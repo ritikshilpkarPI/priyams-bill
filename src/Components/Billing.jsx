@@ -20,11 +20,11 @@ export const Billing = () => {
 
   const barRef = useRef("");
   const { itemsStateAndDispatch } = useContext(AppStateContext);
-  const [itemsList, dispatch] = itemsStateAndDispatch;
+  const [itemsList] = itemsStateAndDispatch;
 
   // useEffect(() => {
   const addNewBill = async () => {
-    const fetch = await Axios.request({
+    await Axios.request({
       url: "/api/billing/newBill",
       method: "post",
       data: { ...bill },
@@ -53,10 +53,11 @@ export const Billing = () => {
   // console.log({ itemsList, itemsByBarcode });
 
   useEffect(() => {
-    const newBill = [...bill.billItems];
     if (itemsByBarcode[barcode]) {
-      newBill.push(itemsByBarcode[barcode]);
-      setBill({ ...bill, billItems: [...newBill] });
+      setBill((prev) => ({
+        ...prev,
+        billItems: [...prev.billItems, itemsByBarcode[barcode]],
+      }));
       setBarCode("");
       setItemName("");
     }
@@ -83,12 +84,12 @@ export const Billing = () => {
         item["itemMRPperUnit"] * item["OrderQuantity"] -
         item["itemSellingPricePerUnit"] * item["OrderQuantity"];
     });
-    setBill({
-      ...bill,
+    setBill((prev) => ({
+      ...prev,
       billMRPTotal: mrpTotal,
       billAmountTotal: totalSum,
       billDiscountTotal: savedAmount,
-    });
+    }));
   }, [bill.billItems]);
   return (
     <div className="billing-container">

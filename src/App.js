@@ -22,12 +22,11 @@ export default function App() {
         },
       });
       dispatch({ type: "ADD_ITEM", payload: fetch.data.message.items });
-      // console.log({ itemsList: fetch.data.message.items });
     })();
-  }, []);
+  }, [dispatch]);
+  console.log({ itemsList });
   return (
     <div className="App">
-      {/* <button onClick={() => history.push("/billing")}>Billing</button> */}
       <Router>
         <ul className="home-nav">
           <li>

@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import { Table, Text } from "@mantine/core";
-import Axios from "axios";
 import { AppStateContext } from "../AppState/appState.context";
 
 export const ItemsList = () => {

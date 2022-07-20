@@ -1,6 +1,5 @@
-import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button } from "@mantine/core";
-import { AppStateContext } from "../AppState/appState.context";
+import { useEffect, useState } from "react";
+import { Table, Text } from "@mantine/core";
 import Axios from "axios";
 
 export const BillFeed = () => {
@@ -74,7 +73,7 @@ export const BillFeed = () => {
           </tr> */}
         {allBills.map((item, idx) => {
           return (
-            <tr key={idx} className="bill-row" key={`${item}$${idx}`}>
+            <tr className="bill-row" key={`${item}$${idx}`}>
               <td>
                 <Text color="black" weight={500}>
                   {idx + 1}
@@ -131,7 +130,7 @@ export const BillFeed = () => {
                         itemSellingPriceTotal,
                       } = itemObj;
                       return (
-                        <tr>
+                        <tr key={idx}>
                           <td>
                             <Text color="black" weight={500}>
                               {idx}
