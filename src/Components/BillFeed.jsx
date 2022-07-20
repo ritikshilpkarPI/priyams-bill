@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table, Text } from "@mantine/core";
-import Axios from "axios";
+import { Axios } from "../utils/axios";
 
 export const BillFeed = () => {
   const [allBills, setAllBills] = useState([]);

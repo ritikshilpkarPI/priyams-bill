@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import { Table, Text, Button } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
-import Axios from "axios";
+import { Axios } from "../utils/axios";
 
 const itemsByBarcode = {};
 const itemsByName = {};

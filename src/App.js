@@ -2,7 +2,7 @@ import { useEffect, useContext } from "react";
 import { Button } from "@mantine/core";
 import { ItemsList } from "./Components/ItemsList";
 import { AppStateContext } from "./AppState/appState.context";
-import Axios from "axios";
+import { Axios } from "./utils/axios";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { Billing } from "./Components/Billing";
 import { BillFeed } from "./Components/BillFeed";
