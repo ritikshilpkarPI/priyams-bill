@@ -11,4 +11,6 @@ if (
   axiosInstance.defaults.baseURL = "/.netlify/functions/app/";
 }
 
+console.log({ env: process.env });
+
 export { source, axiosInstance as Axios };
