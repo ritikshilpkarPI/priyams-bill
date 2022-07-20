@@ -1,0 +1,72 @@
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+require("dotenv").config();
+const mongoose = require("mongoose");
+const serverless = require("serverless-http");
+const routers = require("./routes");
+const { data } = require("./data");
+
+const app = express();
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+  })
+);
+
+app.use(express.urlencoded({ limit: "30mb", extended: true }));
+
+let dbConnector = "";
+let arrayToInsert = [];
+async function addCsvDataToMongoAsJson(dbConnector) {
+  // return csvtojson()
+  //   .fromFile(fileName)
+  //   .then((source) => {
+  // Fetching the all data from each row
+  const source = data;
+  for (let i = 0; i < source.length; i++) {
+    let oneRow = {
+      itemBarcode: source[i]["itemBarcode"],
+      itemName: source[i]["itemName"],
+      itemMRPperUnit: source[i]["itemMRPperUnit"],
+      itemCostPricePerUnit: source[i]["itemCostPricePerUnit"],
+      itemSellingPricePerUnit: source[i]["itemSellingPricePerUnit"],
+      itemStockQuantity: source[i]["itemStockQuantity"],
+      minimumStockQuantity: source[i]["minimumStockQuantity"],
+    };
+    arrayToInsert.push(oneRow);
+  }
+  //inserting into the table “employees”
+  let collectionName = "items";
+  let collection = dbConnector.collection(collectionName);
+  collection.insertMany(arrayToInsert, (err, result) => {
+    if (err) console.log(err);
+    if (result) {
+      console.log("Import CSV into database successfully.");
+    }
+  });
+  // });
+  return;
+}
+app.use("/.netlify/functions/app", routers);
+
+const MONGODB_URI =
+  process.env.ENV_NAME === "staging"
+    ? process.env.STAGING_DB
+    : process.env.ENV_NAME === "production"
+    ? process.env.PROD_DB
+    : process.env.DEV_DB;
+
+async function connectDB() {
+  const client = await mongoose.connect(`${MONGODB_URI}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  // dbConnector = client.connections[0].db;
+  // await addCsvDataToMongoAsJson(dbConnector);
+}
+connectDB();
+module.exports.handler = serverless(app);
