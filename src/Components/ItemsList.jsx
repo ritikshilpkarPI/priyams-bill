@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { Table, Text } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
+import { VariableSizeGrid as Grid } from "react-window";
 
 export const ItemsList = () => {
   const [items, setItems] = useState([]);
@@ -9,6 +10,48 @@ export const ItemsList = () => {
   useEffect(() => {
     setItems(itemsList);
   }, [itemsList]);
+
+  const Row = ({ index, style }) => {
+    return (
+      <tr style={style} className="bill-row" key={`${items[index]}$${index}`}>
+        <td>
+          <Text color="black" weight={500}>
+            {items[index]["itemBarcode"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {items[index]["itemName"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {items[index]["itemMRPperUnit"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {items[index]["itemCostPricePerUnit"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {items[index]["itemSellingPricePerUnit"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {items[index]["itemStockQuantity"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {items[index]["minimumStockQuantity"]}
+          </Text>
+        </td>
+      </tr>
+    );
+  };
 
   return (
     <div>
@@ -40,70 +83,17 @@ export const ItemsList = () => {
           </tr>
         </thead>
         <tbody className="body">
-          {/* <tr>
-            <th>
-              <input>Bar Code</input>
-            </th>
-            <th>
-              <input>Item Name</input>
-            </th>
-            <th>
-              <input>MRP/Unit</input>
-            </th>
-            <th>
-              <input>Cost/Unit</input>
-            </th>
-            <th>
-              <input>Selling Price/Unit</input>
-            </th>
-            <th>
-              <input>Total Stock</input>
-            </th>
-            <th>
-              <input>Minimum Stock</input>
-            </th>
-          </tr> */}
-          {items.map((item, idx) => {
-            return (
-              <tr className="bill-row" key={`${item}$${idx}`}>
-                <td>
-                  <Text color="black" weight={500}>
-                    {item["itemBarcode"]}
-                  </Text>
-                </td>
-                <td>
-                  <Text color="black" weight={500}>
-                    {item["itemName"]}
-                  </Text>
-                </td>
-                <td>
-                  <Text color="black" weight={500}>
-                    {item["itemMRPperUnit"]}
-                  </Text>
-                </td>
-                <td>
-                  <Text color="black" weight={500}>
-                    {item["itemCostPricePerUnit"]}
-                  </Text>
-                </td>
-                <td>
-                  <Text color="black" weight={500}>
-                    {item["itemSellingPricePerUnit"]}
-                  </Text>
-                </td>
-                <td>
-                  <Text color="black" weight={500}>
-                    {item["itemStockQuantity"]}
-                  </Text>
-                </td>
-                <td>
-                  <Text color="black" weight={500}>
-                    {item["minimumStockQuantity"]}
-                  </Text>
-                </td>
-              </tr>
-            );
-          })}
+          <Grid
+            className="list-it"
+            columnCount={Object.keys(items[0]).length}
+            columnWidth={() => 200}
+            height={500}
+            rowCount={items.length}
+            rowHeight={() => 100}
+            width={300}
+          >
+            {Row}
+          </Grid>
         </tbody>
       </Table>
     </div>

@@ -78,13 +78,15 @@ const addNewBill = async (req, res) => {
 
 const getAllBill = async (req, res) => {
   try {
-    const allBill = await Bill.find().populate({
-      path: "items",
-      populate: {
-        path: "itemDetail",
-        model: "Item",
-      },
-    });
+    const allBill = await Bill.find()
+      .populate({
+        path: "items",
+        populate: {
+          path: "itemDetail",
+          model: "Item",
+        },
+      })
+      .sort({ createdAt: -1 });
     // console.log({ allBill });
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });

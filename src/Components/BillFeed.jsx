@@ -48,29 +48,6 @@ export const BillFeed = () => {
         </tr>
       </thead>
       <tbody className="body">
-        {/* <tr>
-            <th>
-              <input>Bar Code</input>
-            </th>
-            <th>
-              <input>Item Name</input>
-            </th>
-            <th>
-              <input>MRP/Unit</input>
-            </th>
-            <th>
-              <input>Cost/Unit</input>
-            </th>
-            <th>
-              <input>Selling Price/Unit</input>
-            </th>
-            <th>
-              <input>Total Stock</input>
-            </th>
-            <th>
-              <input>Minimum Stock</input>
-            </th>
-          </tr> */}
         {allBills.map((item, idx) => {
           return (
             <tr className="bill-row" key={`${item}$${idx}`}>
@@ -101,7 +78,7 @@ export const BillFeed = () => {
               </td>
               <td>
                 <Text color="black" weight={500}>
-                  {new Date(item["createdAt"]).toISOString()}
+                  {new Date(item["createdAt"]).toLocaleString()}
                 </Text>
               </td>
               <td>

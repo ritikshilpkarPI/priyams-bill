@@ -9,6 +9,7 @@ const itemsByName = {};
 export const Billing = () => {
   const [barcode, setBarCode] = useState("");
   const [itemName, setItemName] = useState("");
+  const [saveBill, setSaveBill] = useState("");
   const [bill, setBill] = useState({
     billItems: [],
     customerName: "",
@@ -22,20 +23,20 @@ export const Billing = () => {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
 
-  // useEffect(() => {
-  const addNewBill = async () => {
-    await Axios.request({
-      url: "/api/billing/newBill",
-      method: "post",
-      data: { ...bill },
-      headers: {
-        Cookie: "",
-      },
-    });
-    //   dispatch({ type: "ADD_ITEM", payload: fetch.data.message.items });
-  };
-  // addNewBill();
-  // }, [bill]);
+  useEffect(() => {
+    const addNewBill = async () => {
+      await Axios.request({
+        url: "/api/billing/newBill",
+        method: "post",
+        data: { ...bill },
+        headers: {
+          Cookie: "",
+        },
+      });
+      //   dispatch({ type: "ADD_ITEM", payload: fetch.data.message.items });
+    };
+    addNewBill();
+  }, [saveBill]);
 
   useEffect(() => {
     itemsList.forEach((obj) => {
@@ -101,7 +102,7 @@ export const Billing = () => {
         <Button className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
-        <Button className="print-btn" onClick={() => addNewBill}>
+        <Button className="print-btn" onClick={() => setSaveBill(!saveBill)}>
           Save
         </Button>
       </div>

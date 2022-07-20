@@ -4,13 +4,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AppStateContextProvider } from "./AppState/appState.context";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
-  <AppStateContextProvider>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </AppStateContextProvider>,
+  <BrowserRouter>
+    <AppStateContextProvider>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </AppStateContextProvider>
+  </BrowserRouter>,
   document.getElementById("root")
 );
 
