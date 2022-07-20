@@ -5,8 +5,8 @@ const source = axiosInstance.CancelToken.source();
 if (
   process.env.ENV_NAME === "staging" ||
   process.env.NODE_ENV === "staging" ||
-  process.env.ENV_NAME === "prod" ||
-  process.env.NODE_ENV === "prod"
+  process.env.ENV_NAME === "production" ||
+  process.env.NODE_ENV === "production"
 ) {
   axiosInstance.defaults.baseURL = "/.netlify/functions/app/";
 }
