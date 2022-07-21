@@ -5,3 +5,8 @@
   publish = "build"
   # functions build directory
   functions = "functions-build"
+
+
+[context.production.environment]
+  ENV_NAME = "production"
+  NODE_ENV = "production"
