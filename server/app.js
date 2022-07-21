@@ -53,12 +53,15 @@ async function addCsvDataToMongoAsJson(dbConnector) {
 }
 app.use("/.netlify/functions/app", routers);
 
+const mongoUriEnvMap = {
+  staging: process.env.STAGING_DB,
+  production: process.env.PROD_DB,
+  dev: process.env.DEV_DB,
+};
+
 const MONGODB_URI =
-  process.env.ENV_NAME === "staging"
-    ? process.env.STAGING_DB
-    : process.env.ENV_NAME === "production"
-    ? process.env.PROD_DB
-    : process.env.DEV_DB;
+  mongoUriEnvMap[process.env.ENV_NAME] || mongoUriEnvMap[process.env.NODE_ENV];
+// console.log({ MONGODB_URI, env: process.env.ENV_NAME, mongoUriEnvMap });
 
 async function connectDB() {
   const client = await mongoose.connect(`${MONGODB_URI}`, {

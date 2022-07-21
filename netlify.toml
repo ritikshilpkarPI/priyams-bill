@@ -6,10 +6,9 @@
   # functions build directory
   functions = "functions-build"
 
-  [context.branch-deploy]
-  command = "make staging"
-
-  [context.production]
-  command = "make production"
-  [context.production.environment]
-    PROD_DB = "mongodb+srv://JeXcBPk752QAfjCb:JeXcBPk752QAfjCb@cluster0.k468m.mongodb.net/pstores-prod?retryWrites=true&w=majority"
+[context.production]
+publish = "build"
+command = "make publish"
+[context.production.environment]
+  ENV_NAME = "production"
+  NODE_ENV = "production"
