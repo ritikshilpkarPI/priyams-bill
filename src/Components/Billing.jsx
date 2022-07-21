@@ -7,6 +7,22 @@ const itemsByBarcode = {};
 const itemsByName = {};
 
 export const Billing = () => {
+  const [inputValue, setInputValue] = useState({
+    itemName:"",
+    itemMRPperUnit: "",
+    OrderQuantity: "",
+    itemSellingPricePerUnit: ""
+  });
+  // const [addContact, setAddContact] = useState([]);
+
+  
+
+  
+
+  // console.log(addContact.firstName);
+ 
+  // const [itemSellingPricePerUnit,setSellingPrice] = ([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [barcode, setBarCode] = useState("");
   const [itemName, setItemName] = useState("");
   const [bill, setBill] = useState({
@@ -32,6 +48,51 @@ export const Billing = () => {
       },
     });
   };
+  function handleChange(event) {
+   
+    const { name, value } = event.target;
+    setInputValue((prevState) => ({ ...prevState, [name]: value }));
+
+    console.log("value typed is:", value);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    setBill((prev) => ({
+      ...prev,
+      billItems: [...prev.billItems, {...inputValue,itemName,itemDiscountPerUnit:inputValue.itemMRPperUnit-inputValue.itemSellingPricePerUnit}],
+
+    }));
+    setInputValue({
+      itemName:"",
+    itemMRPperUnit: "",
+    OrderQuantity: "",
+    itemSellingPricePerUnit: ""
+    })
+  }
+
+  const handleFilter = (event) => {
+    
+    setFilteredData(event.target.value)
+    setItemName(event.target.value);
+    const searchWord = event.target.value;
+    const newFilter = itemsList.filter((value) => {
+      return value.itemName.toLowerCase().includes(searchWord.toLowerCase());
+    });
+
+    setFilteredData(newFilter);
+
+    // const { name, value } = event.target;
+    // setInputValue((prevState) => ({ ...prevState, [name]: value }));
+
+    // console.log("value typed is:", value);
+  };
+
+  // const addInTheBill = () =>{
+
+  // }
+
+ 
 
   useEffect(() => {
     itemsList.forEach((obj) => {
@@ -131,10 +192,81 @@ export const Billing = () => {
               <Text color="black" weight={500}>
                 <input
                   type="text"
+                 
                   value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
+                  placeholder="search here"
+                  onChange={(e)=>{
+                    handleFilter(e);
+                    handleChange(e)
+                  }}
+                // {(e) => setItemName(e.target.value)}
+                // {handleFilter}
+                // {(e) => setItemName(e.target.value)}
                 />
               </Text>
+              {Boolean(filteredData.length) && (
+                <div
+                  onClick={(e) => {
+                    console.log({ e });
+                    if (itemsByName[e.target.innerText]) {
+                      setBill((prev) => ({
+                        ...prev,
+                        billItems: [...prev.billItems, itemsByName[e.target.innerText]],
+                      }));
+                      setBarCode("");
+                      setItemName("");
+                      setFilteredData([]);
+                    }
+
+                  }}
+                  className="data-result" style={{ minWidth: "fit-content" }}
+                >
+                  {filteredData.map((value, key) => {
+                    return <div style={{ padding: "5px", fontSize: "16px", fontStyle: "bold" }} className="show-data">{value.itemName}</div>;
+                  })}
+                </div>
+              )}
+
+            </td>
+            <td>
+              <Text color="black" weight={500}>
+                <input
+                  type="number"
+                  placeholder="itemMRPperUnit"
+                  name="itemMRPperUnit"
+                  onChange={handleChange}
+                  value={inputValue.itemMRPperUnit}
+                  
+                />
+              </Text>
+            </td>
+            <td>
+              <Text color="black" weight={500}>
+                <input
+                  type="number"
+                  placeholder="OrderQuantity"
+                  name="OrderQuantity"
+                  onChange={handleChange}
+                  value={inputValue.OrderQuantity}
+                />
+              </Text>
+              
+            </td>
+            <td>
+              <Text color="black" weight={500}>
+                <input
+                  type="number"
+                  name="itemSellingPricePerUnit"
+                  placeholder="selling price"
+                  onChange={handleChange}
+                  value={inputValue.itemSellingPricePerUnit}
+                  
+                />
+              </Text>
+              
+            </td>
+            <td>
+              <button onClick={handleSubmit}>+</button>
             </td>
           </tr>
           {bill.billItems.map((itemObj, idx) => {
@@ -151,6 +283,7 @@ export const Billing = () => {
                   <Text color="black" weight={500}>
                     {itemObj["itemName"]}
                   </Text>
+                
                 </td>
                 <td>
                   <Text color="black" weight={500}>

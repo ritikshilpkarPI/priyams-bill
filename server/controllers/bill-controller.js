@@ -1,4 +1,4 @@
-const { Bill } = require("../db-models/bill-model");
+const { Bill, Item } = require("../db-models/bill-model");
 const mongoose = require("mongoose");
 
 const addNewBill = async (req, res) => {
@@ -18,7 +18,7 @@ const addNewBill = async (req, res) => {
       totalNumberOfItems,
     ] = [billItems.length, 0];
 
-    const allItems = billItems.map((itemObj) => {
+    const allItems = billItems.map(async(itemObj) => {
       const {
         _id,
         itemName,
@@ -32,13 +32,33 @@ const addNewBill = async (req, res) => {
         itemSellingPricePerUnit,
         createdAt,
         OrderQuantity,
-      } = itemObj;
+      } = itemObj
+      let itemId = undefined
+      if (!_id){
+        const newItem = new Item({
+          itemName,
+          itemBarcode,
+          itemStockQuantity,
+          minimumStockQuantity,
+          itemMRPperUnit,
+          itemCostPricePerUnit,
+          itemDiscountPerUnit,
+          itemPerUnitDiscountPercentage,
+          itemSellingPricePerUnit,
+          createdAt,
+          OrderQuantity,
+        })
+       await newItem.save()
+
+       itemId=newItem._id
+      }
+
 
       const orderQuantityInNumber = Number(OrderQuantity);
       totalNumberOfItems += orderQuantityInNumber;
       return {
         itemDetail: {
-          _id,
+          _id:_id||itemId,
           itemName,
           itemBarcode,
           itemStockQuantity,
