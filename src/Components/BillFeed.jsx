@@ -110,7 +110,7 @@ export const BillFeed = () => {
                         <tr key={idx}>
                           <td>
                             <Text color="black" weight={500}>
-                              {idx}
+                              {idx + 1}
                             </Text>
                           </td>
                           <td>

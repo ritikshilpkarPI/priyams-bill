@@ -9,7 +9,6 @@ const itemsByName = {};
 export const Billing = () => {
   const [barcode, setBarCode] = useState("");
   const [itemName, setItemName] = useState("");
-  const [saveBill, setSaveBill] = useState("");
   const [bill, setBill] = useState({
     billItems: [],
     customerName: "",
@@ -23,20 +22,16 @@ export const Billing = () => {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
 
-  useEffect(() => {
-    const addNewBill = async () => {
-      await Axios.request({
-        url: "/api/billing/newBill",
-        method: "post",
-        data: { ...bill },
-        headers: {
-          Cookie: "",
-        },
-      });
-      //   dispatch({ type: "ADD_ITEM", payload: fetch.data.message.items });
-    };
-    addNewBill();
-  }, [saveBill]);
+  const addNewBill = async () => {
+    await Axios.request({
+      url: "/api/billing/newBill",
+      method: "post",
+      data: { ...bill },
+      headers: {
+        Cookie: "",
+      },
+    });
+  };
 
   useEffect(() => {
     itemsList.forEach((obj) => {
@@ -51,7 +46,6 @@ export const Billing = () => {
       }
     });
   }, [itemsList]);
-  // console.log({ itemsList, itemsByBarcode });
 
   useEffect(() => {
     if (itemsByBarcode[barcode]) {
@@ -62,17 +56,8 @@ export const Billing = () => {
       setBarCode("");
       setItemName("");
     }
-    // if (itemsByName[itemName]) {
-    //   newBill.push(itemsByName[itemName]);
-    //   setBill(newBill);
-    //   setBarCode("");
-    //   setItemName("");
-    // }
     barRef.current.focus();
-  }, [
-    barcode,
-    //   itemName
-  ]);
+  }, [barcode]);
 
   useEffect(() => {
     let totalSum = 0;
@@ -102,7 +87,7 @@ export const Billing = () => {
         <Button className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
-        <Button className="print-btn" onClick={() => setSaveBill(!saveBill)}>
+        <Button className="print-btn" onClick={addNewBill}>
           Save
         </Button>
       </div>
@@ -172,11 +157,6 @@ export const Billing = () => {
                     {itemObj["itemMRPperUnit"]}
                   </Text>
                 </td>
-                {/* <td>
-                   <Text color="black" weight={500}>
-                     {itemObj["Quantity"]}
-                   </Text>
-                 </td> */}
                 <td>
                   <QuantBtn
                     itemObj={itemObj}
@@ -185,11 +165,6 @@ export const Billing = () => {
                     setBill={setBill}
                   />
                 </td>
-                {/* <td>
-                   <Text color="black" weight={500}>
-                     {itemObj["itemDiscountPerUnit"]}
-                   </Text>
-                 </td> */}
                 <td>
                   <Text color="black" weight={500}>
                     {itemObj["itemSellingPricePerUnit"]}

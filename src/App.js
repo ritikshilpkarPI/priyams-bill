@@ -1,6 +1,6 @@
 import { useEffect, useContext } from "react";
 import { Button } from "@mantine/core";
-import { ItemsList } from "./Components/ItemsList";
+// import { ItemsList } from "./Components/ItemsList";
 import { AppStateContext } from "./AppState/appState.context";
 import { Axios } from "./utils/axios";
 import { Route, Switch, withRouter } from "react-router-dom";
@@ -25,7 +25,7 @@ function App({ history }) {
     })();
   }, [dispatch]);
 
-  console.log({ history });
+  console.log({ itemsList });
 
   return (
     <div className="App">
