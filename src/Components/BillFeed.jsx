@@ -102,7 +102,7 @@ export const BillFeed = () => {
                   <tbody className="body">
                     {item.items.map((itemObj, idx) => {
                       const {
-                        itemDetail: { itemName },
+                        itemDetail: { itemName } = {},
                         itemQuantityInBill,
                         itemSellingPriceTotal,
                       } = itemObj;
