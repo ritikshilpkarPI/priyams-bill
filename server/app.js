@@ -28,16 +28,18 @@ async function addCsvDataToMongoAsJson(dbConnector) {
   // Fetching the all data from each row
   const source = data;
   for (let i = 0; i < source.length; i++) {
-    let oneRow = {
-      itemBarcode: source[i]["itemBarcode"],
-      itemName: source[i]["itemName"],
-      itemMRPperUnit: source[i]["itemMRPperUnit"],
-      itemCostPricePerUnit: source[i]["itemCostPricePerUnit"],
-      itemSellingPricePerUnit: source[i]["itemSellingPricePerUnit"],
-      itemStockQuantity: source[i]["itemStockQuantity"],
-      minimumStockQuantity: source[i]["minimumStockQuantity"],
-    };
-    arrayToInsert.push(oneRow);
+    if (source[i]["itemName"]) {
+      let oneRow = {
+        itemBarcode: source[i]["itemBarcode"],
+        itemName: source[i]["itemName"],
+        itemMRPperUnit: source[i]["itemMRPperUnit"],
+        itemCostPricePerUnit: source[i]["itemCostPricePerUnit"],
+        itemSellingPricePerUnit: source[i]["itemSellingPricePerUnit"],
+        itemStockQuantity: source[i]["itemStockQuantity"],
+        minimumStockQuantity: source[i]["minimumStockQuantity"],
+      };
+      arrayToInsert.push(oneRow);
+    }
   }
   //inserting into the table “employees”
   let collectionName = "items";
@@ -61,15 +63,20 @@ const mongoUriEnvMap = {
 
 const MONGODB_URI =
   mongoUriEnvMap[process.env.ENV_NAME] || mongoUriEnvMap[process.env.NODE_ENV];
-console.log({ MONGODB_URI, env: process.env, mongoUriEnvMap });
+console.log({
+  MONGODB_URI,
+  env: process.env,
+  mongoUriEnvMap,
+  data: data.length,
+});
 
 async function connectDB() {
   const client = await mongoose.connect(`${MONGODB_URI}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  // dbConnector = client.connections[0].db;
-  // await addCsvDataToMongoAsJson(dbConnector);
+  dbConnector = client.connections[0].db;
+  await addCsvDataToMongoAsJson(dbConnector);
 }
 connectDB();
 module.exports.handler = serverless(app);
