@@ -75,8 +75,8 @@ async function connectDB() {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  dbConnector = client.connections[0].db;
-  await addCsvDataToMongoAsJson(dbConnector);
+  // dbConnector = client.connections[0].db;
+  // await addCsvDataToMongoAsJson(dbConnector);
 }
 connectDB();
 module.exports.handler = serverless(app);
