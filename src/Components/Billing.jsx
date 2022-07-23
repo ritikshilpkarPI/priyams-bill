@@ -10,7 +10,7 @@ export const Billing = () => {
   const [inputValue, setInputValue] = useState({
     itemName: "",
     itemMRPperUnit: "",
-    OrderQuantity: "",
+    OrderQuantity: 1,
     itemSellingPricePerUnit: "",
   });
 
@@ -45,19 +45,20 @@ export const Billing = () => {
     setInputValue((prevState) => ({ ...prevState, [name]: value }));
   }
 
-  function handleSubmit(event) {
+  function addItemToBill(event) {
     event.preventDefault();
+    const itemDetail = {
+      ...inputValue,
+      itemName,
+      itemDiscountPerUnit: inputValue.itemMRPperUnit
+        ? inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit
+        : 0,
+    };
+
+    itemsByName[itemName] = { ...itemDetail };
     setBill((prev) => ({
       ...prev,
-      billItems: [
-        ...prev.billItems,
-        {
-          ...inputValue,
-          itemName,
-          itemDiscountPerUnit:
-            inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit,
-        },
-      ],
+      billItems: [...prev.billItems, itemDetail],
     }));
     setInputValue({
       itemName: "",
@@ -65,16 +66,17 @@ export const Billing = () => {
       OrderQuantity: "",
       itemSellingPricePerUnit: "",
     });
+    setItemName("");
   }
 
   const handleFilter = (event) => {
-    setFilteredData(event.target.value);
+    // setFilteredData(event.target.value);
     setItemName(event.target.value);
     const searchWord = event.target.value;
-    const newFilter = itemsList.filter((value) => {
+    const filteredData = itemsList.filter((value) => {
       return value.itemName.toLowerCase().includes(searchWord.toLowerCase());
     });
-    setFilteredData(newFilter);
+    setFilteredData(filteredData);
   };
   useEffect(() => {
     itemsList.forEach((obj) => {
@@ -109,9 +111,7 @@ export const Billing = () => {
     bill.billItems.forEach((item) => {
       totalSum += item["itemSellingPricePerUnit"] * item["OrderQuantity"];
       mrpTotal += item["itemMRPperUnit"] * item["OrderQuantity"];
-      savedAmount +=
-        item["itemMRPperUnit"] * item["OrderQuantity"] -
-        item["itemSellingPricePerUnit"] * item["OrderQuantity"];
+      savedAmount += item["itemDiscountPerUnit"] * item["OrderQuantity"];
     });
     setBill((prev) => ({
       ...prev,
@@ -180,7 +180,6 @@ export const Billing = () => {
                     handleFilter(e);
                     handleChange(e);
                   }}
-
                 />
               </Text>
               {Boolean(filteredData.length) && (
@@ -254,7 +253,7 @@ export const Billing = () => {
               </Text>
             </td>
             <td>
-              <button onClick={handleSubmit}>+</button>
+              <button onClick={addItemToBill}>ADD ITEM</button>
             </td>
           </tr>
           {bill.billItems.map((itemObj, idx) => {
@@ -324,8 +323,10 @@ export const Billing = () => {
 
 const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
-    if (e.target.value < 1) return;
-    const itemCopy = { ...itemsByBarcode[itemObj["itemBarcode"]] };
+    if (e.target.value < 0) return;
+    const itemCopy = itemsByBarcode[itemObj["itemBarcode"]]
+      ? { ...itemsByBarcode[itemObj["itemBarcode"]] }
+      : itemsByName[itemObj["itemName"]];
     itemCopy["OrderQuantity"] = e.target.value;
     const newBill = [...bill.billItems];
     newBill.splice(idx, 1, itemCopy);
