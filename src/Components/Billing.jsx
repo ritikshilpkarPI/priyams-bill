@@ -15,8 +15,6 @@ export const Billing = () => {
   });
   // const [addContact, setAddContact] = useState([]);
 
-  // console.log(addContact.firstName);
-
   // const [itemSellingPricePerUnit,setSellingPrice] = ([]);
   const [filteredData, setFilteredData] = useState([]);
   const [barcode, setBarCode] = useState("");
@@ -47,8 +45,6 @@ export const Billing = () => {
   function handleChange(event) {
     const { name, value } = event.target;
     setInputValue((prevState) => ({ ...prevState, [name]: value }));
-
-    console.log("value typed is:", value);
   }
 
   function handleSubmit(event) {
@@ -85,8 +81,6 @@ export const Billing = () => {
 
     // const { name, value } = event.target;
     // setInputValue((prevState) => ({ ...prevState, [name]: value }));
-
-    // console.log("value typed is:", value);
   };
 
   // const addInTheBill = () =>{
@@ -205,7 +199,6 @@ export const Billing = () => {
               {Boolean(filteredData.length) && (
                 <div
                   onClick={(e) => {
-                    console.log({ e });
                     if (itemsByName[e.target.innerText]) {
                       setBill((prev) => ({
                         ...prev,
@@ -352,11 +345,14 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
     setBill({ ...bill, billItems: [...newBill] });
   };
   return (
-    <input
-      className="quantity-input"
-      type="number"
-      value={itemObj["OrderQuantity"]}
-      onChange={handleQuantityChange}
-    />
+    <>
+      <Text className="quantity-text">{itemObj["OrderQuantity"] || 0}</Text>
+      <input
+        className="quantity-input"
+        type="number"
+        value={itemObj["OrderQuantity"]}
+        onChange={handleQuantityChange}
+      />
+    </>
   );
 };
