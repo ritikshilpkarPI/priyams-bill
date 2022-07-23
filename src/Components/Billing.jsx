@@ -144,29 +144,41 @@ export const Billing = () => {
         <thead className="table-heading">
           <tr>
             <th>
-              <Text>Bar Code</Text>
+              <Text weight={700} color="black" size="lg">
+                Bar Code
+              </Text>
             </th>
             <th>
-              <Text>Item Name</Text>
+              <Text weight={700} color="black" size="lg">
+                Item Name
+              </Text>
             </th>
             <th>
-              <Text>MRP/Unit</Text>
+              <Text weight={700} color="black" size="lg">
+                MRP/Unit
+              </Text>
             </th>
             <th>
-              <Text>Quantity</Text>
+              <Text weight={700} color="black" size="lg">
+                Quantity
+              </Text>
             </th>
             <th>
-              <Text>Selling Price/Unit</Text>
+              <Text weight={700} color="black" size="lg">
+                Selling Price/Unit
+              </Text>
             </th>
             <th>
-              <Text>Item Total</Text>
+              <Text weight={700} color="black" size="lg">
+                Item Total
+              </Text>
             </th>
           </tr>
         </thead>
         <tbody className="body">
           <tr>
             <td>
-              <Text color="black" weight={500}>
+              <Text color="black" weight={700}>
                 <input
                   ref={barRef}
                   type="number"
@@ -176,7 +188,7 @@ export const Billing = () => {
               </Text>
             </td>
             <td>
-              <Text color="black" weight={500}>
+              <Text color="black" weight={700}>
                 <input
                   type="text"
                   value={itemName}
@@ -225,7 +237,7 @@ export const Billing = () => {
               )}
             </td>
             <td>
-              <Text color="black" weight={500}>
+              <Text color="black" weight={700}>
                 <input
                   type="number"
                   placeholder="itemMRPperUnit"
@@ -236,7 +248,7 @@ export const Billing = () => {
               </Text>
             </td>
             <td>
-              <Text color="black" weight={500}>
+              <Text color="black" weight={700}>
                 <input
                   type="number"
                   placeholder="OrderQuantity"
@@ -247,7 +259,7 @@ export const Billing = () => {
               </Text>
             </td>
             <td>
-              <Text color="black" weight={500}>
+              <Text color="black" weight={700}>
                 <input
                   type="number"
                   name="itemSellingPricePerUnit"
@@ -266,18 +278,18 @@ export const Billing = () => {
               <tr key={`${idx}${itemObj["itemName"]}`}>
                 <td>
                   {itemObj["itemBarcode"] && (
-                    <Text color="black" weight={500}>
+                    <Text color="black" weight={700}>
                       {itemObj["itemBarcode"]}
                     </Text>
                   )}
                 </td>
                 <td>
-                  <Text color="black" weight={500}>
+                  <Text color="black" weight={700}>
                     {itemObj["itemName"]}
                   </Text>
                 </td>
                 <td>
-                  <Text color="black" weight={500}>
+                  <Text color="black" weight={700}>
                     {itemObj["itemMRPperUnit"]}
                   </Text>
                 </td>
@@ -290,12 +302,12 @@ export const Billing = () => {
                   />
                 </td>
                 <td>
-                  <Text color="black" weight={500}>
+                  <Text color="black" weight={700}>
                     {itemObj["itemSellingPricePerUnit"]}
                   </Text>
                 </td>
                 <td>
-                  <Text color="black" weight={500}>
+                  <Text color="black" weight={700}>
                     {itemObj["itemSellingPricePerUnit"] *
                       itemObj["OrderQuantity"]}
                   </Text>
