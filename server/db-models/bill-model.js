@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 // const bcryptjs = require("bcryptjs");
 // const jwt = require("jsonwebtoken");
 const ItemSchem = new mongoose.Schema(
@@ -37,7 +38,7 @@ const BillSchema = new mongoose.Schema(
     items: [
       {
         itemDetail: {
-          type: mongoose.Schema.Types.ObjectId,
+          type: Schema.Types.ObjectId,
           ref: "Item",
         },
         itemQuantityInBill: { type: Number },

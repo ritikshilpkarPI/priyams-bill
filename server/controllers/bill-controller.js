@@ -1,5 +1,4 @@
-const { Bill } = require("../db-models/bill-model");
-const mongoose = require("mongoose");
+const { Bill, Item } = require("../db-models/bill-model");
 
 const addNewBill = async (req, res) => {
   try {
@@ -18,26 +17,9 @@ const addNewBill = async (req, res) => {
       totalNumberOfItems,
     ] = [billItems.length, 0];
 
-    const allItems = billItems.map((itemObj) => {
-      const {
-        _id,
-        itemName,
-        itemBarcode,
-        itemStockQuantity,
-        minimumStockQuantity,
-        itemMRPperUnit,
-        itemCostPricePerUnit,
-        itemDiscountPerUnit,
-        itemPerUnitDiscountPercentage,
-        itemSellingPricePerUnit,
-        createdAt,
-        OrderQuantity,
-      } = itemObj;
-
-      const orderQuantityInNumber = Number(OrderQuantity);
-      totalNumberOfItems += orderQuantityInNumber;
-      return {
-        itemDetail: {
+    const allItems = await Promise.all(
+      billItems.map(async (itemObj) => {
+        const {
           _id,
           itemName,
           itemBarcode,
@@ -49,13 +31,51 @@ const addNewBill = async (req, res) => {
           itemPerUnitDiscountPercentage,
           itemSellingPricePerUnit,
           createdAt,
-        },
-        itemQuantityInBill: orderQuantityInNumber,
-        itemMRPtotal: itemMRPperUnit * orderQuantityInNumber,
-        itemDiscountTotal: itemDiscountPerUnit * orderQuantityInNumber,
-        itemSellingPriceTotal: itemSellingPricePerUnit * orderQuantityInNumber,
-      };
-    });
+          OrderQuantity,
+        } = itemObj;
+        let item = undefined;
+        if (!_id) {
+          const newItem = new Item({
+            itemName,
+            itemBarcode,
+            itemStockQuantity,
+            minimumStockQuantity,
+            itemMRPperUnit,
+            itemCostPricePerUnit,
+            itemDiscountPerUnit,
+            itemPerUnitDiscountPercentage,
+            itemSellingPricePerUnit,
+            createdAt,
+          });
+          const newItemSaved = await newItem.save();
+          item = newItemSaved;
+        }
+
+        const orderQuantityInNumber = Number(OrderQuantity);
+        totalNumberOfItems += orderQuantityInNumber;
+
+        return {
+          itemDetail: {
+            _id: _id || item._id,
+            itemName,
+            itemBarcode,
+            itemStockQuantity,
+            minimumStockQuantity,
+            itemMRPperUnit,
+            itemCostPricePerUnit,
+            itemDiscountPerUnit,
+            itemPerUnitDiscountPercentage,
+            itemSellingPricePerUnit,
+            createdAt,
+          },
+          itemQuantityInBill: orderQuantityInNumber,
+          itemMRPtotal: itemMRPperUnit * orderQuantityInNumber,
+          itemDiscountTotal: itemDiscountPerUnit * orderQuantityInNumber,
+          itemSellingPriceTotal:
+            itemSellingPricePerUnit * orderQuantityInNumber,
+        };
+      })
+    );
     const newBill = new Bill({
       customerName,
       customerPhone,
@@ -87,7 +107,6 @@ const getAllBill = async (req, res) => {
         },
       })
       .sort({ createdAt: -1 });
-    // console.log({ allBill });
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });
   } catch (error) {

@@ -7,6 +7,14 @@ const itemsByBarcode = {};
 const itemsByName = {};
 
 export const Billing = () => {
+  const [inputValue, setInputValue] = useState({
+    itemName: "",
+    itemMRPperUnit: "",
+    OrderQuantity: 1,
+    itemSellingPricePerUnit: "",
+  });
+
+  const [filteredData, setFilteredData] = useState([]);
   const [barcode, setBarCode] = useState("");
   const [itemName, setItemName] = useState("");
   const [bill, setBill] = useState({
@@ -32,7 +40,44 @@ export const Billing = () => {
       },
     });
   };
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setInputValue((prevState) => ({ ...prevState, [name]: value }));
+  }
 
+  function addItemToBill(event) {
+    event.preventDefault();
+    const itemDetail = {
+      ...inputValue,
+      itemName,
+      itemDiscountPerUnit: inputValue.itemMRPperUnit
+        ? inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit
+        : 0,
+    };
+
+    itemsByName[itemName] = { ...itemDetail };
+    setBill((prev) => ({
+      ...prev,
+      billItems: [...prev.billItems, itemDetail],
+    }));
+    setInputValue({
+      itemName: "",
+      itemMRPperUnit: "",
+      OrderQuantity: "",
+      itemSellingPricePerUnit: "",
+    });
+    setItemName("");
+  }
+
+  const handleFilter = (event) => {
+    // setFilteredData(event.target.value);
+    setItemName(event.target.value);
+    const searchWord = event.target.value;
+    const filteredData = itemsList.filter((value) => {
+      return value.itemName.toLowerCase().includes(searchWord.toLowerCase());
+    });
+    setFilteredData(filteredData);
+  };
   useEffect(() => {
     itemsList.forEach((obj) => {
       obj["itemDiscountPerUnit"] =
@@ -66,9 +111,7 @@ export const Billing = () => {
     bill.billItems.forEach((item) => {
       totalSum += item["itemSellingPricePerUnit"] * item["OrderQuantity"];
       mrpTotal += item["itemMRPperUnit"] * item["OrderQuantity"];
-      savedAmount +=
-        item["itemMRPperUnit"] * item["OrderQuantity"] -
-        item["itemSellingPricePerUnit"] * item["OrderQuantity"];
+      savedAmount += item["itemDiscountPerUnit"] * item["OrderQuantity"];
     });
     setBill((prev) => ({
       ...prev,
@@ -132,9 +175,85 @@ export const Billing = () => {
                 <input
                   type="text"
                   value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
+                  placeholder="search here"
+                  onChange={(e) => {
+                    handleFilter(e);
+                    handleChange(e);
+                  }}
                 />
               </Text>
+              {Boolean(filteredData.length) && (
+                <div
+                  onClick={(e) => {
+                    if (itemsByName[e.target.innerText]) {
+                      setBill((prev) => ({
+                        ...prev,
+                        billItems: [
+                          ...prev.billItems,
+                          itemsByName[e.target.innerText],
+                        ],
+                      }));
+                      setBarCode("");
+                      setItemName("");
+                      setFilteredData([]);
+                    }
+                  }}
+                  className="data-result"
+                  style={{ minWidth: "fit-content" }}
+                >
+                  {filteredData.map((value, key) => {
+                    return (
+                      <div
+                        key={key}
+                        style={{
+                          padding: "5px",
+                          fontSize: "16px",
+                          fontStyle: "bold",
+                        }}
+                        className="show-data"
+                      >
+                        {value.itemName}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </td>
+            <td>
+              <Text color="black" weight={500}>
+                <input
+                  type="number"
+                  placeholder="itemMRPperUnit"
+                  name="itemMRPperUnit"
+                  onChange={handleChange}
+                  value={inputValue.itemMRPperUnit}
+                />
+              </Text>
+            </td>
+            <td>
+              <Text color="black" weight={500}>
+                <input
+                  type="number"
+                  placeholder="OrderQuantity"
+                  name="OrderQuantity"
+                  onChange={handleChange}
+                  value={inputValue.OrderQuantity}
+                />
+              </Text>
+            </td>
+            <td>
+              <Text color="black" weight={500}>
+                <input
+                  type="number"
+                  name="itemSellingPricePerUnit"
+                  placeholder="selling price"
+                  onChange={handleChange}
+                  value={inputValue.itemSellingPricePerUnit}
+                />
+              </Text>
+            </td>
+            <td>
+              <button onClick={addItemToBill}>ADD ITEM</button>
             </td>
           </tr>
           {bill.billItems.map((itemObj, idx) => {
@@ -204,19 +323,24 @@ export const Billing = () => {
 
 const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
-    if (e.target.value < 1) return;
-    const itemCopy = { ...itemsByBarcode[itemObj["itemBarcode"]] };
+    if (e.target.value < 0) return;
+    const itemCopy = itemsByBarcode[itemObj["itemBarcode"]]
+      ? { ...itemsByBarcode[itemObj["itemBarcode"]] }
+      : itemsByName[itemObj["itemName"]];
     itemCopy["OrderQuantity"] = e.target.value;
     const newBill = [...bill.billItems];
     newBill.splice(idx, 1, itemCopy);
     setBill({ ...bill, billItems: [...newBill] });
   };
   return (
-    <input
-      className="quantity-input"
-      type="number"
-      value={itemObj["OrderQuantity"]}
-      onChange={handleQuantityChange}
-    />
+    <>
+      <Text className="quantity-text">{itemObj["OrderQuantity"] || 0}</Text>
+      <input
+        className="quantity-input"
+        type="number"
+        value={itemObj["OrderQuantity"]}
+        onChange={handleQuantityChange}
+      />
+    </>
   );
 };
