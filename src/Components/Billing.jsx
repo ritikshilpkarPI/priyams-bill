@@ -278,18 +278,18 @@ export const Billing = () => {
               <tr key={`${idx}${itemObj["itemName"]}`}>
                 <td>
                   {itemObj["itemBarcode"] && (
-                    <Text color="black" weight={700}>
+                    <Text color="black" weight={700} size="lg">
                       {itemObj["itemBarcode"]}
                     </Text>
                   )}
                 </td>
                 <td>
-                  <Text color="black" weight={700}>
+                  <Text color="black" weight={700} size="lg">
                     {itemObj["itemName"]}
                   </Text>
                 </td>
                 <td>
-                  <Text color="black" weight={700}>
+                  <Text color="black" weight={800} size="xl">
                     {itemObj["itemMRPperUnit"]}
                   </Text>
                 </td>
@@ -302,12 +302,12 @@ export const Billing = () => {
                   />
                 </td>
                 <td>
-                  <Text color="black" weight={700}>
+                  <Text color="black" weight={800} size="xl">
                     {itemObj["itemSellingPricePerUnit"]}
                   </Text>
                 </td>
                 <td>
-                  <Text color="black" weight={700}>
+                  <Text color="black" weight={800} size="xl">
                     {itemObj["itemSellingPricePerUnit"] *
                       itemObj["OrderQuantity"]}
                   </Text>
@@ -330,9 +330,9 @@ export const Billing = () => {
         </tbody>
       </Table>
       <div className="final-bill">
-        <div>MRP Total: {bill.billMRPTotal}</div>
-        <div>Bill Total: {bill.billAmountTotal}</div>
-        <div>You saved: {bill.billDiscountTotal}</div>
+        <h2>MRP Total: {bill.billMRPTotal}</h2>
+        <h2>Bill Total: {bill.billAmountTotal}</h2>
+        <h2>You saved: {bill.billDiscountTotal}</h2>
       </div>
     </div>
   );
@@ -351,7 +351,9 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   };
   return (
     <>
-      <Text className="quantity-text">{itemObj["OrderQuantity"] || 0}</Text>
+      <Text color="black" size="xl" weight={800} className="quantity-text">
+        {itemObj["OrderQuantity"] || 0}
+      </Text>
       <input
         className="quantity-input"
         type="number"
