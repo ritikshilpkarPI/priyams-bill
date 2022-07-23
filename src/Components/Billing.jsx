@@ -13,9 +13,7 @@ export const Billing = () => {
     OrderQuantity: "",
     itemSellingPricePerUnit: "",
   });
-  // const [addContact, setAddContact] = useState([]);
 
-  // const [itemSellingPricePerUnit,setSellingPrice] = ([]);
   const [filteredData, setFilteredData] = useState([]);
   const [barcode, setBarCode] = useState("");
   const [itemName, setItemName] = useState("");
@@ -76,17 +74,8 @@ export const Billing = () => {
     const newFilter = itemsList.filter((value) => {
       return value.itemName.toLowerCase().includes(searchWord.toLowerCase());
     });
-
     setFilteredData(newFilter);
-
-    // const { name, value } = event.target;
-    // setInputValue((prevState) => ({ ...prevState, [name]: value }));
   };
-
-  // const addInTheBill = () =>{
-
-  // }
-
   useEffect(() => {
     itemsList.forEach((obj) => {
       obj["itemDiscountPerUnit"] =
@@ -191,9 +180,7 @@ export const Billing = () => {
                     handleFilter(e);
                     handleChange(e);
                   }}
-                  // {(e) => setItemName(e.target.value)}
-                  // {handleFilter}
-                  // {(e) => setItemName(e.target.value)}
+
                 />
               </Text>
               {Boolean(filteredData.length) && (
