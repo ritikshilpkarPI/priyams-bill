@@ -45,7 +45,7 @@ async function addCsvDataToMongoAsJson(dbConnector) {
   let collectionName = "items";
   let collection = dbConnector.collection(collectionName);
   collection.insertMany(arrayToInsert, (err, result) => {
-    if (err) console.log(err);
+    if (err) console.error(err);
     if (result) {
       console.log("Import CSV into database successfully.");
     }
@@ -63,20 +63,14 @@ const mongoUriEnvMap = {
 
 const MONGODB_URI =
   mongoUriEnvMap[process.env.ENV_NAME] || mongoUriEnvMap[process.env.NODE_ENV];
-console.log({
-  MONGODB_URI,
-  env: process.env,
-  mongoUriEnvMap,
-  data: data.length,
-});
 
 async function connectDB() {
   const client = await mongoose.connect(`${MONGODB_URI}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  dbConnector = client.connections[0].db;
-  await addCsvDataToMongoAsJson(dbConnector);
+  // dbConnector = client.connections[0].db;
+  // await addCsvDataToMongoAsJson(dbConnector);
 }
 connectDB();
 module.exports.handler = serverless(app);

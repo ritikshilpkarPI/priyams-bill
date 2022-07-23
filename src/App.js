@@ -29,10 +29,12 @@ function App({ history }) {
 
   return (
     <div className="App">
-      <Button onClick={() => history.push("/")}>Home</Button>
-      <Button onClick={() => history.push("billing")}>Billing</Button>
-      {/* <Button onClick={() => history.push("inventory")}>Inventory</Button> */}
-      <Button onClick={() => history.push("allBill")}>All Bills</Button>
+      <div className="nav-btn">
+        <Button onClick={() => history.push("/")}>Home</Button>
+        <Button onClick={() => history.push("billing")}>Billing</Button>
+        {/* <Button onClick={() => history.push("inventory")}>Inventory</Button> */}
+        <Button onClick={() => history.push("allBill")}>All Bills</Button>
+      </div>
       <Switch>
         <Route path="/billing" component={Billing} />
         {/* <Route path="/inventory" component={ItemsList} /> */}
