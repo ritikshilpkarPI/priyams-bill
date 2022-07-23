@@ -5,6 +5,14 @@ import { Axios } from "../utils/axios";
 
 const itemsByBarcode = {};
 const itemsByName = {};
+const BILL_INITIAL_STATE = {
+  billItems: [],
+  customerName: "",
+  customerPhone: 0,
+  billMRPTotal: 0,
+  billAmountTotal: 0,
+  billDiscountTotal: 0,
+};
 
 export const Billing = () => {
   const [inputValue, setInputValue] = useState({
@@ -17,20 +25,15 @@ export const Billing = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [barcode, setBarCode] = useState("");
   const [itemName, setItemName] = useState("");
-  const [bill, setBill] = useState({
-    billItems: [],
-    customerName: "",
-    customerPhone: 0,
-    billMRPTotal: 0,
-    billAmountTotal: 0,
-    billDiscountTotal: 0,
-  });
+  const [bill, setBill] = useState(BILL_INITIAL_STATE);
+  const [apiLoading, setApiLoading] = useState(false);
 
   const barRef = useRef("");
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
 
   const addNewBill = async () => {
+    setApiLoading(true);
     await Axios.request({
       url: "/api/billing/newBill",
       method: "post",
@@ -39,6 +42,8 @@ export const Billing = () => {
         Cookie: "",
       },
     });
+    setApiLoading(false);
+    setBill(BILL_INITIAL_STATE);
   };
   function handleChange(event) {
     const { name, value } = event.target;
@@ -130,7 +135,7 @@ export const Billing = () => {
         <Button className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
-        <Button className="print-btn" onClick={addNewBill}>
+        <Button className="print-btn" onClick={addNewBill} loading={apiLoading}>
           Save
         </Button>
       </div>
