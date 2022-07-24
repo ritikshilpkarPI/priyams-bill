@@ -15,7 +15,6 @@ export const BillFeed = () => {
       });
       setAllBills(fetch.data.message.allBill);
       //   dispatch({ type: "ADD_ITEM", payload: fetch.data.message.items });
-      console.log({ bill: fetch.data.message.allBill });
     };
     getBillFeed();
   }, []);

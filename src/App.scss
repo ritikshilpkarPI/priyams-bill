@@ -46,12 +46,18 @@
     }
   }
 }
+.show-data:hover {
+  background-color: lightgray;
+}
 
 .billing-container {
   margin-top: 50px;
 
   .bill-btns {
     padding: 5px;
+  }
+  .quantity-text {
+    display: none;
   }
   .final-bill {
     display: flex;
@@ -64,26 +70,37 @@
       padding: 5px;
     }
   }
+}
 
-  @media print {
-    .home-nav > ul > li {
+@media print {
+  .nav-btn {
+    display: none;
+  }
+
+  .table-heading tr th:first-child,
+  .bill-btns,
+  .delete-btn {
+    display: none;
+  }
+
+  .billing-container {
+    margin-top: 10px;
+    width: 50vw;
+
+    .header {
+      padding: 10px;
+    }
+  }
+  .body {
+    tr:first-child,
+    td:first-child {
       display: none;
     }
-
-    .table-heading tr th:first-child,
-    .bill-btns,
-    .delete-btn {
+    .quantity-text {
+      display: block;
+    }
+    .quantity-input {
       display: none;
-    }
-
-    .billing-container {
-      margin-top: 10px;
-    }
-    .body {
-      tr:first-child,
-      td:first-child {
-        display: none;
-      }
     }
   }
 }
