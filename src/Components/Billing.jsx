@@ -42,6 +42,7 @@ export const Billing = () => {
         Cookie: "",
       },
     });
+    window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
   };
@@ -129,14 +130,14 @@ export const Billing = () => {
     <div className="billing-container">
       <div className="header">
         <h1>PRIYAM STORES</h1>
-        <h4>112-C, Indrapuri, Bhopal - 462022</h4>
+        <h3>112-C, Indrapuri, Bhopal - 462022</h3>
       </div>
       <div className="bill-btns">
         <Button className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
         <Button className="print-btn" onClick={addNewBill} loading={apiLoading}>
-          Save
+          Save and Print
         </Button>
       </div>
 
