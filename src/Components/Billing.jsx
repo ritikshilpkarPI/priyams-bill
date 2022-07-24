@@ -309,7 +309,7 @@ export const Billing = () => {
                     weight={800}
                     size="xl"
                   >
-                    {itemObj["itemMRPperUnit"].toFixed(2)}
+                    {itemObj["itemMRPperUnit"]}
                   </Text>
                 </td>
                 <td>
@@ -319,7 +319,7 @@ export const Billing = () => {
                     weight={800}
                     size="xl"
                   >
-                    {itemObj["itemSellingPricePerUnit"].toFixed(2)}
+                    {itemObj["itemSellingPricePerUnit"]}
                   </Text>
                 </td>
                 <td>
