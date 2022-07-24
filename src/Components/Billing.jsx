@@ -21,7 +21,6 @@ export const Billing = () => {
     OrderQuantity: 1,
     itemSellingPricePerUnit: "",
   });
-
   const [filteredData, setFilteredData] = useState([]);
   const [barcode, setBarCode] = useState("");
   const [itemName, setItemName] = useState("");
@@ -42,6 +41,7 @@ export const Billing = () => {
         Cookie: "",
       },
     });
+    window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
   };
@@ -129,14 +129,14 @@ export const Billing = () => {
     <div className="billing-container">
       <div className="header">
         <h1>PRIYAM STORES</h1>
-        <h4>112-C, Indrapuri, Bhopal - 462022</h4>
+        <h3>112-C, Indrapuri, Bhopal - 462022</h3>
       </div>
       <div className="bill-btns">
         <Button className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
         <Button className="print-btn" onClick={addNewBill} loading={apiLoading}>
-          Save
+          Save and Print
         </Button>
       </div>
 
@@ -155,12 +155,12 @@ export const Billing = () => {
             </th>
             <th>
               <Text weight={700} color="black" size="lg">
-                MRP/Unit
+                Quantity
               </Text>
             </th>
             <th>
               <Text weight={700} color="black" size="lg">
-                Quantity
+                MRP/Unit
               </Text>
             </th>
             <th>
@@ -180,6 +180,7 @@ export const Billing = () => {
             <td>
               <Text color="black" weight={700}>
                 <input
+                  className="bill-input"
                   ref={barRef}
                   type="number"
                   value={barcode}
@@ -190,6 +191,7 @@ export const Billing = () => {
             <td>
               <Text color="black" weight={700}>
                 <input
+                  className="bill-input"
                   type="text"
                   value={itemName}
                   placeholder="search here"
@@ -199,7 +201,7 @@ export const Billing = () => {
                   }}
                 />
               </Text>
-              {Boolean(filteredData.length) && (
+              {itemName && Boolean(filteredData.length) && (
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
@@ -236,20 +238,11 @@ export const Billing = () => {
                 </div>
               )}
             </td>
+
             <td>
               <Text color="black" weight={700}>
                 <input
-                  type="number"
-                  placeholder="itemMRPperUnit"
-                  name="itemMRPperUnit"
-                  onChange={handleChange}
-                  value={inputValue.itemMRPperUnit}
-                />
-              </Text>
-            </td>
-            <td>
-              <Text color="black" weight={700}>
-                <input
+                  className="bill-input"
                   type="number"
                   placeholder="OrderQuantity"
                   name="OrderQuantity"
@@ -261,6 +254,19 @@ export const Billing = () => {
             <td>
               <Text color="black" weight={700}>
                 <input
+                  className="bill-input"
+                  type="number"
+                  placeholder="itemMRPperUnit"
+                  name="itemMRPperUnit"
+                  onChange={handleChange}
+                  value={inputValue.itemMRPperUnit}
+                />
+              </Text>
+            </td>
+            <td>
+              <Text color="black" weight={700}>
+                <input
+                  className="bill-input"
                   type="number"
                   name="itemSellingPricePerUnit"
                   placeholder="selling price"
@@ -289,11 +295,6 @@ export const Billing = () => {
                   </Text>
                 </td>
                 <td>
-                  <Text color="black" weight={800} size="xl">
-                    {itemObj["itemMRPperUnit"]}
-                  </Text>
-                </td>
-                <td>
                   <QuantBtn
                     itemObj={itemObj}
                     idx={idx}
@@ -302,14 +303,36 @@ export const Billing = () => {
                   />
                 </td>
                 <td>
-                  <Text color="black" weight={800} size="xl">
-                    {itemObj["itemSellingPricePerUnit"]}
+                  <Text
+                    className="print-text"
+                    color="black"
+                    weight={800}
+                    size="xl"
+                  >
+                    {itemObj["itemMRPperUnit"].toFixed(2)}
                   </Text>
                 </td>
                 <td>
-                  <Text color="black" weight={800} size="xl">
-                    {itemObj["itemSellingPricePerUnit"] *
-                      itemObj["OrderQuantity"]}
+                  <Text
+                    className="print-text"
+                    color="black"
+                    weight={800}
+                    size="xl"
+                  >
+                    {itemObj["itemSellingPricePerUnit"].toFixed(2)}
+                  </Text>
+                </td>
+                <td>
+                  <Text
+                    className="print-text"
+                    color="black"
+                    weight={800}
+                    size="xl"
+                  >
+                    {(
+                      itemObj["itemSellingPricePerUnit"] *
+                      itemObj["OrderQuantity"]
+                    ).toFixed(2)}
                   </Text>
                 </td>
                 <td className="last-clmn">
@@ -330,9 +353,9 @@ export const Billing = () => {
         </tbody>
       </Table>
       <div className="final-bill">
-        <h2>MRP Total: {bill.billMRPTotal}</h2>
-        <h2>Bill Total: {bill.billAmountTotal}</h2>
-        <h2>You saved: {bill.billDiscountTotal}</h2>
+        <h2>MRP Total: {bill.billMRPTotal.toFixed(2)}</h2>
+        <h2>Bill Total: {bill.billAmountTotal.toFixed(2)}</h2>
+        <h2>You saved: {bill.billDiscountTotal.toFixed(2)}</h2>
       </div>
     </div>
   );
@@ -351,7 +374,12 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   };
   return (
     <>
-      <Text color="black" size="xl" weight={800} className="quantity-text">
+      <Text
+        color="black"
+        size="xl"
+        weight={800}
+        className="quantity-text print-text"
+      >
         {itemObj["OrderQuantity"] || 0}
       </Text>
       <input
