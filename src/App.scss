@@ -53,6 +53,15 @@
 .billing-container {
   margin-top: 50px;
 
+  .body {
+    .bill-input {
+      padding: 5px;
+      font-size: 18px;
+      height: 32px;
+      // width: 222px;
+    }
+  }
+
   .bill-btns {
     padding: 5px;
   }
@@ -95,6 +104,10 @@
     tr:first-child,
     td:first-child {
       display: none;
+    }
+
+    .print-text {
+      font-size: 28px;
     }
     .quantity-text {
       display: block;
