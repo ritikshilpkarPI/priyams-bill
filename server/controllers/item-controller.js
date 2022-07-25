@@ -14,7 +14,18 @@ const getItemsFeed = async (req, res) => {
 const addItems = async (req, res) => {
   console.log({ req });
 };
+
+const editItemById = async (req, res) => {
+  const {
+    id,
+    itemWithChanges: { _id, ...rest },
+  } = req.body;
+  const changedItem = Item.findByIdAndUpdate(id, { ...rest });
+  console.log({ changedItem, rest });
+  res.status(200).json({ message: changedItem });
+};
 module.exports = {
   getItemsFeed,
   addItems,
+  editItemById,
 };
