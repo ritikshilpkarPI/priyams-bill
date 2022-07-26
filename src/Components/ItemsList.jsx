@@ -9,22 +9,6 @@ export const ItemsList = () => {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
 
-  const [itemInput, setItemInput] = useState({
-    itemBarcode: "",
-    itemName: "",
-    itemMRPperUnit: "",
-    itemCostPricePerUnit: "",
-    itemSellingPricePerUnit: "",
-    itemStockQuantity: "",
-    minimumStockQuantity: "",
-  });
-
-  const handleItemInputChange = (e) => {
-    const { name, value } = e.target;
-    console.log({ name, value });
-    setItemInput({ ...itemInput, [name]: value });
-  };
-
   useEffect(() => {
     setItems(itemsList);
   }, [itemsList]);
@@ -36,8 +20,6 @@ export const ItemsList = () => {
         style={style}
         items={items}
         itemsList={itemsList}
-        itemInput={itemInput}
-        handleItemInputChange={handleItemInputChange}
       />
     );
   };
@@ -89,23 +71,37 @@ const TableRow = ({
   itemsList,
   style,
   items,
-  itemInput,
-  handleItemInputChange,
 }) => {
+  const [itemInput, setItemInput] = useState({
+    itemBarcode: items[index]["itemBarcode"],
+    itemName: items[index]["itemName"],
+    itemMRPperUnit: items[index]["itemMRPperUnit"],
+    itemCostPricePerUnit: items[index]["itemCostPricePerUnit"],
+    itemSellingPricePerUnit: items[index]["itemSellingPricePerUnit"],
+    itemStockQuantity: items[index]["itemStockQuantity"],
+    minimumStockQuantity: items[index]["minimumStockQuantity"]
+  });
+
+  const handleItemInputChange = (e) => {
+    const { name, value } = e.target;
+    setItemInput({ ...itemInput, [name]: value });
+  };
+
   return (
     <tr style={style} className="bill-row">
       <td>
         <input
           style={{ width: "200px" }}
-          value={items[index]["itemBarcode"]}
+          value={itemInput["itemBarcode"]}
           onChange={handleItemInputChange}
           name="itemBarcode"
         />
       </td>
       <td>
         <input
+          type="text"
           style={{ width: "200px" }}
-          value={items[index]["itemName"]}
+          value={itemInput["itemName"]}
           onChange={handleItemInputChange}
           name="itemName"
         />
@@ -113,7 +109,7 @@ const TableRow = ({
       <td>
         <input
           style={{ width: "200px" }}
-          value={items[index]["itemMRPperUnit"]}
+          value={itemInput["itemMRPperUnit"]}
           onChange={handleItemInputChange}
           name="itemMRPperUnit"
         />
@@ -121,7 +117,7 @@ const TableRow = ({
       <td>
         <input
           style={{ width: "200px" }}
-          value={items[index]["itemCostPricePerUnit"]}
+          value={itemInput["itemCostPricePerUnit"]}
           onChange={handleItemInputChange}
           name="itemCostPricePerUnit"
         />
@@ -129,7 +125,7 @@ const TableRow = ({
       <td>
         <input
           style={{ width: "200px" }}
-          value={items[index]["itemSellingPricePerUnit"]}
+          value={itemInput["itemSellingPricePerUnit"]}
           onChange={handleItemInputChange}
           name="itemSellingPricePerUnit"
         />
@@ -137,7 +133,7 @@ const TableRow = ({
       <td>
         <input
           style={{ width: "200px" }}
-          value={items[index]["itemStockQuantity"]}
+          value={itemInput["itemStockQuantity"]}
           onChange={handleItemInputChange}
           name="itemStockQuantity"
         />
@@ -145,7 +141,7 @@ const TableRow = ({
       <td>
         <input
           style={{ width: "200px" }}
-          value={items[index]["minimumStockQuantity"]}
+          value={itemInput["minimumStockQuantity"]}
           onChange={handleItemInputChange}
           name="minimumStockQuantity"
         />
@@ -164,7 +160,6 @@ const AddItemButton = ({ itemToBeChanged, itemInput }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeChanged;
-    console.log({ ...itemToBeChanged, ...itemInput });
     const itemWithChanges = { ...itemToBeChanged, ...itemInput };
     setApiLoading(true);
     await Axios.request({
