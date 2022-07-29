@@ -53,14 +53,18 @@ export const ItemsList = () => {
       </thead>
       <tbody className="body">
         <List
+
           className="list-it"
           height={500}
           itemCount={items.length}
           itemSize={() => 100}
-          width={500}
+          width={1000}
         >
+
           {Row}
+
         </List>
+
       </tbody>
     </Table>
   );
@@ -89,7 +93,7 @@ const TableRow = ({
 
   return (
     <tr style={style} className="bill-row">
-      <td>
+      <td >
         <input
           style={{ width: "200px" }}
           value={itemInput["itemBarcode"]}
