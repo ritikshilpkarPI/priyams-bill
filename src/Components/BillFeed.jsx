@@ -1,24 +1,6 @@
-import { useEffect, useState } from "react";
 import { Table, Text } from "@mantine/core";
-import { Axios } from "../utils/axios";
 
-export const BillFeed = () => {
-  const [allBills, setAllBills] = useState([]);
-  useEffect(() => {
-    const getBillFeed = async () => {
-      const fetch = await Axios.request({
-        url: "/api/billing/getBillFeed",
-        method: "get",
-        headers: {
-          Cookie: "",
-        },
-      });
-      setAllBills(fetch.data.message.allBill);
-      //   dispatch({ type: "ADD_ITEM", payload: fetch.data.message.items });
-    };
-    getBillFeed();
-  }, []);
-
+export const BillFeed = ({ bills = [] }) => {
   return (
     <Table>
       <thead className="heading">
@@ -47,7 +29,7 @@ export const BillFeed = () => {
         </tr>
       </thead>
       <tbody className="body">
-        {allBills.map((item, idx) => {
+        {bills.map((item, idx) => {
           return (
             <tr className="bill-row" key={`${item}$${idx}`}>
               <td>

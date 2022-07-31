@@ -1,4 +1,4 @@
-const { Item } = require("../db-models/bill-model");
+const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
   try {
@@ -21,10 +21,9 @@ const editItemById = async (req, res) => {
       id,
       itemWithChanges: { _id, ...rest },
     } = req.body;
-    const changedItem = await Item.findById(id)
+    const changedItem = await Item.findById(id);
     res.status(200).json({ message: changedItem });
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ error: error });
   }
 };
