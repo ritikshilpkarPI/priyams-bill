@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Button } from "@mantine/core";
 // import { ItemsList } from "./Components/ItemsList";
 import { AppStateContext } from "./AppState/appState.context";
@@ -6,10 +6,12 @@ import { Axios } from "./utils/axios";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Billing } from "./Components/Billing";
 import { BillFeed } from "./Components/BillFeed";
+import DayWiseBillFeed from "./Components/DailyBill";
 import "./App.scss";
 // import { QRComp } from "./qr";
 
 function App({ history }) {
+  const [allBills, setAllBills] = useState();
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
   useEffect(() => {
@@ -25,6 +27,20 @@ function App({ history }) {
     })();
   }, [dispatch]);
 
+  useEffect(() => {
+    const getBillFeed = async () => {
+      const fetch = await Axios.request({
+        url: "/api/billing/getBillFeed",
+        method: "get",
+        headers: {
+          Cookie: "",
+        },
+      });
+      setAllBills(fetch.data.message.allBill);
+    };
+    getBillFeed();
+  }, []);
+
   console.log({ itemsList });
 
   return (
@@ -34,11 +50,13 @@ function App({ history }) {
         <Button onClick={() => history.push("billing")}>Billing</Button>
         {/* <Button onClick={() => history.push("inventory")}>Inventory</Button> */}
         <Button onClick={() => history.push("allBill")}>All Bills</Button>
+        <Button onClick={() => history.push("dayBill")}>Day Wise Bills</Button>
       </div>
       <Switch>
         <Route path="/billing" component={Billing} />
         {/* <Route path="/inventory" component={ItemsList} /> */}
-        <Route path="/allBill" component={BillFeed} />
+        <Route path="/dayBill" component={DayWiseBillFeed} />
+        <Route path="/allBill" render={() => <BillFeed bills={allBills} />} />
       </Switch>
       {/* <QRComp /> */}
     </div>
