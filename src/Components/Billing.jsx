@@ -102,7 +102,7 @@ export const Billing = () => {
     if (itemsByBarcode[barcode]) {
       setBill((prev) => ({
         ...prev,
-        billItems: [...prev.billItems, itemsByBarcode[barcode]],
+        billItems: [itemsByBarcode[barcode], ...prev.billItems],
       }));
       setBarCode("");
       setItemName("");
@@ -221,15 +221,14 @@ export const Billing = () => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
-                      console.log(bill)
+                      console.log(bill);
                       setBill((prev) => ({
-                       ...prev,
-                        billItems:   
-                         [
+                        ...prev,
+                        billItems: [
                           //  ...prev.billItems,
                           itemsByName[e.target.innerText],
-                          ...prev.billItems
-                         ]
+                          ...prev.billItems,
+                        ],
                       }));
                       setBarCode("");
                       setItemName("");
@@ -381,21 +380,39 @@ export const Billing = () => {
         <h2>You saved: {bill.billDiscountTotal.toFixed(2)}</h2>
         <h2>
           CashPaid:
+          <Text
+            color="black"
+            size="xl"
+            weight={800}
+            className="quantity-text print-text"
+          >
+            {cashPay}
+          </Text>
           <input
             type="number"
             value={cashPay}
             onChange={(e) => setCashPay(Number(e.target.value))}
+            className="quantity-input"
           />
         </h2>
         <h2>
           UpiPaid:
+          <Text
+            color="black"
+            size="xl"
+            weight={800}
+            className="quantity-text print-text"
+          >
+            {upiPay}
+          </Text>
           <input
             type="number"
             value={upiPay}
             onChange={(e) => setUpiPay(Number(e.target.value))}
+            className="quantity-input"
           />
         </h2>
-        <h2>Amount Return:{Number(amountReturn)} </h2>
+        <h2>Amount Return: {Number(amountReturn)} </h2>
       </div>
     </div>
   );

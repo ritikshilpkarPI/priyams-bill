@@ -96,10 +96,28 @@
     margin-top: 10px;
     width: 50vw;
 
+    .final-bill {
+      h2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .print-text {
+        font-size: 28px;
+      }
+      .quantity-text {
+        display: flex;
+      }
+      .quantity-input {
+        display: none;
+      }
+    }
+
     .header {
       padding: 10px;
     }
   }
+
   .body {
     tr:first-child,
     td:first-child {
