@@ -12,7 +12,7 @@ const BILL_INITIAL_STATE = {
   billMRPTotal: 0,
   billAmountTotal: 0,
   billDiscountTotal: 0,
-};
+ };
 
 export const Billing = () => {
   const [inputValue, setInputValue] = useState({
@@ -26,7 +26,9 @@ export const Billing = () => {
   const [itemName, setItemName] = useState("");
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
-
+  const [cashPay, setCashPay] = useState(0);
+  const [upiPay, setUpiPay] = useState(0);
+  const [amountReturn,setAmountReturn] = useState(0)
   const barRef = useRef("");
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
@@ -47,7 +49,8 @@ export const Billing = () => {
   };
   function handleChange(event) {
     const { name, value } = event.target;
-    setInputValue((prevState) => ({ ...prevState, [name]: value }));
+    setInputValue((prevState) => ({ ...prevState,[name]: value }));
+    
   }
 
   function addItemToBill(event) {
@@ -58,12 +61,14 @@ export const Billing = () => {
       itemDiscountPerUnit: inputValue.itemMRPperUnit
         ? inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit
         : 0,
-    };
+      };
+    
 
     itemsByName[itemName] = { ...itemDetail };
     setBill((prev) => ({
       ...prev,
-      billItems: [...prev.billItems, itemDetail],
+      billItems: [...prev.billItems, itemDetail]
+      
     }));
     setInputValue({
       itemName: "",
@@ -125,6 +130,13 @@ export const Billing = () => {
       billDiscountTotal: savedAmount,
     }));
   }, [bill.billItems]);
+  
+   useEffect(()=>{
+    console.log({cashPay,upiPay})
+    setAmountReturn((cashPay + upiPay)-(bill.billAmountTotal));
+   
+   },[cashPay,upiPay,bill.billAmountTotal])
+  
   return (
     <div className="billing-container">
       <div className="header">
@@ -356,6 +368,9 @@ export const Billing = () => {
         <h2>MRP Total: {bill.billMRPTotal.toFixed(2)}</h2>
         <h2>Bill Total: {bill.billAmountTotal.toFixed(2)}</h2>
         <h2>You saved: {bill.billDiscountTotal.toFixed(2)}</h2>
+        <h2>CashPaid:<input type="number" value={cashPay} onChange={(e) => setCashPay(Number(e.target.value))}  /></h2>
+        <h2>UpiPaid:<input type="number" value={upiPay} onChange={(e) => setUpiPay(Number(e.target.value))} /></h2>
+         <h2>Amount Return:{Number(amountReturn)} </h2>
       </div>
     </div>
   );
@@ -371,7 +386,9 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
     const newBill = [...bill.billItems];
     newBill.splice(idx, 1, itemCopy);
     setBill({ ...bill, billItems: [...newBill] });
+    console.log(newBill)
   };
+
   return (
     <>
       <Text
