@@ -26,7 +26,9 @@ export const Billing = () => {
   const [itemName, setItemName] = useState("");
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
-
+  const [cashPay, setCashPay] = useState(0);
+  const [upiPay, setUpiPay] = useState(0);
+  const [amountReturn, setAmountReturn] = useState(0);
   const barRef = useRef("");
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
@@ -75,7 +77,6 @@ export const Billing = () => {
   }
 
   const handleFilter = (event) => {
-    // setFilteredData(event.target.value);
     setItemName(event.target.value);
     const searchWord = event.target.value;
     const filteredData = itemsList.filter((value) => {
@@ -125,6 +126,11 @@ export const Billing = () => {
       billDiscountTotal: savedAmount,
     }));
   }, [bill.billItems]);
+
+  useEffect(() => {
+    setAmountReturn(cashPay + upiPay - bill.billAmountTotal);
+  }, [cashPay, upiPay, bill.billAmountTotal]);
+
   return (
     <div className="billing-container">
       <div className="header">
@@ -248,7 +254,6 @@ export const Billing = () => {
                 </div>
               )}
             </td>
-
             <td>
               <Text color="black" weight={700}>
                 <input
@@ -371,6 +376,23 @@ export const Billing = () => {
         <h2>MRP Total: {bill.billMRPTotal.toFixed(2)}</h2>
         <h2>Bill Total: {bill.billAmountTotal.toFixed(2)}</h2>
         <h2>You saved: {bill.billDiscountTotal.toFixed(2)}</h2>
+        <h2>
+          CashPaid:
+          <input
+            type="number"
+            value={cashPay}
+            onChange={(e) => setCashPay(Number(e.target.value))}
+          />
+        </h2>
+        <h2>
+          UpiPaid:
+          <input
+            type="number"
+            value={upiPay}
+            onChange={(e) => setUpiPay(Number(e.target.value))}
+          />
+        </h2>
+        <h2>Amount Return:{Number(amountReturn)} </h2>
       </div>
     </div>
   );
@@ -387,6 +409,7 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
     newBill.splice(idx, 1, itemCopy);
     setBill({ ...bill, billItems: [...newBill] });
   };
+
   return (
     <>
       <Text
