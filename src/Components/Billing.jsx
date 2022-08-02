@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button } from "@mantine/core";
+import { Table, Text, Button, Input } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -195,7 +195,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   ref={barRef}
                   type="number"
@@ -206,7 +206,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="text"
                   value={itemName}
@@ -258,7 +258,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   placeholder="OrderQuantity"
@@ -270,7 +270,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   placeholder="itemMRPperUnit"
@@ -282,7 +282,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   name="itemSellingPricePerUnit"
@@ -408,7 +408,7 @@ export const Billing = () => {
         >
           CashPaid: {cashPay}
         </Text>
-        <input
+        <Input
           type="number"
           value={cashPay}
           onChange={(e) => setCashPay(Number(e.target.value))}
@@ -422,7 +422,7 @@ export const Billing = () => {
         >
           UpiPaid: {upiPay}
         </Text>
-        <input
+        <Input
           type="number"
           value={upiPay}
           onChange={(e) => setUpiPay(Number(e.target.value))}
@@ -463,7 +463,7 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
       >
         {itemObj["OrderQuantity"] || 0}
       </Text>
-      <input
+      <Input
         className="quantity-input"
         type="number"
         value={itemObj["OrderQuantity"]}
