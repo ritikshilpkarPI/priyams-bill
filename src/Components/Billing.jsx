@@ -145,6 +145,11 @@ export const Billing = () => {
           <tr>
             <th>
               <Text weight={700} color="black" size="lg">
+                Sl. No.
+              </Text>
+            </th>
+            <th>
+              <Text weight={700} color="black" size="lg">
                 Bar Code
               </Text>
             </th>
@@ -177,6 +182,11 @@ export const Billing = () => {
         </thead>
         <tbody className="body">
           <tr>
+            <td>
+              <Text color="black" weight={700}>
+                {bill.billItems.length + 1}
+              </Text>
+            </td>
             <td>
               <Text color="black" weight={700}>
                 <input
@@ -282,6 +292,11 @@ export const Billing = () => {
           {bill.billItems.map((itemObj, idx) => {
             return (
               <tr key={`${idx}${itemObj["itemName"]}`}>
+                <td>
+                  <Text color="black" weight={700} size="lg">
+                    {idx + 1}
+                  </Text>
+                </td>
                 <td>
                   {itemObj["itemBarcode"] && (
                     <Text color="black" weight={700} size="lg">
