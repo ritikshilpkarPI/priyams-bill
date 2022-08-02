@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button } from "@mantine/core";
+import { Table, Text, Button, Input } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -195,7 +195,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   ref={barRef}
                   type="number"
@@ -206,7 +206,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="text"
                   value={itemName}
@@ -258,7 +258,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   placeholder="OrderQuantity"
@@ -270,7 +270,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   placeholder="itemMRPperUnit"
@@ -282,7 +282,7 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   name="itemSellingPricePerUnit"
@@ -375,44 +375,67 @@ export const Billing = () => {
         </tbody>
       </Table>
       <div className="final-bill">
-        <h2>MRP Total: {bill.billMRPTotal.toFixed(2)}</h2>
-        <h2>Bill Total: {bill.billAmountTotal.toFixed(2)}</h2>
-        <h2>You saved: {bill.billDiscountTotal.toFixed(2)}</h2>
-        <h2>
-          CashPaid:
-          <Text
-            color="black"
-            size="xl"
-            weight={800}
-            className="quantity-text print-text"
-          >
-            {cashPay}
-          </Text>
-          <input
-            type="number"
-            value={cashPay}
-            onChange={(e) => setCashPay(Number(e.target.value))}
-            className="quantity-input"
-          />
-        </h2>
-        <h2>
-          UpiPaid:
-          <Text
-            color="black"
-            size="xl"
-            weight={800}
-            className="quantity-text print-text"
-          >
-            {upiPay}
-          </Text>
-          <input
-            type="number"
-            value={upiPay}
-            onChange={(e) => setUpiPay(Number(e.target.value))}
-            className="quantity-input"
-          />
-        </h2>
-        <h2>Amount Return: {Number(amountReturn)} </h2>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          MRP Total: {bill.billMRPTotal.toFixed(2)}
+        </Text>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          Bill Total: {bill.billAmountTotal.toFixed(2)}
+        </Text>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          You saved: {bill.billDiscountTotal.toFixed(2)}
+        </Text>
+
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          CashPaid: {cashPay}
+        </Text>
+        <Input
+          type="number"
+          value={cashPay}
+          onChange={(e) => setCashPay(Number(e.target.value))}
+          className="quantity-input"
+        />
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          UpiPaid: {upiPay}
+        </Text>
+        <Input
+          type="number"
+          value={upiPay}
+          onChange={(e) => setUpiPay(Number(e.target.value))}
+          className="quantity-input"
+        />
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          Amount Return: {Number(amountReturn)}
+        </Text>
       </div>
     </div>
   );
@@ -440,7 +463,7 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
       >
         {itemObj["OrderQuantity"] || 0}
       </Text>
-      <input
+      <Input
         className="quantity-input"
         type="number"
         value={itemObj["OrderQuantity"]}
