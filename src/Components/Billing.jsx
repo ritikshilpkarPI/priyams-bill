@@ -205,12 +205,15 @@ export const Billing = () => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
+                      console.log(bill)
                       setBill((prev) => ({
-                        ...prev,
-                        billItems: [
-                          ...prev.billItems,
+                       ...prev,
+                        billItems:   
+                         [
+                          //  ...prev.billItems,
                           itemsByName[e.target.innerText],
-                        ],
+                          ...prev.billItems
+                         ]
                       }));
                       setBarCode("");
                       setItemName("");
