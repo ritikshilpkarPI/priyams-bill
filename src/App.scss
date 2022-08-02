@@ -70,8 +70,13 @@
   }
   .final-bill {
     display: flex;
+    margin-right: 10px;
     flex-direction: column;
     align-items: flex-end;
+
+    .final-bill-text {
+      display: flex;
+    }
 
     div {
       font-size: 18px;
@@ -97,11 +102,11 @@
     width: 50vw;
 
     .final-bill {
-      h2 {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+      // h2 {
+      //   display: flex;
+      //   align-items: center;
+      //   justify-content: center;
+      // }
       .print-text {
         font-size: 28px;
       }

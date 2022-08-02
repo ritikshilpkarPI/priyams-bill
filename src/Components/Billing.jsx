@@ -375,44 +375,67 @@ export const Billing = () => {
         </tbody>
       </Table>
       <div className="final-bill">
-        <h2>MRP Total: {bill.billMRPTotal.toFixed(2)}</h2>
-        <h2>Bill Total: {bill.billAmountTotal.toFixed(2)}</h2>
-        <h2>You saved: {bill.billDiscountTotal.toFixed(2)}</h2>
-        <h2>
-          CashPaid:
-          <Text
-            color="black"
-            size="xl"
-            weight={800}
-            className="quantity-text print-text"
-          >
-            {cashPay}
-          </Text>
-          <input
-            type="number"
-            value={cashPay}
-            onChange={(e) => setCashPay(Number(e.target.value))}
-            className="quantity-input"
-          />
-        </h2>
-        <h2>
-          UpiPaid:
-          <Text
-            color="black"
-            size="xl"
-            weight={800}
-            className="quantity-text print-text"
-          >
-            {upiPay}
-          </Text>
-          <input
-            type="number"
-            value={upiPay}
-            onChange={(e) => setUpiPay(Number(e.target.value))}
-            className="quantity-input"
-          />
-        </h2>
-        <h2>Amount Return: {Number(amountReturn)} </h2>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          MRP Total: {bill.billMRPTotal.toFixed(2)}
+        </Text>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          Bill Total: {bill.billAmountTotal.toFixed(2)}
+        </Text>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          You saved: {bill.billDiscountTotal.toFixed(2)}
+        </Text>
+
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          CashPaid: {cashPay}
+        </Text>
+        <input
+          type="number"
+          value={cashPay}
+          onChange={(e) => setCashPay(Number(e.target.value))}
+          className="quantity-input"
+        />
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          UpiPaid: {upiPay}
+        </Text>
+        <input
+          type="number"
+          value={upiPay}
+          onChange={(e) => setUpiPay(Number(e.target.value))}
+          className="quantity-input"
+        />
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          Amount Return: {Number(amountReturn)}
+        </Text>
       </div>
     </div>
   );
