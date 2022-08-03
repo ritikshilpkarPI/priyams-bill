@@ -71,7 +71,10 @@ const TableRow = ({ item, idx }) => {
   const [rowOpen, setRowOpen] = useState(false);
   return (
     <>
-      <tr onClick={() => setRowOpen(!rowOpen)} className="bill-row">
+      <tr
+        onClick={() => setRowOpen(!rowOpen)}
+        className={`bill-row ${rowOpen ? "rowOpen-main" : ""}`}
+      >
         <td>
           <Text color="black" weight={500}>
             {idx + 1}
@@ -107,15 +110,16 @@ const TableRow = ({ item, idx }) => {
             {totalQuantityBilled}
           </Text>
         </td>
-      </tr>
-      <tr>
-        <Collapse
-          in={rowOpen}
-          transitionDuration={500}
-          transitionTimingFunction="linear"
-        >
-          <BillFeed bills={bills} />
-        </Collapse>
+        <td>
+          <Collapse
+            in={rowOpen}
+            transitionDuration={500}
+            className={rowOpen ? "rowOpen" : ""}
+            transitionTimingFunction="linear"
+          >
+            <BillFeed bills={bills} />
+          </Collapse>
+        </td>
       </tr>
     </>
   );
