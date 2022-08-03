@@ -63,7 +63,7 @@ export const Billing = () => {
     };
 
     itemsByName[itemName] = { ...itemDetail };
-    console.log(itemDetail)
+    console.log(itemDetail);
     setBill((prev) => ({
       ...prev,
       billItems: [...prev.billItems, itemDetail],
@@ -201,6 +201,7 @@ export const Billing = () => {
                   ref={barRef}
                   type="number"
                   value={barcode}
+                  onWheel={(e) => e.target.blur()}
                   onChange={(e) => setBarCode(e.target.value)}
                 />
               </Text>
@@ -222,7 +223,6 @@ export const Billing = () => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
-
                       setBill((prev) => ({
                         ...prev,
                         billItems: [
@@ -264,6 +264,7 @@ export const Billing = () => {
                   placeholder="OrderQuantity"
                   name="OrderQuantity"
                   onChange={handleChange}
+                  onWheel={(e) => e.target.blur()}
                   value={inputValue.OrderQuantity}
                 />
               </Text>
@@ -275,6 +276,7 @@ export const Billing = () => {
                   type="number"
                   placeholder="itemMRPperUnit"
                   name="itemMRPperUnit"
+                  onWheel={(e) => e.target.blur()}
                   onChange={handleChange}
                   value={inputValue.itemMRPperUnit}
                 />
@@ -288,6 +290,7 @@ export const Billing = () => {
                   name="itemSellingPricePerUnit"
                   placeholder="selling price"
                   onChange={handleChange}
+                  onWheel={(e) => e.target.blur()}
                   value={inputValue.itemSellingPricePerUnit}
                 />
               </Text>
@@ -470,6 +473,7 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
         type="number"
         value={itemObj["OrderQuantity"]}
         onChange={handleQuantityChange}
+        onWheel={(e) => e.target.blur()}
       />
     </>
   );
