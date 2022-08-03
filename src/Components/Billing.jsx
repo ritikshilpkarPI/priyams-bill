@@ -63,6 +63,7 @@ export const Billing = () => {
     };
 
     itemsByName[itemName] = { ...itemDetail };
+    console.log(itemDetail)
     setBill((prev) => ({
       ...prev,
       billItems: [...prev.billItems, itemDetail],
@@ -221,11 +222,10 @@ export const Billing = () => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
-                      console.log(bill);
+
                       setBill((prev) => ({
                         ...prev,
                         billItems: [
-                          //  ...prev.billItems,
                           itemsByName[e.target.innerText],
                           ...prev.billItems,
                         ],
