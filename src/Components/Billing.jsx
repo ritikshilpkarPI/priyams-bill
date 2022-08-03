@@ -61,6 +61,7 @@ export const Billing = () => {
     };
 
     itemsByName[itemName] = { ...itemDetail };
+    console.log(itemDetail)
     setBill((prev) => ({
       ...prev,
       billItems: [...prev.billItems, itemDetail],
@@ -101,7 +102,7 @@ export const Billing = () => {
     if (itemsByBarcode[barcode]) {
       setBill((prev) => ({
         ...prev,
-        billItems: [...prev.billItems, itemsByBarcode[barcode]],
+        billItems: [ itemsByBarcode[barcode], ...prev.billItems],
       }));
       setBarCode("");
       setItemName("");
@@ -205,7 +206,8 @@ export const Billing = () => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
-                      console.log(bill)
+                       console.log(itemsByName[e.target.innerText])
+                       console.log(bill)
                       setBill((prev) => ({
                        ...prev,
                         billItems:   
