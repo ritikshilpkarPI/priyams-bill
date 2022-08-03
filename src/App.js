@@ -23,7 +23,11 @@ function App({ history }) {
           Cookie: "",
         },
       });
-      dispatch({ type: "ADD_ITEM", payload: fetch.data.message.items });
+      const itemsData = fetch.data.message.items;
+      const filteredItemsData = itemsData.filter((itemObj) => {
+        return !itemObj.itemBarcode?.toString().includes("00000");
+      });
+      dispatch({ type: "ADD_ITEM", payload: filteredItemsData });
     })();
   }, [dispatch]);
 
