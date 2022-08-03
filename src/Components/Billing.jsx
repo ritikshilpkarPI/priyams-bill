@@ -46,6 +46,9 @@ export const Billing = () => {
     window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
+    setCashPay("");
+    setUpiPay("");
+    setAmountReturn(0);
   };
   function handleChange(event) {
     const { name, value } = event.target;
