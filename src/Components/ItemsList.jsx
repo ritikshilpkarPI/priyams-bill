@@ -165,13 +165,14 @@ const AddItemButton = ({ itemToBeChanged, itemInput }) => {
   const handleAddItem = async () => {
     const { _id } = itemToBeChanged;
     const itemWithChanges = { ...itemToBeChanged, ...itemInput };
+    console.log(itemWithChanges);
     setApiLoading(true);
     await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
       data: { id: _id, itemWithChanges },
       headers: {
-        Cookie: "",
+        Cookie: "some_cookie",
       },
     });
     setApiLoading(false);

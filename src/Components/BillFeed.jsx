@@ -1,6 +1,11 @@
-import { Table, Text } from "@mantine/core";
+import { Table, Text, Button } from "@mantine/core";
+import { useHistory } from "react-router-dom";
 
 export const BillFeed = ({ bills = [] }) => {
+  let history = useHistory();
+  function handleClick(id) {
+    history.push(`/${id}`);
+  }
   return (
     <Table>
       <thead className="heading">
@@ -61,6 +66,9 @@ export const BillFeed = ({ bills = [] }) => {
                 <Text color="black" weight={500}>
                   {new Date(item["createdAt"]).toLocaleString()}
                 </Text>
+              </td>
+              <td>
+                <Button onClick={() => handleClick(item["_id"])}>Edit Bill</Button>
               </td>
               <td>
                 <Table>
