@@ -26,8 +26,8 @@ export const Billing = () => {
   const [itemName, setItemName] = useState("");
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
-  const [cashPay, setCashPay] = useState(0);
-  const [upiPay, setUpiPay] = useState(0);
+  const [cashPay, setCashPay] = useState("");
+  const [upiPay, setUpiPay] = useState("");
   const [amountReturn, setAmountReturn] = useState(0);
   const barRef = useRef("");
   const { itemsStateAndDispatch } = useContext(AppStateContext);
@@ -63,6 +63,7 @@ export const Billing = () => {
     };
 
     itemsByName[itemName] = { ...itemDetail };
+    console.log(itemDetail);
     setBill((prev) => ({
       ...prev,
       billItems: [...prev.billItems, itemDetail],
@@ -200,6 +201,7 @@ export const Billing = () => {
                   ref={barRef}
                   type="number"
                   value={barcode}
+                  onWheel={(e) => e.target.blur()}
                   onChange={(e) => setBarCode(e.target.value)}
                 />
               </Text>
@@ -221,11 +223,9 @@ export const Billing = () => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
-                      console.log(bill);
                       setBill((prev) => ({
                         ...prev,
                         billItems: [
-                          //  ...prev.billItems,
                           itemsByName[e.target.innerText],
                           ...prev.billItems,
                         ],
@@ -264,6 +264,7 @@ export const Billing = () => {
                   placeholder="OrderQuantity"
                   name="OrderQuantity"
                   onChange={handleChange}
+                  onWheel={(e) => e.target.blur()}
                   value={inputValue.OrderQuantity}
                 />
               </Text>
@@ -275,6 +276,7 @@ export const Billing = () => {
                   type="number"
                   placeholder="itemMRPperUnit"
                   name="itemMRPperUnit"
+                  onWheel={(e) => e.target.blur()}
                   onChange={handleChange}
                   value={inputValue.itemMRPperUnit}
                 />
@@ -288,6 +290,7 @@ export const Billing = () => {
                   name="itemSellingPricePerUnit"
                   placeholder="selling price"
                   onChange={handleChange}
+                  onWheel={(e) => e.target.blur()}
                   value={inputValue.itemSellingPricePerUnit}
                 />
               </Text>
@@ -413,6 +416,7 @@ export const Billing = () => {
           value={cashPay}
           onChange={(e) => setCashPay(Number(e.target.value))}
           className="quantity-input"
+          onWheel={(e) => e.target.blur()}
         />
         <Text
           color="black"
@@ -427,6 +431,7 @@ export const Billing = () => {
           value={upiPay}
           onChange={(e) => setUpiPay(Number(e.target.value))}
           className="quantity-input"
+          onWheel={(e) => e.target.blur()}
         />
         <Text
           color="black"
@@ -468,6 +473,7 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
         type="number"
         value={itemObj["OrderQuantity"]}
         onChange={handleQuantityChange}
+        onWheel={(e) => e.target.blur()}
       />
     </>
   );
