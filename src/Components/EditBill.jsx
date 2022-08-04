@@ -332,7 +332,7 @@ function EditBill() {
                       onChange={(e) => {
                         handleEditItem(e, index, billItem);
                       }}
-                      value={billItem.itemDetail?.itemBarcode}
+                      value={billItem.itemDetail?.itemBarcode || 0}
                     />
                   </Text>
                 </td>
@@ -346,7 +346,7 @@ function EditBill() {
                       onChange={(e) => {
                         handleEditItem(e, index, billItem);
                       }}
-                      value={billItem?.itemDetail?.itemName}
+                      value={billItem?.itemDetail?.itemName || 0}
                     />
                   </Text>
                 </td>
@@ -364,7 +364,7 @@ function EditBill() {
                         newbillItems.splice(index, 1, newItem);
                         setBill({ ...bill, items: newbillItems });
                       }}
-                      value={billItem?.itemQuantityInBill}
+                      value={billItem?.itemQuantityInBill || 0}
                     />
                   </Text>
                 </td>
@@ -378,7 +378,7 @@ function EditBill() {
                       onChange={(e) => {
                         handleEditItem(e, index, billItem);
                       }}
-                      value={billItem?.itemDetail?.itemMRPperUnit}
+                      value={billItem?.itemDetail?.itemMRPperUnit || 0}
                     />
                   </Text>
                 </td>
@@ -392,7 +392,7 @@ function EditBill() {
                       onChange={(e) => {
                         handleEditItem(e, index, billItem);
                       }}
-                      value={billItem?.itemDetail?.itemSellingPricePerUnit}
+                      value={billItem?.itemDetail?.itemSellingPricePerUnit || 0}
                     />
                   </Text>
                 </td>

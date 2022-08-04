@@ -17,11 +17,10 @@ const addItems = async (req, res) => {
 
 const editItemById = async (req, res) => {
   try {
-    const {
-      id,
-      itemWithChanges
-    } = req.body;
-    const changedItem = await Item.findByIdAndUpdate(id,itemWithChanges);
+    const { id, itemWithChanges } = req.body;
+    // const changedItem = await Item.findByIdAndUpdate(id,itemWithChanges);
+    
+
     res.status(200).json({ message: changedItem });
   } catch (error) {
     res.status(500).json({ error: error });

@@ -184,13 +184,37 @@ const getDayWiseBills = async (req, res) => {
 };
 
 const editBill = async(req,res) => {
-  console.log(req.body);
   try {
     const { id, itemWithChanges } = req.body;
-    const changeBill = await Bill.findByIdAndUpdate(id, itemWithChanges)
-    console.log(changeBill);
+    console.log( {itemWithChanges});
+    
+    const changeBill = await Bill.findByIdAndUpdate(id, itemWithChanges).populate({
+      path: "items",
+      populate: {
+        path: "itemDetail",
+        model: "Item",
+      },
+    })
+
+    // const changeBill = await Bill.findByIdAndUpdate(
+    //   id,
+    //   {
+    //     $set: {
+    //       items: {
+    //         item:[
+    //           itemName= itemWithChanges.items[0].itemDetail.itemName
+    //         ],...itemWithChanges.items
+    //       },
+    //     },
+    //   },
+    //   { new: false }
+    // );
+
+    console.log({changeBill:JSON.stringify(changeBill)});
+
     res.status(200).json({ message: changeBill });
     
+
   } catch (error) {
     res.status(500).json({ error: error.message });
     
