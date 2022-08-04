@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import { Button } from "@mantine/core";
-// import { ItemsList } from "./Components/ItemsList";
+import { ItemsList } from "./Components/ItemsList";
 import { AppStateContext } from "./AppState/appState.context";
 import { Axios } from "./utils/axios";
 import { Route, Switch, withRouter } from "react-router-dom";
@@ -48,13 +48,13 @@ function App({ history }) {
       <div className="nav-btn">
         <Button onClick={() => history.push("/")}>Home</Button>
         <Button onClick={() => history.push("billing")}>Billing</Button>
-        {/* <Button onClick={() => history.push("inventory")}>Inventory</Button> */}
+        <Button onClick={() => history.push("inventory")}>Inventory</Button>
         <Button onClick={() => history.push("allBill")}>All Bills</Button>
         <Button onClick={() => history.push("dayBill")}>Day Wise Bills</Button>
       </div>
       <Switch>
         <Route path="/billing" component={Billing} />
-        {/* <Route path="/inventory" component={ItemsList} /> */}
+        <Route path="/inventory" component={ItemsList} />
         <Route path="/dayBill" component={DayWiseBillFeed} />
         <Route path="/allBill" render={() => <BillFeed bills={allBills} />} />
       </Switch>
