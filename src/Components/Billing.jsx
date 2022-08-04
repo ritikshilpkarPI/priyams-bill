@@ -66,7 +66,7 @@ export const Billing = () => {
     console.log(itemDetail)
     setBill((prev) => ({
       ...prev,
-      billItems: [itemDetail , ...prev.billItems ],
+      billItems: [itemDetail, ...prev.billItems],
     }));
     setInputValue({
       itemName: "",
