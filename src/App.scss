@@ -98,7 +98,7 @@
     display: none;
   }
 
-  .table-heading tr th:first-child,
+  .table-heading tr th:nth-child(-n + 2),
   .bill-btns,
   .delete-btn {
     display: none;
@@ -132,7 +132,7 @@
 
   .body {
     tr:first-child,
-    td:first-child {
+    td:nth-child(-n + 2) {
       display: none;
     }
 
