@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button } from "@mantine/core";
+import { Table, Text, Button, Input } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -26,7 +26,9 @@ export const Billing = () => {
   const [itemName, setItemName] = useState("");
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
-
+  const [cashPay, setCashPay] = useState("");
+  const [upiPay, setUpiPay] = useState("");
+  const [amountReturn, setAmountReturn] = useState(0);
   const barRef = useRef("");
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
@@ -44,6 +46,9 @@ export const Billing = () => {
     window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
+    setCashPay("");
+    setUpiPay("");
+    setAmountReturn(0);
   };
   function handleChange(event) {
     const { name, value } = event.target;
@@ -61,6 +66,7 @@ export const Billing = () => {
     };
 
     itemsByName[itemName] = { ...itemDetail };
+    console.log(itemDetail);
     setBill((prev) => ({
       ...prev,
       billItems: [...prev.billItems, itemDetail],
@@ -75,7 +81,6 @@ export const Billing = () => {
   }
 
   const handleFilter = (event) => {
-    // setFilteredData(event.target.value);
     setItemName(event.target.value);
     const searchWord = event.target.value;
     const filteredData = itemsList.filter((value) => {
@@ -101,7 +106,7 @@ export const Billing = () => {
     if (itemsByBarcode[barcode]) {
       setBill((prev) => ({
         ...prev,
-        billItems: [...prev.billItems, itemsByBarcode[barcode]],
+        billItems: [itemsByBarcode[barcode], ...prev.billItems],
       }));
       setBarCode("");
       setItemName("");
@@ -125,6 +130,11 @@ export const Billing = () => {
       billDiscountTotal: savedAmount,
     }));
   }, [bill.billItems]);
+
+  useEffect(() => {
+    setAmountReturn(cashPay + upiPay - bill.billAmountTotal);
+  }, [cashPay, upiPay, bill.billAmountTotal]);
+
   return (
     <div className="billing-container">
       <div className="header">
@@ -143,6 +153,11 @@ export const Billing = () => {
       <Table>
         <thead className="table-heading">
           <tr>
+            <th>
+              <Text weight={700} color="black" size="lg">
+                Sl. No.
+              </Text>
+            </th>
             <th>
               <Text weight={700} color="black" size="lg">
                 Bar Code
@@ -179,18 +194,24 @@ export const Billing = () => {
           <tr>
             <td>
               <Text color="black" weight={700}>
-                <input
+                {bill.billItems.length + 1}
+              </Text>
+            </td>
+            <td>
+              <Text color="black" weight={700}>
+                <Input
                   className="bill-input"
                   ref={barRef}
                   type="number"
                   value={barcode}
+                  onWheel={(e) => e.target.blur()}
                   onChange={(e) => setBarCode(e.target.value)}
                 />
               </Text>
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="text"
                   value={itemName}
@@ -208,8 +229,8 @@ export const Billing = () => {
                       setBill((prev) => ({
                         ...prev,
                         billItems: [
-                          ...prev.billItems,
                           itemsByName[e.target.innerText],
+                          ...prev.billItems,
                         ],
                       }));
                       setBarCode("");
@@ -238,26 +259,27 @@ export const Billing = () => {
                 </div>
               )}
             </td>
-
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   placeholder="OrderQuantity"
                   name="OrderQuantity"
                   onChange={handleChange}
+                  onWheel={(e) => e.target.blur()}
                   value={inputValue.OrderQuantity}
                 />
               </Text>
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   placeholder="itemMRPperUnit"
                   name="itemMRPperUnit"
+                  onWheel={(e) => e.target.blur()}
                   onChange={handleChange}
                   value={inputValue.itemMRPperUnit}
                 />
@@ -265,12 +287,13 @@ export const Billing = () => {
             </td>
             <td>
               <Text color="black" weight={700}>
-                <input
+                <Input
                   className="bill-input"
                   type="number"
                   name="itemSellingPricePerUnit"
                   placeholder="selling price"
                   onChange={handleChange}
+                  onWheel={(e) => e.target.blur()}
                   value={inputValue.itemSellingPricePerUnit}
                 />
               </Text>
@@ -282,6 +305,11 @@ export const Billing = () => {
           {bill.billItems.map((itemObj, idx) => {
             return (
               <tr key={`${idx}${itemObj["itemName"]}`}>
+                <td>
+                  <Text color="black" weight={700} size="lg">
+                    {idx + 1}
+                  </Text>
+                </td>
                 <td>
                   {itemObj["itemBarcode"] && (
                     <Text color="black" weight={700} size="lg">
@@ -353,9 +381,69 @@ export const Billing = () => {
         </tbody>
       </Table>
       <div className="final-bill">
-        <h2>MRP Total: {bill.billMRPTotal.toFixed(2)}</h2>
-        <h2>Bill Total: {bill.billAmountTotal.toFixed(2)}</h2>
-        <h2>You saved: {bill.billDiscountTotal.toFixed(2)}</h2>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          MRP Total: {bill.billMRPTotal.toFixed(2)}
+        </Text>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          Bill Total: {bill.billAmountTotal.toFixed(2)}
+        </Text>
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          You saved: {bill.billDiscountTotal.toFixed(2)}
+        </Text>
+
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          CashPaid: {cashPay}
+        </Text>
+        <Input
+          type="number"
+          value={cashPay}
+          onChange={(e) => setCashPay(Number(e.target.value))}
+          className="quantity-input"
+          onWheel={(e) => e.target.blur()}
+        />
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          UpiPaid: {upiPay}
+        </Text>
+        <Input
+          type="number"
+          value={upiPay}
+          onChange={(e) => setUpiPay(Number(e.target.value))}
+          className="quantity-input"
+          onWheel={(e) => e.target.blur()}
+        />
+        <Text
+          color="black"
+          size="xl"
+          weight={800}
+          className="final-bill-text print-text"
+        >
+          Amount Return: {Number(amountReturn)}
+        </Text>
       </div>
     </div>
   );
@@ -372,6 +460,7 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
     newBill.splice(idx, 1, itemCopy);
     setBill({ ...bill, billItems: [...newBill] });
   };
+
   return (
     <>
       <Text
@@ -382,11 +471,12 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
       >
         {itemObj["OrderQuantity"] || 0}
       </Text>
-      <input
+      <Input
         className="quantity-input"
         type="number"
         value={itemObj["OrderQuantity"]}
         onChange={handleQuantityChange}
+        onWheel={(e) => e.target.blur()}
       />
     </>
   );
