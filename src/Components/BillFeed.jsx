@@ -44,6 +44,7 @@ const TableRow = ({ item, idx }) => {
     <tr
       onClick={() => setOpen(!open)}
       className="bill-row"
+      style={{ cursor: "pointer" }}
       key={`${item}$${idx}`}
     >
       <td>
