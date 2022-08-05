@@ -145,7 +145,12 @@ export const Billing = () => {
         <Button className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
-        <Button className="print-btn" onClick={addNewBill} loading={apiLoading}>
+        <Button
+          disabled={!bill.billItems.length}
+          className="print-btn"
+          onClick={addNewBill}
+          loading={apiLoading}
+        >
           Save and Print
         </Button>
       </div>
@@ -299,7 +304,12 @@ export const Billing = () => {
               </Text>
             </td>
             <td>
-              <button onClick={addItemToBill}>ADD ITEM</button>
+              <Button
+                disabled={!(itemName && inputValue.itemSellingPricePerUnit)}
+                onClick={addItemToBill}
+              >
+                ADD ITEM
+              </Button>
             </td>
           </tr>
           {bill.billItems.map((itemObj, idx) => {
