@@ -25,7 +25,7 @@ export const ItemsList = () => {
   };
 
   return (
-    <Table>
+    <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
           <th>
@@ -53,29 +53,20 @@ export const ItemsList = () => {
       </thead>
       <tbody className="body">
         <List
-
           className="list-it"
           height={500}
           itemCount={items.length}
           itemSize={() => 100}
           width={1000}
         >
-
           {Row}
-
         </List>
-
       </tbody>
     </Table>
   );
 };
 
-const TableRow = ({
-  index,
-  itemsList,
-  style,
-  items,
-}) => {
+const TableRow = ({ index, itemsList, style, items }) => {
   const [itemInput, setItemInput] = useState({
     itemBarcode: items[index]["itemBarcode"],
     itemName: items[index]["itemName"],
@@ -83,7 +74,7 @@ const TableRow = ({
     itemCostPricePerUnit: items[index]["itemCostPricePerUnit"],
     itemSellingPricePerUnit: items[index]["itemSellingPricePerUnit"],
     itemStockQuantity: items[index]["itemStockQuantity"],
-    minimumStockQuantity: items[index]["minimumStockQuantity"]
+    minimumStockQuantity: items[index]["minimumStockQuantity"],
   });
 
   const handleItemInputChange = (e) => {
@@ -93,7 +84,7 @@ const TableRow = ({
 
   return (
     <tr style={style} className="bill-row">
-      <td >
+      <td>
         <input
           style={{ width: "200px" }}
           value={itemInput["itemBarcode"]}

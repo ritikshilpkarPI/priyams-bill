@@ -3,7 +3,7 @@ import { Table, Text, Collapse } from "@mantine/core";
 
 export const BillFeed = ({ bills = [] }) => {
   return (
-    <Table>
+    <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
           <th>
@@ -41,45 +41,47 @@ export const BillFeed = ({ bills = [] }) => {
 const TableRow = ({ item, idx }) => {
   const [open, setOpen] = useState(false);
   return (
-    <tr
-      onClick={() => setOpen(!open)}
-      className="bill-row"
-      style={{ cursor: "pointer" }}
-      key={`${item}$${idx}`}
-    >
-      <td>
-        <Text color="black" weight={500}>
-          {idx + 1}
-        </Text>
-      </td>
-      <td>
-        <Text color="black" weight={500}>
-          {item["billAmountTotal"]}
-        </Text>
-      </td>
-      <td>
-        <Text color="black" weight={500}>
-          {item["billMRPTotal"]}
-        </Text>
-      </td>
-      <td>
-        <Text color="black" weight={500}>
-          {item["totalNumberOfItems"]}
-        </Text>
-      </td>
-      <td>
-        <Text color="black" weight={500}>
-          {item["totalNumberOfUniqueItems"]}
-        </Text>
-      </td>
-      <td>
-        <Text color="black" weight={500}>
-          {new Date(item["createdAt"]).toLocaleString()}
-        </Text>
-      </td>
-      <td>
+    <>
+      <tr
+        onClick={() => setOpen(!open)}
+        className="bill-row"
+        style={{ cursor: "pointer" }}
+        key={`${item}$${idx}`}
+      >
+        <td>
+          <Text color="black" weight={500}>
+            {idx + 1}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["billAmountTotal"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["billMRPTotal"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["totalNumberOfItems"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["totalNumberOfUniqueItems"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {new Date(item["createdAt"]).toLocaleString()}
+          </Text>
+        </td>
+      </tr>
+      <tr>
         <Collapse in={open}>
-          <Table>
+          <Table striped highlightOnHover>
             <thead className="heading">
               <tr>
                 <th>
@@ -131,7 +133,7 @@ const TableRow = ({ item, idx }) => {
             </tbody>
           </Table>
         </Collapse>
-      </td>
-    </tr>
+      </tr>
+    </>
   );
 };
