@@ -66,7 +66,6 @@ export const Billing = () => {
     };
 
     itemsByName[itemName] = { ...itemDetail };
-    console.log(itemDetail);
     setBill((prev) => ({
       ...prev,
       billItems: [itemDetail, ...prev.billItems],

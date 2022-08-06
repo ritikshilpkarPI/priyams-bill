@@ -7,7 +7,7 @@ import { Axios } from "../utils/axios";
 export const ItemsList = () => {
   const [items, setItems] = useState([]);
   const { itemsStateAndDispatch } = useContext(AppStateContext);
-  const [itemsList] = itemsStateAndDispatch;
+  const [itemsList, dispatch] = itemsStateAndDispatch;
 
   useEffect(() => {
     setItems(itemsList);
@@ -20,6 +20,7 @@ export const ItemsList = () => {
         style={style}
         items={items}
         itemsList={itemsList}
+        dispatch={dispatch}
       />
     );
   };
@@ -66,7 +67,7 @@ export const ItemsList = () => {
   );
 };
 
-const TableRow = ({ index, itemsList, style, items }) => {
+const TableRow = ({ index, itemsList, style, items, dispatch }) => {
   const [itemInput, setItemInput] = useState({
     itemBarcode: items[index]["itemBarcode"],
     itemName: items[index]["itemName"],
@@ -78,8 +79,11 @@ const TableRow = ({ index, itemsList, style, items }) => {
   });
 
   const handleItemInputChange = (e) => {
-    const { name, value } = e.target;
-    setItemInput({ ...itemInput, [name]: value });
+    const { name, value, type } = e.target;
+    setItemInput({
+      ...itemInput,
+      [name]: type === "number" ? Number(value) : value,
+    });
   };
 
   return (
@@ -90,6 +94,7 @@ const TableRow = ({ index, itemsList, style, items }) => {
           value={itemInput["itemBarcode"]}
           onChange={handleItemInputChange}
           name="itemBarcode"
+          type="number"
         />
       </td>
       <td>
@@ -107,6 +112,7 @@ const TableRow = ({ index, itemsList, style, items }) => {
           value={itemInput["itemMRPperUnit"]}
           onChange={handleItemInputChange}
           name="itemMRPperUnit"
+          type="number"
         />
       </td>
       <td>
@@ -115,6 +121,7 @@ const TableRow = ({ index, itemsList, style, items }) => {
           value={itemInput["itemCostPricePerUnit"]}
           onChange={handleItemInputChange}
           name="itemCostPricePerUnit"
+          type="number"
         />
       </td>
       <td>
@@ -123,6 +130,7 @@ const TableRow = ({ index, itemsList, style, items }) => {
           value={itemInput["itemSellingPricePerUnit"]}
           onChange={handleItemInputChange}
           name="itemSellingPricePerUnit"
+          type="number"
         />
       </td>
       <td>
@@ -131,6 +139,7 @@ const TableRow = ({ index, itemsList, style, items }) => {
           value={itemInput["itemStockQuantity"]}
           onChange={handleItemInputChange}
           name="itemStockQuantity"
+          type="number"
         />
       </td>
       <td>
@@ -139,25 +148,35 @@ const TableRow = ({ index, itemsList, style, items }) => {
           value={itemInput["minimumStockQuantity"]}
           onChange={handleItemInputChange}
           name="minimumStockQuantity"
+          type="number"
         />
       </td>
       <td>
         <AddItemButton
           itemToBeChanged={itemsList[index]}
           itemInput={itemInput}
+          dispatch={dispatch}
+          index={index}
+          items={items}
         />
       </td>
     </tr>
   );
 };
 
-const AddItemButton = ({ itemToBeChanged, itemInput }) => {
+const AddItemButton = ({
+  itemToBeChanged,
+  itemInput,
+  dispatch,
+  items,
+  index,
+}) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeChanged;
     const itemWithChanges = { ...itemToBeChanged, ...itemInput };
     setApiLoading(true);
-    await Axios.request({
+    const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
       data: { id: _id, itemWithChanges },
@@ -165,6 +184,9 @@ const AddItemButton = ({ itemToBeChanged, itemInput }) => {
         Cookie: "",
       },
     });
+    const newList = [...items];
+    newList.splice(index, 1, { ...updatedItem.data.message });
+    dispatch({ type: "UPDATE_LIST", payload: [...newList] });
     setApiLoading(false);
   };
 
