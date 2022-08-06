@@ -7,7 +7,7 @@ import { Axios } from "../utils/axios";
 export const ItemsList = () => {
   const [items, setItems] = useState([]);
   const { itemsStateAndDispatch } = useContext(AppStateContext);
-  const [itemsList] = itemsStateAndDispatch;
+  const [itemsList, dispatch] = itemsStateAndDispatch;
 
   useEffect(() => {
     setItems(itemsList);
@@ -20,12 +20,13 @@ export const ItemsList = () => {
         style={style}
         items={items}
         itemsList={itemsList}
+        dispatch={dispatch}
       />
     );
   };
 
   return (
-    <Table>
+    <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
           <th>
@@ -53,29 +54,20 @@ export const ItemsList = () => {
       </thead>
       <tbody className="body">
         <List
-
           className="list-it"
           height={500}
           itemCount={items.length}
           itemSize={() => 100}
           width={1000}
         >
-
           {Row}
-
         </List>
-
       </tbody>
     </Table>
   );
 };
 
-const TableRow = ({
-  index,
-  itemsList,
-  style,
-  items,
-}) => {
+const TableRow = ({ index, itemsList, style, items, dispatch }) => {
   const [itemInput, setItemInput] = useState({
     itemBarcode: items[index]["itemBarcode"],
     itemName: items[index]["itemName"],
@@ -83,22 +75,26 @@ const TableRow = ({
     itemCostPricePerUnit: items[index]["itemCostPricePerUnit"],
     itemSellingPricePerUnit: items[index]["itemSellingPricePerUnit"],
     itemStockQuantity: items[index]["itemStockQuantity"],
-    minimumStockQuantity: items[index]["minimumStockQuantity"]
+    minimumStockQuantity: items[index]["minimumStockQuantity"],
   });
 
   const handleItemInputChange = (e) => {
-    const { name, value } = e.target;
-    setItemInput({ ...itemInput, [name]: value });
+    const { name, value, type } = e.target;
+    setItemInput({
+      ...itemInput,
+      [name]: type === "number" ? Number(value) : value,
+    });
   };
 
   return (
     <tr style={style} className="bill-row">
-      <td >
+      <td>
         <input
           style={{ width: "200px" }}
           value={itemInput["itemBarcode"]}
           onChange={handleItemInputChange}
           name="itemBarcode"
+          type="number"
         />
       </td>
       <td>
@@ -116,6 +112,7 @@ const TableRow = ({
           value={itemInput["itemMRPperUnit"]}
           onChange={handleItemInputChange}
           name="itemMRPperUnit"
+          type="number"
         />
       </td>
       <td>
@@ -124,6 +121,7 @@ const TableRow = ({
           value={itemInput["itemCostPricePerUnit"]}
           onChange={handleItemInputChange}
           name="itemCostPricePerUnit"
+          type="number"
         />
       </td>
       <td>
@@ -132,6 +130,7 @@ const TableRow = ({
           value={itemInput["itemSellingPricePerUnit"]}
           onChange={handleItemInputChange}
           name="itemSellingPricePerUnit"
+          type="number"
         />
       </td>
       <td>
@@ -140,6 +139,7 @@ const TableRow = ({
           value={itemInput["itemStockQuantity"]}
           onChange={handleItemInputChange}
           name="itemStockQuantity"
+          type="number"
         />
       </td>
       <td>
@@ -148,25 +148,35 @@ const TableRow = ({
           value={itemInput["minimumStockQuantity"]}
           onChange={handleItemInputChange}
           name="minimumStockQuantity"
+          type="number"
         />
       </td>
       <td>
         <AddItemButton
           itemToBeChanged={itemsList[index]}
           itemInput={itemInput}
+          dispatch={dispatch}
+          index={index}
+          items={items}
         />
       </td>
     </tr>
   );
 };
 
-const AddItemButton = ({ itemToBeChanged, itemInput }) => {
+const AddItemButton = ({
+  itemToBeChanged,
+  itemInput,
+  dispatch,
+  items,
+  index,
+}) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeChanged;
     const itemWithChanges = { ...itemToBeChanged, ...itemInput };
     setApiLoading(true);
-    await Axios.request({
+    const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
       data: { id: _id, itemWithChanges },
@@ -174,6 +184,9 @@ const AddItemButton = ({ itemToBeChanged, itemInput }) => {
         Cookie: "",
       },
     });
+    const newList = [...items];
+    newList.splice(index, 1, { ...updatedItem.data.message });
+    dispatch({ type: "UPDATE_LIST", payload: [...newList] });
     setApiLoading(false);
   };
 

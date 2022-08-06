@@ -66,7 +66,6 @@ export const Billing = () => {
     };
 
     itemsByName[itemName] = { ...itemDetail };
-    console.log(itemDetail);
     setBill((prev) => ({
       ...prev,
       billItems: [itemDetail, ...prev.billItems],
@@ -155,7 +154,7 @@ export const Billing = () => {
         </Button>
       </div>
 
-      <Table>
+      <Table striped highlightOnHover>
         <thead className="table-heading">
           <tr>
             <th>
@@ -374,7 +373,7 @@ export const Billing = () => {
                   </Text>
                 </td>
                 <td className="last-clmn">
-                  <button
+                  <Button
                     className="delete-btn"
                     onClick={() => {
                       const newBill = [...bill.billItems];
@@ -383,7 +382,7 @@ export const Billing = () => {
                     }}
                   >
                     X
-                  </button>
+                  </Button>
                 </td>
               </tr>
             );
