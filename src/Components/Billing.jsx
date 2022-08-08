@@ -66,10 +66,9 @@ export const Billing = () => {
     };
 
     itemsByName[itemName] = { ...itemDetail };
-    console.log(itemDetail);
     setBill((prev) => ({
       ...prev,
-      billItems: [...prev.billItems, itemDetail],
+      billItems: [itemDetail, ...prev.billItems],
     }));
     setInputValue({
       itemName: "",
@@ -145,12 +144,17 @@ export const Billing = () => {
         <Button className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
-        <Button className="print-btn" onClick={addNewBill} loading={apiLoading}>
+        <Button
+          disabled={!bill.billItems.length}
+          className="print-btn"
+          onClick={addNewBill}
+          loading={apiLoading}
+        >
           Save and Print
         </Button>
       </div>
 
-      <Table>
+      <Table striped highlightOnHover>
         <thead className="table-heading">
           <tr>
             <th>
@@ -299,7 +303,12 @@ export const Billing = () => {
               </Text>
             </td>
             <td>
-              <button onClick={addItemToBill}>ADD ITEM</button>
+              <Button
+                disabled={!(itemName && inputValue.itemSellingPricePerUnit)}
+                onClick={addItemToBill}
+              >
+                ADD ITEM
+              </Button>
             </td>
           </tr>
           {bill.billItems.map((itemObj, idx) => {
@@ -364,7 +373,7 @@ export const Billing = () => {
                   </Text>
                 </td>
                 <td className="last-clmn">
-                  <button
+                  <Button
                     className="delete-btn"
                     onClick={() => {
                       const newBill = [...bill.billItems];
@@ -373,7 +382,7 @@ export const Billing = () => {
                     }}
                   >
                     X
-                  </button>
+                  </Button>
                 </td>
               </tr>
             );

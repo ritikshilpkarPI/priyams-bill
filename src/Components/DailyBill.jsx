@@ -20,7 +20,7 @@ const DayWiseBillFeed = () => {
   }, []);
 
   return (
-    <Table>
+    <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
           <th>
@@ -110,16 +110,16 @@ const TableRow = ({ item, idx }) => {
             {totalQuantityBilled}
           </Text>
         </td>
-        <td>
-          <Collapse
-            in={rowOpen}
-            transitionDuration={500}
-            className={rowOpen ? "rowOpen" : ""}
-            transitionTimingFunction="linear"
-          >
-            <BillFeed bills={bills} />
-          </Collapse>
-        </td>
+      </tr>
+      <tr>
+        <Collapse
+          in={rowOpen}
+          transitionDuration={500}
+          className={rowOpen ? "rowOpen" : ""}
+          transitionTimingFunction="linear"
+        >
+          <BillFeed bills={bills} />
+        </Collapse>
       </tr>
     </>
   );

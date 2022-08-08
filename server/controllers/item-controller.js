@@ -12,13 +12,40 @@ const getItemsFeed = async (req, res) => {
 };
 
 const addItems = async (req, res) => {
-  console.log({ req });
+  const {
+    itemBarcode,
+    itemName,
+    itemMRPperUnit,
+    itemCostPricePerUnit,
+    itemSellingPricePerUnit,
+    itemStockQuantity,
+    minimumStockQuantity,
+  } = req.body;
+
+  try {
+    const newItem = await new Item({
+      itemBarcode,
+      itemName,
+      itemStockQuantity,
+      minimumStockQuantity,
+      itemMRPperUnit,
+      itemDiscountPerUnit: itemMRPperUnit - itemSellingPricePerUnit,
+      itemPerUnitDiscountPercentage:
+        ((itemMRPperUnit - itemSellingPricePerUnit) / itemMRPperUnit) * 100,
+      itemCostPricePerUnit,
+      itemSellingPricePerUnit,
+    }).save();
+    res.status(200).json({ message: newItem });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
 };
 
 const editItemById = async (req, res) => {
   try {
     const { id, itemWithChanges } = req.body;
-    const changedItem = await Item.findByIdAndUpdate(id, itemWithChanges);
+    await Item.findByIdAndUpdate(id, itemWithChanges);
+    const changedItem = await Item.findById(id);
     res.status(200).json({ message: changedItem });
   } catch (error) {
     res.status(500).json({ error: error });
