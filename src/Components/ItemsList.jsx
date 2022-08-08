@@ -278,7 +278,7 @@ export const ItemsList = () => {
     return (
       <tr>
         <td>
-          <AddItemButton
+          <UpdateItemButton
             itemToBeChanged={itemsList[index]}
             // itemInput={itemInput}
             // dispatch={dispatch}
@@ -505,7 +505,7 @@ const TableRow = ({
   );
 };
 
-const AddItemButton = ({
+const UpdateItemButton = ({
   itemToBeChanged,
   itemInput,
   dispatch,
