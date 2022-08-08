@@ -8,7 +8,7 @@ const {
 
 // itemRoutes.post("/newbill", userSignupValidator, runValidation, userSignup);
 itemRoutes.get("/items", getItemsFeed);
-itemRoutes.post("/itemlist", addItems);
+itemRoutes.post("/addNewItem", addItems);
 itemRoutes.put("/editItemById", editItemById);
 
 module.exports = itemRoutes;
