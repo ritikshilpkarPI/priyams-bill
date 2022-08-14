@@ -27,7 +27,7 @@ function App({ history }) {
       const filteredItemsData = itemsData.filter((itemObj) => {
         return !itemObj.itemBarcode?.toString().includes("00000");
       });
-      dispatch({ type: "ADD_ITEM", payload: filteredItemsData });
+      dispatch({ type: "NEW_ITEMS_LIST", payload: filteredItemsData });
     })();
   }, [dispatch]);
 
