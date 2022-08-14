@@ -139,6 +139,8 @@ export const Billing = () => {
       <div className="header">
         <h1>PRIYAM STORES</h1>
         <h3>112-C, Indrapuri, Bhopal - 462022</h3>
+        <h3>Date: {new Date().toDateString()}</h3>
+        <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
         <Button className="print-btn" onClick={() => window.print()}>
@@ -313,25 +315,28 @@ export const Billing = () => {
           </tr>
           {bill.billItems.map((itemObj, idx) => {
             return (
-              <tr key={`${idx}${itemObj["itemName"]}`}>
-                <td>
+              <tr
+                className="bill-item-row"
+                key={`${idx}${itemObj["itemName"]}`}
+              >
+                <td className="idx">
                   <Text color="black" weight={700} size="lg">
                     {idx + 1}
                   </Text>
                 </td>
-                <td>
+                <td className="itemBarcode">
                   {itemObj["itemBarcode"] && (
                     <Text color="black" weight={700} size="lg">
                       {itemObj["itemBarcode"]}
                     </Text>
                   )}
                 </td>
-                <td>
+                <td className="itemName">
                   <Text color="black" weight={700} size="lg">
                     {itemObj["itemName"]}
                   </Text>
                 </td>
-                <td>
+                <td className="OrderQuantity">
                   <QuantBtn
                     itemObj={itemObj}
                     idx={idx}
@@ -339,7 +344,7 @@ export const Billing = () => {
                     setBill={setBill}
                   />
                 </td>
-                <td>
+                <td className="itemMRPperUnit">
                   <Text
                     className="print-text"
                     color="black"
@@ -349,7 +354,7 @@ export const Billing = () => {
                     {itemObj["itemMRPperUnit"]}
                   </Text>
                 </td>
-                <td>
+                <td className="itemSellingPricePerUnit">
                   <Text
                     className="print-text"
                     color="black"
@@ -359,7 +364,7 @@ export const Billing = () => {
                     {itemObj["itemSellingPricePerUnit"]}
                   </Text>
                 </td>
-                <td>
+                <td className="itemDiscountPerUnit">
                   <Text
                     className="print-text"
                     color="black"
@@ -388,72 +393,96 @@ export const Billing = () => {
             );
           })}
         </tbody>
-      </Table>
-      <div className="final-bill">
-        <Text
-          color="black"
-          size="xl"
-          weight={800}
-          className="final-bill-text print-text"
-        >
-          MRP Total: {bill.billMRPTotal.toFixed(2)}
-        </Text>
-        <Text
-          color="black"
-          size="xl"
-          weight={800}
-          className="final-bill-text print-text"
-        >
-          Bill Total: {bill.billAmountTotal.toFixed(2)}
-        </Text>
-        <Text
-          color="black"
-          size="xl"
-          weight={800}
-          className="final-bill-text print-text"
-        >
-          You saved: {bill.billDiscountTotal.toFixed(2)}
-        </Text>
+        <tr className="final-bill">
+          <td scope="row" className="empty-slots"></td>
+          <td scope="row" className="empty-slots"></td>
+          <td scope="row" className="empty-slots"></td>
+          <td scope="row" className="empty-slots"></td>
+          <td>
+            <Text
+              color="black"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+            >
+              MRP Total: {bill.billMRPTotal.toFixed(2)}
+            </Text>
+          </td>
+          <td>
+            <Text
+              color="black"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+            >
+              Bill Total: {bill.billAmountTotal.toFixed(2)}
+            </Text>
+          </td>
 
-        <Text
-          color="black"
-          size="xl"
-          weight={800}
-          className="final-bill-text print-text"
-        >
-          CashPaid: {cashPay}
-        </Text>
-        <Input
-          type="number"
-          value={cashPay}
-          onChange={(e) => setCashPay(Number(e.target.value))}
-          className="quantity-input"
-          onWheel={(e) => e.target.blur()}
-        />
-        <Text
-          color="black"
-          size="xl"
-          weight={800}
-          className="final-bill-text print-text"
-        >
-          UpiPaid: {upiPay}
-        </Text>
-        <Input
-          type="number"
-          value={upiPay}
-          onChange={(e) => setUpiPay(Number(e.target.value))}
-          className="quantity-input"
-          onWheel={(e) => e.target.blur()}
-        />
-        <Text
-          color="black"
-          size="xl"
-          weight={800}
-          className="final-bill-text print-text"
-        >
-          Amount Return: {Number(amountReturn)}
-        </Text>
-      </div>
+          <td>
+            <Text
+              color="black"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+            >
+              You saved: {bill.billDiscountTotal.toFixed(2)}
+            </Text>
+          </td>
+        </tr>
+        <br />
+        <tr className="final-bill">
+          <td className="empty-slots"></td>
+          <td className="empty-slots"></td>
+          <td className="empty-slots"></td>
+          <td className="empty-slots"></td>
+          <td>
+            <Text
+              color="black"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+            >
+              CashPaid: {cashPay}
+            </Text>
+            <Input
+              type="number"
+              value={cashPay}
+              onChange={(e) => setCashPay(Number(e.target.value))}
+              className="quantity-input"
+              onWheel={(e) => e.target.blur()}
+            />
+          </td>
+          <td>
+            <Text
+              color="black"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+            >
+              UpiPaid: {upiPay}
+            </Text>
+            <Input
+              type="number"
+              value={upiPay}
+              onChange={(e) => setUpiPay(Number(e.target.value))}
+              className="quantity-input"
+              onWheel={(e) => e.target.blur()}
+            />
+          </td>
+          <td>
+            <Text
+              color="black"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+            >
+              Amount Return: {Number(amountReturn)}
+            </Text>
+          </td>
+        </tr>
+        <br />
+      </Table>
     </div>
   );
 };
