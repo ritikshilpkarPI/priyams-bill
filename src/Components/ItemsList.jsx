@@ -14,6 +14,8 @@ const ITEM_INITIAL_INPUT = {
   minimumStockQuantity: "",
 };
 
+let itemToBeUpdated = {};
+
 export const ItemsList = () => {
   const [items, setItems] = useState([]);
   const { itemsStateAndDispatch } = useContext(AppStateContext);
@@ -27,12 +29,10 @@ export const ItemsList = () => {
 
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
-    console.log({ name, value });
     setNewItemInput({ ...newItemInput, [name]: value });
     const filteredItems = itemsList.filter(
       (itemObj) =>
         itemObj[name] &&
-        // value &&
         itemObj[name]
           .toString()
           .toLowerCase()
@@ -52,31 +52,28 @@ export const ItemsList = () => {
           Cookie: "",
         },
       });
-      console.log({ newItem });
       dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
     })();
     setApiLoading(false);
     setNewItemInput(ITEM_INITIAL_INPUT);
   };
 
-  const handleItemInputChange = (e, itemInput, setItemInput) => {
+  const handleItemInputChange = (e, itemInput, setItemInput, index) => {
     const { name, value, type } = e.target;
+    itemToBeUpdated = { [index]: { ...items[index] } };
     setItemInput({
       ...itemInput,
       [name]: type === "number" ? Number(value) : value,
     });
+    console.log({ itemToBeUpdated: itemToBeUpdated[name], name, value });
+    itemToBeUpdated[index][name] = value;
+    console.log({ itemToBeUpdated });
   };
 
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
-      // itemName: items[index]["itemName"],
-      // itemMRPperUnit: items[index]["itemMRPperUnit"],
-      // itemCostPricePerUnit: items[index]["itemCostPricePerUnit"],
-      // itemSellingPricePerUnit: items[index]["itemSellingPricePerUnit"],
-      // itemStockQuantity: items[index]["itemStockQuantity"],
-      // minimumStockQuantity: items[index]["minimumStockQuantity"],
     });
 
     return (
@@ -100,11 +97,6 @@ export const ItemsList = () => {
     const name = "itemName";
     const [itemInput, setItemInput] = useState({
       itemName: items[index][name],
-      // itemMRPperUnit: items[index]["itemMRPperUnit"],
-      // itemCostPricePerUnit: items[index]["itemCostPricePerUnit"],
-      // itemSellingPricePerUnit: items[index]["itemSellingPricePerUnit"],
-      // itemStockQuantity: items[index]["itemStockQuantity"],
-      // minimumStockQuantity: items[index]["minimumStockQuantity"],
     });
 
     return (
@@ -127,12 +119,7 @@ export const ItemsList = () => {
   const ItemMRPRow = ({ index, style }) => {
     const name = "itemMRPperUnit";
     const [itemInput, setItemInput] = useState({
-      // itemName: items[index]["itemName"],
       itemMRPperUnit: items[index][name],
-      // itemCostPricePerUnit: items[index]["itemCostPricePerUnit"],
-      // itemSellingPricePerUnit: items[index]["itemSellingPricePerUnit"],
-      // itemStockQuantity: items[index]["itemStockQuantity"],
-      // minimumStockQuantity: items[index]["minimumStockQuantity"],
     });
 
     return (
@@ -155,12 +142,7 @@ export const ItemsList = () => {
   const ItemCostPriceRow = ({ index, style }) => {
     const name = "itemCostPricePerUnit";
     const [itemInput, setItemInput] = useState({
-      // itemName: items[index]["itemName"],
-      // itemMRPperUnit: items[index][name],
       itemCostPricePerUnit: items[index][name],
-      // itemSellingPricePerUnit: items[index]["itemSellingPricePerUnit"],
-      // itemStockQuantity: items[index]["itemStockQuantity"],
-      // minimumStockQuantity: items[index]["minimumStockQuantity"],
     });
 
     return (
@@ -183,12 +165,7 @@ export const ItemsList = () => {
   const ItemSellingPriceRow = ({ index, style }) => {
     const name = "itemSellingPricePerUnit";
     const [itemInput, setItemInput] = useState({
-      // itemName: items[index]["itemName"],
-      // itemMRPperUnit: items[index][name],
-      // itemCostPricePerUnit: items[index][name],
       itemSellingPricePerUnit: items[index][name],
-      // itemStockQuantity: items[index]["itemStockQuantity"],
-      // minimumStockQuantity: items[index]["minimumStockQuantity"],
     });
 
     return (
@@ -211,12 +188,7 @@ export const ItemsList = () => {
   const ItemStockQuantityRow = ({ index, style }) => {
     const name = "itemStockQuantity";
     const [itemInput, setItemInput] = useState({
-      // itemName: items[index]["itemName"],
-      // itemMRPperUnit: items[index][name],
-      // itemCostPricePerUnit: items[index][name],
-      // itemSellingPricePerUnit: items[index][name],
       itemStockQuantity: items[index][name],
-      // minimumStockQuantity: items[index]["minimumStockQuantity"],
     });
 
     return (
@@ -239,11 +211,6 @@ export const ItemsList = () => {
   const ItemMinimumStockQuantityRow = ({ index, style }) => {
     const name = "minimumStockQuantity";
     const [itemInput, setItemInput] = useState({
-      // itemName: items[index]["itemName"],
-      // itemMRPperUnit: items[index][name],
-      // itemCostPricePerUnit: items[index][name],
-      // itemSellingPricePerUnit: items[index][name],
-      // itemStockQuantity: items[index][name],
       minimumStockQuantity: items[index][name],
     });
 
@@ -265,25 +232,14 @@ export const ItemsList = () => {
   };
 
   const ItemUpdateButtonRow = ({ index, style }) => {
-    // const name = "minimumStockQuantity";
-    // const [itemInput, setItemInput] = useState({
-    //   // itemName: items[index]["itemName"],
-    //   // itemMRPperUnit: items[index][name],
-    //   // itemCostPricePerUnit: items[index][name],
-    //   // itemSellingPricePerUnit: items[index][name],
-    //   // itemStockQuantity: items[index][name],
-    //   minimumStockQuantity: items[index][name],
-    // });
-
     return (
       <tr>
         <td>
           <UpdateItemButton
-            itemToBeChanged={itemsList[index]}
             // itemInput={itemInput}
-            // dispatch={dispatch}
+            dispatch={dispatch}
             // index={index}
-            // items={items}
+            items={items}
           />
         </td>
       </tr>
@@ -314,6 +270,9 @@ export const ItemsList = () => {
           </th>
           <th>
             <Text>Minimum Stock</Text>
+          </th>
+          <th>
+            <Text>Update Button</Text>
           </th>
         </tr>
       </thead>
@@ -489,6 +448,8 @@ const TableRow = ({
   itemInput,
   setItemInput,
   name,
+  index,
+  items,
 }) => {
   return (
     <tr style={style} className="bill-row">
@@ -496,7 +457,9 @@ const TableRow = ({
         <Input
           style={{ width: "200px" }}
           value={itemInput[name]}
-          onChange={(e) => handleItemInputChange(e, itemInput, setItemInput)}
+          onChange={(e) =>
+            handleItemInputChange(e, itemInput, setItemInput, index)
+          }
           name={name}
           type="search"
         />
@@ -505,26 +468,21 @@ const TableRow = ({
   );
 };
 
-const UpdateItemButton = ({
-  itemToBeChanged,
-  itemInput,
-  dispatch,
-  items,
-  index,
-}) => {
+const UpdateItemButton = ({ dispatch, items, index }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
-    const { _id } = itemToBeChanged;
-    const itemWithChanges = { ...itemToBeChanged, ...itemInput };
+    const { _id } = itemToBeUpdated;
+    console.log({ itemToBeUpdated });
     setApiLoading(true);
     const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
-      data: { id: _id, itemWithChanges },
+      data: { id: _id, itemToBeUpdated },
       headers: {
         Cookie: "",
       },
     });
+    console.log({ updatedItem });
     const newList = [...items];
     newList.splice(index, 1, { ...updatedItem.data.message });
     dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });

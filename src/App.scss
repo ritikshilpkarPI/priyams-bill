@@ -76,9 +76,7 @@
     display: none;
   }
   .final-bill {
-    display: flex;
     margin-right: 10px;
-    flex-direction: column;
     align-items: flex-end;
 
     .final-bill-text {
@@ -98,22 +96,25 @@
     display: none;
   }
 
-  .table-heading tr th:nth-child(-n + 2),
-  .bill-btns,
-  .delete-btn {
-    display: none;
-  }
-
   .billing-container {
     margin-top: 10px;
-    width: 50vw;
+    max-width: 30vw;
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      // justify-content: center;
+      align-items: flex-end;
+      padding: 10px;
+    }
+
+    .table-heading tr th:nth-child(-n + 2),
+    .bill-btns,
+    .delete-btn {
+      display: none;
+    }
 
     .final-bill {
-      // h2 {
-      //   display: flex;
-      //   align-items: center;
-      //   justify-content: center;
-      // }
       .print-text {
         font-size: 28px;
       }
@@ -125,25 +126,25 @@
       }
     }
 
-    .header {
-      padding: 10px;
-    }
-  }
+    .body {
+      tr:first-child,
+      td:nth-child(-n + 2) {
+        display: none;
+      }
 
-  .body {
-    tr:first-child,
-    td:nth-child(-n + 2) {
-      display: none;
-    }
+      .itemName {
+        word-spacing: 999999px;
+      }
 
-    .print-text {
-      font-size: 28px;
-    }
-    .quantity-text {
-      display: block;
-    }
-    .quantity-input {
-      display: none;
+      .print-text {
+        font-size: 28px;
+      }
+      .quantity-text {
+        display: block;
+      }
+      .quantity-input {
+        display: none;
+      }
     }
   }
 }
