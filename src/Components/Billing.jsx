@@ -394,10 +394,10 @@ export const Billing = () => {
           })}
         </tbody>
         <tr className="final-bill">
-          <td scope="row" className="empty-slots"></td>
-          <td scope="row" className="empty-slots"></td>
-          <td scope="row" className="empty-slots"></td>
-          <td scope="row" className="empty-slots"></td>
+          <td className="empty-slots"></td>
+          <td className="empty-slots"></td>
+          <td className="empty-slots"></td>
+          <td className="empty-slots"></td>
           <td>
             <Text
               color="black"
