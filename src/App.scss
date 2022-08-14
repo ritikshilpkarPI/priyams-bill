@@ -103,8 +103,8 @@
     .header {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      // justify-content: center;
+      align-items: end;
       padding: 10px;
     }
 
@@ -131,10 +131,6 @@
       td:nth-child(-n + 2) {
         display: none;
       }
-
-      // tr:nth-last-child(-n+2) {
-
-      // }
 
       .itemName {
         word-spacing: 999999px;
