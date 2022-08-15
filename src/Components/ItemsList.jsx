@@ -1,27 +1,248 @@
 import { useEffect, useState, useContext } from "react";
-import { Table, Text, Button } from "@mantine/core";
+import { Table, Text, Button, Input } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { VariableSizeList as List } from "react-window";
 import { Axios } from "../utils/axios";
+
+const ITEM_INITIAL_INPUT = {
+  itemBarcode: "",
+  itemName: "",
+  itemMRPperUnit: "",
+  itemCostPricePerUnit: "",
+  itemSellingPricePerUnit: "",
+  itemStockQuantity: "",
+  minimumStockQuantity: "",
+};
+
+let itemToBeUpdated = {};
 
 export const ItemsList = () => {
   const [items, setItems] = useState([]);
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
+  const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
+  const [apiLoading, setApiLoading] = useState(false);
 
   useEffect(() => {
-    setItems(itemsList);
+    setItems([...itemsList]);
   }, [itemsList]);
 
-  const Row = ({ index, style }) => {
+  const handleNewItemInput = (e) => {
+    const { name, value } = e.target;
+    setNewItemInput({ ...newItemInput, [name]: value });
+    const filteredItems = itemsList.filter(
+      (itemObj) =>
+        itemObj[name] &&
+        itemObj[name]
+          .toString()
+          .toLowerCase()
+          .includes(value.toString().toLowerCase())
+    );
+    setItems([...filteredItems]);
+  };
+
+  const addItemToDb = async () => {
+    setApiLoading(true);
+    (async () => {
+      const newItem = await Axios.request({
+        url: "/api/inventory/addNewItem",
+        method: "post",
+        data: { ...newItemInput },
+        headers: {
+          Cookie: "",
+        },
+      });
+      dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
+    })();
+    setApiLoading(false);
+    setNewItemInput(ITEM_INITIAL_INPUT);
+  };
+
+  const handleItemInputChange = (e, itemInput, setItemInput, index) => {
+    const { name, value, type } = e.target;
+    itemToBeUpdated = { [index]: { ...items[index] } };
+    setItemInput({
+      ...itemInput,
+      [name]: type === "number" ? Number(value) : value,
+    });
+    console.log({ itemToBeUpdated: itemToBeUpdated[name], name, value });
+    itemToBeUpdated[index][name] = value;
+    console.log({ itemToBeUpdated });
+  };
+
+  const BarcodeRow = ({ index, style }) => {
+    const name = "itemBarcode";
+    const [itemInput, setItemInput] = useState({
+      itemBarcode: items[index][name],
+    });
+
     return (
-      <TableRow
-        index={index}
-        style={style}
-        items={items}
-        itemsList={itemsList}
-        dispatch={dispatch}
-      />
+      <>
+        <TableRow
+          index={index}
+          style={style}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemNameRow = ({ index, style }) => {
+    const name = "itemName";
+    const [itemInput, setItemInput] = useState({
+      itemName: items[index][name],
+    });
+
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={style}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemMRPRow = ({ index, style }) => {
+    const name = "itemMRPperUnit";
+    const [itemInput, setItemInput] = useState({
+      itemMRPperUnit: items[index][name],
+    });
+
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={style}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemCostPriceRow = ({ index, style }) => {
+    const name = "itemCostPricePerUnit";
+    const [itemInput, setItemInput] = useState({
+      itemCostPricePerUnit: items[index][name],
+    });
+
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={style}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemSellingPriceRow = ({ index, style }) => {
+    const name = "itemSellingPricePerUnit";
+    const [itemInput, setItemInput] = useState({
+      itemSellingPricePerUnit: items[index][name],
+    });
+
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={style}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemStockQuantityRow = ({ index, style }) => {
+    const name = "itemStockQuantity";
+    const [itemInput, setItemInput] = useState({
+      itemStockQuantity: items[index][name],
+    });
+
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={style}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemMinimumStockQuantityRow = ({ index, style }) => {
+    const name = "minimumStockQuantity";
+    const [itemInput, setItemInput] = useState({
+      minimumStockQuantity: items[index][name],
+    });
+
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={style}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemUpdateButtonRow = ({ index, style }) => {
+    return (
+      <tr>
+        <td>
+          <UpdateItemButton
+            // itemInput={itemInput}
+            dispatch={dispatch}
+            // index={index}
+            items={items}
+          />
+        </td>
+      </tr>
     );
   };
 
@@ -50,149 +271,227 @@ export const ItemsList = () => {
           <th>
             <Text>Minimum Stock</Text>
           </th>
+          <th>
+            <Text>Update Button</Text>
+          </th>
         </tr>
       </thead>
       <tbody className="body">
-        <List
-          className="list-it"
-          height={500}
-          itemCount={items.length}
-          itemSize={() => 100}
-          width={1000}
-        >
-          {Row}
-        </List>
+        <tr className="bill-row">
+          <td>
+            <Input
+              style={{ width: "200px" }}
+              value={newItemInput["itemBarcode"]}
+              onChange={handleNewItemInput}
+              name="itemBarcode"
+              type="number"
+            />
+          </td>
+          <td>
+            <Input
+              type="text"
+              style={{ width: "200px" }}
+              value={newItemInput["itemName"]}
+              onChange={handleNewItemInput}
+              name="itemName"
+            />
+          </td>
+          <td>
+            <Input
+              style={{ width: "200px" }}
+              value={newItemInput["itemMRPperUnit"]}
+              onChange={handleNewItemInput}
+              name="itemMRPperUnit"
+              type="number"
+            />
+          </td>
+          <td>
+            <Input
+              style={{ width: "200px" }}
+              value={newItemInput["itemCostPricePerUnit"]}
+              onChange={handleNewItemInput}
+              name="itemCostPricePerUnit"
+              type="number"
+            />
+          </td>
+          <td>
+            <Input
+              style={{ width: "200px" }}
+              value={newItemInput["itemSellingPricePerUnit"]}
+              onChange={handleNewItemInput}
+              name="itemSellingPricePerUnit"
+              type="number"
+            />
+          </td>
+          <td>
+            <Input
+              style={{ width: "200px" }}
+              value={newItemInput["itemStockQuantity"]}
+              onChange={handleNewItemInput}
+              name="itemStockQuantity"
+              type="number"
+            />
+          </td>
+          <td>
+            <Input
+              style={{ width: "200px" }}
+              value={newItemInput["minimumStockQuantity"]}
+              onChange={handleNewItemInput}
+              name="minimumStockQuantity"
+              type="number"
+            />
+          </td>
+          <td>
+            <Button loading={apiLoading} onClick={addItemToDb}>
+              ADD NEW ITEM
+            </Button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 75}
+              width={250}
+            >
+              {BarcodeRow}
+            </List>
+          </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 75}
+              width={250}
+            >
+              {ItemNameRow}
+            </List>
+          </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 75}
+              width={250}
+            >
+              {ItemMRPRow}
+            </List>
+          </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 75}
+              width={250}
+            >
+              {ItemCostPriceRow}
+            </List>
+          </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 75}
+              width={250}
+            >
+              {ItemSellingPriceRow}
+            </List>
+          </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 75}
+              width={250}
+            >
+              {ItemStockQuantityRow}
+            </List>
+          </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 75}
+              width={250}
+            >
+              {ItemMinimumStockQuantityRow}
+            </List>
+          </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 75}
+              width={250}
+            >
+              {ItemUpdateButtonRow}
+            </List>
+          </td>
+        </tr>
       </tbody>
     </Table>
   );
 };
 
-const TableRow = ({ index, itemsList, style, items, dispatch }) => {
-  const [itemInput, setItemInput] = useState({
-    itemBarcode: items[index]["itemBarcode"],
-    itemName: items[index]["itemName"],
-    itemMRPperUnit: items[index]["itemMRPperUnit"],
-    itemCostPricePerUnit: items[index]["itemCostPricePerUnit"],
-    itemSellingPricePerUnit: items[index]["itemSellingPricePerUnit"],
-    itemStockQuantity: items[index]["itemStockQuantity"],
-    minimumStockQuantity: items[index]["minimumStockQuantity"],
-  });
-
-  const handleItemInputChange = (e) => {
-    const { name, value, type } = e.target;
-    setItemInput({
-      ...itemInput,
-      [name]: type === "number" ? Number(value) : value,
-    });
-  };
-
+const TableRow = ({
+  style,
+  handleItemInputChange,
+  itemInput,
+  setItemInput,
+  name,
+  index,
+  items,
+}) => {
   return (
     <tr style={style} className="bill-row">
       <td>
-        <input
+        <Input
           style={{ width: "200px" }}
-          value={itemInput["itemBarcode"]}
-          onChange={handleItemInputChange}
-          name="itemBarcode"
-          type="number"
-        />
-      </td>
-      <td>
-        <input
-          type="text"
-          style={{ width: "200px" }}
-          value={itemInput["itemName"]}
-          onChange={handleItemInputChange}
-          name="itemName"
-        />
-      </td>
-      <td>
-        <input
-          style={{ width: "200px" }}
-          value={itemInput["itemMRPperUnit"]}
-          onChange={handleItemInputChange}
-          name="itemMRPperUnit"
-          type="number"
-        />
-      </td>
-      <td>
-        <input
-          style={{ width: "200px" }}
-          value={itemInput["itemCostPricePerUnit"]}
-          onChange={handleItemInputChange}
-          name="itemCostPricePerUnit"
-          type="number"
-        />
-      </td>
-      <td>
-        <input
-          style={{ width: "200px" }}
-          value={itemInput["itemSellingPricePerUnit"]}
-          onChange={handleItemInputChange}
-          name="itemSellingPricePerUnit"
-          type="number"
-        />
-      </td>
-      <td>
-        <input
-          style={{ width: "200px" }}
-          value={itemInput["itemStockQuantity"]}
-          onChange={handleItemInputChange}
-          name="itemStockQuantity"
-          type="number"
-        />
-      </td>
-      <td>
-        <input
-          style={{ width: "200px" }}
-          value={itemInput["minimumStockQuantity"]}
-          onChange={handleItemInputChange}
-          name="minimumStockQuantity"
-          type="number"
-        />
-      </td>
-      <td>
-        <AddItemButton
-          itemToBeChanged={itemsList[index]}
-          itemInput={itemInput}
-          dispatch={dispatch}
-          index={index}
-          items={items}
+          value={itemInput[name]}
+          onChange={(e) =>
+            handleItemInputChange(e, itemInput, setItemInput, index)
+          }
+          name={name}
+          type="search"
         />
       </td>
     </tr>
   );
 };
 
-const AddItemButton = ({
-  itemToBeChanged,
-  itemInput,
-  dispatch,
-  items,
-  index,
-}) => {
+const UpdateItemButton = ({ dispatch, items, index }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
-    const { _id } = itemToBeChanged;
-    const itemWithChanges = { ...itemToBeChanged, ...itemInput };
+    const { _id } = itemToBeUpdated;
+    console.log({ itemToBeUpdated });
     setApiLoading(true);
     const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
-      data: { id: _id, itemWithChanges },
+      data: { id: _id, itemToBeUpdated },
       headers: {
         Cookie: "",
       },
     });
+    console.log({ updatedItem });
     const newList = [...items];
     newList.splice(index, 1, { ...updatedItem.data.message });
-    dispatch({ type: "UPDATE_LIST", payload: [...newList] });
+    dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });
     setApiLoading(false);
   };
 
   return (
     <Button loading={apiLoading} onClick={handleAddItem}>
-      ADD ITEM
+      UPDATE ITEM
     </Button>
   );
 };

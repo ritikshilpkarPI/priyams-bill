@@ -55,6 +55,13 @@ const addNewBill = async (req, res) => {
 
         const orderQuantityInNumber = Number(OrderQuantity);
         totalNumberOfItems += orderQuantityInNumber;
+        if (_id) {
+          await Item.findByIdAndUpdate(
+            _id,
+            { $inc: { itemStockQuantity: -orderQuantityInNumber } },
+            { new: true }
+          );
+        }
 
         return {
           itemDetail: {
