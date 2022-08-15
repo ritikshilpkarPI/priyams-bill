@@ -91,22 +91,43 @@
   }
 }
 
-@media print {
+@media only screen and (max-width: 900px) {
   .nav-btn {
     display: none;
   }
 
   .billing-container {
     margin-top: 10px;
-    max-width: 30vw;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
 
     .header {
       display: flex;
       flex-direction: column;
-      // justify-content: center;
-      align-items: flex-end;
+      align-items: center;
       padding: 10px;
+      margin-right: 180px;
+      margin-bottom: 20px
     }
+
+    .bill-table {
+      max-width: fit-content;
+      tr {
+        th {
+          word-spacing: 999999px;
+          div {
+            max-width: fit-content;
+          }
+        }
+        td {
+          div {
+            max-width: fit-content;
+          }
+        }
+      }
+    }
+
 
     .table-heading tr th:nth-child(-n + 2),
     .bill-btns,
@@ -115,6 +136,7 @@
     }
 
     .final-bill {
+      word-spacing: 999999px;
       .print-text {
         font-size: 28px;
       }

@@ -156,7 +156,7 @@ export const Billing = () => {
         </Button>
       </div>
 
-      <Table striped highlightOnHover>
+      <Table horizontalSpacing="sm" striped highlightOnHover className="bill-table">
         <thead className="table-heading">
           <tr>
             <th>
