@@ -91,7 +91,7 @@
   }
 }
 
-@media only screen and (max-width: 900px) {
+@media print {
   .nav-btn {
     display: none;
   }
@@ -107,12 +107,12 @@
       flex-direction: column;
       align-items: center;
       padding: 10px;
-      margin-right: 180px;
+      margin-right: 40px;
       margin-bottom: 20px
     }
 
     .bill-table {
-      max-width: fit-content;
+      max-width: 10vw;
       tr {
         th {
           word-spacing: 999999px;
