@@ -65,13 +65,12 @@ export const ItemsList = () => {
       ...itemInput,
       [name]: type === "number" ? Number(value) : value,
     });
-    console.log({ itemToBeUpdated: itemToBeUpdated[name], name, value });
     itemToBeUpdated[index][name] = value;
-    console.log({ itemToBeUpdated });
   };
 
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
+    // setItemInput({...itemInput,itemBarcode: items[index][name],})
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
@@ -238,7 +237,7 @@ export const ItemsList = () => {
           <UpdateItemButton
             // itemInput={itemInput}
             dispatch={dispatch}
-            // index={index}
+            index={index}
             items={items}
           />
         </td>
@@ -471,18 +470,16 @@ const TableRow = ({
 const UpdateItemButton = ({ dispatch, items, index }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
-    const { _id } = itemToBeUpdated;
-    console.log({ itemToBeUpdated });
+    const { _id } = itemToBeUpdated[index];
     setApiLoading(true);
     const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
-      data: { id: _id, itemToBeUpdated },
+      data: { id: _id, itemToBeUpdated:itemToBeUpdated[index] },
       headers: {
         Cookie: "",
       },
     });
-    console.log({ updatedItem });
     const newList = [...items];
     newList.splice(index, 1, { ...updatedItem.data.message });
     dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });
