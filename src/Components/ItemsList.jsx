@@ -236,9 +236,8 @@ export const ItemsList = () => {
       <tr>
         <td>
           <UpdateItemButton
-            // itemInput={itemInput}
+            style={style}
             dispatch={dispatch}
-            // index={index}
             items={items}
           />
         </td>
@@ -298,7 +297,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "200px" }}
+              style={{ width: "110px" }}
               value={newItemInput["itemMRPperUnit"]}
               onChange={handleNewItemInput}
               name="itemMRPperUnit"
@@ -307,7 +306,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "200px" }}
+              style={{ width: "110px" }}
               value={newItemInput["itemCostPricePerUnit"]}
               onChange={handleNewItemInput}
               name="itemCostPricePerUnit"
@@ -316,7 +315,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "200px" }}
+              style={{ width: "110px" }}
               value={newItemInput["itemSellingPricePerUnit"]}
               onChange={handleNewItemInput}
               name="itemSellingPricePerUnit"
@@ -325,7 +324,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "200px" }}
+              style={{ width: "110px" }}
               value={newItemInput["itemStockQuantity"]}
               onChange={handleNewItemInput}
               name="itemStockQuantity"
@@ -334,7 +333,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "200px" }}
+              style={{ width: "110px" }}
               value={newItemInput["minimumStockQuantity"]}
               onChange={handleNewItemInput}
               name="minimumStockQuantity"
@@ -342,7 +341,8 @@ export const ItemsList = () => {
             />
           </td>
           <td>
-            <Button loading={apiLoading} onClick={addItemToDb}>
+            <Button loading={apiLoading} onClick={addItemToDb}
+            >
               ADD NEW ITEM
             </Button>
           </td>
@@ -366,6 +366,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={250}
+
             >
               {ItemNameRow}
             </List>
@@ -376,7 +377,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={250}
+              width={130}
             >
               {ItemMRPRow}
             </List>
@@ -387,7 +388,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={250}
+              width={130}
             >
               {ItemCostPriceRow}
             </List>
@@ -398,7 +399,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={250}
+              width={130}
             >
               {ItemSellingPriceRow}
             </List>
@@ -409,7 +410,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={250}
+              width={130}
             >
               {ItemStockQuantityRow}
             </List>
@@ -420,7 +421,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={250}
+              width={130}
             >
               {ItemMinimumStockQuantityRow}
             </List>
@@ -431,7 +432,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={250}
+              width={160}
             >
               {ItemUpdateButtonRow}
             </List>
@@ -455,7 +456,6 @@ const TableRow = ({
     <tr style={style} className="bill-row">
       <td>
         <Input
-          style={{ width: "200px" }}
           value={itemInput[name]}
           onChange={(e) =>
             handleItemInputChange(e, itemInput, setItemInput, index)
@@ -468,7 +468,7 @@ const TableRow = ({
   );
 };
 
-const UpdateItemButton = ({ dispatch, items, index }) => {
+const UpdateItemButton = ({ dispatch, items, index, style }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeUpdated;
