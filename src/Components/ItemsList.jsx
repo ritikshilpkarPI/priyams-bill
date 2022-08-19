@@ -289,7 +289,8 @@ export const ItemsList = () => {
           <td>
             <Input
               type="text"
-              style={{ width: "200px" }}
+
+              style={{ width: "200px", marginLeft: "-10px" }}
               value={newItemInput["itemName"]}
               onChange={handleNewItemInput}
               name="itemName"
@@ -297,7 +298,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "110px", marginLeft: "-10px" }}
               value={newItemInput["itemMRPperUnit"]}
               onChange={handleNewItemInput}
               name="itemMRPperUnit"
@@ -306,6 +307,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
+
               style={{ width: "110px" }}
               value={newItemInput["itemCostPricePerUnit"]}
               onChange={handleNewItemInput}
@@ -354,7 +356,9 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={250}
+              width={220}
+              style={{ marginRight: "-80px" }}
+
             >
               {BarcodeRow}
             </List>
@@ -365,7 +369,8 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={250}
+              width={220}
+              style={{ marginRight: "-18px", marginLeft: "-20px" }}
 
             >
               {ItemNameRow}
@@ -378,6 +383,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={130}
+              style={{ marginRight: "-8px", marginLeft: "-15px" }}
             >
               {ItemMRPRow}
             </List>
@@ -389,6 +395,8 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={130}
+              style={{ marginRight: "-8px" }}
+
             >
               {ItemCostPriceRow}
             </List>
@@ -396,10 +404,12 @@ export const ItemsList = () => {
           <td>
             <List
               className="list-it"
+              style={{ marginRight: "-8px" }}
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
               width={130}
+
             >
               {ItemSellingPriceRow}
             </List>
@@ -411,6 +421,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={130}
+              style={{ marginRight: "-8px", marginLeft: "-10px" }}
             >
               {ItemStockQuantityRow}
             </List>
@@ -422,6 +433,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={130}
+              style={{ marginRight: "-8px" }}
             >
               {ItemMinimumStockQuantityRow}
             </List>
