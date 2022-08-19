@@ -175,22 +175,22 @@ export const Billing = () => {
               </Text>
             </th>
             <th>
-              <Text weight={700} color="black" size="lg">
+              <Text style={{ width: "100px" }} weight={700} color="black" size="lg">
                 Quantity
               </Text>
             </th>
             <th>
-              <Text weight={700} color="black" size="lg">
+              <Text style={{ width: "100px" }} weight={700} color="black" size="lg">
                 MRP/Unit
               </Text>
             </th>
             <th>
-              <Text weight={700} color="black" size="lg">
+              <Text style={{ width: "100px" }} weight={700} color="black" size="lg">
                 Selling Price/Unit
               </Text>
             </th>
             <th>
-              <Text weight={700} color="black" size="lg">
+              <Text style={{ width: "100px" }} weight={700} color="black" size="lg">
                 Item Total
               </Text>
             </th>
@@ -268,6 +268,7 @@ export const Billing = () => {
             <td>
               <Text color="black" weight={700}>
                 <Input
+                  style={{ width: "90px" }}
                   className="bill-input"
                   type="number"
                   placeholder="OrderQuantity"
@@ -281,6 +282,7 @@ export const Billing = () => {
             <td>
               <Text color="black" weight={700}>
                 <Input
+                  style={{ width: "90px" }}
                   className="bill-input"
                   type="number"
                   placeholder="itemMRPperUnit"
@@ -294,6 +296,7 @@ export const Billing = () => {
             <td>
               <Text color="black" weight={700}>
                 <Input
+                  style={{ width: "90px" }}
                   className="bill-input"
                   type="number"
                   name="itemSellingPricePerUnit"
@@ -364,17 +367,17 @@ export const Billing = () => {
                     {itemObj["itemSellingPricePerUnit"]}
                   </Text>
                 </td>
-                <td className="itemDiscountPerUnit">
+                <td className="itemTotal">
                   <Text
                     className="print-text"
                     color="black"
                     weight={800}
                     size="xl"
                   >
-                    {(
+                    {Math.floor(
                       itemObj["itemSellingPricePerUnit"] *
                       itemObj["OrderQuantity"]
-                    ).toFixed(2)}
+                    )}
                   </Text>
                 </td>
                 <td className="last-clmn">
@@ -443,6 +446,7 @@ export const Billing = () => {
                 CashPaid: {cashPay}
               </Text>
               <Input
+                style={{ width: "90px" }}
                 type="number"
                 value={cashPay}
                 onChange={(e) => setCashPay(Number(e.target.value))}
@@ -460,6 +464,7 @@ export const Billing = () => {
                 UpiPaid: {upiPay}
               </Text>
               <Input
+                style={{ width: "90px" }}
                 type="number"
                 value={upiPay}
                 onChange={(e) => setUpiPay(Number(e.target.value))}
@@ -507,6 +512,7 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
         {itemObj["OrderQuantity"] || 0}
       </Text>
       <Input
+        style={{ width: "90px" }}
         className="quantity-input"
         type="number"
         value={itemObj["OrderQuantity"]}
