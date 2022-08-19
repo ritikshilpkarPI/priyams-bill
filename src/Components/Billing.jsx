@@ -118,7 +118,7 @@ export const Billing = () => {
     let mrpTotal = 0;
     let savedAmount = 0;
     bill.billItems.forEach((item) => {
-      totalSum += item["itemSellingPricePerUnit"] * item["OrderQuantity"];
+      totalSum += Math.ceil(item["itemSellingPricePerUnit"] * item["OrderQuantity"]);
       mrpTotal += item["itemMRPperUnit"] * item["OrderQuantity"];
       savedAmount += item["itemDiscountPerUnit"] * item["OrderQuantity"];
     });
@@ -374,7 +374,7 @@ export const Billing = () => {
                     weight={800}
                     size="xl"
                   >
-                    {Math.floor(
+                    {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
                       itemObj["OrderQuantity"]
                     )}
