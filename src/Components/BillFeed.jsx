@@ -91,7 +91,7 @@ export const BillFeed = ({ bills = [] }) => {
                   <tbody className="body">
                     {item.items.map((itemObj, idx) => {
                       const {
-                        itemDetail: { itemName } = {},
+                        itemDetail,
                         itemQuantityInBill,
                         itemSellingPriceTotal,
                       } = itemObj;
@@ -104,7 +104,7 @@ export const BillFeed = ({ bills = [] }) => {
                           </td>
                           <td>
                             <Text color="black" weight={500}>
-                              {itemName}
+                              {itemDetail?.itemName}
                             </Text>
                           </td>
                           <td>
