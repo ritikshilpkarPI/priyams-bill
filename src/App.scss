@@ -50,6 +50,13 @@
   background-color: lightgray;
 }
 
+.rowOpen-main {
+  background-color: rgb(247, 224, 228);
+}
+.rowOpen {
+  background-color: rgb(219, 233, 205);
+}
+
 .billing-container {
   margin-top: 50px;
 
@@ -69,9 +76,12 @@
     display: none;
   }
   .final-bill {
-    display: flex;
-    flex-direction: column;
+    margin-right: 10px;
     align-items: flex-end;
+
+    .final-bill-text {
+      display: flex;
+    }
 
     div {
       font-size: 18px;
@@ -86,34 +96,85 @@
     display: none;
   }
 
-  .table-heading tr th:first-child,
-  .bill-btns,
-  .delete-btn {
-    display: none;
-  }
-
   .billing-container {
     margin-top: 10px;
-    width: 50vw;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
 
     .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 10px;
+      margin-right: 80px;
+      margin-bottom: 20px;
     }
-  }
-  .body {
-    tr:first-child,
-    td:first-child {
+
+    .bill-table {
+      max-width: 10px;
+      margin-right: 200px;
+      tr {
+        th {
+          word-spacing: 999999px;
+          div {
+            max-width: fit-content;
+          }
+        }
+        td {
+          div {
+            max-width: fit-content;
+          }
+        }
+      }
+
+      .body {
+        tr:first-child,
+        td:nth-child(-n + 2) {
+          display: none;
+        }
+
+        .itemName,
+        .OrderQuantity,
+        .itemMRPperUnit,
+        .itemSellingPricePerUnit,
+        .itemTotal,
+        .last-clmn {
+          width: 20px;
+          text-align: left;
+          word-spacing: 999999px;
+        }
+
+        .print-text {
+          font-size: 28px;
+        }
+        .quantity-text {
+          display: block;
+        }
+        .quantity-input {
+          display: none;
+        }
+      }
+    }
+
+    .table-heading tr th:nth-child(-n + 2),
+    .bill-btns,
+    .delete-btn {
       display: none;
     }
 
-    .print-text {
-      font-size: 28px;
-    }
-    .quantity-text {
-      display: block;
-    }
-    .quantity-input {
-      display: none;
+    .final-bill {
+      text-align: left;
+      word-spacing: 999999px;
+      .print-text {
+        font-size: 28px;
+      }
+      .quantity-text {
+        display: flex;
+      }
+      .quantity-input {
+        display: none;
+      }
     }
   }
 }

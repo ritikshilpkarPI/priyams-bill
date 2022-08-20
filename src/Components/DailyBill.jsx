@@ -20,7 +20,7 @@ const DayWiseBillFeed = () => {
   }, []);
 
   return (
-    <Table>
+    <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
           <th>
@@ -71,7 +71,10 @@ const TableRow = ({ item, idx }) => {
   const [rowOpen, setRowOpen] = useState(false);
   return (
     <>
-      <tr onClick={() => setRowOpen(!rowOpen)} className="bill-row">
+      <tr
+        onClick={() => setRowOpen(!rowOpen)}
+        className={`bill-row ${rowOpen ? "rowOpen-main" : ""}`}
+      >
         <td>
           <Text color="black" weight={500}>
             {idx + 1}
@@ -112,6 +115,7 @@ const TableRow = ({ item, idx }) => {
         <Collapse
           in={rowOpen}
           transitionDuration={500}
+          className={rowOpen ? "rowOpen" : ""}
           transitionTimingFunction="linear"
         >
           <BillFeed bills={bills} />
