@@ -360,12 +360,11 @@ export const ItemsList = () => {
               style={{ marginRight: "-8px" }}
 
             >
-
               {BarcodeRow}
             </List>
 
           </td>
-          
+
           <td>
             <List
               className="list-it"
@@ -448,6 +447,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={160}
+              style={{ marginTop: "10px" }}
             >
               {ItemUpdateButtonRow}
             </List>
@@ -468,29 +468,17 @@ const TableRow = ({
   items,
 }) => {
   return (
-    
-
     <tr style={style} className="bill-row">
-      {/* {
-        index.reduce((prev,currentVal)=>{
-          return <td>{prev+currentVal}</td>
-
-        },0)
-      } */}
-      <td>{index+1}</td>
+      <td>{index + 1}</td>
       <td>
-      
         <Input
-        value={itemInput[name]}
+          value={itemInput[name]}
           onChange={(e) =>
             handleItemInputChange(e, itemInput, setItemInput, index)
           }
           name={name}
           type="search"
         />
-        
-        
-
       </td>
     </tr>
   );
