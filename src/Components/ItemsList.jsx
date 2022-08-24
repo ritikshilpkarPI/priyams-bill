@@ -22,6 +22,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  const [checked,setChecked] = useState(true);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -41,6 +42,16 @@ export const ItemsList = () => {
     setItems([...filteredItems]);
   };
 
+  const handleCheckBox = () =>{
+   
+    
+    
+   
+    setChecked(!checked);
+    
+    
+  }
+
   const addItemToDb = async () => {
     setApiLoading(true);
     (async () => {
@@ -58,6 +69,8 @@ export const ItemsList = () => {
     setNewItemInput(ITEM_INITIAL_INPUT);
   };
 
+  
+
   const handleItemInputChange = (e, itemInput, setItemInput, index) => {
     const { name, value, type } = e.target;
     itemToBeUpdated = { [index]: { ...items[index] } };
@@ -67,6 +80,8 @@ export const ItemsList = () => {
     });
     itemToBeUpdated[index][name] = value;
   };
+
+  
 
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
@@ -233,11 +248,15 @@ export const ItemsList = () => {
   const ItemUpdateButtonRow = ({ index, style }) => {
     return (
       <tr>
+        <td>{index+1}.</td>
         <td>
           <UpdateItemButton
+
             style={style}
             dispatch={dispatch}
             index={index}
+            
+
             items={items}
           />
         </td>
@@ -285,6 +304,17 @@ export const ItemsList = () => {
               name="itemBarcode"
               type="number"
             />
+           
+             
+             < input type="checkbox"
+        value={checked}
+        onClick={handleCheckBox}
+      />
+      Check Me!
+      {checked? <h1>hello</h1>:null}
+      
+    
+    
           </td>
           <td>
             <Input
@@ -344,6 +374,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Button loading={apiLoading} onClick={addItemToDb}
+            style={{ width: "180px" }}
             >
               ADD NEW ITEM
             </Button>
@@ -361,6 +392,7 @@ export const ItemsList = () => {
 
             >
               {BarcodeRow}
+             
             </List>
 
           </td>
@@ -445,9 +477,9 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={160}
-              style={{ marginTop: "10px" }}
+              itemSize={() =>75}
+              width={180}
+              
             >
               {ItemUpdateButtonRow}
             </List>
@@ -469,7 +501,7 @@ const TableRow = ({
 }) => {
   return (
     <tr style={style} className="bill-row">
-      <td>{index + 1}</td>
+      <td>{index + 1}.</td>
       <td>
         <Input
           value={itemInput[name]}
@@ -504,7 +536,9 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
   };
 
   return (
-    <Button loading={apiLoading} onClick={handleAddItem}>
+    <Button loading={apiLoading} onClick={handleAddItem}
+    style={{marginBottom:"20px",marginTop:"5px",paddingRight:"4px",paddingLeft:"8px"}}
+    >
       UPDATE ITEM
     </Button>
   );
