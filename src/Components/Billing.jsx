@@ -14,7 +14,7 @@ const BILL_INITIAL_STATE = {
   billDiscountTotal: 0,
 };
 
-export const Billing = () => {
+export const Billing = ({ billID = ''}) => {
   const [inputValue, setInputValue] = useState({
     itemName: "",
     itemMRPperUnit: "",
@@ -33,12 +33,29 @@ export const Billing = () => {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
 
+  console.log({billID,bill})
+  useEffect(() => {
+    (async () => {
+      const editBill = await Axios.request({
+        url: `/api/billing/getEditBill/${billID}`,
+        method: "get",
+        headers: {
+          Cookie: "",
+        },
+      });
+      const { items, ...billObject } = editBill.data.message
+      const billObjectWithBillItems = {...billObject, billItems: items}
+      console.log({billObjectWithBillItems});
+      setBill(billObjectWithBillItems);
+    })();
+  }, [billID]);
   const addNewBill = async () => {
     setApiLoading(true);
+    const editApi = {url: '/api/billing/editBill', method: 'put', data: {id: billID, itemWithChanges: {...bill}}, }
+    const createApi = {url: '/api/billing/newBill', method: 'post', data: {...bill }, }
+    const objectOfInterest = billID ? editApi : createApi;
     await Axios.request({
-      url: "/api/billing/newBill",
-      method: "post",
-      data: { ...bill },
+      ...objectOfInterest,
       headers: {
         Cookie: "",
       },

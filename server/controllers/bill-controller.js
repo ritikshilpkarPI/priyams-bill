@@ -195,7 +195,7 @@ const editBill = async(req,res) => {
     const { id, itemWithChanges } = req.body;
     console.log( {itemWithChanges});
     
-    const changeBill = await Bill.findByIdAndUpdate(id, itemWithChanges).populate({
+    const changeBill = await Bill.findByIdAndUpdate(id, itemWithChanges, {new: true}).populate({
       path: "items",
       populate: {
         path: "itemDetail",
