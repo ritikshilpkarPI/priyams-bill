@@ -135,9 +135,9 @@ export const Billing = ({ billID = ''}) => {
     let mrpTotal = 0;
     let savedAmount = 0;
     bill.billItems.forEach((item) => {
-      totalSum += Math.ceil(item["itemSellingPricePerUnit"] * item["OrderQuantity"]);
-      mrpTotal += item["itemMRPperUnit"] * item["OrderQuantity"];
-      savedAmount += item["itemDiscountPerUnit"] * item["OrderQuantity"];
+      totalSum += Math.ceil((item["itemSellingPricePerUnit"] * item["OrderQuantity"]) || (item["itemSellingPriceTotal"] * item["itemQuantityInBill"]));
+      mrpTotal += (item["itemMRPperUnit"] * item["OrderQuantity"]) || (item["itemMRPtotal"] * item["itemQuantityInBill"]);
+      savedAmount += (item["itemDiscountPerUnit"] * item["OrderQuantity"]) ;
     });
     setBill((prev) => ({
       ...prev,
@@ -334,6 +334,7 @@ export const Billing = ({ billID = ''}) => {
             </td>
           </tr>
           {bill.billItems.map((itemObj, idx) => {
+            itemObj = {...itemObj,...itemObj.itemDetail}
             return (
               <tr
                 className="bill-item-row"
@@ -393,7 +394,7 @@ export const Billing = ({ billID = ''}) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                      itemObj["OrderQuantity"]
+                      (itemObj["OrderQuantity"] || itemObj["itemQuantityInBill"])
                     )}
                   </Text>
                 </td>
@@ -424,7 +425,7 @@ export const Billing = ({ billID = ''}) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                MRP Total: {bill.billMRPTotal.toFixed(2)}
+                MRP Total: {bill?.billMRPTotal?.toFixed(2)}
               </Text>
             </td>
             <td>
@@ -434,7 +435,7 @@ export const Billing = ({ billID = ''}) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                Bill Total: {bill.billAmountTotal.toFixed(2)}
+                Bill Total: {bill?.billAmountTotal?.toFixed(2)}
               </Text>
             </td>
             <td>
@@ -444,7 +445,7 @@ export const Billing = ({ billID = ''}) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                You saved: {bill.billDiscountTotal.toFixed(2)}
+                You saved: {bill?.billDiscountTotal?.toFixed(2)}
               </Text>
             </td>
           </tr>
@@ -526,13 +527,13 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
         weight={800}
         className="quantity-text print-text"
       >
-        {itemObj["OrderQuantity"] || 0}
+        {itemObj["itemQuantityInBill"] || itemObj["OrderQuantity"] || 0}
       </Text>
       <Input
         style={{ width: "90px" }}
         className="quantity-input"
         type="number"
-        value={itemObj["OrderQuantity"]}
+        value={itemObj["itemQuantityInBill"] || itemObj["OrderQuantity"]}
         onChange={handleQuantityChange}
         onWheel={(e) => e.target.blur()}
       />
