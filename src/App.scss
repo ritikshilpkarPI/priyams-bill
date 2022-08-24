@@ -107,12 +107,13 @@
       flex-direction: column;
       align-items: center;
       padding: 10px;
-      margin-right: 40px;
-      margin-bottom: 20px
+      margin-right: 80px;
+      margin-bottom: 20px;
     }
 
     .bill-table {
-      max-width: 10vw;
+      max-width: 10px;
+      margin-right: 200px;
       tr {
         th {
           word-spacing: 999999px;
@@ -126,8 +127,35 @@
           }
         }
       }
-    }
 
+      .body {
+        tr:first-child,
+        td:nth-child(-n + 2) {
+          display: none;
+        }
+
+        .itemName,
+        .OrderQuantity,
+        .itemMRPperUnit,
+        .itemSellingPricePerUnit,
+        .itemTotal,
+        .last-clmn {
+          width: 20px;
+          text-align: left;
+          word-spacing: 999999px;
+        }
+
+        .print-text {
+          font-size: 28px;
+        }
+        .quantity-text {
+          display: block;
+        }
+        .quantity-input {
+          display: none;
+        }
+      }
+    }
 
     .table-heading tr th:nth-child(-n + 2),
     .bill-btns,
@@ -136,33 +164,13 @@
     }
 
     .final-bill {
+      text-align: left;
       word-spacing: 999999px;
       .print-text {
         font-size: 28px;
       }
       .quantity-text {
         display: flex;
-      }
-      .quantity-input {
-        display: none;
-      }
-    }
-
-    .body {
-      tr:first-child,
-      td:nth-child(-n + 2) {
-        display: none;
-      }
-
-      .itemName {
-        word-spacing: 999999px;
-      }
-
-      .print-text {
-        font-size: 28px;
-      }
-      .quantity-text {
-        display: block;
       }
       .quantity-input {
         display: none;
