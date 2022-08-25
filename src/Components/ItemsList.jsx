@@ -39,18 +39,50 @@ export const ItemsList = () => {
           .toLowerCase()
           .includes(value.toString().toLowerCase())
     );
+   
+    
     setItems([...filteredItems]);
+    
   };
+  const handleData = ()=>{
+    const filteredInput  = itemsList.filter((itemObj)=>
+    itemObj.itemBarcode!==null
+    )
+    
+     setItems(filteredInput)
+  }
+  
+  const handleEmptyData = ()=>{
+    const filteredInput  = itemsList.filter((itemObj)=>
+    itemObj.itemBarcode===null
+    )
+     setItems(filteredInput)
+  }
 
-  const handleCheckBox = () =>{
+
+  const handleCheckBox = async () =>{
+  
+  console.log(items)
+  
    
     
+  //  console.log(filteredInput)
+  if(checked){
+    await handleData()
+  }else{
+   await handleEmptyData()
+  }
+    // setChecked( !checked);
     
-   
-    setChecked(!checked);
     
     
   }
+  useEffect(() => {
+    handleCheckBox()
+  
+
+  }, [checked])
+
 
   const addItemToDb = async () => {
     setApiLoading(true);
@@ -85,11 +117,11 @@ export const ItemsList = () => {
 
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
-    // setItemInput({...itemInput,itemBarcode: items[index][name],})
+    // setItemInput({...itemInput,itemBarcode: items[index][name]})
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
-
+console.log({itemInput})
     return (
       <>
         <TableRow
@@ -308,10 +340,11 @@ export const ItemsList = () => {
              
              < input type="checkbox"
         value={checked}
-        onClick={handleCheckBox}
+        onChange={()=>{
+          setChecked(!checked)
+        }}
       />
-      Check Me!
-      {checked? <h1>hello</h1>:null}
+     
       
     
     
