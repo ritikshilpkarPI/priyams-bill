@@ -12,6 +12,8 @@ const BILL_INITIAL_STATE = {
   billMRPTotal: 0,
   billAmountTotal: 0,
   billDiscountTotal: 0,
+  totalNumberOfItems: 0,
+  totalNumberOfUniqueItems: 0
 };
 
 export const Billing = ({ billID = ''}) => {
@@ -33,7 +35,6 @@ export const Billing = ({ billID = ''}) => {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
 
-  console.log({billID,bill})
   useEffect(() => {
     (async () => {
       const editBill = await Axios.request({
@@ -45,7 +46,6 @@ export const Billing = ({ billID = ''}) => {
       });
       const { items, ...billObject } = editBill.data.message
       const billObjectWithBillItems = {...billObject, billItems: items}
-      console.log({billObjectWithBillItems});
       setBill(billObjectWithBillItems);
     })();
   }, [billID]);
@@ -54,6 +54,7 @@ export const Billing = ({ billID = ''}) => {
     const editApi = {url: '/api/billing/editBill', method: 'put', data: {id: billID, itemWithChanges: {...bill}}, }
     const createApi = {url: '/api/billing/newBill', method: 'post', data: {...bill }, }
     const objectOfInterest = billID ? editApi : createApi;
+
     await Axios.request({
       ...objectOfInterest,
       headers: {
@@ -134,13 +135,17 @@ export const Billing = ({ billID = ''}) => {
     let totalSum = 0;
     let mrpTotal = 0;
     let savedAmount = 0;
+    let numOfItems = 0;
     bill.billItems.forEach((item) => {
       totalSum += Math.ceil((item["itemSellingPricePerUnit"] * item["OrderQuantity"]) || (item["itemSellingPriceTotal"] * item["itemQuantityInBill"]));
       mrpTotal += (item["itemMRPperUnit"] * item["OrderQuantity"]) || (item["itemMRPtotal"] * item["itemQuantityInBill"]);
-      savedAmount += (item["itemDiscountPerUnit"] * item["OrderQuantity"]) ;
+      savedAmount = mrpTotal - totalSum
+      numOfItems += item["itemQuantityInBill"] || item["OrderQuantity"] ;
     });
     setBill((prev) => ({
       ...prev,
+      totalNumberOfUniqueItems: bill.billItems.length,
+      totalNumberOfItems: numOfItems,
       billMRPTotal: mrpTotal,
       billAmountTotal: totalSum,
       billDiscountTotal: savedAmount,
@@ -249,10 +254,16 @@ export const Billing = ({ billID = ''}) => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
+                      let itemDetail = itemsByName[e.target.innerText]
                       setBill((prev) => ({
                         ...prev,
                         billItems: [
-                          itemsByName[e.target.innerText],
+                          {itemDetail,
+                            itemQuantityInBill: itemDetail.OrderQuantity,
+                            itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+                            itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+                            itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+                            _id: itemDetail._id},
                           ...prev.billItems,
                         ],
                       }));
@@ -511,9 +522,9 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
     if (e.target.value < 0) return;
     const itemCopy = itemsByBarcode[itemObj["itemBarcode"]]
-      ? { ...itemsByBarcode[itemObj["itemBarcode"]] }
-      : itemsByName[itemObj["itemName"]];
-    itemCopy["OrderQuantity"] = e.target.value;
+      ? {"itemDetail":{...itemsByBarcode[itemObj["itemBarcode"]], ...bill.billItems[idx] }}
+      : {"itemDetail":{...itemsByName[itemObj["itemName"]]}, ...bill.billItems[idx]};
+      itemCopy["itemQuantityInBill"] = Number(e.target.value)
     const newBill = [...bill.billItems];
     newBill.splice(idx, 1, itemCopy);
     setBill({ ...bill, billItems: [...newBill] });
@@ -527,7 +538,7 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
         weight={800}
         className="quantity-text print-text"
       >
-        {itemObj["itemQuantityInBill"] || itemObj["OrderQuantity"] || 0}
+        {itemObj["itemQuantityInBill"] || 0}
       </Text>
       <Input
         style={{ width: "90px" }}
