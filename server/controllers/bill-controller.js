@@ -147,6 +147,25 @@ const getAllBill = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getEditBill = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const bill = await Bill.findById(id)
+      .populate({
+        path: "items",
+        populate: {
+          path: "itemDetail",
+          model: "Item",
+        },
+      })
+
+    console.log(JSON.stringify(bill));
+    res.status(200).json({ message: bill });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 const getDayWiseBills = async (req, res) => {
   try {
@@ -171,8 +190,31 @@ const getDayWiseBills = async (req, res) => {
   }
 };
 
+const editBill = async(req,res) => {
+  try {
+    const { id, itemWithChanges } = req.body;
+    const { billItems, ...billObject } = itemWithChanges;
+    const billObjectWithItems = {...billObject, items: billItems}
+    const changeBill = await Bill.findByIdAndUpdate(id, billObjectWithItems, {new: true}).populate({
+      path: "items",
+      populate: {
+        path: "itemDetail",
+        model: "Item",
+      },
+    })
+    
+    res.status(200).json({ message: changeBill });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    
+  }
+}
+
 module.exports = {
   addNewBill,
   getAllBill,
   getDayWiseBills,
+  getEditBill,
+  editBill
 };
