@@ -298,7 +298,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px", marginLeft: "-10px" }}
+              style={{ width: "130px", marginLeft: "-10px" }}
               value={newItemInput["itemMRPperUnit"]}
               onChange={handleNewItemInput}
               name="itemMRPperUnit"
@@ -308,7 +308,7 @@ export const ItemsList = () => {
           <td>
             <Input
 
-              style={{ width: "110px" }}
+              style={{ width: "130px" }}
               value={newItemInput["itemCostPricePerUnit"]}
               onChange={handleNewItemInput}
               name="itemCostPricePerUnit"
@@ -317,7 +317,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "130px" }}
               value={newItemInput["itemSellingPricePerUnit"]}
               onChange={handleNewItemInput}
               name="itemSellingPricePerUnit"
@@ -326,7 +326,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "130px" }}
               value={newItemInput["itemStockQuantity"]}
               onChange={handleNewItemInput}
               name="itemStockQuantity"
@@ -335,7 +335,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "130px" }}
               value={newItemInput["minimumStockQuantity"]}
               onChange={handleNewItemInput}
               name="minimumStockQuantity"
@@ -357,12 +357,14 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={220}
-              style={{ marginRight: "-80px" }}
+              style={{ marginRight: "-8px" }}
 
             >
               {BarcodeRow}
             </List>
+
           </td>
+
           <td>
             <List
               className="list-it"
@@ -370,7 +372,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={220}
-              style={{ marginRight: "-18px", marginLeft: "-20px" }}
+              style={{ marginRight: "-2px", marginLeft: "-20px" }}
 
             >
               {ItemNameRow}
@@ -382,7 +384,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={130}
+              width={150}
               style={{ marginRight: "-8px", marginLeft: "-15px" }}
             >
               {ItemMRPRow}
@@ -394,7 +396,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={130}
+              width={150}
               style={{ marginRight: "-8px" }}
 
             >
@@ -404,11 +406,11 @@ export const ItemsList = () => {
           <td>
             <List
               className="list-it"
-              style={{ marginRight: "-8px" }}
+              style={{ marginRight: "-2px" }}
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={130}
+              width={150}
 
             >
               {ItemSellingPriceRow}
@@ -420,7 +422,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={130}
+              width={150}
               style={{ marginRight: "-8px", marginLeft: "-10px" }}
             >
               {ItemStockQuantityRow}
@@ -432,7 +434,7 @@ export const ItemsList = () => {
               height={500}
               itemCount={items.length}
               itemSize={() => 75}
-              width={130}
+              width={150}
               style={{ marginRight: "-8px" }}
             >
               {ItemMinimumStockQuantityRow}
@@ -445,6 +447,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 75}
               width={160}
+              style={{ marginTop: "10px" }}
             >
               {ItemUpdateButtonRow}
             </List>
@@ -466,6 +469,7 @@ const TableRow = ({
 }) => {
   return (
     <tr style={style} className="bill-row">
+      <td>{index + 1}</td>
       <td>
         <Input
           value={itemInput[name]}
