@@ -8,6 +8,7 @@ import { Billing } from "./Components/Billing";
 import { BillFeed } from "./Components/BillFeed";
 import DayWiseBillFeed from "./Components/DailyBill";
 import "./App.scss";
+import EditBill from "./Components/EditBill";
 // import { QRComp } from "./qr";
 
 function App({ history }) {
@@ -61,6 +62,7 @@ function App({ history }) {
         <Route path="/inventory" component={ItemsList} />
         <Route path="/dayBill" component={DayWiseBillFeed} />
         <Route path="/allBill" render={() => <BillFeed bills={allBills} />} />
+        <Route path="/:billingID" component={EditBill} />
       </Switch>
       {/* <QRComp /> */}
     </div>

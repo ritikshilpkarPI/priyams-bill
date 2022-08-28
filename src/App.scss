@@ -135,7 +135,7 @@
         }
 
         .itemName,
-        .OrderQuantity,
+        .itemQuantityInBill,
         .itemMRPperUnit,
         .itemSellingPricePerUnit,
         .itemTotal,
@@ -177,4 +177,29 @@
       }
     }
   }
+}
+// Billing css
+
+.data-result {
+  position: absolute;
+  min-width: fit-content;
+  z-index: 3;
+  overflow-y: scroll;
+  height: 400px;
+}
+.search-container {
+  position: relative;
+}
+.total {
+  text-align: right;
+  margin-top: 6rem;
+  margin-bottom: 5rem;
+  margin-right: 1rem;
+  font-size: 18px;
+  font-weight: bold;
+}
+.operation-button {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
