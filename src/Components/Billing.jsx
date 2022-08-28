@@ -96,7 +96,7 @@ export const Billing = ({ billID = "" }) => {
     itemsByName[inputValue.itemName] = { ...itemDetail };
     setBill((prev) => ({
       ...prev,
-      billItems: [itemDetail, ...prev.billItems],
+      billItems: [{ itemDetail }, ...prev.billItems],
     }));
     setInputValue(INPUT_INITIAL_STATE);
   }
@@ -126,9 +126,10 @@ export const Billing = ({ billID = "" }) => {
 
   useEffect(() => {
     if (itemsByBarcode[inputValue.itemBarcode]) {
+      const itemDetail = { ...itemsByBarcode[inputValue.itemBarcode] };
       setBill((prev) => ({
         ...prev,
-        billItems: [itemsByBarcode[inputValue.itemBarcode], ...prev.billItems],
+        billItems: [{ itemDetail }, ...prev.billItems],
       }));
       setInputValue(INPUT_INITIAL_STATE);
     }
@@ -142,6 +143,7 @@ export const Billing = ({ billID = "" }) => {
     let profitAmount = 0;
     let numOfItems = 0;
     bill.billItems.forEach((item) => {
+      console.log({ item });
       totalSum += Math.ceil(
         item.itemDetail["itemSellingPricePerUnit"] * item["itemQuantityInBill"]
       );
@@ -324,6 +326,7 @@ export const Billing = ({ billID = "" }) => {
                 >
                   <Table>
                     <thead>
+                      <td>Barcode</td>
                       <td>Name</td>
                       <td>MRP</td>
                     </thead>
@@ -340,6 +343,7 @@ export const Billing = ({ billID = "" }) => {
                             }}
                             className="show-data"
                           >
+                            <td>{value.itemBarcode}</td>
                             <td>{value.itemName}</td>
                             <td>{value.itemMRPperUnit}</td>
                           </tr>
