@@ -17,7 +17,8 @@ const addNewBill = async (req, res) => {
       // billPercentageDiscountTotal,
       totalNumberOfUniqueItems,
       totalNumberOfItems,
-    ] = [billItems.length, 0];
+      totalBillProfit,
+    ] = [billItems.length, 0, 0];
 
     const allItems = await Promise.all(
       billItems.map(async (itemObj) => {
@@ -28,7 +29,7 @@ const addNewBill = async (req, res) => {
           itemStockQuantity,
           minimumStockQuantity,
           itemMRPperUnit,
-          itemCostPricePerUnit,
+          itemCostPricePerUnit = 0,
           itemDiscountPerUnit,
           itemPerUnitDiscountPercentage,
           itemSellingPricePerUnit,
@@ -55,6 +56,11 @@ const addNewBill = async (req, res) => {
 
         const orderQuantityInNumber = Number(itemQuantityInBill);
         totalNumberOfItems += orderQuantityInNumber;
+
+        const itemNetProfit =
+          (itemSellingPricePerUnit - itemCostPricePerUnit) *
+          orderQuantityInNumber;
+        totalBillProfit += itemNetProfit;
         // if (_id) {
         //   await Item.findByIdAndUpdate(
         //     _id,
@@ -77,6 +83,7 @@ const addNewBill = async (req, res) => {
             itemSellingPricePerUnit,
             createdAt,
           },
+          itemNetProfit,
           itemQuantityInBill: orderQuantityInNumber,
           itemMRPtotal: itemMRPperUnit * orderQuantityInNumber,
           itemDiscountTotal: itemDiscountPerUnit * orderQuantityInNumber,
@@ -93,6 +100,7 @@ const addNewBill = async (req, res) => {
       billAmountTotal,
       billDiscountTotal,
       // billPercentageDiscountTotal,
+      totalBillProfit,
       totalNumberOfUniqueItems,
       totalNumberOfItems,
     });
