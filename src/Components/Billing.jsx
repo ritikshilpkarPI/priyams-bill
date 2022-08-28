@@ -14,6 +14,7 @@ const BILL_INITIAL_STATE = {
   billDiscountTotal: 0,
   totalNumberOfItems: 0,
   totalNumberOfUniqueItems: 0,
+  totalBillProfit: 0,
   cashPay: 0,
   upiPay: 0,
   amountReturn: 0,
@@ -138,6 +139,7 @@ export const Billing = ({ billID = "" }) => {
     let totalSum = 0;
     let mrpTotal = 0;
     let savedAmount = 0;
+    let profitAmount = 0;
     let numOfItems = 0;
     bill.billItems.forEach((item) => {
       totalSum += Math.ceil(
@@ -147,6 +149,10 @@ export const Billing = ({ billID = "" }) => {
         item.itemDetail["itemMRPperUnit"] * item["itemQuantityInBill"];
       savedAmount = mrpTotal - totalSum;
       numOfItems += item["itemQuantityInBill"];
+      profitAmount +=
+        (item.itemDetail["itemSellingPricePerUnit"] -
+          item.itemDetail["itemCostPricePerUnit"]) *
+        item["itemQuantityInBill"];
     });
 
     setBill((prev) => ({
@@ -156,6 +162,7 @@ export const Billing = ({ billID = "" }) => {
       billMRPTotal: mrpTotal,
       billAmountTotal: totalSum,
       billDiscountTotal: savedAmount,
+      totalBillProfit: profitAmount,
     }));
   }, [bill.billItems]);
 
