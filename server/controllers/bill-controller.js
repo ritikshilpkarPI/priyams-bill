@@ -33,8 +33,8 @@ const addNewBill = async (req, res) => {
           itemPerUnitDiscountPercentage,
           itemSellingPricePerUnit,
           createdAt,
-          OrderQuantity,
-        } = itemObj;
+          itemQuantityInBill,
+        } = itemObj.itemDetail;
         let item = undefined;
         if (!_id) {
           const newItem = new Item({
@@ -53,7 +53,7 @@ const addNewBill = async (req, res) => {
           item = newItemSaved;
         }
 
-        const orderQuantityInNumber = Number(OrderQuantity);
+        const orderQuantityInNumber = Number(itemQuantityInBill);
         totalNumberOfItems += orderQuantityInNumber;
         // if (_id) {
         //   await Item.findByIdAndUpdate(
@@ -150,19 +150,17 @@ const getAllBill = async (req, res) => {
 const getEditBill = async (req, res) => {
   try {
     const id = req.params.id;
-    const bill = await Bill.findById(id)
-      .populate({
-        path: "items",
-        populate: {
-          path: "itemDetail",
-          model: "Item",
-        },
-      })
+    const bill = await Bill.findById(id).populate({
+      path: "items",
+      populate: {
+        path: "itemDetail",
+        model: "Item",
+      },
+    });
 
-    console.log(JSON.stringify(bill));
     res.status(200).json({ message: bill });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -190,31 +188,31 @@ const getDayWiseBills = async (req, res) => {
   }
 };
 
-const editBill = async(req,res) => {
+const editBill = async (req, res) => {
   try {
     const { id, itemWithChanges } = req.body;
     const { billItems, ...billObject } = itemWithChanges;
-    const billObjectWithItems = {...billObject, items: billItems}
-    const changeBill = await Bill.findByIdAndUpdate(id, billObjectWithItems, {new: true}).populate({
+    const billObjectWithItems = { ...billObject, items: billItems };
+    const changeBill = await Bill.findByIdAndUpdate(id, billObjectWithItems, {
+      new: true,
+    }).populate({
       path: "items",
       populate: {
         path: "itemDetail",
         model: "Item",
       },
-    })
-    
-    res.status(200).json({ message: changeBill });
+    });
 
+    res.status(200).json({ message: changeBill });
   } catch (error) {
     res.status(500).json({ error: error.message });
-    
   }
-}
+};
 
 module.exports = {
   addNewBill,
   getAllBill,
   getDayWiseBills,
   getEditBill,
-  editBill
+  editBill,
 };
