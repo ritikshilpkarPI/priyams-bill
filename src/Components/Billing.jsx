@@ -96,7 +96,16 @@ export const Billing = ({ billID = "" }) => {
     itemsByName[inputValue.itemName] = { ...itemDetail };
     setBill((prev) => ({
       ...prev,
-      billItems: [{ itemDetail }, ...prev.billItems],
+      billItems: [
+        {
+          itemDetail,
+          itemQuantityInBill: itemDetail.itemQuantityInBill,
+          itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+          itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+          itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+        },
+        ...prev.billItems,
+      ],
     }));
     setInputValue(INPUT_INITIAL_STATE);
   }
@@ -129,7 +138,17 @@ export const Billing = ({ billID = "" }) => {
       const itemDetail = { ...itemsByBarcode[inputValue.itemBarcode] };
       setBill((prev) => ({
         ...prev,
-        billItems: [{ itemDetail }, ...prev.billItems],
+        billItems: [
+          {
+            itemDetail,
+            itemQuantityInBill: itemDetail.itemQuantityInBill,
+            itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+            itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+            itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+            _id: itemDetail._id,
+          },
+          ...prev.billItems,
+        ],
       }));
       setInputValue(INPUT_INITIAL_STATE);
     }
