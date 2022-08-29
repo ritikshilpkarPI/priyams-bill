@@ -117,7 +117,7 @@ export const ItemsList = () => {
 
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
-    // setItemInput({...itemInput,itemBarcode: items[index][name]})
+
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
@@ -549,7 +549,7 @@ const TableRow = ({
   );
 };
 
-const UpdateItemButton = ({ dispatch, items, index, style }) => {
+const UpdateItemButton = ({ dispatch, items, index }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeUpdated[index];
@@ -559,7 +559,7 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
       method: "put",
       data: { id: _id, itemToBeUpdated:itemToBeUpdated[index] },
       headers: {
-        Cookie: "",
+        Cookie: "some_cookie",
       },
     });
     const newList = [...items];
