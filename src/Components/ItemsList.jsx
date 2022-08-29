@@ -22,7 +22,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
-  const [checked,setChecked] = useState(true);
+  const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -39,50 +39,9 @@ export const ItemsList = () => {
           .toLowerCase()
           .includes(value.toString().toLowerCase())
     );
-   
-    
     setItems([...filteredItems]);
-    
+
   };
-  const handleData = ()=>{
-    const filteredInput  = itemsList.filter((itemObj)=>
-    itemObj.itemBarcode!==null
-    )
-    
-     setItems(filteredInput)
-  }
-  
-  const handleEmptyData = ()=>{
-    const filteredInput  = itemsList.filter((itemObj)=>
-    itemObj.itemBarcode===null
-    )
-     setItems(filteredInput)
-  }
-
-
-  const handleCheckBox = async () =>{
-  
-  console.log(items)
-  
-   
-    
-  //  console.log(filteredInput)
-  if(checked){
-    await handleData()
-  }else{
-   await handleEmptyData()
-  }
-    // setChecked( !checked);
-    
-    
-    
-  }
-  useEffect(() => {
-    handleCheckBox()
-  
-
-  }, [checked])
-
 
   const addItemToDb = async () => {
     setApiLoading(true);
@@ -101,8 +60,6 @@ export const ItemsList = () => {
     setNewItemInput(ITEM_INITIAL_INPUT);
   };
 
-  
-
   const handleItemInputChange = (e, itemInput, setItemInput, index) => {
     const { name, value, type } = e.target;
     itemToBeUpdated = { [index]: { ...items[index] } };
@@ -113,15 +70,13 @@ export const ItemsList = () => {
     itemToBeUpdated[index][name] = value;
   };
 
-  
-
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
 
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
-console.log({itemInput})
+    console.log({ itemInput })
     return (
       <>
         <TableRow
@@ -280,14 +235,14 @@ console.log({itemInput})
   const ItemUpdateButtonRow = ({ index, style }) => {
     return (
       <tr>
-        <td>{index+1}.</td>
+        <td>{index + 1}.</td>
         <td>
           <UpdateItemButton
 
             style={style}
             dispatch={dispatch}
             index={index}
-            
+
 
             items={items}
           />
@@ -336,18 +291,12 @@ console.log({itemInput})
               name="itemBarcode"
               type="number"
             />
-           
-             
-             < input type="checkbox"
-        value={checked}
-        onChange={()=>{
-          setChecked(!checked)
-        }}
-      />
-     
-      
-    
-    
+            < input type="checkbox"
+              value={checked}
+              onChange={() => {
+                setChecked(!checked)
+              }}
+            />
           </td>
           <td>
             <Input
@@ -407,7 +356,7 @@ console.log({itemInput})
           </td>
           <td>
             <Button loading={apiLoading} onClick={addItemToDb}
-            style={{ width: "180px" }}
+              style={{ width: "180px" }}
             >
               ADD NEW ITEM
             </Button>
@@ -425,7 +374,7 @@ console.log({itemInput})
 
             >
               {BarcodeRow}
-             
+
             </List>
 
           </td>
@@ -510,9 +459,9 @@ console.log({itemInput})
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() =>75}
+              itemSize={() => 75}
               width={180}
-              
+
             >
               {ItemUpdateButtonRow}
             </List>
@@ -557,7 +506,7 @@ const UpdateItemButton = ({ dispatch, items, index }) => {
     const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
-      data: { id: _id, itemToBeUpdated:itemToBeUpdated[index] },
+      data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
       headers: {
         Cookie: "some_cookie",
       },
@@ -570,7 +519,7 @@ const UpdateItemButton = ({ dispatch, items, index }) => {
 
   return (
     <Button loading={apiLoading} onClick={handleAddItem}
-    style={{marginBottom:"20px",marginTop:"5px",paddingRight:"4px",paddingLeft:"8px"}}
+      style={{ marginBottom: "20px", marginTop: "5px", paddingRight: "4px", paddingLeft: "8px" }}
     >
       UPDATE ITEM
     </Button>
