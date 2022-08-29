@@ -11,6 +11,7 @@ const BillSchema = new mongoose.Schema(
     billPercentageDiscountTotal: { type: Number },
     totalNumberOfUniqueItems: { type: Number },
     totalNumberOfItems: { type: Number },
+    totalBillProfit: { type: Number },
     items: [
       {
         itemDetail: {
