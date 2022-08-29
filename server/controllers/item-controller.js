@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
@@ -52,8 +53,19 @@ const editItemById = async (req, res) => {
     res.status(500).json({ error: error });
   }
 };
+
+const softDeleteById = async (req, res) => {
+  try {
+    console.log(req.body);
+    res.status(200).json({ status: true, message: 'Got Ids' });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 module.exports = {
   getItemsFeed,
   addItems,
   editItemById,
+  softDeleteById
 };

@@ -17,6 +17,7 @@ const ItemSchem = new mongoose.Schema(
     },
     createdAt: { type: Date, default: Date.now },
     lastUpdateAt: { type: Date },
+    isDeleted: {type: Boolean, default: false}
   },
   {
     timestamps: true,

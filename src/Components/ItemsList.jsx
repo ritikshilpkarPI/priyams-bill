@@ -3,6 +3,7 @@ import { Table, Text, Button, Input } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { VariableSizeList as List } from "react-window";
 import { Axios } from "../utils/axios";
+import axios from 'axios';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -26,6 +27,19 @@ export const ItemsList = () => {
   useEffect(() => {
     setItems([...itemsList]);
   }, [itemsList]);
+
+  useEffect(() => {
+    const softDelete = async (data) => {
+      console.log(data);
+      const res = await Axios.request({
+        url: "/api/inventory/softDeleteItem",
+        method: "post",
+        body: [...data]
+      });
+      console.log(res);
+    };
+    softDelete([{ _id: "62dd09fa63f8d5aa0cf737b9" }]);
+  }, []);
 
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
@@ -492,7 +506,7 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
     const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
-      data: { id: _id, itemToBeUpdated:itemToBeUpdated[index] },
+      data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
       headers: {
         Cookie: "",
       },
