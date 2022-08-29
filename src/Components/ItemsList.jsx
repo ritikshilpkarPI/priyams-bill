@@ -22,6 +22,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  // const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -70,10 +71,11 @@ export const ItemsList = () => {
 
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
+
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
-
+    console.log({ itemInput });
     return (
       <>
         <TableRow
@@ -284,11 +286,17 @@ export const ItemsList = () => {
               name="itemBarcode"
               type="number"
             />
+            {/* <input
+              type="checkbox"
+              value={checked}
+              onChange={() => {
+                setChecked(!checked);
+              }}
+            /> */}
           </td>
           <td>
             <Input
               type="text"
-
               style={{ width: "200px", marginLeft: "-10px" }}
               value={newItemInput["itemName"]}
               onChange={handleNewItemInput}
@@ -306,7 +314,6 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-
               style={{ width: "130px" }}
               value={newItemInput["itemCostPricePerUnit"]}
               onChange={handleNewItemInput}
@@ -342,7 +349,10 @@ export const ItemsList = () => {
             />
           </td>
           <td>
-            <Button loading={apiLoading} onClick={addItemToDb}
+            <Button
+              loading={apiLoading}
+              onClick={addItemToDb}
+              style={{ width: "180px" }}
             >
               ADD NEW ITEM
             </Button>
@@ -354,14 +364,12 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
+              itemSize={() => 50}
               width={220}
               style={{ marginRight: "-8px" }}
-
             >
               {BarcodeRow}
             </List>
-
           </td>
 
           <td>
@@ -369,10 +377,9 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
+              itemSize={() => 50}
               width={220}
               style={{ marginRight: "-2px", marginLeft: "-20px" }}
-
             >
               {ItemNameRow}
             </List>
@@ -382,7 +389,7 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
+              itemSize={() => 50}
               width={150}
               style={{ marginRight: "-8px", marginLeft: "-15px" }}
             >
@@ -394,10 +401,9 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
+              itemSize={() => 50}
               width={150}
               style={{ marginRight: "-8px" }}
-
             >
               {ItemCostPriceRow}
             </List>
@@ -408,9 +414,8 @@ export const ItemsList = () => {
               style={{ marginRight: "-2px" }}
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
+              itemSize={() => 50}
               width={150}
-
             >
               {ItemSellingPriceRow}
             </List>
@@ -420,7 +425,7 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
+              itemSize={() => 50}
               width={150}
               style={{ marginRight: "-8px", marginLeft: "-10px" }}
             >
@@ -432,7 +437,7 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
+              itemSize={() => 50}
               width={150}
               style={{ marginRight: "-8px" }}
             >
@@ -444,9 +449,8 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={160}
-              style={{ marginTop: "10px" }}
+              itemSize={() => 50}
+              width={140}
             >
               {ItemUpdateButtonRow}
             </List>
@@ -464,11 +468,10 @@ const TableRow = ({
   setItemInput,
   name,
   index,
-  items,
 }) => {
   return (
     <tr style={style} className="bill-row">
-      <td>{index + 1}</td>
+      <td>{index + 1}.</td>
       <td>
         <Input
           value={itemInput[name]}
@@ -483,7 +486,7 @@ const TableRow = ({
   );
 };
 
-const UpdateItemButton = ({ dispatch, items, index }) => {
+const UpdateItemButton = ({ dispatch, items, index, style }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeUpdated[index];
@@ -491,7 +494,7 @@ const UpdateItemButton = ({ dispatch, items, index }) => {
     const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
-      data: { id: _id, itemToBeUpdated:itemToBeUpdated[index] },
+      data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
       headers: {
         Cookie: "some_cookie",
       },
@@ -503,8 +506,8 @@ const UpdateItemButton = ({ dispatch, items, index }) => {
   };
 
   return (
-    <Button loading={apiLoading} onClick={handleAddItem}>
-      UPDATE ITEM
+    <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
+      <Text>{index + 1}. UPDATE</Text>
     </Button>
   );
 };
