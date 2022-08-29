@@ -352,7 +352,7 @@ export const ItemsList = () => {
             <Button
               loading={apiLoading}
               onClick={addItemToDb}
-              style={{ width: "180px" }}
+              style={{ width: "140px" }}
             >
               ADD NEW ITEM
             </Button>
