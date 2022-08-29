@@ -96,7 +96,16 @@ export const Billing = ({ billID = "" }) => {
     itemsByName[inputValue.itemName] = { ...itemDetail };
     setBill((prev) => ({
       ...prev,
-      billItems: [{ itemDetail }, ...prev.billItems],
+      billItems: [
+        {
+          itemDetail,
+          itemQuantityInBill: itemDetail.itemQuantityInBill,
+          itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+          itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+          itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+        },
+        ...prev.billItems,
+      ],
     }));
     setInputValue(INPUT_INITIAL_STATE);
   }
