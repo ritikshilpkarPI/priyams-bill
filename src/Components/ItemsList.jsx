@@ -22,11 +22,12 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
-  // const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     setItems([...itemsList]);
   }, [itemsList]);
+
 
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
@@ -41,6 +42,32 @@ export const ItemsList = () => {
     );
     setItems([...filteredItems]);
   };
+
+  const handleData = ()=>{
+    const filteredInput  = itemsList.filter((itemObj)=>
+    itemObj.itemBarcode!==null
+    )
+     setItems(filteredInput)
+  }
+  const handleEmptyData = ()=>{
+    const filteredInput  = itemsList.filter((itemObj)=>
+    itemObj.itemBarcode===null
+    )
+     setItems(filteredInput)
+  }
+  const handleCheckBox = async () =>{
+  console.log(items)
+  //  console.log(filteredInput)
+  if(!checked){
+    await handleData()
+  }else{
+   await handleEmptyData()
+  }
+    // setChecked( !checked);
+  }
+  useEffect(() => {
+    handleCheckBox()
+  }, [checked])
 
   const addItemToDb = async () => {
     setApiLoading(true);
@@ -286,13 +313,13 @@ export const ItemsList = () => {
               name="itemBarcode"
               type="number"
             />
-            {/* <input
+            <input
               type="checkbox"
               value={checked}
               onChange={() => {
                 setChecked(!checked);
               }}
-            /> */}
+            />
           </td>
           <td>
             <Input
@@ -451,6 +478,8 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 50}
               width={140}
+              // style={{marginRight:"50px"}}
+              
             >
               {ItemUpdateButtonRow}
             </List>
