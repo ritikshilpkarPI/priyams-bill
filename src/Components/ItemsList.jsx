@@ -22,6 +22,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  // const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -70,11 +71,11 @@ export const ItemsList = () => {
 
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
-    // setItemInput({...itemInput,itemBarcode: items[index][name],})
+
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
-
+    console.log({ itemInput });
     return (
       <>
         <TableRow
@@ -285,11 +286,18 @@ export const ItemsList = () => {
               name="itemBarcode"
               type="number"
             />
+            {/* <input
+              type="checkbox"
+              value={checked}
+              onChange={() => {
+                setChecked(!checked);
+              }}
+            /> */}
           </td>
           <td>
             <Input
               type="text"
-              style={{ width: "200px" }}
+              style={{ width: "200px", marginLeft: "-10px" }}
               value={newItemInput["itemName"]}
               onChange={handleNewItemInput}
               name="itemName"
@@ -297,7 +305,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "130px", marginLeft: "-10px" }}
               value={newItemInput["itemMRPperUnit"]}
               onChange={handleNewItemInput}
               name="itemMRPperUnit"
@@ -306,7 +314,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "130px" }}
               value={newItemInput["itemCostPricePerUnit"]}
               onChange={handleNewItemInput}
               name="itemCostPricePerUnit"
@@ -315,7 +323,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "130px" }}
               value={newItemInput["itemSellingPricePerUnit"]}
               onChange={handleNewItemInput}
               name="itemSellingPricePerUnit"
@@ -324,7 +332,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "130px" }}
               value={newItemInput["itemStockQuantity"]}
               onChange={handleNewItemInput}
               name="itemStockQuantity"
@@ -333,7 +341,7 @@ export const ItemsList = () => {
           </td>
           <td>
             <Input
-              style={{ width: "110px" }}
+              style={{ width: "130px" }}
               value={newItemInput["minimumStockQuantity"]}
               onChange={handleNewItemInput}
               name="minimumStockQuantity"
@@ -341,7 +349,10 @@ export const ItemsList = () => {
             />
           </td>
           <td>
-            <Button loading={apiLoading} onClick={addItemToDb}
+            <Button
+              loading={apiLoading}
+              onClick={addItemToDb}
+              style={{ width: "140px" }}
             >
               ADD NEW ITEM
             </Button>
@@ -353,20 +364,22 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={250}
+              itemSize={() => 50}
+              width={220}
+              style={{ marginRight: "-8px" }}
             >
               {BarcodeRow}
             </List>
           </td>
+
           <td>
             <List
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={250}
-
+              itemSize={() => 50}
+              width={220}
+              style={{ marginRight: "-2px", marginLeft: "-20px" }}
             >
               {ItemNameRow}
             </List>
@@ -376,8 +389,9 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={130}
+              itemSize={() => 50}
+              width={150}
+              style={{ marginRight: "-8px", marginLeft: "-15px" }}
             >
               {ItemMRPRow}
             </List>
@@ -387,8 +401,9 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={130}
+              itemSize={() => 50}
+              width={150}
+              style={{ marginRight: "-8px" }}
             >
               {ItemCostPriceRow}
             </List>
@@ -396,10 +411,11 @@ export const ItemsList = () => {
           <td>
             <List
               className="list-it"
+              style={{ marginRight: "-2px" }}
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={130}
+              itemSize={() => 50}
+              width={150}
             >
               {ItemSellingPriceRow}
             </List>
@@ -409,8 +425,9 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={130}
+              itemSize={() => 50}
+              width={150}
+              style={{ marginRight: "-8px", marginLeft: "-10px" }}
             >
               {ItemStockQuantityRow}
             </List>
@@ -420,8 +437,9 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={130}
+              itemSize={() => 50}
+              width={150}
+              style={{ marginRight: "-8px" }}
             >
               {ItemMinimumStockQuantityRow}
             </List>
@@ -431,8 +449,8 @@ export const ItemsList = () => {
               className="list-it"
               height={500}
               itemCount={items.length}
-              itemSize={() => 75}
-              width={160}
+              itemSize={() => 50}
+              width={140}
             >
               {ItemUpdateButtonRow}
             </List>
@@ -450,10 +468,10 @@ const TableRow = ({
   setItemInput,
   name,
   index,
-  items,
 }) => {
   return (
     <tr style={style} className="bill-row">
+      <td>{index + 1}.</td>
       <td>
         <Input
           value={itemInput[name]}
@@ -476,9 +494,9 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
     const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
-      data: { id: _id, itemToBeUpdated:itemToBeUpdated[index] },
+      data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
       headers: {
-        Cookie: "",
+        Cookie: "some_cookie",
       },
     });
     const newList = [...items];
@@ -488,8 +506,8 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
   };
 
   return (
-    <Button loading={apiLoading} onClick={handleAddItem}>
-      UPDATE ITEM
+    <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
+      <Text>{index + 1}. UPDATE</Text>
     </Button>
   );
 };
