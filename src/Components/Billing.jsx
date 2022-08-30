@@ -341,7 +341,7 @@ export const Billing = ({ billID = "" }) => {
                   className="data-result"
                   style={{ minWidth: "fit-content" }}
                 >
-                  <Table>
+                  <Table style={{ backgroundColor: "white" }}>
                     <thead>
                       <td>Barcode</td>
                       <td>Name</td>
