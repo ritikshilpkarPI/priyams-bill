@@ -135,10 +135,11 @@ export const Billing = ({ billID = "" }) => {
 
   useEffect(() => {
     if (itemsByBarcode[inputValue.itemBarcode]) {
+      let index;
+      const itemDetail = { ...itemsByBarcode[inputValue.itemBarcode] };
       bill.billItems.map((billItem) => {
-        let index;
+        index = bill.billItems.findIndex((a) => a._id === billItem._id);
         if (itemsByBarcode[inputValue.itemBarcode].itemBarcode === billItem.itemDetail.itemBarcode) {
-          index = bill.billItems.findIndex((a) => a._id === billItem._id);
           const updatedItem = {
             ...billItem,
             itemDetail:{...billItem.itemDetail,"itemQuantityInBill":billItem.itemQuantityInBill+1},
@@ -151,10 +152,19 @@ export const Billing = ({ billID = "" }) => {
             billItems: [updatedItem, ...prev.billItems],
           }));
         } 
-        else if (index === bill.billItems.length - 1) {
+        else if (index === bill.totalNumberOfUniqueItems - 1) {
           setBill((prev) => ({
             ...prev,
-            billItems: [itemsByBarcode[inputValue.itemBarcode], ...prev.billItems],
+            billItems: [
+              {
+                itemDetail,
+                itemQuantityInBill: itemDetail.itemQuantityInBill,
+                itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+                itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+                itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+                _id: itemDetail._id,
+              },
+              ...prev.billItems,],
           }));
         }
         return <></>;
@@ -162,13 +172,22 @@ export const Billing = ({ billID = "" }) => {
       if (bill.totalNumberOfItems === 0){
         setBill((prev) => ({
           ...prev,
-          billItems: [itemsByBarcode[inputValue.itemBarcode], ...prev.billItems],
+          billItems: [
+            {
+              itemDetail,
+              itemQuantityInBill: itemDetail.itemQuantityInBill,
+              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+              itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+              itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+              _id: itemDetail._id,
+            },
+            ...prev.billItems,],
         }));
       }
       setInputValue(INPUT_INITIAL_STATE);
     }
     barRef.current.focus();
-  }, [inputValue.itemBarcode,bill.billItems,bill.totalNumberOfItems]);
+  }, [inputValue.itemBarcode,bill.billItems,bill.totalNumberOfItems,bill.totalNumberOfUniqueItems]);
 
   useEffect(() => {
     let totalSum = 0;
@@ -334,24 +353,18 @@ export const Billing = ({ billID = "" }) => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
-                      console.log("IF")
                       let index;
                       let itemDetail = itemsByName[e.target.innerText];
                       bill.billItems.map((billItem) => {
                         index = bill.billItems.findIndex(
                           (a) => a._id === billItem._id
                         );
-                        console.log(billItem)
                         if (itemDetail.itemName === billItem.itemDetail.itemName) {
-                          console.log("if")
-                          console.log(billItem.itemQuantityInBill+1)
-                          console.log({itemDetail:{...billItem.itemDetail,"itemQuantityInBill":billItem.itemQuantityInBill+1}})
                           const updatedItem = {
                             ...billItem,
                             itemDetail:{...billItem.itemDetail,"itemQuantityInBill":billItem.itemQuantityInBill+1},
                             itemQuantityInBill: billItem.itemQuantityInBill + 1,
                           };
-                          console.log(updatedItem)
                           bill.billItems.splice(index, 1);
                           setBill((prev) => ({
                             totalNumberOfItems: prev.totalNumberOfItems + 1,
