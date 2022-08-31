@@ -22,7 +22,6 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
-  // const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -286,13 +285,6 @@ export const ItemsList = () => {
               name="itemBarcode"
               type="number"
             />
-            {/* <input
-              type="checkbox"
-              value={checked}
-              onChange={() => {
-                setChecked(!checked);
-              }}
-            /> */}
           </td>
           <td>
             <Input
