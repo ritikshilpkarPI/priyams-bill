@@ -105,9 +105,12 @@ const addNewBill = async (req, res) => {
       totalNumberOfItems,
     });
     const savedBill = await newBill.save();
+
+    console.log({ savedBill });
     const todayBill = await DailyBill.findOne({
-      billDate: new Date(savedBill.createdAt).getDate(),
+      billDate: savedBill.createdAt.toDateString(),
     });
+    console.log({ todayBill });
     if (todayBill) {
       ++todayBill.totalNumberOfBillsForToday,
         (todayBill.totalBillAmount += savedBill.billAmountTotal),
@@ -116,7 +119,9 @@ const addNewBill = async (req, res) => {
         (todayBill.totalItemBilled += savedBill.totalNumberOfUniqueItems),
         (todayBill.totalQuantityBilled += savedBill.totalNumberOfItems),
         todayBill.bills.push(savedBill);
-      await todayBill.save();
+      console.log("2", { todayBill });
+      const todayBilPresentSaved = await todayBill.save();
+      console.log({ todayBilPresentSaved });
     } else {
       const createTodaysBill = new DailyBill({
         totalNumberOfBillsForToday: 1,
@@ -125,10 +130,10 @@ const addNewBill = async (req, res) => {
         totalDiscountAmount: savedBill.billDiscountTotal,
         totalItemBilled: savedBill.totalNumberOfUniqueItems,
         totalQuantityBilled: savedBill.totalNumberOfItems,
-        billDate: new Date(savedBill.createdAt).getDate(),
         bills: [savedBill],
       });
-      await createTodaysBill.save();
+      const todayBillNewSaved = await createTodaysBill.save();
+      console.log({ todayBillNewSaved });
     }
     res.status(200).json({ message: newBill });
   } catch (error) {
