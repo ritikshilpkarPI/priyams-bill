@@ -75,7 +75,6 @@ export const Billing = ({ billID = "" }) => {
     window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
-
   };
   function handleChange(event) {
     const { name, value } = event.target;
@@ -672,7 +671,6 @@ export const Billing = ({ billID = "" }) => {
                 color="black"
                 size="xl"
                 weight={800}
-
                 className="final-bill-text print-text"
               >
                 UpiPaid: {bill.upiPay}
