@@ -75,9 +75,6 @@ export const Billing = ({ billID = "" }) => {
     window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
-    // setCashPay("");
-    // setUpiPay("");
-    // setAmountReturn(0);
   };
   function handleChange(event) {
     const { name, value } = event.target;
@@ -255,7 +252,7 @@ export const Billing = ({ billID = "" }) => {
           Print
         </Button>
         <Button
-          disabled={!bill.billItems.length}
+          disabled={!bill.billItems.length || bill.amountReturn < 0}
           className="print-btn"
           onClick={addNewBill}
           loading={apiLoading}
@@ -585,7 +582,7 @@ export const Billing = ({ billID = "" }) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                        itemObj["itemQuantityInBill"]
+                      itemObj["itemQuantityInBill"]
                     )}
                   </Text>
                 </td>
@@ -657,6 +654,7 @@ export const Billing = ({ billID = "" }) => {
               <Input
                 style={{ width: "90px" }}
                 type="number"
+                invalid={bill.amountReturn < 0}
                 value={bill.cashPay}
                 onChange={(e) =>
                   setBill((prev) => ({
@@ -680,6 +678,7 @@ export const Billing = ({ billID = "" }) => {
               <Input
                 style={{ width: "90px" }}
                 type="number"
+                invalid={bill.amountReturn < 0}
                 value={bill.upiPay}
                 onChange={(e) =>
                   setBill((prev) => ({
@@ -713,13 +712,13 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
     if (e.target.value < 0) return;
     const itemCopy = itemsByBarcode[itemObj["itemBarcode"]]
       ? {
-          itemDetail: { ...itemsByBarcode[itemObj["itemBarcode"]] },
-          ...bill.billItems[idx],
-        }
+        itemDetail: { ...itemsByBarcode[itemObj["itemBarcode"]] },
+        ...bill.billItems[idx],
+      }
       : {
-          itemDetail: { ...itemsByName[itemObj["itemName"]] },
-          ...bill.billItems[idx],
-        };
+        itemDetail: { ...itemsByName[itemObj["itemName"]] },
+        ...bill.billItems[idx],
+      };
 
     itemCopy.itemDetail["itemQuantityInBill"] = Number(e.target.value);
     itemCopy["itemQuantityInBill"] = Number(e.target.value);
