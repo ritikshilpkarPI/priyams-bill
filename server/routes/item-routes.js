@@ -4,6 +4,7 @@ const {
   getItemsFeed,
   addItems,
   editItemById,
+  softDeleteBill
 } = require("../controllers/item-controller");
 
 
@@ -11,5 +12,6 @@ const {
 itemRoutes.get("/items", getItemsFeed);
 itemRoutes.post("/addNewItem", addItems);
 itemRoutes.put("/editItemById", editItemById);
+itemRoutes.post("/softDeleteBill",softDeleteBill );
 
 module.exports = itemRoutes;
