@@ -12,6 +12,7 @@ const addNewBill = async (req, res) => {
       billDiscountTotal,
       billItems,
     } = req.body;
+    console.log({ req: req.body });
 
     let [
       // billPercentageDiscountTotal,
@@ -105,9 +106,12 @@ const addNewBill = async (req, res) => {
       totalNumberOfItems,
     });
     const savedBill = await newBill.save();
+
+    console.log({ savedBill });
     const todayBill = await DailyBill.findOne({
-      billDate: new Date(savedBill.createdAt).getDate(),
+      billDate: savedBill.createdAt.toDateString(),
     });
+    console.log({ todayBill });
     if (todayBill) {
       ++todayBill.totalNumberOfBillsForToday,
         (todayBill.totalBillAmount += savedBill.billAmountTotal),
@@ -116,7 +120,9 @@ const addNewBill = async (req, res) => {
         (todayBill.totalItemBilled += savedBill.totalNumberOfUniqueItems),
         (todayBill.totalQuantityBilled += savedBill.totalNumberOfItems),
         todayBill.bills.push(savedBill);
-      await todayBill.save();
+      console.log("2", { todayBill });
+      const todayBilPresentSaved = await todayBill.save();
+      console.log({ todayBilPresentSaved });
     } else {
       const createTodaysBill = new DailyBill({
         totalNumberOfBillsForToday: 1,
@@ -125,10 +131,10 @@ const addNewBill = async (req, res) => {
         totalDiscountAmount: savedBill.billDiscountTotal,
         totalItemBilled: savedBill.totalNumberOfUniqueItems,
         totalQuantityBilled: savedBill.totalNumberOfItems,
-        billDate: new Date(savedBill.createdAt).getDate(),
         bills: [savedBill],
       });
-      await createTodaysBill.save();
+      const todayBillNewSaved = await createTodaysBill.save();
+      console.log({ todayBillNewSaved });
     }
     res.status(200).json({ message: newBill });
   } catch (error) {
@@ -175,19 +181,48 @@ const getEditBill = async (req, res) => {
 
 const getDayWiseBills = async (req, res) => {
   try {
-    const allDailyBills = await DailyBill.find()
-      .populate({
-        path: "bills",
-        model: "Bill",
-        populate: {
-          path: "items",
-          populate: {
-            path: "itemDetail",
-            model: "Item",
+    const allDailyBills = await Bill.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          totalNumberOfBillsForToday: {
+            $sum: 1,
+          },
+          totalBillAmount: {
+            $sum: "$billAmountTotal",
+          },
+          totalMRPAmount: {
+            $sum: "$billMRPTotal",
+          },
+          totalDiscountAmount: {
+            $sum: "$billDiscountTotal",
+          },
+          totalItemBilled: {
+            $sum: "$totalNumberOfUniqueItems",
+          },
+          totalQuantityBilled: {
+            $sum: "$totalNumberOfItems",
+          },
+          totalDailyProfit: {
+            $sum: "$totalBillProfit",
           },
         },
-      })
-      .sort({ createdAt: -1 });
+      },
+      { $sort: { createdAt: -1 } },
+    ]);
+    // await DailyBill.find()
+    //   .populate({
+    //     path: "bills",
+    //     model: "Bill",
+    //     populate: {
+    //       path: "items",
+    //       populate: {
+    //         path: "itemDetail",
+    //         model: "Item",
+    //       },
+    //     },
+    //   })
+    //   .sort({ createdAt: -1 });
     const dailyBillCount = await DailyBill.countDocuments();
     res.status(200).json({ message: { allDailyBills, dailyBillCount } });
   } catch (error) {
