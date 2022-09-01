@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { Table, Text, Collapse } from "@mantine/core";
+import {
+  Table,
+  Text,
+  // Collapse
+} from "@mantine/core";
 import { Axios } from "../utils/axios";
-import { BillFeed } from "./BillFeed";
+// import { BillFeed } from "./BillFeed";
 
 const DayWiseBillFeed = () => {
   const [allBills, setAllBills] = useState([]);
