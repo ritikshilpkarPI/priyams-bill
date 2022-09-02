@@ -23,7 +23,7 @@ export const OpenClose = () => {
   const handleOpeningNotesInput = (value, key) => {
     console.log(value, key);
     setOpeningNotes((prev) => ({ ...prev, [key]: value }));
-    
+
     console.log(openingNotes);
   };
   const handleOpeningCoinInput = (value, key) => {
@@ -35,25 +35,48 @@ export const OpenClose = () => {
   const handleClosingCoinInput = (value, key) => {
     setClosingCoin((prev) => ({ ...prev, [key]: value }));
   };
-  const indexArr = {0:2000,1:500,2:200,3:100,4:50,5:20,6:10,7:5,8:2,9:1,}
-  const calculateSum = (dataObj)=>Object.values(dataObj).reduce((acc,curr,index)=> curr===undefined?acc:acc+curr*indexArr[index],0)
-  let openingNotesSum = calculateSum(openingNotes)
-  let openingCoinsSum = calculateSum(openingCoin)
-  let closingNotesSum = calculateSum(closingNotes)
-  let closingCoinsSum = calculateSum(closingCoin)
+  const indexArr = {
+    0: 2000,
+    1: 500,
+    2: 200,
+    3: 100,
+    4: 50,
+    5: 20,
+    6: 10,
+    7: 5,
+    8: 2,
+    9: 1,
+  };
+  const calculateSum = (dataObj) =>
+    Object.values(dataObj).reduce(
+      (acc, curr, index) =>
+        curr === undefined ? acc : acc + curr * indexArr[index],
+      0
+    );
+  let openingNotesSum = calculateSum(openingNotes);
+  let openingCoinsSum = calculateSum(openingCoin);
+  let closingNotesSum = calculateSum(closingNotes);
+  let closingCoinsSum = calculateSum(closingCoin);
 
   return (
-    <div>
-      <div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "80px" }}>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          gap: "40px",
+        }}
+      >
         <Text style={{ width: "100px" }} size="xl" weight={700}>
           Opening
         </Text>
-        <div style={{ display: "flex", alignItems:"center", gap:"10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <Text style={{ width: "100px" }} size="lg" weight={500}>
             Notes:
           </Text>
           {Object.keys(openingNotes).map((key) => (
-            <div >
+            <div>
               <label>{key.toUpperCase()}</label>
               <NumberInput
                 name={`${key}`}
@@ -66,72 +89,87 @@ export const OpenClose = () => {
             = {openingNotesSum}
           </Text>
         </div>
-      </div>
-
-      <div>
-        
-      <div style={{ display: "flex", alignItems:"center", gap:"10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <Text style={{ width: "100px" }} size="lg" weight={500}>
             Coins:
           </Text>
-        {Object.keys(openingCoin).map((key) => (
-          <div>
-            <label>{key.toUpperCase()}</label>
-            <NumberInput
-              name={`${key}`}
-              onChange={(value) => handleOpeningCoinInput(value, key)}
-              value={key}
-            />
-          </div>
-        ))}
-        <Text style={{ width: "100px" }} size="lg" weight={500}>
+          {Object.keys(openingCoin).map((key) => (
+            <div>
+              <label>{key.toUpperCase()}</label>
+              <NumberInput
+                name={`${key}`}
+                onChange={(value) => handleOpeningCoinInput(value, key)}
+                value={key}
+              />
+            </div>
+          ))}
+          <Text style={{ width: "100px" }} size="lg" weight={500}>
             = {openingCoinsSum}
           </Text>
         </div>
+        <Text
+          style={{ position: "absolute", right: "18px", top: "250px" }}
+          size="xl"
+          weight={700}
+        >
+          Total opening sum= {openingNotesSum + openingCoinsSum}
+        </Text>
       </div>
 
-      <div>
-      <Text style={{ width: "100px" }} size="xl" weight={700}>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          gap: "40px",
+        }}
+      >
+        <Text style={{ width: "100px" }} size="xl" weight={700}>
           Closing
         </Text>
-      <div style={{ display: "flex", alignItems:"center", gap:"10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <Text style={{ width: "100px" }} size="lg" weight={500}>
             Notes:
           </Text>
-        {Object.keys(closingNotes).map((key) => (
-          <div>
-            <label>{key.toUpperCase()}</label>
-            <NumberInput
-              name={`${key}`}
-              onChange={(value) => handleClosingNotesInput(value, key)}
-              value={key}
-            />
-          </div>
-        ))}
-        <Text style={{ width: "100px" }} size="lg" weight={500}>
+          {Object.keys(closingNotes).map((key) => (
+            <div>
+              <label>{key.toUpperCase()}</label>
+              <NumberInput
+                name={`${key}`}
+                onChange={(value) => handleClosingNotesInput(value, key)}
+                value={key}
+              />
+            </div>
+          ))}
+          <Text style={{ width: "100px" }} size="lg" weight={500}>
             = {closingNotesSum}
           </Text>
         </div>
-      </div>
-      <div>
-      <div style={{ display: "flex", alignItems:"center", gap:"10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <Text style={{ width: "100px" }} size="lg" weight={500}>
             Coins:
           </Text>
-        {Object.keys(closingCoin).map((key) => (
-          <div>
-            <label>{key.toUpperCase()}</label>
-            <NumberInput
-              name={`${key}`}
-              onChange={(value) => handleClosingCoinInput(value, key)}
-              value={key}
-            />
-          </div>
-        ))}
-        <Text style={{ width: "100px" }} size="lg" weight={500}>
+          {Object.keys(closingCoin).map((key) => (
+            <div>
+              <label>{key.toUpperCase()}</label>
+              <NumberInput
+                name={`${key}`}
+                onChange={(value) => handleClosingCoinInput(value, key)}
+                value={key}
+              />
+            </div>
+          ))}
+          <Text style={{ width: "100px" }} size="lg" weight={500}>
             = {closingCoinsSum}
           </Text>
         </div>
+        <Text
+          style={{ position: "absolute", right: "18px", top: "250px" }}
+          size="xl"
+          weight={700}
+        >
+          Total closing sum={closingNotesSum + closingCoinsSum}
+        </Text>
       </div>
     </div>
   );
