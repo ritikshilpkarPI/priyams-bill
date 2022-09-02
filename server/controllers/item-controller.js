@@ -52,8 +52,20 @@ const editItemById = async (req, res) => {
     res.status(500).json({ error: error });
   }
 };
+const softDeleteItem = async (req, res) => {
+  console.log(req.body.id);
+  try {
+    const { id } = req.body;
+    const deleteItem = await Item.findByIdAndUpdate(id, { $set: { isDeleted: false }});
+    console.log({deleteItem});
+    res.status(200).json({ message: deleteItem });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+};
 module.exports = {
   getItemsFeed,
   addItems,
   editItemById,
+  softDeleteItem
 };

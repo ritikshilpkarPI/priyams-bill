@@ -9,6 +9,7 @@ const ItemSchem = new mongoose.Schema(
     itemMRPperUnit: { type: Number, required: true, default: 0 },
     itemDiscountPerUnit: { type: Number, default: 0 },
     itemPerUnitDiscountPercentage: { type: Number, default: 0 },
+    isDeleted: {type: Boolean, default: false},
     itemCostPricePerUnit: {
       type: Number,
     },
@@ -22,6 +23,10 @@ const ItemSchem = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+ItemSchem.pre('find', function() {
+  this.where({ isDeleted: !true });
+});
 
 const Item = mongoose.model("Item", ItemSchem);
 module.exports = { Item };

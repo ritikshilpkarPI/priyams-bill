@@ -1,8 +1,20 @@
-import { useEffect, useState, useContext } from "react";
-import { Table, Text, Button, Input } from "@mantine/core";
-import { AppStateContext } from "../AppState/appState.context";
-import { VariableSizeList as List } from "react-window";
-import { Axios } from "../utils/axios";
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+
+import { VariableSizeList as List } from 'react-window';
+
+import {
+  Button,
+  Input,
+  Table,
+  Text,
+} from '@mantine/core';
+
+import { AppStateContext } from '../AppState/appState.context';
+import { Axios } from '../utils/axios';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -245,6 +257,19 @@ export const ItemsList = () => {
       </tr>
     );
   };
+  const ItemSoftDeleteButtonRow = ({ index, style }) => {
+    return (
+      <tr>
+        <td>
+          <SoftDeleteButton
+            style={style}
+            index={index}
+            items={items}
+          />
+        </td>
+      </tr>
+    );
+  };
 
   return (
     <Table striped highlightOnHover>
@@ -455,6 +480,17 @@ export const ItemsList = () => {
               {ItemUpdateButtonRow}
             </List>
           </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 50}
+              width={140}
+            >
+              {ItemSoftDeleteButtonRow}
+            </List>
+          </td>
         </tr>
       </tbody>
     </Table>
@@ -508,6 +544,32 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
   return (
     <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
       <Text>{index + 1}. UPDATE</Text>
+    </Button>
+  );
+};
+const SoftDeleteButton = ({ dispatch, items, index, style }) => {
+  const [apiLoading, setApiLoading] = useState(false);
+  const handleAddItem = async () => {
+    const { _id } = items[index];
+    setApiLoading(true);
+    const deletedItem = await Axios.request({
+      url: "/api/inventory/softDeleteItem",
+      method: "post",
+      data: { id: _id},
+      headers: {
+        Cookie: "some_cookie",
+      },
+    });
+    // const newList = [...items];
+    // newList.splice(index, 1, { ...updatedItem.data.message });
+    // dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });
+    console.log({deletedItem});
+    setApiLoading(false);
+  };
+
+  return (
+    <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
+      <Text>{index + 1}. Soft Delete</Text>
     </Button>
   );
 };
