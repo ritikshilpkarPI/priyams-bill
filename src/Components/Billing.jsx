@@ -538,7 +538,7 @@ export const Billing = ({ billID = "" }) => {
                   )}
                 </td>
                 <td className="itemName">
-                  <Text color="black" weight={800} size="xl">
+                  <Text color="black" weight={700} size="xl">
                     {itemObj["itemName"]}
                   </Text>
                 </td>
