@@ -194,12 +194,8 @@ export const Billing = ({ billID = "" }) => {
       setInputValue(INPUT_INITIAL_STATE);
     }
     barRef.current.focus();
-  }, [
-    inputValue.itemBarcode,
-    bill.billItems.length,
-    // bill.totalNumberOfItems,
-    // bill.totalNumberOfUniqueItems,
-  ]);
+    // eslint-disable-next-line
+  }, [inputValue.itemBarcode, bill.billItems.length]);
 
   useEffect(() => {
     let totalSum = 0;
