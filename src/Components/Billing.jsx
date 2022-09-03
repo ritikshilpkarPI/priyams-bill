@@ -340,6 +340,7 @@ export const Billing = ({ billID = "" }) => {
                   value={inputValue.itemBarcode}
                   onWheel={(e) => e.target.blur()}
                   onChange={(e) => handleChange(e)}
+                  autoComplete="off"
                 />
               </Text>
             </td>
@@ -351,6 +352,7 @@ export const Billing = ({ billID = "" }) => {
                   value={inputValue.itemName}
                   name="itemName"
                   placeholder="search here"
+                  autoComplete="off"
                   onChange={(e) => {
                     handleFilter(e);
                     handleChange(e);

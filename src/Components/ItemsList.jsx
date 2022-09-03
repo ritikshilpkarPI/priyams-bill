@@ -284,6 +284,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemBarcode"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -293,6 +294,7 @@ export const ItemsList = () => {
               value={newItemInput["itemName"]}
               onChange={handleNewItemInput}
               name="itemName"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -302,6 +304,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemMRPperUnit"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -311,6 +314,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemCostPricePerUnit"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -320,6 +324,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemSellingPricePerUnit"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -329,6 +334,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemStockQuantity"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -338,6 +344,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="minimumStockQuantity"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -472,6 +479,7 @@ const TableRow = ({
           }
           name={name}
           type="search"
+          autoComplete="off"
         />
       </td>
     </tr>
