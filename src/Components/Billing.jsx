@@ -708,7 +708,7 @@ export const Billing = ({ billID = "" }) => {
 
 const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
-    if (e.target.value < 1) return;
+    if (e.target.value < 0) return;
     const billItemsCopy = [...bill.billItems];
     billItemsCopy[idx].itemDetail["itemQuantityInBill"] = Number(
       e.target.value
