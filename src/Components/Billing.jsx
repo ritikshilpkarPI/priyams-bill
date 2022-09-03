@@ -76,6 +76,7 @@ export const Billing = ({ billID = "" }) => {
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
   };
+
   function handleChange(event) {
     const { name, value } = event.target;
     setInputValue((prevState) => ({ ...prevState, [name]: value }));
@@ -541,7 +542,7 @@ export const Billing = ({ billID = "" }) => {
                   )}
                 </td>
                 <td className="itemName">
-                  <Text color="black" weight={700} size="lg">
+                  <Text color="black" weight={800} size="xl">
                     {itemObj["itemName"]}
                   </Text>
                 </td>

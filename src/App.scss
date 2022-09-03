@@ -60,6 +60,10 @@
 .billing-container {
   margin-top: 50px;
 
+  .header {
+    display: none;
+  }
+
   .body {
     .bill-input {
       padding: 5px;
@@ -107,7 +111,7 @@
       flex-direction: column;
       align-items: center;
       padding: 10px;
-      margin-right: 80px;
+      margin-right: 120px;
       margin-bottom: 20px;
     }
 
@@ -145,8 +149,12 @@
           word-spacing: 999999px;
         }
 
+        .itemName {
+          font-size: 34px;
+        }
+
         .print-text {
-          font-size: 28px;
+          font-size: 44px;
         }
         .quantity-text {
           display: block;
@@ -167,7 +175,7 @@
       text-align: left;
       word-spacing: 999999px;
       .print-text {
-        font-size: 28px;
+        font-size: 44px;
       }
       .quantity-text {
         display: flex;
