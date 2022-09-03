@@ -340,6 +340,7 @@ export const Billing = ({ billID = "" }) => {
                   value={inputValue.itemBarcode}
                   onWheel={(e) => e.target.blur()}
                   onChange={(e) => handleChange(e)}
+                  autoComplete="off"
                 />
               </Text>
             </td>
@@ -351,6 +352,7 @@ export const Billing = ({ billID = "" }) => {
                   value={inputValue.itemName}
                   name="itemName"
                   placeholder="search here"
+                  autoComplete="off"
                   onChange={(e) => {
                     handleFilter(e);
                     handleChange(e);
@@ -706,7 +708,7 @@ export const Billing = ({ billID = "" }) => {
 
 const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
-    if (e.target.value < 1) return;
+    if (e.target.value < 0) return;
     const billItemsCopy = [...bill.billItems];
     billItemsCopy[idx].itemDetail["itemQuantityInBill"] = Number(
       e.target.value
