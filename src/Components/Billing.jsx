@@ -76,6 +76,7 @@ export const Billing = ({ billID = "" }) => {
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
   };
+
   function handleChange(event) {
     const { name, value } = event.target;
     setInputValue((prevState) => ({ ...prevState, [name]: value }));
@@ -193,12 +194,8 @@ export const Billing = ({ billID = "" }) => {
       setInputValue(INPUT_INITIAL_STATE);
     }
     barRef.current.focus();
-  }, [
-    inputValue.itemBarcode,
-    bill.billItems,
-    bill.totalNumberOfItems,
-    bill.totalNumberOfUniqueItems,
-  ]);
+    // eslint-disable-next-line
+  }, [inputValue.itemBarcode, bill.billItems.length]);
 
   useEffect(() => {
     let totalSum = 0;
@@ -541,7 +538,7 @@ export const Billing = ({ billID = "" }) => {
                   )}
                 </td>
                 <td className="itemName">
-                  <Text color="black" weight={700} size="lg">
+                  <Text color="black" weight={700} size="xl">
                     {itemObj["itemName"]}
                   </Text>
                 </td>
@@ -582,7 +579,7 @@ export const Billing = ({ billID = "" }) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                      itemObj["itemQuantityInBill"]
+                        itemObj["itemQuantityInBill"]
                     )}
                   </Text>
                 </td>
@@ -709,22 +706,13 @@ export const Billing = ({ billID = "" }) => {
 
 const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
-    if (e.target.value < 0) return;
-    const itemCopy = itemsByBarcode[itemObj["itemBarcode"]]
-      ? {
-        itemDetail: { ...itemsByBarcode[itemObj["itemBarcode"]] },
-        ...bill.billItems[idx],
-      }
-      : {
-        itemDetail: { ...itemsByName[itemObj["itemName"]] },
-        ...bill.billItems[idx],
-      };
-
-    itemCopy.itemDetail["itemQuantityInBill"] = Number(e.target.value);
-    itemCopy["itemQuantityInBill"] = Number(e.target.value);
-    const newBill = [...bill.billItems];
-    newBill.splice(idx, 1, itemCopy);
-    setBill({ ...bill, billItems: [...newBill] });
+    if (e.target.value < 1) return;
+    const billItemsCopy = [...bill.billItems];
+    billItemsCopy[idx].itemDetail["itemQuantityInBill"] = Number(
+      e.target.value
+    );
+    billItemsCopy[idx]["itemQuantityInBill"] = Number(e.target.value);
+    setBill((prev) => ({ ...prev, billItems: [...billItemsCopy] }));
   };
 
   return (
