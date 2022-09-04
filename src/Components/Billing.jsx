@@ -277,7 +277,12 @@ export const Billing = ({ billID = "" }) => {
               </Text>
             </th>
             <th>
-              <Text weight={700} color="black" size="lg">
+              <Text
+                weight={700}
+                color="black"
+                className="header-print-text"
+                size="lg"
+              >
                 Item Name
               </Text>
             </th>
@@ -287,6 +292,7 @@ export const Billing = ({ billID = "" }) => {
                 weight={700}
                 color="black"
                 size="lg"
+                className="header-print-text"
               >
                 Quantity
               </Text>
@@ -297,8 +303,9 @@ export const Billing = ({ billID = "" }) => {
                 weight={700}
                 color="black"
                 size="lg"
+                className="header-print-text"
               >
-                MRP/Unit
+                MRP /Unit
               </Text>
             </th>
             <th>
@@ -307,8 +314,9 @@ export const Billing = ({ billID = "" }) => {
                 weight={700}
                 color="black"
                 size="lg"
+                className="header-print-text"
               >
-                Selling Price/Unit
+                Selling Price /Unit
               </Text>
             </th>
             <th>
@@ -317,6 +325,7 @@ export const Billing = ({ billID = "" }) => {
                 weight={700}
                 color="black"
                 size="lg"
+                className="header-print-text"
               >
                 Item Total
               </Text>
@@ -540,7 +549,12 @@ export const Billing = ({ billID = "" }) => {
                   )}
                 </td>
                 <td className="itemName">
-                  <Text color="black" weight={700} size="xl">
+                  <Text
+                    className="print-text"
+                    color="black"
+                    weight={700}
+                    size="xl"
+                  >
                     {itemObj["itemName"]}
                   </Text>
                 </td>
@@ -556,7 +570,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={700}
                     size="xl"
                   >
                     {itemObj["itemMRPperUnit"]}
@@ -566,7 +580,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={700}
                     size="xl"
                   >
                     {itemObj["itemSellingPricePerUnit"]}
@@ -576,7 +590,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={700}
                     size="xl"
                   >
                     {Math.ceil(
@@ -604,7 +618,16 @@ export const Billing = ({ billID = "" }) => {
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
-            <td className="empty-slots"></td>
+            <td>
+              <Text
+                color="black"
+                size="xl"
+                weight={800}
+                className="final-bill-text print-text"
+              >
+                Total Items: {bill?.totalNumberOfItems?.toFixed(2)}
+              </Text>
+            </td>
             <td>
               <Text
                 color="black"
@@ -648,7 +671,7 @@ export const Billing = ({ billID = "" }) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                CashPaid: {bill.cashPay}
+                Cash Paid: {bill.cashPay}
               </Text>
               <Input
                 style={{ width: "90px" }}
@@ -672,7 +695,7 @@ export const Billing = ({ billID = "" }) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                UpiPaid: {bill.upiPay}
+                Upi Paid: {bill.upiPay}
               </Text>
               <Input
                 style={{ width: "90px" }}

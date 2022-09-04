@@ -113,6 +113,7 @@
       padding: 10px;
       margin-right: 120px;
       margin-bottom: 20px;
+      font-size: 32px;
     }
 
     .bill-table {
@@ -130,6 +131,11 @@
             max-width: fit-content;
           }
         }
+      }
+
+      .header-print-text {
+        font-size: 30px;
+        word-spacing: 999999px;
       }
 
       .body {
@@ -154,7 +160,7 @@
         }
 
         .print-text {
-          font-size: 44px;
+          font-size: 36px;
         }
         .quantity-text {
           display: block;
@@ -175,7 +181,7 @@
       text-align: left;
       word-spacing: 999999px;
       .print-text {
-        font-size: 44px;
+        font-size: 36px;
       }
       .quantity-text {
         display: flex;
