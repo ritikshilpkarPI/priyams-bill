@@ -305,7 +305,7 @@ export const Billing = ({ billID = "" }) => {
                 size="lg"
                 className="header-print-text"
               >
-                MRP/Unit
+                MRP /Unit
               </Text>
             </th>
             <th>
@@ -316,7 +316,7 @@ export const Billing = ({ billID = "" }) => {
                 size="lg"
                 className="header-print-text"
               >
-                Selling Price/Unit
+                Selling Price /Unit
               </Text>
             </th>
             <th>
@@ -618,7 +618,16 @@ export const Billing = ({ billID = "" }) => {
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
-            <td className="empty-slots"></td>
+            <td>
+              <Text
+                color="black"
+                size="xl"
+                weight={800}
+                className="final-bill-text print-text"
+              >
+                Total Items: {bill?.totalNumberOfItems?.toFixed(2)}
+              </Text>
+            </td>
             <td>
               <Text
                 color="black"
@@ -662,7 +671,7 @@ export const Billing = ({ billID = "" }) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                CashPaid: {bill.cashPay}
+                Cash Paid: {bill.cashPay}
               </Text>
               <Input
                 style={{ width: "90px" }}
@@ -686,7 +695,7 @@ export const Billing = ({ billID = "" }) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                UpiPaid: {bill.upiPay}
+                Upi Paid: {bill.upiPay}
               </Text>
               <Input
                 style={{ width: "90px" }}
