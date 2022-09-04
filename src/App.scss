@@ -144,15 +144,22 @@
           display: none;
         }
 
+        // .bill-item-row {
+        //   max-width: 100px;
+        // }
+
         .itemName,
         .itemQuantityInBill,
         .itemMRPperUnit,
         .itemSellingPricePerUnit,
         .itemTotal,
         .last-clmn {
-          width: 20px;
+          max-width: 20px;
           text-align: left;
           word-spacing: 999999px;
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
         }
 
         .itemName {
