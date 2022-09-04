@@ -540,7 +540,7 @@ export const Billing = ({ billID = "" }) => {
                   )}
                 </td>
                 <td className="itemName">
-                  <Text color="black" weight={700} size="xl">
+                  <Text color="black" weight={750} size="xl">
                     {itemObj["itemName"]}
                   </Text>
                 </td>
@@ -556,7 +556,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={750}
                     size="xl"
                   >
                     {itemObj["itemMRPperUnit"]}
@@ -566,7 +566,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={750}
                     size="xl"
                   >
                     {itemObj["itemSellingPricePerUnit"]}
@@ -576,7 +576,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={750}
                     size="xl"
                   >
                     {Math.ceil(
