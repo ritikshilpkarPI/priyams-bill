@@ -62,13 +62,17 @@ const addNewBill = async (req, res) => {
           (itemSellingPricePerUnit - itemCostPricePerUnit) *
           orderQuantityInNumber;
         totalBillProfit += itemNetProfit;
-        // if (_id) {
-        //   await Item.findByIdAndUpdate(
-        //     _id,
-        //     { $inc: { itemStockQuantity: -orderQuantityInNumber } },
-        //     { new: true }
-        //   );
-        // }
+
+        if (_id) {
+          const item = await Item.findById(_id);
+          if (!item.itemStockQuantity) {
+            item.itemStockQuantity = 0;
+            await item.save();
+          } else {
+            item.itemStockQuantity -= orderQuantityInNumber;
+            await item.save();
+          }
+        }
 
         return {
           itemDetail: {
@@ -105,37 +109,7 @@ const addNewBill = async (req, res) => {
       totalNumberOfUniqueItems,
       totalNumberOfItems,
     });
-    const savedBill = await newBill.save();
-
-    console.log({ savedBill });
-    const todayBill = await DailyBill.findOne({
-      billDate: savedBill.createdAt.toDateString(),
-    });
-    console.log({ todayBill });
-    if (todayBill) {
-      ++todayBill.totalNumberOfBillsForToday,
-        (todayBill.totalBillAmount += savedBill.billAmountTotal),
-        (todayBill.totalMRPAmount += savedBill.billMRPTotal),
-        (todayBill.totalDiscountAmount += savedBill.billDiscountTotal),
-        (todayBill.totalItemBilled += savedBill.totalNumberOfUniqueItems),
-        (todayBill.totalQuantityBilled += savedBill.totalNumberOfItems),
-        todayBill.bills.push(savedBill);
-      console.log("2", { todayBill });
-      const todayBilPresentSaved = await todayBill.save();
-      console.log({ todayBilPresentSaved });
-    } else {
-      const createTodaysBill = new DailyBill({
-        totalNumberOfBillsForToday: 1,
-        totalBillAmount: savedBill.billAmountTotal,
-        totalMRPAmount: savedBill.billMRPTotal,
-        totalDiscountAmount: savedBill.billDiscountTotal,
-        totalItemBilled: savedBill.totalNumberOfUniqueItems,
-        totalQuantityBilled: savedBill.totalNumberOfItems,
-        bills: [savedBill],
-      });
-      const todayBillNewSaved = await createTodaysBill.save();
-      console.log({ todayBillNewSaved });
-    }
+    await newBill.save();
     res.status(200).json({ message: newBill });
   } catch (error) {
     console.error(error);
@@ -210,19 +184,6 @@ const getDayWiseBills = async (req, res) => {
       },
       { $sort: { createdAt: -1 } },
     ]);
-    // await DailyBill.find()
-    //   .populate({
-    //     path: "bills",
-    //     model: "Bill",
-    //     populate: {
-    //       path: "items",
-    //       populate: {
-    //         path: "itemDetail",
-    //         model: "Item",
-    //       },
-    //     },
-    //   })
-    //   .sort({ createdAt: -1 });
     const dailyBillCount = await DailyBill.countDocuments();
     res.status(200).json({ message: { allDailyBills, dailyBillCount } });
   } catch (error) {
