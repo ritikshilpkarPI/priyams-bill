@@ -38,6 +38,10 @@ function App({ history }) {
       const fetch = await Axios.request({
         url: "/api/billing/getBillFeed",
         method: "get",
+        params: {
+          page: 1,
+          size: 100,
+        },
         headers: {
           Cookie: "",
         },

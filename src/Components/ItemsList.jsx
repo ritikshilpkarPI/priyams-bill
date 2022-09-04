@@ -74,7 +74,6 @@ export const ItemsList = () => {
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
-    console.log({ itemInput });
     return (
       <>
         <TableRow

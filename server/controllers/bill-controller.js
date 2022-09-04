@@ -12,7 +12,6 @@ const addNewBill = async (req, res) => {
       billDiscountTotal,
       billItems,
     } = req.body;
-    console.log({ req: req.body });
 
     let [
       // billPercentageDiscountTotal,
@@ -127,6 +126,8 @@ const getAllBill = async (req, res) => {
           model: "Item",
         },
       })
+      .limit(req.query.size)
+      .skip(req.query.size * req.query.page)
       .sort({ createdAt: -1 });
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });
