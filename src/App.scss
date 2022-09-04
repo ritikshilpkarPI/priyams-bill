@@ -132,6 +132,10 @@
         }
       }
 
+      .header-print-text {
+        font-size: 30px;
+      }
+
       .body {
         tr:first-child,
         td:nth-child(-n + 2) {
@@ -154,7 +158,7 @@
         }
 
         .print-text {
-          font-size: 44px;
+          font-size: 40px;
         }
         .quantity-text {
           display: block;
@@ -175,7 +179,7 @@
       text-align: left;
       word-spacing: 999999px;
       .print-text {
-        font-size: 44px;
+        font-size: 40px;
       }
       .quantity-text {
         display: flex;
