@@ -21,7 +21,7 @@ const ItemSchem = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  }, 
 );
 
 ItemSchem.pre('find', function() {

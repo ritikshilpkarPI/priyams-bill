@@ -2,7 +2,8 @@ const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
   try {
-    const items = await Item.find();
+     const items = await Item.find({isDeleted: false});
+     console.log(items);
     const itemCount = await Item.countDocuments();
     res.status(200).json({ message: { items, itemCount } });
   } catch (error) {
