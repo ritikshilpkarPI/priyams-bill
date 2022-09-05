@@ -12,7 +12,6 @@ const addNewBill = async (req, res) => {
       billDiscountTotal,
       billItems,
     } = req.body;
-    console.log({ req: req.body });
 
     let [
       // billPercentageDiscountTotal,
@@ -127,7 +126,10 @@ const getAllBill = async (req, res) => {
           model: "Item",
         },
       })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .limit(req.query.size);
+    // .skip(req.query.size * req.query.page)
+
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });
   } catch (error) {
@@ -182,8 +184,7 @@ const getDayWiseBills = async (req, res) => {
           },
         },
       },
-      { $sort: { createdAt: -1 } },
-    ]);
+    ]).sort({ _id: -1 });
     const dailyBillCount = await DailyBill.countDocuments();
     res.status(200).json({ message: { allDailyBills, dailyBillCount } });
   } catch (error) {

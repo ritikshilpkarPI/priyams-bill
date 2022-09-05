@@ -21,10 +21,7 @@ export const OpenClose = () => {
   const [closingCoin, setClosingCoin] = useState(INITIAL_VALS);
 
   const handleOpeningNotesInput = (value, key) => {
-    console.log(value, key);
     setOpeningNotes((prev) => ({ ...prev, [key]: value }));
-
-    console.log(openingNotes);
   };
   const handleOpeningCoinInput = (value, key) => {
     setOpeningCoin((prev) => ({ ...prev, [key]: value }));

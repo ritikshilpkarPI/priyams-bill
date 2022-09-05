@@ -204,7 +204,6 @@ export const Billing = ({ billID = "" }) => {
     let profitAmount = 0;
     let numOfItems = 0;
     bill.billItems.forEach((item) => {
-      console.log({ item });
       totalSum += Math.ceil(
         item.itemDetail["itemSellingPricePerUnit"] * item["itemQuantityInBill"]
       );
