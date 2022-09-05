@@ -80,6 +80,32 @@ export const ItemsList = () => {
     itemToBeUpdated[index][name] = value;
   };
 
+  const SoftDeleteButton = ({ items, index, style }) => {
+    const [apiLoading, setApiLoading] = useState(false);
+
+    const handleAddItem = async () => {
+      const { _id } = items[index];
+      setApiLoading(true);
+      const deletedItem = await Axios.request({
+        url: "/api/inventory/softDeleteItem",
+        method: "post",
+        data: { id: _id },
+        headers: {
+          Cookie: "some_cookie",
+        },
+      });
+      const newList = deletedItem.data.items;
+      dispatch({ type: "NEW_ITEMS_LIST", payload: [...newList] });
+      setApiLoading(false);
+    };
+
+    return (
+      <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
+        <Text>{index + 1}. Soft Delete</Text>
+      </Button>
+    );
+  };
+
   const BarcodeRow = ({ index, style }) => {
     const name = "itemBarcode";
 
@@ -543,32 +569,6 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
   return (
     <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
       <Text>{index + 1}. UPDATE</Text>
-    </Button>
-  );
-};
-const SoftDeleteButton = ({ dispatch, items, index, style }) => {
-  const [apiLoading, setApiLoading] = useState(false);
-  const handleAddItem = async () => {
-    const { _id } = items[index];
-    setApiLoading(true);
-    const deletedItem = await Axios.request({
-      url: "/api/inventory/softDeleteItem",
-      method: "post",
-      data: { id: _id},
-      headers: {
-        Cookie: "some_cookie",
-      },
-    });
-    // const newList = [...items];
-    // newList.splice(index, 1, { ...updatedItem.data.message });
-    // dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });
-    console.log({deletedItem});
-    setApiLoading(false);
-  };
-
-  return (
-    <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
-      <Text>{index + 1}. Soft Delete</Text>
     </Button>
   );
 };

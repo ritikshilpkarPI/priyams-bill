@@ -57,9 +57,9 @@ const softDeleteItem = async (req, res) => {
   console.log(req.body.id);
   try {
     const { id } = req.body;
-    const deleteItem = await Item.findByIdAndUpdate(id, { $set: { isDeleted: true } });
-    console.log({ deleteItem });
-    res.status(200).json({ message: deleteItem });
+    await Item.findByIdAndUpdate(id, { isDeleted: true });
+    const items = await Item.find({ isDeleted: false });
+    res.status(200).json({ message: 'item soft deleted!', items: items });
   } catch (error) {
     res.status(500).json({ error: error });
   }

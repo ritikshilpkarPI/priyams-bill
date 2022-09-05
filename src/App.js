@@ -40,7 +40,7 @@ function App({ history }) {
         method: "get",
         params: {
           page: 1,
-          size: 100,
+          size: 50,
         },
         headers: {
           Cookie: "",
