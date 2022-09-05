@@ -24,9 +24,5 @@ const ItemSchem = new mongoose.Schema(
   }, 
 );
 
-ItemSchem.pre('find', function() {
-  this.where({ isDeleted: false });
-});
-
 const Item = mongoose.model("Item", ItemSchem);
 module.exports = { Item };
