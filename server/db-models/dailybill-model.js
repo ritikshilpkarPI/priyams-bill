@@ -8,7 +8,7 @@ const DailyBillSchema = new mongoose.Schema(
     totalDiscountAmount: { type: Number, default: 0 },
     totalItemBilled: { type: Number, default: 1 },
     totalQuantityBilled: { type: Number, default: 0 },
-    billDate: { type: Date },
+    billDate: { type: Date, default: Date.now },
     bills: [
       {
         type: mongoose.Schema.Types.ObjectId,

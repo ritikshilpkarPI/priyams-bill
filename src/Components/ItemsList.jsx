@@ -34,7 +34,6 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
-  // const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -87,7 +86,6 @@ export const ItemsList = () => {
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
-    console.log({ itemInput });
     return (
       <>
         <TableRow
@@ -310,14 +308,8 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemBarcode"
               type="number"
+              autoComplete="off"
             />
-            {/* <input
-              type="checkbox"
-              value={checked}
-              onChange={() => {
-                setChecked(!checked);
-              }}
-            /> */}
           </td>
           <td>
             <Input
@@ -326,6 +318,7 @@ export const ItemsList = () => {
               value={newItemInput["itemName"]}
               onChange={handleNewItemInput}
               name="itemName"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -335,6 +328,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemMRPperUnit"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -344,6 +338,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemCostPricePerUnit"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -353,6 +348,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemSellingPricePerUnit"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -362,6 +358,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="itemStockQuantity"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -371,6 +368,7 @@ export const ItemsList = () => {
               onChange={handleNewItemInput}
               name="minimumStockQuantity"
               type="number"
+              autoComplete="off"
             />
           </td>
           <td>
@@ -516,6 +514,7 @@ const TableRow = ({
           }
           name={name}
           type="search"
+          autoComplete="off"
         />
       </td>
     </tr>

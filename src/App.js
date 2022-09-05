@@ -6,6 +6,7 @@ import { Axios } from "./utils/axios";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Billing } from "./Components/Billing";
 import { BillFeed } from "./Components/BillFeed";
+import { OpenClose } from "./Components/OpenClose";
 import DayWiseBillFeed from "./Components/DailyBill";
 import "./App.scss";
 import EditBill from "./Components/EditBill";
@@ -37,6 +38,10 @@ function App({ history }) {
       const fetch = await Axios.request({
         url: "/api/billing/getBillFeed",
         method: "get",
+        params: {
+          page: 1,
+          size: 100,
+        },
         headers: {
           Cookie: "",
         },
@@ -56,8 +61,10 @@ function App({ history }) {
         <Button onClick={() => history.push("inventory")}>Inventory</Button>
         <Button onClick={() => history.push("allBill")}>All Bills</Button>
         <Button onClick={() => history.push("dayBill")}>Day Wise Bills</Button>
+        <Button onClick={() => history.push("openClose")}>Open Close</Button>
       </div>
       <Switch>
+        <Route path="/openClose" component={OpenClose} />
         <Route path="/billing" component={Billing} />
         <Route path="/inventory" component={ItemsList} />
         <Route path="/dayBill" component={DayWiseBillFeed} />
