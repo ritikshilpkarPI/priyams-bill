@@ -101,12 +101,12 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {totalBillAmount}
+            {totalBillAmount.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {totalMRPAmount}
+            {totalMRPAmount.toFixed(2)}
           </Text>
         </td>
         <td>
@@ -116,12 +116,12 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {totalQuantityBilled}
+            {totalQuantityBilled.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {totalDailyProfit}
+            {totalDailyProfit.toFixed(2)}
           </Text>
         </td>
       </tr>
