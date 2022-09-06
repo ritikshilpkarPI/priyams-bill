@@ -189,6 +189,15 @@ const getDayWiseBills = async (req, res) => {
           totalDailyProfit: {
             $sum: "$totalBillProfit",
           },
+          totalCashPay: {
+            $sum: "$cashPay",
+          },
+          totalUpiPay: {
+            $sum: "$upiPay",
+          },
+          totalAmountReturn: {
+            $sum: "$amountReturn",
+          },          
         },
       },
     ]).sort({ _id: -1 });
