@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { Table, Text, Collapse } from "@mantine/core";
+import {
+  Table,
+  Text,
+  // Collapse
+} from "@mantine/core";
 import { Axios } from "../utils/axios";
-import { BillFeed } from "./BillFeed";
+// import { BillFeed } from "./BillFeed";
 
 const DayWiseBillFeed = () => {
   const [allBills, setAllBills] = useState([]);
@@ -45,8 +49,11 @@ const DayWiseBillFeed = () => {
             <Text>Date Quantity</Text>
           </th>
           <th>
-            <Text>Bills</Text>
+            <Text>Date Profit</Text>
           </th>
+          {/* <th>
+            <Text>Bills</Text>
+          </th> */}
         </tr>
       </thead>
       <tbody className="body">
@@ -60,13 +67,15 @@ const DayWiseBillFeed = () => {
 
 const TableRow = ({ item, idx }) => {
   const {
-    createdAt,
-    bills,
+    _id,
+    // createdAt,
+    // bills,
     totalBillAmount,
     totalItemBilled,
     totalMRPAmount,
     totalNumberOfBillsForToday,
     totalQuantityBilled,
+    totalDailyProfit,
   } = item;
   const [rowOpen, setRowOpen] = useState(false);
   return (
@@ -82,7 +91,7 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {new Date(createdAt).toDateString()}
+            {new Date(_id).toDateString()}
           </Text>
         </td>
         <td>
@@ -92,12 +101,12 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {totalBillAmount}
+            {totalBillAmount.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {totalMRPAmount}
+            {totalMRPAmount.toFixed(2)}
           </Text>
         </td>
         <td>
@@ -107,11 +116,16 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {totalQuantityBilled}
+            {totalQuantityBilled.toFixed(2)}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {totalDailyProfit.toFixed(2)}
           </Text>
         </td>
       </tr>
-      <tr>
+      {/* <tr>
         <Collapse
           in={rowOpen}
           transitionDuration={500}
@@ -120,7 +134,7 @@ const TableRow = ({ item, idx }) => {
         >
           <BillFeed bills={bills} />
         </Collapse>
-      </tr>
+      </tr> */}
     </>
   );
 };

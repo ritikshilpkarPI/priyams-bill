@@ -75,10 +75,8 @@ export const Billing = ({ billID = "" }) => {
     window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
-    // setCashPay("");
-    // setUpiPay("");
-    // setAmountReturn(0);
   };
+
   function handleChange(event) {
     const { name, value } = event.target;
     setInputValue((prevState) => ({ ...prevState, [name]: value }));
@@ -135,25 +133,69 @@ export const Billing = ({ billID = "" }) => {
 
   useEffect(() => {
     if (itemsByBarcode[inputValue.itemBarcode]) {
+      let index;
       const itemDetail = { ...itemsByBarcode[inputValue.itemBarcode] };
-      setBill((prev) => ({
-        ...prev,
-        billItems: [
-          {
-            itemDetail,
-            itemQuantityInBill: itemDetail.itemQuantityInBill,
-            itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-            itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-            itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-            _id: itemDetail._id,
-          },
-          ...prev.billItems,
-        ],
-      }));
+      bill.billItems.map((billItem) => {
+        index = bill.billItems.findIndex((a) => a._id === billItem._id);
+        if (
+          itemsByBarcode[inputValue.itemBarcode].itemBarcode ===
+          billItem.itemDetail.itemBarcode
+        ) {
+          const updatedItem = {
+            ...billItem,
+            itemDetail: {
+              ...billItem.itemDetail,
+              itemQuantityInBill: billItem.itemQuantityInBill + 1,
+            },
+            itemQuantityInBill: billItem.itemQuantityInBill + 1,
+          };
+          bill.billItems.splice(index, 1);
+          setBill((prev) => ({
+            totalNumberOfItems: prev.totalNumberOfItems + 1,
+            ...prev,
+            billItems: [updatedItem, ...prev.billItems],
+          }));
+        } else if (index === bill.totalNumberOfUniqueItems - 1) {
+          setBill((prev) => ({
+            ...prev,
+            billItems: [
+              {
+                itemDetail,
+                itemQuantityInBill: itemDetail.itemQuantityInBill,
+                itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+                itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+                itemSellingPriceTotal: Number(
+                  itemDetail.itemSellingPricePerUnit
+                ),
+                _id: itemDetail._id,
+              },
+              ...prev.billItems,
+            ],
+          }));
+        }
+        return <></>;
+      });
+      if (bill.totalNumberOfItems === 0) {
+        setBill((prev) => ({
+          ...prev,
+          billItems: [
+            {
+              itemDetail,
+              itemQuantityInBill: itemDetail.itemQuantityInBill,
+              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+              itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+              itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+              _id: itemDetail._id,
+            },
+            ...prev.billItems,
+          ],
+        }));
+      }
       setInputValue(INPUT_INITIAL_STATE);
     }
     barRef.current.focus();
-  }, [inputValue.itemBarcode]);
+    // eslint-disable-next-line
+  }, [inputValue.itemBarcode, bill.billItems.length]);
 
   useEffect(() => {
     let totalSum = 0;
@@ -162,7 +204,6 @@ export const Billing = ({ billID = "" }) => {
     let profitAmount = 0;
     let numOfItems = 0;
     bill.billItems.forEach((item) => {
-      console.log({ item });
       totalSum += Math.ceil(
         item.itemDetail["itemSellingPricePerUnit"] * item["itemQuantityInBill"]
       );
@@ -207,7 +248,7 @@ export const Billing = ({ billID = "" }) => {
           Print
         </Button>
         <Button
-          disabled={!bill.billItems.length}
+          disabled={!bill.billItems.length || bill.amountReturn < 0}
           className="print-btn"
           onClick={addNewBill}
           loading={apiLoading}
@@ -235,7 +276,12 @@ export const Billing = ({ billID = "" }) => {
               </Text>
             </th>
             <th>
-              <Text weight={700} color="black" size="lg">
+              <Text
+                weight={700}
+                color="black"
+                className="header-print-text"
+                size="lg"
+              >
                 Item Name
               </Text>
             </th>
@@ -245,6 +291,7 @@ export const Billing = ({ billID = "" }) => {
                 weight={700}
                 color="black"
                 size="lg"
+                className="header-print-text"
               >
                 Quantity
               </Text>
@@ -255,8 +302,9 @@ export const Billing = ({ billID = "" }) => {
                 weight={700}
                 color="black"
                 size="lg"
+                className="header-print-text"
               >
-                MRP/Unit
+                MRP /Unit
               </Text>
             </th>
             <th>
@@ -265,8 +313,9 @@ export const Billing = ({ billID = "" }) => {
                 weight={700}
                 color="black"
                 size="lg"
+                className="header-print-text"
               >
-                Selling Price/Unit
+                Selling Price /Unit
               </Text>
             </th>
             <th>
@@ -275,6 +324,7 @@ export const Billing = ({ billID = "" }) => {
                 weight={700}
                 color="black"
                 size="lg"
+                className="header-print-text"
               >
                 Item Total
               </Text>
@@ -298,6 +348,7 @@ export const Billing = ({ billID = "" }) => {
                   value={inputValue.itemBarcode}
                   onWheel={(e) => e.target.blur()}
                   onChange={(e) => handleChange(e)}
+                  autoComplete="off"
                 />
               </Text>
             </td>
@@ -309,6 +360,7 @@ export const Billing = ({ billID = "" }) => {
                   value={inputValue.itemName}
                   name="itemName"
                   placeholder="search here"
+                  autoComplete="off"
                   onChange={(e) => {
                     handleFilter(e);
                     handleChange(e);
@@ -319,23 +371,73 @@ export const Billing = ({ billID = "" }) => {
                 <div
                   onClick={(e) => {
                     if (itemsByName[e.target.innerText]) {
+                      let index;
                       let itemDetail = itemsByName[e.target.innerText];
-                      setBill((prev) => ({
-                        ...prev,
-                        billItems: [
-                          {
-                            itemDetail,
-                            itemQuantityInBill: itemDetail.itemQuantityInBill,
-                            itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-                            itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-                            itemSellingPriceTotal: Number(
-                              itemDetail.itemSellingPricePerUnit
-                            ),
-                            _id: itemDetail._id,
-                          },
-                          ...prev.billItems,
-                        ],
-                      }));
+                      bill.billItems.map((billItem) => {
+                        index = bill.billItems.findIndex(
+                          (a) => a._id === billItem._id
+                        );
+                        if (
+                          itemDetail.itemName === billItem.itemDetail.itemName
+                        ) {
+                          const updatedItem = {
+                            ...billItem,
+                            itemDetail: {
+                              ...billItem.itemDetail,
+                              itemQuantityInBill:
+                                billItem.itemQuantityInBill + 1,
+                            },
+                            itemQuantityInBill: billItem.itemQuantityInBill + 1,
+                          };
+                          bill.billItems.splice(index, 1);
+                          setBill((prev) => ({
+                            totalNumberOfItems: prev.totalNumberOfItems + 1,
+                            ...prev,
+                            billItems: [updatedItem, ...prev.billItems],
+                          }));
+                        } else if (
+                          index ===
+                          bill.totalNumberOfUniqueItems - 1
+                        ) {
+                          setBill((prev) => ({
+                            ...prev,
+                            billItems: [
+                              {
+                                itemDetail,
+                                itemQuantityInBill:
+                                  itemDetail.itemQuantityInBill,
+                                itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+                                itemDiscountTotal:
+                                  itemDetail.itemDiscountPerUnit,
+                                itemSellingPriceTotal: Number(
+                                  itemDetail.itemSellingPricePerUnit
+                                ),
+                                _id: itemDetail._id,
+                              },
+                              ...prev.billItems,
+                            ],
+                          }));
+                        }
+                        return <></>;
+                      });
+                      if (bill.totalNumberOfItems === 0) {
+                        setBill((prev) => ({
+                          ...prev,
+                          billItems: [
+                            {
+                              itemDetail,
+                              itemQuantityInBill: itemDetail.itemQuantityInBill,
+                              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+                              itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+                              itemSellingPriceTotal: Number(
+                                itemDetail.itemSellingPricePerUnit
+                              ),
+                              _id: itemDetail._id,
+                            },
+                            ...prev.billItems,
+                          ],
+                        }));
+                      }
                       setInputValue(INPUT_INITIAL_STATE);
                       setFilteredData([]);
                     }
@@ -343,7 +445,7 @@ export const Billing = ({ billID = "" }) => {
                   className="data-result"
                   style={{ minWidth: "fit-content" }}
                 >
-                  <Table>
+                  <Table style={{ backgroundColor: "white" }}>
                     <thead>
                       <td>Barcode</td>
                       <td>Name</td>
@@ -446,7 +548,12 @@ export const Billing = ({ billID = "" }) => {
                   )}
                 </td>
                 <td className="itemName">
-                  <Text color="black" weight={700} size="lg">
+                  <Text
+                    className="print-text"
+                    color="black"
+                    weight={700}
+                    size="xl"
+                  >
                     {itemObj["itemName"]}
                   </Text>
                 </td>
@@ -462,7 +569,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={700}
                     size="xl"
                   >
                     {itemObj["itemMRPperUnit"]}
@@ -472,7 +579,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={700}
                     size="xl"
                   >
                     {itemObj["itemSellingPricePerUnit"]}
@@ -482,7 +589,7 @@ export const Billing = ({ billID = "" }) => {
                   <Text
                     className="print-text"
                     color="black"
-                    weight={800}
+                    weight={700}
                     size="xl"
                   >
                     {Math.ceil(
@@ -510,7 +617,16 @@ export const Billing = ({ billID = "" }) => {
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
-            <td className="empty-slots"></td>
+            <td>
+              <Text
+                color="black"
+                size="xl"
+                weight={800}
+                className="final-bill-text print-text"
+              >
+                Total Items: {bill?.totalNumberOfItems?.toFixed(2)}
+              </Text>
+            </td>
             <td>
               <Text
                 color="black"
@@ -554,11 +670,12 @@ export const Billing = ({ billID = "" }) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                CashPaid: {bill.cashPay}
+                Cash Paid: {bill.cashPay}
               </Text>
               <Input
                 style={{ width: "90px" }}
                 type="number"
+                invalid={bill.amountReturn < 0}
                 value={bill.cashPay}
                 onChange={(e) =>
                   setBill((prev) => ({
@@ -577,11 +694,12 @@ export const Billing = ({ billID = "" }) => {
                 weight={800}
                 className="final-bill-text print-text"
               >
-                UpiPaid: {bill.upiPay}
+                Upi Paid: {bill.upiPay}
               </Text>
               <Input
                 style={{ width: "90px" }}
                 type="number"
+                invalid={bill.amountReturn < 0}
                 value={bill.upiPay}
                 onChange={(e) =>
                   setBill((prev) => ({
@@ -613,21 +731,12 @@ export const Billing = ({ billID = "" }) => {
 const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
     if (e.target.value < 0) return;
-    const itemCopy = itemsByBarcode[itemObj["itemBarcode"]]
-      ? {
-          itemDetail: { ...itemsByBarcode[itemObj["itemBarcode"]] },
-          ...bill.billItems[idx],
-        }
-      : {
-          itemDetail: { ...itemsByName[itemObj["itemName"]] },
-          ...bill.billItems[idx],
-        };
-
-    itemCopy.itemDetail["itemQuantityInBill"] = Number(e.target.value);
-    itemCopy["itemQuantityInBill"] = Number(e.target.value);
-    const newBill = [...bill.billItems];
-    newBill.splice(idx, 1, itemCopy);
-    setBill({ ...bill, billItems: [...newBill] });
+    const billItemsCopy = [...bill.billItems];
+    billItemsCopy[idx].itemDetail["itemQuantityInBill"] = Number(
+      e.target.value
+    );
+    billItemsCopy[idx]["itemQuantityInBill"] = Number(e.target.value);
+    setBill((prev) => ({ ...prev, billItems: [...billItemsCopy] }));
   };
 
   return (
