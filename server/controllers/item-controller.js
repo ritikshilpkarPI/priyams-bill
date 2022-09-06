@@ -59,7 +59,7 @@ const softDeleteItem = async (req, res) => {
     const { id } = req.body;
     await Item.findByIdAndUpdate(id, { isDeleted: true });
     const items = await Item.find({ isDeleted: false });
-    res.status(200).json({ message: 'item soft deleted!', items: items });
+    res.status(200).json({ message: "item soft deleted!", items: items });
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -69,5 +69,5 @@ module.exports = {
   getItemsFeed,
   addItems,
   editItemById,
-  softDeleteItem
+  softDeleteItem,
 };
