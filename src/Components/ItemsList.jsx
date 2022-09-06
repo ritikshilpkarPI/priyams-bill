@@ -1,7 +1,10 @@
-import { useEffect, useState, useContext } from "react";
-import { Table, Text, Button, Input } from "@mantine/core";
-import { AppStateContext } from "../AppState/appState.context";
+import { useContext, useEffect, useState } from "react";
+
 import { VariableSizeList as List } from "react-window";
+
+import { Button, Input, Table, Text } from "@mantine/core";
+
+import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
 const ITEM_INITIAL_INPUT = {
@@ -66,6 +69,37 @@ export const ItemsList = () => {
       [name]: type === "number" ? Number(value) : value,
     });
     itemToBeUpdated[index][name] = value;
+  };
+
+  const SoftDeleteButton = ({ items, index, style }) => {
+    const [apiLoading, setApiLoading] = useState(false);
+
+    const handleDeleteItem = async () => {
+      const { _id } = items[index];
+      setApiLoading(true);
+      const deletedItem = await Axios.request({
+        url: "/api/inventory/softDeleteItem",
+        method: "post",
+        data: { id: _id },
+        headers: {
+          Cookie: "some_cookie",
+        },
+      });
+      const newList = deletedItem.data.items;
+      dispatch({ type: "NEW_ITEMS_LIST", payload: [...newList] });
+      setApiLoading(false);
+    };
+
+    return (
+      <Button
+        color="red"
+        loading={apiLoading}
+        onClick={handleDeleteItem}
+        style={{ ...style }}
+      >
+        <Text>{index + 1}. Delete</Text>
+      </Button>
+    );
   };
 
   const BarcodeRow = ({ index, style }) => {
@@ -239,6 +273,15 @@ export const ItemsList = () => {
             index={index}
             items={items}
           />
+        </td>
+      </tr>
+    );
+  };
+  const ItemSoftDeleteButtonRow = ({ index, style }) => {
+    return (
+      <tr>
+        <td>
+          <SoftDeleteButton style={style} index={index} items={items} />
         </td>
       </tr>
     );
@@ -452,6 +495,17 @@ export const ItemsList = () => {
               width={140}
             >
               {ItemUpdateButtonRow}
+            </List>
+          </td>
+          <td>
+            <List
+              className="list-it"
+              height={500}
+              itemCount={items.length}
+              itemSize={() => 50}
+              width={140}
+            >
+              {ItemSoftDeleteButtonRow}
             </List>
           </td>
         </tr>
