@@ -25,7 +25,6 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
-  // const ['inline-block', setasteriskDisplay] = useState('none');
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -54,12 +53,10 @@ export const ItemsList = () => {
       !newItemInput.itemStockQuantity ||
       !newItemInput.minimumStockQuantity
     ) {
-      // setasteriskDisplay('inline-block');
       alert("Fill all required fields!");
       return;
     }
 
-    // setasteriskDisplay('none');
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
