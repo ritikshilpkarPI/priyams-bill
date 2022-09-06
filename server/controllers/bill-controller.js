@@ -198,6 +198,31 @@ const editBill = async (req, res) => {
     const { id, itemWithChanges } = req.body;
     const { billItems, ...billObject } = itemWithChanges;
     const billObjectWithItems = { ...billObject, items: billItems };
+    const prevBill = await Bill.findById(billObjectWithItems._id);
+    billObjectWithItems.items = await Promise.all(
+      billObjectWithItems.items.map(async (billItem) => {
+        const item = await Item.findById(billItem.itemDetail._id);
+        const itemInPrevBilll = prevBill.items.find((itemObj) => {
+          console.log({ itemObj });
+          return itemObj.itemDetail._id === item._id;
+        });
+        console.log({ billItem, item, itemInPrevBilll, prevBill });
+        if (itemInPrevBilll) {
+          item.itemStockQuantity += itemInPrevBilll.itemQuantityInBill;
+          item.itemStockQuantity -= billItem.itemQuantityInBill;
+          await item.save();
+        } else {
+          if (!item.itemStockQuantity) {
+            item.itemStockQuantity = 0;
+            await item.save();
+          } else {
+            item.itemStockQuantity -= orderQuantityInNumber;
+            await item.save();
+          }
+        }
+      })
+    );
+    console.log({ billObjectWithItems: JSON.stringify(billObjectWithItems) });
     const changeBill = await Bill.findByIdAndUpdate(id, billObjectWithItems, {
       new: true,
     }).populate({
