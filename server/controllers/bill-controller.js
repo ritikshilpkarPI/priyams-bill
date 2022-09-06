@@ -118,6 +118,7 @@ const addNewBill = async (req, res) => {
 
 const getAllBill = async (req, res) => {
   try {
+    console.log({ req });
     const allBill = await Bill.find()
       .populate({
         path: "items",
@@ -127,9 +128,8 @@ const getAllBill = async (req, res) => {
         },
       })
       .sort({ createdAt: -1 })
-      .limit(req.query.size);
-    // .skip(req.query.size * req.query.page)
-
+      .limit(Number(req.query.size));
+    // .skip(Number(req.query.size) * Number(req.query.page))
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });
   } catch (error) {
