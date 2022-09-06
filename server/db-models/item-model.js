@@ -9,7 +9,7 @@ const ItemSchem = new mongoose.Schema(
     itemMRPperUnit: { type: Number, required: true, default: 0 },
     itemDiscountPerUnit: { type: Number, default: 0 },
     itemPerUnitDiscountPercentage: { type: Number, default: 0 },
-    isDeleted: {type: Boolean, default: false},
+    isDeleted: { type: Boolean, default: false },
     itemCostPricePerUnit: {
       type: Number,
     },
@@ -19,9 +19,7 @@ const ItemSchem = new mongoose.Schema(
     createdAt: { type: Date, default: Date.now },
     lastUpdateAt: { type: Date },
   },
-  {
-    timestamps: true,
-  }, 
+  { strict: false, timestamps: true }
 );
 
 const Item = mongoose.model("Item", ItemSchem);
