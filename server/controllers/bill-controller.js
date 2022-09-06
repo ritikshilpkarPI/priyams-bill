@@ -118,7 +118,6 @@ const addNewBill = async (req, res) => {
 
 const getAllBill = async (req, res) => {
   try {
-    console.log({ req });
     const allBill = await Bill.find()
       .populate({
         path: "items",
