@@ -25,7 +25,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
-  const [asteriskDisplay, setasteriskDisplay] = useState('none');
+  // const ['inline-block', setasteriskDisplay] = useState('none');
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -46,13 +46,20 @@ export const ItemsList = () => {
   };
 
   const addItemToDb = async () => {
-    if (!newItemInput.itemCostPricePerUnit || !newItemInput.itemMRPperUnit || !newItemInput.itemName || !newItemInput.itemSellingPricePerUnit || !newItemInput.itemStockQuantity || !newItemInput.minimumStockQuantity) {
-      setasteriskDisplay('inline-block');
-      alert('Fill all required fields!');
+    if (
+      !newItemInput.itemCostPricePerUnit ||
+      !newItemInput.itemMRPperUnit ||
+      !newItemInput.itemName ||
+      !newItemInput.itemSellingPricePerUnit ||
+      !newItemInput.itemStockQuantity ||
+      !newItemInput.minimumStockQuantity
+    ) {
+      // setasteriskDisplay('inline-block');
+      alert("Fill all required fields!");
       return;
     }
 
-    setasteriskDisplay('none');
+    // setasteriskDisplay('none');
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
@@ -303,22 +310,40 @@ export const ItemsList = () => {
             <Text>Bar Code</Text>
           </th>
           <th>
-            <Text>Item Name<span style={{ color: 'red', display: asteriskDisplay }}>*</span></Text>
+            <Text>
+              Item Name
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>MRP/Unit<span style={{ color: 'red', display: asteriskDisplay }}>*</span></Text>
+            <Text>
+              MRP/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Cost/Unit<span style={{ color: 'red', display: asteriskDisplay }}>*</span></Text>
+            <Text>
+              Cost/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Selling Price/Unit<span style={{ color: 'red', display: asteriskDisplay }}>*</span></Text>
+            <Text>
+              Selling Price/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Total Stock<span style={{ color: 'red', display: asteriskDisplay }}>*</span></Text>
+            <Text>
+              Total Stock
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Minimum Stock<span style={{ color: 'red', display: asteriskDisplay }}>*</span></Text>
+            <Text>
+              Minimum Stock
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
             <Text>Update Button</Text>
