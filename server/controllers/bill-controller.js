@@ -118,7 +118,7 @@ const addNewBill = async (req, res) => {
 
 const getAllBill = async (req, res) => {
   try {
-    console.log({req});
+    console.log({ req });
     const allBill = await Bill.find()
       .populate({
         path: "items",
@@ -128,8 +128,8 @@ const getAllBill = async (req, res) => {
         },
       })
       .sort({ createdAt: -1 })
-      .limit(Number(req.query.size))
-      // .skip(Number(req.query.size) * Number(req.query.page))
+      .limit(Number(req.query.size));
+    // .skip(Number(req.query.size) * Number(req.query.page))
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });
   } catch (error) {
@@ -184,8 +184,7 @@ const getDayWiseBills = async (req, res) => {
           },
         },
       },
-      { $sort: { createdAt: -1 } },
-    ]);
+    ]).sort({ _id: -1 });
     const dailyBillCount = await DailyBill.countDocuments();
     res.status(200).json({ message: { allDailyBills, dailyBillCount } });
   } catch (error) {
@@ -214,8 +213,6 @@ const editBill = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 module.exports = {
   addNewBill,

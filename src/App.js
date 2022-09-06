@@ -26,10 +26,7 @@ function App({ history }) {
         },
       });
       const itemsData = fetch.data.message.items;
-      const filteredItemsData = itemsData.filter((itemObj) => {
-        return !itemObj.itemBarcode?.toString().includes("00000");
-      });
-      dispatch({ type: "NEW_ITEMS_LIST", payload: filteredItemsData });
+      dispatch({ type: "NEW_ITEMS_LIST", payload: itemsData });
     })();
   }, [dispatch]);
 

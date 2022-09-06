@@ -328,6 +328,7 @@ export const ItemsList = () => {
       <tbody className="body">
         <tr className="bill-row">
           <td>
+            {items.length}
             <Input
               style={{ width: "200px" }}
               value={newItemInput["itemBarcode"]}
