@@ -3,7 +3,6 @@ import { Table, Text, Button, Input } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { VariableSizeList as List } from "react-window";
 import { Axios } from "../utils/axios";
-import axios from 'axios';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -34,7 +33,7 @@ export const ItemsList = () => {
       const res = await Axios.request({
         url: "/api/inventory/softDeleteItem",
         method: "post",
-        body: [...data]
+        body: [...data],
       });
       console.log(res);
     };
