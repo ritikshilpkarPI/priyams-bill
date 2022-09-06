@@ -23,8 +23,15 @@ const addItems = async (req, res) => {
   } = req.body;
 
   try {
-    if (!itemCostPricePerUnit || !itemMRPperUnit || !itemName || !itemSellingPricePerUnit || !itemStockQuantity || !minimumStockQuantity) {
-      return res.status(200).json({ status: false, message: 'not all fields' });;
+    if (
+      !itemCostPricePerUnit ||
+      !itemMRPperUnit ||
+      !itemName ||
+      !itemSellingPricePerUnit ||
+      !itemStockQuantity ||
+      !minimumStockQuantity
+    ) {
+      return res.status(200).json({ status: false, message: "not all fields" });
     }
 
     const newItem = await new Item({
@@ -58,7 +65,6 @@ const editItemById = async (req, res) => {
 };
 
 const softDeleteItem = async (req, res) => {
-  console.log(req.body.id);
   try {
     const { id } = req.body;
     await Item.findByIdAndUpdate(id, { isDeleted: true });
