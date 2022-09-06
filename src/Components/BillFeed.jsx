@@ -8,31 +8,40 @@ export const BillFeed = ({ bills = [] }) => {
       <thead className="heading">
         <tr>
           <th>
-            <Text>Sl. No.</Text>
+            <Text align="center">Sl. No.</Text>
           </th>
           <th>
-            <Text>Bill Total Amount</Text>
+            <Text align="center">Bill Total Amount</Text>
           </th>
           <th>
-            <Text>Bill MRP Total Amount</Text>
+            <Text align="center">Bill MRP Total Amount</Text>
           </th>
           <th>
-            <Text>Total Items</Text>
+            <Text align="center">Cash Paid</Text>
           </th>
           <th>
-            <Text>Quantity</Text>
+            <Text align="center">UPI Paid</Text>
           </th>
           <th>
-            <Text>Bill Discount</Text>
+            <Text align="center">Amount Return</Text>
           </th>
           <th>
-            <Text>Bill Profit</Text>
+            <Text align="center">Total Items</Text>
           </th>
           <th>
-            <Text>Bill date</Text>
+            <Text align="center">Quantity</Text>
           </th>
           <th>
-            <Text>Items</Text>
+            <Text align="center">Bill Discount</Text>
+          </th>
+          <th>
+            <Text align="center">Bill Profit</Text>
+          </th>
+          <th>
+            <Text align="center">Bill date</Text>
+          </th>
+          <th>
+            <Text align="center">Items</Text>
           </th>
         </tr>
       </thead>
@@ -72,6 +81,21 @@ const TableRow = ({ item, idx }) => {
         <td>
           <Text color="black" weight={500}>
             {item["billMRPTotal"].toFixed(2)}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["cashPay"]?.toFixed(2)}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["upiPay"]?.toFixed(2)}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["amountReturn"]?.toFixed(2)}
           </Text>
         </td>
         <td>

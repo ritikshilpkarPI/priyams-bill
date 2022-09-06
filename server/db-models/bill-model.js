@@ -24,6 +24,9 @@ const BillSchema = new mongoose.Schema(
         itemSellingPriceTotal: { type: Number },
       },
     ],
+    cashPay: { type: Number },
+    upiPay: { type: Number },
+    amountReturn: { type: Number },
     createdAt: { type: Date, default: Date.now },
   },
   {
