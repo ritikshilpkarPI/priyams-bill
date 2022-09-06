@@ -1,20 +1,11 @@
-import {
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { useContext, useEffect, useState } from "react";
 
-import { VariableSizeList as List } from 'react-window';
+import { VariableSizeList as List } from "react-window";
 
-import {
-  Button,
-  Input,
-  Table,
-  Text,
-} from '@mantine/core';
+import { Button, Input, Table, Text } from "@mantine/core";
 
-import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
+import { AppStateContext } from "../AppState/appState.context";
+import { Axios } from "../utils/axios";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -83,7 +74,7 @@ export const ItemsList = () => {
   const SoftDeleteButton = ({ items, index, style }) => {
     const [apiLoading, setApiLoading] = useState(false);
 
-    const handleAddItem = async () => {
+    const handleDeleteItem = async () => {
       const { _id } = items[index];
       setApiLoading(true);
       const deletedItem = await Axios.request({
@@ -100,8 +91,13 @@ export const ItemsList = () => {
     };
 
     return (
-      <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
-        <Text>{index + 1}. Soft Delete</Text>
+      <Button
+        color="red"
+        loading={apiLoading}
+        onClick={handleDeleteItem}
+        style={{ ...style }}
+      >
+        <Text>{index + 1}. Delete</Text>
       </Button>
     );
   };
@@ -285,11 +281,7 @@ export const ItemsList = () => {
     return (
       <tr>
         <td>
-          <SoftDeleteButton
-            style={style}
-            index={index}
-            items={items}
-          />
+          <SoftDeleteButton style={style} index={index} items={items} />
         </td>
       </tr>
     );
