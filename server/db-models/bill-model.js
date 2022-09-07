@@ -28,6 +28,7 @@ const BillSchema = new mongoose.Schema(
     upiPay: { type: Number },
     amountReturn: { type: Number },
     createdAt: { type: Date, default: Date.now },
+    updated: { type: Array, default: Date.now },
   },
   {
     timestamps: true,

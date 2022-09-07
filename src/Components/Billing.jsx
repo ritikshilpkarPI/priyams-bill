@@ -1,7 +1,19 @@
-import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button, Input } from "@mantine/core";
-import { AppStateContext } from "../AppState/appState.context";
-import { Axios } from "../utils/axios";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
+import {
+  Button,
+  Input,
+  Table,
+  Text,
+} from '@mantine/core';
+
+import { AppStateContext } from '../AppState/appState.context';
+import { Axios } from '../utils/axios';
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -52,8 +64,14 @@ export const Billing = ({ billID = "" }) => {
     })();
   }, [billID]);
 
+
   const addNewBill = async () => {
     setApiLoading(true);
+    let updateBill = {
+      ...bill,
+      [bill.updated]: bill?.updated?.push(Date.now()),
+    };
+    setBill(updateBill);
     const editApi = {
       url: "/api/billing/editBill",
       method: "put",
@@ -724,6 +742,53 @@ export const Billing = ({ billID = "" }) => {
           </tr>
         </tbody>
       </Table>
+      <div style={{width: "50%"}}>
+        <Table>
+          <thead>
+          <th>
+              <Text weight={700} color="black" size="lg">
+              Created By
+              </Text>
+            </th>
+          <th>
+              <Text weight={700} color="black" size="lg">
+              Updated At
+              </Text>
+            </th>
+
+          </thead>
+          <tbody>
+            {bill?.updated?.map((value, key) => {
+              return (
+                <tr
+                  key={key}
+                  style={{
+                    padding: "5px",
+                    fontSize: "16px",
+                    fontStyle: "bold",
+                  }}
+                  className="show-data"
+                >
+                  <td>
+                  <Text weight={500} color="black" size="md">
+                  User
+                  </Text>
+                  
+                  </td>
+                  <td>
+                  <Text weight={500} color="black" size="md">
+                  {new Date(value).toLocaleDateString("en-US",{ weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour:"2-digit", minute: "2-digit", second: "2-digit" })}
+                  </Text>
+                  
+                  </td>
+
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+
+      </div>
     </div>
   );
 };
