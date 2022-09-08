@@ -37,6 +37,14 @@ export const Billing = ({ billID = "" }) => {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
 
+  // To refresh page
+  const refreshPage = () => {
+    let answer = window.confirm('Do you want to refresh page?')
+    if (answer) {
+      setBill(BILL_INITIAL_STATE);
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const editBill = await Axios.request({
@@ -244,7 +252,10 @@ export const Billing = ({ billID = "" }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
-        <Button className="print-btn" onClick={() => window.print()}>
+        <Button sx={{ background: 'black', marginRight: '5px' }} onClick={refreshPage}>
+          Refresh
+        </Button>
+        <Button sx={{ marginRight: '5px' }} className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
         <Button
@@ -594,7 +605,7 @@ export const Billing = ({ billID = "" }) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                        itemObj["itemQuantityInBill"]
+                      itemObj["itemQuantityInBill"]
                     )}
                   </Text>
                 </td>
