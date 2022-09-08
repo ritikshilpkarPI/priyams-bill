@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button, Input } from "@mantine/core";
+import { Table, Text, Button, Input, Loader } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -28,7 +28,7 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: "",
 };
 
-export const Billing = ({ billID = "" }) => {
+export const Billing = ({ billID = "", loader }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
@@ -36,6 +36,7 @@ export const Billing = ({ billID = "" }) => {
   const barRef = useRef("");
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
+  const loaderDisplay = loader;
 
   useEffect(() => {
     (async () => {
@@ -331,7 +332,7 @@ export const Billing = ({ billID = "" }) => {
             </th>
           </tr>
         </thead>
-        <tbody className="body">
+        <tbody style={{ display: loaderDisplay ? 'none' : '' }} className="body">
           <tr>
             <td>
               <Text color="black" weight={700}>
@@ -594,7 +595,7 @@ export const Billing = ({ billID = "" }) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                        itemObj["itemQuantityInBill"]
+                      itemObj["itemQuantityInBill"]
                     )}
                   </Text>
                 </td>
@@ -724,6 +725,9 @@ export const Billing = ({ billID = "" }) => {
           </tr>
         </tbody>
       </Table>
+      <div style={{ display: loaderDisplay ? 'flex' : 'none', justifyContent: 'center', width: '100%', padding: '30px' }}>
+        <Loader />
+      </div>
     </div>
   );
 };
