@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button, Input } from "@mantine/core";
+import { Table, Text, Button, Input, Loader } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -28,14 +28,38 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: "",
 };
 
-export const Billing = ({ billID = "" }) => {
+export const Billing = ({ billID = "", loader }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
   const barRef = useRef("");
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
+  const { itemsStateAndDispatch, billItemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
+  const [billItems, dispatch] = billItemsStateAndDispatch;
+  const loaderDisplay = loader;
+
+  // To save bill items in billItem Reducer
+  useEffect(() => {
+    dispatch({ type: "BILL_ITEMS_LIST", payload: bill });
+  }, [bill])
+
+  // To get items through billItems Reducer
+  useEffect(() => {
+    if (billItems.length === 0) {
+      setBill(BILL_INITIAL_STATE)
+    } else {
+      setBill(billItems);
+    }
+  }, []);
+
+  // To refresh page
+  const refreshPage = () => {
+    let answer = window.confirm('Do you want to refresh page?')
+    if (answer) {
+      setBill(BILL_INITIAL_STATE);
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -46,6 +70,7 @@ export const Billing = ({ billID = "" }) => {
           Cookie: "",
         },
       });
+
       const { items, ...billObject } = editBill.data.message;
       const billObjectWithBillItems = { ...billObject, billItems: items };
       setBill(billObjectWithBillItems);
@@ -107,6 +132,7 @@ export const Billing = ({ billID = "" }) => {
     }));
     setInputValue(INPUT_INITIAL_STATE);
   }
+
 
   const handleFilter = (event) => {
     setInputValue((prev) => ({ ...prev, itemName: event.target.value }));
@@ -244,7 +270,10 @@ export const Billing = ({ billID = "" }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
-        <Button className="print-btn" onClick={() => window.print()}>
+        <Button sx={{ background: 'black', marginRight: '5px' }} onClick={refreshPage}>
+          Refresh
+        </Button>
+        <Button sx={{ marginRight: '5px' }} className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
         <Button
@@ -331,7 +360,7 @@ export const Billing = ({ billID = "" }) => {
             </th>
           </tr>
         </thead>
-        <tbody className="body">
+        <tbody style={{ display: loaderDisplay ? 'none' : '' }} className="body">
           <tr>
             <td>
               <Text color="black" weight={700}>
@@ -594,7 +623,7 @@ export const Billing = ({ billID = "" }) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                        itemObj["itemQuantityInBill"]
+                      itemObj["itemQuantityInBill"]
                     )}
                   </Text>
                 </td>
@@ -724,6 +753,9 @@ export const Billing = ({ billID = "" }) => {
           </tr>
         </tbody>
       </Table>
+      <div style={{ display: loaderDisplay ? 'flex' : 'none', justifyContent: 'center', width: '100%', padding: '30px' }}>
+        <Loader />
+      </div>
     </div>
   );
 };
