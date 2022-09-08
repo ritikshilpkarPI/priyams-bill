@@ -16,7 +16,6 @@ function App({ history }) {
   const [allBills, setAllBills] = useState();
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
-  const [loaderDisplay, setLoaderDisplay] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -28,7 +27,6 @@ function App({ history }) {
         },
       });
       const itemsData = fetch.data.message.items;
-      setLoaderDisplay(false);
       dispatch({ type: "NEW_ITEMS_LIST", payload: itemsData });
     })();
   }, [dispatch]);
@@ -65,7 +63,7 @@ function App({ history }) {
       </div>
       <Switch>
         <Route path="/openClose" component={OpenClose} />
-        <Route path="/billing" render={() => <Billing loader={loaderDisplay} />} />
+        <Route path="/billing" component={Billing} />
         <Route path="/inventory" component={ItemsList} />
         <Route path="/dayBill" component={DayWiseBillFeed} />
         <Route path="/allBill" render={() => <BillFeed bills={allBills} />} />

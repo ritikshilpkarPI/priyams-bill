@@ -34,32 +34,9 @@ export const Billing = ({ billID = "", loader }) => {
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
   const barRef = useRef("");
-  const { itemsStateAndDispatch, billItemsStateAndDispatch } = useContext(AppStateContext);
+  const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
-  const [billItems, dispatch] = billItemsStateAndDispatch;
   const loaderDisplay = loader;
-
-  // To save bill items in billItem Reducer
-  useEffect(() => {
-    dispatch({ type: "BILL_ITEMS_LIST", payload: bill });
-  }, [bill])
-
-  // To get items through billItems Reducer
-  useEffect(() => {
-    if (billItems.length === 0) {
-      setBill(BILL_INITIAL_STATE)
-    } else {
-      setBill(billItems);
-    }
-  }, []);
-
-  // To refresh page
-  const refreshPage = () => {
-    let answer = window.confirm('Do you want to refresh page?')
-    if (answer) {
-      setBill(BILL_INITIAL_STATE);
-    }
-  }
 
   // To refresh page
   const refreshPage = () => {
