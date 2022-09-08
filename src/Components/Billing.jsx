@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button, Input, Loader } from "@mantine/core";
+import { Table, Text, Button, Input } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -28,7 +28,7 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: "",
 };
 
-export const Billing = ({ billID = "", loader }) => {
+export const Billing = ({ billID = "" }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
@@ -37,7 +37,6 @@ export const Billing = ({ billID = "", loader }) => {
   const { itemsStateAndDispatch, billItemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
   const [billItems, dispatch] = billItemsStateAndDispatch;
-  const loaderDisplay = loader;
 
   // To save bill items in billItem Reducer
   useEffect(() => {
@@ -52,14 +51,6 @@ export const Billing = ({ billID = "", loader }) => {
       setBill(billItems);
     }
   }, []);
-
-  // To refresh page
-  const refreshPage = () => {
-    let answer = window.confirm('Do you want to refresh page?')
-    if (answer) {
-      setBill(BILL_INITIAL_STATE);
-    }
-  }
 
   useEffect(() => {
     (async () => {
@@ -270,9 +261,6 @@ export const Billing = ({ billID = "", loader }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
-        <Button sx={{ background: 'black', marginRight: '5px' }} onClick={refreshPage}>
-          Refresh
-        </Button>
         <Button sx={{ marginRight: '5px' }} className="print-btn" onClick={() => window.print()}>
           Print
         </Button>
@@ -360,7 +348,7 @@ export const Billing = ({ billID = "", loader }) => {
             </th>
           </tr>
         </thead>
-        <tbody style={{ display: loaderDisplay ? 'none' : '' }} className="body">
+        <tbody className="body">
           <tr>
             <td>
               <Text color="black" weight={700}>
@@ -753,9 +741,6 @@ export const Billing = ({ billID = "", loader }) => {
           </tr>
         </tbody>
       </Table>
-      <div style={{ display: loaderDisplay ? 'flex' : 'none', justifyContent: 'center', width: '100%', padding: '30px' }}>
-        <Loader />
-      </div>
     </div>
   );
 };
