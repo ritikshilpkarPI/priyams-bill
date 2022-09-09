@@ -46,8 +46,26 @@ export const Billing = ({ billID = "" }) => {
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
   const barRef = useRef("");
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
+  const { itemsStateAndDispatch, billItemsStateAndDispatch } =
+    useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
+  const [billItems, dispatch] = billItemsStateAndDispatch;
+
+  // To save bill items in billItem Reducer
+  useEffect(() => {
+    dispatch({ type: "BILL_ITEMS_LIST", payload: bill });
+    // eslint-disable-next-line
+  }, [bill]);
+
+  // To get items through billItems Reducer
+  useEffect(() => {
+    if (billItems.length === 0) {
+      setBill(BILL_INITIAL_STATE);
+    } else {
+      setBill(billItems);
+    }
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -58,6 +76,7 @@ export const Billing = ({ billID = "" }) => {
           Cookie: "",
         },
       });
+
       const { items, ...billObject } = editBill.data.message;
       const billObjectWithBillItems = { ...billObject, billItems: items };
       setBill(billObjectWithBillItems);
@@ -262,7 +281,11 @@ export const Billing = ({ billID = "" }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
-        <Button className="print-btn" onClick={() => window.print()}>
+        <Button
+          sx={{ marginRight: "5px" }}
+          className="print-btn"
+          onClick={() => window.print()}
+        >
           Print
         </Button>
         <Button

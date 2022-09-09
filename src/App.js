@@ -16,6 +16,7 @@ function App({ history }) {
   const [allBills, setAllBills] = useState();
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
+
   useEffect(() => {
     (async () => {
       const fetch = await Axios.request({
