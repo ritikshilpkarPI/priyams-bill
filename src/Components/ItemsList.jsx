@@ -288,6 +288,8 @@ export const ItemsList = () => {
   };
 
   return (
+    <>
+    <a rel="noreferrer" download href="/.netlify/functions/items.csv" target="_blank" ><Button style={{float: 'right',background: '#0da20a', margin: '5px'}}>Download CSV</Button></a>
     <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
@@ -511,6 +513,7 @@ export const ItemsList = () => {
         </tr>
       </tbody>
     </Table>
+    </>
   );
 };
 
