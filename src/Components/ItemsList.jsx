@@ -2,9 +2,12 @@ import { useContext, useEffect, useState } from "react";
 
 import { VariableSizeList as List } from "react-window";
 
+import {parse} from 'json2csv';
+
 import { Button, Input, Table, Text } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
+
 import { Axios } from "../utils/axios";
 
 const ITEM_INITIAL_INPUT = {
@@ -299,9 +302,22 @@ export const ItemsList = () => {
     );
   };
 
+  const downloadFile = async () => {
+        const fileName = 'items.csv';
+        const fields = ['_id', 'itemName', 'itemDiscountPerUnit', 'itemPerUnitDiscountPercentage', 'itemBarcode', 'itemMRPperUnit', 'itemCostPricePerUnit', 'itemSellingPricePerUnit', 'itemStockQuantity', 'minimumStockQuantity', 'isDeleted'];
+        const blob = new Blob([parse(items, {fields})],{type:'text/csv'});
+        const href = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = href;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        return document.body.removeChild(link);
+    }
+
   return (
     <>
-    <a rel="noreferrer" download href="/.netlify/functions/items.csv" target="_blank" ><Button style={{float: 'right',background: '#0da20a', margin: '5px'}}>Download CSV</Button></a>
+    <Button disabled={!items.length} style={{float: 'right',background: '#0da20a', margin: '5px'}} onClick={downloadFile}>Download CSV</Button>
     <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
