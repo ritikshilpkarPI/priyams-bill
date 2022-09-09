@@ -40,11 +40,11 @@ export const Billing = ({ billID = "", loader }) => {
 
   // To refresh page
   const refreshPage = () => {
-    let answer = window.confirm('Do you want to refresh page?')
+    let answer = window.confirm("Do you want to refresh page?");
     if (answer) {
       setBill(BILL_INITIAL_STATE);
     }
-  }
+  };
 
   useEffect(() => {
     (async () => {
@@ -117,7 +117,6 @@ export const Billing = ({ billID = "", loader }) => {
     }));
     setInputValue(INPUT_INITIAL_STATE);
   }
-
 
   const handleFilter = (event) => {
     setInputValue((prev) => ({ ...prev, itemName: event.target.value }));
@@ -255,10 +254,17 @@ export const Billing = ({ billID = "", loader }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
-        <Button sx={{ background: 'black', marginRight: '5px' }} onClick={refreshPage}>
+        <Button
+          sx={{ background: "black", marginRight: "5px" }}
+          onClick={refreshPage}
+        >
           Refresh
         </Button>
-        <Button sx={{ marginRight: '5px' }} className="print-btn" onClick={() => window.print()}>
+        <Button
+          sx={{ marginRight: "5px" }}
+          className="print-btn"
+          onClick={() => window.print()}
+        >
           Print
         </Button>
         <Button
@@ -345,7 +351,10 @@ export const Billing = ({ billID = "", loader }) => {
             </th>
           </tr>
         </thead>
-        <tbody style={{ display: loaderDisplay ? 'none' : '' }} className="body">
+        <tbody
+          style={{ display: loaderDisplay ? "none" : "" }}
+          className="body"
+        >
           <tr>
             <td>
               <Text color="black" weight={700}>
@@ -608,7 +617,7 @@ export const Billing = ({ billID = "", loader }) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                      itemObj["itemQuantityInBill"]
+                        itemObj["itemQuantityInBill"]
                     )}
                   </Text>
                 </td>
@@ -738,7 +747,14 @@ export const Billing = ({ billID = "", loader }) => {
           </tr>
         </tbody>
       </Table>
-      <div style={{ display: loaderDisplay ? 'flex' : 'none', justifyContent: 'center', width: '100%', padding: '30px' }}>
+      <div
+        style={{
+          display: loaderDisplay ? "flex" : "none",
+          justifyContent: "center",
+          width: "100%",
+          padding: "30px",
+        }}
+      >
         <Loader />
       </div>
     </div>
