@@ -34,22 +34,25 @@ export const Billing = ({ billID = "" }) => {
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
   const barRef = useRef("");
-  const { itemsStateAndDispatch, billItemsStateAndDispatch } = useContext(AppStateContext);
+  const { itemsStateAndDispatch, billItemsStateAndDispatch } =
+    useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
   const [billItems, dispatch] = billItemsStateAndDispatch;
 
   // To save bill items in billItem Reducer
   useEffect(() => {
     dispatch({ type: "BILL_ITEMS_LIST", payload: bill });
-  }, [bill])
+    // eslint-disable-next-line
+  }, [bill]);
 
   // To get items through billItems Reducer
   useEffect(() => {
     if (billItems.length === 0) {
-      setBill(BILL_INITIAL_STATE)
+      setBill(BILL_INITIAL_STATE);
     } else {
       setBill(billItems);
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -123,7 +126,6 @@ export const Billing = ({ billID = "" }) => {
     }));
     setInputValue(INPUT_INITIAL_STATE);
   }
-
 
   const handleFilter = (event) => {
     setInputValue((prev) => ({ ...prev, itemName: event.target.value }));
@@ -261,7 +263,11 @@ export const Billing = ({ billID = "" }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
-        <Button sx={{ marginRight: '5px' }} className="print-btn" onClick={() => window.print()}>
+        <Button
+          sx={{ marginRight: "5px" }}
+          className="print-btn"
+          onClick={() => window.print()}
+        >
           Print
         </Button>
         <Button
@@ -611,7 +617,7 @@ export const Billing = ({ billID = "" }) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                      itemObj["itemQuantityInBill"]
+                        itemObj["itemQuantityInBill"]
                     )}
                   </Text>
                 </td>
