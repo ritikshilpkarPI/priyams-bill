@@ -45,6 +45,18 @@ export const ItemsList = () => {
   };
 
   const addItemToDb = async () => {
+    if (
+      !newItemInput.itemCostPricePerUnit ||
+      !newItemInput.itemMRPperUnit ||
+      !newItemInput.itemName ||
+      !newItemInput.itemSellingPricePerUnit ||
+      !newItemInput.itemStockQuantity ||
+      !newItemInput.minimumStockQuantity
+    ) {
+      alert("Fill all required fields!");
+      return;
+    }
+
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
@@ -297,22 +309,40 @@ export const ItemsList = () => {
             <Text>Bar Code</Text>
           </th>
           <th>
-            <Text>Item Name</Text>
+            <Text>
+              Item Name
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>MRP/Unit</Text>
+            <Text>
+              MRP/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Cost/Unit</Text>
+            <Text>
+              Cost/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Selling Price/Unit</Text>
+            <Text>
+              Selling Price/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Total Stock</Text>
+            <Text>
+              Total Stock
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Minimum Stock</Text>
+            <Text>
+              Minimum Stock
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
             <Text>Update Button</Text>
