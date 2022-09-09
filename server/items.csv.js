@@ -20,10 +20,9 @@ async function connectDB() {
 }
 connectDB();
 exports.handler = async () => {
-    const dateTime = new Date().toISOString().slice(-24).replace(/\D/g, '').slice(0, 14); 
     let csv;
     const items = await Item.find({}).lean();
-    const fields = ['_id','itemName'];
+    const fields = ['_id', 'itemName', 'itemDiscountPerUnit', 'itemPerUnitDiscountPercentage', 'itemBarcode', 'itemMRPperUnit', 'itemCostPricePerUnit', 'itemSellingPricePerUnit', 'itemStockQuantity', 'minimumStockQuantity', 'isDeleted'];
     csv = json2csv(items, {fields});
     return {
         statusCode: 200,
