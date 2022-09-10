@@ -4,9 +4,8 @@ const {
   getItemsFeed,
   addItems,
   editItemById,
-  softDeleteItem
+  softDeleteItem,
 } = require("../controllers/item-controller");
-
 
 // itemRoutes.post("/newbill", userSignupValidator, runValidation, userSignup);
 itemRoutes.get("/items", getItemsFeed);

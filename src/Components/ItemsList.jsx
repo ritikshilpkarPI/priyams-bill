@@ -33,6 +33,19 @@ export const ItemsList = () => {
     setItems([...itemsList]);
   }, [itemsList]);
 
+  useEffect(() => {
+    const softDelete = async (data) => {
+      console.log(data);
+      const res = await Axios.request({
+        url: "/api/inventory/softDeleteItem",
+        method: "post",
+        body: [...data],
+      });
+      console.log(res);
+    };
+    softDelete([{ _id: "62dd09fa63f8d5aa0cf737b9" }]);
+  }, []);
+
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
     setNewItemInput({ ...newItemInput, [name]: value });
