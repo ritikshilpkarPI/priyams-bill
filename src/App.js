@@ -28,8 +28,8 @@ function App({ history }) {
         },
       });
       const itemsData = fetch.data.message.items;
-      setLoaderDisplay(false);
       dispatch({ type: "NEW_ITEMS_LIST", payload: itemsData });
+      setLoaderDisplay(false);
     })();
   }, [dispatch]);
 
@@ -67,7 +67,12 @@ function App({ history }) {
         <Route path="/openClose" component={OpenClose} />
         <Route
           path="/billing"
-          render={() => <Billing loader={loaderDisplay} />}
+          render={() => (
+            <Billing
+              loaderDisplay={loaderDisplay}
+              setLoaderDisplay={setLoaderDisplay}
+            />
+          )}
         />
         <Route path="/inventory" component={ItemsList} />
         <Route path="/dayBill" component={DayWiseBillFeed} />

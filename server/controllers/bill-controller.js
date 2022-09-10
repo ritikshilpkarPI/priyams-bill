@@ -13,7 +13,7 @@ const addNewBill = async (req, res) => {
       billItems,
       cashPay,
       upiPay,
-      amountReturn
+      amountReturn,
     } = req.body;
 
     let [
@@ -67,7 +67,6 @@ const addNewBill = async (req, res) => {
 
         if (_id) {
           const item = await Item.findById(_id);
-          console.log(item);
           if (!item.itemStockQuantity) {
             item.itemStockQuantity = 0;
             await item.save();
@@ -113,7 +112,7 @@ const addNewBill = async (req, res) => {
       totalNumberOfItems,
       cashPay,
       upiPay,
-      amountReturn
+      amountReturn,
     });
     await newBill.save();
     res.status(200).json({ message: newBill });
@@ -196,7 +195,7 @@ const getDayWiseBills = async (req, res) => {
           },
           totalAmountReturn: {
             $sum: "$amountReturn",
-          },          
+          },
         },
       },
     ]).sort({ _id: -1 });
