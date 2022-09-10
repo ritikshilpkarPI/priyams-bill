@@ -11,6 +11,9 @@ const addNewBill = async (req, res) => {
       billAmountTotal,
       billDiscountTotal,
       billItems,
+      cashPay,
+      upiPay,
+      amountReturn,
     } = req.body;
 
     let [
@@ -107,6 +110,9 @@ const addNewBill = async (req, res) => {
       totalBillProfit,
       totalNumberOfUniqueItems,
       totalNumberOfItems,
+      cashPay,
+      upiPay,
+      amountReturn,
     });
     await newBill.save();
     res.status(200).json({ message: newBill });
@@ -127,9 +133,8 @@ const getAllBill = async (req, res) => {
         },
       })
       .sort({ createdAt: -1 })
-      .limit(req.query.size);
-    // .skip(req.query.size * req.query.page)
-
+      .limit(Number(req.query.size));
+    // .skip(Number(req.query.size) * Number(req.query.page))
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });
   } catch (error) {
@@ -181,6 +186,15 @@ const getDayWiseBills = async (req, res) => {
           },
           totalDailyProfit: {
             $sum: "$totalBillProfit",
+          },
+          totalCashPay: {
+            $sum: "$cashPay",
+          },
+          totalUpiPay: {
+            $sum: "$upiPay",
+          },
+          totalAmountReturn: {
+            $sum: "$amountReturn",
           },
         },
       },
