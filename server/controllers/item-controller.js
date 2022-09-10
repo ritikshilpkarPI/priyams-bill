@@ -2,7 +2,8 @@ const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
   try {
-    const items = await Item.find({ isDeleted: false });
+    let items = await Item.find();
+    items = items.filter((item) => !item.isDeleted);
     const itemCount = await Item.countDocuments();
     res.status(200).json({ message: { items, itemCount } });
   } catch (error) {
@@ -68,7 +69,8 @@ const softDeleteItem = async (req, res) => {
   try {
     const { id } = req.body;
     await Item.findByIdAndUpdate(id, { isDeleted: true });
-    const items = await Item.find({ isDeleted: false });
+    let items = await Item.find();
+    items = items.filter((item) => !item.isDeleted);
     res.status(200).json({ message: "item soft deleted!", items: items });
   } catch (error) {
     res.status(500).json({ error: error });
