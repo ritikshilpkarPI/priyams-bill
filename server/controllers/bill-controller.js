@@ -11,6 +11,9 @@ const addNewBill = async (req, res) => {
       billAmountTotal,
       billDiscountTotal,
       billItems,
+      cashPay,
+      upiPay,
+      amountReturn,
     } = req.body;
 
     let [
@@ -107,6 +110,9 @@ const addNewBill = async (req, res) => {
       totalBillProfit,
       totalNumberOfUniqueItems,
       totalNumberOfItems,
+      cashPay,
+      upiPay,
+      amountReturn,
     });
     await newBill.save();
     res.status(200).json({ message: newBill });
@@ -118,7 +124,6 @@ const addNewBill = async (req, res) => {
 
 const getAllBill = async (req, res) => {
   try {
-    console.log({ req });
     const allBill = await Bill.find()
       .populate({
         path: "items",
@@ -182,6 +187,15 @@ const getDayWiseBills = async (req, res) => {
           totalDailyProfit: {
             $sum: "$totalBillProfit",
           },
+          totalCashPay: {
+            $sum: "$cashPay",
+          },
+          totalUpiPay: {
+            $sum: "$upiPay",
+          },
+          totalAmountReturn: {
+            $sum: "$amountReturn",
+          },
         },
       },
     ]).sort({ _id: -1 });
@@ -198,6 +212,31 @@ const editBill = async (req, res) => {
     const { id, itemWithChanges } = req.body;
     const { billItems, ...billObject } = itemWithChanges;
     const billObjectWithItems = { ...billObject, items: billItems };
+    const prevBill = await Bill.findById(billObjectWithItems._id);
+    billObjectWithItems.items = await Promise.all(
+      billObjectWithItems.items.map(async (billItem) => {
+        const item = await Item.findById(billItem.itemDetail._id);
+        const itemInPrevBilll = prevBill.items.find((itemObj) => {
+          console.log({ itemObj });
+          return itemObj.itemDetail._id === item._id;
+        });
+        console.log({ billItem, item, itemInPrevBilll, prevBill });
+        if (itemInPrevBilll) {
+          item.itemStockQuantity += itemInPrevBilll.itemQuantityInBill;
+          item.itemStockQuantity -= billItem.itemQuantityInBill;
+          await item.save();
+        } else {
+          if (!item.itemStockQuantity) {
+            item.itemStockQuantity = 0;
+            await item.save();
+          } else {
+            item.itemStockQuantity -= orderQuantityInNumber;
+            await item.save();
+          }
+        }
+      })
+    );
+    console.log({ billObjectWithItems: JSON.stringify(billObjectWithItems) });
     const changeBill = await Bill.findByIdAndUpdate(id, billObjectWithItems, {
       new: true,
     }).populate({

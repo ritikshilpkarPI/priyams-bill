@@ -51,6 +51,15 @@ const DayWiseBillFeed = () => {
           <th>
             <Text>Date Profit</Text>
           </th>
+          <th>
+            <Text>Cash Paid</Text>
+          </th>
+          <th>
+            <Text>UPI Paid</Text>
+          </th>
+          <th>
+            <Text>Amount Returned</Text>
+          </th>
           {/* <th>
             <Text>Bills</Text>
           </th> */}
@@ -76,6 +85,9 @@ const TableRow = ({ item, idx }) => {
     totalNumberOfBillsForToday,
     totalQuantityBilled,
     totalDailyProfit,
+    totalCashPay,
+    totalUpiPay,
+    totalAmountReturn
   } = item;
   const [rowOpen, setRowOpen] = useState(false);
   return (
@@ -122,6 +134,21 @@ const TableRow = ({ item, idx }) => {
         <td>
           <Text color="black" weight={500}>
             {totalDailyProfit.toFixed(2)}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {totalCashPay.toFixed(2)}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {totalUpiPay.toFixed(2)}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {totalAmountReturn.toFixed(2)}
           </Text>
         </td>
       </tr>

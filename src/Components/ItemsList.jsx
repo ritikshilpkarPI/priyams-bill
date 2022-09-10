@@ -2,9 +2,12 @@ import { useContext, useEffect, useState } from "react";
 
 import { VariableSizeList as List } from "react-window";
 
+import { parse } from "json2csv";
+
 import { Button, Input, Table, Text } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
+
 import { Axios } from "../utils/axios";
 
 const ITEM_INITIAL_INPUT = {
@@ -45,6 +48,18 @@ export const ItemsList = () => {
   };
 
   const addItemToDb = async () => {
+    if (
+      !newItemInput.itemCostPricePerUnit ||
+      !newItemInput.itemMRPperUnit ||
+      !newItemInput.itemName ||
+      !newItemInput.itemSellingPricePerUnit ||
+      !newItemInput.itemStockQuantity ||
+      !newItemInput.minimumStockQuantity
+    ) {
+      alert("Fill all required fields!");
+      return;
+    }
+
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
@@ -287,230 +302,282 @@ export const ItemsList = () => {
     );
   };
 
-  return (
-    <Table striped highlightOnHover>
-      <thead className="heading">
-        <tr>
-          <th>
-            <Text>Bar Code</Text>
-          </th>
-          <th>
-            <Text>Item Name</Text>
-          </th>
-          <th>
-            <Text>MRP/Unit</Text>
-          </th>
-          <th>
-            <Text>Cost/Unit</Text>
-          </th>
-          <th>
-            <Text>Selling Price/Unit</Text>
-          </th>
-          <th>
-            <Text>Total Stock</Text>
-          </th>
-          <th>
-            <Text>Minimum Stock</Text>
-          </th>
-          <th>
-            <Text>Update Button</Text>
-          </th>
-        </tr>
-      </thead>
-      <tbody className="body">
-        <tr className="bill-row">
-          <td>
-            {items.length}
-            <Input
-              style={{ width: "200px" }}
-              value={newItemInput["itemBarcode"]}
-              onChange={handleNewItemInput}
-              name="itemBarcode"
-              type="number"
-              autoComplete="off"
-            />
-          </td>
-          <td>
-            <Input
-              type="text"
-              style={{ width: "200px", marginLeft: "-10px" }}
-              value={newItemInput["itemName"]}
-              onChange={handleNewItemInput}
-              name="itemName"
-              autoComplete="off"
-            />
-          </td>
-          <td>
-            <Input
-              style={{ width: "130px", marginLeft: "-10px" }}
-              value={newItemInput["itemMRPperUnit"]}
-              onChange={handleNewItemInput}
-              name="itemMRPperUnit"
-              type="number"
-              autoComplete="off"
-            />
-          </td>
-          <td>
-            <Input
-              style={{ width: "130px" }}
-              value={newItemInput["itemCostPricePerUnit"]}
-              onChange={handleNewItemInput}
-              name="itemCostPricePerUnit"
-              type="number"
-              autoComplete="off"
-            />
-          </td>
-          <td>
-            <Input
-              style={{ width: "130px" }}
-              value={newItemInput["itemSellingPricePerUnit"]}
-              onChange={handleNewItemInput}
-              name="itemSellingPricePerUnit"
-              type="number"
-              autoComplete="off"
-            />
-          </td>
-          <td>
-            <Input
-              style={{ width: "130px" }}
-              value={newItemInput["itemStockQuantity"]}
-              onChange={handleNewItemInput}
-              name="itemStockQuantity"
-              type="number"
-              autoComplete="off"
-            />
-          </td>
-          <td>
-            <Input
-              style={{ width: "130px" }}
-              value={newItemInput["minimumStockQuantity"]}
-              onChange={handleNewItemInput}
-              name="minimumStockQuantity"
-              type="number"
-              autoComplete="off"
-            />
-          </td>
-          <td>
-            <Button
-              loading={apiLoading}
-              onClick={addItemToDb}
-              style={{ width: "140px" }}
-            >
-              ADD NEW ITEM
-            </Button>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <List
-              className="list-it"
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={220}
-              style={{ marginRight: "-8px" }}
-            >
-              {BarcodeRow}
-            </List>
-          </td>
+  const downloadFile = async () => {
+    const fileName = "items.csv";
+    const fields = [
+      "_id",
+      "itemName",
+      "itemDiscountPerUnit",
+      "itemPerUnitDiscountPercentage",
+      "itemBarcode",
+      "itemMRPperUnit",
+      "itemCostPricePerUnit",
+      "itemSellingPricePerUnit",
+      "itemStockQuantity",
+      "minimumStockQuantity",
+      "isDeleted",
+    ];
+    const blob = new Blob([parse(items, { fields })], { type: "text/csv" });
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = href;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    return document.body.removeChild(link);
+  };
 
-          <td>
-            <List
-              className="list-it"
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={220}
-              style={{ marginRight: "-2px", marginLeft: "-20px" }}
-            >
-              {ItemNameRow}
-            </List>
-          </td>
-          <td>
-            <List
-              className="list-it"
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={150}
-              style={{ marginRight: "-8px", marginLeft: "-15px" }}
-            >
-              {ItemMRPRow}
-            </List>
-          </td>
-          <td>
-            <List
-              className="list-it"
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={150}
-              style={{ marginRight: "-8px" }}
-            >
-              {ItemCostPriceRow}
-            </List>
-          </td>
-          <td>
-            <List
-              className="list-it"
-              style={{ marginRight: "-2px" }}
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={150}
-            >
-              {ItemSellingPriceRow}
-            </List>
-          </td>
-          <td>
-            <List
-              className="list-it"
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={150}
-              style={{ marginRight: "-8px", marginLeft: "-10px" }}
-            >
-              {ItemStockQuantityRow}
-            </List>
-          </td>
-          <td>
-            <List
-              className="list-it"
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={150}
-              style={{ marginRight: "-8px" }}
-            >
-              {ItemMinimumStockQuantityRow}
-            </List>
-          </td>
-          <td>
-            <List
-              className="list-it"
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={140}
-            >
-              {ItemUpdateButtonRow}
-            </List>
-          </td>
-          <td>
-            <List
-              className="list-it"
-              height={500}
-              itemCount={items.length}
-              itemSize={() => 50}
-              width={140}
-            >
-              {ItemSoftDeleteButtonRow}
-            </List>
-          </td>
-        </tr>
-      </tbody>
-    </Table>
+  return (
+    <>
+      <Button
+        disabled={!items.length}
+        style={{ float: "right", background: "#0da20a", margin: "5px" }}
+        onClick={downloadFile}
+      >
+        Download CSV
+      </Button>
+      <Table striped highlightOnHover>
+        <thead className="heading">
+          <tr>
+            <th>
+              <Text>Bar Code</Text>
+            </th>
+            <th>
+              <Text>
+                Item Name
+                <span style={{ color: "red", display: "inline-block" }}>*</span>
+              </Text>
+            </th>
+            <th>
+              <Text>
+                MRP/Unit
+                <span style={{ color: "red", display: "inline-block" }}>*</span>
+              </Text>
+            </th>
+            <th>
+              <Text>
+                Cost/Unit
+                <span style={{ color: "red", display: "inline-block" }}>*</span>
+              </Text>
+            </th>
+            <th>
+              <Text>
+                Selling Price/Unit
+                <span style={{ color: "red", display: "inline-block" }}>*</span>
+              </Text>
+            </th>
+            <th>
+              <Text>
+                Total Stock
+                <span style={{ color: "red", display: "inline-block" }}>*</span>
+              </Text>
+            </th>
+            <th>
+              <Text>
+                Minimum Stock
+                <span style={{ color: "red", display: "inline-block" }}>*</span>
+              </Text>
+            </th>
+            <th>
+              <Text>Update Button</Text>
+            </th>
+          </tr>
+        </thead>
+        <tbody className="body">
+          <tr className="bill-row">
+            <td>
+              {items.length}
+              <Input
+                style={{ width: "200px" }}
+                value={newItemInput["itemBarcode"]}
+                onChange={handleNewItemInput}
+                name="itemBarcode"
+                type="number"
+                autoComplete="off"
+              />
+            </td>
+            <td>
+              <Input
+                type="text"
+                style={{ width: "200px", marginLeft: "-10px" }}
+                value={newItemInput["itemName"]}
+                onChange={handleNewItemInput}
+                name="itemName"
+                autoComplete="off"
+              />
+            </td>
+            <td>
+              <Input
+                style={{ width: "130px", marginLeft: "-10px" }}
+                value={newItemInput["itemMRPperUnit"]}
+                onChange={handleNewItemInput}
+                name="itemMRPperUnit"
+                type="number"
+                autoComplete="off"
+              />
+            </td>
+            <td>
+              <Input
+                style={{ width: "130px" }}
+                value={newItemInput["itemCostPricePerUnit"]}
+                onChange={handleNewItemInput}
+                name="itemCostPricePerUnit"
+                type="number"
+                autoComplete="off"
+              />
+            </td>
+            <td>
+              <Input
+                style={{ width: "130px" }}
+                value={newItemInput["itemSellingPricePerUnit"]}
+                onChange={handleNewItemInput}
+                name="itemSellingPricePerUnit"
+                type="number"
+                autoComplete="off"
+              />
+            </td>
+            <td>
+              <Input
+                style={{ width: "130px" }}
+                value={newItemInput["itemStockQuantity"]}
+                onChange={handleNewItemInput}
+                name="itemStockQuantity"
+                type="number"
+                autoComplete="off"
+              />
+            </td>
+            <td>
+              <Input
+                style={{ width: "130px" }}
+                value={newItemInput["minimumStockQuantity"]}
+                onChange={handleNewItemInput}
+                name="minimumStockQuantity"
+                type="number"
+                autoComplete="off"
+              />
+            </td>
+            <td>
+              <Button
+                loading={apiLoading}
+                onClick={addItemToDb}
+                style={{ width: "140px" }}
+              >
+                ADD NEW ITEM
+              </Button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <List
+                className="list-it"
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={220}
+                style={{ marginRight: "-8px" }}
+              >
+                {BarcodeRow}
+              </List>
+            </td>
+
+            <td>
+              <List
+                className="list-it"
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={220}
+                style={{ marginRight: "-2px", marginLeft: "-20px" }}
+              >
+                {ItemNameRow}
+              </List>
+            </td>
+            <td>
+              <List
+                className="list-it"
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={150}
+                style={{ marginRight: "-8px", marginLeft: "-15px" }}
+              >
+                {ItemMRPRow}
+              </List>
+            </td>
+            <td>
+              <List
+                className="list-it"
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={150}
+                style={{ marginRight: "-8px" }}
+              >
+                {ItemCostPriceRow}
+              </List>
+            </td>
+            <td>
+              <List
+                className="list-it"
+                style={{ marginRight: "-2px" }}
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={150}
+              >
+                {ItemSellingPriceRow}
+              </List>
+            </td>
+            <td>
+              <List
+                className="list-it"
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={150}
+                style={{ marginRight: "-8px", marginLeft: "-10px" }}
+              >
+                {ItemStockQuantityRow}
+              </List>
+            </td>
+            <td>
+              <List
+                className="list-it"
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={150}
+                style={{ marginRight: "-8px" }}
+              >
+                {ItemMinimumStockQuantityRow}
+              </List>
+            </td>
+            <td>
+              <List
+                className="list-it"
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={140}
+              >
+                {ItemUpdateButtonRow}
+              </List>
+            </td>
+            <td>
+              <List
+                className="list-it"
+                height={500}
+                itemCount={items.length}
+                itemSize={() => 50}
+                width={140}
+              >
+                {ItemSoftDeleteButtonRow}
+              </List>
+            </td>
+          </tr>
+        </tbody>
+      </Table>
+    </>
   );
 };
 

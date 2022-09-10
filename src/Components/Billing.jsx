@@ -1,5 +1,7 @@
-import { useEffect, useState, useRef, useContext } from "react";
-import { Table, Text, Button, Input } from "@mantine/core";
+import { useContext, useEffect, useRef, useState } from "react";
+
+import { Button, Input, Table, Text, Loader } from "@mantine/core";
+
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -28,16 +30,44 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: "",
 };
 
-export const Billing = ({ billID = "" }) => {
+export const Billing = ({ billID = "", loaderDisplay }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
   const barRef = useRef("");
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
+  const { itemsStateAndDispatch, billItemsStateAndDispatch } =
+    useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
+  const [billItems, dispatch] = billItemsStateAndDispatch;
+  // const [loaderDisplay, setLoaderDisplay] = loaderState;
+
+  // To refresh page
+  const refreshPage = () => {
+    let answer = window.confirm("Do you want to refresh page?");
+    if (answer) {
+      setBill(BILL_INITIAL_STATE);
+    }
+  };
+
+  // To save bill items in billItem Reducer
+  useEffect(() => {
+    dispatch({ type: "BILL_ITEMS_LIST", payload: bill });
+    // eslint-disable-next-line
+  }, [bill]);
+
+  // To get items through billItems Reducer
+  useEffect(() => {
+    if (billItems.length === 0) {
+      setBill(BILL_INITIAL_STATE);
+    } else {
+      setBill(billItems);
+    }
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
+    // setLoaderDisplay(true);
     (async () => {
       const editBill = await Axios.request({
         url: `/api/billing/getEditBill/${billID}`,
@@ -46,14 +76,21 @@ export const Billing = ({ billID = "" }) => {
           Cookie: "",
         },
       });
+
       const { items, ...billObject } = editBill.data.message;
       const billObjectWithBillItems = { ...billObject, billItems: items };
       setBill(billObjectWithBillItems);
+      // setLoaderDisplay(false);
     })();
   }, [billID]);
 
   const addNewBill = async () => {
     setApiLoading(true);
+    let updateBill = {
+      ...bill,
+      [bill.updated]: bill?.updated?.push(Date.now()),
+    };
+    setBill(updateBill);
     const editApi = {
       url: "/api/billing/editBill",
       method: "put",
@@ -244,7 +281,17 @@ export const Billing = ({ billID = "" }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
-        <Button className="print-btn" onClick={() => window.print()}>
+        <Button
+          sx={{ background: "black", marginRight: "5px" }}
+          onClick={refreshPage}
+        >
+          Refresh
+        </Button>
+        <Button
+          sx={{ marginRight: "5px" }}
+          className="print-btn"
+          onClick={() => window.print()}
+        >
           Print
         </Button>
         <Button
@@ -331,7 +378,10 @@ export const Billing = ({ billID = "" }) => {
             </th>
           </tr>
         </thead>
-        <tbody className="body">
+        <tbody
+          style={{ display: loaderDisplay ? "none" : "" }}
+          className="body"
+        >
           <tr>
             <td>
               <Text color="black" weight={700}>
@@ -724,6 +774,68 @@ export const Billing = ({ billID = "" }) => {
           </tr>
         </tbody>
       </Table>
+      <div
+        style={{
+          display: loaderDisplay ? "flex" : "none",
+          justifyContent: "center",
+          width: "100%",
+          padding: "30px",
+        }}
+      >
+        <Loader />
+        {billID && (
+          <div style={{ width: "50%" }}>
+            <Table>
+              <thead>
+                <th>
+                  <Text weight={700} color="black" size="lg">
+                    Created By
+                  </Text>
+                </th>
+                <th>
+                  <Text weight={700} color="black" size="lg">
+                    Updated At
+                  </Text>
+                </th>
+              </thead>
+              <tbody>
+                {bill?.updated?.map((value, key) => {
+                  return (
+                    <tr
+                      key={key}
+                      style={{
+                        padding: "5px",
+                        fontSize: "16px",
+                        fontStyle: "bold",
+                      }}
+                      className="show-data"
+                    >
+                      <td>
+                        <Text weight={500} color="black" size="md">
+                          User
+                        </Text>
+                      </td>
+                      <td>
+                        <Text weight={500} color="black" size="md">
+                          {new Date(value).toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          })}
+                        </Text>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
