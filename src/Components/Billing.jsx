@@ -1,19 +1,9 @@
-import {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useContext, useEffect, useRef, useState } from "react";
 
-import {
-  Button,
-  Input,
-  Table,
-  Text,
-} from '@mantine/core';
+import { Button, Input, Table, Text, Loader } from "@mantine/core";
 
-import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
+import { AppStateContext } from "../AppState/appState.context";
+import { Axios } from "../utils/axios";
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -40,7 +30,7 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: "",
 };
 
-export const Billing = ({ billID = "" }) => {
+export const Billing = ({ billID = "", loaderDisplay }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
@@ -50,6 +40,15 @@ export const Billing = ({ billID = "" }) => {
     useContext(AppStateContext);
   const [itemsList] = itemsStateAndDispatch;
   const [billItems, dispatch] = billItemsStateAndDispatch;
+  // const [loaderDisplay, setLoaderDisplay] = loaderState;
+
+  // To refresh page
+  const refreshPage = () => {
+    let answer = window.confirm("Do you want to refresh page?");
+    if (answer) {
+      setBill(BILL_INITIAL_STATE);
+    }
+  };
 
   // To save bill items in billItem Reducer
   useEffect(() => {
@@ -68,6 +67,7 @@ export const Billing = ({ billID = "" }) => {
   }, []);
 
   useEffect(() => {
+    // setLoaderDisplay(true);
     (async () => {
       const editBill = await Axios.request({
         url: `/api/billing/getEditBill/${billID}`,
@@ -80,9 +80,9 @@ export const Billing = ({ billID = "" }) => {
       const { items, ...billObject } = editBill.data.message;
       const billObjectWithBillItems = { ...billObject, billItems: items };
       setBill(billObjectWithBillItems);
+      // setLoaderDisplay(false);
     })();
   }, [billID]);
-
 
   const addNewBill = async () => {
     setApiLoading(true);
@@ -282,6 +282,12 @@ export const Billing = ({ billID = "" }) => {
       </div>
       <div className="bill-btns">
         <Button
+          sx={{ background: "black", marginRight: "5px" }}
+          onClick={refreshPage}
+        >
+          Refresh
+        </Button>
+        <Button
           sx={{ marginRight: "5px" }}
           className="print-btn"
           onClick={() => window.print()}
@@ -372,7 +378,10 @@ export const Billing = ({ billID = "" }) => {
             </th>
           </tr>
         </thead>
-        <tbody className="body">
+        <tbody
+          style={{ display: loaderDisplay ? "none" : "" }}
+          className="body"
+        >
           <tr>
             <td>
               <Text color="black" weight={700}>
@@ -765,52 +774,67 @@ export const Billing = ({ billID = "" }) => {
           </tr>
         </tbody>
       </Table>
-      <div style={{width: "50%"}}>
-        <Table>
-          <thead>
-          <th>
-              <Text weight={700} color="black" size="lg">
-              Created By
-              </Text>
-            </th>
-          <th>
-              <Text weight={700} color="black" size="lg">
-              Updated At
-              </Text>
-            </th>
-
-          </thead>
-          <tbody>
-            {bill?.updated?.map((value, key) => {
-              return (
-                <tr
-                  key={key}
-                  style={{
-                    padding: "5px",
-                    fontSize: "16px",
-                    fontStyle: "bold",
-                  }}
-                  className="show-data"
-                >
-                  <td>
-                  <Text weight={500} color="black" size="md">
-                  User
+      <div
+        style={{
+          display: loaderDisplay ? "flex" : "none",
+          justifyContent: "center",
+          width: "100%",
+          padding: "30px",
+        }}
+      >
+        <Loader />
+        {billID && (
+          <div style={{ width: "50%" }}>
+            <Table>
+              <thead>
+                <th>
+                  <Text weight={700} color="black" size="lg">
+                    Created By
                   </Text>
-                  
-                  </td>
-                  <td>
-                  <Text weight={500} color="black" size="md">
-                  {new Date(value).toLocaleDateString("en-US",{ weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour:"2-digit", minute: "2-digit", second: "2-digit" })}
+                </th>
+                <th>
+                  <Text weight={700} color="black" size="lg">
+                    Updated At
                   </Text>
-                  
-                  </td>
-
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-
+                </th>
+              </thead>
+              <tbody>
+                {bill?.updated?.map((value, key) => {
+                  return (
+                    <tr
+                      key={key}
+                      style={{
+                        padding: "5px",
+                        fontSize: "16px",
+                        fontStyle: "bold",
+                      }}
+                      className="show-data"
+                    >
+                      <td>
+                        <Text weight={500} color="black" size="md">
+                          User
+                        </Text>
+                      </td>
+                      <td>
+                        <Text weight={500} color="black" size="md">
+                          {new Date(value).toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          })}
+                        </Text>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </div>
+        )}
       </div>
     </div>
   );
