@@ -2,9 +2,12 @@ import { useContext, useEffect, useState } from "react";
 
 import { VariableSizeList as List } from "react-window";
 
+import {parse} from 'json2csv';
+
 import { Button, Input, Table, Text } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
+
 import { Axios } from "../utils/axios";
 
 const ITEM_INITIAL_INPUT = {
@@ -45,6 +48,18 @@ export const ItemsList = () => {
   };
 
   const addItemToDb = async () => {
+    if (
+      !newItemInput.itemCostPricePerUnit ||
+      !newItemInput.itemMRPperUnit ||
+      !newItemInput.itemName ||
+      !newItemInput.itemSellingPricePerUnit ||
+      !newItemInput.itemStockQuantity ||
+      !newItemInput.minimumStockQuantity
+    ) {
+      alert("Fill all required fields!");
+      return;
+    }
+
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
@@ -287,7 +302,22 @@ export const ItemsList = () => {
     );
   };
 
+  const downloadFile = async () => {
+        const fileName = 'items.csv';
+        const fields = ['_id', 'itemName', 'itemDiscountPerUnit', 'itemPerUnitDiscountPercentage', 'itemBarcode', 'itemMRPperUnit', 'itemCostPricePerUnit', 'itemSellingPricePerUnit', 'itemStockQuantity', 'minimumStockQuantity', 'isDeleted'];
+        const blob = new Blob([parse(items, {fields})],{type:'text/csv'});
+        const href = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = href;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        return document.body.removeChild(link);
+    }
+
   return (
+    <>
+    <Button disabled={!items.length} style={{float: 'right',background: '#0da20a', margin: '5px'}} onClick={downloadFile}>Download CSV</Button>
     <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
@@ -295,22 +325,40 @@ export const ItemsList = () => {
             <Text>Bar Code</Text>
           </th>
           <th>
-            <Text>Item Name</Text>
+            <Text>
+              Item Name
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>MRP/Unit</Text>
+            <Text>
+              MRP/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Cost/Unit</Text>
+            <Text>
+              Cost/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Selling Price/Unit</Text>
+            <Text>
+              Selling Price/Unit
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Total Stock</Text>
+            <Text>
+              Total Stock
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
-            <Text>Minimum Stock</Text>
+            <Text>
+              Minimum Stock
+              <span style={{ color: "red", display: "inline-block" }}>*</span>
+            </Text>
           </th>
           <th>
             <Text>Update Button</Text>
@@ -511,6 +559,7 @@ export const ItemsList = () => {
         </tr>
       </tbody>
     </Table>
+    </>
   );
 };
 

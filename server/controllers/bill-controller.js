@@ -11,6 +11,9 @@ const addNewBill = async (req, res) => {
       billAmountTotal,
       billDiscountTotal,
       billItems,
+      cashPay,
+      upiPay,
+      amountReturn,
     } = req.body;
 
     let [
@@ -107,6 +110,9 @@ const addNewBill = async (req, res) => {
       totalBillProfit,
       totalNumberOfUniqueItems,
       totalNumberOfItems,
+      cashPay,
+      upiPay,
+      amountReturn,
     });
     await newBill.save();
     res.status(200).json({ message: newBill });
@@ -118,7 +124,6 @@ const addNewBill = async (req, res) => {
 
 const getAllBill = async (req, res) => {
   try {
-    console.log({ req });
     const allBill = await Bill.find()
       .populate({
         path: "items",
@@ -181,6 +186,15 @@ const getDayWiseBills = async (req, res) => {
           },
           totalDailyProfit: {
             $sum: "$totalBillProfit",
+          },
+          totalCashPay: {
+            $sum: "$cashPay",
+          },
+          totalUpiPay: {
+            $sum: "$upiPay",
+          },
+          totalAmountReturn: {
+            $sum: "$amountReturn",
           },
         },
       },
