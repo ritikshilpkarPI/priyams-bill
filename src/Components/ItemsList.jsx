@@ -126,7 +126,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: '160px' }}
+          style={{ width: "160px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -149,7 +149,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: '250px' }}
+          style={{ width: "250px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -172,7 +172,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: '100px' }}
+          style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -195,7 +195,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: '100px' }}
+          style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -218,7 +218,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: '100px' }}
+          style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -231,7 +231,6 @@ export const ItemsList = () => {
     );
   };
 
-
   const ItemSlabPriceRow = ({ index, style }) => {
     const name = "itemSlabPricePerUnit";
     const slabPrice = {
@@ -239,24 +238,39 @@ export const ItemsList = () => {
       2: 4.5,
       5: 4,
       15: 3.8,
-      20: 3.5
-    }
+      20: 3.5,
+    };
     const slabKeys = Object.keys(slabPrice);
     const slabValues = Object.values(slabPrice);
 
     return (
-      <div style={{ paddingTop: '20px', border: '1px solid red' }}>
-
+      <div style={{ paddingTop: "20px", border: "1px solid red" }}>
         {slabKeys.map((item, index) => {
-          console.log(item);
           return (
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: "flex" }}>
               <Image src="./Images/edit.svg" alt="edit-icon"></Image>
-              <input type="number" defaultValue={parseInt(item)} style={{ width: '40px', textAlign: 'center', border: 'none' }} disabled />-
-              <input type="number" defaultValue={parseInt(slabKeys[index + 1] - 1)} style={{ width: '40px', textAlign: 'center', border: 'none' }} disabled />=
-              <input type="number" defaultValue={slabValues[index]} style={{ width: '40px', textAlign: 'center', border: 'none' }} disabled />
+              <input
+                type="number"
+                defaultValue={parseInt(item)}
+                style={{ width: "40px", textAlign: "center", border: "none" }}
+                disabled
+              />
+              -
+              <input
+                type="number"
+                defaultValue={parseInt(slabKeys[index + 1] - 1)}
+                style={{ width: "40px", textAlign: "center", border: "none" }}
+                disabled
+              />
+              =
+              <input
+                type="number"
+                defaultValue={slabValues[index]}
+                style={{ width: "40px", textAlign: "center", border: "none" }}
+                disabled
+              />
             </div>
-          )
+          );
         })}
       </div>
     );
@@ -272,7 +286,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: '100px' }}
+          style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -295,7 +309,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: '100px', textAlign: 'center' }}
+          style={{ width: "100px", textAlign: "center" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -359,29 +373,29 @@ export const ItemsList = () => {
 
   const rows = ({ index, style }) => {
     return (
-      <tr style={{ ...style, display: 'flex' }}>
-        <td style={{ padding: '0' }}>
+      <tr style={{ ...style, display: "flex" }}>
+        <td style={{ padding: "0" }}>
           <BarcodeRow style={style} index={index} />
         </td>
-        <td style={{ padding: '0' }}>
+        <td style={{ padding: "0" }}>
           <ItemNameRow style={style} index={index} />
         </td>
-        <td style={{ padding: '0' }}>
+        <td style={{ padding: "0" }}>
           <ItemMRPRow style={style} index={index} />
         </td>
-        <td style={{ padding: '0' }}>
+        <td style={{ padding: "0" }}>
           <ItemCostPriceRow style={style} index={index} />
         </td>
-        <td style={{ padding: '0' }}>
+        <td style={{ padding: "0" }}>
           <ItemSellingPriceRow style={style} index={index} />
         </td>
-        <td style={{ padding: '0' }}>
+        <td style={{ padding: "0" }}>
           <ItemStockQuantityRow style={style} index={index} />
         </td>
         {/* <td style={{ padding: '0', width: '220px' }}>
           <ItemSlabPriceRow style={style} index={index} />
         </td> */}
-        <td style={{ padding: '0' }}>
+        <td style={{ padding: "0" }}>
           <ItemMinimumStockQuantityRow style={style} index={index} />
         </td>
         <td>
@@ -391,8 +405,8 @@ export const ItemsList = () => {
           <ItemSoftDeleteButtonRow index={index} />
         </td>
       </tr>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -403,36 +417,44 @@ export const ItemsList = () => {
       >
         Download CSV
       </Button>
-      <div style={{ width: '1360px', margin: '30px auto 0' }}>
+      <div style={{ width: "1360px", margin: "30px auto 0" }}>
         <h4>Total Items : {items.length}</h4>
-        <Table style={{ width: 'auto' }} striped highlightOnHover>
+        <Table style={{ width: "auto" }} striped highlightOnHover>
           <thead className="heading">
             <tr>
-              <th style={{ width: '160px', textAlign: 'center' }}>
+              <th style={{ width: "160px", textAlign: "center" }}>
                 <Text>Bar Code</Text>
               </th>
-              <th style={{ width: '250px', textAlign: 'center' }}>
+              <th style={{ width: "250px", textAlign: "center" }}>
                 <Text>
                   Item Name
-                  <span style={{ color: "red", display: "inline-block" }}>*</span>
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
                 </Text>
               </th>
-              <th style={{ width: '100px', textAlign: 'center' }}>
+              <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
                   MRP/Unit
-                  <span style={{ color: "red", display: "inline-block" }}>*</span>
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
                 </Text>
               </th>
-              <th style={{ width: '100px', textAlign: 'center' }}>
+              <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
                   Cost/Unit
-                  <span style={{ color: "red", display: "inline-block" }}>*</span>
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
                 </Text>
               </th>
-              <th style={{ width: '100px', textAlign: 'center' }}>
+              <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
                   Selling Price/Unit
-                  <span style={{ color: "red", display: "inline-block" }}>*</span>
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
                 </Text>
               </th>
               {/* <th style={{width: '250px', textAlign: 'center'}}>
@@ -441,19 +463,23 @@ export const ItemsList = () => {
                 <span style={{ color: "red", display: "inline-block" }}>*</span>
               </Text>
             </th> */}
-              <th style={{ width: '100px', textAlign: 'center' }}>
+              <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
                   Total Stock
-                  <span style={{ color: "red", display: "inline-block" }}>*</span>
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
                 </Text>
               </th>
-              <th style={{ width: '100px', textAlign: 'center' }}>
+              <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
                   Minimum Stock
-                  <span style={{ color: "red", display: "inline-block" }}>*</span>
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
                 </Text>
               </th>
-              <th style={{ width: '150px', textAlign: 'center' }}>
+              <th style={{ width: "150px", textAlign: "center" }}>
                 <Text>Update Button</Text>
               </th>
             </tr>
@@ -553,7 +579,7 @@ export const ItemsList = () => {
             </tr>
           </tbody>
         </Table>
-        <Table style={{ width: 'auto', margin: '0 auto' }}>
+        <Table style={{ width: "auto", margin: "0 auto" }}>
           <tbody>
             <List
               className="list-it"
@@ -561,7 +587,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 50}
               width={1360}
-            // style={{ border: '2px solid black' }}
+              // style={{ border: '2px solid black' }}
             >
               {rows}
             </List>
@@ -580,11 +606,11 @@ const TableRow = ({
   name,
   index,
 }) => {
-
   return (
     <tr className="bill-row">
       <td>
-        <Input style={{ ...style, borderTop: 'none' }}
+        <Input
+          style={{ ...style, borderTop: "none" }}
           value={itemInput[name]}
           onChange={(e) =>
             handleItemInputChange(e, itemInput, setItemInput, index)
@@ -618,7 +644,11 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
   };
 
   return (
-    <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style, margin: '0 15px' }}>
+    <Button
+      loading={apiLoading}
+      onClick={handleAddItem}
+      style={{ ...style, margin: "0 15px" }}
+    >
       <Text>Update</Text>
     </Button>
   );
