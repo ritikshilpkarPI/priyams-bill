@@ -4,7 +4,7 @@ import { VariableSizeList as List } from "react-window";
 
 import { parse } from "json2csv";
 
-import { Button, Input, Table, Text } from "@mantine/core";
+import { Button, Input, Table, Text, Image } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 
@@ -112,14 +112,13 @@ export const ItemsList = () => {
         onClick={handleDeleteItem}
         style={{ ...style }}
       >
-        <Text>{index + 1}. Delete</Text>
+        <Text>Delete</Text>
       </Button>
     );
   };
 
-  const BarcodeRow = ({ index, style }) => {
+  const BarcodeRow = ({ index }) => {
     const name = "itemBarcode";
-
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
@@ -127,7 +126,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={style}
+          style={{ width: "160px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -140,7 +139,7 @@ export const ItemsList = () => {
     );
   };
 
-  const ItemNameRow = ({ index, style }) => {
+  const ItemNameRow = ({ index }) => {
     const name = "itemName";
     const [itemInput, setItemInput] = useState({
       itemName: items[index][name],
@@ -150,7 +149,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={style}
+          style={{ width: "250px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -173,7 +172,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={style}
+          style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -196,7 +195,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={style}
+          style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -219,7 +218,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={style}
+          style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -229,6 +228,51 @@ export const ItemsList = () => {
           name={name}
         />
       </>
+    );
+  };
+
+  const ItemSlabPriceRow = ({ index, style }) => {
+    const name = "itemSlabPricePerUnit";
+    const slabPrice = {
+      1: 5,
+      2: 4.5,
+      5: 4,
+      15: 3.8,
+      20: 3.5,
+    };
+    const slabKeys = Object.keys(slabPrice);
+    const slabValues = Object.values(slabPrice);
+
+    return (
+      <div style={{ paddingTop: "20px", border: "1px solid red" }}>
+        {slabKeys.map((item, index) => {
+          return (
+            <div style={{ display: "flex" }}>
+              <Image src="./Images/edit.svg" alt="edit-icon"></Image>
+              <input
+                type="number"
+                defaultValue={parseInt(item)}
+                style={{ width: "40px", textAlign: "center", border: "none" }}
+                disabled
+              />
+              -
+              <input
+                type="number"
+                defaultValue={parseInt(slabKeys[index + 1] - 1)}
+                style={{ width: "40px", textAlign: "center", border: "none" }}
+                disabled
+              />
+              =
+              <input
+                type="number"
+                defaultValue={slabValues[index]}
+                style={{ width: "40px", textAlign: "center", border: "none" }}
+                disabled
+              />
+            </div>
+          );
+        })}
+      </div>
     );
   };
 
@@ -242,7 +286,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={style}
+          style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -265,7 +309,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={style}
+          style={{ width: "100px", textAlign: "center" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -327,256 +371,229 @@ export const ItemsList = () => {
     return document.body.removeChild(link);
   };
 
+  const rows = ({ index, style }) => {
+    return (
+      <tr style={{ ...style, display: "flex" }}>
+        <td style={{ padding: "0" }}>
+          <BarcodeRow style={style} index={index} />
+        </td>
+        <td style={{ padding: "0" }}>
+          <ItemNameRow style={style} index={index} />
+        </td>
+        <td style={{ padding: "0" }}>
+          <ItemMRPRow style={style} index={index} />
+        </td>
+        <td style={{ padding: "0" }}>
+          <ItemCostPriceRow style={style} index={index} />
+        </td>
+        <td style={{ padding: "0" }}>
+          <ItemSellingPriceRow style={style} index={index} />
+        </td>
+        <td style={{ padding: "0" }}>
+          <ItemStockQuantityRow style={style} index={index} />
+        </td>
+        {/* <td style={{ padding: '0', width: '220px' }}>
+          <ItemSlabPriceRow style={style} index={index} />
+        </td> */}
+        <td style={{ padding: "0" }}>
+          <ItemMinimumStockQuantityRow style={style} index={index} />
+        </td>
+        <td>
+          <ItemUpdateButtonRow index={index} />
+        </td>
+        <td>
+          <ItemSoftDeleteButtonRow index={index} />
+        </td>
+      </tr>
+    );
+  };
+
   return (
     <>
       <Button
         disabled={!items.length}
-        style={{ float: "right", background: "#0da20a", margin: "5px" }}
+        style={{ background: "#0da20a", margin: "5px", float: "right" }}
         onClick={downloadFile}
       >
         Download CSV
       </Button>
-      <Table striped highlightOnHover>
-        <thead className="heading">
-          <tr>
-            <th>
-              <Text>Bar Code</Text>
-            </th>
-            <th>
+      <div style={{ width: "1360px", margin: "30px auto 0" }}>
+        <h4>Total Items : {items.length}</h4>
+        <Table style={{ width: "auto" }} striped highlightOnHover>
+          <thead className="heading">
+            <tr>
+              <th style={{ width: "160px", textAlign: "center" }}>
+                <Text>Bar Code</Text>
+              </th>
+              <th style={{ width: "250px", textAlign: "center" }}>
+                <Text>
+                  Item Name
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+              </th>
+              <th style={{ width: "100px", textAlign: "center" }}>
+                <Text>
+                  MRP/Unit
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+              </th>
+              <th style={{ width: "100px", textAlign: "center" }}>
+                <Text>
+                  Cost/Unit
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+              </th>
+              <th style={{ width: "100px", textAlign: "center" }}>
+                <Text>
+                  Selling Price/Unit
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+              </th>
+              {/* <th style={{width: '250px', textAlign: 'center'}}>
               <Text>
-                Item Name
+                Slab Pricing
                 <span style={{ color: "red", display: "inline-block" }}>*</span>
               </Text>
-            </th>
-            <th>
-              <Text>
-                MRP/Unit
-                <span style={{ color: "red", display: "inline-block" }}>*</span>
-              </Text>
-            </th>
-            <th>
-              <Text>
-                Cost/Unit
-                <span style={{ color: "red", display: "inline-block" }}>*</span>
-              </Text>
-            </th>
-            <th>
-              <Text>
-                Selling Price/Unit
-                <span style={{ color: "red", display: "inline-block" }}>*</span>
-              </Text>
-            </th>
-            <th>
-              <Text>
-                Total Stock
-                <span style={{ color: "red", display: "inline-block" }}>*</span>
-              </Text>
-            </th>
-            <th>
-              <Text>
-                Minimum Stock
-                <span style={{ color: "red", display: "inline-block" }}>*</span>
-              </Text>
-            </th>
-            <th>
-              <Text>Update Button</Text>
-            </th>
-          </tr>
-        </thead>
-        <tbody className="body">
-          <tr className="bill-row">
-            <td>
-              {items.length}
+            </th> */}
+              <th style={{ width: "100px", textAlign: "center" }}>
+                <Text>
+                  Total Stock
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+              </th>
+              <th style={{ width: "100px", textAlign: "center" }}>
+                <Text>
+                  Minimum Stock
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+              </th>
+              <th style={{ width: "150px", textAlign: "center" }}>
+                <Text>Update Button</Text>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="body">
+            <tr className="bill-row">
+              <td>
+                <Input
+                  style={{ width: "160px" }}
+                  value={newItemInput["itemBarcode"]}
+                  onChange={handleNewItemInput}
+                  name="itemBarcode"
+                  type="number"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Input
+                  type="text"
+                  style={{ width: "250px" }}
+                  value={newItemInput["itemName"]}
+                  onChange={handleNewItemInput}
+                  name="itemName"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Input
+                  style={{ width: "100px" }}
+                  value={newItemInput["itemMRPperUnit"]}
+                  onChange={handleNewItemInput}
+                  name="itemMRPperUnit"
+                  type="number"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Input
+                  style={{ width: "100px" }}
+                  value={newItemInput["itemCostPricePerUnit"]}
+                  onChange={handleNewItemInput}
+                  name="itemCostPricePerUnit"
+                  type="number"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Input
+                  style={{ width: "100px" }}
+                  value={newItemInput["itemSellingPricePerUnit"]}
+                  onChange={handleNewItemInput}
+                  name="itemSellingPricePerUnit"
+                  type="number"
+                  autoComplete="off"
+                />
+              </td>
+              {/* <td>
               <Input
-                style={{ width: "200px" }}
-                value={newItemInput["itemBarcode"]}
-                onChange={handleNewItemInput}
-                name="itemBarcode"
-                type="number"
-                autoComplete="off"
-              />
-            </td>
-            <td>
-              <Input
-                type="text"
-                style={{ width: "200px", marginLeft: "-10px" }}
-                value={newItemInput["itemName"]}
-                onChange={handleNewItemInput}
-                name="itemName"
-                autoComplete="off"
-              />
-            </td>
-            <td>
-              <Input
-                style={{ width: "130px", marginLeft: "-10px" }}
-                value={newItemInput["itemMRPperUnit"]}
-                onChange={handleNewItemInput}
-                name="itemMRPperUnit"
-                type="number"
-                autoComplete="off"
-              />
-            </td>
-            <td>
-              <Input
-                style={{ width: "130px" }}
-                value={newItemInput["itemCostPricePerUnit"]}
-                onChange={handleNewItemInput}
-                name="itemCostPricePerUnit"
-                type="number"
-                autoComplete="off"
-              />
-            </td>
-            <td>
-              <Input
-                style={{ width: "130px" }}
+                style={{ width: "250px" }}
                 value={newItemInput["itemSellingPricePerUnit"]}
                 onChange={handleNewItemInput}
                 name="itemSellingPricePerUnit"
                 type="number"
+                placeholder="hello"
                 autoComplete="off"
               />
-            </td>
-            <td>
-              <Input
-                style={{ width: "130px" }}
-                value={newItemInput["itemStockQuantity"]}
-                onChange={handleNewItemInput}
-                name="itemStockQuantity"
-                type="number"
-                autoComplete="off"
-              />
-            </td>
-            <td>
-              <Input
-                style={{ width: "130px" }}
-                value={newItemInput["minimumStockQuantity"]}
-                onChange={handleNewItemInput}
-                name="minimumStockQuantity"
-                type="number"
-                autoComplete="off"
-              />
-            </td>
-            <td>
-              <Button
-                loading={apiLoading}
-                onClick={addItemToDb}
-                style={{ width: "140px" }}
-              >
-                ADD NEW ITEM
-              </Button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <List
-                className="list-it"
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={220}
-                style={{ marginRight: "-8px" }}
-              >
-                {BarcodeRow}
-              </List>
-            </td>
-
-            <td>
-              <List
-                className="list-it"
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={220}
-                style={{ marginRight: "-2px", marginLeft: "-20px" }}
-              >
-                {ItemNameRow}
-              </List>
-            </td>
-            <td>
-              <List
-                className="list-it"
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={150}
-                style={{ marginRight: "-8px", marginLeft: "-15px" }}
-              >
-                {ItemMRPRow}
-              </List>
-            </td>
-            <td>
-              <List
-                className="list-it"
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={150}
-                style={{ marginRight: "-8px" }}
-              >
-                {ItemCostPriceRow}
-              </List>
-            </td>
-            <td>
-              <List
-                className="list-it"
-                style={{ marginRight: "-2px" }}
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={150}
-              >
-                {ItemSellingPriceRow}
-              </List>
-            </td>
-            <td>
-              <List
-                className="list-it"
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={150}
-                style={{ marginRight: "-8px", marginLeft: "-10px" }}
-              >
-                {ItemStockQuantityRow}
-              </List>
-            </td>
-            <td>
-              <List
-                className="list-it"
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={150}
-                style={{ marginRight: "-8px" }}
-              >
-                {ItemMinimumStockQuantityRow}
-              </List>
-            </td>
-            <td>
-              <List
-                className="list-it"
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={140}
-              >
-                {ItemUpdateButtonRow}
-              </List>
-            </td>
-            <td>
-              <List
-                className="list-it"
-                height={500}
-                itemCount={items.length}
-                itemSize={() => 50}
-                width={140}
-              >
-                {ItemSoftDeleteButtonRow}
-              </List>
-            </td>
-          </tr>
-        </tbody>
-      </Table>
+            </td> */}
+              <td>
+                <Input
+                  style={{ width: "100px" }}
+                  value={newItemInput["itemStockQuantity"]}
+                  onChange={handleNewItemInput}
+                  name="itemStockQuantity"
+                  type="number"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Input
+                  style={{ width: "100px" }}
+                  value={newItemInput["minimumStockQuantity"]}
+                  onChange={handleNewItemInput}
+                  name="minimumStockQuantity"
+                  type="number"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Button
+                  loading={apiLoading}
+                  onClick={addItemToDb}
+                  style={{ width: "140px" }}
+                >
+                  ADD NEW ITEM
+                </Button>
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+        <Table style={{ width: "auto", margin: "0 auto" }}>
+          <tbody>
+            <List
+              className="list-it"
+              height={window.innerHeight - 250}
+              itemCount={items.length}
+              itemSize={() => 50}
+              width={1360}
+              // style={{ border: '2px solid black' }}
+            >
+              {rows}
+            </List>
+          </tbody>
+        </Table>
+      </div>
     </>
   );
 };
@@ -590,10 +607,10 @@ const TableRow = ({
   index,
 }) => {
   return (
-    <tr style={style} className="bill-row">
-      <td>{index + 1}.</td>
+    <tr className="bill-row">
       <td>
         <Input
+          style={{ ...style, borderTop: "none" }}
           value={itemInput[name]}
           onChange={(e) =>
             handleItemInputChange(e, itemInput, setItemInput, index)
@@ -627,8 +644,12 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
   };
 
   return (
-    <Button loading={apiLoading} onClick={handleAddItem} style={{ ...style }}>
-      <Text>{index + 1}. UPDATE</Text>
+    <Button
+      loading={apiLoading}
+      onClick={handleAddItem}
+      style={{ ...style, margin: "0 15px" }}
+    >
+      <Text>Update</Text>
     </Button>
   );
 };

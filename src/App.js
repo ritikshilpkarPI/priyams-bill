@@ -33,23 +33,23 @@ function App({ history }) {
     })();
   }, [dispatch]);
 
-  useEffect(() => {
-    const getBillFeed = async () => {
-      const fetch = await Axios.request({
-        url: "/api/billing/getBillFeed",
-        method: "get",
-        params: {
-          page: 1,
-          size: 50,
-        },
-        headers: {
-          Cookie: "",
-        },
-      });
-      setAllBills(fetch.data.message.allBill);
-    };
-    getBillFeed();
-  }, []);
+  // useEffect(() => {
+  //   const getBillFeed = async () => {
+  //     const fetch = await Axios.request({
+  //       url: "/api/billing/getBillFeed",
+  //       method: "get",
+  //       params: {
+  //         page: 1,
+  //         size: 50,
+  //       },
+  //       headers: {
+  //         Cookie: "",
+  //       },
+  //     });
+  //     setAllBills(fetch.data.message.allBill);
+  //   };
+  //   getBillFeed();
+  // }, []);
 
   console.log({ itemsList });
 
