@@ -4,7 +4,7 @@ import { VariableSizeList as List } from "react-window";
 
 import { parse } from "json2csv";
 
-import { Button, Input, Table, Text, Image } from "@mantine/core";
+import { Button, Input, Table, Text } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 
@@ -231,50 +231,50 @@ export const ItemsList = () => {
     );
   };
 
-  const ItemSlabPriceRow = ({ index, style }) => {
-    const name = "itemSlabPricePerUnit";
-    const slabPrice = {
-      1: 5,
-      2: 4.5,
-      5: 4,
-      15: 3.8,
-      20: 3.5,
-    };
-    const slabKeys = Object.keys(slabPrice);
-    const slabValues = Object.values(slabPrice);
+  // const ItemSlabPriceRow = ({ index, style }) => {
+  //   const name = "itemSlabPricePerUnit";
+  //   const slabPrice = {
+  //     1: 5,
+  //     2: 4.5,
+  //     5: 4,
+  //     15: 3.8,
+  //     20: 3.5,
+  //   };
+  //   const slabKeys = Object.keys(slabPrice);
+  //   const slabValues = Object.values(slabPrice);
 
-    return (
-      <div style={{ paddingTop: "20px", border: "1px solid red" }}>
-        {slabKeys.map((item, index) => {
-          return (
-            <div style={{ display: "flex" }}>
-              <Image src="./Images/edit.svg" alt="edit-icon"></Image>
-              <input
-                type="number"
-                defaultValue={parseInt(item)}
-                style={{ width: "40px", textAlign: "center", border: "none" }}
-                disabled
-              />
-              -
-              <input
-                type="number"
-                defaultValue={parseInt(slabKeys[index + 1] - 1)}
-                style={{ width: "40px", textAlign: "center", border: "none" }}
-                disabled
-              />
-              =
-              <input
-                type="number"
-                defaultValue={slabValues[index]}
-                style={{ width: "40px", textAlign: "center", border: "none" }}
-                disabled
-              />
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  //   return (
+  //     <div style={{ paddingTop: "20px", border: "1px solid red" }}>
+  //       {slabKeys.map((item, index) => {
+  //         return (
+  //           <div style={{ display: "flex" }}>
+  //             <Image src="./Images/edit.svg" alt="edit-icon"></Image>
+  //             <input
+  //               type="number"
+  //               defaultValue={parseInt(item)}
+  //               style={{ width: "40px", textAlign: "center", border: "none" }}
+  //               disabled
+  //             />
+  //             -
+  //             <input
+  //               type="number"
+  //               defaultValue={parseInt(slabKeys[index + 1] - 1)}
+  //               style={{ width: "40px", textAlign: "center", border: "none" }}
+  //               disabled
+  //             />
+  //             =
+  //             <input
+  //               type="number"
+  //               defaultValue={slabValues[index]}
+  //               style={{ width: "40px", textAlign: "center", border: "none" }}
+  //               disabled
+  //             />
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // };
 
   const ItemStockQuantityRow = ({ index, style }) => {
     const name = "itemStockQuantity";
