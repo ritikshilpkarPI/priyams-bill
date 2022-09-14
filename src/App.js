@@ -49,6 +49,7 @@ function App({ history }) {
       setAllBills(fetch.data.message.allBill);
     };
     getBillFeed();
+    // setAllBills([]);
   }, []);
 
   console.log({ itemsList });

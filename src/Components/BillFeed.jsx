@@ -1,6 +1,11 @@
 import { useState } from "react";
-import { Table, Text, Collapse, Button } from "@mantine/core";
-import { useHistory } from "react-router-dom";
+import {
+  Table,
+  Text,
+  // Collapse,
+  // Button
+} from "@mantine/core";
+// import { useHistory } from "react-router-dom";
 
 export const BillFeed = ({ bills = [] }) => {
   return (
@@ -56,10 +61,10 @@ export const BillFeed = ({ bills = [] }) => {
 
 const TableRow = ({ item, idx }) => {
   const [open, setOpen] = useState(false);
-  let history = useHistory();
-  function handleClick(id) {
-    history.push(`/${id}`);
-  }
+  // let history = useHistory();
+  // function handleClick(id) {
+  //   history.push(`/${id}`);
+  // }
   return (
     <>
       <tr
@@ -123,11 +128,11 @@ const TableRow = ({ item, idx }) => {
             {new Date(item["createdAt"]).toLocaleString()}
           </Text>
         </td>
-        <td>
+        {/* <td>
           <Button onClick={() => handleClick(item["_id"])}>Edit Bill</Button>
-        </td>
+        </td> */}
       </tr>
-      <tr>
+      {/* <tr>
         <Collapse in={open}>
           <Table striped highlightOnHover>
             <thead className="heading">
@@ -181,7 +186,7 @@ const TableRow = ({ item, idx }) => {
             </tbody>
           </Table>
         </Collapse>
-      </tr>
+      </tr> */}
     </>
   );
 };
