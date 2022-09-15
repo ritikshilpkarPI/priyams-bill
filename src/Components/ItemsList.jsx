@@ -1,14 +1,22 @@
-import { useContext, useEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
-import { VariableSizeList as List } from "react-window";
+import { parse } from 'json2csv';
+import { VariableSizeList as List } from 'react-window';
 
-import { parse } from "json2csv";
+import {
+  Button,
+  Input,
+  Table,
+  Text,
+  Textarea,
+} from '@mantine/core';
 
-import { Button, Input, Table, Text, Textarea } from "@mantine/core";
-
-import { AppStateContext } from "../AppState/appState.context";
-
-import { Axios } from "../utils/axios";
+import { AppStateContext } from '../AppState/appState.context';
+import { Axios } from '../utils/axios';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -372,9 +380,11 @@ export const ItemsList = () => {
   };
 
   const rows = ({ index, style }) => {
+    const minimumStock = itemsList[index].minimumStockQuantity >= itemsList[index].itemStockQuantity
+    console.log({minimumStock});
     return (
-      <tr style={{ ...style, height: "60px", display: "flex" }}>
-        <td style={{ padding: "0" }}>
+      <tr style={{ ...style, height: "50px", display: "flex", border:`${minimumStock ? "1px solid red"  : "" }`,  }}>
+        <td style={{ padding: "10" }}>
           <BarcodeRow style={style} index={index} />
         </td>
         <td style={{ padding: "0" }}>
