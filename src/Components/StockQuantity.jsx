@@ -57,7 +57,7 @@ const StockQuantity = () => {
         <Loader size="xl" />
        </div> 
       ) : (
-        <Table>
+        <Table fontSize="lg" striped={true} style={{marginTop: "1rem"}}>
           <thead>
             <tr>
               <th>Barcode </th>
