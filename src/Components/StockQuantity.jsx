@@ -8,6 +8,7 @@ import Axios from 'axios';
 import {
   Loader,
   Table,
+  Text,
 } from '@mantine/core';
 
 const StockQuantity = () => {
@@ -41,13 +42,13 @@ const StockQuantity = () => {
 
   const rows = minimumQuantityItem.map((item, index) => (
     <tr key={index}>
-      <td>{item.itemBarcode}</td>
+      <td>{index + 1}</td>
       <td>{item.itemName}</td>
+      <td>{item.itemStockQuantity}</td>
+      <td>{item.minimumStockQuantity}</td>
       <td>{item.itemMRPperUnit}</td>
       <td>{item.itemCostPricePerUnit}</td>
       <td>{item.itemSellingPricePerUnit}</td>
-      <td>{item.itemStockQuantity}</td>
-      <td>{item.minimumStockQuantity}</td>
     </tr>
   ));
   return (
@@ -57,20 +58,24 @@ const StockQuantity = () => {
         <Loader size="xl" />
        </div> 
       ) : (
+        <div style={{ marginTop: "1rem"}}>
+        <Text size="lg" weight="bold" align="center"   >Total Items: {minimumQuantityItem.length}</Text>
+
         <Table fontSize="lg" striped={true} style={{marginTop: "1rem"}}>
           <thead>
             <tr>
-              <th>Barcode </th>
+              <th>SR.No</th>
               <th>Item Name</th>
+              <th>Current  Stock</th>
+              <th>Minimum Stock</th>
               <th>MRP/Unit</th>
               <th>Cost/Unit</th>
               <th>Selling Price/Unit</th>
-              <th>Total Stock</th>
-              <th>Minimum Stock</th>
             </tr>
           </thead>
           <tbody>{rows}</tbody>
         </Table>
+        </div>
       )}
     </>
   );

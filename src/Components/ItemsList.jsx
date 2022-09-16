@@ -147,17 +147,17 @@ export const ItemsList = () => {
     );
   };
 
-  const ItemNameRow = ({ index }) => {
+  const ItemNameRow = ({ index, minimumStock }) => {
     const name = "itemName";
     const [itemInput, setItemInput] = useState({
       itemName: items[index][name],
     });
-
+    console.log({minimumStock});
     return (
       <>
         <TableRow
           index={index}
-          style={{ width: "250px" }}
+          style={{ width: "250px"}}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -165,6 +165,7 @@ export const ItemsList = () => {
           itemInput={itemInput}
           setItemInput={setItemInput}
           name={name}
+          minimumStock={minimumStock}
         />
       </>
     );
@@ -383,12 +384,12 @@ export const ItemsList = () => {
     const minimumStock = itemsList[index].minimumStockQuantity >= itemsList[index].itemStockQuantity
     console.log({minimumStock});
     return (
-      <tr style={{ ...style, height: "50px", display: "flex", border:`${minimumStock ? "1px solid red"  : "" }`,  }}>
+      <tr style={{ ...style, height: "60px", display: "flex", border:`${minimumStock ? "1px solid red"  : "" }`,  }}>
         <td style={{ padding: "10" }}>
           <BarcodeRow style={style} index={index} />
         </td>
         <td style={{ padding: "0" }}>
-          <ItemNameRow style={style} index={index} />
+          <ItemNameRow style={style} index={index}  minimumStock={minimumStock} />
         </td>
         <td style={{ padding: "0" }}>
           <ItemMRPRow style={style} index={index} />
@@ -429,7 +430,7 @@ export const ItemsList = () => {
       </Button>
       <div style={{ width: "1360px", margin: "30px auto 0" }}>
         <h4>Total Items : {items.length}</h4>
-        <Table style={{ width: "auto" }} striped highlightOnHover>
+        <Table style={{ width: "auto" }} striped highlightOnHover verticalSpacing="xl">
           <thead className="heading">
             <tr>
               <th style={{ width: "160px", textAlign: "center" }}>
@@ -595,7 +596,7 @@ export const ItemsList = () => {
               className="list-it"
               height={window.innerHeight - 250}
               itemCount={items.length}
-              itemSize={() => 50}
+              itemSize={() => 70}
               width={1360}
               // style={{ border: '2px solid black' }}
             >
@@ -615,13 +616,14 @@ const TableRow = ({
   setItemInput,
   name,
   index,
+  minimumStock
 }) => {
   const Component = name === "itemName" ? Textarea : Input;
   return (
     <tr className="bill-row">
       <td>
         <Component
-          style={{ ...style }}
+          style={{ ...style, color: `${minimumStock ? "red" : "" } ` }}
           variant="unstyled"
           value={itemInput[name]}
           onChange={(e) =>
