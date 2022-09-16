@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 
 import { VariableSizeList as List } from "react-window";
 
 import { parse } from "json2csv";
 
-import { Button, Input, Table, Text } from "@mantine/core";
+import { Button, Input, Table, Text, Loader, Image } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 
@@ -28,6 +28,15 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  const [loaderDisplay, setloaderDisplay] = useState(true);
+  const [slabArray, setSlabArray] = useState([]);
+  const [slabPricesObj, setslabPricesObj] = useState({});
+
+  useEffect(() => {
+    if (items.length) {
+      setloaderDisplay(false)
+    }
+  }, [items]);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -60,19 +69,34 @@ export const ItemsList = () => {
       return;
     }
 
-    setApiLoading(true);
-    (async () => {
-      const newItem = await Axios.request({
-        url: "/api/inventory/addNewItem",
-        method: "post",
-        data: { ...newItemInput },
-        headers: {
-          Cookie: "",
-        },
-      });
-      dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
-    })();
-    setApiLoading(false);
+    let itemObject;
+    if (Object.keys(slabPricesObj).length) {
+      itemObject = { ...newItemInput, slabPricing: [slabPricesObj] }
+    } else {
+      itemObject = { ...newItemInput }
+    }
+    
+    console.log(slabArray, Object.keys(slabPricesObj));
+    if(slabArray.length !== Object.keys(slabPricesObj).length){
+      alert('Click on tick button to add slab prices');
+      return;
+    }
+    console.log(itemObject);
+    // setApiLoading(true);
+    // (async () => {
+    //   const newItem = await Axios.request({
+    //     url: "/api/inventory/addNewItem",
+    //     method: "post",
+    //     data: { ...newItemInput },
+    //     headers: {
+    //       Cookie: "",
+    //     },
+    //   });
+    //   dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
+    // })();
+    // setApiLoading(false);
+    setSlabArray([]);
+    setslabPricesObj({});
     setNewItemInput(ITEM_INITIAL_INPUT);
   };
 
@@ -231,50 +255,78 @@ export const ItemsList = () => {
     );
   };
 
-  // const ItemSlabPriceRow = ({ index, style }) => {
-  //   const name = "itemSlabPricePerUnit";
-  //   const slabPrice = {
-  //     1: 5,
-  //     2: 4.5,
-  //     5: 4,
-  //     15: 3.8,
-  //     20: 3.5,
-  //   };
-  //   const slabKeys = Object.keys(slabPrice);
-  //   const slabValues = Object.values(slabPrice);
+  const ItemSlabPriceRow = ({ index, style }) => {
+    const [border, setborder] = useState('none');
+    const [disabled, setdisabled] = useState(true);
+    const inputStyle = { width: '20px', height: '20px', padding: '2px', margin: '0 3px', cursor: 'pointer' };
+    const upIcon = useRef();
+    const name = "itemSlabPricePerUnit";
+    const slabPrice = {
+      1: 5,
+      4: 4.5,
+      7: 4,
+      20: 3.5,
+    };
+    const slabKeys = Object.keys(slabPrice);
+    const slabValues = Object.values(slabPrice);
 
-  //   return (
-  //     <div style={{ paddingTop: "20px", border: "1px solid red" }}>
-  //       {slabKeys.map((item, index) => {
-  //         return (
-  //           <div style={{ display: "flex" }}>
-  //             <Image src="./Images/edit.svg" alt="edit-icon"></Image>
-  //             <input
-  //               type="number"
-  //               defaultValue={parseInt(item)}
-  //               style={{ width: "40px", textAlign: "center", border: "none" }}
-  //               disabled
-  //             />
-  //             -
-  //             <input
-  //               type="number"
-  //               defaultValue={parseInt(slabKeys[index + 1] - 1)}
-  //               style={{ width: "40px", textAlign: "center", border: "none" }}
-  //               disabled
-  //             />
-  //             =
-  //             <input
-  //               type="number"
-  //               defaultValue={slabValues[index]}
-  //               style={{ width: "40px", textAlign: "center", border: "none" }}
-  //               disabled
-  //             />
-  //           </div>
-  //         );
-  //       })}
-  //     </div>
-  //   );
-  // };
+    const editSlabPrice = () => {
+      setborder('1px solid black');
+      setdisabled(false);
+    }
+
+    const saveSlabPrice = () => {
+      setborder('none');
+      setdisabled(true);
+    }
+
+    const closeRow = () => {
+      upIcon.current.style.transition = '0.6s ease';
+      if (upIcon.current.style.transform === 'rotate(180deg)') {
+        upIcon.current.style.transform = 'rotate(360deg)';
+      } else {
+        upIcon.current.style.transform = 'rotate(180deg)';
+      };
+    }
+
+    return (
+      <div style={{ paddingTop: "0px" }}>
+        <div style={{ display: 'flex', justifyContent: 'end', margin: '3px 0' }}>
+          <Image style={{ ...inputStyle, display: disabled ? 'none' : 'inline-block' }} src="images/add.svg" alt="add-icon" />
+          <Image onClick={editSlabPrice} style={{ ...inputStyle, display: !disabled ? 'none' : 'inline-block' }} src="images/pencil.svg" alt="edit-icon" />
+          <Image onClick={saveSlabPrice} style={{ ...inputStyle, display: disabled ? 'none' : 'inline-block' }} src="images/check.svg" alt="check-icon" />
+          <Image ref={upIcon} onClick={closeRow} style={{ ...inputStyle }} src="images/up.svg" alt="up-icon" />
+        </div>
+
+        {slabKeys.map((item, index) => {
+          return (
+            <div key={index} style={{ display: "flex" }}>
+              <input
+                type="number"
+                defaultValue={parseInt(item)}
+                style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: border }}
+                disabled={disabled}
+              />
+              -
+              <input
+                type="number"
+                defaultValue={parseInt(slabKeys[index + 1] - 1)}
+                style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: border }}
+                disabled={disabled}
+              />
+              =
+              <input
+                type="number"
+                defaultValue={slabValues[index]}
+                style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: border }}
+                disabled={disabled}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   const ItemStockQuantityRow = ({ index, style }) => {
     const name = "itemStockQuantity";
@@ -371,6 +423,88 @@ export const ItemsList = () => {
     return document.body.removeChild(link);
   };
 
+  const AddSlabPrice = () => {
+    const [addSlab, setAddSlab] = useState(false);
+
+    const [slabObj, setSlabObj] = useState({
+      start: '',
+      end: '',
+      value: ''
+    });
+
+    const addNewSlab = () => {
+      if (addSlab) {
+        setSlabArray([...slabArray, slabObj]);
+        setSlabObj({
+          start: '',
+          end: '',
+          value: ''
+        })
+        setAddSlab(false);
+      }
+      setAddSlab(true);
+    }
+    // console.log(addSlab);
+    
+    const handleOldInput = (data) => {
+      setSlabObj({
+        ...slabObj,
+        [data.name]: data.value,
+      });
+    }
+
+    const handleInputChange = (data) => {
+      let obj = slabArray[data.dataset.index];
+      obj[data.name] = data.value;
+      slabArray.splice(data.dataset.index, 1, obj);
+      setSlabArray([...slabArray]);
+      setAddSlab(true);
+    }
+
+    const setSlabPrice = () => {
+      let newArry = [...slabArray, slabObj];
+      let newObj = {};
+      console.log(slabArray, slabObj);
+      if(slabObj.start === '' || slabObj.value === ''){
+        setSlabArray([...slabArray]);
+      }else{
+        setSlabArray([...slabArray, slabObj]);
+      }
+      newArry.map((item) => (
+        newObj[item.start] = item.value
+      ));
+      setslabPricesObj(newObj);
+      setAddSlab(false);
+      alert('Slab added!');
+    }
+
+    return (
+      <div style={{ paddingTop: "0px" }}>
+        <div style={{ display: 'flex', justifyContent: 'end', margin: '3px 0' }}>
+          <Image onClick={addNewSlab} style={{ width: '20px', height: '20px', padding: '2px', margin: '0 3px', cursor: 'pointer', display: 'inline-block' }} src="images/add.svg" alt="add-icon" />
+          <Image onClick={setSlabPrice} style={{ width: '20px', height: '20px', padding: '2px', margin: '0 3px', cursor: 'pointer', display: 'inline-block' }} src="images/check.svg" alt="check-icon" />
+        </div>
+        {slabArray.map((item, index) => {
+          return (
+            <div key={index} style={{ display: "flex" }}>
+              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} value={item.start} name='start' data-index={index} onChange={(e) => handleInputChange(e.target)} /> -
+              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} value={item.end} name='end' data-index={index} onChange={(e) => handleInputChange(e.target)} /> =
+              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} value={item.value} name='value' data-index={index} onChange={(e) => handleInputChange(e.target)} />
+            </div>
+          )
+        })}
+        {
+          addSlab ?
+            <div style={{ display: "flex" }}>
+              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} value={slabObj.start} name='start' onChange={(e) => handleOldInput(e.target)} /> -
+              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} value={slabObj.end} name='end' onChange={(e) => handleOldInput(e.target)} /> =
+              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} value={slabObj.value} name='value' onChange={(e) => handleOldInput(e.target)} />
+            </div> : ''
+        }
+      </div>
+    )
+  }
+
   const rows = ({ index, style }) => {
     return (
       <tr style={{ ...style, display: "flex" }}>
@@ -389,12 +523,12 @@ export const ItemsList = () => {
         <td style={{ padding: "0" }}>
           <ItemSellingPriceRow style={style} index={index} />
         </td>
+        <td style={{ padding: '0', width: '220px' }}>
+          <ItemSlabPriceRow style={style} index={index} />
+        </td>
         <td style={{ padding: "0" }}>
           <ItemStockQuantityRow style={style} index={index} />
         </td>
-        {/* <td style={{ padding: '0', width: '220px' }}>
-          <ItemSlabPriceRow style={style} index={index} />
-        </td> */}
         <td style={{ padding: "0" }}>
           <ItemMinimumStockQuantityRow style={style} index={index} />
         </td>
@@ -457,12 +591,12 @@ export const ItemsList = () => {
                   </span>
                 </Text>
               </th>
-              {/* <th style={{width: '250px', textAlign: 'center'}}>
-              <Text>
-                Slab Pricing
-                <span style={{ color: "red", display: "inline-block" }}>*</span>
-              </Text>
-            </th> */}
+              <th style={{ width: '250px', textAlign: 'center' }}>
+                <Text>
+                  Slab Pricing
+                  <span style={{ color: "red", display: "inline-block" }}>*</span>
+                </Text>
+              </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
                   Total Stock
@@ -484,7 +618,7 @@ export const ItemsList = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="body">
+          <tbody style={{ display: loaderDisplay ? 'none' : '' }} className="body">
             <tr className="bill-row">
               <td>
                 <Input
@@ -536,17 +670,9 @@ export const ItemsList = () => {
                   autoComplete="off"
                 />
               </td>
-              {/* <td>
-              <Input
-                style={{ width: "250px" }}
-                value={newItemInput["itemSellingPricePerUnit"]}
-                onChange={handleNewItemInput}
-                name="itemSellingPricePerUnit"
-                type="number"
-                placeholder="hello"
-                autoComplete="off"
-              />
-            </td> */}
+              <td>
+                <AddSlabPrice />
+              </td>
               <td>
                 <Input
                   style={{ width: "100px" }}
@@ -579,15 +705,18 @@ export const ItemsList = () => {
             </tr>
           </tbody>
         </Table>
+        <div style={{ padding: '30px 0', display: loaderDisplay ? 'flex' : 'none', justifyContent: 'center' }}>
+          <Loader />
+        </div>
         <Table style={{ width: "auto", margin: "0 auto" }}>
           <tbody>
             <List
               className="list-it"
               height={window.innerHeight - 250}
               itemCount={items.length}
-              itemSize={() => 50}
+              itemSize={() => 130}
               width={1360}
-              // style={{ border: '2px solid black' }}
+            // style={{ border: '2px solid black' }}
             >
               {rows}
             </List>
