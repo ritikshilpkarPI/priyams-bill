@@ -4,7 +4,7 @@ import { VariableSizeList as List } from "react-window";
 
 import { parse } from "json2csv";
 
-import { Button, Input, Table, Text, Loader, Image } from "@mantine/core";
+import { Button, Input, Table, Text, Textarea, Loader, Image } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 
@@ -507,7 +507,7 @@ export const ItemsList = () => {
 
   const rows = ({ index, style }) => {
     return (
-      <tr style={{ ...style, display: "flex" }}>
+      <tr style={{ ...style, height: "60px", display: "flex" }}>
         <td style={{ padding: "0" }}>
           <BarcodeRow style={style} index={index} />
         </td>
@@ -735,11 +735,13 @@ const TableRow = ({
   name,
   index,
 }) => {
+  const Component = name === "itemName" ? Textarea : Input;
   return (
     <tr className="bill-row">
       <td>
-        <Input
-          style={{ ...style, borderTop: "none" }}
+        <Component
+          style={{ ...style }}
+          variant="unstyled"
           value={itemInput[name]}
           onChange={(e) =>
             handleItemInputChange(e, itemInput, setItemInput, index)

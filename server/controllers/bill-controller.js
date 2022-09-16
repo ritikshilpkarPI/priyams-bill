@@ -125,16 +125,16 @@ const addNewBill = async (req, res) => {
 const getAllBill = async (req, res) => {
   try {
     const allBill = await Bill.find()
-      .populate({
-        path: "items",
-        populate: {
-          path: "itemDetail",
-          model: "Item",
-        },
-      })
+      // .populate({
+      //   path: "items.itemDetail",
+      //   model: "Item",
+      //   // populate: {
+      //   //   path: "itemDetail",
+      //   //   model: "Item",
+      //   // },
+      // })
       .sort({ createdAt: -1 })
       .limit(Number(req.query.size));
-    // .skip(Number(req.query.size) * Number(req.query.page))
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });
   } catch (error) {
