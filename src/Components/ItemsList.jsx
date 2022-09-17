@@ -147,12 +147,11 @@ export const ItemsList = () => {
     );
   };
 
-  const ItemNameRow = ({ index, minimumStock }) => {
+  const ItemNameRow = ({ index }) => {
     const name = "itemName";
     const [itemInput, setItemInput] = useState({
       itemName: items[index][name],
     });
-    console.log({minimumStock});
     return (
       <>
         <TableRow
@@ -165,7 +164,6 @@ export const ItemsList = () => {
           itemInput={itemInput}
           setItemInput={setItemInput}
           name={name}
-          minimumStock={minimumStock}
         />
       </>
     );
@@ -381,15 +379,14 @@ export const ItemsList = () => {
   };
 
   const rows = ({ index, style }) => {
-    const minimumStock = itemsList[index].minimumStockQuantity >= itemsList[index].itemStockQuantity
-    console.log({minimumStock});
+    const minimumStock = itemsList[index].minimumStockQuantity >= itemsList[index].itemStockQuantity;
     return (
-      <tr style={{ ...style, height: "60px", display: "flex", border:`${minimumStock ? "1px solid red"  : "" }`,  }}>
+      <tr style={{ ...style, height: "60px", display: "flex", border:`${minimumStock ? "1px solid #F4877A"  : "" }`,  borderRadius:"8px" }}>
         <td style={{ padding: "10" }}>
           <BarcodeRow style={style} index={index} />
         </td>
         <td style={{ padding: "0" }}>
-          <ItemNameRow style={style} index={index}  minimumStock={minimumStock} />
+          <ItemNameRow style={style} index={index}  />
         </td>
         <td style={{ padding: "0" }}>
           <ItemMRPRow style={style} index={index} />
@@ -616,14 +613,13 @@ const TableRow = ({
   setItemInput,
   name,
   index,
-  minimumStock
 }) => {
   const Component = name === "itemName" ? Textarea : Input;
   return (
     <tr className="bill-row">
       <td>
         <Component
-          style={{ ...style, color: `${minimumStock ? "red" : "" } ` }}
+          style={{ ...style  }}
           variant="unstyled"
           value={itemInput[name]}
           onChange={(e) =>
