@@ -1,13 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 
-import { VariableSizeList as List } from "react-window";
-
 import { parse } from "json2csv";
+import { VariableSizeList as List } from "react-window";
 
 import { Button, Input, Table, Text, Textarea } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
-
 import { Axios } from "../utils/axios";
 
 const ITEM_INITIAL_INPUT = {
@@ -144,7 +142,6 @@ export const ItemsList = () => {
     const [itemInput, setItemInput] = useState({
       itemName: items[index][name],
     });
-
     return (
       <>
         <TableRow
@@ -372,9 +369,20 @@ export const ItemsList = () => {
   };
 
   const rows = ({ index, style }) => {
+    const minimumStock =
+      itemsList[index].minimumStockQuantity >=
+      itemsList[index].itemStockQuantity;
     return (
-      <tr style={{ ...style, height: "60px", display: "flex" }}>
-        <td style={{ padding: "0" }}>
+      <tr
+        style={{
+          ...style,
+          height: "60px",
+          display: "flex",
+          border: `${minimumStock ? "1px solid #F4877A" : ""}`,
+          borderRadius: "8px",
+        }}
+      >
+        <td style={{ padding: "10" }}>
           <BarcodeRow style={style} index={index} />
         </td>
         <td style={{ padding: "0" }}>
@@ -419,7 +427,12 @@ export const ItemsList = () => {
       </Button>
       <div style={{ width: "1360px", margin: "30px auto 0" }}>
         <h4>Total Items : {items.length}</h4>
-        <Table style={{ width: "auto" }} striped highlightOnHover>
+        <Table
+          style={{ width: "auto" }}
+          striped
+          highlightOnHover
+          verticalSpacing="xl"
+        >
           <thead className="heading">
             <tr>
               <th style={{ width: "160px", textAlign: "center" }}>
@@ -585,7 +598,7 @@ export const ItemsList = () => {
               className="list-it"
               height={window.innerHeight - 250}
               itemCount={items.length}
-              itemSize={() => 50}
+              itemSize={() => 70}
               width={1360}
               // style={{ border: '2px solid black' }}
             >

@@ -2,9 +2,19 @@ const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
   try {
-    let items = await Item.find();
-    items = items.filter((item) => !item.isDeleted);
-    const itemCount = await Item.countDocuments();
+    const reqFilters = JSON.parse(req.query.filters);
+    let items = [];
+    if (reqFilters.isDeleted === false) {
+      items = await Item.find();
+      items.filter((item) => !item.isDeleted);
+    }
+    if (reqFilters.minStockOnly) {
+      items = await Item.find({
+        minStockReached: reqFilters.minStockOnly,
+        isDeleted: reqFilters.isDeleted,
+      }).sort({ itemStockQuantity: 1 });
+    }
+    const itemCount = items.length;
     res.status(200).json({ message: { items, itemCount } });
   } catch (error) {
     console.error(error);

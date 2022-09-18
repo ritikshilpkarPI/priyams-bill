@@ -24,9 +24,22 @@ const ItemSchem = new mongoose.Schema(
         slabMRP: { type: Number },
       },
     ],
+    minStockReached: { type: Boolean, default: false },
   },
   { strict: false, timestamps: true }
 );
 
+ItemSchem.pre(["save", "findOneAndUpdate"], function (next) {
+  const updatedObj = this._update;
+  if (updatedObj) {
+    updatedObj.minStockReached =
+      Number(updatedObj.minimumStockQuantity) >=
+      Number(updatedObj.itemStockQuantity);
+  } else {
+    this.minStockReached =
+      Number(this.minimumStockQuantity) >= Number(this.itemStockQuantity);
+  }
+  next();
+});
 const Item = mongoose.model("Item", ItemSchem);
 module.exports = { Item };
