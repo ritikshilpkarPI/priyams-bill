@@ -1,7 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-
-import { Button, Input, Table, Text, Loader } from "@mantine/core";
-
+import { Button, Input, Table, Text, Loader, Grid } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -334,7 +332,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             </th>
             <th>
               <Text
-                style={{ width: "100px" }}
                 weight={700}
                 color="black"
                 size="lg"
@@ -345,7 +342,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             </th>
             <th>
               <Text
-                style={{ width: "100px" }}
                 weight={700}
                 color="black"
                 size="lg"
@@ -356,7 +352,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             </th>
             <th>
               <Text
-                style={{ width: "100px" }}
                 weight={700}
                 color="black"
                 size="lg"
@@ -367,7 +362,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             </th>
             <th>
               <Text
-                style={{ width: "100px" }}
                 weight={700}
                 color="black"
                 size="lg"
@@ -666,7 +660,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
           <tr className="final-bill">
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
-            <td className="empty-slots"></td>
             <td>
               <Text
                 color="black"
@@ -709,7 +702,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             </td>
           </tr>
           <tr className="final-bill">
-            <td className="empty-slots"></td>
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>

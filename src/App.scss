@@ -134,14 +134,7 @@ input[type="number"] {
       tr {
         th {
           word-spacing: 999999px;
-          div {
-            max-width: fit-content;
-          }
-        }
-        td {
-          div {
-            max-width: fit-content;
-          }
+          width: 10px;
         }
       }
 
@@ -160,29 +153,28 @@ input[type="number"] {
           border-bottom: 10px solid black;
         }
 
-        // .bill-item-row {
-        //   max-width: 100px;
-        // }
+        .bill-item-row {
+          .itemQuantityInBill,
+          .itemMRPperUnit,
+          .itemSellingPricePerUnit,
+          .itemTotal {
+            text-align: left;
+            width: 10px;
+            font-size: 40px;
+          }
 
-        .itemQuantityInBill,
-        .itemMRPperUnit,
-        .itemSellingPricePerUnit,
-        .itemTotal {
-          text-align: center;
-          width: 10px;
-          margin: 0;
-          padding: 0;
-        }
+          .itemQuantityInBill {
+            margin-left: 5px;
+            padding-left: 5px;
+          }
 
-        .itemQuantityInBill > .quantity-text {
-          text-align: center;
-          align-items: center;
-        }
-
-        .itemName {
-          text-align: left;
-          font-size: 34px;
-          word-spacing: 999999px;
+          .itemName {
+            max-width: 10px;
+            word-break: break-word;
+            padding: 1px;
+            text-align: left;
+            font-size: 26px;
+          }
         }
 
         .print-text {
