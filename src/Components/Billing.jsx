@@ -768,7 +768,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
         </tbody>
       </Table>
       <div className="discount-line">
-        <Text size="xl" color="black" weight={700}>
+        <Text className="discount-text" size="xl" color="black" weight={700}>
           You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP
         </Text>
       </div>
