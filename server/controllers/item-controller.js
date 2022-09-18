@@ -6,13 +6,14 @@ const getItemsFeed = async (req, res) => {
     let items = [];
     if (reqFilters.isDeleted === false) {
       items = await Item.find();
-      items.filter((item) => !item.isDeleted);
+      items = items.filter((item) => !item.isDeleted);
     }
     if (reqFilters.minStockOnly) {
       items = await Item.find({
         minStockReached: reqFilters.minStockOnly,
         isDeleted: reqFilters.isDeleted,
       }).sort({ itemStockQuantity: 1 });
+      items = items.filter((item) => !item.isDeleted);
     }
     const itemCount = items.length;
     res.status(200).json({ message: { items, itemCount } });
