@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input, Table, Text, Loader, Grid } from "@mantine/core";
+import { Button, Input, Table, Text, Loader } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
