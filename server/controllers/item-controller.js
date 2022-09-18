@@ -21,7 +21,7 @@ const addItems = async (req, res) => {
     itemSellingPricePerUnit,
     itemStockQuantity,
     minimumStockQuantity,
-    slabPricing
+    slabPricing = [],
   } = req.body;
 
   try {
@@ -31,10 +31,11 @@ const addItems = async (req, res) => {
       !itemName ||
       !itemSellingPricePerUnit ||
       !itemStockQuantity ||
-      !minimumStockQuantity ||
-      !slabPricing
+      !minimumStockQuantity
     ) {
-      return res.status(200).json({ status: false, message: "not all fields" });
+      return res
+        .status(501)
+        .json({ status: false, message: "Fill all required fields" });
     }
 
     const newItem = await new Item({
@@ -48,11 +49,11 @@ const addItems = async (req, res) => {
         ((itemMRPperUnit - itemSellingPricePerUnit) / itemMRPperUnit) * 100,
       itemCostPricePerUnit,
       itemSellingPricePerUnit,
-      slabPricing
+      slabPricing,
     }).save();
     res.status(200).json({ status: true, message: newItem });
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ error });
   }
 };
 
@@ -60,7 +61,7 @@ const editItemById = async (req, res) => {
   try {
     const { id, itemToBeUpdated } = req.body;
     const changedItem = await Item.findByIdAndUpdate(id, itemToBeUpdated, {
-      new: true
+      new: true,
     });
     res.status(200).json({ message: changedItem });
   } catch (error) {
@@ -84,5 +85,5 @@ module.exports = {
   getItemsFeed,
   addItems,
   editItemById,
-  softDeleteItem
+  softDeleteItem,
 };

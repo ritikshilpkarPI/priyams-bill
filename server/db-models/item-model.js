@@ -11,19 +11,19 @@ const ItemSchem = new mongoose.Schema(
     itemPerUnitDiscountPercentage: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
     itemCostPricePerUnit: {
-      type: Number
+      type: Number,
     },
     itemSellingPricePerUnit: {
-      type: Number
+      type: Number,
     },
     createdAt: { type: Date, default: Date.now },
     lastUpdateAt: { type: Date },
     slabPricing: [
       {
-        slabQuantity: { type: Number, required: true },
-        slabMRP: { type: Number, required: true }
-      }
-    ]
+        slabQuantity: { type: Number },
+        slabMRP: { type: Number },
+      },
+    ],
   },
   { strict: false, timestamps: true }
 );
