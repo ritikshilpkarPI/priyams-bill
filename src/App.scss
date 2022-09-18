@@ -37,7 +37,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -160,22 +160,25 @@ input[type=number] {
         //   max-width: 100px;
         // }
 
-        .itemName,
         .itemQuantityInBill,
         .itemMRPperUnit,
         .itemSellingPricePerUnit,
-        .itemTotal,
-        .last-clmn {
-          max-width: 20px;
-          text-align: left;
-          word-spacing: 999999px;
-          overflow: hidden;
+        .itemTotal {
+          text-align: center;
+          width: 10px;
           margin: 0;
           padding: 0;
         }
 
+        .itemQuantityInBill > .quantity-text {
+          text-align: center;
+          align-items: center;
+        }
+
         .itemName {
+          text-align: left;
           font-size: 34px;
+          word-spacing: 999999px;
         }
 
         .print-text {
