@@ -1,10 +1,7 @@
 import { useState } from "react";
-import {
-  Table,
-  Text,
-  // Collapse,
-  // Button
-} from "@mantine/core";
+
+import { Table, Text } from "@mantine/core";
+
 // import { useHistory } from "react-router-dom";
 
 export const BillFeed = ({ bills = [] }) => {
