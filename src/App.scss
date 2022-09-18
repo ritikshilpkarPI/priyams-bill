@@ -149,7 +149,7 @@ input[type="number"] {
           display: none;
         }
 
-        tr {
+        tr:not(:last-child) {
           border-bottom: 10px solid black;
         }
 
@@ -187,6 +187,15 @@ input[type="number"] {
           display: none;
         }
       }
+    }
+
+    .discount-line {
+      display: flex;
+      padding: 5px;
+      font-size: 40px;
+      align-items: center;
+      justify-content: center;
+      border: 10px dashed black;
     }
 
     .table-heading tr th:nth-child(-n + 2),

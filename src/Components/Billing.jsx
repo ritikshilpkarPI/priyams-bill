@@ -660,6 +660,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
           <tr className="final-bill">
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
+            <td className="empty-slots"></td>
             <td>
               <Text
                 color="black"
@@ -690,7 +691,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                 Bill Total: {bill?.billAmountTotal?.toFixed(2)}
               </Text>
             </td>
-            <td>
+            {/* <td>
               <Text
                 color="black"
                 size="xl"
@@ -699,7 +700,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
               >
                 You saved: {bill?.billDiscountTotal?.toFixed(2)}
               </Text>
-            </td>
+            </td> */}
           </tr>
           <tr className="final-bill">
             <td className="empty-slots"></td>
@@ -766,6 +767,11 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
           </tr>
         </tbody>
       </Table>
+      <div className="discount-line">
+        <Text size="xl" color="black" weight={700}>
+          You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP
+        </Text>
+      </div>
       <div
         style={{
           display: loaderDisplay ? "flex" : "none",
