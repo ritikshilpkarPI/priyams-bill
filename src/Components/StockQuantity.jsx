@@ -1,43 +1,31 @@
-import {
-  useEffect,
-  useState,
-} from 'react';
-
-import Axios from 'axios';
-
-import {
-  Loader,
-  Table,
-  Text,
-} from '@mantine/core';
+import { useEffect, useState } from "react";
+import Axios from "axios";
+import { Loader, Table, Text } from "@mantine/core";
 
 const StockQuantity = () => {
   const [minimumQuantityItem, setMinimumQuantityItem] = useState([]);
   const [loader, setLoader] = useState(false);
   useEffect(() => {
     setLoader(true);
-    const getBillFeed = async () => {
+    const getAllItemsFeed = async () => {
       const fetch = await Axios.request({
         url: "/api/inventory/items",
         method: "get",
         params: {
-          page: 1,
-          size: 50,
+          filters: {
+            minStockOnly: true,
+            isDeleted: false,
+          },
         },
         headers: {
           Cookie: "",
         },
       });
-      let allItems = fetch.data.message.items;
-      const filterItems = allItems.filter(
-        (item) => item.minimumStockQuantity >= item.itemStockQuantity
-      );
-      console.log({ filterItems });
-      setMinimumQuantityItem(filterItems);
+      const minStockItems = fetch.data.message.items;
+      setMinimumQuantityItem(minStockItems);
       setLoader(false);
     };
-    getBillFeed();
-    // setAllBills([]);
+    getAllItemsFeed();
   }, []);
 
   const rows = minimumQuantityItem.map((item, index) => (
@@ -54,27 +42,37 @@ const StockQuantity = () => {
   return (
     <>
       {loader ? (
-       <div style={{ height:"95vh", width:"100%", display: "flex", justifyContent: "center", alignItems:"center" }}>
-        <Loader size="xl" />
-       </div> 
+        <div
+          style={{
+            height: "95vh",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Loader size="xl" />
+        </div>
       ) : (
-        <div style={{ marginTop: "1rem"}}>
-        <Text size="lg" weight="bold" align="center"   >Total Items: {minimumQuantityItem.length}</Text>
+        <div style={{ marginTop: "1rem" }}>
+          <Text size="lg" weight="bold" align="center">
+            Total Items: {minimumQuantityItem.length}
+          </Text>
 
-        <Table fontSize="lg" striped={true} style={{marginTop: "1rem"}}>
-          <thead>
-            <tr>
-              <th>SR.No</th>
-              <th>Item Name</th>
-              <th>Current  Stock</th>
-              <th>Minimum Stock</th>
-              <th>MRP/Unit</th>
-              <th>Cost/Unit</th>
-              <th>Selling Price/Unit</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </Table>
+          <Table fontSize="lg" striped={true} style={{ marginTop: "1rem" }}>
+            <thead>
+              <tr>
+                <th>SR.No</th>
+                <th>Item Name</th>
+                <th>Current Stock</th>
+                <th>Minimum Stock</th>
+                <th>MRP/Unit</th>
+                <th>Cost/Unit</th>
+                <th>Selling Price/Unit</th>
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+          </Table>
         </div>
       )}
     </>

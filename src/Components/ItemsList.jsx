@@ -1,22 +1,12 @@
-import {
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { useContext, useEffect, useState } from "react";
 
-import { parse } from 'json2csv';
-import { VariableSizeList as List } from 'react-window';
+import { parse } from "json2csv";
+import { VariableSizeList as List } from "react-window";
 
-import {
-  Button,
-  Input,
-  Table,
-  Text,
-  Textarea,
-} from '@mantine/core';
+import { Button, Input, Table, Text, Textarea } from "@mantine/core";
 
-import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
+import { AppStateContext } from "../AppState/appState.context";
+import { Axios } from "../utils/axios";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -156,7 +146,7 @@ export const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "250px"}}
+          style={{ width: "250px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -379,14 +369,24 @@ export const ItemsList = () => {
   };
 
   const rows = ({ index, style }) => {
-    const minimumStock = itemsList[index].minimumStockQuantity >= itemsList[index].itemStockQuantity;
+    const minimumStock =
+      itemsList[index].minimumStockQuantity >=
+      itemsList[index].itemStockQuantity;
     return (
-      <tr style={{ ...style, height: "60px", display: "flex", border:`${minimumStock ? "1px solid #F4877A"  : "" }`,  borderRadius:"8px" }}>
+      <tr
+        style={{
+          ...style,
+          height: "60px",
+          display: "flex",
+          border: `${minimumStock ? "1px solid #F4877A" : ""}`,
+          borderRadius: "8px",
+        }}
+      >
         <td style={{ padding: "10" }}>
           <BarcodeRow style={style} index={index} />
         </td>
         <td style={{ padding: "0" }}>
-          <ItemNameRow style={style} index={index}  />
+          <ItemNameRow style={style} index={index} />
         </td>
         <td style={{ padding: "0" }}>
           <ItemMRPRow style={style} index={index} />
@@ -427,7 +427,12 @@ export const ItemsList = () => {
       </Button>
       <div style={{ width: "1360px", margin: "30px auto 0" }}>
         <h4>Total Items : {items.length}</h4>
-        <Table style={{ width: "auto" }} striped highlightOnHover verticalSpacing="xl">
+        <Table
+          style={{ width: "auto" }}
+          striped
+          highlightOnHover
+          verticalSpacing="xl"
+        >
           <thead className="heading">
             <tr>
               <th style={{ width: "160px", textAlign: "center" }}>
@@ -619,7 +624,7 @@ const TableRow = ({
     <tr className="bill-row">
       <td>
         <Component
-          style={{ ...style  }}
+          style={{ ...style }}
           variant="unstyled"
           value={itemInput[name]}
           onChange={(e) =>

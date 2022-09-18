@@ -1,9 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import {
-  Table,
-  Text,
-} from '@mantine/core';
+import { Table, Text } from "@mantine/core";
 
 // import { useHistory } from "react-router-dom";
 
@@ -49,7 +46,6 @@ export const BillFeed = ({ bills = [] }) => {
             <Text align="center">Items</Text>
           </th>
         </tr>
-        
       </thead>
       <tbody className="body">
         {bills.map((item, idx) => {

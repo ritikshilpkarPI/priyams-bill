@@ -1,28 +1,16 @@
-import './App.scss';
-
-import {
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-
-import {
-  Route,
-  Switch,
-  withRouter,
-} from 'react-router-dom';
-
-import { Button } from '@mantine/core';
-
-import { AppStateContext } from './AppState/appState.context';
-import { BillFeed } from './Components/BillFeed';
-import { Billing } from './Components/Billing';
-import DayWiseBillFeed from './Components/DailyBill';
-import EditBill from './Components/EditBill';
-import { ItemsList } from './Components/ItemsList';
-import { OpenClose } from './Components/OpenClose';
-import StockQuantity from './Components/StockQuantity';
-import { Axios } from './utils/axios';
+import "./App.scss";
+import { useContext, useEffect, useState } from "react";
+import { Route, Switch, withRouter } from "react-router-dom";
+import { Button } from "@mantine/core";
+import { AppStateContext } from "./AppState/appState.context";
+import { BillFeed } from "./Components/BillFeed";
+import { Billing } from "./Components/Billing";
+import DayWiseBillFeed from "./Components/DailyBill";
+import EditBill from "./Components/EditBill";
+import { ItemsList } from "./Components/ItemsList";
+import { OpenClose } from "./Components/OpenClose";
+import StockQuantity from "./Components/StockQuantity";
+import { Axios } from "./utils/axios";
 
 // import { QRComp } from "./qr";
 
@@ -32,13 +20,17 @@ function App({ history }) {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
 
-
-
   useEffect(() => {
     (async () => {
       const fetch = await Axios.request({
         url: "/api/inventory/items",
         method: "get",
+        params: {
+          filters: {
+            minStockOnly: false,
+            isDeleted: false,
+          },
+        },
         headers: {
           Cookie: "",
         },
@@ -79,7 +71,9 @@ function App({ history }) {
         <Button onClick={() => history.push("allBill")}>All Bills</Button>
         <Button onClick={() => history.push("dayBill")}>Day Wise Bills</Button>
         <Button onClick={() => history.push("openClose")}>Open Close</Button>
-        <Button onClick={() => history.push("stockquantity")}>Stock Quantity</Button>
+        <Button onClick={() => history.push("stockquantity")}>
+          Shortage Product
+        </Button>
       </div>
       <Switch>
         <Route path="/openClose" component={OpenClose} />
