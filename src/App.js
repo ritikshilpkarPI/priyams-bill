@@ -1,15 +1,17 @@
-import { useEffect, useContext, useState } from "react";
-import { Button } from "@mantine/core";
-import { ItemsList } from "./Components/ItemsList";
-import { AppStateContext } from "./AppState/appState.context";
-import { Axios } from "./utils/axios";
-import { Route, Switch, withRouter } from "react-router-dom";
-import { Billing } from "./Components/Billing";
-import { BillFeed } from "./Components/BillFeed";
-import { OpenClose } from "./Components/OpenClose";
-import DayWiseBillFeed from "./Components/DailyBill";
 import "./App.scss";
+import { useContext, useEffect, useState } from "react";
+import { Route, Switch, withRouter } from "react-router-dom";
+import { Button } from "@mantine/core";
+import { AppStateContext } from "./AppState/appState.context";
+import { BillFeed } from "./Components/BillFeed";
+import { Billing } from "./Components/Billing";
+import DayWiseBillFeed from "./Components/DailyBill";
 import EditBill from "./Components/EditBill";
+import { ItemsList } from "./Components/ItemsList";
+import { OpenClose } from "./Components/OpenClose";
+import StockQuantity from "./Components/StockQuantity";
+import { Axios } from "./utils/axios";
+
 // import { QRComp } from "./qr";
 
 function App({ history }) {
@@ -23,6 +25,12 @@ function App({ history }) {
       const fetch = await Axios.request({
         url: "/api/inventory/items",
         method: "get",
+        params: {
+          filters: {
+            minStockOnly: false,
+            isDeleted: false,
+          },
+        },
         headers: {
           Cookie: "",
         },
@@ -63,6 +71,9 @@ function App({ history }) {
         <Button onClick={() => history.push("allBill")}>All Bills</Button>
         <Button onClick={() => history.push("dayBill")}>Day Wise Bills</Button>
         <Button onClick={() => history.push("openClose")}>Open Close</Button>
+        <Button onClick={() => history.push("stockquantity")}>
+          Shortage Product
+        </Button>
       </div>
       <Switch>
         <Route path="/openClose" component={OpenClose} />
@@ -77,6 +88,7 @@ function App({ history }) {
         />
         <Route path="/inventory" component={ItemsList} />
         <Route path="/dayBill" component={DayWiseBillFeed} />
+        <Route path="/stockquantity" component={StockQuantity} />
         <Route path="/allBill" render={() => <BillFeed bills={allBills} />} />
         <Route path="/:billingID" component={EditBill} />
       </Switch>

@@ -2,9 +2,19 @@ const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
   try {
-    let items = await Item.find();
-    items = items.filter((item) => !item.isDeleted);
-    const itemCount = await Item.countDocuments();
+    const reqFilters = JSON.parse(req.query.filters);
+    let items = [];
+    if (reqFilters.isDeleted === false) {
+      items = await Item.find();
+      items.filter((item) => !item.isDeleted);
+    }
+    if (reqFilters.minStockOnly) {
+      items = await Item.find({
+        minStockReached: reqFilters.minStockOnly,
+        isDeleted: reqFilters.isDeleted,
+      }).sort({ itemStockQuantity: 1 });
+    }
+    const itemCount = items.length;
     res.status(200).json({ message: { items, itemCount } });
   } catch (error) {
     console.error(error);
@@ -21,7 +31,7 @@ const addItems = async (req, res) => {
     itemSellingPricePerUnit,
     itemStockQuantity,
     minimumStockQuantity,
-    slabPricing
+    slabPricing,
   } = req.body;
 
   try {
@@ -48,7 +58,7 @@ const addItems = async (req, res) => {
         ((itemMRPperUnit - itemSellingPricePerUnit) / itemMRPperUnit) * 100,
       itemCostPricePerUnit,
       itemSellingPricePerUnit,
-      slabPricing
+      slabPricing,
     }).save();
     res.status(200).json({ status: true, message: newItem });
   } catch (error) {
@@ -60,7 +70,7 @@ const editItemById = async (req, res) => {
   try {
     const { id, itemToBeUpdated } = req.body;
     const changedItem = await Item.findByIdAndUpdate(id, itemToBeUpdated, {
-      new: true
+      new: true,
     });
     res.status(200).json({ message: changedItem });
   } catch (error) {
@@ -84,5 +94,5 @@ module.exports = {
   getItemsFeed,
   addItems,
   editItemById,
-  softDeleteItem
+  softDeleteItem,
 };
