@@ -18,12 +18,7 @@ const ItemSchem = new mongoose.Schema(
     },
     createdAt: { type: Date, default: Date.now },
     lastUpdateAt: { type: Date },
-    slabPricing: [
-      {
-        slabQuantity: { type: Number, required: true },
-        slabMRP: { type: Number, required: true }
-      }
-    ]
+    slabPricing: { type: Array }
   },
   { strict: false, timestamps: true }
 );
