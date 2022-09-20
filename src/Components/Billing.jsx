@@ -1,7 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-
 import { Button, Input, Table, Text, Loader } from "@mantine/core";
-
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -281,6 +279,8 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
 
          if (quantity > slabs[slabs.length - 1][1]) {
             validSlab = slabs.length - 1;
+         } else if (quantity < 1 && quantity > 0) {
+            validSlab = 0;
          } else {
             for (let i = 0; i < slabs.length; i++) {
                if (Number(slabs[i][1]) === quantity) {
