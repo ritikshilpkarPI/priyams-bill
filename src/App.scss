@@ -149,7 +149,7 @@ input[type="number"] {
           display: none;
         }
 
-        tr {
+        tr:not(:last-child) {
           border-bottom: 10px solid black;
         }
 
@@ -186,6 +186,18 @@ input[type="number"] {
         .quantity-input {
           display: none;
         }
+      }
+    }
+
+    .discount-line {
+      display: flex;
+      padding: 5px;
+      width: 60%;
+      justify-content: center;
+      border: 10px dashed black;
+      .discount-text {
+        font-size: 50px;
+        margin-right: 20px;
       }
     }
 
