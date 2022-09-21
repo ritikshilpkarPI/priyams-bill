@@ -171,8 +171,6 @@ export const OpenClose = () => {
           Cookie: "",
         },
       });
-      setApiLoading(false);
-
       let dateFromDb = newOpenProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split("T")[0];
       id = newOpenProcedure.data.message._id;
@@ -188,10 +186,11 @@ export const OpenClose = () => {
           Cookie: "",
         },
       });
-      setApiLoading(false);
     }
-    getAllProcedure();
-    getDayWiseProcedure();
+
+    await getAllProcedure();
+    await getDayWiseProcedure();
+    setApiLoading(false);
   };
   const addNewCloseProcedure = async () => {
     setApiLoading(true);
@@ -220,7 +219,6 @@ export const OpenClose = () => {
           Cookie: "",
         },
       });
-      setApiLoading(false);
       let dateFromDb = newCloseProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split("T")[0];
       id = newCloseProcedure.data.message._id;
@@ -236,10 +234,10 @@ export const OpenClose = () => {
           Cookie: "",
         },
       });
-      setApiLoading(false);
     }
-    getAllProcedure();
-    getDayWiseProcedure();
+    await getAllProcedure();
+    await getDayWiseProcedure();
+    setApiLoading(false);
   };
 
   return (
