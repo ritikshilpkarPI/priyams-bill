@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
@@ -28,15 +28,11 @@ export const ItemsList = () => {
   const [apiLoading, setApiLoading] = useState(false);
   const [loaderDisplay, setloaderDisplay] = useState(true);
   const [slabArray, setSlabArray] = useState([]);
-  const [updateSlabArray, setUpdateSlabArray] = useState([]);
-  const [openRows, setOpenRows] = useState([1, 2, 6]);
 
   useEffect(() => {
     if (items.length) {
       setloaderDisplay(false)
     }
-    console.log(items);
-    itemRowSize();
   }, [items]);
 
   useEffect(() => {
@@ -77,11 +73,6 @@ export const ItemsList = () => {
       itemObject = { ...newItemInput }
     }
 
-    // console.log(slabArray, Object.keys(slabPricesObj));
-    // if (slabArray.length !== Object.keys(slabPricesObj).length) {
-    //   alert('Click on tick button to add slab prices');
-    //   return;
-    // }
     console.log(itemObject);
     setApiLoading(true);
     (async () => {
@@ -399,7 +390,6 @@ export const ItemsList = () => {
             dispatch={dispatch}
             index={index}
             items={items}
-            state={[updateSlabArray, setUpdateSlabArray]}
           />
         </td>
       </tr>
@@ -442,8 +432,6 @@ export const ItemsList = () => {
 
   const AddSlabPrice = () => {
     const [addSlab, setAddSlab] = useState(false);
-    // const [slabArray, setSlabArray] = useState([]);
-    const [newArray, setNewArray] = useState([]);
     const [slabObjectKey, setSlabObjectKey] = useState();
     const [slabObjectValue, setSlabObjectValue] = useState();
 
@@ -455,36 +443,28 @@ export const ItemsList = () => {
           setSlabArray([...slabArray, [slabArray.length, slabObjectKey, slabObjectValue]]);
           setSlabObjectKey();
           setSlabObjectValue();
-          // setAddSlab(true);
         }
         return;
       }
       setAddSlab(true);
     }
 
-    console.log(addSlab);
-
     const handleNewInput = (data) => {
       data.name === 'key' ? setSlabObjectKey(data.value) : setSlabObjectValue(data.value);
-      setNewArray([slabArray.length, slabObjectKey, slabObjectValue]);
     }
 
     const handleOldInput = (data, index, type) => {
       let arry = slabArray[index];
-      console.log(arry);
       type === 'key' ? arry[1] = data.value : arry[2] = data.value;
-      console.log(arry);
       slabArray.splice(index, 1, arry);
       setSlabArray([...slabArray]);
     }
 
     const createFinalObj = (arry) => {
-      console.log(arry);
       let obj = {};
       arry.map((item) => (
         obj[item[1]] = Number(item[2])
       ))
-      console.log(obj);
     }
 
     const setSlabPrice = () => {
@@ -806,17 +786,11 @@ const TableRow = ({
   );
 };
 
-const UpdateItemButton = ({ dispatch, items, index, style, state }) => {
+const UpdateItemButton = ({ dispatch, items, index, style }) => {
   const [apiLoading, setApiLoading] = useState(false);
-  const [updateSlabArray, setUpdateSlabArray] = useState(state);
   const handleAddItem = async () => {
-    console.log(itemToBeUpdated);
     const { _id } = itemToBeUpdated[index];
     setApiLoading(true);
-
-    console.log(updateSlabArray);
-
-    console.log(itemToBeUpdated);
     const updatedItem = await Axios.request({
       url: "/api/inventory/editItemById",
       method: "put",
@@ -827,7 +801,6 @@ const UpdateItemButton = ({ dispatch, items, index, style, state }) => {
     });
     itemToBeUpdated = {};
     const newList = [...items];
-    console.log(updatedItem);
     newList.splice(index, 1, { ...updatedItem.data.message });
     dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });
     setApiLoading(false);

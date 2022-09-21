@@ -36,8 +36,9 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
    const barRef = useRef("");
    const { itemsStateAndDispatch, billItemsStateAndDispatch } =
       useContext(AppStateContext);
-   const [itemsList] = itemsStateAndDispatch;
+   const [itemsList, itemsReducer] = itemsStateAndDispatch;
    const [billItems, dispatch] = billItemsStateAndDispatch;
+   const initialItemList = itemsList;
    // const [loaderDisplay, setLoaderDisplay] = loaderState;
 
    // To refresh page
@@ -110,6 +111,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
       window.print();
       setApiLoading(false);
       setBill(BILL_INITIAL_STATE);
+      itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] })
    };
 
    function handleChange(event) {
@@ -184,6 +186,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                   },
                   itemQuantityInBill: billItem.itemQuantityInBill + 1,
                };
+               console.log('updated item', updatedItem);
                bill.billItems.splice(index, 1);
                setBill((prev) => ({
                   totalNumberOfItems: prev.totalNumberOfItems + 1,
@@ -271,12 +274,14 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
       }));
    }, [bill.cashPay, bill.upiPay, bill.billAmountTotal]);
 
+   // To show prices according to slabs if exists
    const ItemPrice = ({ item, index }) => {
       let quantity = item["itemQuantityInBill"];
-      let slabs = item["slabPricing"]
+      let slabs = item["slabPricing"];
+
+      // if slabs exists
       if (slabs.length !== 0) {
          let validSlab = 0;
-
          if (quantity > slabs[slabs.length - 1][1]) {
             validSlab = slabs.length - 1;
          } else if (quantity < 1 && quantity > 0) {
@@ -304,6 +309,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             return slabs[validSlab][2];
          }
       } else {
+         // if slabs does not exist
          return item["itemSellingPricePerUnit"];
       }
    }
@@ -407,7 +413,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                         weight={700}
                         color="black"
                         size="lg"
-                        className="header-print-text"
                      >
                         Slab Prices
                      </Text>
@@ -920,7 +925,6 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
             size="xl"
             weight={800}
             className="quantity-text print-text"
-            style={{ border: '2px solid blue' }}
          >
             {itemObj["itemQuantityInBill"] || 0}
          </Text>
