@@ -1,5 +1,13 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input, Table, Text, Loader } from "@mantine/core";
+import {
+  Button,
+  Input,
+  Table,
+  Text,
+  Loader,
+  TextInput,
+  NumberInput,
+} from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -269,7 +277,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
       amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
     }));
   }, [bill.cashPay, bill.upiPay, bill.billAmountTotal]);
-
+  const [phoneError, setPhoneError] = useState("");
   return (
     <div className="billing-container">
       <div className="header">
@@ -279,6 +287,38 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
+        <div style={{ display: "flex", gap: "30px" }}>
+          <TextInput
+            label="Customer Name"
+            style={{ width: "180px" }}
+            onChange={(e) =>
+              setBill((prevBill) => ({
+                ...prevBill,
+                customerName: e.target.value,
+              }))
+            }
+          />
+          <div style={{display:"flex",flexDirection:"column"}}>
+            <TextInput
+              type="number"
+              label="Customer Phone No."
+              style={{ width: "180px",paddingBottom:"30px" }}
+              onChange={(e) => {
+                // console.log(val.target.value.length !== 10);
+                e.target.value.length != 10
+                  ? setPhoneError("Phone number is Invalid!")
+                  : setPhoneError("");
+                setBill((prevBill) => ({
+                  ...prevBill,
+                  customerPhone: e.target.value,
+                }));
+              }}
+            />
+            {console.log(phoneError)}
+            <div style={{ color: "red" }}>{phoneError}</div>
+          </div>
+        </div>
+        {console.log(bill)}
         <Button
           sx={{ background: "black", marginRight: "5px" }}
           onClick={refreshPage}
