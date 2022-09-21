@@ -37,6 +37,7 @@ export const OpenClose = () => {
   const [closingCoin, setClosingCoin] = useState(INITIAL_VALS);
 
   const [selectedDate, setSelectedDate] = useState(currentDate);
+  const [apiLoading, setApiLoading] = useState(false);
 
   const handleOpeningNotesInput = (value, key) => {
     setOpeningNotes((prev) => ({ ...prev, [key]: value }));
@@ -63,7 +64,7 @@ export const OpenClose = () => {
     two: 2,
     one: 1,
   };
-  
+
   const calculateSum = (dataObj) =>
     Object.keys(dataObj).reduce(
       (acc, curr) =>
@@ -125,7 +126,7 @@ export const OpenClose = () => {
     setOpeningCoin(INITIAL_VALS);
     setClosingNotes(INITIAL_VALS);
     setClosingCoin(INITIAL_VALS);
-    
+
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
       createdAtDate = date.split("T")[0];
@@ -147,6 +148,7 @@ export const OpenClose = () => {
   let selectedProcedureDate = "";
 
   const addNewOpenProcedure = async () => {
+    setApiLoading(true);
     id = "";
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
@@ -169,6 +171,8 @@ export const OpenClose = () => {
           Cookie: "",
         },
       });
+      setApiLoading(false);
+
       let dateFromDb = newOpenProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split("T")[0];
       id = newOpenProcedure.data.message._id;
@@ -184,11 +188,13 @@ export const OpenClose = () => {
           Cookie: "",
         },
       });
-      getAllProcedure();
-      getDayWiseProcedure();
+      setApiLoading(false);
     }
+    getAllProcedure();
+    getDayWiseProcedure();
   };
   const addNewCloseProcedure = async () => {
+    setApiLoading(true);
     id = "";
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
@@ -214,6 +220,7 @@ export const OpenClose = () => {
           Cookie: "",
         },
       });
+      setApiLoading(false);
       let dateFromDb = newCloseProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split("T")[0];
       id = newCloseProcedure.data.message._id;
@@ -229,9 +236,10 @@ export const OpenClose = () => {
           Cookie: "",
         },
       });
-      getAllProcedure();
-      getDayWiseProcedure();
+      setApiLoading(false);
     }
+    getAllProcedure();
+    getDayWiseProcedure();
   };
 
   return (
@@ -396,7 +404,8 @@ export const OpenClose = () => {
               </Text>
             )}
             <Button
-              style={{ width: "80px", marginTop: "30px" }}
+              loading={apiLoading}
+              style={{ width: "100px", marginTop: "30px" }}
               onClick={
                 procedureValue === "open"
                   ? addNewOpenProcedure
@@ -443,7 +452,7 @@ export const OpenClose = () => {
               <Text>Closing Coins Sum</Text>
             </th>
             <th>
-              <Text>Total Sum</Text>
+              <Text>Closing - Opening</Text>
             </th>
           </tr>
         </thead>
@@ -523,7 +532,9 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {new Date(openingTime).toLocaleTimeString("en-US")}
+            {openingTime === 0
+              ? 0
+              : new Date(openingTime).toLocaleTimeString("en-US")}
           </Text>
         </td>
         <td>
@@ -543,7 +554,9 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {new Date(closingTime).toLocaleTimeString("en-US")}
+            {closingTime === 0
+              ? 0
+              : new Date(closingTime).toLocaleTimeString("en-US")}
           </Text>
         </td>
         <td>
@@ -563,7 +576,7 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {openingSum + closingSum}
+            {closingSum - openingSum}
           </Text>
         </td>
       </tr>
