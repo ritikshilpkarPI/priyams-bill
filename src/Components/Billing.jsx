@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input, Table, Text, Loader } from "@mantine/core";
+import { Button, Input, Table, Text, Loader, TextInput } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -8,7 +8,7 @@ const itemsByName = {};
 const BILL_INITIAL_STATE = {
   billItems: [],
   customerName: "",
-  customerPhone: 0,
+  customerPhone: "",
   billMRPTotal: 0,
   billAmountTotal: 0,
   billDiscountTotal: 0,
@@ -320,6 +320,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
     }
   };
 
+  const [phoneError, setPhoneError] = useState("");
   return (
     <div className="billing-container">
       <div className="header">
@@ -329,6 +330,37 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
+        <div style={{ display: "flex", gap: "30px" }}>
+          <TextInput
+            label="Customer Name"
+            style={{ width: "180px" }}
+            value={bill.customerName}
+            onChange={(e) =>
+              setBill((prevBill) => ({
+                ...prevBill,
+                customerName: e.target.value,
+              }))
+            }
+          />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <TextInput
+              type="number"
+              label="Customer Phone No."
+              value={bill.customerPhone}
+              style={{ width: "180px", paddingBottom: "4px" }}
+              onChange={(e) => {
+                e.target.value.length !== 10
+                  ? setPhoneError("Phone number is Invalid!")
+                  : setPhoneError("");
+                setBill((prevBill) => ({
+                  ...prevBill,
+                  customerPhone: e.target.value,
+                }));
+              }}
+            />
+            <div style={{ height: "10px", color: "red" }}>{phoneError}</div>
+          </div>
+        </div>
         <Button
           sx={{ background: "black", marginRight: "5px" }}
           onClick={refreshPage}
