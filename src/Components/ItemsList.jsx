@@ -438,7 +438,9 @@ export const ItemsList = () => {
           stopStream={stopStream}
           onUpdate={(err, result) => {
             if (result) {
-              setNewItemInput({ ...newItemInput, itemBarcode: result.text });
+              handleNewItemInput({
+                target: { name: "itemBarcode", value: result.text },
+              });
               // setStopStream(true);
             }
           }}
