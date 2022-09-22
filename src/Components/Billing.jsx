@@ -6,7 +6,6 @@ import {
   Text,
   Loader,
   TextInput,
-  NumberInput,
 } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
@@ -16,7 +15,7 @@ const itemsByName = {};
 const BILL_INITIAL_STATE = {
   billItems: [],
   customerName: "",
-  customerPhone: 0,
+  customerPhone: "",
   billMRPTotal: 0,
   billAmountTotal: 0,
   billDiscountTotal: 0,
@@ -291,6 +290,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
           <TextInput
             label="Customer Name"
             style={{ width: "180px" }}
+            value={bill.customerName}
             onChange={(e) =>
               setBill((prevBill) => ({
                 ...prevBill,
@@ -298,14 +298,14 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
               }))
             }
           />
-          <div style={{display:"flex",flexDirection:"column"}}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
             <TextInput
               type="number"
               label="Customer Phone No."
-              style={{ width: "180px",paddingBottom:"30px" }}
+              value={bill.customerPhone}
+              style={{ width: "180px", paddingBottom: "4px" }}
               onChange={(e) => {
-                // console.log(val.target.value.length !== 10);
-                e.target.value.length != 10
+                e.target.value.length !== 10
                   ? setPhoneError("Phone number is Invalid!")
                   : setPhoneError("");
                 setBill((prevBill) => ({
@@ -314,11 +314,9 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                 }));
               }}
             />
-            {console.log(phoneError)}
-            <div style={{ color: "red" }}>{phoneError}</div>
+            <div style={{ height: "10px", color: "red" }}>{phoneError}</div>
           </div>
         </div>
-        {console.log(bill)}
         <Button
           sx={{ background: "black", marginRight: "5px" }}
           onClick={refreshPage}

@@ -68,7 +68,6 @@ const TableRow = ({ item, idx }) => {
   // function handleClick(id) {
   //   history.push(`/${id}`);
   // }
-  console.log(item)
   return (
     <>
       <tr
