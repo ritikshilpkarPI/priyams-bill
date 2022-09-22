@@ -808,19 +808,8 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                 Bill Total: {bill?.billAmountTotal?.toFixed(2)}
               </Text>
             </td>
-            <td>
-              <Text
-                color="black"
-                size="xl"
-                weight={800}
-                className="final-bill-text print-text"
-              >
-                You saved: {bill?.billDiscountTotal?.toFixed(2)}
-              </Text>
-            </td>
           </tr>
           <tr className="final-bill">
-            <td className="empty-slots"></td>
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
             <td className="empty-slots"></td>
@@ -885,6 +874,11 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
           </tr>
         </tbody>
       </Table>
+      <div className="discount-line">
+        <Text className="discount-text" size="xl" color="black" weight={700}>
+          You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP
+        </Text>
+      </div>
       <div
         style={{
           display: loaderDisplay ? "flex" : "none",
