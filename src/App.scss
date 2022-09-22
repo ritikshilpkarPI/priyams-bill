@@ -162,6 +162,9 @@ input[type="number"] {
             width: 10px;
             font-size: 40px;
           }
+          .slabPricing {
+            display: none;
+          }
 
           .itemQuantityInBill {
             margin-left: 5px;
@@ -202,6 +205,7 @@ input[type="number"] {
     }
 
     .table-heading tr th:nth-child(-n + 2),
+    .table-heading .header-slab-price,
     .bill-btns,
     .delete-btn {
       display: none;
