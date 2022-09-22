@@ -1,12 +1,22 @@
-import { useContext, useEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
-import { parse } from "json2csv";
-import { VariableSizeList as List } from "react-window";
+import { parse } from 'json2csv';
+import { VariableSizeList as List } from 'react-window';
 
-import { Button, Input, Table, Text, Textarea } from "@mantine/core";
+import {
+  Button,
+  Input,
+  Table,
+  Text,
+  Textarea,
+} from '@mantine/core';
 
-import { AppStateContext } from "../AppState/appState.context";
-import { Axios } from "../utils/axios";
+import { AppStateContext } from '../AppState/appState.context';
+import { Axios } from '../utils/axios';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -26,6 +36,8 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [filterItems, setFilterItems] = useState("");
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -43,6 +55,28 @@ export const ItemsList = () => {
           .includes(value.toString().toLowerCase())
     );
     setItems([...filteredItems]);
+  };
+
+  // const handleChange = (filterName) => {
+  //   handleCheckboxFilter(filterName)
+  // }
+
+  const handleCheckboxFilter = (filterName) => {
+    setFilterItems(filterName);
+    if (filterName !== filterItems) {
+      handleFilter(filterName);
+    } else {
+      resetFilter();
+    }
+  };
+
+  const handleFilter = (name) => {
+    const filteredData = itemsList.filter((item) => item[name] === null);
+    setItems([...filteredData]);
+  };
+  const resetFilter = () => {
+    setItems([...itemsList]);
+    setFilterItems(" ");
   };
 
   const addItemToDb = async () => {
@@ -437,6 +471,15 @@ export const ItemsList = () => {
             <tr>
               <th style={{ width: "160px", textAlign: "center" }}>
                 <Text>Bar Code</Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemBarcode"}
+                    label="Filter Barcode"
+                    value="Filter Barcode"
+                    onClick={() => handleCheckboxFilter("itemBarcode")}
+                  />
+                </div>
               </th>
               <th style={{ width: "250px", textAlign: "center" }}>
                 <Text>
@@ -445,6 +488,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemName"}
+                    label="Filter Name"
+                    value="Filter Name"
+                    onClick={() => handleCheckboxFilter("itemName")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -453,6 +505,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter MRP/Unit"
+                    value="Filter  MRP/Unit"
+                    checked={filterItems === "itemMRPperUnit"}
+                    onClick={() => handleCheckboxFilter("itemMRPperUnit")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -460,6 +521,17 @@ export const ItemsList = () => {
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
+                  <div style={{ marginTop: "1rem" }}>
+                    <input
+                      type="checkbox"
+                      label="Filter With Cost Price"
+                      value="Filter With Cost Price"
+                      checked={filterItems === "itemCostPricePerUnit"}
+                      onClick={() =>
+                        handleCheckboxFilter("itemCostPricePerUnit")
+                      }
+                    />
+                  </div>
                 </Text>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
@@ -469,6 +541,17 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter With Selling Price"
+                    value="Filter With Selling Price"
+                    checked={filterItems === "itemSellingPricePerUnit"}
+                    onClick={() =>
+                      handleCheckboxFilter("itemSellingPricePerUnit")
+                    }
+                  />
+                </div>
               </th>
               {/* <th style={{width: '250px', textAlign: 'center'}}>
               <Text>
@@ -483,6 +566,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter With Total Stock"
+                    value="Filter With Total Stock"
+                    checked={filterItems === "itemStockQuantity"}
+                    onClick={() => handleCheckboxFilter("itemStockQuantity")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -491,6 +583,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "minimumStockQuantity"}
+                    label="Filter With Minimum Stock"
+                    value="Filter With Minimum Stock"
+                    onClick={() => handleCheckboxFilter("minimumStockQuantity")}
+                  />
+                </div>
               </th>
               <th style={{ width: "150px", textAlign: "center" }}>
                 <Text>Update Button</Text>
