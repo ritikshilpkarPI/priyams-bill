@@ -312,7 +312,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
     }
   };
 
-  const [phoneError, setPhoneError] = useState("");
   return (
     <div className="billing-container">
       <div className="header">
