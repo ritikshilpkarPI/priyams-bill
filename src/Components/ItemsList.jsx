@@ -73,7 +73,6 @@ export const ItemsList = () => {
       itemObject = { ...newItemInput }
     }
 
-    console.log(itemObject);
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
@@ -84,7 +83,6 @@ export const ItemsList = () => {
           Cookie: "",
         },
       });
-      console.log(newItem);
       dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
     })();
     setApiLoading(false);
@@ -246,6 +244,7 @@ export const ItemsList = () => {
     );
   };
 
+  // To edit slab on existing item
   const ItemSlabPriceRow = ({ index }) => {
     const [addOldSlab, setAddOldSlab] = useState(false);
     const [newArray, setNewArray] = useState(items[index].slabPricing || []);
@@ -254,15 +253,13 @@ export const ItemsList = () => {
     const [editable, setEditable] = useState(false);
 
     const addNewSlab = () => {
-      console.log('row added')
       if (addOldSlab) {
         if (!slabObjectKey || !slabObjectValue) {
           alert('Fill values...');
         } else {
-          setNewArray([...newArray, [newArray.length, slabObjectKey, slabObjectValue]]);
+          setNewArray([...newArray, [newArray.length, Number(slabObjectKey), Number(slabObjectValue)]]);
           setSlabObjectKey();
           setSlabObjectValue();
-          // setAddOldSlab(true);
         }
         return;
       }
@@ -275,31 +272,33 @@ export const ItemsList = () => {
 
     const handleOldInput = (data, index, type) => {
       let arry = newArray[index];
-      console.log(arry);
       type === 'key' ? arry[1] = data.value : arry[2] = data.value;
-      console.log(arry);
       newArray.splice(index, 1, arry);
       setNewArray([...newArray]);
     }
 
     const setSlabPrice = () => {
-      console.log('final object', newArray);
       if (!slabObjectKey && !slabObjectValue) {
-        // setUpdateSlabArray([...newArray]);
+        setEditable(false);
+        for(let i = 0; i < newArray.length; i++){
+          if(!newArray[i][1] || !newArray[i][2]){
+            newArray.splice(index, 1);
+            setNewArray([...newArray]);
+          }else{
+          }
+        }
         setNewArray([...newArray]);
         itemToBeUpdated = { [index]: { ...items[index], slabPricing: [...newArray] } };
       } else {
-        setNewArray([...newArray, [newArray.length, slabObjectKey, slabObjectValue]]);
-        // setUpdateSlabArray([...newArray, [newArray.length, slabObjectKey, slabObjectValue]]);
+        setEditable(false);
+        setNewArray([...newArray, [newArray.length, Number(slabObjectKey), Number(slabObjectValue)]]);
         setSlabObjectKey();
         setSlabObjectValue();
         setAddOldSlab(false);
-        setEditable(false);
-        itemToBeUpdated = { [index]: { ...items[index], slabPricing: [...newArray, [newArray.length, slabObjectKey, slabObjectValue]] } };
+        itemToBeUpdated = { [index]: { ...items[index], slabPricing: [...newArray, [newArray.length, Number(slabObjectKey), Number(slabObjectValue)]] } };
       }
+      alert('Slab Added');
     }
-
-    // console.log(newArray);
 
     const editSlabPrice = () => {
       setEditable(true);
@@ -430,6 +429,7 @@ export const ItemsList = () => {
     return document.body.removeChild(link);
   };
 
+  // To Add slab price on new adding item
   const AddSlabPrice = () => {
     const [addSlab, setAddSlab] = useState(false);
     const [slabObjectKey, setSlabObjectKey] = useState();
@@ -471,7 +471,7 @@ export const ItemsList = () => {
       if (!slabObjectKey && !slabObjectValue) {
         setSlabArray([...slabArray]);
       } else {
-        setSlabArray([...slabArray, [slabArray.length, slabObjectKey, slabObjectValue]]);
+        setSlabArray([...slabArray, [slabArray.length, Number(slabObjectKey), Number(slabObjectValue)]]);
         setSlabObjectKey();
         setSlabObjectValue();
         setAddSlab(false);
@@ -514,7 +514,6 @@ export const ItemsList = () => {
       <tr
         style={{
           ...style,
-          height: "60px",
           display: "flex",
           border: `${minimumStock ? "1px solid #F4877A" : ""}`,
           borderRadius: "8px",
@@ -556,7 +555,7 @@ export const ItemsList = () => {
 
 
   const itemRowSize = (index) => {
-    if (items[index]?.slabPricing.length > 1) {
+    if (items[index]?.slabPricing.length >= 1) {
       return (items[index].slabPricing.length * 21 + 22) + 28;
     } else {
       return 50;
