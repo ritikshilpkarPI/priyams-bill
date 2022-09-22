@@ -186,7 +186,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             },
             itemQuantityInBill: billItem.itemQuantityInBill + 1,
           };
-          console.log("updated item", updatedItem);
           bill.billItems.splice(index, 1);
           setBill((prev) => ({
             totalNumberOfItems: prev.totalNumberOfItems + 1,
@@ -242,11 +241,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
     let profitAmount = 0;
     let numOfItems = 0;
     bill.billItems.forEach((item) => {
-      console.log(
-        "total sum",
-        item.itemDetail["itemSellingPricePerUnit"],
-        item["itemQuantityInBill"]
-      );
       totalSum += Math.ceil(
         item.itemDetail["itemSellingPricePerUnit"] * item["itemQuantityInBill"]
       );
@@ -305,12 +299,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
       if (!quantity) {
         return 0;
       } else {
-        console.log(item);
-        console.log(item.itemName, quantity, slabs.length);
-        bill.billItems[index].itemDetail.itemSellingPricePerUnit = Number(
-          slabs[validSlab][2]
-        );
-        console.log(bill);
+        bill.billItems[index].itemDetail.itemSellingPricePerUnit = Number(slabs[validSlab][2]);
         setBill(bill);
         return slabs[validSlab][2];
       }
