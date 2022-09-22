@@ -7,6 +7,7 @@ import { Button, Input, Table, Text, Textarea } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -26,6 +27,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  const [stopStream] = useState(false);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -425,6 +427,17 @@ export const ItemsList = () => {
       >
         Download CSV
       </Button>
+      <BarcodeScannerComponent
+        width={500}
+        height={500}
+        stopStream={stopStream}
+        onUpdate={(err, result) => {
+          if (result) {
+            setNewItemInput({ ...newItemInput, itemBarcode: result.text });
+            // setStopStream(true);
+          }
+        }}
+      />
       <div style={{ width: "1360px", margin: "30px auto 0" }}>
         <h4>Total Items : {items.length}</h4>
         <Table
