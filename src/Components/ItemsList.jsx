@@ -36,7 +36,6 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
-  const [checked, setChecked] = useState(false);
   const [filterItems, setFilterItems] = useState("");
 
   useEffect(() => {
@@ -56,10 +55,6 @@ export const ItemsList = () => {
     );
     setItems([...filteredItems]);
   };
-
-  // const handleChange = (filterName) => {
-  //   handleCheckboxFilter(filterName)
-  // }
 
   const handleCheckboxFilter = (filterName) => {
     setFilterItems(filterName);
