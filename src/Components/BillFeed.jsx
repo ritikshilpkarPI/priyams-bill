@@ -13,6 +13,12 @@ export const BillFeed = ({ bills = [] }) => {
             <Text align="center">Sl. No.</Text>
           </th>
           <th>
+            <Text align="center">Customer Name</Text>
+          </th>
+          <th>
+            <Text align="center">Customer Phone</Text>
+          </th>
+          <th>
             <Text align="center">Bill Total Amount</Text>
           </th>
           <th>
@@ -73,6 +79,16 @@ const TableRow = ({ item, idx }) => {
         <td>
           <Text color="black" weight={500}>
             {idx + 1}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["customerName"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["customerPhone"]}
           </Text>
         </td>
         <td>

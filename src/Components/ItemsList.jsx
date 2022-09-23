@@ -1,22 +1,13 @@
-import {
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { useContext, useEffect, useState } from "react";
 
-import { parse } from 'json2csv';
-import { VariableSizeList as List } from 'react-window';
+import { parse } from "json2csv";
+import { VariableSizeList as List } from "react-window";
 
-import {
-  Button,
-  Input,
-  Table,
-  Text,
-  Textarea,
-} from '@mantine/core';
+import { Button, Input, Table, Text, Textarea } from "@mantine/core";
 
-import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
+import { AppStateContext } from "../AppState/appState.context";
+import { Axios } from "../utils/axios";
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -37,6 +28,8 @@ export const ItemsList = () => {
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
   const [filterItems, setFilterItems] = useState("");
+  const [stopStream] = useState(false);
+  const [openScanner, setOpenScanner] = useState(false);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -454,6 +447,24 @@ export const ItemsList = () => {
       >
         Download CSV
       </Button>
+      <Button onClick={() => setOpenScanner(!openScanner)}>
+        Barcode Scanner
+      </Button>
+      {openScanner && (
+        <BarcodeScannerComponent
+          width={500}
+          height={500}
+          stopStream={stopStream}
+          onUpdate={(err, result) => {
+            if (result) {
+              handleNewItemInput({
+                target: { name: "itemBarcode", value: result.text },
+              });
+              // setStopStream(true);
+            }
+          }}
+        />
+      )}
       <div style={{ width: "1360px", margin: "30px auto 0" }}>
         <h4>Total Items : {items.length}</h4>
         <Table
