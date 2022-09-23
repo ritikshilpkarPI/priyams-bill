@@ -3,10 +3,19 @@ import { useContext, useEffect, useState } from "react";
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
 
-import { Button, Input, Table, Text, Textarea, Loader, Image } from "@mantine/core";
+import {
+  Button,
+  Input,
+  Table,
+  Text,
+  Textarea,
+  Loader,
+  Image,
+} from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -28,16 +37,18 @@ export const ItemsList = () => {
   const [apiLoading, setApiLoading] = useState(false);
   const [loaderDisplay, setloaderDisplay] = useState(true);
   const [slabArray, setSlabArray] = useState([]);
-
-  useEffect(() => {
-    if (items.length) {
-      setloaderDisplay(false)
-    }
-  }, [items]);
+  const [stopStream] = useState(false);
+  const [openScanner, setOpenScanner] = useState(false);
 
   useEffect(() => {
     setItems([...itemsList]);
   }, [itemsList]);
+
+  useEffect(() => {
+    if (items.length) {
+      setloaderDisplay(false);
+    }
+  }, [items]);
 
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
@@ -68,9 +79,9 @@ export const ItemsList = () => {
 
     let itemObject;
     if (slabArray.length !== 0) {
-      itemObject = { ...newItemInput, slabPricing: slabArray }
+      itemObject = { ...newItemInput, slabPricing: slabArray };
     } else {
-      itemObject = { ...newItemInput }
+      itemObject = { ...newItemInput };
     }
 
     setApiLoading(true);
@@ -255,81 +266,213 @@ export const ItemsList = () => {
     const addNewSlab = () => {
       if (addOldSlab) {
         if (!slabObjectKey || !slabObjectValue) {
-          alert('Fill values...');
+          alert("Fill values...");
         } else {
-          setNewArray([...newArray, [newArray.length, Number(slabObjectKey), Number(slabObjectValue)]]);
+          setNewArray([
+            ...newArray,
+            [newArray.length, Number(slabObjectKey), Number(slabObjectValue)],
+          ]);
           setSlabObjectKey();
           setSlabObjectValue();
         }
         return;
       }
       setAddOldSlab(true);
-    }
+    };
 
     const handleNewInput = (data) => {
-      data.name === 'key' ? setSlabObjectKey(data.value) : setSlabObjectValue(data.value);
-    }
+      data.name === "key"
+        ? setSlabObjectKey(data.value)
+        : setSlabObjectValue(data.value);
+    };
 
     const handleOldInput = (data, index, type) => {
       let arry = newArray[index];
-      type === 'key' ? arry[1] = data.value : arry[2] = data.value;
+      type === "key" ? (arry[1] = data.value) : (arry[2] = data.value);
       newArray.splice(index, 1, arry);
       setNewArray([...newArray]);
-    }
+    };
 
     const setSlabPrice = () => {
       if (!slabObjectKey && !slabObjectValue) {
         setEditable(false);
-        for(let i = 0; i < newArray.length; i++){
-          if(!newArray[i][1] || !newArray[i][2]){
+        for (let i = 0; i < newArray.length; i++) {
+          if (!newArray[i][1] || !newArray[i][2]) {
             newArray.splice(index, 1);
             setNewArray([...newArray]);
-          }else{
+          } else {
           }
         }
         setNewArray([...newArray]);
-        itemToBeUpdated = { [index]: { ...items[index], slabPricing: [...newArray] } };
+        itemToBeUpdated = {
+          [index]: { ...items[index], slabPricing: [...newArray] },
+        };
       } else {
         setEditable(false);
-        setNewArray([...newArray, [newArray.length, Number(slabObjectKey), Number(slabObjectValue)]]);
+        setNewArray([
+          ...newArray,
+          [newArray.length, Number(slabObjectKey), Number(slabObjectValue)],
+        ]);
         setSlabObjectKey();
         setSlabObjectValue();
         setAddOldSlab(false);
-        itemToBeUpdated = { [index]: { ...items[index], slabPricing: [...newArray, [newArray.length, Number(slabObjectKey), Number(slabObjectValue)]] } };
+        itemToBeUpdated = {
+          [index]: {
+            ...items[index],
+            slabPricing: [
+              ...newArray,
+              [newArray.length, Number(slabObjectKey), Number(slabObjectValue)],
+            ],
+          },
+        };
       }
-      alert('Slab Added');
-    }
+      alert("Slab Added");
+    };
 
     const editSlabPrice = () => {
       setEditable(true);
-    }
+    };
 
     return (
-      <div style={{ paddingTop: "0px", width: '155px' }}>
-        <div style={{ display: 'flex', justifyContent: 'end', margin: '3px 0' }}>
-          <Image onClick={addNewSlab} style={{ display: editable ? 'inline-block' : 'none', margin: '0 2px' }} width={16} height={16} src="images/add.svg" alt="add-icon" />
-          <Image onClick={editSlabPrice} style={{ display: editable ? 'none' : 'inline-block', margin: '0 2px' }} width={16} height={16} src="images/pencil.svg" alt="edit-icon" />
-          <Image onClick={setSlabPrice} style={{ display: editable ? 'inline-block' : 'none', margin: '0 2px' }} width={16} height={16} src="images/check.svg" alt="check-icon" />
-          <Image width={16} height={16} style={{ margin: '0 2px' }} src="images/up.svg" alt="up-icon" />
+      <div style={{ paddingTop: "0px", width: "155px" }}>
+        <div
+          style={{ display: "flex", justifyContent: "end", margin: "3px 0" }}
+        >
+          <Image
+            onClick={addNewSlab}
+            style={{
+              display: editable ? "inline-block" : "none",
+              margin: "0 2px",
+            }}
+            width={16}
+            height={16}
+            src="images/add.svg"
+            alt="add-icon"
+          />
+          <Image
+            onClick={editSlabPrice}
+            style={{
+              display: editable ? "none" : "inline-block",
+              margin: "0 2px",
+            }}
+            width={16}
+            height={16}
+            src="images/pencil.svg"
+            alt="edit-icon"
+          />
+          <Image
+            onClick={setSlabPrice}
+            style={{
+              display: editable ? "inline-block" : "none",
+              margin: "0 2px",
+            }}
+            width={16}
+            height={16}
+            src="images/check.svg"
+            alt="check-icon"
+          />
+          <Image
+            width={16}
+            height={16}
+            style={{ margin: "0 2px" }}
+            src="images/up.svg"
+            alt="up-icon"
+          />
         </div>
 
         {newArray?.map((item, index) => {
           return (
             <div key={index} style={{ display: "flex" }}>
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: editable ? '1px solid black' : 'none' }} value={item[1]} onChange={(e) => handleOldInput(e.target, index, 'key')} disabled={!editable} /> -
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none' }} disabled defaultValue={index !== newArray.length - 1 ? Number(newArray[index + 1][1]) - 1 : ''} /> =
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: editable ? '1px solid black' : 'none' }} value={item[2]} onChange={(e) => handleOldInput(e.target, index, 'value')} disabled={!editable} />
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                  borderBottom: editable ? "1px solid black" : "none",
+                }}
+                value={item[1]}
+                onChange={(e) => handleOldInput(e.target, index, "key")}
+                disabled={!editable}
+              />{" "}
+              -
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                }}
+                disabled
+                defaultValue={
+                  index !== newArray.length - 1
+                    ? Number(newArray[index + 1][1]) - 1
+                    : ""
+                }
+              />{" "}
+              =
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                  borderBottom: editable ? "1px solid black" : "none",
+                }}
+                value={item[2]}
+                onChange={(e) => handleOldInput(e.target, index, "value")}
+                disabled={!editable}
+              />
             </div>
-          )
+          );
         })}
-        {
-          addOldSlab ?
-            <div style={{ display: "flex" }}>
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} name="key" onChange={(e) => handleNewInput(e.target)} value={Number(slabObjectKey)} /> -
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none' }} disabled /> =
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} name="value" onChange={(e) => handleNewInput(e.target)} value={Number(slabObjectValue)} />
-            </div> : ''
-        }
+        {addOldSlab ? (
+          <div style={{ display: "flex" }}>
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+              }}
+              name="key"
+              onChange={(e) => handleNewInput(e.target)}
+              value={Number(slabObjectKey)}
+            />{" "}
+            -
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+              }}
+              disabled
+            />{" "}
+            =
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+              }}
+              name="value"
+              onChange={(e) => handleNewInput(e.target)}
+              value={Number(slabObjectValue)}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     );
   };
@@ -438,73 +581,182 @@ export const ItemsList = () => {
     const addNewSlab = () => {
       if (addSlab) {
         if (!slabObjectKey || !slabObjectValue) {
-          alert('Fill values...');
+          alert("Fill values...");
         } else {
-          setSlabArray([...slabArray, [slabArray.length, slabObjectKey, slabObjectValue]]);
+          setSlabArray([
+            ...slabArray,
+            [slabArray.length, slabObjectKey, slabObjectValue],
+          ]);
           setSlabObjectKey();
           setSlabObjectValue();
         }
         return;
       }
       setAddSlab(true);
-    }
+    };
 
     const handleNewInput = (data) => {
-      data.name === 'key' ? setSlabObjectKey(data.value) : setSlabObjectValue(data.value);
-    }
+      data.name === "key"
+        ? setSlabObjectKey(data.value)
+        : setSlabObjectValue(data.value);
+    };
 
     const handleOldInput = (data, index, type) => {
       let arry = slabArray[index];
-      type === 'key' ? arry[1] = data.value : arry[2] = data.value;
+      type === "key" ? (arry[1] = data.value) : (arry[2] = data.value);
       slabArray.splice(index, 1, arry);
       setSlabArray([...slabArray]);
-    }
+    };
 
     const createFinalObj = (arry) => {
       let obj = {};
-      arry.map((item) => (
-        obj[item[1]] = Number(item[2])
-      ))
-    }
+      arry.map((item) => (obj[item[1]] = Number(item[2])));
+    };
 
     const setSlabPrice = () => {
       if (!slabObjectKey && !slabObjectValue) {
         setSlabArray([...slabArray]);
       } else {
-        setSlabArray([...slabArray, [slabArray.length, Number(slabObjectKey), Number(slabObjectValue)]]);
+        setSlabArray([
+          ...slabArray,
+          [slabArray.length, Number(slabObjectKey), Number(slabObjectValue)],
+        ]);
         setSlabObjectKey();
         setSlabObjectValue();
         setAddSlab(false);
-        createFinalObj([...slabArray, [slabArray.length, slabObjectKey, slabObjectValue]]);
+        createFinalObj([
+          ...slabArray,
+          [slabArray.length, slabObjectKey, slabObjectValue],
+        ]);
       }
-    }
+    };
 
     return (
       <div style={{ paddingTop: "0px" }}>
-        <div style={{ display: 'flex', justifyContent: 'end', margin: '3px 0' }}>
-          <Image onClick={addNewSlab} style={{ width: '20px', height: '20px', padding: '2px', margin: '0 3px', cursor: 'pointer', display: 'inline-block' }} src="images/add.svg" alt="add-icon" />
-          <Image onClick={setSlabPrice} style={{ width: '20px', height: '20px', padding: '2px', margin: '0 3px', cursor: 'pointer', display: 'inline-block' }} src="images/check.svg" alt="check-icon" />
+        <div
+          style={{ display: "flex", justifyContent: "end", margin: "3px 0" }}
+        >
+          <Image
+            onClick={addNewSlab}
+            style={{
+              width: "20px",
+              height: "20px",
+              padding: "2px",
+              margin: "0 3px",
+              cursor: "pointer",
+              display: "inline-block",
+            }}
+            src="images/add.svg"
+            alt="add-icon"
+          />
+          <Image
+            onClick={setSlabPrice}
+            style={{
+              width: "20px",
+              height: "20px",
+              padding: "2px",
+              margin: "0 3px",
+              cursor: "pointer",
+              display: "inline-block",
+            }}
+            src="images/check.svg"
+            alt="check-icon"
+          />
         </div>
         {slabArray.map((item, index) => {
           return (
             <div key={index} style={{ display: "flex" }}>
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} value={item[1]} onChange={(e) => handleOldInput(e.target, index, 'key')} /> -
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none' }} disabled defaultValue={index !== slabArray.length - 1 ? Number(slabArray[index + 1][1]) - 1 : ''} /> =
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} value={item[2]} onChange={(e) => handleOldInput(e.target, index, 'value')} />
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                  borderBottom: "1px solid black",
+                }}
+                value={item[1]}
+                onChange={(e) => handleOldInput(e.target, index, "key")}
+              />{" "}
+              -
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                }}
+                disabled
+                defaultValue={
+                  index !== slabArray.length - 1
+                    ? Number(slabArray[index + 1][1]) - 1
+                    : ""
+                }
+              />{" "}
+              =
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                  borderBottom: "1px solid black",
+                }}
+                value={item[2]}
+                onChange={(e) => handleOldInput(e.target, index, "value")}
+              />
             </div>
-          )
+          );
         })}
-        {
-          addSlab ?
-            <div style={{ display: "flex" }}>
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} name="key" onChange={(e) => handleNewInput(e.target)} value={Number(slabObjectKey)} /> -
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none' }} disabled /> =
-              <input type="number" style={{ width: "40px", textAlign: "center", border: 'none', outline: 'none', borderBottom: '1px solid black' }} name="value" onChange={(e) => handleNewInput(e.target)} value={Number(slabObjectValue)} />
-            </div> : ''
-        }
+        {addSlab ? (
+          <div style={{ display: "flex" }}>
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+              }}
+              name="key"
+              onChange={(e) => handleNewInput(e.target)}
+              value={Number(slabObjectKey)}
+            />{" "}
+            -
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+              }}
+              disabled
+            />{" "}
+            =
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+              }}
+              name="value"
+              onChange={(e) => handleNewInput(e.target)}
+              value={Number(slabObjectValue)}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
-    )
-  }
+    );
+  };
 
   const rows = ({ index, style }) => {
     const minimumStock =
@@ -534,7 +786,7 @@ export const ItemsList = () => {
         <td style={{ padding: "0" }}>
           <ItemSellingPriceRow style={style} index={index} />
         </td>
-        <td style={{ padding: '0', width: '220px' }}>
+        <td style={{ padding: "0", width: "220px" }}>
           <ItemSlabPriceRow style={style} index={index} />
         </td>
         <td style={{ padding: "0" }}>
@@ -553,14 +805,13 @@ export const ItemsList = () => {
     );
   };
 
-
   const itemRowSize = (index) => {
     if (items[index]?.slabPricing.length >= 1) {
-      return (items[index].slabPricing.length * 21 + 22) + 28;
+      return items[index].slabPricing.length * 21 + 22 + 28;
     } else {
       return 50;
     }
-  }
+  };
 
   const ListComponents = () => {
     return (
@@ -573,8 +824,8 @@ export const ItemsList = () => {
       >
         {rows}
       </List>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -585,6 +836,24 @@ export const ItemsList = () => {
       >
         Download CSV
       </Button>
+      <Button onClick={() => setOpenScanner(!openScanner)}>
+        Barcode Scanner
+      </Button>
+      {openScanner && (
+        <BarcodeScannerComponent
+          width={500}
+          height={500}
+          stopStream={stopStream}
+          onUpdate={(err, result) => {
+            if (result) {
+              handleNewItemInput({
+                target: { name: "itemBarcode", value: result.text },
+              });
+              // setStopStream(true);
+            }
+          }}
+        />
+      )}
       <div style={{ width: "1360px", margin: "30px auto 0" }}>
         <h4>Total Items : {items.length}</h4>
         <Table
@@ -630,10 +899,12 @@ export const ItemsList = () => {
                   </span>
                 </Text>
               </th>
-              <th style={{ width: '250px', textAlign: 'center' }}>
+              <th style={{ width: "250px", textAlign: "center" }}>
                 <Text>
                   Slab Pricing
-                  <span style={{ color: "red", display: "inline-block" }}>*</span>
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
                 </Text>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
@@ -657,7 +928,10 @@ export const ItemsList = () => {
               </th>
             </tr>
           </thead>
-          <tbody style={{ display: loaderDisplay ? 'none' : '' }} className="body">
+          <tbody
+            style={{ display: loaderDisplay ? "none" : "" }}
+            className="body"
+          >
             <tr className="bill-row">
               <td>
                 <Input
@@ -744,7 +1018,13 @@ export const ItemsList = () => {
             </tr>
           </tbody>
         </Table>
-        <div style={{ padding: '30px 0', display: loaderDisplay ? 'flex' : 'none', justifyContent: 'center' }}>
+        <div
+          style={{
+            padding: "30px 0",
+            display: loaderDisplay ? "flex" : "none",
+            justifyContent: "center",
+          }}
+        >
           <Loader />
         </div>
         <Table style={{ width: "auto", margin: "0 auto" }}>
