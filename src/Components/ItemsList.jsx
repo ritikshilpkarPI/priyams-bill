@@ -891,7 +891,7 @@ export const ItemsList = () => {
                     checked={filterItems === "itemBarcode"}
                     label="Filter Barcode"
                     value="Filter Barcode"
-                    onClick={() => handleCheckboxFilter("itemBarcode")}
+                    onChange={() => handleCheckboxFilter("itemBarcode")}
                   />
                 </div>
               </th>
@@ -908,7 +908,7 @@ export const ItemsList = () => {
                     checked={filterItems === "itemName"}
                     label="Filter Name"
                     value="Filter Name"
-                    onClick={() => handleCheckboxFilter("itemName")}
+                    onChange={() => handleCheckboxFilter("itemName")}
                   />
                 </div>
               </th>
@@ -925,7 +925,7 @@ export const ItemsList = () => {
                     label="Filter MRP/Unit"
                     value="Filter  MRP/Unit"
                     checked={filterItems === "itemMRPperUnit"}
-                    onClick={() => handleCheckboxFilter("itemMRPperUnit")}
+                    onChange={() => handleCheckboxFilter("itemMRPperUnit")}
                   />
                 </div>
               </th>
@@ -941,7 +941,7 @@ export const ItemsList = () => {
                       label="Filter With Cost Price"
                       value="Filter With Cost Price"
                       checked={filterItems === "itemCostPricePerUnit"}
-                      onClick={() =>
+                      onChange={() =>
                         handleCheckboxFilter("itemCostPricePerUnit")
                       }
                     />
@@ -961,7 +961,7 @@ export const ItemsList = () => {
                     label="Filter With Selling Price"
                     value="Filter With Selling Price"
                     checked={filterItems === "itemSellingPricePerUnit"}
-                    onClick={() =>
+                    onChange={() =>
                       handleCheckboxFilter("itemSellingPricePerUnit")
                     }
                   />
@@ -988,7 +988,7 @@ export const ItemsList = () => {
                     label="Filter With Total Stock"
                     value="Filter With Total Stock"
                     checked={filterItems === "itemStockQuantity"}
-                    onClick={() => handleCheckboxFilter("itemStockQuantity")}
+                    onChange={() => handleCheckboxFilter("itemStockQuantity")}
                   />
                 </div>
               </th>
@@ -1005,7 +1005,9 @@ export const ItemsList = () => {
                     checked={filterItems === "minimumStockQuantity"}
                     label="Filter With Minimum Stock"
                     value="Filter With Minimum Stock"
-                    onClick={() => handleCheckboxFilter("minimumStockQuantity")}
+                    onChange={() =>
+                      handleCheckboxFilter("minimumStockQuantity")
+                    }
                   />
                 </div>
               </th>
