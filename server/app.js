@@ -9,7 +9,7 @@ const { data } = require("./data");
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({limit: '30mb'}));
 app.use(cookieParser());
 app.use(
   cors({

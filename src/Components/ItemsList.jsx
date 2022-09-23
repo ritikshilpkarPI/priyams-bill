@@ -3,10 +3,11 @@ import { useContext, useEffect, useState } from "react";
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
 
-import { Button, Input, Table, Text, Textarea } from "@mantine/core";
+import { FileButton, Button, Input, Table, Text, Textarea } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
+import Papa from 'papaparse';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -26,6 +27,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  const [csvFile, setCsvFile] = useState();
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -228,51 +230,6 @@ export const ItemsList = () => {
     );
   };
 
-  // const ItemSlabPriceRow = ({ index, style }) => {
-  //   const name = "itemSlabPricePerUnit";
-  //   const slabPrice = {
-  //     1: 5,
-  //     2: 4.5,
-  //     5: 4,
-  //     15: 3.8,
-  //     20: 3.5,
-  //   };
-  //   const slabKeys = Object.keys(slabPrice);
-  //   const slabValues = Object.values(slabPrice);
-
-  //   return (
-  //     <div style={{ paddingTop: "20px", border: "1px solid red" }}>
-  //       {slabKeys.map((item, index) => {
-  //         return (
-  //           <div style={{ display: "flex" }}>
-  //             <Image src="./Images/edit.svg" alt="edit-icon"></Image>
-  //             <input
-  //               type="number"
-  //               defaultValue={parseInt(item)}
-  //               style={{ width: "40px", textAlign: "center", border: "none" }}
-  //               disabled
-  //             />
-  //             -
-  //             <input
-  //               type="number"
-  //               defaultValue={parseInt(slabKeys[index + 1] - 1)}
-  //               style={{ width: "40px", textAlign: "center", border: "none" }}
-  //               disabled
-  //             />
-  //             =
-  //             <input
-  //               type="number"
-  //               defaultValue={slabValues[index]}
-  //               style={{ width: "40px", textAlign: "center", border: "none" }}
-  //               disabled
-  //             />
-  //           </div>
-  //         );
-  //       })}
-  //     </div>
-  //   );
-  // };
-
   const ItemStockQuantityRow = ({ index, style }) => {
     const name = "itemStockQuantity";
     const [itemInput, setItemInput] = useState({
@@ -416,8 +373,87 @@ export const ItemsList = () => {
     );
   };
 
+  // useEffect(() => {
+  // const uploadCsv = async () => {
+  //   if (csvFile) {
+  //     const data = new FormData();
+  //     data.append('name', csvFile.name);
+  //     data.append('file', csvFile);
+  //     const response = await Axios.request({
+  //       url: "/api/inventory/addbulkitems",
+  //       method: "post",
+  //       headers: {
+  //         "Content-Type": "multipart/form-data"
+  //       },
+  //       data: data,
+  //     });
+  //     console.log(response);
+  //     // const input = document.getElementById('csvFile')
+
+  //     // input.addEventListener('change', () => {
+  //     //   readXlsxFile(input.files[0]).then((rows) => {
+  //     //     // `rows` is an array of rows
+  //     //     // each row being an array of cells.
+  //     //   })
+  //     // })
+  //   }
+  // }
+  // uploadCsv();
+  // }, [csvFile]);
+
+  // const input = document.getElementById('csvFile')
+
+  // input?.addEventListener('change', () => {
+  //   console.log(input.files[0])
+  //   readXlsxFile(input.files[0]).then((rows) => {
+  //     console.log('read csv')
+  //     console.log(rows);
+  //     // `rows` is an array of rows
+  //     // each row being an array of cells.
+  //   })
+  // })
+
+  // const handleFileUpload = (e) => {
+  //   const fileReader = new FileReader()
+  //   // titleDispatch(e.target.files[0].name)
+  //   fileReader.readAsText(e.target.files[0], "UTF-8")
+  //   fileReader.onload = (ev) => {
+  //     // console.log({ev});
+  //     // const updatedState = JSON.parse(JSON.stringify(ev.target.result));
+  //     var data = Papa.parse(ev.target.result);
+  //     console.log(data.data);
+  //     // updatedState.forEach(taskObj => {
+  //     //   if (taskObj.id === undefined) {
+  //     //     taskObj.id = uuidv4()
+  //     //   }
+  //     // })
+  //     // console.log(updatedState);
+  //     // dispatch({ type: "jsonFileData", value: updatedState })
+  //     fileInputRef.current.value = ''
+  //   }
+  // }
+
+  useEffect(() => {
+    if (csvFile) {
+      Papa.parse(csvFile, {
+        complete: async function (results) {
+          console.log(results.data);
+          const response = await Axios.request({
+            url: "/api/inventory/addbulkitems",
+            method: "post",
+            data: results.data,
+          });
+          console.log(response.data);
+        }
+      });
+    }
+  }, [csvFile]);
+
   return (
     <>
+      <FileButton onChange={setCsvFile}>
+        {(props) => <Button {...props}>Upload CSV</Button>}
+      </FileButton>
       <Button
         disabled={!items.length}
         style={{ background: "#0da20a", margin: "5px", float: "right" }}
@@ -600,7 +636,7 @@ export const ItemsList = () => {
               itemCount={items.length}
               itemSize={() => 70}
               width={1360}
-              // style={{ border: '2px solid black' }}
+            // style={{ border: '2px solid black' }}
             >
               {rows}
             </List>
