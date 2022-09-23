@@ -35,6 +35,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  const [filterItems, setFilterItems] = useState("");
   const [loaderDisplay, setloaderDisplay] = useState(true);
   const [slabArray, setSlabArray] = useState([]);
   const [stopStream] = useState(false);
@@ -62,6 +63,24 @@ export const ItemsList = () => {
           .includes(value.toString().toLowerCase())
     );
     setItems([...filteredItems]);
+  };
+
+  const handleCheckboxFilter = (filterName) => {
+    setFilterItems(filterName);
+    if (filterName !== filterItems) {
+      handleFilter(filterName);
+    } else {
+      resetFilter();
+    }
+  };
+
+  const handleFilter = (name) => {
+    const filteredData = itemsList.filter((item) => item[name] === null);
+    setItems([...filteredData]);
+  };
+  const resetFilter = () => {
+    setItems([...itemsList]);
+    setFilterItems(" ");
   };
 
   const addItemToDb = async () => {
@@ -759,16 +778,16 @@ export const ItemsList = () => {
   };
 
   const rows = ({ index, style }) => {
-    const minimumStock =
-      itemsList[index].minimumStockQuantity >=
-      itemsList[index].itemStockQuantity;
+    // const minimumStock =
+    //   itemsList[index].minimumStockQuantity >=
+    //   itemsList[index].itemStockQuantity;
     return (
       <tr
         style={{
           ...style,
           display: "flex",
-          border: `${minimumStock ? "1px solid #F4877A" : ""}`,
-          borderRadius: "8px",
+          // border: `${minimumStock ? "1px solid #F4877A" : ""}`,
+          // borderRadius: "8px",
         }}
       >
         <td style={{ padding: "10" }}>
@@ -809,7 +828,7 @@ export const ItemsList = () => {
     if (items[index]?.slabPricing.length >= 1) {
       return items[index].slabPricing.length * 21 + 22 + 28;
     } else {
-      return 50;
+      return 60;
     }
   };
 
@@ -866,6 +885,15 @@ export const ItemsList = () => {
             <tr>
               <th style={{ width: "160px", textAlign: "center" }}>
                 <Text>Bar Code</Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemBarcode"}
+                    label="Filter Barcode"
+                    value="Filter Barcode"
+                    onChange={() => handleCheckboxFilter("itemBarcode")}
+                  />
+                </div>
               </th>
               <th style={{ width: "250px", textAlign: "center" }}>
                 <Text>
@@ -874,6 +902,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemName"}
+                    label="Filter Name"
+                    value="Filter Name"
+                    onChange={() => handleCheckboxFilter("itemName")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -882,6 +919,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter MRP/Unit"
+                    value="Filter  MRP/Unit"
+                    checked={filterItems === "itemMRPperUnit"}
+                    onChange={() => handleCheckboxFilter("itemMRPperUnit")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -889,6 +935,17 @@ export const ItemsList = () => {
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
+                  <div style={{ marginTop: "1rem" }}>
+                    <input
+                      type="checkbox"
+                      label="Filter With Cost Price"
+                      value="Filter With Cost Price"
+                      checked={filterItems === "itemCostPricePerUnit"}
+                      onChange={() =>
+                        handleCheckboxFilter("itemCostPricePerUnit")
+                      }
+                    />
+                  </div>
                 </Text>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
@@ -898,6 +955,17 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter With Selling Price"
+                    value="Filter With Selling Price"
+                    checked={filterItems === "itemSellingPricePerUnit"}
+                    onChange={() =>
+                      handleCheckboxFilter("itemSellingPricePerUnit")
+                    }
+                  />
+                </div>
               </th>
               <th style={{ width: "250px", textAlign: "center" }}>
                 <Text>
@@ -914,6 +982,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter With Total Stock"
+                    value="Filter With Total Stock"
+                    checked={filterItems === "itemStockQuantity"}
+                    onChange={() => handleCheckboxFilter("itemStockQuantity")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -922,6 +999,17 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "minimumStockQuantity"}
+                    label="Filter With Minimum Stock"
+                    value="Filter With Minimum Stock"
+                    onChange={() =>
+                      handleCheckboxFilter("minimumStockQuantity")
+                    }
+                  />
+                </div>
               </th>
               <th style={{ width: "150px", textAlign: "center" }}>
                 <Text>Update Button</Text>
