@@ -18,12 +18,7 @@ const ItemSchem = new mongoose.Schema(
     },
     createdAt: { type: Date, default: Date.now },
     lastUpdateAt: { type: Date },
-    slabPricing: [
-      {
-        slabQuantity: { type: Number },
-        slabMRP: { type: Number },
-      },
-    ],
+    slabPricing: { type: Array },
     minStockReached: { type: Boolean, default: false },
   },
   { strict: false, timestamps: true }

@@ -3,11 +3,12 @@ import { useContext, useEffect, useState } from "react";
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
 
-import { FileButton, Button, Input, Table, Text, Textarea } from "@mantine/core";
+import { FileButton, Button, Input, Table, Text, Loader, Image, Textarea } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import Papa from 'papaparse';
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -28,10 +29,21 @@ export const ItemsList = () => {
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
   const [csvFile, setCsvFile] = useState();
+  const [filterItems, setFilterItems] = useState("");
+  const [loaderDisplay, setloaderDisplay] = useState(true);
+  const [slabArray, setSlabArray] = useState([]);
+  const [stopStream] = useState(false);
+  const [openScanner, setOpenScanner] = useState(false);
 
   useEffect(() => {
     setItems([...itemsList]);
   }, [itemsList]);
+
+  useEffect(() => {
+    if (items.length) {
+      setloaderDisplay(false);
+    }
+  }, [items]);
 
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
@@ -47,6 +59,24 @@ export const ItemsList = () => {
     setItems([...filteredItems]);
   };
 
+  const handleCheckboxFilter = (filterName) => {
+    setFilterItems(filterName);
+    if (filterName !== filterItems) {
+      handleFilter(filterName);
+    } else {
+      resetFilter();
+    }
+  };
+
+  const handleFilter = (name) => {
+    const filteredData = itemsList.filter((item) => item[name] === null);
+    setItems([...filteredData]);
+  };
+  const resetFilter = () => {
+    setItems([...itemsList]);
+    setFilterItems(" ");
+  };
+
   const addItemToDb = async () => {
     if (
       !newItemInput.itemCostPricePerUnit ||
@@ -60,12 +90,19 @@ export const ItemsList = () => {
       return;
     }
 
+    let itemObject;
+    if (slabArray.length !== 0) {
+      itemObject = { ...newItemInput, slabPricing: slabArray };
+    } else {
+      itemObject = { ...newItemInput };
+    }
+
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
         url: "/api/inventory/addNewItem",
         method: "post",
-        data: { ...newItemInput },
+        data: { ...itemObject },
         headers: {
           Cookie: "",
         },
@@ -73,6 +110,7 @@ export const ItemsList = () => {
       dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
     })();
     setApiLoading(false);
+    setSlabArray([]);
     setNewItemInput(ITEM_INITIAL_INPUT);
   };
 
@@ -230,6 +268,228 @@ export const ItemsList = () => {
     );
   };
 
+  // To edit slab on existing item
+  const ItemSlabPriceRow = ({ index }) => {
+    const [addOldSlab, setAddOldSlab] = useState(false);
+    const [newArray, setNewArray] = useState(items[index].slabPricing || []);
+    const [slabObjectKey, setSlabObjectKey] = useState();
+    const [slabObjectValue, setSlabObjectValue] = useState();
+    const [editable, setEditable] = useState(false);
+
+    const addNewSlab = () => {
+      if (addOldSlab) {
+        if (!slabObjectKey || !slabObjectValue) {
+          alert("Fill values...");
+        } else {
+          setNewArray([
+            ...newArray,
+            [newArray.length, Number(slabObjectKey), Number(slabObjectValue)],
+          ]);
+          setSlabObjectKey();
+          setSlabObjectValue();
+        }
+        return;
+      }
+      setAddOldSlab(true);
+    };
+
+    const handleNewInput = (data) => {
+      data.name === "key"
+        ? setSlabObjectKey(data.value)
+        : setSlabObjectValue(data.value);
+    };
+
+    const handleOldInput = (data, index, type) => {
+      let arry = newArray[index];
+      type === "key" ? (arry[1] = data.value) : (arry[2] = data.value);
+      newArray.splice(index, 1, arry);
+      setNewArray([...newArray]);
+    };
+
+    const setSlabPrice = () => {
+      if (!slabObjectKey && !slabObjectValue) {
+        setEditable(false);
+        for (let i = 0; i < newArray.length; i++) {
+          if (!newArray[i][1] || !newArray[i][2]) {
+            newArray.splice(index, 1);
+            setNewArray([...newArray]);
+          } else {
+          }
+        }
+        setNewArray([...newArray]);
+        itemToBeUpdated = {
+          [index]: { ...items[index], slabPricing: [...newArray] },
+        };
+      } else {
+        setEditable(false);
+        setNewArray([
+          ...newArray,
+          [newArray.length, Number(slabObjectKey), Number(slabObjectValue)],
+        ]);
+        setSlabObjectKey();
+        setSlabObjectValue();
+        setAddOldSlab(false);
+        itemToBeUpdated = {
+          [index]: {
+            ...items[index],
+            slabPricing: [
+              ...newArray,
+              [newArray.length, Number(slabObjectKey), Number(slabObjectValue)],
+            ],
+          },
+        };
+      }
+      alert("Slab Added");
+    };
+
+    const editSlabPrice = () => {
+      setEditable(true);
+    };
+
+    return (
+      <div style={{ paddingTop: "0px", width: "155px" }}>
+        <div
+          style={{ display: "flex", justifyContent: "end", margin: "3px 0" }}
+        >
+          <Image
+            onClick={addNewSlab}
+            style={{
+              display: editable ? "inline-block" : "none",
+              margin: "0 2px",
+            }}
+            width={16}
+            height={16}
+            src="images/add.svg"
+            alt="add-icon"
+          />
+          <Image
+            onClick={editSlabPrice}
+            style={{
+              display: editable ? "none" : "inline-block",
+              margin: "0 2px",
+            }}
+            width={16}
+            height={16}
+            src="images/pencil.svg"
+            alt="edit-icon"
+          />
+          <Image
+            onClick={setSlabPrice}
+            style={{
+              display: editable ? "inline-block" : "none",
+              margin: "0 2px",
+            }}
+            width={16}
+            height={16}
+            src="images/check.svg"
+            alt="check-icon"
+          />
+          <Image
+            width={16}
+            height={16}
+            style={{ margin: "0 2px" }}
+            src="images/up.svg"
+            alt="up-icon"
+          />
+        </div>
+
+        {newArray?.map((item, index) => {
+          return (
+            <div key={index} style={{ display: "flex" }}>
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                  borderBottom: editable ? "1px solid black" : "none",
+                }}
+                value={item[1]}
+                onChange={(e) => handleOldInput(e.target, index, "key")}
+                disabled={!editable}
+              />{" "}
+              -
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                }}
+                disabled
+                defaultValue={
+                  index !== newArray.length - 1
+                    ? Number(newArray[index + 1][1]) - 1
+                    : ""
+                }
+              />{" "}
+              =
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                  borderBottom: editable ? "1px solid black" : "none",
+                }}
+                value={item[2]}
+                onChange={(e) => handleOldInput(e.target, index, "value")}
+                disabled={!editable}
+              />
+            </div>
+          );
+        })}
+        {addOldSlab ? (
+          <div style={{ display: "flex" }}>
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+              }}
+              name="key"
+              onChange={(e) => handleNewInput(e.target)}
+              value={Number(slabObjectKey)}
+            />{" "}
+            -
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+              }}
+              disabled
+            />{" "}
+            =
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+              }}
+              name="value"
+              onChange={(e) => handleNewInput(e.target)}
+              value={Number(slabObjectValue)}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
+    );
+  };
+
   const ItemStockQuantityRow = ({ index, style }) => {
     const name = "itemStockQuantity";
     const [itemInput, setItemInput] = useState({
@@ -325,18 +585,203 @@ export const ItemsList = () => {
     return document.body.removeChild(link);
   };
 
+  // To Add slab price on new adding item
+  const AddSlabPrice = () => {
+    const [addSlab, setAddSlab] = useState(false);
+    const [slabObjectKey, setSlabObjectKey] = useState();
+    const [slabObjectValue, setSlabObjectValue] = useState();
+
+    const addNewSlab = () => {
+      if (addSlab) {
+        if (!slabObjectKey || !slabObjectValue) {
+          alert("Fill values...");
+        } else {
+          setSlabArray([
+            ...slabArray,
+            [slabArray.length, slabObjectKey, slabObjectValue],
+          ]);
+          setSlabObjectKey();
+          setSlabObjectValue();
+        }
+        return;
+      }
+      setAddSlab(true);
+    };
+
+    const handleNewInput = (data) => {
+      data.name === "key"
+        ? setSlabObjectKey(data.value)
+        : setSlabObjectValue(data.value);
+    };
+
+    const handleOldInput = (data, index, type) => {
+      let arry = slabArray[index];
+      type === "key" ? (arry[1] = data.value) : (arry[2] = data.value);
+      slabArray.splice(index, 1, arry);
+      setSlabArray([...slabArray]);
+    };
+
+    const createFinalObj = (arry) => {
+      let obj = {};
+      arry.map((item) => (obj[item[1]] = Number(item[2])));
+    };
+
+    const setSlabPrice = () => {
+      if (!slabObjectKey && !slabObjectValue) {
+        setSlabArray([...slabArray]);
+      } else {
+        setSlabArray([
+          ...slabArray,
+          [slabArray.length, Number(slabObjectKey), Number(slabObjectValue)],
+        ]);
+        setSlabObjectKey();
+        setSlabObjectValue();
+        setAddSlab(false);
+        createFinalObj([
+          ...slabArray,
+          [slabArray.length, slabObjectKey, slabObjectValue],
+        ]);
+      }
+    };
+
+    return (
+      <div style={{ paddingTop: "0px" }}>
+        <div
+          style={{ display: "flex", justifyContent: "end", margin: "3px 0" }}
+        >
+          <Image
+            onClick={addNewSlab}
+            style={{
+              width: "20px",
+              height: "20px",
+              padding: "2px",
+              margin: "0 3px",
+              cursor: "pointer",
+              display: "inline-block",
+            }}
+            src="images/add.svg"
+            alt="add-icon"
+          />
+          <Image
+            onClick={setSlabPrice}
+            style={{
+              width: "20px",
+              height: "20px",
+              padding: "2px",
+              margin: "0 3px",
+              cursor: "pointer",
+              display: "inline-block",
+            }}
+            src="images/check.svg"
+            alt="check-icon"
+          />
+        </div>
+        {slabArray.map((item, index) => {
+          return (
+            <div key={index} style={{ display: "flex" }}>
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                  borderBottom: "1px solid black",
+                }}
+                value={item[1]}
+                onChange={(e) => handleOldInput(e.target, index, "key")}
+              />{" "}
+              -
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                }}
+                disabled
+                defaultValue={
+                  index !== slabArray.length - 1
+                    ? Number(slabArray[index + 1][1]) - 1
+                    : ""
+                }
+              />{" "}
+              =
+              <input
+                type="number"
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  border: "none",
+                  outline: "none",
+                  borderBottom: "1px solid black",
+                }}
+                value={item[2]}
+                onChange={(e) => handleOldInput(e.target, index, "value")}
+              />
+            </div>
+          );
+        })}
+        {addSlab ? (
+          <div style={{ display: "flex" }}>
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+              }}
+              name="key"
+              onChange={(e) => handleNewInput(e.target)}
+              value={Number(slabObjectKey)}
+            />{" "}
+            -
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+              }}
+              disabled
+            />{" "}
+            =
+            <input
+              type="number"
+              style={{
+                width: "40px",
+                textAlign: "center",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+              }}
+              name="value"
+              onChange={(e) => handleNewInput(e.target)}
+              value={Number(slabObjectValue)}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
+    );
+  };
+
   const rows = ({ index, style }) => {
-    const minimumStock =
-      itemsList[index].minimumStockQuantity >=
-      itemsList[index].itemStockQuantity;
+    // const minimumStock =
+    //   itemsList[index].minimumStockQuantity >=
+    //   itemsList[index].itemStockQuantity;
     return (
       <tr
         style={{
           ...style,
-          height: "60px",
           display: "flex",
-          border: `${minimumStock ? "1px solid #F4877A" : ""}`,
-          borderRadius: "8px",
+          // border: `${minimumStock ? "1px solid #F4877A" : ""}`,
+          // borderRadius: "8px",
         }}
       >
         <td style={{ padding: "10" }}>
@@ -354,12 +799,12 @@ export const ItemsList = () => {
         <td style={{ padding: "0" }}>
           <ItemSellingPriceRow style={style} index={index} />
         </td>
+        <td style={{ padding: "0", width: "220px" }}>
+          <ItemSlabPriceRow style={style} index={index} />
+        </td>
         <td style={{ padding: "0" }}>
           <ItemStockQuantityRow style={style} index={index} />
         </td>
-        {/* <td style={{ padding: '0', width: '220px' }}>
-          <ItemSlabPriceRow style={style} index={index} />
-        </td> */}
         <td style={{ padding: "0" }}>
           <ItemMinimumStockQuantityRow style={style} index={index} />
         </td>
@@ -373,71 +818,11 @@ export const ItemsList = () => {
     );
   };
 
-  // useEffect(() => {
-  // const uploadCsv = async () => {
-  //   if (csvFile) {
-  //     const data = new FormData();
-  //     data.append('name', csvFile.name);
-  //     data.append('file', csvFile);
-  //     const response = await Axios.request({
-  //       url: "/api/inventory/addbulkitems",
-  //       method: "post",
-  //       headers: {
-  //         "Content-Type": "multipart/form-data"
-  //       },
-  //       data: data,
-  //     });
-  //     console.log(response);
-  //     // const input = document.getElementById('csvFile')
-
-  //     // input.addEventListener('change', () => {
-  //     //   readXlsxFile(input.files[0]).then((rows) => {
-  //     //     // `rows` is an array of rows
-  //     //     // each row being an array of cells.
-  //     //   })
-  //     // })
-  //   }
-  // }
-  // uploadCsv();
-  // }, [csvFile]);
-
-  // const input = document.getElementById('csvFile')
-
-  // input?.addEventListener('change', () => {
-  //   console.log(input.files[0])
-  //   readXlsxFile(input.files[0]).then((rows) => {
-  //     console.log('read csv')
-  //     console.log(rows);
-  //     // `rows` is an array of rows
-  //     // each row being an array of cells.
-  //   })
-  // })
-
-  // const handleFileUpload = (e) => {
-  //   const fileReader = new FileReader()
-  //   // titleDispatch(e.target.files[0].name)
-  //   fileReader.readAsText(e.target.files[0], "UTF-8")
-  //   fileReader.onload = (ev) => {
-  //     // console.log({ev});
-  //     // const updatedState = JSON.parse(JSON.stringify(ev.target.result));
-  //     var data = Papa.parse(ev.target.result);
-  //     console.log(data.data);
-  //     // updatedState.forEach(taskObj => {
-  //     //   if (taskObj.id === undefined) {
-  //     //     taskObj.id = uuidv4()
-  //     //   }
-  //     // })
-  //     // console.log(updatedState);
-  //     // dispatch({ type: "jsonFileData", value: updatedState })
-  //     fileInputRef.current.value = ''
-  //   }
-  // }
-
+  // To update item data through uploading CSV file
   useEffect(() => {
     if (csvFile) {
       Papa.parse(csvFile, {
         complete: async function (results) {
-          console.log(results.data);
           const response = await Axios.request({
             url: "/api/inventory/addbulkitems",
             method: "post",
@@ -448,6 +833,29 @@ export const ItemsList = () => {
       });
     }
   }, [csvFile]);
+
+  // To adjust height of the rows
+  const itemRowSize = (index) => {
+    if (items[index]?.slabPricing.length >= 1) {
+      return items[index].slabPricing.length * 21 + 22 + 28;
+    } else {
+      return 60;
+    }
+  };
+
+  const ListComponents = () => {
+    return (
+      <List
+        className="list-it"
+        height={window.innerHeight - 250}
+        itemCount={items.length}
+        itemSize={itemRowSize}
+        width={1360}
+      >
+        {rows}
+      </List>
+    );
+  };
 
   return (
     <>
@@ -461,6 +869,24 @@ export const ItemsList = () => {
       >
         Download CSV
       </Button>
+      <Button onClick={() => setOpenScanner(!openScanner)}>
+        Barcode Scanner
+      </Button>
+      {openScanner && (
+        <BarcodeScannerComponent
+          width={500}
+          height={500}
+          stopStream={stopStream}
+          onUpdate={(err, result) => {
+            if (result) {
+              handleNewItemInput({
+                target: { name: "itemBarcode", value: result.text },
+              });
+              // setStopStream(true);
+            }
+          }}
+        />
+      )}
       <div style={{ width: "1360px", margin: "30px auto 0" }}>
         <h4>Total Items : {items.length}</h4>
         <Table
@@ -473,6 +899,15 @@ export const ItemsList = () => {
             <tr>
               <th style={{ width: "160px", textAlign: "center" }}>
                 <Text>Bar Code</Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemBarcode"}
+                    label="Filter Barcode"
+                    value="Filter Barcode"
+                    onChange={() => handleCheckboxFilter("itemBarcode")}
+                  />
+                </div>
               </th>
               <th style={{ width: "250px", textAlign: "center" }}>
                 <Text>
@@ -481,6 +916,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemName"}
+                    label="Filter Name"
+                    value="Filter Name"
+                    onChange={() => handleCheckboxFilter("itemName")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -489,6 +933,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter MRP/Unit"
+                    value="Filter  MRP/Unit"
+                    checked={filterItems === "itemMRPperUnit"}
+                    onChange={() => handleCheckboxFilter("itemMRPperUnit")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -496,6 +949,17 @@ export const ItemsList = () => {
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
+                  <div style={{ marginTop: "1rem" }}>
+                    <input
+                      type="checkbox"
+                      label="Filter With Cost Price"
+                      value="Filter With Cost Price"
+                      checked={filterItems === "itemCostPricePerUnit"}
+                      onChange={() =>
+                        handleCheckboxFilter("itemCostPricePerUnit")
+                      }
+                    />
+                  </div>
                 </Text>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
@@ -505,13 +969,26 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter With Selling Price"
+                    value="Filter With Selling Price"
+                    checked={filterItems === "itemSellingPricePerUnit"}
+                    onChange={() =>
+                      handleCheckboxFilter("itemSellingPricePerUnit")
+                    }
+                  />
+                </div>
               </th>
-              {/* <th style={{width: '250px', textAlign: 'center'}}>
-              <Text>
-                Slab Pricing
-                <span style={{ color: "red", display: "inline-block" }}>*</span>
-              </Text>
-            </th> */}
+              <th style={{ width: "250px", textAlign: "center" }}>
+                <Text>
+                  Slab Pricing
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+              </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
                   Total Stock
@@ -519,6 +996,15 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    label="Filter With Total Stock"
+                    value="Filter With Total Stock"
+                    checked={filterItems === "itemStockQuantity"}
+                    onChange={() => handleCheckboxFilter("itemStockQuantity")}
+                  />
+                </div>
               </th>
               <th style={{ width: "100px", textAlign: "center" }}>
                 <Text>
@@ -527,13 +1013,27 @@ export const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "minimumStockQuantity"}
+                    label="Filter With Minimum Stock"
+                    value="Filter With Minimum Stock"
+                    onChange={() =>
+                      handleCheckboxFilter("minimumStockQuantity")
+                    }
+                  />
+                </div>
               </th>
               <th style={{ width: "150px", textAlign: "center" }}>
                 <Text>Update Button</Text>
               </th>
             </tr>
           </thead>
-          <tbody className="body">
+          <tbody
+            style={{ display: loaderDisplay ? "none" : "" }}
+            className="body"
+          >
             <tr className="bill-row">
               <td>
                 <Input
@@ -585,17 +1085,9 @@ export const ItemsList = () => {
                   autoComplete="off"
                 />
               </td>
-              {/* <td>
-              <Input
-                style={{ width: "250px" }}
-                value={newItemInput["itemSellingPricePerUnit"]}
-                onChange={handleNewItemInput}
-                name="itemSellingPricePerUnit"
-                type="number"
-                placeholder="hello"
-                autoComplete="off"
-              />
-            </td> */}
+              <td>
+                <AddSlabPrice />
+              </td>
               <td>
                 <Input
                   style={{ width: "100px" }}
@@ -628,18 +1120,18 @@ export const ItemsList = () => {
             </tr>
           </tbody>
         </Table>
+        <div
+          style={{
+            padding: "30px 0",
+            display: loaderDisplay ? "flex" : "none",
+            justifyContent: "center",
+          }}
+        >
+          <Loader />
+        </div>
         <Table style={{ width: "auto", margin: "0 auto" }}>
           <tbody>
-            <List
-              className="list-it"
-              height={window.innerHeight - 250}
-              itemCount={items.length}
-              itemSize={() => 70}
-              width={1360}
-            // style={{ border: '2px solid black' }}
-            >
-              {rows}
-            </List>
+            <ListComponents />
           </tbody>
         </Table>
       </div>
@@ -688,6 +1180,7 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
         Cookie: "some_cookie",
       },
     });
+    itemToBeUpdated = {};
     const newList = [...items];
     newList.splice(index, 1, { ...updatedItem.data.message });
     dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });

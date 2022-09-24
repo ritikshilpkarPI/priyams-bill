@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input, Table, Text, Loader } from "@mantine/core";
+import { Button, Input, Table, Text, Loader, TextInput } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
@@ -8,7 +8,7 @@ const itemsByName = {};
 const BILL_INITIAL_STATE = {
   billItems: [],
   customerName: "",
-  customerPhone: 0,
+  customerPhone: "",
   billMRPTotal: 0,
   billAmountTotal: 0,
   billDiscountTotal: 0,
@@ -36,8 +36,10 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
   const barRef = useRef("");
   const { itemsStateAndDispatch, billItemsStateAndDispatch } =
     useContext(AppStateContext);
-  const [itemsList] = itemsStateAndDispatch;
+  const [itemsList, itemsReducer] = itemsStateAndDispatch;
   const [billItems, dispatch] = billItemsStateAndDispatch;
+  const initialItemList = itemsList;
+  const [phoneError, setPhoneError] = useState("");
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
 
   // To refresh page
@@ -110,6 +112,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
     window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
+    itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
   };
 
   function handleChange(event) {
@@ -270,6 +273,45 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
     }));
   }, [bill.cashPay, bill.upiPay, bill.billAmountTotal]);
 
+  // To show prices according to slabs if exists
+  const ItemPrice = ({ item, index }) => {
+    let quantity = item["itemQuantityInBill"];
+    let slabs = item["slabPricing"];
+
+    // if slabs exists
+    if (slabs.length !== 0) {
+      let validSlab = 0;
+      if (quantity > slabs[slabs.length - 1][1]) {
+        validSlab = slabs.length - 1;
+      } else if (quantity < 1 && quantity > 0) {
+        validSlab = 0;
+      } else {
+        for (let i = 0; i < slabs.length; i++) {
+          if (Number(slabs[i][1]) === quantity) {
+            validSlab = i;
+            break;
+          } else if (Number(slabs[i][1]) > quantity) {
+            validSlab = i - 1;
+            break;
+          }
+        }
+      }
+
+      if (!quantity) {
+        return 0;
+      } else {
+        bill.billItems[index].itemDetail.itemSellingPricePerUnit = Number(
+          slabs[validSlab][2]
+        );
+        setBill(bill);
+        return slabs[validSlab][2];
+      }
+    } else {
+      // if slabs does not exist
+      return item["itemSellingPricePerUnit"];
+    }
+  };
+
   return (
     <div className="billing-container">
       <div className="header">
@@ -279,6 +321,37 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
         <h3>Time: {new Date().toLocaleTimeString()}</h3>
       </div>
       <div className="bill-btns">
+        <div style={{ display: "flex", gap: "30px" }}>
+          <TextInput
+            label="Customer Name"
+            style={{ width: "180px" }}
+            value={bill.customerName}
+            onChange={(e) =>
+              setBill((prevBill) => ({
+                ...prevBill,
+                customerName: e.target.value,
+              }))
+            }
+          />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <TextInput
+              type="number"
+              label="Customer Phone No."
+              value={bill.customerPhone}
+              style={{ width: "180px", paddingBottom: "4px" }}
+              onChange={(e) => {
+                e.target.value.length !== 10
+                  ? setPhoneError("Phone number is Invalid!")
+                  : setPhoneError("");
+                setBill((prevBill) => ({
+                  ...prevBill,
+                  customerPhone: e.target.value,
+                }));
+              }}
+            />
+            <div style={{ height: "10px", color: "red" }}>{phoneError}</div>
+          </div>
+        </div>
         <Button
           sx={{ background: "black", marginRight: "5px" }}
           onClick={refreshPage}
@@ -332,6 +405,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             </th>
             <th>
               <Text
+                style={{ width: "100px" }}
                 weight={700}
                 color="black"
                 size="lg"
@@ -340,8 +414,19 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                 Quantity
               </Text>
             </th>
+            <th className="header-slab-price">
+              <Text
+                style={{ width: "100px" }}
+                weight={700}
+                color="black"
+                size="lg"
+              >
+                Slab Prices
+              </Text>
+            </th>
             <th>
               <Text
+                style={{ width: "100px" }}
                 weight={700}
                 color="black"
                 size="lg"
@@ -352,6 +437,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
             </th>
             <th>
               <Text
+                style={{ width: "100px" }}
                 weight={700}
                 color="black"
                 size="lg"
@@ -360,8 +446,10 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                 Selling Price /Unit
               </Text>
             </th>
+
             <th>
               <Text
+                style={{ width: "100px" }}
                 weight={700}
                 color="black"
                 size="lg"
@@ -533,6 +621,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                 />
               </Text>
             </td>
+            <td></td>
             <td>
               <Text color="black" weight={700}>
                 <Input
@@ -561,6 +650,7 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                 />
               </Text>
             </td>
+            <td></td>
             <td>
               <Button
                 disabled={
@@ -609,6 +699,55 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                     setBill={setBill}
                   />
                 </td>
+                <td className="slabPricing">
+                  <div>
+                    {itemObj.slabPricing?.map((item, index) => {
+                      return (
+                        <div key={index} style={{ display: "flex" }}>
+                          <input
+                            type="number"
+                            style={{
+                              width: "40px",
+                              textAlign: "center",
+                              border: "none",
+                              outline: "none",
+                            }}
+                            value={item[1]}
+                            disabled
+                          />{" "}
+                          -
+                          <input
+                            type="number"
+                            style={{
+                              width: "40px",
+                              textAlign: "center",
+                              border: "none",
+                              outline: "none",
+                            }}
+                            disabled
+                            defaultValue={
+                              index !== itemObj.slabPricing.length - 1
+                                ? Number(itemObj.slabPricing[index + 1][1]) - 1
+                                : ""
+                            }
+                          />{" "}
+                          =
+                          <input
+                            type="number"
+                            style={{
+                              width: "40px",
+                              textAlign: "center",
+                              border: "none",
+                              outline: "none",
+                            }}
+                            value={item[2]}
+                            disabled
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </td>
                 <td className="itemMRPperUnit">
                   <Text
                     className="print-text"
@@ -626,9 +765,10 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                     weight={700}
                     size="xl"
                   >
-                    {itemObj["itemSellingPricePerUnit"]}
+                    <ItemPrice item={itemObj} index={idx} />
                   </Text>
                 </td>
+
                 <td className="itemTotal">
                   <Text
                     className="print-text"
@@ -691,16 +831,6 @@ export const Billing = ({ billID = "", loaderDisplay }) => {
                 Bill Total: {bill?.billAmountTotal?.toFixed(2)}
               </Text>
             </td>
-            {/* <td>
-              <Text
-                color="black"
-                size="xl"
-                weight={800}
-                className="final-bill-text print-text"
-              >
-                You saved: {bill?.billDiscountTotal?.toFixed(2)}
-              </Text>
-            </td> */}
           </tr>
           <tr className="final-bill">
             <td className="empty-slots"></td>

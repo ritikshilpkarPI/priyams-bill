@@ -13,6 +13,12 @@ export const BillFeed = ({ bills = [] }) => {
             <Text align="center">Sl. No.</Text>
           </th>
           <th>
+            <Text align="center">Customer Name</Text>
+          </th>
+          <th>
+            <Text align="center">Customer Phone</Text>
+          </th>
+          <th>
             <Text align="center">Bill Total Amount</Text>
           </th>
           <th>
@@ -49,7 +55,7 @@ export const BillFeed = ({ bills = [] }) => {
       </thead>
       <tbody className="body">
         {bills.map((item, idx) => {
-          return <TableRow item={item} idx={idx} />;
+          return <TableRow key={`${item}$${idx}`} item={item} idx={idx} />;
         })}
       </tbody>
     </Table>
@@ -68,11 +74,20 @@ const TableRow = ({ item, idx }) => {
         onClick={() => setOpen(!open)}
         className="bill-row"
         style={{ cursor: "pointer" }}
-        key={`${item}$${idx}`}
       >
         <td>
           <Text color="black" weight={500}>
             {idx + 1}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["customerName"]}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {item["customerPhone"]}
           </Text>
         </td>
         <td>

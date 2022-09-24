@@ -1,9 +1,4 @@
 const { Item } = require("../db-models/item-model");
-const excelToJson = require('convert-excel-to-json');
-const readXlsxFile = require('read-excel-file/node')
-const txtToJson = require("txt-file-to-json");
-const path = require('path');
-const CSVRead = require('csv-read');
 
 const getItemsFeed = async (req, res) => {
     try {
@@ -54,35 +49,37 @@ const addItems = async (req, res) => {
                 .json({ status: false, message: "Fill all required fields" });
         }
 
-        const newItem = await new Item({
-            itemBarcode,
-            itemName,
-            itemStockQuantity,
-            minimumStockQuantity,
-            itemMRPperUnit,
-            itemDiscountPerUnit: itemMRPperUnit - itemSellingPricePerUnit,
-            itemPerUnitDiscountPercentage:
-                ((itemMRPperUnit - itemSellingPricePerUnit) / itemMRPperUnit) * 100,
-            itemCostPricePerUnit,
-            itemSellingPricePerUnit,
-            slabPricing,
-        }).save();
-        res.status(200).json({ status: true, message: newItem });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
+    const newItem = await new Item({
+      itemBarcode,
+      itemName,
+      itemStockQuantity,
+      minimumStockQuantity,
+      itemMRPperUnit,
+      itemDiscountPerUnit: itemMRPperUnit - itemSellingPricePerUnit,
+      itemPerUnitDiscountPercentage:
+        ((itemMRPperUnit - itemSellingPricePerUnit) / itemMRPperUnit) * 100,
+      itemCostPricePerUnit,
+      itemSellingPricePerUnit,
+      slabPricing,
+    }).save();
+    console.log('New Item', newItem);
+    res.status(200).json({ status: true, message: newItem });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 const editItemById = async (req, res) => {
-    try {
-        const { id, itemToBeUpdated } = req.body;
-        const changedItem = await Item.findByIdAndUpdate(id, itemToBeUpdated, {
-            new: true,
-        });
-        res.status(200).json({ message: changedItem });
-    } catch (error) {
-        res.status(500).json({ error: error });
-    }
+  try {
+    const { id, itemToBeUpdated } = req.body;
+    console.log(id, itemToBeUpdated);
+    const changedItem = await Item.findByIdAndUpdate(id, itemToBeUpdated, {
+      new: true,
+    });
+    res.status(200).json({ message: changedItem });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
 };
 
 const softDeleteItem = async (req, res) => {
