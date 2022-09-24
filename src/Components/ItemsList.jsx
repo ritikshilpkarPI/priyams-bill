@@ -551,6 +551,7 @@ export const ItemsList = () => {
             dispatch={dispatch}
             index={index}
             items={items}
+            setItems={setItems}
           />
         </td>
       </tr>
@@ -1153,7 +1154,7 @@ const TableRow = ({
   );
 };
 
-const UpdateItemButton = ({ dispatch, items, index, style }) => {
+const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeUpdated[index];
@@ -1169,6 +1170,7 @@ const UpdateItemButton = ({ dispatch, items, index, style }) => {
     itemToBeUpdated = {};
     const newList = [...items];
     newList.splice(index, 1, { ...updatedItem.data.message });
+    setItems(newList);
     dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });
     setApiLoading(false);
   };
