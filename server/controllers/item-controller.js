@@ -62,7 +62,6 @@ const addItems = async (req, res) => {
       itemSellingPricePerUnit,
       slabPricing,
     }).save();
-    console.log('New Item', newItem);
     res.status(200).json({ status: true, message: newItem });
   } catch (error) {
     res.status(500).json({ error });
@@ -72,7 +71,6 @@ const addItems = async (req, res) => {
 const editItemById = async (req, res) => {
   try {
     const { id, itemToBeUpdated } = req.body;
-    console.log(id, itemToBeUpdated);
     const changedItem = await Item.findByIdAndUpdate(id, itemToBeUpdated, {
       new: true,
     });
