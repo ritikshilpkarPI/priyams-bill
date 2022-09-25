@@ -1,55 +1,53 @@
 const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
-  try {
-    const reqFilters = JSON.parse(req.query.filters);
-    let items = [];
-    if (reqFilters.isDeleted === false) {
-      items = await Item.find();
-      items = items.filter((item) => !item.isDeleted);
+    try {
+        const reqFilters = JSON.parse(req.query.filters);
+        let items = [];
+        if (reqFilters.isDeleted === false) {
+            items = await Item.find();
+            items = items.filter((item) => !item.isDeleted);
+        }
+        if (reqFilters.minStockOnly) {
+            items = await Item.find({
+                minStockReached: reqFilters.minStockOnly,
+                isDeleted: reqFilters.isDeleted,
+            }).sort({ itemStockQuantity: 1 });
+            items = items.filter((item) => !item.isDeleted);
+        }
+        const itemCount = items.length;
+        res.status(200).json({ message: { items, itemCount } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
     }
-    if (reqFilters.minStockOnly) {
-      items = await Item.find({
-        minStockReached: reqFilters.minStockOnly,
-        isDeleted: reqFilters.isDeleted,
-      }).sort({ itemStockQuantity: 1 });
-      items = items.filter((item) => !item.isDeleted);
-    }
-    const itemCount = items.length;
-    res.status(200).json({ message: { items, itemCount } });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
 };
 
 const addItems = async (req, res) => {
-  const {
-    itemBarcode,
-    itemName,
-    itemMRPperUnit,
-    itemCostPricePerUnit,
-    itemSellingPricePerUnit,
-    itemStockQuantity,
-    minimumStockQuantity,
-    slabPricing = [],
-  } = req.body;
+    const {
+        itemBarcode,
+        itemName,
+        itemMRPperUnit,
+        itemCostPricePerUnit,
+        itemSellingPricePerUnit,
+        itemStockQuantity,
+        minimumStockQuantity,
+        slabPricing = [],
+    } = req.body;
 
-  try {
-    if (
-      !itemCostPricePerUnit ||
-      !itemMRPperUnit ||
-      !itemName ||
-      !itemSellingPricePerUnit ||
-      !itemStockQuantity ||
-      !minimumStockQuantity
-    ) {
-      return res
-        .status(501)
-        .json({ status: false, message: "Fill all required fields" });
-    }
-
-    console.log(req.body);
+    try {
+        if (
+            !itemCostPricePerUnit ||
+            !itemMRPperUnit ||
+            !itemName ||
+            !itemSellingPricePerUnit ||
+            !itemStockQuantity ||
+            !minimumStockQuantity
+        ) {
+            return res
+                .status(501)
+                .json({ status: false, message: "Fill all required fields" });
+        }
 
     const newItem = await new Item({
       itemBarcode,
@@ -83,20 +81,57 @@ const editItemById = async (req, res) => {
 };
 
 const softDeleteItem = async (req, res) => {
-  try {
-    const { id } = req.body;
-    await Item.findByIdAndUpdate(id, { isDeleted: true });
-    let items = await Item.find();
-    items = items.filter((item) => !item.isDeleted);
-    res.status(200).json({ message: "item soft deleted!", items: items });
-  } catch (error) {
-    res.status(500).json({ error: error });
-  }
+    try {
+        const { id } = req.body;
+        await Item.findByIdAndUpdate(id, { isDeleted: true });
+        let items = await Item.find();
+        items = items.filter((item) => !item.isDeleted);
+        res.status(200).json({ message: "item soft deleted!", items: items });
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
 };
 
+const addBulkItems = async (request, response) => {
+    try {
+        const csvData = request.body;
+        const slabPricingStart = csvData[0].findIndex((item) => item === 'tp1');
+        const mrpprice = csvData[0].findIndex((item) => item === 'itemMRPperUnit');
+        const itemname = csvData[0].findIndex((item) => item === 'itemName');
+        const itembarcode = csvData[0].findIndex((item) => item === 'itemBarcode');
+
+        await Promise.all(csvData.map(async (item, index) => {
+            if (item.length > slabPricingStart && item[slabPricingStart] && item[slabPricingStart] != 'tp1') {
+                let arry = [];
+                let j = 0;
+                for (let i = slabPricingStart; i < item.length; i += 2) {
+                    if (item[i]) {
+                        arry.push([Number(j), Number(item[i]), Number(item[i + 1])]);
+                        j++;
+                    } else {
+                        break;
+                    }
+                }
+
+                await Item.findOneAndUpdate({ itemName: item[itemname], itemBarcode: item[itembarcode], itemMRPperUnit: item[mrpprice] }, { slabPricing: arry });
+            } else if (!item[slabPricingStart]) {
+                const dbItem = await Item.find({ _id: item[0] });
+                if (dbItem && dbItem.slabPricing.length != 0) {
+                    await Item.findByIdAndUpdate(item[0], { slabPricing: [] });
+                }
+            }
+        }));
+
+        response.status(200).json({ status: true, message: 'items added' });
+    } catch (error) {
+        response.status(500).json(error);
+    }
+}
+
 module.exports = {
-  getItemsFeed,
-  addItems,
-  editItemById,
-  softDeleteItem,
+    getItemsFeed,
+    addItems,
+    editItemById,
+    softDeleteItem,
+    addBulkItems
 };

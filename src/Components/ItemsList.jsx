@@ -3,18 +3,11 @@ import { useContext, useEffect, useState } from "react";
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
 
-import {
-  Button,
-  Input,
-  Table,
-  Text,
-  Textarea,
-  Loader,
-  Image,
-} from "@mantine/core";
+import { FileButton, Button, Input, Table, Text, Loader, Image, Textarea } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
+import Papa from 'papaparse';
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 const ITEM_INITIAL_INPUT = {
@@ -35,6 +28,7 @@ export const ItemsList = () => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
+  const [csvFile, setCsvFile] = useState();
   const [filterItems, setFilterItems] = useState("");
   const [loaderDisplay, setloaderDisplay] = useState(true);
   const [slabArray, setSlabArray] = useState([]);
@@ -825,6 +819,23 @@ export const ItemsList = () => {
     );
   };
 
+  // To update item data through uploading CSV file
+  useEffect(() => {
+    if (csvFile) {
+      Papa.parse(csvFile, {
+        complete: async function (results) {
+          const response = await Axios.request({
+            url: "/api/inventory/addbulkitems",
+            method: "post",
+            data: results.data,
+          });
+          console.log(response.data);
+        }
+      });
+    }
+  }, [csvFile]);
+
+  // To adjust height of the rows
   const itemRowSize = (index) => {
     if (items[index]?.slabPricing.length >= 1) {
       return items[index].slabPricing.length * 21 + 22 + 28;
@@ -849,6 +860,9 @@ export const ItemsList = () => {
 
   return (
     <>
+      <FileButton onChange={setCsvFile}>
+        {(props) => <Button {...props}>Upload CSV</Button>}
+      </FileButton>
       <Button
         disabled={!items.length}
         style={{ background: "#0da20a", margin: "5px", float: "right" }}
