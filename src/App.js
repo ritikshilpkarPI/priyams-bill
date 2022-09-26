@@ -3,14 +3,15 @@ import { useContext, useEffect, useState } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Button } from "@mantine/core";
 import { AppStateContext } from "./AppState/appState.context";
-import { BillFeed } from "./Components/BillFeed";
-import { Billing } from "./Components/Billing";
-import DayWiseBillFeed from "./Components/DailyBill";
-import EditBill from "./Components/EditBill";
-import { ItemsList } from "./Components/ItemsList";
-import { OpenClose } from "./Components/OpenClose";
-import StockQuantity from "./Components/StockQuantity";
+import { BillFeed } from "./Pages/BillFeed";
+import { Billing } from "./Pages/Billing";
+import DayWiseBillFeed from "./Pages/DailyBill";
+import EditBill from "./Pages/EditBill";
+import { ItemsList } from "./Pages/ItemsList";
+import { OpenClose } from "./Pages/OpenClose";
+import StockQuantity from "./Pages/StockQuantity";
 import { Axios } from "./utils/axios";
+import MiscellaneousExpenses from "./Pages/MiscellaneousExpenses";
 
 // import { QRComp } from "./qr";
 
@@ -71,9 +72,8 @@ function App({ history }) {
         <Button onClick={() => history.push("allBill")}>All Bills</Button>
         <Button onClick={() => history.push("dayBill")}>Day Wise Bills</Button>
         <Button onClick={() => history.push("openClose")}>Open Close</Button>
-        <Button onClick={() => history.push("stockquantity")}>
-          Shortage Product
-        </Button>
+        <Button onClick={() => history.push("stockquantity")}>Shortage Product</Button>
+        <Button onClick={() => history.push("expenses")}>Expenses</Button>
       </div>
       <Switch>
         <Route path="/openClose" component={OpenClose} />
@@ -88,6 +88,7 @@ function App({ history }) {
         />
         <Route path="/inventory" component={ItemsList} />
         <Route path="/dayBill" component={DayWiseBillFeed} />
+        <Route path="/expenses" component={MiscellaneousExpenses} />
         <Route path="/stockquantity" component={StockQuantity} />
         <Route path="/allBill" render={() => <BillFeed bills={allBills} />} />
         <Route path="/:billingID" component={EditBill} />
