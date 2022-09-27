@@ -2,7 +2,7 @@ import "./App.scss";
 import { useContext, useEffect, useState, lazy, Suspense } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Axios } from "./utils/axios";
-import { Button } from "@mantine/core";
+import { SegmentedControl } from "@mantine/core";
 import { AppStateContext } from "./AppState/appState.context";
 
 const BillFeed = lazy(() => import("./Pages/BillFeed"));
@@ -18,10 +18,22 @@ const MiscellaneousExpenses = lazy(() =>
 
 // import { QRComp } from "./qr";
 
+const PAGES = {
+  "/": "Home",
+  billing: "Billing",
+  inventory: "Inventory",
+  allBill: "All Bills",
+  dayBill: "Day Bills",
+  openClose: "Open Close",
+  stockquantity: "Shortage Items",
+  expenses: "Expenses",
+};
+
 function App({ history }) {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
+  const [value, setValue] = useState(PAGES.billing);
 
   useEffect(() => {
     (async () => {
@@ -44,21 +56,26 @@ function App({ history }) {
     })();
   }, [dispatch]);
 
+  useEffect(() => {
+    history.push(value);
+  }, [value, history]);
+
   console.log({ itemsList });
 
   return (
     <div className="App">
       <div className="nav-btn">
-        <Button onClick={() => history.push("/")}>Home</Button>
-        <Button onClick={() => history.push("billing")}>Billing</Button>
-        <Button onClick={() => history.push("inventory")}>Inventory</Button>
-        <Button onClick={() => history.push("allBill")}>All Bills</Button>
-        <Button onClick={() => history.push("dayBill")}>Day Wise Bills</Button>
-        <Button onClick={() => history.push("openClose")}>Open Close</Button>
-        <Button onClick={() => history.push("stockquantity")}>
-          Shortage Product
-        </Button>
-        <Button onClick={() => history.push("expenses")}>Expenses</Button>
+        <SegmentedControl
+          value={value}
+          onChange={setValue}
+          color="blue"
+          radius="md"
+          size="md"
+          data={Object.keys(PAGES).map((page) => ({
+            label: PAGES[page],
+            value: page,
+          }))}
+        />
       </div>
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
