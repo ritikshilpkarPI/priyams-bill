@@ -1,24 +1,18 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Title, Table } from '@mantine/core';
+import { Title, Table, Loader } from '@mantine/core';
 
-const ShowOldExpenses = ({ dateState }) => {
-    const [allData, setAllData] = useState([]);
+const ShowOldExpenses = ({ dateState, reloadState }) => {
+    const [allData, setAllData] = useState();
 
-    const rows = allData.map((element, index) => (
-        <tr key={index} onClick={() => { dateState[1](element._id) }} style={{ cursor: 'pointer' }}>
-            <td>{element._id}</td>
-            <td>{element.amount}</td>
-        </tr>
-    ));
-
+    // To get all expense data
     useEffect(() => {
         const getAllData = async () => {
             const allExpense = await axios.get(`/api/expense`);
             setAllData(allExpense.data.data);
         };
         getAllData();
-    }, [])
+    }, [reloadState]);
 
     return (
         <div className="table-section" style={{ marginLeft: '25px', padding: '0 20px 20px', borderRadius: '8px', boxShadow: '0px 0px 15px -1px rgba(0,0,0,0.18)', width: '500px' }}>
@@ -30,8 +24,16 @@ const ShowOldExpenses = ({ dateState }) => {
                         <th style={{ textAlign: 'center' }}>Total Amount</th>
                     </tr>
                 </thead>
-                <tbody>{rows}</tbody>
+                <tbody>{allData?.map((element, index) => (
+                    <tr key={index} onClick={() => { dateState[1](element._id) }} style={{ cursor: 'pointer' }}>
+                        <td>{element._id}</td>
+                        <td>{element.amount}</td>
+                    </tr>
+                ))}</tbody>
             </Table>
+            <div style={{ marginTop: '10px', display: allData ? 'none' : 'inline-block' }}>
+                <Loader size="sm" />
+            </div>
         </div>
     )
 }

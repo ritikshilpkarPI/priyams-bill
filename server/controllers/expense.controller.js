@@ -1,4 +1,3 @@
-const { response } = require('express');
 const Expense = require('../db-models/expense.model');
 
 const addExpense = async (request, response) => {
@@ -6,6 +5,16 @@ const addExpense = async (request, response) => {
         const expenseItem = await new Expense(request.body);
         expenseItem.save();
         response.status(200).json({ status: true, message: 'expense added' });
+    } catch (error) {
+        response.status(500).json({ error });
+    }
+}
+
+const deleteExpense = async (request, response) => {
+    try {
+        const id = request.params.id;
+        const deletedItem = await Expense.findByIdAndDelete(id);
+        response.status(200).json({ status: true, message: 'expense deleted', data: deletedItem });
     } catch (error) {
         response.status(500).json({ error });
     }
@@ -32,7 +41,9 @@ const sendAllExpense = async (request, response) => {
 
 const updateExpense = async (request, response) => {
     try {
-        response.status(200).json({ status: true, message: 'expense updated' });
+        const id = request.params.id;
+        const updatedExpense = await Expense.findByIdAndUpdate(id, request.body);
+        response.status(200).json({ status: true, message: 'expense updated', data: updatedExpense });
     } catch (error) {
         response.status(500).json({ error });
     }
@@ -48,4 +59,4 @@ const sendDayExpenses = async (request, response) => {
     }
 };
 
-module.exports = { addExpense, sendAllExpense, updateExpense, sendDayExpenses }
+module.exports = { addExpense, deleteExpense, sendAllExpense, updateExpense, sendDayExpenses }
