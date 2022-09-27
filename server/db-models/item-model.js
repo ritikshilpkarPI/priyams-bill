@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ItemSchem = new mongoose.Schema(
   {
-    itemName: { type: String, required: true },
+    itemName: { type: String, required: true, trim: true },
     itemBarcode: { type: Number },
     itemStockQuantity: { type: Number, default: 0 },
     minimumStockQuantity: { type: Number, default: 1 },
