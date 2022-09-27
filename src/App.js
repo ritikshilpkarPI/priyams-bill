@@ -16,7 +16,6 @@ import MiscellaneousExpenses from "./Pages/MiscellaneousExpenses";
 // import { QRComp } from "./qr";
 
 function App({ history }) {
-  const [allBills, setAllBills] = useState();
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
@@ -42,25 +41,6 @@ function App({ history }) {
     })();
   }, [dispatch]);
 
-  useEffect(() => {
-    const getBillFeed = async () => {
-      const fetch = await Axios.request({
-        url: "/api/billing/getBillFeed",
-        method: "get",
-        params: {
-          page: 1,
-          size: 50,
-        },
-        headers: {
-          Cookie: "",
-        },
-      });
-      setAllBills(fetch.data.message.allBill);
-    };
-    getBillFeed();
-    // setAllBills([]);
-  }, []);
-
   console.log({ itemsList });
 
   return (
@@ -72,7 +52,9 @@ function App({ history }) {
         <Button onClick={() => history.push("allBill")}>All Bills</Button>
         <Button onClick={() => history.push("dayBill")}>Day Wise Bills</Button>
         <Button onClick={() => history.push("openClose")}>Open Close</Button>
-        <Button onClick={() => history.push("stockquantity")}>Shortage Product</Button>
+        <Button onClick={() => history.push("stockquantity")}>
+          Shortage Product
+        </Button>
         <Button onClick={() => history.push("expenses")}>Expenses</Button>
       </div>
       <Switch>
@@ -90,7 +72,7 @@ function App({ history }) {
         <Route path="/dayBill" component={DayWiseBillFeed} />
         <Route path="/expenses" component={MiscellaneousExpenses} />
         <Route path="/stockquantity" component={StockQuantity} />
-        <Route path="/allBill" render={() => <BillFeed bills={allBills} />} />
+        <Route path="/allBill" component={BillFeed} />
         <Route path="/:billingID" component={EditBill} />
       </Switch>
       {/* <QRComp /> */}

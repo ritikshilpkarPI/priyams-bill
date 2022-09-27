@@ -1,64 +1,105 @@
-import { useState } from "react";
-
-import { Table, Text } from "@mantine/core";
-
-// import { useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Axios } from "../utils/axios";
+import { Table, Text, Loader } from "@mantine/core";
 
 export const BillFeed = ({ bills = [] }) => {
+  const [allBills, setAllBills] = useState([]);
+  const [loader, setLoader] = useState(false);
+  useEffect(() => {
+    setLoader(true);
+    const getBillFeed = async () => {
+      const fetch = await Axios.request({
+        url: "/api/billing/getBillFeed",
+        method: "get",
+        params: {
+          page: 1,
+          size: 100,
+        },
+        headers: {
+          Cookie: "",
+        },
+      });
+      setAllBills(fetch.data.message.allBill);
+      setLoader(false);
+    };
+    if (bills.length) {
+      setAllBills(bills);
+      setLoader(false);
+    } else {
+      getBillFeed();
+    }
+  }, []);
+
   return (
-    <Table striped highlightOnHover>
-      <thead className="heading">
-        <tr>
-          <th>
-            <Text align="center">Sl. No.</Text>
-          </th>
-          <th>
-            <Text align="center">Customer Name</Text>
-          </th>
-          <th>
-            <Text align="center">Customer Phone</Text>
-          </th>
-          <th>
-            <Text align="center">Bill Total Amount</Text>
-          </th>
-          <th>
-            <Text align="center">Bill MRP Total Amount</Text>
-          </th>
-          <th>
-            <Text align="center">Cash Paid</Text>
-          </th>
-          <th>
-            <Text align="center">UPI Paid</Text>
-          </th>
-          <th>
-            <Text align="center">Amount Return</Text>
-          </th>
-          <th>
-            <Text align="center">Total Items</Text>
-          </th>
-          <th>
-            <Text align="center">Quantity</Text>
-          </th>
-          <th>
-            <Text align="center">Bill Discount</Text>
-          </th>
-          <th>
-            <Text align="center">Bill Profit</Text>
-          </th>
-          <th>
-            <Text align="center">Bill date</Text>
-          </th>
-          <th>
-            <Text align="center">Items</Text>
-          </th>
-        </tr>
-      </thead>
-      <tbody className="body">
-        {bills.map((item, idx) => {
-          return <TableRow key={`${item}$${idx}`} item={item} idx={idx} />;
-        })}
-      </tbody>
-    </Table>
+    <>
+      {loader ? (
+        <div
+          style={{
+            height: "95vh",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Loader color="blue" size="xl" />
+        </div>
+      ) : (
+        <Table striped highlightOnHover>
+          <thead className="heading">
+            <tr>
+              <th>
+                <Text align="center">Sl. No.</Text>
+              </th>
+              <th>
+                <Text align="center">Customer Name</Text>
+              </th>
+              <th>
+                <Text align="center">Customer Phone</Text>
+              </th>
+              <th>
+                <Text align="center">Bill Total Amount</Text>
+              </th>
+              <th>
+                <Text align="center">Bill MRP Total Amount</Text>
+              </th>
+              <th>
+                <Text align="center">Cash Paid</Text>
+              </th>
+              <th>
+                <Text align="center">UPI Paid</Text>
+              </th>
+              <th>
+                <Text align="center">Amount Return</Text>
+              </th>
+              <th>
+                <Text align="center">Total Items</Text>
+              </th>
+              <th>
+                <Text align="center">Quantity</Text>
+              </th>
+              <th>
+                <Text align="center">Bill Discount</Text>
+              </th>
+              <th>
+                <Text align="center">Bill Profit</Text>
+              </th>
+              <th>
+                <Text align="center">Bill date</Text>
+              </th>
+              <th>
+                <Text align="center">Items</Text>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="body">
+            {allBills.map((item, idx) => {
+              return <TableRow key={`${item}$${idx}`} item={item} idx={idx} />;
+            })}
+          </tbody>
+        </Table>
+      )}
+    </>
   );
 };
 
