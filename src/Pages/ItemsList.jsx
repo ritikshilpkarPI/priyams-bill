@@ -3,11 +3,20 @@ import { useContext, useEffect, useState } from "react";
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
 
-import { FileButton, Button, Input, Table, Text, Loader, Image, Textarea } from "@mantine/core";
+import {
+  FileButton,
+  Button,
+  Input,
+  Table,
+  Text,
+  Loader,
+  Image,
+  Textarea,
+} from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
-import Papa from 'papaparse';
+import Papa from "papaparse";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 const ITEM_INITIAL_INPUT = {
@@ -22,7 +31,7 @@ const ITEM_INITIAL_INPUT = {
 
 let itemToBeUpdated = {};
 
-export const ItemsList = () => {
+const ItemsList = () => {
   const [items, setItems] = useState([]);
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
@@ -830,7 +839,7 @@ export const ItemsList = () => {
             data: results.data,
           });
           console.log(response.data);
-        }
+        },
       });
     }
   }, [csvFile]);
@@ -1199,3 +1208,5 @@ const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
     </Button>
   );
 };
+
+export default ItemsList;

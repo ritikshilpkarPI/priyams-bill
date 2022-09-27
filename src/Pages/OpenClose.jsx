@@ -25,7 +25,7 @@ const INITIAL_VALS = {
 let createdAtDate = "";
 let id = "";
 
-export const OpenClose = () => {
+const OpenClose = () => {
   const currentDate = new Date().toJSON().split("T")[0];
 
   const [procedureValue, setProcedureValue] = useState("open");
@@ -581,3 +581,5 @@ const TableRow = ({ item, idx }) => {
     </>
   );
 };
+
+export default OpenClose;

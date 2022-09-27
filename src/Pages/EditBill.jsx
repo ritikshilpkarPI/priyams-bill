@@ -1,12 +1,10 @@
 import { useParams } from "react-router-dom";
-import { Billing } from './Billing'
+import Billing from "./Billing";
 
-function EditBill () {
+function EditBill() {
   const { billingID } = useParams();
 
-  return (
-    <Billing billID={billingID}/>
-  )
+  return <Billing billID={billingID} />;
 }
 
 export default EditBill;

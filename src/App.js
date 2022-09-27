@@ -1,17 +1,20 @@
 import "./App.scss";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, lazy, Suspense } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
+import { Axios } from "./utils/axios";
 import { Button } from "@mantine/core";
 import { AppStateContext } from "./AppState/appState.context";
-import { BillFeed } from "./Pages/BillFeed";
-import { Billing } from "./Pages/Billing";
-import DayWiseBillFeed from "./Pages/DailyBill";
-import EditBill from "./Pages/EditBill";
-import { ItemsList } from "./Pages/ItemsList";
-import { OpenClose } from "./Pages/OpenClose";
-import StockQuantity from "./Pages/StockQuantity";
-import { Axios } from "./utils/axios";
-import MiscellaneousExpenses from "./Pages/MiscellaneousExpenses";
+
+const BillFeed = lazy(() => import("./Pages/BillFeed"));
+const Billing = lazy(() => import("./Pages/Billing"));
+const DayWiseBillFeed = lazy(() => import("./Pages/DailyBill"));
+const EditBill = lazy(() => import("./Pages/EditBill"));
+const ItemsList = lazy(() => import("./Pages/ItemsList"));
+const OpenClose = lazy(() => import("./Pages/OpenClose"));
+const StockQuantity = lazy(() => import("./Pages/StockQuantity"));
+const MiscellaneousExpenses = lazy(() =>
+  import("./Pages/MiscellaneousExpenses")
+);
 
 // import { QRComp } from "./qr";
 
@@ -57,24 +60,26 @@ function App({ history }) {
         </Button>
         <Button onClick={() => history.push("expenses")}>Expenses</Button>
       </div>
-      <Switch>
-        <Route path="/openClose" component={OpenClose} />
-        <Route
-          path="/billing"
-          render={() => (
-            <Billing
-              loaderDisplay={loaderDisplay}
-              setLoaderDisplay={setLoaderDisplay}
-            />
-          )}
-        />
-        <Route path="/inventory" component={ItemsList} />
-        <Route path="/dayBill" component={DayWiseBillFeed} />
-        <Route path="/expenses" component={MiscellaneousExpenses} />
-        <Route path="/stockquantity" component={StockQuantity} />
-        <Route path="/allBill" component={BillFeed} />
-        <Route path="/:billingID" component={EditBill} />
-      </Switch>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          <Route path="/openClose" component={OpenClose} />
+          <Route
+            path="/billing"
+            render={() => (
+              <Billing
+                loaderDisplay={loaderDisplay}
+                setLoaderDisplay={setLoaderDisplay}
+              />
+            )}
+          />
+          <Route path="/inventory" component={ItemsList} />
+          <Route path="/dayBill" component={DayWiseBillFeed} />
+          <Route path="/expenses" component={MiscellaneousExpenses} />
+          <Route path="/stockquantity" component={StockQuantity} />
+          <Route path="/allBill" component={BillFeed} />
+          <Route path="/:billingID" component={EditBill} />
+        </Switch>
+      </Suspense>
       {/* <QRComp /> */}
     </div>
   );

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Axios } from "../utils/axios";
 import { Table, Text, Loader } from "@mantine/core";
 
-export const BillFeed = ({ bills = [] }) => {
+const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
   const [loader, setLoader] = useState(false);
   useEffect(() => {
@@ -244,3 +244,5 @@ const TableRow = ({ item, idx }) => {
     </>
   );
 };
+
+export default BillFeed;
