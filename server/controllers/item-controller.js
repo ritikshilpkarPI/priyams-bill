@@ -100,41 +100,43 @@ const addBulkItems = async (request, response) => {
     const itemname = csvData[0].findIndex((item) => item === "itemName");
     const itembarcode = csvData[0].findIndex((item) => item === "itemBarcode");
 
+    if (slabPricingStart === -1)
+      return response
+        .status(503)
+        .json({
+          status: false,
+          message: "Uploaded sheet does not has tp1 column in its header",
+        });
     await Promise.all(
       csvData.map(async (item, index) => {
-        if (
-          item.length > slabPricingStart &&
-          item[slabPricingStart] &&
-          item[slabPricingStart] != "tp1"
-        ) {
-          let arry = [];
-          let j = 0;
-          for (let i = slabPricingStart; i < item.length; i += 2) {
-            if (item[i]) {
-              arry.push([Number(j), Number(item[i]), Number(item[i + 1])]);
-              j++;
-            } else {
-              break;
+        if (index !== 0) {
+          const slabPricesArray = [];
+          if (item[slabPricingStart]) {
+            let j = 0;
+            for (let i = slabPricingStart; i < item.length; i += 2) {
+              if (item[i]) {
+                slabPricesArray.push([
+                  Number(j),
+                  Number(item[i]),
+                  Number(item[i + 1]),
+                ]);
+                j++;
+              } else {
+                break;
+              }
             }
           }
-
           await Item.findOneAndUpdate(
             {
               itemName: item[itemname],
               itemBarcode: item[itembarcode],
               itemMRPperUnit: item[mrpprice],
             },
-            { slabPricing: arry }
+            { slabPricing: slabPricesArray }
           );
-        } else if (!item[slabPricingStart]) {
-          const dbItem = await Item.find({ _id: item[0] });
-          if (dbItem && dbItem.slabPricing.length != 0) {
-            await Item.findByIdAndUpdate(item[0], { slabPricing: [] });
-          }
         }
       })
     );
-
     response.status(200).json({ status: true, message: "items added" });
   } catch (error) {
     response.status(500).json(error);
