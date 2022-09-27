@@ -28,7 +28,7 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: "",
 };
 
-export const Billing = ({ billID = "", loaderDisplay }) => {
+const Billing = ({ billID = "", loaderDisplay }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
@@ -1000,3 +1000,5 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
     </>
   );
 };
+
+export default Billing;
