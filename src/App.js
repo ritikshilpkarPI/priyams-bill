@@ -33,7 +33,7 @@ function App({ history }) {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
-  const [value, setValue] = useState(PAGES.billing);
+  const [value, setValue] = useState(Object.keys(PAGES)[1]);
 
   useEffect(() => {
     (async () => {
