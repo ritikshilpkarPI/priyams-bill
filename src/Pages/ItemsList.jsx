@@ -572,6 +572,8 @@ const ItemsList = () => {
 
   const downloadFile = async () => {
     const fileName = "items.csv";
+    let newArray = [];
+    let max = 0;
     const fields = [
       "_id",
       "itemName",
@@ -583,9 +585,31 @@ const ItemsList = () => {
       "itemSellingPricePerUnit",
       "itemStockQuantity",
       "minimumStockQuantity",
-      "isDeleted",
+      "isDeleted"
     ];
-    const blob = new Blob([parse(items, { fields })], { type: "text/csv" });
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].slabPricing.length !== 0) {
+        if(max < items[i].slabPricing.length){
+          max = items[i].slabPricing.length;
+        }
+        let newObj = { ...items[i] }
+        for (let j = 0; j < items[i].slabPricing.length; j++) {
+          newObj[`tp${j + 1}`] = Number(items[i].slabPricing[j][1]);
+          newObj[`sp${j + 1}`] = Number(items[i].slabPricing[j][2]);
+        }
+        newArray.push(newObj);
+      } else {
+        newArray.push(items[i]);
+      }
+    };
+
+    for(let i = 1; i <= max; i++){
+      fields.push(`tp${i}`);
+      fields.push(`sp${i}`);
+    }
+
+    const blob = new Blob([parse(newArray, { fields })], { type: "text/csv" });
     const href = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = href;
