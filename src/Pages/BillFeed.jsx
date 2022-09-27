@@ -28,6 +28,7 @@ export const BillFeed = ({ bills = [] }) => {
     } else {
       getBillFeed();
     }
+    // eslint-disable-next-line
   }, []);
 
   return (
