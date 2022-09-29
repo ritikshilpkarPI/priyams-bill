@@ -778,7 +778,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   >
                     {Math.ceil(
                       itemObj["itemSellingPricePerUnit"] *
-                        itemObj["itemQuantityInBill"]
+                      itemObj["itemQuantityInBill"]
                     )}
                   </Text>
                 </td>
