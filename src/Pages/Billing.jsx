@@ -172,7 +172,7 @@ const updateBillValuesOnItemChange = (bill, setBill) => {
     totalNumberOfUniqueItems: bill.billItems.length,
     totalNumberOfItems: numOfItems,
     billMRPTotal: mrpTotal,
-    billAmountTotal: totalSum,
+    billAmountTotal: Math.ceil(totalSum),
     billDiscountTotal: savedAmount,
     totalBillProfit: profitAmount,
   }));
@@ -222,6 +222,58 @@ async function addNewBill(
   setApiLoading(false);
   setBill(BILL_INITIAL_STATE);
   itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
+}
+
+function handleItemInputChange(event, setInputValue) {
+  const { name, value } = event.target;
+  setInputValue((prevState) => ({ ...prevState, [name]: value }));
+}
+
+function addItemToBill(
+  event,
+  inputValue,
+  itemsByName,
+  setBill,
+  setInputValue,
+  INPUT_INITIAL_STATE
+) {
+  event.preventDefault();
+  const itemDetail = {
+    ...inputValue,
+    itemDiscountPerUnit: inputValue.itemMRPperUnit
+      ? inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit
+      : 0,
+  };
+
+  itemsByName[inputValue.itemName] = { ...itemDetail };
+  setBill((prev) => ({
+    ...prev,
+    billItems: [
+      {
+        itemDetail,
+        itemQuantityInBill: itemDetail.itemQuantityInBill,
+        itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+        itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+        itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+      },
+      ...prev.billItems,
+    ],
+  }));
+  setInputValue(INPUT_INITIAL_STATE);
+}
+
+function handleItemNameFilter(
+  event,
+  setInputValue,
+  itemsList,
+  setFilteredData
+) {
+  setInputValue((prev) => ({ ...prev, itemName: event.target.value }));
+  const searchWord = event.target.value;
+  const filteredData = itemsList.filter((value) => {
+    return value.itemName.toLowerCase().includes(searchWord.toLowerCase());
+  });
+  setFilteredData(filteredData);
 }
 
 const Billing = ({ billID = "", loaderDisplay }) => {
@@ -284,46 +336,6 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     () => updateReturnAmount(setBill, bill),
     [bill.cashPay, bill.upiPay, bill.billAmountTotal]
   );
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setInputValue((prevState) => ({ ...prevState, [name]: value }));
-  }
-
-  function addItemToBill(event) {
-    event.preventDefault();
-    const itemDetail = {
-      ...inputValue,
-      itemDiscountPerUnit: inputValue.itemMRPperUnit
-        ? inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit
-        : 0,
-    };
-
-    itemsByName[inputValue.itemName] = { ...itemDetail };
-    setBill((prev) => ({
-      ...prev,
-      billItems: [
-        {
-          itemDetail,
-          itemQuantityInBill: itemDetail.itemQuantityInBill,
-          itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-          itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-          itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-        },
-        ...prev.billItems,
-      ],
-    }));
-    setInputValue(INPUT_INITIAL_STATE);
-  }
-
-  function handleFilter(event) {
-    setInputValue((prev) => ({ ...prev, itemName: event.target.value }));
-    const searchWord = event.target.value;
-    const filteredData = itemsList.filter((value) => {
-      return value.itemName.toLowerCase().includes(searchWord.toLowerCase());
-    });
-    setFilteredData(filteredData);
-  }
 
   // To show prices according to slabs if exists
   const ItemPrice = ({ item, index }) => {
@@ -462,7 +474,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 className="header-print-text"
                 size="lg"
               >
-                Item Name
+                Item
               </Text>
             </th>
             <th>
@@ -473,7 +485,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 size="lg"
                 className="header-print-text"
               >
-                Quantity
+                Qty.
               </Text>
             </th>
             <th className="header-slab-price">
@@ -494,7 +506,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 size="lg"
                 className="header-print-text"
               >
-                MRP /Unit
+                MRP
               </Text>
             </th>
             <th>
@@ -505,7 +517,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 size="lg"
                 className="header-print-text"
               >
-                Selling Price /Unit
+                S.P
               </Text>
             </th>
 
@@ -517,7 +529,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 size="lg"
                 className="header-print-text"
               >
-                Item Total
+                Total
               </Text>
             </th>
           </tr>
@@ -541,7 +553,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   name="itemBarcode"
                   value={inputValue.itemBarcode}
                   onWheel={(e) => e.target.blur()}
-                  onChange={(e) => handleChange(e)}
+                  onChange={(e) => handleItemInputChange(e, setInputValue)}
                   autoComplete="off"
                 />
               </Text>
@@ -556,8 +568,13 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   placeholder="search here"
                   autoComplete="off"
                   onChange={(e) => {
-                    handleFilter(e);
-                    handleChange(e);
+                    handleItemNameFilter(
+                      e,
+                      setInputValue,
+                      itemsList,
+                      setFilteredData
+                    );
+                    handleItemInputChange(e, setInputValue);
                   }}
                 />
               </Text>
@@ -677,7 +694,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   type="number"
                   placeholder="itemQuantityInBill"
                   name="itemQuantityInBill"
-                  onChange={handleChange}
+                  onChange={(e) => handleItemInputChange(e, setInputValue)}
                   onWheel={(e) => e.target.blur()}
                   value={inputValue.itemQuantityInBill}
                 />
@@ -693,7 +710,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   placeholder="itemMRPperUnit"
                   name="itemMRPperUnit"
                   onWheel={(e) => e.target.blur()}
-                  onChange={handleChange}
+                  onChange={(e) => handleItemInputChange(e, setInputValue)}
                   value={inputValue.itemMRPperUnit}
                 />
               </Text>
@@ -706,7 +723,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   type="number"
                   name="itemSellingPricePerUnit"
                   placeholder="selling price"
-                  onChange={handleChange}
+                  onChange={(e) => handleItemInputChange(e, setInputValue)}
                   onWheel={(e) => e.target.blur()}
                   value={inputValue.itemSellingPricePerUnit}
                 />
@@ -718,7 +735,16 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 disabled={
                   !(inputValue.itemName && inputValue.itemSellingPricePerUnit)
                 }
-                onClick={addItemToBill}
+                onClick={(e) =>
+                  addItemToBill(
+                    e,
+                    inputValue,
+                    itemsByName,
+                    setBill,
+                    setInputValue,
+                    INPUT_INITIAL_STATE
+                  )
+                }
               >
                 ADD ITEM
               </Button>
@@ -838,10 +864,8 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                     weight={700}
                     size="xl"
                   >
-                    {Math.ceil(
-                      itemObj["itemSellingPricePerUnit"] *
-                        itemObj["itemQuantityInBill"]
-                    )}
+                    {itemObj["itemSellingPricePerUnit"] *
+                      itemObj["itemQuantityInBill"]}
                   </Text>
                 </td>
                 <td className="last-clmn">
