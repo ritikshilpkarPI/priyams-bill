@@ -28,6 +28,155 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: "",
 };
 
+const refreshPage = (setBill, BILL_INITIAL_STATE) => {
+  let answer = window.confirm("Do you want to refresh page?");
+  if (answer) {
+    setBill(BILL_INITIAL_STATE);
+  }
+};
+
+const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
+  if (billItems.length === 0) {
+    setBill(BILL_INITIAL_STATE);
+  } else {
+    setBill(billItems);
+  }
+};
+
+const initializeBillForEdit = async (setBill, billID) => {
+  const editBill = await Axios.request({
+    url: `/api/billing/getEditBill/${billID}`,
+    method: "get",
+    headers: {
+      Cookie: "",
+    },
+  });
+
+  const { items, ...billObject } = editBill.data.message;
+  const billObjectWithBillItems = { ...billObject, billItems: items };
+  setBill(billObjectWithBillItems);
+  // setLoaderDisplay(false);
+};
+
+const createInitialObjectsForBilling = (
+  itemsList,
+  itemsByBarcode,
+  itemsByName
+) => {
+  itemsList.forEach((obj) => {
+    obj["itemDiscountPerUnit"] =
+      obj["itemMRPperUnit"] - obj["itemSellingPricePerUnit"];
+    obj["itemQuantityInBill"] = 1;
+    if (obj["itemBarcode"]) {
+      itemsByBarcode[obj["itemBarcode"]] = { ...obj };
+    }
+    if (obj["itemName"]) {
+      itemsByName[obj["itemName"]] = { ...obj };
+    }
+  });
+};
+
+const addItemToBillByBarcode = (
+  itemsByBarcode,
+  inputValue,
+  setInputValue,
+  bill,
+  setBill,
+  INPUT_INITIAL_STATE,
+  barRef
+) => {
+  if (itemsByBarcode[inputValue.itemBarcode]) {
+    let index;
+    const itemDetail = { ...itemsByBarcode[inputValue.itemBarcode] };
+    bill.billItems.map((billItem) => {
+      index = bill.billItems.findIndex((a) => a._id === billItem._id);
+      if (
+        itemsByBarcode[inputValue.itemBarcode].itemBarcode ===
+        billItem.itemDetail.itemBarcode
+      ) {
+        const updatedItem = {
+          ...billItem,
+          itemDetail: {
+            ...billItem.itemDetail,
+            itemQuantityInBill: billItem.itemQuantityInBill + 1,
+          },
+          itemQuantityInBill: billItem.itemQuantityInBill + 1,
+        };
+        bill.billItems.splice(index, 1);
+        setBill((prev) => ({
+          totalNumberOfItems: prev.totalNumberOfItems + 1,
+          ...prev,
+          billItems: [updatedItem, ...prev.billItems],
+        }));
+      } else if (index === bill.totalNumberOfUniqueItems - 1) {
+        setBill((prev) => ({
+          ...prev,
+          billItems: [
+            {
+              itemDetail,
+              itemQuantityInBill: itemDetail.itemQuantityInBill,
+              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+              itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+              itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+              _id: itemDetail._id,
+            },
+            ...prev.billItems,
+          ],
+        }));
+      }
+      return <></>;
+    });
+    if (bill.totalNumberOfItems === 0) {
+      setBill((prev) => ({
+        ...prev,
+        billItems: [
+          {
+            itemDetail,
+            itemQuantityInBill: itemDetail.itemQuantityInBill,
+            itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+            itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+            itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+            _id: itemDetail._id,
+          },
+          ...prev.billItems,
+        ],
+      }));
+    }
+    setInputValue(INPUT_INITIAL_STATE);
+  }
+  barRef.current.focus();
+  // eslint-disable-next-line
+};
+
+const updateBillValuesOnItemChange = (bill, setBill) => {
+  let totalSum = 0;
+  let mrpTotal = 0;
+  let savedAmount = 0;
+  let profitAmount = 0;
+  let numOfItems = 0;
+  bill.billItems.forEach((item) => {
+    totalSum += Math.ceil(
+      item.itemDetail["itemSellingPricePerUnit"] * item["itemQuantityInBill"]
+    );
+    mrpTotal += item.itemDetail["itemMRPperUnit"] * item["itemQuantityInBill"];
+    savedAmount = mrpTotal - totalSum;
+    numOfItems += item["itemQuantityInBill"];
+    profitAmount +=
+      (item.itemDetail["itemSellingPricePerUnit"] -
+        item.itemDetail["itemCostPricePerUnit"]) *
+      item["itemQuantityInBill"];
+  });
+
+  setBill((prev) => ({
+    ...prev,
+    totalNumberOfUniqueItems: bill.billItems.length,
+    totalNumberOfItems: numOfItems,
+    billMRPTotal: mrpTotal,
+    billAmountTotal: totalSum,
+    billDiscountTotal: savedAmount,
+    totalBillProfit: profitAmount,
+  }));
+};
 const Billing = ({ billID = "", loaderDisplay }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
@@ -43,12 +192,6 @@ const Billing = ({ billID = "", loaderDisplay }) => {
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
 
   // To refresh page
-  const refreshPage = () => {
-    let answer = window.confirm("Do you want to refresh page?");
-    if (answer) {
-      setBill(BILL_INITIAL_STATE);
-    }
-  };
 
   // To save bill items in billItem Reducer
   useEffect(() => {
@@ -57,34 +200,47 @@ const Billing = ({ billID = "", loaderDisplay }) => {
   }, [bill]);
 
   // To get items through billItems Reducer
-  useEffect(() => {
-    if (billItems.length === 0) {
-      setBill(BILL_INITIAL_STATE);
-    } else {
-      setBill(billItems);
-    }
+  useEffect(
+    () => initializeBillState(billItems, BILL_INITIAL_STATE, setBill),
     // eslint-disable-next-line
-  }, []);
+    []
+  );
+
+  useEffect(() => initializeBillForEdit(setBill, billID), [billID]);
+
+  useEffect(
+    () =>
+      createInitialObjectsForBilling(itemsList, itemsByBarcode, itemsByName),
+    [itemsList]
+  );
+
+  useEffect(
+    () =>
+      addItemToBillByBarcode(
+        itemsByBarcode,
+        inputValue,
+        setInputValue,
+        bill,
+        setBill,
+        INPUT_INITIAL_STATE,
+        barRef
+      ),
+    [inputValue.itemBarcode, bill.billItems.length]
+  );
+
+  useEffect(
+    () => updateBillValuesOnItemChange(bill, setBill),
+    [bill.billItems]
+  );
 
   useEffect(() => {
-    // setLoaderDisplay(true);
-    (async () => {
-      const editBill = await Axios.request({
-        url: `/api/billing/getEditBill/${billID}`,
-        method: "get",
-        headers: {
-          Cookie: "",
-        },
-      });
+    setBill((prev) => ({
+      ...prev,
+      amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
+    }));
+  }, [bill.cashPay, bill.upiPay, bill.billAmountTotal]);
 
-      const { items, ...billObject } = editBill.data.message;
-      const billObjectWithBillItems = { ...billObject, billItems: items };
-      setBill(billObjectWithBillItems);
-      // setLoaderDisplay(false);
-    })();
-  }, [billID]);
-
-  const addNewBill = async () => {
+  async function addNewBill() {
     setApiLoading(true);
     let updateBill = {
       ...bill,
@@ -113,7 +269,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
     itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
-  };
+  }
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -146,132 +302,14 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     setInputValue(INPUT_INITIAL_STATE);
   }
 
-  const handleFilter = (event) => {
+  function handleFilter(event) {
     setInputValue((prev) => ({ ...prev, itemName: event.target.value }));
     const searchWord = event.target.value;
     const filteredData = itemsList.filter((value) => {
       return value.itemName.toLowerCase().includes(searchWord.toLowerCase());
     });
     setFilteredData(filteredData);
-  };
-
-  useEffect(() => {
-    itemsList.forEach((obj) => {
-      obj["itemDiscountPerUnit"] =
-        obj["itemMRPperUnit"] - obj["itemSellingPricePerUnit"];
-      obj["itemQuantityInBill"] = 1;
-      if (obj["itemBarcode"]) {
-        itemsByBarcode[obj["itemBarcode"]] = { ...obj };
-      }
-      if (obj["itemName"]) {
-        itemsByName[obj["itemName"]] = { ...obj };
-      }
-    });
-  }, [itemsList]);
-
-  useEffect(() => {
-    if (itemsByBarcode[inputValue.itemBarcode]) {
-      let index;
-      const itemDetail = { ...itemsByBarcode[inputValue.itemBarcode] };
-      bill.billItems.map((billItem) => {
-        index = bill.billItems.findIndex((a) => a._id === billItem._id);
-        if (
-          itemsByBarcode[inputValue.itemBarcode].itemBarcode ===
-          billItem.itemDetail.itemBarcode
-        ) {
-          const updatedItem = {
-            ...billItem,
-            itemDetail: {
-              ...billItem.itemDetail,
-              itemQuantityInBill: billItem.itemQuantityInBill + 1,
-            },
-            itemQuantityInBill: billItem.itemQuantityInBill + 1,
-          };
-          bill.billItems.splice(index, 1);
-          setBill((prev) => ({
-            totalNumberOfItems: prev.totalNumberOfItems + 1,
-            ...prev,
-            billItems: [updatedItem, ...prev.billItems],
-          }));
-        } else if (index === bill.totalNumberOfUniqueItems - 1) {
-          setBill((prev) => ({
-            ...prev,
-            billItems: [
-              {
-                itemDetail,
-                itemQuantityInBill: itemDetail.itemQuantityInBill,
-                itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-                itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-                itemSellingPriceTotal: Number(
-                  itemDetail.itemSellingPricePerUnit
-                ),
-                _id: itemDetail._id,
-              },
-              ...prev.billItems,
-            ],
-          }));
-        }
-        return <></>;
-      });
-      if (bill.totalNumberOfItems === 0) {
-        setBill((prev) => ({
-          ...prev,
-          billItems: [
-            {
-              itemDetail,
-              itemQuantityInBill: itemDetail.itemQuantityInBill,
-              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-              itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-              itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-              _id: itemDetail._id,
-            },
-            ...prev.billItems,
-          ],
-        }));
-      }
-      setInputValue(INPUT_INITIAL_STATE);
-    }
-    barRef.current.focus();
-    // eslint-disable-next-line
-  }, [inputValue.itemBarcode, bill.billItems.length]);
-
-  useEffect(() => {
-    let totalSum = 0;
-    let mrpTotal = 0;
-    let savedAmount = 0;
-    let profitAmount = 0;
-    let numOfItems = 0;
-    bill.billItems.forEach((item) => {
-      totalSum += Math.ceil(
-        item.itemDetail["itemSellingPricePerUnit"] * item["itemQuantityInBill"]
-      );
-      mrpTotal +=
-        item.itemDetail["itemMRPperUnit"] * item["itemQuantityInBill"];
-      savedAmount = mrpTotal - totalSum;
-      numOfItems += item["itemQuantityInBill"];
-      profitAmount +=
-        (item.itemDetail["itemSellingPricePerUnit"] -
-          item.itemDetail["itemCostPricePerUnit"]) *
-        item["itemQuantityInBill"];
-    });
-
-    setBill((prev) => ({
-      ...prev,
-      totalNumberOfUniqueItems: bill.billItems.length,
-      totalNumberOfItems: numOfItems,
-      billMRPTotal: mrpTotal,
-      billAmountTotal: totalSum,
-      billDiscountTotal: savedAmount,
-      totalBillProfit: profitAmount,
-    }));
-  }, [bill.billItems]);
-
-  useEffect(() => {
-    setBill((prev) => ({
-      ...prev,
-      amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
-    }));
-  }, [bill.cashPay, bill.upiPay, bill.billAmountTotal]);
+  }
 
   // To show prices according to slabs if exists
   const ItemPrice = ({ item, index }) => {
@@ -354,7 +392,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
         </div>
         <Button
           sx={{ background: "black", marginRight: "5px" }}
-          onClick={refreshPage}
+          onClick={() => refreshPage(setBill, BILL_INITIAL_STATE)}
         >
           Refresh
         </Button>
