@@ -177,6 +177,53 @@ const updateBillValuesOnItemChange = (bill, setBill) => {
     totalBillProfit: profitAmount,
   }));
 };
+
+const updateReturnAmount = (setBill, bill) => {
+  setBill((prev) => ({
+    ...prev,
+    amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
+  }));
+};
+
+async function addNewBill(
+  setApiLoading,
+  bill,
+  setBill,
+  BILL_INITIAL_STATE,
+  itemsReducer,
+  initialItemList,
+  billID
+) {
+  setApiLoading(true);
+  let updateBill = {
+    ...bill,
+    [bill.updated]: bill?.updated?.push(Date.now()),
+  };
+  setBill(updateBill);
+  const editApi = {
+    url: "/api/billing/editBill",
+    method: "put",
+    data: { id: billID, itemWithChanges: { ...bill } },
+  };
+  const createApi = {
+    url: "/api/billing/newBill",
+    method: "post",
+    data: { ...bill },
+  };
+  const objectOfInterest = billID ? editApi : createApi;
+
+  await Axios.request({
+    ...objectOfInterest,
+    headers: {
+      Cookie: "",
+    },
+  });
+  window.print();
+  setApiLoading(false);
+  setBill(BILL_INITIAL_STATE);
+  itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
+}
+
 const Billing = ({ billID = "", loaderDisplay }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
@@ -233,43 +280,10 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     [bill.billItems]
   );
 
-  useEffect(() => {
-    setBill((prev) => ({
-      ...prev,
-      amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
-    }));
-  }, [bill.cashPay, bill.upiPay, bill.billAmountTotal]);
-
-  async function addNewBill() {
-    setApiLoading(true);
-    let updateBill = {
-      ...bill,
-      [bill.updated]: bill?.updated?.push(Date.now()),
-    };
-    setBill(updateBill);
-    const editApi = {
-      url: "/api/billing/editBill",
-      method: "put",
-      data: { id: billID, itemWithChanges: { ...bill } },
-    };
-    const createApi = {
-      url: "/api/billing/newBill",
-      method: "post",
-      data: { ...bill },
-    };
-    const objectOfInterest = billID ? editApi : createApi;
-
-    await Axios.request({
-      ...objectOfInterest,
-      headers: {
-        Cookie: "",
-      },
-    });
-    window.print();
-    setApiLoading(false);
-    setBill(BILL_INITIAL_STATE);
-    itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
-  }
+  useEffect(
+    () => updateReturnAmount(setBill, bill),
+    [bill.cashPay, bill.upiPay, bill.billAmountTotal]
+  );
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -406,7 +420,17 @@ const Billing = ({ billID = "", loaderDisplay }) => {
         <Button
           disabled={!bill.billItems.length || bill.amountReturn < 0}
           className="print-btn"
-          onClick={addNewBill}
+          onClick={() =>
+            addNewBill(
+              setApiLoading,
+              bill,
+              setBill,
+              BILL_INITIAL_STATE,
+              itemsReducer,
+              initialItemList,
+              billID
+            )
+          }
           loading={apiLoading}
         >
           Save and Print
