@@ -36,6 +36,8 @@ function App({ history }) {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
   const [value, setValue] = useState(Object.keys(PAGES)[1]);
+  const staffName = JSON.parse(localStorage.getItem('priyam-store'))?.name;
+  const staffUserName = JSON.parse(localStorage.getItem('priyam-store'))?.username;
 
   useEffect(() => {
     (async () => {
@@ -63,15 +65,15 @@ function App({ history }) {
   }, [value, history]);
 
   const logoutUser = async () => {
-    const fetch = await Axios.request({
-      url: "/api/auth/logout",
-      method: "get",
-    });
+    // const fetch = await Axios.request({
+    //   url: "/api/auth/logout",
+    //   method: "get",
+    // });
 
-    if (fetch.data.status === true && fetch.data.message === "logout user") {
+    // if (fetch.data.status === true && fetch.data.message === "logout user") {
       localStorage.removeItem("priyam-store");
       history.push("/login");
-    }
+    // }
   };
 
   console.log({ itemsList });
@@ -80,20 +82,24 @@ function App({ history }) {
     <div className="App">
       {localStorage.getItem('priyam-store') &&
         <div className="nav-btn">
-        <SegmentedControl
-          value={value}
-          onChange={setValue}
-          color="blue"
-          radius="md"
-          size="md"
-          data={Object.keys(PAGES).map((page) => ({
-            label: PAGES[page],
-            value: page,
-          }))}
-        />
-        <Button className="logout-btn" onClick={logoutUser}>Logout</Button>
-      </div>
+          <SegmentedControl
+            value={value}
+            onChange={setValue}
+            color="blue"
+            radius="md"
+            size="md"
+            data={Object.keys(PAGES).map((page) => ({
+              label: PAGES[page],
+              value: page,
+            }))}
+          />
+          <Button className="logout-btn" onClick={logoutUser}>Logout</Button>
+        </div>
       }
+
+      {staffName && <h3 className="staffname">{staffName}</h3>}
+      {staffUserName && <p className="staffname">{staffUserName}</p>}
+
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
           <Route path="/login" exact component={Login} />

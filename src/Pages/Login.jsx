@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
@@ -10,14 +10,15 @@ const Login = ({ history }) => {
   const loginUser = async (e) => {
     e.preventDefault();
 
+    if (!username || !password) {
+      setErrorMsg("username or password can't be blank");
+      return;
+    }
+
     const payload = { username: username.toLowerCase(), password };
-
-    console.log(payload);
-
     const response = await axios.post("/api/auth/login", payload);
     const status = response.data.status;
     const message = response.data.message;
-    console.log(response);
 
     if (status === false && message === "invalid username") {
       setErrorMsg("Invalid username");
@@ -30,12 +31,12 @@ const Login = ({ history }) => {
     }
   };
 
-  // useEffect(() => {
-  //     if (localStorage.getItem('priyam-store')) {
-  //         history.push('/billing');
-  //     };
-  //     // eslint-disable-next-line
-  // }, []);
+  useEffect(() => {
+    if (localStorage.getItem('priyam-store')) {
+      history.push('/billing');
+    };
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div className="login-card">

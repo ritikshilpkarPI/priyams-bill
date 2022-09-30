@@ -277,3 +277,15 @@ input[type="number"] {
     border: 2px solid black;
   }
 }
+
+// Top Staff name and User name
+h3.staffname{
+  text-align: right;
+  margin: 20px 20px 0 0;
+}
+
+p.staffname{
+  text-align: right;
+  margin: 5px 20px 0 0;
+  color: gray;
+}

@@ -1,4 +1,5 @@
-const user = require('../data/user');
+// const user = require('../data/user');
+const Staff = require('../db-models/staff.model');
 const jwt = require('jsonwebtoken');
 
 const loginUser = async (request, response) => {
@@ -7,7 +8,7 @@ const loginUser = async (request, response) => {
         let { username, password } = await request.body;
 
         // Our saved database user 
-        let userData = user.userData.filter((item) => item.username === username);
+        let userData = await Staff.find({username});
 
         if (userData.length === 0) {
             // If email not registered
@@ -19,11 +20,6 @@ const loginUser = async (request, response) => {
             // JWT Token
             const token = await jwt.sign({ username: userData[0].username, role: userData[0].role }, process.env.JSON_WEB_TOKEN_SECRET);
 
-            console.log(token);
-
-            // Sending cookie
-            // response.cookie('authtoken', token);
-
             return response.status(200).json({ status: true, message: 'login successfull', authtoken: token, role: userData[0].role, name: userData[0].name });
         }
     } catch (error) {
@@ -33,7 +29,6 @@ const loginUser = async (request, response) => {
 
 const logoutUser = async (request, response) => {
     try {
-        response.clearCookie('authtoken');
         response.status(200).json({ status: true, message: 'logout user' });
     } catch (error) {
         response.status(500).json(error);
