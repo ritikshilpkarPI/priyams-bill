@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 const Login = ({ history }) => {
   const [username, setusername] = useState("");
@@ -26,15 +26,23 @@ const Login = ({ history }) => {
       setErrorMsg("wrong password");
     } else if (status === true && message === "login successfull") {
       setErrorMsg("login successfull");
-      localStorage.setItem("priyam-store", JSON.stringify({ name: response.data.name, username: username.toLowerCase(), role: response.data.role, authtoken: response.data.authtoken }));
+      localStorage.setItem(
+        "priyam-store",
+        JSON.stringify({
+          name: response.data.name,
+          username: username.toLowerCase(),
+          role: response.data.role,
+          authtoken: response.data.authtoken,
+        })
+      );
       history.push("/billing");
     }
   };
 
   useEffect(() => {
-    if (localStorage.getItem('priyam-store')) {
-      history.push('/billing');
-    };
+    if (localStorage.getItem("priyam-store")) {
+      history.push("/billing");
+    }
     // eslint-disable-next-line
   }, []);
 
