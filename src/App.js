@@ -78,7 +78,8 @@ function App({ history }) {
 
   return (
     <div className="App">
-      <div className="nav-btn">
+      {localStorage.getItem('priyam-store') &&
+        <div className="nav-btn">
         <SegmentedControl
           value={value}
           onChange={setValue}
@@ -92,6 +93,7 @@ function App({ history }) {
         />
         <Button className="logout-btn" onClick={logoutUser}>Logout</Button>
       </div>
+      }
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
           <Route path="/login" exact component={Login} />

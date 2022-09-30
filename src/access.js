@@ -1,7 +1,7 @@
 const access = {
     // Inventory Page
-    UPLOAD_CSV_BUTTON: 'manager',
-    DOWNLOAD_CSV_BUTTON: 'admin',
+    UPLOAD_CSV_BUTTON: ['admin'],
+    DOWNLOAD_CSV_BUTTON: ['admin', 'manager'],
 }
 
 export default access;

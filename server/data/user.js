@@ -2,25 +2,25 @@ export const userData = [
     {
         name: 'Yash Priyam',
         role: 'admin',
-        email: 'yash@email.com',
+        username: 'yash',
         password: '1234'
     },
     {
         name: 'Sachin Rawat',
         role: 'manager',
-        email: 'Sachin@gmail.com',
+        username: 'sachin',
         password: '1234'
     },
     {
         name: 'Hitesh',
         role: 'manager',
-        email: 'hitesh@email.com',
+        username: 'hitesh',
         password: '123456'
     },
     {
         name: 'Rahul',
         role: 'staff',
-        email: 'rahul@email.com',
+        username: 'rahul',
         password: '123456'
     }
 ]
