@@ -2,7 +2,7 @@ import "./CSS/App.scss";
 import { useContext, useEffect, useState, lazy, Suspense } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Axios } from "./utils/axios";
-import { SegmentedControl, Button } from "@mantine/core";
+import { SegmentedControl } from "@mantine/core";
 import { AppStateContext } from "./AppState/appState.context";
 // import ProtectedRoutes from "./components/ProtectedRoutes";
 
@@ -66,17 +66,17 @@ function App({ history }) {
     history.push(value);
   }, [value, history]);
 
-  const logoutUser = async () => {
-    // const fetch = await Axios.request({
-    //   url: "/api/auth/logout",
-    //   method: "get",
-    // });
+  // const logoutUser = async () => {
+  //   // const fetch = await Axios.request({
+  //   //   url: "/api/auth/logout",
+  //   //   method: "get",
+  //   // });
 
-    // if (fetch.data.status === true && fetch.data.message === "logout user") {
-    localStorage.removeItem("priyam-store");
-    history.push("/login");
-    // }
-  };
+  //   // if (fetch.data.status === true && fetch.data.message === "logout user") {
+  //   localStorage.removeItem("priyam-store");
+  //   history.push("/login");
+  //   // }
+  // };
 
   console.log({ itemsList });
 
