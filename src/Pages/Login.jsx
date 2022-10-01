@@ -16,26 +16,30 @@ const Login = ({ history }) => {
     }
 
     const payload = { username: username.toLowerCase(), password };
-    const response = await axios.post("/api/auth/login", payload);
-    const status = response.data.status;
-    const message = response.data.message;
+    try {
+      const response = await axios.post("/api/auth/login", payload);
+      const status = response.data.status;
+      const message = response.data.message;
 
-    if (status === false && message === "invalid username") {
-      setErrorMsg("Invalid username");
-    } else if (status === false && message === "wrong password") {
-      setErrorMsg("wrong password");
-    } else if (status === true && message === "login successfull") {
-      setErrorMsg("login successfull");
-      localStorage.setItem(
-        "priyam-store",
-        JSON.stringify({
-          name: response.data.name,
-          username: username.toLowerCase(),
-          role: response.data.role,
-          authtoken: response.data.authtoken,
-        })
-      );
-      history.push("/billing");
+      if (status === false && message === "invalid username") {
+        setErrorMsg("Invalid username");
+      } else if (status === false && message === "wrong password") {
+        setErrorMsg("wrong password");
+      } else if (status === true && message === "login successfull") {
+        setErrorMsg("login successfull");
+        localStorage.setItem(
+          "priyam-store",
+          JSON.stringify({
+            name: response.data.name,
+            username: username.toLowerCase(),
+            role: response.data.role,
+            authtoken: response.data.authtoken,
+          })
+        );
+        history.push("/billing");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
