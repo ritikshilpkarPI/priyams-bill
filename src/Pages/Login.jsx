@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Axios } from "../utils/axios";
-// axios.defaults.withCredentials = true;
 
 const Login = ({ history }) => {
   const [username, setusername] = useState("");
