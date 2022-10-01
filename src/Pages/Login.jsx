@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { Axios } from "../utils/axios";
 // axios.defaults.withCredentials = true;
 
 const Login = ({ history }) => {
@@ -17,7 +17,14 @@ const Login = ({ history }) => {
 
     const payload = { username: username.toLowerCase(), password };
     try {
-      const response = await axios.post("/api/auth/login", payload);
+      const response = await Axios.request({
+        url: "/api/auth/login",
+        method: "post",
+        data: { ...payload },
+        headers: {
+          Cookie: "",
+        },
+      });
       const status = response.data.status;
       const message = response.data.message;
 
