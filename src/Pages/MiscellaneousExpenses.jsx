@@ -238,7 +238,9 @@ const AddExpense = ({ dateState, reloadState }) => {
               placeholder="Your name"
               style={InputStyle}
               value={name}
-              disabled={JSON.parse(localStorage.getItem("priyam-store"))?.name}
+              disabled={Boolean(
+                JSON.parse(localStorage.getItem("priyam-store"))
+              )}
               onChange={(e) => setName(e.target.value)}
             />
             <NumberInput
