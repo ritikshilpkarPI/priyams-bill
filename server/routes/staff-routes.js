@@ -1,5 +1,5 @@
 const Route = require('express').Router();
-const staffController = require('../controllers/staff.controller');
+const staffController = require('../controllers/staff-controller');
 
 Route.get('/staff', staffController.getStaff);
 Route.post('/staff', staffController.addStaff);

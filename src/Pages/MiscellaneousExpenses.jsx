@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Title,
   Text,
@@ -10,24 +10,12 @@ import {
   Image,
 } from "@mantine/core";
 import { Axios } from "../utils/axios";
+import { AppStateContext } from "../AppState/appState.context";
 
 const ShowOldExpenses = ({ dateState, reloadState }) => {
-  const [allData, setAllData] = useState();
-
-  // To get all expense data
-  useEffect(() => {
-    const getAllData = async () => {
-      const allExpense = await Axios.request({
-        url: "/api/expense",
-        method: "get",
-        headers: {
-          Cookie: "",
-        },
-      });
-      setAllData(allExpense.data.data);
-    };
-    getAllData();
-  }, [reloadState]);
+  // const [allData, setAllData] = useState(expenseList);
+  const {expenseItemsStateAndDispatch} = useContext(AppStateContext);
+  const [expenseList] = expenseItemsStateAndDispatch;
 
   return (
     <div
@@ -51,7 +39,7 @@ const ShowOldExpenses = ({ dateState, reloadState }) => {
           </tr>
         </thead>
         <tbody>
-          {allData?.map((element, index) => (
+          {expenseList?.map((element, index) => (
             <tr
               key={index}
               onClick={() => {
@@ -68,7 +56,7 @@ const ShowOldExpenses = ({ dateState, reloadState }) => {
       <div
         style={{
           marginTop: "10px",
-          display: allData ? "none" : "inline-block",
+          display: expenseList ? "none" : "inline-block",
         }}
       >
         <Loader size="sm" />
@@ -78,6 +66,8 @@ const ShowOldExpenses = ({ dateState, reloadState }) => {
 };
 
 const AddExpense = ({ dateState, reloadState }) => {
+  // const {expenseItemsStateAndDispatch} = useContext(AppStateContext);
+  // const [expenseList, expenseReducer] = expenseItemsStateAndDispatch;
   const InputStyle = { width: "100%", marginTop: "15px" };
   const newDate = new Date();
   const todayDate = `${newDate.getFullYear()}-${(

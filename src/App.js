@@ -32,8 +32,9 @@ const PAGES = {
 };
 
 function App({ history }) {
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
+  const { itemsStateAndDispatch, expenseItemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
+  const [expenseList, expenseReducer] = expenseItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
   const [value, setValue] = useState(Object.keys(PAGES)[1]);
   // const staffName = JSON.parse(localStorage.getItem("priyam-store"))?.name;
@@ -63,6 +64,20 @@ function App({ history }) {
   }, [dispatch]);
 
   useEffect(() => {
+    const getAllData = async () => {
+      const allExpense = await Axios.request({
+        url: "/api/expense",
+        method: "get",
+        headers: {
+          Cookie: "",
+        },
+      });
+      expenseReducer({ type: "EXPENSE_LIST", payload: allExpense.data.data });
+    };
+    getAllData();
+  }, [expenseReducer]);
+
+  useEffect(() => {
     history.push(value);
   }, [value, history]);
 
@@ -78,7 +93,7 @@ function App({ history }) {
   //   // }
   // };
 
-  console.log({ itemsList });
+  console.log({ itemsList, expenseList });
 
   return (
     <div className="App">
