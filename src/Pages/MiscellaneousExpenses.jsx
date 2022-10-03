@@ -89,7 +89,9 @@ const AddExpense = ({ dateState, reloadState }) => {
   ).slice(-2)}:${("0" + newDate.getSeconds()).slice(-2)}`;
 
   // All States
-  const [name, setName] = useState(JSON.parse(localStorage.getItem('priyam-store')).name);
+  const [name, setName] = useState(
+    JSON.parse(localStorage.getItem("priyam-store"))?.name || ""
+  );
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState();
   const [dataDate, setDataDate] = dateState;
@@ -236,8 +238,8 @@ const AddExpense = ({ dateState, reloadState }) => {
               placeholder="Your name"
               style={InputStyle}
               value={name}
-              // disabled
-              // onChange={(e) => setName(e.target.value)}
+              disabled={JSON.parse(localStorage.getItem("priyam-store"))?.name}
+              onChange={(e) => setName(e.target.value)}
             />
             <NumberInput
               placeholder="Amount"
