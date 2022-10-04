@@ -20,6 +20,10 @@ const ItemSchem = new mongoose.Schema(
     lastUpdateAt: { type: Date },
     slabPricing: { type: Array },
     minStockReached: { type: Boolean, default: false },
+    brandName: { type: String },
+    category: { type: String, enum: ["Rice", "Pulse", "Beverage", "Spice"] },
+    useByDate: { type: Array },
+    quantity: { type: String, enum: ["Kilo", "Grams", "Liter", "Mililiter", "Piece"] },
   },
   { strict: false, timestamps: true }
 );

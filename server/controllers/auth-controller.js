@@ -1,5 +1,5 @@
 // const user = require('../data/user');
-const Staff = require('../db-models/staff.model');
+const Staff = require('../db-models/staff-model');
 const jwt = require('jsonwebtoken');
 
 const loginUser = async (request, response) => {
