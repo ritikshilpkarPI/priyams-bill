@@ -28,7 +28,7 @@ let id = "";
 
 const OpenClose = () => {
     const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
-    const [expenseList] = expenseItemsStateAndDispatch;
+    const [expenseList, expenseDispatch] = expenseItemsStateAndDispatch;
     const currentDate = new Date().toJSON().split("T")[0];
 
     const [procedureValue, setProcedureValue] = useState("open");
@@ -38,6 +38,7 @@ const OpenClose = () => {
     const [closingNotes, setClosingNotes] = useState(INITIAL_VALS);
     const [openingCoin, setOpeningCoin] = useState(INITIAL_VALS);
     const [closingCoin, setClosingCoin] = useState(INITIAL_VALS);
+    const [allBills, setAllBills] = useState([]);
 
     const [selectedDate, setSelectedDate] = useState(currentDate);
     const [apiLoading, setApiLoading] = useState(false);
@@ -242,6 +243,36 @@ const OpenClose = () => {
         await getDayWiseProcedure();
         setApiLoading(false);
     };
+
+    useEffect(() => {
+        if (!expenseList.length) {
+            const getAllData = async () => {
+                const allExpense = await Axios.request({
+                    url: "/api/expense",
+                    method: "get",
+                    headers: {
+                        Cookie: "",
+                    },
+                });
+                expenseDispatch({ type: "UPDATE_EXPENSE_LIST", payload: allExpense.data.data });
+            };
+            getAllData();
+        }
+        // eslint-disable-next-line
+    }, [expenseDispatch]);
+
+    useEffect(() => {
+        (async () => {
+            const dayBill = await Axios.request({
+                url: "/api/billing/allDailyBills",
+                method: "get",
+                headers: {
+                    Cookie: "",
+                },
+            });
+            setAllBills(dayBill.data.message.allDailyBills);
+        })();
+    }, []);
 
     return (
         <div
@@ -465,7 +496,7 @@ const OpenClose = () => {
                 </thead>
                 <tbody className="body">
                     {dayWiseProcedures.map((item, idx) => {
-                        return <TableRow key={idx} item={item} idx={idx} expense={expenseList} />;
+                        return <TableRow key={idx} item={item} idx={idx} expense={expenseList} bill={allBills} />;
                     })}
                 </tbody>
             </Table>
@@ -512,7 +543,8 @@ const PopoverComponent = (sum, denominations) => {
         </Popover>
     );
 };
-const TableRow = ({ item, idx, expense }) => {
+
+const TableRow = ({ item, idx, expense, bill }) => {
     const {
         _id,
         openingNotes,
@@ -532,6 +564,16 @@ const TableRow = ({ item, idx, expense }) => {
     const filteredItem = expense.filter((element) => {
         if (element._id === item._id) {
             return element
+        }else{
+            return 0;
+        }
+    });
+
+    const filteredBill = bill.filter((element) => {
+        if (element._id === item._id) {
+            return element
+        }else{
+            return 0;
         }
     });
 
@@ -599,7 +641,7 @@ const TableRow = ({ item, idx, expense }) => {
                 </td>
                 <td>
                     <Text color="black" weight={500}>
-                        {closingSum - openingSum}
+                        {filteredBill.length ? filteredBill[0].totalAmountReturn : 0}
                     </Text>
                 </td>
             </tr>
