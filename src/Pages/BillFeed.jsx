@@ -1,6 +1,16 @@
-import { useState, useEffect } from "react";
-import { Axios } from "../utils/axios";
-import { Table, Text, Loader } from "@mantine/core";
+import {
+  useEffect,
+  useState,
+} from 'react';
+
+import {
+  Button,
+  Loader,
+  Table,
+  Text,
+} from '@mantine/core';
+
+import { Axios } from '../utils/axios';
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
@@ -110,6 +120,37 @@ const TableRow = ({ item, idx }) => {
   // function handleClick(id) {
   //   history.push(`/${id}`);
   // }
+  console.log({item});
+  const sendCustomerMessage = async (id) => {
+    await Axios.request({
+      url: "/api/billing/sendMessage",
+      method: "post",
+      data: {
+        id: id
+      },
+      headers: {
+        Cookie: "",
+      },
+    });
+  };
+  const sendBill = (customer) => {
+    let number = customer.customerPhone;
+    let link = `http://localhost:3000/showbill/${customer._id}`;
+    let message = `Hello, ${customer.customerName} this is your bill for purchasing in Priyam Stores. 
+      You can view your with the link below ${link}
+    `;
+    // Appending the phone number to the URL
+    let url = `https://web.whatsapp.com/send?phone=+91${number}`;
+
+    // Appending the message to the URL by encoding it
+    url += `&text=${encodeURI(message)}&app_absent=0`;
+    console.log({url});
+
+    // Open our newly created URL in a new tab to send the message
+    window.open(url);
+
+    sendCustomerMessage(customer._id)
+  };
   return (
     <>
       <tr
@@ -181,6 +222,15 @@ const TableRow = ({ item, idx }) => {
           <Text color="black" weight={500}>
             {new Date(item["createdAt"]).toLocaleString()}
           </Text>
+        </td>
+        <td>
+          <Button
+            color={item.messageSend ? "blue" : "green" }
+            disabled={item.customerPhone && item.customerName ? false : true}
+            onClick={() => sendBill(item)}
+          >
+            Send Bill
+          </Button>
         </td>
         {/* <td>
           <Button onClick={() => handleClick(item["_id"])}>Edit Bill</Button>

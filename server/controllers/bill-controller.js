@@ -253,10 +253,25 @@ const editBill = async (req, res) => {
   }
 };
 
+const sendMessage = async (req, res) => {
+  const id = req.body.id;
+    try { 
+        const bill = await Bill.findByIdAndUpdate(id, {
+          $set: {
+            messageSend: true
+          }
+        });
+        res.send({status: 200, message: bill})
+    } catch (error) {
+      res.send({error: error.message})
+    }
+}
+
 module.exports = {
   addNewBill,
   getAllBill,
   getDayWiseBills,
   getEditBill,
   editBill,
+  sendMessage
 };

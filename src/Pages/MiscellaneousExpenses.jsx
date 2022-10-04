@@ -1,7 +1,13 @@
-import React, { useState } from "react";
-import { Title } from "@mantine/core";
-import AddExpense from "../Components/Expenses/AddExpense";
-import ShowOldExpenses from "../Components/Expenses/ShowOldExpenses";
+import React, { useState } from 'react';
+
+import AddExpense from 'src/components/Expenses/AddExpense';
+import ShowOldExpenses from 'src/components/Expenses/ShowOldExpenses';
+
+import { Title } from '@mantine/core';
+
+// import AddExpense from '../Components/Expenses/AddExpense';
+// import ShowOldExpenses from '../Components/Expenses/ShowOldExpenses';
+
 
 const MiscellaneousExpenses = () => {
   const newDate = new Date();

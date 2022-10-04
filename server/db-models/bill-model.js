@@ -12,6 +12,7 @@ const BillSchema = new mongoose.Schema(
     totalNumberOfUniqueItems: { type: Number },
     totalNumberOfItems: { type: Number },
     totalBillProfit: { type: Number },
+    messageSend: { type: Boolean, default: false },
     items: [
       {
         itemDetail: {

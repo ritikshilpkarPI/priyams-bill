@@ -259,3 +259,20 @@ input[type="number"] {
     
   }
 }
+
+// Customer Bill styling
+.customer-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 95vh;
+  padding: 1rem 3rem;
+  .bill-header{
+    
+  }
+  .footer{
+    position: absolute;
+    bottom: 10px;
+  }
+}

@@ -1,7 +1,21 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input, Table, Text, Loader, TextInput } from "@mantine/core";
-import { AppStateContext } from "../AppState/appState.context";
-import { Axios } from "../utils/axios";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
+import {
+  Button,
+  Input,
+  Loader,
+  Table,
+  Text,
+  TextInput,
+} from '@mantine/core';
+
+import { AppStateContext } from '../AppState/appState.context';
+import { Axios } from '../utils/axios';
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -55,7 +69,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     dispatch({ type: "BILL_ITEMS_LIST", payload: bill });
     // eslint-disable-next-line
   }, [bill]);
-
+ 
   // To get items through billItems Reducer
   useEffect(() => {
     if (billItems.length === 0) {
@@ -68,20 +82,22 @@ const Billing = ({ billID = "", loaderDisplay }) => {
 
   useEffect(() => {
     // setLoaderDisplay(true);
-    (async () => {
-      const editBill = await Axios.request({
-        url: `/api/billing/getEditBill/${billID}`,
-        method: "get",
-        headers: {
-          Cookie: "",
-        },
-      });
-
-      const { items, ...billObject } = editBill.data.message;
-      const billObjectWithBillItems = { ...billObject, billItems: items };
-      setBill(billObjectWithBillItems);
-      // setLoaderDisplay(false);
-    })();
+    if(billID){
+      (async () => {
+        const editBill = await Axios.request({
+          url: `/api/billing/getEditBill/${billID}`,
+          method: "get",
+          headers: {
+            Cookie: "",
+          },
+        });
+  
+        const { items, ...billObject } = editBill.data.message;
+        const billObjectWithBillItems = { ...billObject, billItems: items };
+        setBill(billObjectWithBillItems);
+        // setLoaderDisplay(false);
+      })();
+    }
   }, [billID]);
 
   const addNewBill = async () => {
@@ -114,6 +130,20 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     setBill(BILL_INITIAL_STATE);
     itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
   };
+  // const sendBill = () => {
+  //   if(bill.customerName && bill.customerPhone){
+  //     let number = bill.customerPhone.replace(/[^\w\s]/gi, "").replace(/ /g, "");
+  //     let message = bill.customerName + " this is your bill for 100000" + bill
+  //     // Appending the phone number to the URL
+  //       let url = `https://web.whatsapp.com/send?phone=+91${number}`;
+  
+  //     // Appending the message to the URL by encoding it
+  //       url += `&text=${encodeURI(message)}&app_absent=0`;
+  
+  //     // Open our newly created URL in a new tab to send the message
+  //       window.open(url);
+  //   }
+  // }
 
   function handleChange(event) {
     const { name, value } = event.target;
