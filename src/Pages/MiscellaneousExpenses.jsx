@@ -150,7 +150,7 @@ const AddExpense = ({ dateState, reloadState }) => {
         setAmount();
         setButtonLoad(false);
         reloadState[1](!reloadState[0]);
-        expenseReducer({ type: "UPDATE_EXPENSE_LIST", payload: response.data.data });
+        expenseReducer[1]({ type: "UPDATE_EXPENSE_LIST", payload: response.data.data });
       } else {
         alert("Failed to save date!");
       }
