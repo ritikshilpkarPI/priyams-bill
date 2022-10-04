@@ -1,4 +1,4 @@
-import './App.scss';
+import './CSS/App.scss';
 
 import {
   lazy,
@@ -17,8 +17,9 @@ import {
 import { SegmentedControl } from '@mantine/core';
 
 import { AppStateContext } from './AppState/appState.context';
-import CustomerBill from './Pages/CustomerBill';
 import { Axios } from './utils/axios';
+
+// import ProtectedRoutes from "./components/ProtectedRoutes";
 
 const BillFeed = lazy(() => import("./Pages/BillFeed"));
 const Billing = lazy(() => import("./Pages/Billing"));
@@ -27,6 +28,7 @@ const EditBill = lazy(() => import("./Pages/EditBill"));
 const ItemsList = lazy(() => import("./Pages/ItemsList"));
 const OpenClose = lazy(() => import("./Pages/OpenClose"));
 const StockQuantity = lazy(() => import("./Pages/StockQuantity"));
+// const Login = lazy(() => import("./Pages/Login"));
 const MiscellaneousExpenses = lazy(() =>
   import("./Pages/MiscellaneousExpenses")
 );
@@ -50,6 +52,10 @@ function App({ history, location }) {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
   const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
+  // const staffName = JSON.parse(localStorage.getItem("priyam-store"))?.name;
+  // const staffUserName = JSON.parse(
+  //   localStorage.getItem("priyam-store")
+  // )?.username;
   useEffect(() => {
     (async () => {
       const fetch = await Axios.request({
@@ -76,6 +82,18 @@ function App({ history, location }) {
       console.log(true);
     }
   }, [value, history]);
+
+  // const logoutUser = async () => {
+  //   // const fetch = await Axios.request({
+  //   //   url: "/api/auth/logout",
+  //   //   method: "get",
+  //   // });
+
+  //   // if (fetch.data.status === true && fetch.data.message === "logout user") {
+  //   localStorage.removeItem("priyam-store");
+  //   history.push("/login");
+  //   // }
+  // };
 
   console.log({ itemsList });
 

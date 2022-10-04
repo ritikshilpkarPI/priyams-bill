@@ -5,6 +5,7 @@ import { Loader, Table, Text } from "@mantine/core";
 const StockQuantity = () => {
   const [minimumQuantityItem, setMinimumQuantityItem] = useState([]);
   const [loader, setLoader] = useState(false);
+
   useEffect(() => {
     setLoader(true);
     const getAllItemsFeed = async () => {

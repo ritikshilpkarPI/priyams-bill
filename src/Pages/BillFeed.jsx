@@ -15,6 +15,7 @@ import { Axios } from '../utils/axios';
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
   const [loader, setLoader] = useState(false);
+
   useEffect(() => {
     setLoader(true);
     const getBillFeed = async () => {
