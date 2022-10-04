@@ -18,6 +18,8 @@ import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import Papa from "papaparse";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
+// import ProtectedComponent from "src/components/ProtectedComponent";
+// import access from "../access.js";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -585,15 +587,15 @@ const ItemsList = () => {
       "itemSellingPricePerUnit",
       "itemStockQuantity",
       "minimumStockQuantity",
-      "isDeleted"
+      "isDeleted",
     ];
 
     for (let i = 0; i < items.length; i++) {
       if (items[i].slabPricing.length !== 0) {
-        if(max < items[i].slabPricing.length){
+        if (max < items[i].slabPricing.length) {
           max = items[i].slabPricing.length;
         }
-        let newObj = { ...items[i] }
+        let newObj = { ...items[i] };
         for (let j = 0; j < items[i].slabPricing.length; j++) {
           newObj[`tp${j + 1}`] = Number(items[i].slabPricing[j][1]);
           newObj[`sp${j + 1}`] = Number(items[i].slabPricing[j][2]);
@@ -602,9 +604,9 @@ const ItemsList = () => {
       } else {
         newArray.push(items[i]);
       }
-    };
+    }
 
-    for(let i = 1; i <= max; i++){
+    for (let i = 1; i <= max; i++) {
       fields.push(`tp${i}`);
       fields.push(`sp${i}`);
     }
@@ -893,9 +895,12 @@ const ItemsList = () => {
 
   return (
     <>
+      {/* <ProtectedComponent role={access.UPLOAD_CSV_BUTTON}> */}
       <FileButton onChange={setCsvFile}>
         {(props) => <Button {...props}>Upload CSV</Button>}
       </FileButton>
+      {/* </ProtectedComponent> */}
+      {/* <ProtectedComponent role={access.DOWNLOAD_CSV_BUTTON}> */}
       <Button
         disabled={!items.length}
         style={{ background: "#0da20a", margin: "5px", float: "right" }}
@@ -903,6 +908,7 @@ const ItemsList = () => {
       >
         Download CSV
       </Button>
+      {/* </ProtectedComponent> */}
       <Button onClick={() => setOpenScanner(!openScanner)}>
         Barcode Scanner
       </Button>

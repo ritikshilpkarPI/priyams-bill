@@ -1,9 +1,10 @@
-import "./App.scss";
+import "./CSS/App.scss";
 import { useContext, useEffect, useState, lazy, Suspense } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Axios } from "./utils/axios";
 import { SegmentedControl } from "@mantine/core";
 import { AppStateContext } from "./AppState/appState.context";
+// import ProtectedRoutes from "./components/ProtectedRoutes";
 
 const BillFeed = lazy(() => import("./Pages/BillFeed"));
 const Billing = lazy(() => import("./Pages/Billing"));
@@ -12,6 +13,7 @@ const EditBill = lazy(() => import("./Pages/EditBill"));
 const ItemsList = lazy(() => import("./Pages/ItemsList"));
 const OpenClose = lazy(() => import("./Pages/OpenClose"));
 const StockQuantity = lazy(() => import("./Pages/StockQuantity"));
+// const Login = lazy(() => import("./Pages/Login"));
 const MiscellaneousExpenses = lazy(() =>
   import("./Pages/MiscellaneousExpenses")
 );
@@ -34,6 +36,10 @@ function App({ history }) {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
   const [value, setValue] = useState(Object.keys(PAGES)[1]);
+  // const staffName = JSON.parse(localStorage.getItem("priyam-store"))?.name;
+  // const staffUserName = JSON.parse(
+  //   localStorage.getItem("priyam-store")
+  // )?.username;
 
   useEffect(() => {
     (async () => {
@@ -60,10 +66,23 @@ function App({ history }) {
     history.push(value);
   }, [value, history]);
 
+  // const logoutUser = async () => {
+  //   // const fetch = await Axios.request({
+  //   //   url: "/api/auth/logout",
+  //   //   method: "get",
+  //   // });
+
+  //   // if (fetch.data.status === true && fetch.data.message === "logout user") {
+  //   localStorage.removeItem("priyam-store");
+  //   history.push("/login");
+  //   // }
+  // };
+
   console.log({ itemsList });
 
   return (
     <div className="App">
+      {/* {localStorage.getItem('priyam-store') && */}
       <div className="nav-btn">
         <SegmentedControl
           value={value}
@@ -76,12 +95,23 @@ function App({ history }) {
             value: page,
           }))}
         />
+        {/* <Button className="logout-btn" onClick={logoutUser}>
+          Logout
+        </Button> */}
       </div>
+      {/* } */}
+
+      {/* {staffName && <h3 className="staffname">{staffName}</h3>}
+      {staffUserName && <p className="staffname">{staffUserName}</p>} */}
+
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
+          {/* <Route path="/login" exact component={Login} /> */}
+          {/* <ProtectedRoutes> */}
           <Route path="/openClose" component={OpenClose} />
           <Route
             path="/billing"
+            exact
             render={() => (
               <Billing
                 loaderDisplay={loaderDisplay}
@@ -89,12 +119,13 @@ function App({ history }) {
               />
             )}
           />
-          <Route path="/inventory" component={ItemsList} />
-          <Route path="/dayBill" component={DayWiseBillFeed} />
-          <Route path="/expenses" component={MiscellaneousExpenses} />
-          <Route path="/stockquantity" component={StockQuantity} />
-          <Route path="/allBill" component={BillFeed} />
-          <Route path="/:billingID" component={EditBill} />
+          <Route exact path="/inventory" component={ItemsList} />
+          <Route exact path="/dayBill" component={DayWiseBillFeed} />
+          <Route exact path="/expenses" component={MiscellaneousExpenses} />
+          <Route exact path="/stockquantity" component={StockQuantity} />
+          <Route exact path="/allBill" component={BillFeed} />
+          {/* </ProtectedRoutes> */}
+          <Route exact path="/:billingID" component={EditBill} />
         </Switch>
       </Suspense>
       {/* <QRComp /> */}

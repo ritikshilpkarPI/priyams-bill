@@ -5,6 +5,7 @@ import { Table, Text, Loader } from "@mantine/core";
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
   const [loader, setLoader] = useState(false);
+
   useEffect(() => {
     setLoader(true);
     const getBillFeed = async () => {

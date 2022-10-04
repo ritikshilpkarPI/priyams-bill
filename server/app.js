@@ -5,7 +5,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const serverless = require("serverless-http");
 const routers = require("./routes");
-const { data } = require("./data");
+const { data } = require("./data/data");
 
 const app = express();
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 const axiosInstance = axios;
 const source = axiosInstance.CancelToken.source();
+axiosInstance.defaults.withCredentials = true;
 
 if (
   process.env.ENV_NAME === "staging" ||
