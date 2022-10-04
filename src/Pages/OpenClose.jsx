@@ -641,7 +641,7 @@ const TableRow = ({ item, idx, expense, bill }) => {
                 </td>
                 <td>
                     <Text color="black" weight={500}>
-                        {filteredBill.length ? filteredBill[0].totalAmountReturn : 0}
+                        {filteredBill.length ? (filteredBill[0].totalCashPay - filteredBill[0].totalAmountReturn) : 0}
                     </Text>
                 </td>
             </tr>
