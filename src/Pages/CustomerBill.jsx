@@ -14,6 +14,8 @@ import {
   Title,
 } from '@mantine/core';
 
+const options = { weekday:"long", year:"numeric", month:"short", day:"numeric"}
+
 const CustomerBill = () => {
   const params = useParams();
   const id = params.customerBillId;
@@ -52,11 +54,11 @@ const CustomerBill = () => {
           </Group>
           <Group position="left" mt="md" mb="xs">
             <Title order={4}>Date Of Purchase:</Title>
-            <Text>{new Date(bill?.createdAt).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})}</Text>
+            <Text>{new Date(bill?.createdAt).toLocaleDateString('en-us', options)}</Text>
           </Group>
         </Group>
         <Title order={3}>Purchased Items</Title>
-        <div className='table-container'>
+        <div className="table-container">
         <Table sx={{ marginTop: "10px" }}>
           <thead>
             <tr>
