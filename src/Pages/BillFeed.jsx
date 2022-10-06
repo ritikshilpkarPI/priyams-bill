@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Axios } from "../utils/axios";
-import { Table, Text, Loader } from "@mantine/core";
+import { Table, Text, Loader, Collapse, Button } from "@mantine/core";
+import { useHistory } from "react-router-dom";
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
@@ -107,10 +108,10 @@ const BillFeed = ({ bills = [] }) => {
 
 const TableRow = ({ item, idx }) => {
   const [open, setOpen] = useState(false);
-  // let history = useHistory();
-  // function handleClick(id) {
-  //   history.push(`/${id}`);
-  // }
+  let history = useHistory();
+  function handleClick(id) {
+    history.push(`/${id}`);
+  }
   return (
     <>
       <tr
@@ -183,11 +184,11 @@ const TableRow = ({ item, idx }) => {
             {new Date(item["createdAt"]).toLocaleString()}
           </Text>
         </td>
-        {/* <td>
+        <td>
           <Button onClick={() => handleClick(item["_id"])}>Edit Bill</Button>
-        </td> */}
+        </td>
       </tr>
-      {/* <tr>
+      <tr>
         <Collapse in={open}>
           <Table striped highlightOnHover>
             <thead className="heading">
@@ -196,23 +197,27 @@ const TableRow = ({ item, idx }) => {
                   <Text>Sl. No.</Text>
                 </th>
                 <th>
-                  <Text>Item name</Text>
+                  <Text>Name</Text>
                 </th>
                 <th>
-                  <Text>Item Quantity</Text>
+                  <Text>Quantity</Text>
                 </th>
                 <th>
-                  <Text>Item Total Amount</Text>
+                  <Text>MRP</Text>
+                </th>
+                <th>
+                  <Text>Total Amount</Text>
                 </th>
               </tr>
             </thead>
             <tbody className="body">
               {item.items.map((itemObj, idx) => {
-                const {
-                  itemDetail,
-                  itemQuantityInBill,
-                  itemSellingPriceTotal,
-                } = itemObj;
+                // const itemDetail = (itemObj && itemObj.itemDetail) || {};
+                // const {
+                //   itemDetail,
+                //   itemQuantityInBill,
+                //   itemSellingPriceTotal,
+                // } = itemObj;
                 return (
                   <tr key={idx}>
                     <td>
@@ -222,17 +227,22 @@ const TableRow = ({ item, idx }) => {
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemDetail?.itemName || "Item name not found"}
+                        {itemObj?.itemDetail?.itemName || "Item name not found"}
                       </Text>
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemQuantityInBill}
+                        {itemObj?.itemQuantityInBill}
                       </Text>
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemSellingPriceTotal}
+                        {itemObj?.itemMRPtotal}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text color="black" weight={500}>
+                        {itemObj?.itemSellingPriceTotal}
                       </Text>
                     </td>
                   </tr>
@@ -241,7 +251,7 @@ const TableRow = ({ item, idx }) => {
             </tbody>
           </Table>
         </Collapse>
-      </tr> */}
+      </tr>
     </>
   );
 };
