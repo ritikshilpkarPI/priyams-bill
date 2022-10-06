@@ -80,7 +80,7 @@ function App({ history, location }) {
     if (!showBill) {
       history.push(value);
     }
-  }, [value, history]);
+  }, [value, history, showBill]);
 
   // const logoutUser = async () => {
   //   // const fetch = await Axios.request({

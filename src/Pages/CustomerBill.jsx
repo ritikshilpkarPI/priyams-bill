@@ -32,6 +32,7 @@ const CustomerBill = () => {
   };
   useEffect(() => {
     fetchBill();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const printBill = () => {
     window.print()
