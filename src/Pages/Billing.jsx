@@ -286,7 +286,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     useContext(AppStateContext);
   const [itemsList, itemsReducer] = itemsStateAndDispatch;
   const [billItems, dispatch] = billItemsStateAndDispatch;
-  const initialItemList = itemsList;
+  const initialItemList = [...itemsList];
   const [phoneError, setPhoneError] = useState("");
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
 
