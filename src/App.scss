@@ -1,8 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter&family=Poppins&display=swap");
-
-@import "./login";
-
 * {
   margin: 0;
   padding: 0;
@@ -255,80 +252,11 @@ input[type="number"] {
   align-items: center;
 }
 
-.heading {
-  input {
+.heading{
+  input{
     width: 20px;
     height: 20px;
+    
   }
 }
 
-// Customer Bill styling
-.customer-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 100%;
-  overflow-x: scroll;
-  padding: 1rem 3rem;
-  table {
-    tbody {
-      tr {
-        .data-cell {
-          padding: "0 6px";
-          white-space: nowrap;
-          width: 130px;
-          div {
-            border:none;
-            outline: none;
-            display: flex;
-            padding: 0.5rem;
-          }
-        }
-        .data-cell:nth-child(1) {
-          width: 60px;
-        }
-        .data-cell:nth-child(2) {
-          width: 350px;
-        }
-        .data-cell:nth-child(3) {
-          width: 180px;
-        }
-      }
-    }
-  }
-  .footer {
-    position: relative;
-  }
-}
-@media print {
-  .print-btn {
-    display: none;
-  }
-}
-// Logout button
-.logout-btn {
-  background-color: black;
-  margin-left: 12px;
-  cursor: pointer;
-  transition: 0.3s ease;
-  border: 2px solid black;
-
-  &:hover {
-    background-color: rgb(255, 255, 255);
-    color: black;
-    border: 2px solid black;
-  }
-}
-
-// Top Staff name and User name
-h3.staffname {
-  text-align: right;
-  margin: 20px 20px 0 0;
-}
-
-p.staffname {
-  text-align: right;
-  margin: 5px 20px 0 0;
-  color: gray;
-}

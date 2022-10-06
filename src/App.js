@@ -17,10 +17,10 @@ import {
 import { SegmentedControl } from '@mantine/core';
 
 import { AppStateContext } from './AppState/appState.context';
+import CustomerBill from './Pages/CustomerBill';
 import { Axios } from './utils/axios';
 
 // import ProtectedRoutes from "./components/ProtectedRoutes";
-
 const BillFeed = lazy(() => import("./Pages/BillFeed"));
 const Billing = lazy(() => import("./Pages/Billing"));
 const DayWiseBillFeed = lazy(() => import("./Pages/DailyBill"));
@@ -79,7 +79,6 @@ function App({ history, location }) {
   useEffect(() => {
     if (!showBill) {
       history.push(value);
-      console.log(true);
     }
   }, [value, history]);
 
@@ -101,9 +100,7 @@ function App({ history, location }) {
     <>
       <div className="App">
         <div className="nav-btn">
-          {showBill ? (
-            ''
-          ) : (
+          {!showBill ? (
             <SegmentedControl
               value={value}
               onChange={setValue}
@@ -115,6 +112,8 @@ function App({ history, location }) {
                 value: page,
               }))}
             />
+          ) : (
+            ""
           )}
         </div>
         <Suspense fallback={<div>Loading...</div>}>
@@ -137,7 +136,6 @@ function App({ history, location }) {
             <Route path="/inventory" component={ItemsList} />
             <Route path="/dayBill" component={DayWiseBillFeed} />
             <Route path="/expenses" component={MiscellaneousExpenses} />
-            <Route path="/stockquantity" component={StockQuantity} />
             <Route path="/stockquantity" component={StockQuantity} />
             <Route path="/allBill" component={BillFeed} />
             <Route path="/:billingID" component={EditBill} />

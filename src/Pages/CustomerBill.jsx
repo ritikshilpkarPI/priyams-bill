@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 import {
-  Card,
+  Button,
   Group,
   Table,
   Text,
@@ -18,6 +18,7 @@ const CustomerBill = () => {
   const params = useParams();
   const id = params.customerBillId;
   const [bill, setBill] = useState({});
+  const columnName = ["Sr. No.","Item Name","Oty.", "MRP", "Discount","Value"]
 
   const fetchBill = async () => {
     const customerBill = await axios.request({
@@ -27,15 +28,17 @@ const CustomerBill = () => {
         Cookie: "",
       },
     });
-    console.log({ customerBill });
     setBill(customerBill.data.message);
   };
   useEffect(() => {
     fetchBill();
   }, []);
-  console.log({ bill });
+  const printBill = () => {
+    window.print()
+  }
   return (
     <div className='customer-container'>
+      <Button className="print-btn" onClick={printBill}>Print Bill</Button>
       <Title order={1} className="bill-header">Priyam Store Invoice Bill</Title>
         <Group mt="md" mb="xs" position="center">
           <Group position="left" mt="md" mb="xs">
@@ -51,39 +54,40 @@ const CustomerBill = () => {
             <Text>{new Date(bill?.createdAt).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})}</Text>
           </Group>
         </Group>
-      <Card shadow="sm" p="lg" radius="md" withBorder>
         <Title order={3}>Purchased Items</Title>
         <Table sx={{ marginTop: "10px" }}>
           <thead>
             <tr>
-              <th>Sr. No.</th>
-              <th>Item Name</th>
-              <th>Oty.</th>
-              <th>MRP</th>
-              <th>Discount</th>
-              <th>Value</th>
+            {
+              columnName.map(column => {
+                return (
+                   <th>{column}</th>
+
+                )
+              })
+            }
             </tr>
           </thead>
           <tbody>
             {bill?.items?.map((item, index) => (
               <tr key={index}>
-                <td style={{ padding: "0 6px", width: "60px" }}>
-                  <Text style={{ padding: "0 6px", width: "60px" }}>{index + 1}</Text>
+                <td className='data-cell'>
+                  <Text style={{ padding: "0 6px" }}>{index + 1}</Text>
                 </td>
-                <td style={{ width: "350px", padding: "0 6px" }}>
-                  <Text style={{ border: "0px solid red", outline: "none", display: "flex", padding:"0.5rem" }}>{item?.itemDetail.itemName}</Text>
+                <td className='data-cell'>
+                  <Text >{item?.itemDetail.itemName}</Text>
                 </td>
-                <td style={{ padding: "0 6px", width: "180px" }}>
-                  <Text style={{ border: "0px solid red", outline: "none", display: "flex", padding:"0.5rem" }}>{item.itemQuantityInBill}</Text>
+                <td className='data-cell' >
+                  <Text >{item.itemQuantityInBill}</Text>
                 </td>
-                <td style={{ padding: "0 6px", width: "130px" }}>
-                  <Text  style={{ border: "0px solid red", outline: "none", display: "flex", padding:"0.5rem" }}>{item.itemMRPtotal}</Text>
+                <td className='data-cell' >
+                  <Text>{item.itemMRPtotal}</Text>
                 </td>
-                <td style={{ padding: "0 6px", width: "130px" }}>
-                  <Text  style={{ display: "flex", padding:"0.5rem"  }}>{item.itemDiscountTotal}</Text>
+                <td className='data-cell' >
+                  <Text >{item.itemDiscountTotal}</Text>
                 </td>
-                <td style={{ padding: "0 6px", width: "130px" }}>
-                  <Text  style={{ display: "flex", padding:"0.5rem"  }}>{item.itemSellingPriceTotal}</Text>
+                <td className='data-cell' >
+                  <Text>{item.itemSellingPriceTotal}</Text>
                 </td>
               </tr>
             ))}
@@ -164,7 +168,6 @@ const CustomerBill = () => {
           </tbody>
 
         </Table>
-      </Card>
       <footer className="footer">
         <Title>ThankYou for purchasing from priyam stores. </Title>
         <Text>Priyam Stores, Shop No-9, Building Name, Indrapuri Bhopal-462021 | Contact No - 0000-000-000 </Text>

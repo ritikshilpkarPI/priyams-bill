@@ -15,7 +15,6 @@ import { Axios } from '../utils/axios';
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
   const [loader, setLoader] = useState(false);
-
   useEffect(() => {
     setLoader(true);
     const getBillFeed = async () => {
@@ -121,7 +120,6 @@ const TableRow = ({ item, idx }) => {
   // function handleClick(id) {
   //   history.push(`/${id}`);
   // }
-  console.log({item});
   const sendCustomerMessage = async (id) => {
     await Axios.request({
       url: "/api/billing/sendMessage",
@@ -136,16 +134,15 @@ const TableRow = ({ item, idx }) => {
   };
   const sendBill = (customer) => {
     let number = customer.customerPhone;
-    let link = `http://localhost:3000/showbill/${customer._id}`;
-    let message = `Hello, ${customer.customerName} this is your bill for purchasing in Priyam Stores. 
-      You can view your with the link below ${link}
+    let link = `${process.env.REACT_APP_BASE_URL}showbill/${customer._id}`;
+    let message = `Hello, ${customer.customerName} this is your bill for purchasing in Priyam Stores. You can view your with the link below 
+     Link: ${link}
     `;
     // Appending the phone number to the URL
     let url = `https://web.whatsapp.com/send?phone=+91${number}`;
 
     // Appending the message to the URL by encoding it
     url += `&text=${encodeURI(message)}&app_absent=0`;
-    console.log({url});
 
     // Open our newly created URL in a new tab to send the message
     window.open(url);

@@ -216,6 +216,7 @@ const editBill = async (req, res) => {
     billObjectWithItems.items = await Promise.all(
       billObjectWithItems.items.map(async (billItem) => {
         const item = await Item.findById(billItem.itemDetail._id);
+        const orderQuantityInNumber = Number( billItem.itemQuantityInBill);
         const itemInPrevBilll = prevBill.items.find((itemObj) => {
           console.log({ itemObj });
           return itemObj.itemDetail._id === item._id;
@@ -254,18 +255,24 @@ const editBill = async (req, res) => {
 };
 
 const sendMessage = async (req, res) => {
-  const id = req.body.id;
-    try { 
-        const bill = await Bill.findByIdAndUpdate(id, {
-          $set: {
-            messageSend: true
-          }
-        });
-        res.send({status: 200, message: bill})
-    } catch (error) {
-      res.send({error: error.message})
-    }
-}
+  const billId = req.body.id;
+  try {
+    const bill = await Bill.findByIdAndUpdate(
+      billId,
+      {
+        $set: {
+          messageSend: true,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({ message: bill });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
   addNewBill,
@@ -273,5 +280,5 @@ module.exports = {
   getDayWiseBills,
   getEditBill,
   editBill,
-  sendMessage
+  sendMessage,
 };
