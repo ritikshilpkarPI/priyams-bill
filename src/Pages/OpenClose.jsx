@@ -7,8 +7,9 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Axios } from "../utils/axios";
+import { AppStateContext } from "../AppState/appState.context";
 
 const INITIAL_VALS = {
   twoThousand: 0,
@@ -26,6 +27,8 @@ let createdAtDate = "";
 let id = "";
 
 const OpenClose = () => {
+  const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
+  const [expenseList, expenseDispatch] = expenseItemsStateAndDispatch;
   const currentDate = new Date().toJSON().split("T")[0];
 
   const [procedureValue, setProcedureValue] = useState("open");
@@ -35,6 +38,7 @@ const OpenClose = () => {
   const [closingNotes, setClosingNotes] = useState(INITIAL_VALS);
   const [openingCoin, setOpeningCoin] = useState(INITIAL_VALS);
   const [closingCoin, setClosingCoin] = useState(INITIAL_VALS);
+  const [allBills, setAllBills] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [apiLoading, setApiLoading] = useState(false);
@@ -239,6 +243,39 @@ const OpenClose = () => {
     await getDayWiseProcedure();
     setApiLoading(false);
   };
+
+  useEffect(() => {
+    if (!expenseList.length) {
+      const getAllData = async () => {
+        const allExpense = await Axios.request({
+          url: "/api/expense",
+          method: "get",
+          headers: {
+            Cookie: "",
+          },
+        });
+        expenseDispatch({
+          type: "UPDATE_EXPENSE_LIST",
+          payload: allExpense.data.data,
+        });
+      };
+      getAllData();
+    }
+    // eslint-disable-next-line
+  }, [expenseDispatch]);
+
+  useEffect(() => {
+    (async () => {
+      const dayBill = await Axios.request({
+        url: "/api/billing/allDailyBills",
+        method: "get",
+        headers: {
+          Cookie: "",
+        },
+      });
+      setAllBills(dayBill.data.message.allDailyBills);
+    })();
+  }, []);
 
   return (
     <div
@@ -452,11 +489,28 @@ const OpenClose = () => {
             <th>
               <Text>Closing - Opening</Text>
             </th>
+            <th>
+              <Text>Expense</Text>
+            </th>
+            <th>
+              <Text>Cash - Amt Ret</Text>
+            </th>
+            <th>
+              <Text>Check</Text>
+            </th>
           </tr>
         </thead>
         <tbody className="body">
           {dayWiseProcedures.map((item, idx) => {
-            return <TableRow key={idx} item={item} idx={idx} />;
+            return (
+              <TableRow
+                key={idx}
+                item={item}
+                idx={idx}
+                expense={expenseList}
+                bill={allBills}
+              />
+            );
           })}
         </tbody>
       </Table>
@@ -503,7 +557,8 @@ const PopoverComponent = (sum, denominations) => {
     </Popover>
   );
 };
-const TableRow = ({ item, idx }) => {
+
+const TableRow = ({ item, idx, expense, bill }) => {
   const {
     _id,
     openingNotes,
@@ -519,6 +574,31 @@ const TableRow = ({ item, idx }) => {
     closingTime,
     closingSum,
   } = item;
+
+  const filteredItem = expense.filter((element) => {
+    if (element._id === item._id) {
+      return element;
+    } else {
+      return 0;
+    }
+  });
+
+  const filteredBill = bill.filter((element) => {
+    if (element._id === item._id) {
+      return element;
+    } else {
+      return 0;
+    }
+  });
+
+  const billBalanceCheck = (idx) => {
+    const closeOpen = closingSum - openingSum;
+    const expense = filteredItem.length ? filteredItem[idx].amount : 0;
+    const cashAmountReturn = filteredItem.length
+      ? filteredBill[idx].totalCashPay - filteredBill[idx].totalAmountReturn
+      : 0;
+    return closeOpen + expense - cashAmountReturn;
+  };
 
   return (
     <>
@@ -575,6 +655,23 @@ const TableRow = ({ item, idx }) => {
         <td>
           <Text color="black" weight={500}>
             {closingSum - openingSum}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {filteredItem.length ? filteredItem[0].amount : 0}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {filteredBill.length
+              ? filteredBill[0].totalCashPay - filteredBill[0].totalAmountReturn
+              : 0}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {filteredBill.length ? billBalanceCheck(0) : 0}
           </Text>
         </td>
       </tr>

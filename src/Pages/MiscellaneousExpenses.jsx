@@ -1,4 +1,5 @@
 import React, {
+  useContext,
   useEffect,
   useState,
 } from 'react';
@@ -14,25 +15,30 @@ import {
   Title,
 } from '@mantine/core';
 
+import { AppStateContext } from '../AppState/appState.context';
 import { Axios } from '../utils/axios';
 
 const ShowOldExpenses = ({ dateState, reloadState }) => {
-  const [allData, setAllData] = useState();
+  // const [allData, setAllData] = useState();
+  const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
+  const [expenseList, expenseDispatch] = expenseItemsStateAndDispatch;
 
-  // To get all expense data
   useEffect(() => {
-    const getAllData = async () => {
-      const allExpense = await Axios.request({
-        url: "/api/expense",
-        method: "get",
-        headers: {
-          Cookie: "",
-        },
-      });
-      setAllData(allExpense.data.data);
-    };
-    getAllData();
-  }, [reloadState]);
+    if (!expenseList.length) {
+      const getAllData = async () => {
+        const allExpense = await Axios.request({
+          url: "/api/expense",
+          method: "get",
+          headers: {
+            Cookie: "",
+          },
+        });
+        expenseDispatch({ type: "UPDATE_EXPENSE_LIST", payload: allExpense.data.data });
+      };
+      getAllData();
+    }
+    // eslint-disable-next-line
+  }, [expenseDispatch]);
 
   return (
     <div
@@ -56,7 +62,7 @@ const ShowOldExpenses = ({ dateState, reloadState }) => {
           </tr>
         </thead>
         <tbody>
-          {allData?.map((element, index) => (
+          {expenseList.map((element, index) => (
             <tr
               key={index}
               onClick={() => {
@@ -73,7 +79,7 @@ const ShowOldExpenses = ({ dateState, reloadState }) => {
       <div
         style={{
           marginTop: "10px",
-          display: allData ? "none" : "inline-block",
+          display: expenseList ? "none" : "inline-block",
         }}
       >
         <Loader size="sm" />
@@ -83,6 +89,8 @@ const ShowOldExpenses = ({ dateState, reloadState }) => {
 };
 
 const AddExpense = ({ dateState, reloadState }) => {
+  const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
+  const expenseReducer = expenseItemsStateAndDispatch;
   const InputStyle = { width: "100%", marginTop: "15px" };
   const newDate = new Date();
   const todayDate = `${newDate.getFullYear()}-${(
@@ -148,6 +156,7 @@ const AddExpense = ({ dateState, reloadState }) => {
         setAmount();
         setButtonLoad(false);
         reloadState[1](!reloadState[0]);
+        expenseReducer[1]({ type: "UPDATE_EXPENSE_LIST", payload: response.data.data });
       } else {
         alert("Failed to save date!");
       }
@@ -186,6 +195,7 @@ const AddExpense = ({ dateState, reloadState }) => {
       ) {
         setReload(!reload);
         reloadState[1](!reloadState[0]);
+        expenseReducer[1]({type: "UPDATE_EXPENSE_LIST", payload: response.data.data});
       } else {
         alert("Failed to delete expense!");
       }
@@ -216,6 +226,7 @@ const AddExpense = ({ dateState, reloadState }) => {
     ) {
       alert("Expense updated!");
       reloadState[1](!reloadState[0]);
+      expenseReducer({type: "UPDATE_EXPENSE_LIST", payload: response.data.data});
     } else {
       alert("Failed to update expense item!");
     }
