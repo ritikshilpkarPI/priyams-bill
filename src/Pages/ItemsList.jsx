@@ -12,6 +12,7 @@ import {
   Loader,
   Image,
   Textarea,
+  Select
 } from "@mantine/core";
 
 import { AppStateContext } from "../AppState/appState.context";
@@ -70,6 +71,19 @@ const ItemsList = () => {
     setItems([...filteredItems]);
   };
 
+  const handleSelectChange = (value, name) => {
+    setNewItemInput({ ...newItemInput, [name]: value });
+    const filteredItems = itemsList.filter(
+      (itemObj) =>
+        itemObj[name] &&
+        itemObj[name]
+          .toString()
+          .toLowerCase()
+          .includes(value.toString().toLowerCase())
+    );
+    setItems([...filteredItems]);
+  }
+
   const handleCheckboxFilter = (filterName) => {
     setFilterItems(filterName);
     if (filterName !== filterItems) {
@@ -108,6 +122,8 @@ const ItemsList = () => {
       itemObject = { ...newItemInput };
     }
 
+    console.log(itemObject);
+
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
@@ -131,6 +147,17 @@ const ItemsList = () => {
     setItemInput({
       ...itemInput,
       [name]: type === "number" ? Number(value) : value,
+    });
+    itemToBeUpdated[index][name] = value;
+  };
+
+  // const handleItemSelectChange = (e, itemInput, setItemInput, index) => {
+  const handleItemSelectChange = (value, name, index, itemInput, setItemInput) => {
+    // const { name, value, type } = e.target;
+    itemToBeUpdated = { [index]: { ...items[index] } };
+    setItemInput({
+      ...itemInput,
+      [name]: value,
     });
     itemToBeUpdated[index][name] = value;
   };
@@ -175,7 +202,29 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "160px" }}
+          style={{ width: "140px" }}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const BrandNameRow = ({ index }) => {
+    const name = "itemBrandName";
+    const [itemInput, setItemInput] = useState({
+      itemBrandName: items[index][name],
+    });
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={{ width: "140px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -202,6 +251,71 @@ const ItemsList = () => {
           itemsList={itemsList}
           dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemCategoryRow = ({ index }) => {
+    const name = "itemCategory";
+    const [itemInput, setItemInput] = useState({
+      itemCategory: items[index][name],
+    });
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={{ width: "100px" }}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemSelectChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemPerUnitQuantityRow = ({ index }) => {
+    const name = "itemPerUnitQuantity";
+    const [itemInput, setItemInput] = useState({
+      itemPerUnitQuantity: items[index][name],
+    });
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={{ width: "100px" }}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+  const ItemQuantityUnitRow = ({ index }) => {
+    const name = "quantityUnitName";
+    const [itemInput, setItemInput] = useState({
+      quantityUnitName: items[index][name],
+    });
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={{ width: "100px" }}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemSelectChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
           name={name}
@@ -823,8 +937,20 @@ const ItemsList = () => {
         <td style={{ padding: "10" }}>
           <BarcodeRow style={style} index={index} />
         </td>
+        <td style={{ padding: "10" }}>
+          <BrandNameRow style={style} index={index} />
+        </td>
         <td style={{ padding: "0" }}>
           <ItemNameRow style={style} index={index} />
+        </td>
+        <td style={{ padding: "0" }}>
+          <ItemCategoryRow style={style} index={index} />
+        </td>
+        <td style={{ padding: "0" }}>
+          <ItemPerUnitQuantityRow style={style} index={index} />
+        </td>
+        <td style={{ padding: "0" }}>
+          <ItemQuantityUnitRow style={style} index={index} />
         </td>
         <td style={{ padding: "0" }}>
           <ItemMRPRow style={style} index={index} />
@@ -886,7 +1012,7 @@ const ItemsList = () => {
         height={window.innerHeight - 250}
         itemCount={items.length}
         itemSize={itemRowSize}
-        width={1360}
+        width={1860}
       >
         {rows}
       </List>
@@ -894,7 +1020,7 @@ const ItemsList = () => {
   };
 
   return (
-    <>
+    <div className="inventory-items-container">
       {/* <ProtectedComponent role={access.UPLOAD_CSV_BUTTON}> */}
       <FileButton onChange={setCsvFile}>
         {(props) => <Button {...props}>Upload CSV</Button>}
@@ -927,7 +1053,7 @@ const ItemsList = () => {
           }}
         />
       )}
-      <div style={{ width: "1360px", margin: "30px auto 0" }}>
+      <div style={{ width: "1360px", margin: "30px 0" }}>
         <h4>Total Items : {items.length}</h4>
         <Table
           style={{ width: "auto" }}
@@ -949,6 +1075,18 @@ const ItemsList = () => {
                   />
                 </div>
               </th>
+              <th style={{ width: "400px", textAlign: "center" }}>
+                <Text>Brand Name</Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemBrandName"}
+                    label="Filter Brand Name"
+                    value="Filter Brand Name"
+                    onChange={() => handleCheckboxFilter("itemBrandName")}
+                  />
+                </div>
+              </th>
               <th style={{ width: "250px", textAlign: "center" }}>
                 <Text>
                   Item Name
@@ -963,6 +1101,57 @@ const ItemsList = () => {
                     label="Filter Name"
                     value="Filter Name"
                     onChange={() => handleCheckboxFilter("itemName")}
+                  />
+                </div>
+              </th>
+              <th style={{ width: "250px", textAlign: "center" }}>
+                <Text>
+                  Category
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemName"}
+                    label="Filter Name"
+                    value="Filter Name"
+                    onChange={() => handleCheckboxFilter("itemName")}
+                  />
+                </div>
+              </th>
+              <th style={{ width: "250px", textAlign: "center" }}>
+                <Text>
+                  Item Quantity
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "itemPerUnitQuantity"}
+                    label="Filter Item Quantity"
+                    value="Filter Item Quantity"
+                    onChange={() => handleCheckboxFilter("itemPerUnitQuantity")}
+                  />
+                </div>
+              </th>
+              <th style={{ width: "250px", textAlign: "center" }}>
+                <Text>
+                  Unit
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+                <div style={{ marginTop: "1rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={filterItems === "quantityUnitName"}
+                    label="Filter Item Unit"
+                    value="Filter Item Unit"
+                    onChange={() => handleCheckboxFilter("quantityUnitName")}
                   />
                 </div>
               </th>
@@ -1087,12 +1276,61 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
+                  style={{ width: "160px", border: "1px solid greeen" }}
+                  value={newItemInput["itemBrandName"]}
+                  onChange={handleNewItemInput}
+                  name="itemBrandName"
+                  type="text"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Input
                   type="text"
                   style={{ width: "250px" }}
                   value={newItemInput["itemName"]}
                   onChange={handleNewItemInput}
                   name="itemName"
                   autoComplete="off"
+                />
+              </td>
+              <td>
+                <Select
+                  style={{ width: "110px" }}
+                  placeholder="Category"
+                  data={[
+                    { value: 'Rice', label: 'Rice' },
+                    { value: 'Pulse', label: 'Pulse' },
+                    { value: 'Beverage', label: 'Beverage' },
+                    { value: 'Spice', label: 'Spice' },
+                  ]}
+                  value={newItemInput["itemCategory"]}
+                  onChange={(val) => handleSelectChange(val, "itemCategory")}
+                />
+              </td>
+              <td>
+                <Input
+                  style={{ width: "100px" }}
+                  value={newItemInput["itemPerUnitQuantity"]}
+                  onChange={handleNewItemInput}
+                  name="itemPerUnitQuantity"
+                  type="number"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Select
+                  style={{ width: "110px" }}
+                  placeholder="Pick one"
+                  data={[
+                    { value: 'kg', label: 'kg' },
+                    { value: 'grams', label: 'grams' },
+                    { value: 'liter', label: 'liter' },
+                    { value: 'ml', label: 'ml' },
+                    { value: 'Piece', label: 'Piece' },
+                  ]}
+                  value={newItemInput["quantityUnitName"]}
+                  onChange={(val) => handleSelectChange(val, "quantityUnitName")}
                 />
               </td>
               <td>
@@ -1175,7 +1413,7 @@ const ItemsList = () => {
           </tbody>
         </Table>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -1187,24 +1425,49 @@ const TableRow = ({
   name,
   index,
 }) => {
-  const Component = name === "itemName" ? Textarea : Input;
-  return (
-    <tr className="bill-row">
-      <td>
-        <Component
-          style={{ ...style }}
-          variant="unstyled"
-          value={itemInput[name]}
-          onChange={(e) =>
-            handleItemInputChange(e, itemInput, setItemInput, index)
-          }
-          name={name}
-          type="search"
-          autoComplete="off"
-        />
-      </td>
-    </tr>
-  );
+  if (name === "quantityUnitName" || name === "itemCategory") {
+    const data = name === "quantityUnitName" ? [
+      { value: 'kg', label: 'kg' },
+      { value: 'grams', label: 'grams' },
+      { value: 'liter', label: 'liter' },
+      { value: 'ml', label: 'ml' },
+      { value: 'Piece', label: 'Piece' },
+    ] : [
+      { value: 'Rice', label: 'Rice' },
+      { value: 'Pulse', label: 'Pulse' },
+      { value: 'Beverage', label: 'Beverage' },
+      { value: 'Spice', label: 'Spice' },
+    ];
+
+    return (
+      <Select
+        style={{ width: "110px" }}
+        placeholder="Pick one"
+        data={data}
+        value={itemInput[name]}
+        onChange={(val) => handleItemInputChange(val, name, index, itemInput, setItemInput)}
+      />
+    );
+  } else {
+    const Component = name === "itemName" ? Textarea : Input;
+    return (
+      <tr className="bill-row">
+        <td>
+          <Component
+            style={{ ...style }}
+            variant="unstyled"
+            value={itemInput[name]}
+            onChange={(e) =>
+              handleItemInputChange(e, itemInput, setItemInput, index)
+            }
+            name={name}
+            type="search"
+            autoComplete="off"
+          />
+        </td>
+      </tr>
+    );
+  }
 };
 
 const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
