@@ -5,7 +5,6 @@ import {
 
 import {
   Button,
-  Collapse,
   Loader,
   Table,
   Text,
@@ -231,11 +230,11 @@ const TableRow = ({ item, idx }) => {
             Send Bill
           </Button>
         </td>
-        {/* <td>
+         {/* <td>
           <Button onClick={() => handleClick(item["_id"])}>Edit Bill</Button>
-        </td>
+        </td> */}
       </tr>
-      <tr>
+      {/* <tr>
         <Collapse in={open}>
           <Table striped highlightOnHover>
             <thead className="heading">
@@ -298,7 +297,7 @@ const TableRow = ({ item, idx }) => {
             </tbody>
           </Table>
         </Collapse>
-      </tr>
+      </tr> */}
     </>
   );
 };
