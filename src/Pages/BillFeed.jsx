@@ -1,16 +1,7 @@
-import {
-  useEffect,
-  useState,
-} from 'react';
-
-import {
-  Button,
-  Loader,
-  Table,
-  Text,
-} from '@mantine/core';
-
-import { Axios } from '../utils/axios';
+import { useEffect, useState } from "react";
+import { Button, Loader, Table, Text, Collapse } from "@mantine/core";
+import { Axios } from "../utils/axios";
+import { useHistory } from "react-router-dom";
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
@@ -99,13 +90,16 @@ const BillFeed = ({ bills = [] }) => {
                 <Text align="center">Bill date</Text>
               </th>
               <th>
+                <Text align="center">Whatsapp Bill</Text>
+              </th>
+              <th>
                 <Text align="center">Items</Text>
               </th>
             </tr>
           </thead>
           <tbody className="body">
-            {allBills.map((item, idx) => {
-              return <TableRow key={`${item}$${idx}`} item={item} idx={idx} />;
+            {allBills.map((bill, idx) => {
+              return <TableRow key={`${bill}$${idx}`} bill={bill} idx={idx} />;
             })}
           </tbody>
         </Table>
@@ -114,30 +108,34 @@ const BillFeed = ({ bills = [] }) => {
   );
 };
 
-const TableRow = ({ item, idx }) => {
+const TableRow = ({ bill, idx }) => {
   const [open, setOpen] = useState(false);
-  // let history = useHistory();
-  // function handleClick(id) {
-  //   history.push(`/${id}`);
-  // }
+  let history = useHistory();
+  function handleClick(id) {
+    history.push(`/${id}`);
+  }
   const sendCustomerMessage = async (id) => {
     await Axios.request({
       url: "/api/billing/sendMessage",
       method: "post",
       data: {
-        id: id
+        id: id,
       },
       headers: {
         Cookie: "",
       },
     });
   };
-  const sendBill = (customer) => {
-    let number = customer.customerPhone;
-    let link = `${process.env.REACT_APP_BASE_URL}showbill/${customer._id}`;
-    let message = `Hello, ${customer.customerName} this is your bill for purchasing in Priyam Stores. You can view your with the link below 
-     Link: ${link}
-    `;
+  const sendBill = (bill) => {
+    const link = `${window.location.origin}/showbill/${bill._id}`;
+    const number = bill.customerPhone;
+    const message = `Hello, ${
+      bill.customerName
+    } this is your bill for your purchase at Priyam Stores on ${new Date(
+      bill.createdAt
+    ).toLocaleString()}.
+    Please view your bill by clicking on the link below:
+    ${link}`;
     // Appending the phone number to the URL
     let url = `https://web.whatsapp.com/send?phone=+91${number}`;
 
@@ -147,7 +145,7 @@ const TableRow = ({ item, idx }) => {
     // Open our newly created URL in a new tab to send the message
     window.open(url);
 
-    sendCustomerMessage(customer._id)
+    sendCustomerMessage(bill._id);
   };
   return (
     <>
@@ -163,78 +161,78 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["customerName"]}
+            {bill["customerName"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["customerPhone"]}
+            {bill["customerPhone"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billAmountTotal"].toFixed(2)}
+            {bill["billAmountTotal"].toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billMRPTotal"].toFixed(2)}
+            {bill["billMRPTotal"].toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["cashPay"]?.toFixed(2)}
+            {bill["cashPay"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["upiPay"]?.toFixed(2)}
+            {bill["upiPay"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["amountReturn"]?.toFixed(2)}
+            {bill["amountReturn"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["totalNumberOfItems"]}
+            {bill["totalNumberOfItems"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["totalNumberOfUniqueItems"]}
+            {bill["totalNumberOfUniqueItems"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billDiscountTotal"].toFixed(2)}
+            {bill["billDiscountTotal"].toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["totalBillProfit"].toFixed(2)}
+            {bill["totalBillProfit"].toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {new Date(item["createdAt"]).toLocaleString()}
+            {new Date(bill["createdAt"]).toLocaleString()}
           </Text>
         </td>
         <td>
           <Button
-            color={item.messageSend ? "blue" : "green" }
-            disabled={item.customerPhone && item.customerName ? false : true}
-            onClick={() => sendBill(item)}
+            color={bill.messageSend ? "blue" : "green"}
+            disabled={bill.customerPhone && bill.customerName ? false : true}
+            onClick={() => sendBill(bill)}
           >
             Send Bill
           </Button>
         </td>
-         {/* <td>
-          <Button onClick={() => handleClick(item["_id"])}>Edit Bill</Button>
-        </td> */}
+        <td>
+          <Button onClick={() => handleClick(bill["_id"])}>Edit Bill</Button>
+        </td>
       </tr>
-      {/* <tr>
+      <tr>
         <Collapse in={open}>
           <Table striped highlightOnHover>
             <thead className="heading">
@@ -257,13 +255,13 @@ const TableRow = ({ item, idx }) => {
               </tr>
             </thead>
             <tbody className="body">
-              {item.items.map((itemObj, idx) => {
-                // const itemDetail = (itemObj && itemObj.itemDetail) || {};
+              {bill.items.map((billItemObj, idx) => {
+                // const itemDetail = (billItemObj && billItemObj.itemDetail) || {};
                 // const {
                 //   itemDetail,
                 //   itemQuantityInBill,
                 //   itemSellingPriceTotal,
-                // } = itemObj;
+                // } = billItemObj;
                 return (
                   <tr key={idx}>
                     <td>
@@ -273,22 +271,23 @@ const TableRow = ({ item, idx }) => {
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemObj?.itemDetail?.itemName || "Item name not found"}
+                        {billItemObj?.itemDetail?.itemName ||
+                          "Item name not found"}
                       </Text>
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemObj?.itemQuantityInBill}
+                        {billItemObj?.itemQuantityInBill}
                       </Text>
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemObj?.itemMRPtotal}
+                        {billItemObj?.itemMRPtotal}
                       </Text>
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemObj?.itemSellingPriceTotal}
+                        {billItemObj?.itemSellingPriceTotal}
                       </Text>
                     </td>
                   </tr>
@@ -297,7 +296,7 @@ const TableRow = ({ item, idx }) => {
             </tbody>
           </Table>
         </Collapse>
-      </tr> */}
+      </tr>
     </>
   );
 };
