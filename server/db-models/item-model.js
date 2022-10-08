@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ItemSchem = new mongoose.Schema(
   {
-    itemName: { type: String, required: true },
+    itemName: { type: String, required: true, trim: true },
     itemBarcode: { type: Number },
     itemStockQuantity: { type: Number, default: 0 },
     minimumStockQuantity: { type: Number, default: 1 },
@@ -18,10 +18,27 @@ const ItemSchem = new mongoose.Schema(
     },
     createdAt: { type: Date, default: Date.now },
     lastUpdateAt: { type: Date },
-    isDeleted: {type: Boolean, default: false}
+    slabPricing: { type: Array },
+    minStockReached: { type: Boolean, default: false },
+    brandName: { type: String },
+    category: { type: String, enum: ["Rice", "Pulse", "Beverage", "Spice"] },
+    useByDate: { type: Array },
+    quantity: { type: String, enum: ["Kilo", "Grams", "Liter", "Mililiter", "Piece"] },
   },
   { strict: false, timestamps: true }
 );
 
+ItemSchem.pre(["save", "findOneAndUpdate"], function (next) {
+  const updatedObj = this._update;
+  if (updatedObj) {
+    updatedObj.minStockReached =
+      Number(updatedObj.minimumStockQuantity) >=
+      Number(updatedObj.itemStockQuantity);
+  } else {
+    this.minStockReached =
+      Number(this.minimumStockQuantity) >= Number(this.itemStockQuantity);
+  }
+  next();
+});
 const Item = mongoose.model("Item", ItemSchem);
 module.exports = { Item };

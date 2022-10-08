@@ -125,16 +125,15 @@ const addNewBill = async (req, res) => {
 const getAllBill = async (req, res) => {
   try {
     const allBill = await Bill.find()
-      .populate({
-        path: "items",
-        populate: {
-          path: "itemDetail",
-          model: "Item",
-        },
-      })
+      // .populate({
+      //   path: "items",
+      //   populate: {
+      //     path: "itemDetail",
+      //     model: "Item",
+      //   },
+      // })
       .sort({ createdAt: -1 })
       .limit(Number(req.query.size));
-    // .skip(Number(req.query.size) * Number(req.query.page))
     const billCount = await Bill.countDocuments();
     res.status(200).json({ message: { allBill, billCount } });
   } catch (error) {
@@ -212,34 +211,26 @@ const editBill = async (req, res) => {
     const { id, itemWithChanges } = req.body;
     const { billItems, ...billObject } = itemWithChanges;
     const billObjectWithItems = { ...billObject, items: billItems };
-    const prevBill = await Bill.findById(billObjectWithItems._id);
-    billObjectWithItems.items = await Promise.all(
-      billObjectWithItems.items.map(async (billItem) => {
-        const item = await Item.findById(billItem.itemDetail._id);
-        const itemInPrevBilll = prevBill.items.find((itemObj) => {
-          console.log({ itemObj });
-          return itemObj.itemDetail._id === item._id;
-        });
-        console.log({ billItem, item, itemInPrevBilll, prevBill });
-        if (itemInPrevBilll) {
-          item.itemStockQuantity += itemInPrevBilll.itemQuantityInBill;
-          item.itemStockQuantity -= billItem.itemQuantityInBill;
-          await item.save();
-        } else {
-          if (!item.itemStockQuantity) {
-            item.itemStockQuantity = 0;
-            await item.save();
-          } else {
-            item.itemStockQuantity -= orderQuantityInNumber;
-            await item.save();
-          }
-        }
-      })
-    );
-    console.log({ billObjectWithItems: JSON.stringify(billObjectWithItems) });
-    const changeBill = await Bill.findByIdAndUpdate(id, billObjectWithItems, {
-      new: true,
-    }).populate({
+    const { _id, createdAt, updatedAt, __v, ...billWithoutDbConstants } =
+      billObjectWithItems;
+    const prevBill = await Bill.findById(id).populate({
+      path: "items",
+      populate: {
+        path: "itemDetail",
+        model: "Item",
+      },
+    });
+    // console.log({
+    //   billWithoutDbConstants,
+    //   prevBill: JSON.stringify(prevBill.items),
+    // });
+    const changeBill = await Bill.findByIdAndUpdate(
+      id,
+      billWithoutDbConstants,
+      {
+        new: true,
+      }
+    ).populate({
       path: "items",
       populate: {
         path: "itemDetail",
@@ -253,10 +244,31 @@ const editBill = async (req, res) => {
   }
 };
 
+const sendMessage = async (req, res) => {
+  const billId = req.body.id;
+  try {
+    const bill = await Bill.findByIdAndUpdate(
+      billId,
+      {
+        $set: {
+          messageSend: true,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({ message: bill });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   addNewBill,
   getAllBill,
   getDayWiseBills,
   getEditBill,
   editBill,
+  sendMessage,
 };

@@ -2,9 +2,20 @@ const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
   try {
-    let items = await Item.find();
-    items = items.filter((item) => !item.isDeleted);
-    const itemCount = await Item.countDocuments();
+    const reqFilters = JSON.parse(req.query.filters);
+    let items = [];
+    if (reqFilters.isDeleted === false) {
+      items = await Item.find({}, null, { sort: { itemName: 1 } });
+      items = items.filter((item) => !item.isDeleted);
+    }
+    if (reqFilters.minStockOnly) {
+      items = await Item.find({
+        minStockReached: reqFilters.minStockOnly,
+        isDeleted: reqFilters.isDeleted,
+      }).sort({ itemStockQuantity: 1 });
+      items = items.filter((item) => !item.isDeleted);
+    }
+    const itemCount = items.length;
     res.status(200).json({ message: { items, itemCount } });
   } catch (error) {
     console.error(error);
@@ -21,6 +32,7 @@ const addItems = async (req, res) => {
     itemSellingPricePerUnit,
     itemStockQuantity,
     minimumStockQuantity,
+    slabPricing = [],
   } = req.body;
 
   try {
@@ -32,7 +44,9 @@ const addItems = async (req, res) => {
       !itemStockQuantity ||
       !minimumStockQuantity
     ) {
-      return res.status(200).json({ status: false, message: "not all fields" });
+      return res
+        .status(501)
+        .json({ status: false, message: "Fill all required fields" });
     }
 
     const newItem = await new Item({
@@ -46,10 +60,11 @@ const addItems = async (req, res) => {
         ((itemMRPperUnit - itemSellingPricePerUnit) / itemMRPperUnit) * 100,
       itemCostPricePerUnit,
       itemSellingPricePerUnit,
+      slabPricing,
     }).save();
     res.status(200).json({ status: true, message: newItem });
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ error });
   }
 };
 
@@ -77,9 +92,61 @@ const softDeleteItem = async (req, res) => {
   }
 };
 
+const addBulkItems = async (request, response) => {
+  try {
+    const csvData = request.body;
+    const slabPricingStart = csvData[0].findIndex((item) => item === "tp1");
+    const mrpprice = csvData[0].findIndex((item) => item === "itemMRPperUnit");
+    const itemname = csvData[0].findIndex((item) => item === "itemName");
+    const itembarcode = csvData[0].findIndex((item) => item === "itemBarcode");
+
+    if (slabPricingStart === -1)
+      return response
+        .status(503)
+        .json({
+          status: false,
+          message: "Uploaded sheet does not has tp1 column in its header",
+        });
+    await Promise.all(
+      csvData.map(async (item, index) => {
+        if (index !== 0) {
+          const slabPricesArray = [];
+          if (item[slabPricingStart]) {
+            let j = 0;
+            for (let i = slabPricingStart; i < item.length; i += 2) {
+              if (item[i]) {
+                slabPricesArray.push([
+                  Number(j),
+                  Number(item[i]),
+                  Number(item[i + 1]),
+                ]);
+                j++;
+              } else {
+                break;
+              }
+            }
+          }
+          await Item.findOneAndUpdate(
+            {
+              itemName: item[itemname],
+              itemBarcode: item[itembarcode],
+              itemMRPperUnit: item[mrpprice],
+            },
+            { slabPricing: slabPricesArray }
+          );
+        }
+      })
+    );
+    response.status(200).json({ status: true, message: "items added" });
+  } catch (error) {
+    response.status(500).json(error);
+  }
+};
+
 module.exports = {
   getItemsFeed,
   addItems,
   editItemById,
   softDeleteItem,
+  addBulkItems,
 };
