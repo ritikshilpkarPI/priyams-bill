@@ -1,21 +1,8 @@
-import {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-
-import {
-  Button,
-  Input,
-  Loader,
-  Table,
-  Text,
-  TextInput,
-} from '@mantine/core';
-
-import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
+import { useContext, useEffect, useRef, useState } from "react";
+import { Button, Input, Loader, Table, Text, TextInput } from "@mantine/core";
+import { AppStateContext } from "../AppState/appState.context";
+import { Axios } from "../utils/axios";
+import BillNarrator from "../components/BillNarrator";
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -464,6 +451,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
         >
           Save and Print
         </Button>
+        <BillNarrator billTotal={bill.billAmountTotal} />
       </div>
 
       <Table
