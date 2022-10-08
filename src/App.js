@@ -1,11 +1,26 @@
-import "./CSS/App.scss";
-import { useContext, useEffect, useState, lazy, Suspense } from "react";
-import { Route, Switch, withRouter } from "react-router-dom";
-import { Axios } from "./utils/axios";
-import { SegmentedControl } from "@mantine/core";
-import { AppStateContext } from "./AppState/appState.context";
-// import ProtectedRoutes from "./components/ProtectedRoutes";
+import './CSS/App.scss';
 
+import {
+  lazy,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+
+import {
+  Route,
+  Switch,
+  withRouter,
+} from 'react-router-dom';
+
+import { SegmentedControl } from '@mantine/core';
+
+import { AppStateContext } from './AppState/appState.context';
+import CustomerBill from './Pages/CustomerBill';
+import { Axios } from './utils/axios';
+
+// import ProtectedRoutes from "./components/ProtectedRoutes";
 const BillFeed = lazy(() => import("./Pages/BillFeed"));
 const Billing = lazy(() => import("./Pages/Billing"));
 const DayWiseBillFeed = lazy(() => import("./Pages/DailyBill"));
@@ -31,16 +46,16 @@ const PAGES = {
   expenses: "Expenses",
 };
 
-function App({ history }) {
+function App({ history, location }) {
+  const showBill = location.pathname.includes("showbill");
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
-  const [value, setValue] = useState(Object.keys(PAGES)[1]);
+  const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
   // const staffName = JSON.parse(localStorage.getItem("priyam-store"))?.name;
   // const staffUserName = JSON.parse(
   //   localStorage.getItem("priyam-store")
   // )?.username;
-
   useEffect(() => {
     (async () => {
       const fetch = await Axios.request({
@@ -61,10 +76,11 @@ function App({ history }) {
       setLoaderDisplay(false);
     })();
   }, [dispatch]);
-
   useEffect(() => {
-    history.push(value);
-  }, [value, history]);
+    if (!showBill) {
+      history.push(value);
+    }
+  }, [value, history, showBill]);
 
   // const logoutUser = async () => {
   //   // const fetch = await Axios.request({
@@ -81,55 +97,53 @@ function App({ history }) {
   console.log({ itemsList });
 
   return (
-    <div className="App">
-      {/* {localStorage.getItem('priyam-store') && */}
-      <div className="nav-btn">
-        <SegmentedControl
-          value={value}
-          onChange={setValue}
-          color="blue"
-          radius="md"
-          size="md"
-          data={Object.keys(PAGES).map((page) => ({
-            label: PAGES[page],
-            value: page,
-          }))}
-        />
-        {/* <Button className="logout-btn" onClick={logoutUser}>
-          Logout
-        </Button> */}
+    <>
+      <div className="App">
+        <div className="nav-btn">
+          {!showBill ? (
+            <SegmentedControl
+              value={value}
+              onChange={setValue}
+              color="blue"
+              radius="md"
+              size="md"
+              data={Object.keys(PAGES).map((page) => ({
+                label: PAGES[page],
+                value: page,
+              }))}
+            />
+          ) : (
+            ""
+          )}
+        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            <Route path="/openClose" component={OpenClose} />
+            <Route
+              exact
+              path="/showBill/:customerBillId"
+              component={CustomerBill}
+            />
+            <Route
+              path="/billing"
+              render={() => (
+                <Billing
+                  loaderDisplay={loaderDisplay}
+                  setLoaderDisplay={setLoaderDisplay}
+                />
+              )}
+            />
+            <Route path="/inventory" component={ItemsList} />
+            <Route path="/dayBill" component={DayWiseBillFeed} />
+            <Route path="/expenses" component={MiscellaneousExpenses} />
+            <Route path="/stockquantity" component={StockQuantity} />
+            <Route path="/allBill" component={BillFeed} />
+            <Route path="/:billingID" component={EditBill} />
+          </Switch>
+        </Suspense>
+        {/* <QRComp /> */}
       </div>
-      {/* } */}
-
-      {/* {staffName && <h3 className="staffname">{staffName}</h3>}
-      {staffUserName && <p className="staffname">{staffUserName}</p>} */}
-
-      <Suspense fallback={<div>Loading...</div>}>
-        <Switch>
-          {/* <Route path="/login" exact component={Login} /> */}
-          {/* <ProtectedRoutes> */}
-          <Route path="/openClose" component={OpenClose} />
-          <Route
-            path="/billing"
-            exact
-            render={() => (
-              <Billing
-                loaderDisplay={loaderDisplay}
-                setLoaderDisplay={setLoaderDisplay}
-              />
-            )}
-          />
-          <Route exact path="/inventory" component={ItemsList} />
-          <Route exact path="/dayBill" component={DayWiseBillFeed} />
-          <Route exact path="/expenses" component={MiscellaneousExpenses} />
-          <Route exact path="/stockquantity" component={StockQuantity} />
-          <Route exact path="/allBill" component={BillFeed} />
-          {/* </ProtectedRoutes> */}
-          <Route exact path="/:billingID" component={EditBill} />
-        </Switch>
-      </Suspense>
-      {/* <QRComp /> */}
-    </div>
+    </>
   );
 }
 
