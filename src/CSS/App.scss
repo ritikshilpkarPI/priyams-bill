@@ -269,14 +269,17 @@ input[type="number"] {
   align-items: center;
   flex-direction: column;
   height: 100%;
-  overflow-x: scroll;
+  overflow: hidden;
+  overflow-y: auto;
   padding: 1rem 3rem;
+  .print-btn{
+    margin-bottom: 1rem;
+  }
   table {
     tbody {
       tr {
         .data-cell {
           padding: "0 6px";
-          white-space: nowrap;
           width: 130px;
           div {
             border:none;
@@ -298,12 +301,54 @@ input[type="number"] {
     }
   }
   .footer {
-    position: relative;
+    position: absolute;
+    bottom: 10px;
   }
 }
 @media print {
   .print-btn {
     display: none;
+  }
+}
+@media screen and (max-width:900px) {
+  .customer-container {
+    padding: 1rem 1rem;
+    .table-container{
+      padding-left: 1rem;
+      padding-right: 1rem;
+      width: 100%;
+      overflow: scroll;
+      margin-bottom: 3rem;
+      table {
+        tbody {
+          tr {
+            .data-cell {
+              div {
+              }
+            }
+            .data-cell:nth-child(1) {
+              width: 60px;
+            }
+            .data-cell:nth-child(2) {
+              width: 350px;
+            }
+            .data-cell:nth-child(3) {
+              width: 180px;
+            }
+          }
+          .final-bill{
+            td{
+              .mantine-uawhwc{
+                font-size: 16px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .footer {
+      position: relative;
+    }
   }
 }
 // Logout button
