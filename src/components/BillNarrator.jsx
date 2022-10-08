@@ -31,19 +31,15 @@ const BillNarrator = ({ billTotal }) => {
     if ("speechSynthesis" in window) {
       const voices = getVoices();
       const pitch = 0;
-      const volume = 2;
-      speak("Preyamm stores me aapka bill,", voices[21], 8, pitch, volume);
+      const volume = 1;
+      speak("Preyamm stores me aapka bill,", voices[21], 5, pitch, volume);
       speak(`${billTotal} ,`, voices[21], 0.1, pitch, volume);
       speak(`or, ${billTotal},`, voices[0], 0.1, pitch, volume);
       speak("rupaye hai", voices[21], 5, pitch, volume);
     }
   }
 
-  return (
-    <div>
-      <Button onClick={narrateOnClick}>Voice Bill</Button>
-    </div>
-  );
+  return <Button onClick={narrateOnClick}>Voice Bill</Button>;
 };
 
 export default BillNarrator;
