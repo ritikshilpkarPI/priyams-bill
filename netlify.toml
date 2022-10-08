@@ -9,4 +9,3 @@
 
 [context.production.environment]
   ENV_NAME = "production"
-  NODE_ENV = "production"
