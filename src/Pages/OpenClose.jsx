@@ -10,6 +10,7 @@ import {
 import { useEffect, useState, useContext } from "react";
 import { Axios } from "../utils/axios";
 import { AppStateContext } from "../AppState/appState.context";
+import AddExpense from "../components/AddExpense";
 
 const INITIAL_VALS = {
   twoThousand: 0,
@@ -283,6 +284,7 @@ const OpenClose = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        border: "2px solid red",
       }}
     >
       <div
@@ -329,6 +331,7 @@ const OpenClose = () => {
           flexDirection: "column",
           alignItems: "center",
           gap: "30px",
+          border: "2px solid red",
         }}
       >
         <Text style={{ width: "100vw" }} size="xl" weight={700}>
@@ -337,20 +340,45 @@ const OpenClose = () => {
         <div
           style={{
             display: "flex",
-            width: "100vw",
-            alignItems: "center",
+            // width: "100vw",
+            // alignItems: "center",
+            flexDirection: "column",
             gap: "10px",
+            border: "2px solid blue",
           }}
         >
           <div
-            style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "24px",
+              border: "1px solid black",
+            }}
           >
-            <div style={{ display: "flex", gap: "10px", marginLeft: "80px" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                // marginLeft: "80px",
+                width: "70px",
+                marginTop: "40px",
+              }}
+            >
               {Object.values(indexArr).map((key, index) => (
-                <Title key={index} order={4} style={{ width: "70px" }}>
+                <Title
+                  key={index}
+                  order={6}
+                  style={{
+                    width: "70px",
+                    // border: "1px solid red",
+                    lineHeight: "26px",
+                  }}
+                >
                   {key}
                 </Title>
               ))}
+              <Title order={4}>Total</Title>
             </div>
             {["notes", "coins"].map((denominationForm, index) => (
               <div
@@ -361,74 +389,93 @@ const OpenClose = () => {
                   gap: "10px",
                 }}
               >
-                <Text style={{ margin: "0 10px" }} size="lg" weight={500}>
+                {/* <Text style={{ margin: "0 10px" }} size="lg" weight={500}>
                   {denominationForm === "notes" ? "Notes" : "Coins"}:
-                </Text>
-
-                {Object.keys(INITIAL_VALS).map((key, index) => (
-                  <div key={index}>
-                    {procedureValue === "open" ? (
-                      <NumberInput
-                        name={`${key}`}
-                        style={{ width: "70px" }}
-                        onChange={(value) =>
-                          denominationForm === "notes"
-                            ? handleOpeningNotesInput(value, key)
-                            : handleOpeningCoinInput(value, key)
-                        }
-                        value={
-                          denominationForm === "notes"
-                            ? openingNotes[key]
-                            : openingCoin[key]
-                        }
-                      />
-                    ) : (
-                      <NumberInput
-                        name={`${key}`}
-                        style={{ width: "70px" }}
-                        onChange={(value) =>
-                          denominationForm === "notes"
-                            ? handleClosingNotesInput(value, key)
-                            : handleClosingCoinInput(value, key)
-                        }
-                        value={
-                          denominationForm === "notes"
-                            ? closingNotes[key]
-                            : closingCoin[key]
-                        }
-                      />
-                    )}
-                  </div>
-                ))}
-                {procedureValue === "open" ? (
-                  <Text
-                    style={{ margin: "0 4px", width: "80px" }}
-                    size="lg"
-                    weight={500}
-                  >
-                    ={" "}
-                    {denominationForm === "notes"
-                      ? openingNotesSum
-                      : openingCoinsSum}
+                </Text> */}
+                <div>
+                  <Text style={{ height: "30px" }}>
+                    {denominationForm === "notes" ? "Notes" : "Coins"}
                   </Text>
-                ) : (
-                  <Text
-                    style={{ margin: "0 4px", width: "100px" }}
+                  {Object.keys(INITIAL_VALS).map((key, index) => (
+                    <div key={index}>
+                      {procedureValue === "open" ? (
+                        <NumberInput
+                          name={`${key}`}
+                          size="xs"
+                          style={{
+                            width: "70px",
+                            // border: "2px solid red",
+                            padding: "3px 0",
+                          }}
+                          onChange={(value) =>
+                            denominationForm === "notes"
+                              ? handleOpeningNotesInput(value, key)
+                              : handleOpeningCoinInput(value, key)
+                          }
+                          value={
+                            denominationForm === "notes"
+                              ? openingNotes[key]
+                              : openingCoin[key]
+                          }
+                        />
+                      ) : (
+                        <NumberInput
+                          name={`${key}`}
+                          size="xs"
+                          style={{
+                            width: "70px",
+                            // border: "2px solid red",
+                            padding: "3px 0",
+                          }}
+                          onChange={(value) =>
+                            denominationForm === "notes"
+                              ? handleClosingNotesInput(value, key)
+                              : handleClosingCoinInput(value, key)
+                          }
+                          value={
+                            denominationForm === "notes"
+                              ? closingNotes[key]
+                              : closingCoin[key]
+                          }
+                        />
+                      )}
+                    </div>
+                  ))}
+                  {/* <Text
+                    style={{ margin: "0 4px", width: "70px" }}
                     size="lg"
                     weight={500}
                   >
-                    ={" "}
-                    <span>
+                    4000
+                  </Text> */}
+                  {procedureValue === "open" ? (
+                    <Text
+                      style={{ margin: "0 4px", width: "70px" }}
+                      size="md"
+                      weight={500}
+                    >
                       {denominationForm === "notes"
-                        ? closingNotesSum
-                        : closingCoinsSum}
-                    </span>
-                  </Text>
-                )}
+                        ? openingNotesSum
+                        : openingCoinsSum}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{ margin: "0 4px", width: "70px" }}
+                      size="md"
+                      weight={500}
+                    >
+                      <span>
+                        {denominationForm === "notes"
+                          ? closingNotesSum
+                          : closingCoinsSum}
+                      </span>
+                    </Text>
+                  )}
+                </div>
               </div>
             ))}
           </div>
-          <div style={{ marginTop: "40px" }}>
+          <div style={{ marginTop: "20px", border: "1px solid red" }}>
             {procedureValue === "open" ? (
               <Text size="xl" weight={700}>
                 Total sum= {openingNotesSum + openingCoinsSum}
@@ -440,7 +487,7 @@ const OpenClose = () => {
             )}
             <Button
               loading={apiLoading}
-              style={{ width: "100px", marginTop: "30px" }}
+              style={{ width: "100px", marginTop: "5px" }}
               onClick={
                 procedureValue === "open"
                   ? addNewOpenProcedure
@@ -451,6 +498,7 @@ const OpenClose = () => {
             </Button>
           </div>
         </div>
+        <AddExpense />
       </div>
       <Title style={{ margin: "44px" }} order={2}>
         All Procedures

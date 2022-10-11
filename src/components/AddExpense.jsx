@@ -10,88 +10,14 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-
-import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 
-const ShowOldExpenses = ({ dateState, reloadState }) => {
-  // const [allData, setAllData] = useState();
-  const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
-  const [expenseList, expenseDispatch] = expenseItemsStateAndDispatch;
+import { AppStateContext } from "../AppState/appState.context";
 
-  useEffect(() => {
-    if (!expenseList.length) {
-      const getAllData = async () => {
-        const allExpense = await Axios.request({
-          url: "/api/expense",
-          method: "get",
-          headers: {
-            Cookie: "",
-          },
-        });
-        expenseDispatch({
-          type: "UPDATE_EXPENSE_LIST",
-          payload: allExpense.data.data,
-        });
-      };
-      getAllData();
-    }
-    // eslint-disable-next-line
-  }, [expenseDispatch]);
-
-  return (
-    <div
-      className="table-section"
-      style={{
-        marginLeft: "25px",
-        padding: "0 20px 20px",
-        borderRadius: "8px",
-        boxShadow: "0px 0px 15px -1px rgba(0,0,0,0.18)",
-        width: "500px",
-        border: "2px solid red",
-        display: "none",
-      }}
-    >
-      <Title order={4} sx={{ margin: "20px 0 20px" }}>
-        Previous Expenses
-      </Title>
-      <Table>
-        <thead>
-          <tr>
-            <th style={{ textAlign: "center" }}>Date</th>
-            <th style={{ textAlign: "center" }}>Total Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {expenseList.map((element, index) => (
-            <tr
-              key={index}
-              onClick={() => {
-                dateState[1](element._id);
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <td>{element._id}</td>
-              <td>{element.amount}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      <div
-        style={{
-          marginTop: "10px",
-          display: expenseList ? "none" : "inline-block",
-        }}
-      >
-        <Loader size="sm" />
-      </div>
-    </div>
-  );
-};
-
-const AddExpense = ({ dateState, reloadState }) => {
+const AddExpense = ({ reloadState }) => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
   const expenseReducer = expenseItemsStateAndDispatch;
+
   const InputStyle = { width: "100%", marginTop: "15px" };
   const newDate = new Date();
   const todayDate = `${newDate.getFullYear()}-${(
@@ -108,7 +34,7 @@ const AddExpense = ({ dateState, reloadState }) => {
   );
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState();
-  const [dataDate, setDataDate] = dateState;
+  const [dataDate, setDataDate] = useState();
   const [todayData, setTodayData] = useState();
   const [buttonLoad, setButtonLoad] = useState(false);
   const [reload, setReload] = useState(true);
@@ -254,7 +180,7 @@ const AddExpense = ({ dateState, reloadState }) => {
         style={{
           width: "900px",
           textAlign: "left",
-          padding: "15px 28px 2px",
+          padding: "15px 28px 20px",
         }}
       >
         <div>
@@ -384,29 +310,4 @@ const AddExpense = ({ dateState, reloadState }) => {
   );
 };
 
-const MiscellaneousExpenses = () => {
-  const newDate = new Date();
-  const todayDate = `${newDate.getFullYear()}-${(
-    "0" +
-    (newDate.getMonth() + 1)
-  ).slice(-2)}-${("0" + newDate.getDate()).slice(-2)}`;
-  const [reload, setreload] = useState(true);
-  const dateState = useState(todayDate);
-
-  return (
-    <div style={{ display: "inline-block" }}>
-      <Title order={3} sx={{ margin: "55px 0 10px" }}>
-        Miscellaneous Expenses
-      </Title>
-      <div
-        className="container"
-        style={{ display: "flex", padding: "30px", alignItems: "start" }}
-      >
-        <AddExpense dateState={dateState} reloadState={[reload, setreload]} />
-        <ShowOldExpenses dateState={dateState} reloadState={reload} />
-      </div>
-    </div>
-  );
-};
-
-export default MiscellaneousExpenses;
+export default AddExpense;
