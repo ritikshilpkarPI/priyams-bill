@@ -18,8 +18,8 @@ import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import Papa from "papaparse";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
-// import ProtectedComponent from "src/components/ProtectedComponent";
-// import access from "../access.js";
+import ProtectedComponent from "src/components/ProtectedComponent";
+import access from "../access.js";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -859,12 +859,11 @@ const ItemsList = () => {
     if (csvFile) {
       Papa.parse(csvFile, {
         complete: async function (results) {
-          const response = await Axios.request({
+          await Axios.request({
             url: "/api/inventory/addbulkitems",
             method: "post",
             data: results.data,
           });
-          console.log(response.data);
         },
       });
     }
@@ -895,11 +894,11 @@ const ItemsList = () => {
 
   return (
     <>
-      {/* <ProtectedComponent role={access.UPLOAD_CSV_BUTTON}> */}
-      <FileButton onChange={setCsvFile}>
-        {(props) => <Button {...props}>Upload CSV</Button>}
-      </FileButton>
-      {/* </ProtectedComponent> */}
+      <ProtectedComponent role={access.UPLOAD_CSV_BUTTON}>
+        <FileButton onChange={setCsvFile}>
+          {(props) => <Button {...props}>Upload CSV</Button>}
+        </FileButton>
+      </ProtectedComponent>
       {/* <ProtectedComponent role={access.DOWNLOAD_CSV_BUTTON}> */}
       <Button
         disabled={!items.length}

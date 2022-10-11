@@ -36,6 +36,7 @@ const Login = ({ history }) => {
         })
       );
       history.push("/billing");
+      // loaderDisplay(false);
     }
   };
 
