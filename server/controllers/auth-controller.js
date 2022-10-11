@@ -6,8 +6,6 @@ const loginUser = async (request, response) => {
   const { username, password } = request.body;
   let userData;
   try {
-    // Getting user input details
-
     // Our saved database user
     userData = await Staff.find({ username });
   } catch (error) {
