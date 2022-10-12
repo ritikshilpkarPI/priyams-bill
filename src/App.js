@@ -5,7 +5,7 @@ import { Axios } from "./utils/axios";
 import { SegmentedControl, Button } from "@mantine/core";
 import { AppStateContext } from "./AppState/appState.context";
 import CustomerBill from "./Pages/CustomerBill";
-import ProtectedRoutes from "./Components/ProtectedRoutes";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 
 // import ProtectedRoutes from "./components/ProtectedRoutes";
 const Home = lazy(() => import("./Pages/Home"));

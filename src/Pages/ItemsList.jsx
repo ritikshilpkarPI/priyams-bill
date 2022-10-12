@@ -18,7 +18,7 @@ import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import Papa from "papaparse";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
-import ProtectedComponent from "src/Components/ProtectedComponent";
+import ProtectedComponent from "src/components/ProtectedComponent";
 import access from "../access.js";
 
 const ITEM_INITIAL_INPUT = {
