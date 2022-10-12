@@ -101,12 +101,53 @@ const getItemTrendReport = async (startDate, lastDate, itemName) => {
   return itemTrendReport;
 };
 
+const getAllItemsTrendReport = async (startDate, lastDate) => {
+  const unwindedItemDetails = await Bill.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+      },
+    },
+    {
+      $unwind: "$items",
+    },
+    {
+      $group: {
+        _id: "$items.itemDetail",
+        createdAtDates: { $push: "$createdAt" },
+        items: { $push: "$items" },
+        totalDiscountSum: {
+          $sum: "$items.itemDiscountTotal",
+        },
+        totalAmountSum: {
+          $sum: "$items.itemSellingPriceTotal",
+        },
+        totalMRPsum: {
+          $sum: "$items.itemMRPtotal",
+        },
+        totalQuantitysum: {
+          $sum: "$items.itemQuantityInBill",
+        },
+      },
+    },
+  ]);
+  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails, {
+    path: "items",
+    populate: {
+      path: "itemDetail",
+      model: "Item",
+    },
+  });
+  return allItemsBillingTrend;
+};
+
 const filterFunctionsObj = {
   totalAmount: getTotalAmountReport,
   totalProfit: getTotalProfitReport,
   totalDiscount: getTotalDiscountReport,
   totalMRP: getTotalMRPReport,
   itemBillingTrend: getItemTrendReport,
+  allItemsBillingTrend: getAllItemsTrendReport,
 };
 
 const getDateRangeReport = async (req, res) => {

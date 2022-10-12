@@ -1,6 +1,14 @@
 import { DateRangePicker, TimeRangeInput } from "@mantine/dates";
 import { useState } from "react";
-import { Button, Input, Select, Table, Text, Title } from "@mantine/core";
+import {
+  Button,
+  Collapse,
+  Input,
+  Select,
+  Table,
+  Text,
+  Title,
+} from "@mantine/core";
 import { Axios } from "../utils/axios";
 
 const Report = () => {
@@ -17,6 +25,7 @@ const Report = () => {
     totalMRP: "totalMRPSum",
     totalDiscount: "totalDiscountSum",
     itemBillingTrend: "itemBillingTrend",
+    allItemsBillingTrend: "allItemsBillingTrend",
   };
 
   const findResult = async () => {
@@ -69,7 +78,8 @@ const Report = () => {
           label="Choose Filter"
           placeholder="Pick one"
           data={[
-            { value: "itemBillingTrend", label: "Item Billing Trend" },
+            { value: "itemBillingTrend", label: "Single Item Billing Trend" },
+            { value: "allItemsBillingTrend", label: "All Items Billing Trend" },
             { value: "totalProfit", label: "Total Profit sum" },
             { value: "totalAmount", label: "Total Amount sum" },
             { value: "totalMRP", label: "Total MRP sum" },
@@ -94,7 +104,10 @@ const Report = () => {
       <div>
         {reportResult?.report?.length !== 0 ? (
           JSON.stringify(reportResult) !== "{}" ? (
-            reportResult?.filterType !== "itemBillingTrend" ? (
+            reportResult?.filterType === "itemBillingTrend" ||
+            reportResult?.filterType === "allItemsBillingTrend" ? (
+              showBillTable(reportResult)
+            ) : (
               <>
                 <Title>
                   {reportResult?.report[0][filterNameObj[selectedFilter]]
@@ -107,8 +120,6 @@ const Report = () => {
                   ]?.toFixed(2)}
                 </Text>
               </>
-            ) : (
-              showBillTable(reportResult.report)
             )
           ) : (
             ""
@@ -138,34 +149,47 @@ const showBillTable = (reportResult) => (
           <Text align="center">Item MRP per unit</Text>
         </th>
         <th>
-          <Text align="center">Bill Total Amount</Text>
+          <Text align="center">Bill MRP Total Amount</Text>
         </th>
         <th>
-          <Text align="center">Bill MRP Total Amount</Text>
+          <Text align="center">Bill Total Amount</Text>
         </th>
         <th>
           <Text align="center">Bill Discount</Text>
         </th>
-        <th>
-          <Text align="center">Bill Profit</Text>
-        </th>
-        <th>
-          <Text align="center">Bill date</Text>
-        </th>
+        {reportResult.filterType === "itemBillingTrend" ? (
+          <th>
+            <Text align="center">Bill date</Text>
+          </th>
+        ) : (
+          <></>
+        )}
       </tr>
     </thead>
     <tbody className="body">
-      {reportResult?.map((item, idx) => {
-        return <TableRow key={`${item}$${idx}`} item={item} idx={idx} />;
+      {reportResult.report?.map((item, idx) => {
+        return (
+          <TableRow
+            key={`${item}$${idx}`}
+            itemBill={item}
+            idx={idx}
+            filterName={reportResult.filterType}
+          />
+        );
       })}
     </tbody>
   </Table>
 );
 
-const TableRow = ({ item, idx }) => {
+const TableRow = ({ itemBill, idx, filterName }) => {
+  const [open, setOpen] = useState(false);
   return (
     <>
-      <tr className="bill-row" style={{ cursor: "pointer" }}>
+      <tr
+        onClick={() => setOpen(!open)}
+        className="bill-row"
+        style={{ cursor: "pointer" }}
+      >
         <td>
           <Text color="black" weight={500}>
             {idx + 1}
@@ -173,45 +197,119 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item.items.itemDetail?.itemName}
+            {itemBill.items[0]?.itemDetail?.itemName ||
+              itemBill.items.itemDetail?.itemName}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["totalNumberOfItems"]}
+            {itemBill.items?.itemQuantityInBill || itemBill["totalQuantitysum"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item.items.itemDetail?.itemMRPperUnit}
+            {itemBill.items[0]?.itemDetail?.itemMRPperUnit ||
+              itemBill.items.itemDetail?.itemMRPperUnit}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billAmountTotal"].toFixed(2)}
+            {itemBill.items?.itemMRPtotal?.toFixed(2) ||
+              itemBill["totalMRPsum"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billMRPTotal"].toFixed(2)}
+            {itemBill.items?.itemSellingPriceTotal?.toFixed(2) ||
+              itemBill["totalAmountSum"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billDiscountTotal"].toFixed(2)}
+            {itemBill.items?.itemDiscountTotal?.toFixed(2) ||
+              itemBill["totalDiscountSum"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["totalBillProfit"].toFixed(2)}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {new Date(item["createdAt"]).toLocaleString()}
+            {filterName === "itemBillingTrend"
+              ? new Date(itemBill["createdAt"])?.toLocaleString()
+              : ""}
           </Text>
         </td>
       </tr>
+      {filterName !== "itemBillingTrend" ? (
+        <tr>
+          <Collapse in={open}>
+            <Table striped highlightOnHover>
+              <thead className="heading">
+                <tr>
+                  <th>
+                    <Text>Sl. No.</Text>
+                  </th>
+                  <th>
+                    <Text>Name</Text>
+                  </th>
+                  <th>
+                    <Text>Quantity</Text>
+                  </th>
+                  <th>
+                    <Text>MRP</Text>
+                  </th>
+                  <th>
+                    <Text>Total Amount</Text>
+                  </th>
+                  <th>
+                    <Text>Bill date</Text>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="body">
+                {itemBill.items?.map((item, idx) => {
+                  return (
+                    <tr key={idx}>
+                      <td>
+                        <Text color="black" weight={500}>
+                          {idx + 1}
+                        </Text>
+                      </td>
+                      <td>
+                        <Text color="black" weight={500}>
+                          {item?.itemDetail?.itemName}
+                        </Text>
+                      </td>
+                      <td>
+                        <Text color="black" weight={500}>
+                          {item?.itemQuantityInBill}
+                        </Text>
+                      </td>
+                      <td>
+                        <Text color="black" weight={500}>
+                          {item?.itemMRPtotal}
+                        </Text>
+                      </td>
+                      <td>
+                        <Text color="black" weight={500}>
+                          {item?.itemSellingPriceTotal?.toFixed(2)}
+                        </Text>
+                      </td>
+                      <td>
+                        <Text color="black" weight={500}>
+                          {new Date(
+                            itemBill?.createdAtDates[idx]
+                          )?.toLocaleString()}
+                        </Text>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </Collapse>
+        </tr>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
