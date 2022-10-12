@@ -151,8 +151,8 @@ function App({ history, location }) {
             <Route exact path="/stockquantity" component={StockQuantity} />
             <Route exact path="/allBill" component={BillFeed} />
             <Route exact path="/report" component={Report} />
+            <Route exact path="/edit/:billingID" component={EditBill} />
           </ProtectedRoutes>
-          <Route exact path="/edit/:billingID" component={EditBill} />
         </Switch>
       </Suspense>
       {/* <QRComp /> */}
