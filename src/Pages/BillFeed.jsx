@@ -112,7 +112,7 @@ const TableRow = ({ bill, idx }) => {
   const [open, setOpen] = useState(false);
   let history = useHistory();
   function handleClick(id) {
-    history.push(`/${id}`);
+    history.push(`/edit/${id}`);
   }
   const sendCustomerMessage = async (id) => {
     await Axios.request({
