@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Input, Loader, Table, Text, TextInput } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
-import BillNarrator from "../Components/BillNarrator";
+import BillNarrator from "../components/BillNarrator";
 
 const itemsByBarcode = {};
 const itemsByName = {};
