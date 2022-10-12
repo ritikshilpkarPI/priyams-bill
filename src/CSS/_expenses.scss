@@ -1,27 +1,61 @@
-form {
-  display: flex;
-  align-items: end;
-  //   border: 2px solid red;
+.add-expense-container {
+  width: 740px;
 
-  .mantine-NumberInput-root,
-  .mantine-TextInput-root,
-  .mantine-UnstyledButton-root {
-    margin-left: 12px;
+  form {
+    display: flex;
+    align-items: end;
+    margin-top: 15px;
+
+    .mantine-NumberInput-root,
+    .mantine-TextInput-root,
+    .mantine-UnstyledButton-root {
+      margin-left: 12px;
+    }
+
+    .mantine-gqmpge {
+      width: 260px;
+    }
+
+    .mantine-NumberInput-root {
+      width: 120px;
+    }
+
+    .mantine-UnstyledButton-root {
+      margin-left: 12px;
+    }
   }
 
-  .mantine-gqmpge {
-    width: 430px;
+  .mantine-1lpqoty {
+    line-height: 2.9;
   }
 
-  .mantine-NumberInput-root {
-    width: 120px;
-  }
+  #expenseTable {
+    tbody {
+      tr {
+        td {
+          padding: 2px 6px;
+        }
 
-  .mantine-UnstyledButton-root {
-    margin-left: 12px;
-  }
-}
+        td:nth-child(1) {
+          width: 120px;
+        }
 
-.mantine-1lpqoty {
-  line-height: 2.9;
+        td:nth-child(3) {
+          width: 110px;
+        }
+
+        td:nth-child(4) {
+          width: 80px;
+        }
+
+        td:nth-child(5) {
+          width: 40px;
+        }
+
+        td:nth-child(6) {
+          width: 40px;
+        }
+      }
+    }
+  }
 }

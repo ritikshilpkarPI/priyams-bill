@@ -92,7 +92,6 @@ const ShowOldExpenses = ({ dateState, reloadState }) => {
 const AddExpense = ({ dateState, reloadState }) => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
   const expenseReducer = expenseItemsStateAndDispatch;
-  const InputStyle = { width: "100%", marginTop: "15px" };
   const newDate = new Date();
   const todayDate = `${newDate.getFullYear()}-${(
     "0" +

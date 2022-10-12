@@ -40,6 +40,7 @@ const OpenClose = () => {
   const [openingCoin, setOpeningCoin] = useState(INITIAL_VALS);
   const [closingCoin, setClosingCoin] = useState(INITIAL_VALS);
   const [allBills, setAllBills] = useState([]);
+  const [expenseDataDate, setexpenseDataDate] = useState(currentDate);
 
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [apiLoading, setApiLoading] = useState(false);
@@ -284,7 +285,6 @@ const OpenClose = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        border: "2px solid red",
       }}
     >
       <div
@@ -325,26 +325,26 @@ const OpenClose = () => {
         />
       </div>
 
+      <Text id="mainTitle" style={{ width: "100vw" }} size="xl" weight={700}>
+        {procedureValue === "open" ? "Opening" : "Closing"}
+      </Text>
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "30px",
-          border: "2px solid red",
+          justifyContent: "space-between",
+          alignItems: "start",
+          gap: "20px",
+          marginTop: "20px"
         }}
       >
-        <Text style={{ width: "100vw" }} size="xl" weight={700}>
-          {procedureValue === "open" ? "Opening" : "Closing"}
-        </Text>
         <div
           style={{
             display: "flex",
-            // width: "100vw",
-            // alignItems: "center",
             flexDirection: "column",
             gap: "10px",
-            border: "2px solid blue",
+            boxShadow: "0px 0px 15px -1px rgba(0,0,0,0.12)",
+            borderRadius: "8px",
+            padding: "10px 15px 15px 5px"
           }}
         >
           <div
@@ -352,7 +352,6 @@ const OpenClose = () => {
               display: "flex",
               flexDirection: "row",
               gap: "24px",
-              border: "1px solid black",
             }}
           >
             <div
@@ -360,7 +359,6 @@ const OpenClose = () => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "10px",
-                // marginLeft: "80px",
                 width: "70px",
                 marginTop: "40px",
               }}
@@ -371,7 +369,6 @@ const OpenClose = () => {
                   order={6}
                   style={{
                     width: "70px",
-                    // border: "1px solid red",
                     lineHeight: "26px",
                   }}
                 >
@@ -389,9 +386,6 @@ const OpenClose = () => {
                   gap: "10px",
                 }}
               >
-                {/* <Text style={{ margin: "0 10px" }} size="lg" weight={500}>
-                  {denominationForm === "notes" ? "Notes" : "Coins"}:
-                </Text> */}
                 <div>
                   <Text style={{ height: "30px" }}>
                     {denominationForm === "notes" ? "Notes" : "Coins"}
@@ -404,7 +398,6 @@ const OpenClose = () => {
                           size="xs"
                           style={{
                             width: "70px",
-                            // border: "2px solid red",
                             padding: "3px 0",
                           }}
                           onChange={(value) =>
@@ -424,7 +417,6 @@ const OpenClose = () => {
                           size="xs"
                           style={{
                             width: "70px",
-                            // border: "2px solid red",
                             padding: "3px 0",
                           }}
                           onChange={(value) =>
@@ -441,13 +433,6 @@ const OpenClose = () => {
                       )}
                     </div>
                   ))}
-                  {/* <Text
-                    style={{ margin: "0 4px", width: "70px" }}
-                    size="lg"
-                    weight={500}
-                  >
-                    4000
-                  </Text> */}
                   {procedureValue === "open" ? (
                     <Text
                       style={{ margin: "0 4px", width: "70px" }}
@@ -475,7 +460,7 @@ const OpenClose = () => {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: "20px", border: "1px solid red" }}>
+          <div style={{ marginTop: "20px" }}>
             {procedureValue === "open" ? (
               <Text size="xl" weight={700}>
                 Total sum= {openingNotesSum + openingCoinsSum}
@@ -498,7 +483,7 @@ const OpenClose = () => {
             </Button>
           </div>
         </div>
-        <AddExpense />
+        <AddExpense date={expenseDataDate} />
       </div>
       <Title style={{ margin: "44px" }} order={2}>
         All Procedures
@@ -557,6 +542,7 @@ const OpenClose = () => {
                 idx={idx}
                 expense={expenseList}
                 bill={allBills}
+                expenseDate={setexpenseDataDate}
               />
             );
           })}
@@ -606,7 +592,7 @@ const PopoverComponent = (sum, denominations) => {
   );
 };
 
-const TableRow = ({ item, idx, expense, bill }) => {
+const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
   const {
     _id,
     openingNotes,
@@ -647,6 +633,10 @@ const TableRow = ({ item, idx, expense, bill }) => {
       : 0;
     return closeOpen + expense - cashAmountReturn;
   };
+
+  const showExpenseOf = () => {
+    expenseDate(item._id);
+  }
 
   return (
     <>
@@ -706,9 +696,9 @@ const TableRow = ({ item, idx, expense, bill }) => {
           </Text>
         </td>
         <td>
-          <Text color="black" weight={500}>
+          <a href="#mainTitle" color="black" weight={500} onClick={showExpenseOf} style={{ textDecoration: "none", color: "black", fontWeight: 600 }}>
             {filteredItem.length ? filteredItem[0].amount : 0}
-          </Text>
+          </a>
         </td>
         <td>
           <Text color="black" weight={500}>

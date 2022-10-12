@@ -17,9 +17,6 @@ const ItemsList = lazy(() => import("./Pages/ItemsList"));
 const OpenClose = lazy(() => import("./Pages/OpenClose"));
 const StockQuantity = lazy(() => import("./Pages/StockQuantity"));
 const Login = lazy(() => import("./Pages/Login"));
-const MiscellaneousExpenses = lazy(() =>
-  import("./Pages/MiscellaneousExpenses")
-);
 
 // import { QRComp } from "./qr";
 
@@ -31,7 +28,6 @@ const PAGES = {
   dayBill: "Day Bills",
   openClose: "Open Close",
   stockquantity: "Shortage Items",
-  expenses: "Expenses",
 };
 
 function App({ history, location }) {
@@ -44,10 +40,6 @@ function App({ history, location }) {
   const staffUserName = JSON.parse(
     localStorage.getItem("priyam-store")
   )?.username;
-
-  // useEffect(() => {
-  //   setValue((prev) => prev);
-  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -118,12 +110,6 @@ function App({ history, location }) {
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
           <Route path="/login" exact component={Login} />
-          {/* <Route
-            path="/login"
-            exact
-            render={() => <Login reload={setValue} />}
-            // render={<Login />}
-          /> */}
           <Route
             exact
             path="/showBill/:customerBillId"
@@ -145,7 +131,6 @@ function App({ history, location }) {
             <Route exact path="/inventory" component={ItemsList} />
             <Route exact path="/" component={Home} />
             <Route exact path="/dayBill" component={DayWiseBillFeed} />
-            <Route exact path="/expenses" component={MiscellaneousExpenses} />
             <Route exact path="/stockquantity" component={StockQuantity} />
             <Route exact path="/allBill" component={BillFeed} />
           </ProtectedRoutes>

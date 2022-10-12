@@ -8,17 +8,15 @@ import {
   Table,
   Text,
   TextInput,
-  Title,
 } from "@mantine/core";
 import { Axios } from "../utils/axios";
 
 import { AppStateContext } from "../AppState/appState.context";
 
-const AddExpense = ({ reloadState }) => {
+const AddExpense = ({ date }) => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
   const expenseReducer = expenseItemsStateAndDispatch;
 
-  const InputStyle = { width: "100%", marginTop: "15px" };
   const newDate = new Date();
   const todayDate = `${newDate.getFullYear()}-${(
     "0" +
@@ -34,10 +32,15 @@ const AddExpense = ({ reloadState }) => {
   );
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState();
-  const [dataDate, setDataDate] = useState();
+  const [dataDate, setDataDate] = useState(date);
   const [todayData, setTodayData] = useState();
   const [buttonLoad, setButtonLoad] = useState(false);
   const [reload, setReload] = useState(true);
+
+  useEffect(() => {
+    setDataDate(date);
+  }, [date])
+
 
   // Convert time
   function timeConvert(time) {
@@ -78,11 +81,10 @@ const AddExpense = ({ reloadState }) => {
         response.data.status === true &&
         response.data.message === "expense added"
       ) {
-        setName("");
         setDescription("");
         setAmount();
         setButtonLoad(false);
-        reloadState[1](!reloadState[0]);
+        setDataDate(todayDate);
         expenseReducer[1]({
           type: "UPDATE_EXPENSE_LIST",
           payload: response.data.data,
@@ -124,7 +126,6 @@ const AddExpense = ({ reloadState }) => {
         response.data.message === "expense deleted"
       ) {
         setReload(!reload);
-        reloadState[1](!reloadState[0]);
         expenseReducer[1]({
           type: "UPDATE_EXPENSE_LIST",
           payload: response.data.data,
@@ -158,8 +159,7 @@ const AddExpense = ({ reloadState }) => {
       response.data.message === "expense updated"
     ) {
       alert("Expense updated!");
-      reloadState[1](!reloadState[0]);
-      expenseReducer({
+      expenseReducer[1]({
         type: "UPDATE_EXPENSE_LIST",
         payload: response.data.data,
       });
@@ -171,9 +171,10 @@ const AddExpense = ({ reloadState }) => {
   return (
     <div
       style={{
-        boxShadow: "0px 0px 15px -1px rgba(0,0,0,0.18)",
-        borderRadius: "8px",
+        boxShadow: "0px 0px 15px -1px rgba(0,0,0,0.12)",
+        borderRadius: "8px"
       }}
+      className="add-expense-container"
     >
       <div
         className="input-section"
@@ -193,9 +194,6 @@ const AddExpense = ({ reloadState }) => {
             onChange={(e) => setDataDate(e.target.value)}
           />
         </div>
-        <Title order={4} style={{ marginTop: "15px" }}>
-          Add Expenses
-        </Title>
         <form onSubmit={addExpense}>
           <TextInput
             label="Your name"
@@ -225,15 +223,14 @@ const AddExpense = ({ reloadState }) => {
       <div
         style={{
           borderRadius: "8px",
-          // boxShadow: "0px 0px 15px -1px rgba(0,0,0,0.18)",
-          padding: "0 20px 20px",
+          padding: "0 20px 5px",
           marginTop: "0px",
         }}
       >
-        <Table sx={{ marginTop: "10px" }}>
+        <Table sx={{ marginTop: "10px" }} id="expenseTable">
           <thead>
             <tr>
-              <th style={{ textAlign: "center" }}>Time</th>
+              <th>Time</th>
               <th>Description</th>
               <th>User</th>
               <th>Amount</th>
@@ -242,8 +239,8 @@ const AddExpense = ({ reloadState }) => {
           <tbody>
             {todayData?.map((element, index) => (
               <tr key={index}>
-                <td style={{ padding: "0 6px" }}>{element.time}</td>
-                <td style={{ width: "350px", padding: "0 6px" }}>
+                <td>{element.time}</td>
+                <td>
                   <TextInput
                     style={{ border: "0px solid red", outline: "none" }}
                     variant="unstyled"
@@ -258,7 +255,7 @@ const AddExpense = ({ reloadState }) => {
                     }
                   />
                 </td>
-                <td style={{ padding: "0 6px", width: "180px" }}>
+                <td>
                   <TextInput
                     variant="unstyled"
                     value={element.user}
@@ -267,7 +264,7 @@ const AddExpense = ({ reloadState }) => {
                     }
                   />
                 </td>
-                <td style={{ padding: "0 6px", width: "130px" }}>
+                <td>
                   <NumberInput
                     style={{ textAlign: "center" }}
                     variant="unstyled"
@@ -277,14 +274,14 @@ const AddExpense = ({ reloadState }) => {
                     }
                   />
                 </td>
-                <td style={{ display: dataDate === todayDate ? "" : "none" }}>
+                <td style={{ display: dataDate === todayDate ? "" : "none"}}>
                   <Image
                     style={{ padding: "7px", width: "26px", cursor: "pointer" }}
                     onClick={() => deleteExpense(element._id)}
                     src="images/cross.svg"
                   />
                 </td>
-                <td style={{ display: dataDate === todayDate ? "" : "none" }}>
+                <td style={{ display: dataDate === todayDate ? "" : "none"}}>
                   <Image
                     style={{ padding: "6px", width: "27px", cursor: "pointer" }}
                     onClick={() => updateExpense(index)}
