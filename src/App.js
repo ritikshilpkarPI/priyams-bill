@@ -16,6 +16,7 @@ const EditBill = lazy(() => import("./Pages/EditBill"));
 const ItemsList = lazy(() => import("./Pages/ItemsList"));
 const OpenClose = lazy(() => import("./Pages/OpenClose"));
 const StockQuantity = lazy(() => import("./Pages/StockQuantity"));
+const Report = lazy(() => import("./Pages/Report"));
 const Login = lazy(() => import("./Pages/Login"));
 const MiscellaneousExpenses = lazy(() =>
   import("./Pages/MiscellaneousExpenses")
@@ -32,6 +33,7 @@ const PAGES = {
   openClose: "Open Close",
   stockquantity: "Shortage Items",
   expenses: "Expenses",
+  report: "Report",
 };
 
 function App({ history, location }) {
@@ -148,6 +150,7 @@ function App({ history, location }) {
             <Route exact path="/expenses" component={MiscellaneousExpenses} />
             <Route exact path="/stockquantity" component={StockQuantity} />
             <Route exact path="/allBill" component={BillFeed} />
+            <Route exact path="/report" component={Report} />
           </ProtectedRoutes>
           <Route exact path="/edit/:billingID" component={EditBill} />
         </Switch>
