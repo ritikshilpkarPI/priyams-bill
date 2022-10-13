@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import {
   Button,
   Image,
@@ -10,7 +9,6 @@ import {
   TextInput,
 } from "@mantine/core";
 import { Axios } from "../utils/axios";
-
 import { AppStateContext } from "../AppState/appState.context";
 
 const AddExpense = ({ date }) => {
@@ -39,8 +37,7 @@ const AddExpense = ({ date }) => {
 
   useEffect(() => {
     setDataDate(date);
-  }, [date])
-
+  }, [date]);
 
   // Convert time
   function timeConvert(time) {
@@ -172,7 +169,7 @@ const AddExpense = ({ date }) => {
     <div
       style={{
         boxShadow: "0px 0px 15px -1px rgba(0,0,0,0.12)",
-        borderRadius: "8px"
+        borderRadius: "8px",
       }}
       className="add-expense-container"
     >
@@ -274,14 +271,14 @@ const AddExpense = ({ date }) => {
                     }
                   />
                 </td>
-                <td style={{ display: dataDate === todayDate ? "" : "none"}}>
+                <td style={{ display: dataDate === todayDate ? "" : "none" }}>
                   <Image
                     style={{ padding: "7px", width: "26px", cursor: "pointer" }}
                     onClick={() => deleteExpense(element._id)}
                     src="images/cross.svg"
                   />
                 </td>
-                <td style={{ display: dataDate === todayDate ? "" : "none"}}>
+                <td style={{ display: dataDate === todayDate ? "" : "none" }}>
                   <Image
                     style={{ padding: "6px", width: "27px", cursor: "pointer" }}
                     onClick={() => updateExpense(index)}
