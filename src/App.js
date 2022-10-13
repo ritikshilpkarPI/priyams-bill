@@ -7,7 +7,6 @@ import { AppStateContext } from "./AppState/appState.context";
 import CustomerBill from "./Pages/CustomerBill";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 
-// import ProtectedRoutes from "./components/ProtectedRoutes";
 const Home = lazy(() => import("./Pages/Home"));
 const BillFeed = lazy(() => import("./Pages/BillFeed"));
 const Billing = lazy(() => import("./Pages/Billing"));
@@ -16,6 +15,7 @@ const EditBill = lazy(() => import("./Pages/EditBill"));
 const ItemsList = lazy(() => import("./Pages/ItemsList"));
 const OpenClose = lazy(() => import("./Pages/OpenClose"));
 const StockQuantity = lazy(() => import("./Pages/StockQuantity"));
+const Report = lazy(() => import("./Pages/Report"));
 const Login = lazy(() => import("./Pages/Login"));
 
 // import { QRComp } from "./qr";
@@ -28,6 +28,7 @@ const PAGES = {
   dayBill: "Day Bills",
   openClose: "Open Close",
   stockquantity: "Shortage Items",
+  report: "Report",
 };
 
 function App({ history, location }) {
@@ -70,15 +71,8 @@ function App({ history, location }) {
   }, [value, showBill]);
 
   const logoutUser = async () => {
-    // const fetch = await Axios.request({
-    //   url: "/api/auth/logout",
-    //   method: "get",
-    // });
-
-    // if (fetch.data.status === true && fetch.data.message === "logout user") {
     localStorage.removeItem("priyam-store");
     history.push("/login");
-    // }
   };
 
   console.log({ itemsList });
@@ -133,8 +127,9 @@ function App({ history, location }) {
             <Route exact path="/dayBill" component={DayWiseBillFeed} />
             <Route exact path="/stockquantity" component={StockQuantity} />
             <Route exact path="/allBill" component={BillFeed} />
+            <Route exact path="/report" component={Report} />
+            <Route exact path="/edit/:billingID" component={EditBill} />
           </ProtectedRoutes>
-          <Route exact path="/edit/:billingID" component={EditBill} />
         </Switch>
       </Suspense>
       {/* <QRComp /> */}
