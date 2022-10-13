@@ -10,6 +10,7 @@ const BillNarrator = ({ billTotal }) => {
       speechSynthesis.speak(utterance);
       voices = speechSynthesis.getVoices();
     }
+    console.log(voices);
     return voices;
   }
 
