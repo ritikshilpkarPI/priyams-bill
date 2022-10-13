@@ -382,6 +382,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
 
   return (
     <div className="billing-container">
+      <h4 style={{marginBottom: "20px"}}>Total Items : {itemsList.length}</h4>
       <div className="header">
         <h1>PRIYAM STORES</h1>
         <h3>112-C, Indrapuri, Bhopal - 462022</h3>

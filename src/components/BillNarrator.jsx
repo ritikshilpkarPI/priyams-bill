@@ -10,21 +10,27 @@ const BillNarrator = ({ billTotal }) => {
       speechSynthesis.speak(utterance);
       voices = speechSynthesis.getVoices();
     }
-    console.log(voices);
+    // console.log(voices);
     return voices;
   }
 
-  function speak(text, voice, rate, pitch, volume) {
+  function speak(text, voice, rate, pitch, volume, lang) {
+    // console.log(text, voice, rate, pitch, volume);
     // create a SpeechSynthesisUtterance to configure the how text to be spoken
     let speakData = new SpeechSynthesisUtterance();
+    // console.log(speakData);
     speakData.volume = volume; // From 0 to 1
     speakData.rate = rate; // From 0.1 to 10
     speakData.pitch = pitch; // From 0 to 2
     speakData.text = text;
-    speakData.lang = "hi";
-    speakData.voice = voice;
+    speakData.lang = lang;
+    // speakData.lang = "hi";
+    // speakData.voice = BillNarrator()[12];
+    // speakData.voice = voice;
+    // console.log(speakData);
 
     // pass the SpeechSynthesisUtterance to speechSynthesis.speak to start speaking
+    // speechSynthesis.cancel();
     speechSynthesis.speak(speakData);
   }
 
@@ -33,10 +39,10 @@ const BillNarrator = ({ billTotal }) => {
       const voices = getVoices();
       const pitch = 0;
       const volume = 1;
-      speak("Preyamm stores me aapka bill,", voices[21], 5, pitch, volume);
-      speak(`${billTotal} ,`, voices[21], 0.1, pitch, volume);
-      speak(`or, ${billTotal},`, voices[0], 0.1, pitch, volume);
-      speak("rupaye hai", voices[21], 5, pitch, volume);
+      speak("Preyamm stores me aapka bill,", voices[1], 1, pitch, volume, "hi");
+      speak(`${billTotal} ,`, voices[1], 1, pitch, volume, "hi");
+      speak(`or, ${billTotal},`, voices[1], 1, pitch, volume, "hi");
+      speak("rupaye hai", voices[1], 1, pitch, volume, "hi");
     }
   }
 
