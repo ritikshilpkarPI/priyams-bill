@@ -11,6 +11,8 @@ import { useEffect, useState, useContext } from "react";
 import { Axios } from "../utils/axios";
 import { AppStateContext } from "../AppState/appState.context";
 import AddExpense from "../components/AddExpense";
+import ProtectedComponent from "src/components/ProtectedComponent";
+import access from '../access';
 
 const INITIAL_VALS = {
   twoThousand: 0,
@@ -528,9 +530,11 @@ const OpenClose = () => {
             <th>
               <Text>Cash - Amt Ret</Text>
             </th>
-            <th>
-              <Text>Check</Text>
-            </th>
+            <ProtectedComponent role={access.CHECK_AMOUNT_ROW}>
+              <th>
+                <Text>Check</Text>
+              </th>
+            </ProtectedComponent>
           </tr>
         </thead>
         <tbody className="body">
@@ -707,11 +711,13 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
               : 0}
           </Text>
         </td>
-        <td>
-          <Text color="black" weight={500}>
-            {filteredBill.length ? billBalanceCheck(0) : 0}
-          </Text>
-        </td>
+        <ProtectedComponent role={access.CHECK_AMOUNT_ROW}>
+          <td>
+            <Text color="black" weight={500}>
+              {filteredBill.length ? billBalanceCheck(0) : 0}
+            </Text>
+          </td>
+        </ProtectedComponent>
       </tr>
     </>
   );

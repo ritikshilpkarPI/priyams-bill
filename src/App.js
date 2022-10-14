@@ -6,6 +6,8 @@ import { SegmentedControl, Button } from "@mantine/core";
 import { AppStateContext } from "./AppState/appState.context";
 import CustomerBill from "./Pages/CustomerBill";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import ProtectedComponent from "./components/ProtectedComponent";
+import access from './access';
 
 const Home = lazy(() => import("./Pages/Home"));
 const BillFeed = lazy(() => import("./Pages/BillFeed"));
@@ -124,7 +126,9 @@ function App({ history, location }) {
 
             <Route exact path="/inventory" component={ItemsList} />
             <Route exact path="/" component={Home} />
-            <Route exact path="/dayBill" component={DayWiseBillFeed} />
+            <ProtectedComponent role={access.DAY_BILL_ROUTE}>
+              <Route exact path="/dayBill" component={DayWiseBillFeed} />
+            </ProtectedComponent>
             <Route exact path="/stockquantity" component={StockQuantity} />
             <Route exact path="/allBill" component={BillFeed} />
             <Route exact path="/report" component={Report} />
