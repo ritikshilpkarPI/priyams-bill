@@ -7,7 +7,7 @@ import { AppStateContext } from "./AppState/appState.context";
 import CustomerBill from "./Pages/CustomerBill";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import ProtectedComponent from "./components/ProtectedComponent";
-import access from './access';
+import access from "./access";
 
 const Home = lazy(() => import("./Pages/Home"));
 const BillFeed = lazy(() => import("./Pages/BillFeed"));
@@ -131,7 +131,9 @@ function App({ history, location }) {
             </ProtectedComponent>
             <Route exact path="/stockquantity" component={StockQuantity} />
             <Route exact path="/allBill" component={BillFeed} />
-            <Route exact path="/report" component={Report} />
+            <ProtectedComponent role={access.REPORT_PAGE_ROUTE}>
+              <Route exact path="/report" component={Report} />
+            </ProtectedComponent>
             <Route exact path="/edit/:billingID" component={EditBill} />
           </ProtectedRoutes>
         </Switch>

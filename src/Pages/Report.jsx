@@ -29,14 +29,12 @@ const Report = () => {
   };
 
   const findResult = async () => {
-    let day = 60 * 60 * 24 * 1000;
-    let increasedLastDate = new Date(dateRange[1].getTime() + day);
     const result = await Axios.request({
       url: `/api/report/getDateRangeReport/${selectedFilter}`,
       method: "post",
       data: {
-        startDate: dateRange[0].toLocaleDateString(),
-        lastDate: increasedLastDate.toLocaleDateString(),
+        startDate: new Date(dateRange[0]),
+        lastDate: new Date(dateRange[1]),
         startTime: timeRange[0].toUTCString(),
         lastTime: timeRange[1].toUTCString(),
         itemName: itemName,
