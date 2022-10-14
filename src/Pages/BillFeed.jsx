@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Loader, Table, Text, Collapse } from "@mantine/core";
 import { Axios } from "../utils/axios";
 import { useHistory } from "react-router-dom";
+import ProtectedComponent from "src/components/ProtectedComponent";
+import access from '../access';
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
@@ -83,9 +85,11 @@ const BillFeed = ({ bills = [] }) => {
               <th>
                 <Text align="center">Bill Discount</Text>
               </th>
-              <th>
-                <Text align="center">Bill Profit</Text>
-              </th>
+              <ProtectedComponent role={access.BILL_PROFIT_ROW}>
+                <th>
+                  <Text align="center">Bill Profit</Text>
+                </th>
+              </ProtectedComponent>
               <th>
                 <Text align="center">Bill date</Text>
               </th>
@@ -129,11 +133,10 @@ const TableRow = ({ bill, idx }) => {
   const sendBill = (bill) => {
     const link = `${window.location.origin}/showbill/${bill._id}`;
     const number = bill.customerPhone;
-    const message = `Hello, ${
-      bill.customerName
-    } this is your bill for your purchase at Priyam Stores on ${new Date(
-      bill.createdAt
-    ).toLocaleString()}.
+    const message = `Hello, ${bill.customerName
+      } this is your bill for your purchase at Priyam Stores on ${new Date(
+        bill.createdAt
+      ).toLocaleString()}.
     Please view your bill by clicking on the link below:
     ${link}`;
     // Appending the phone number to the URL
@@ -209,11 +212,13 @@ const TableRow = ({ bill, idx }) => {
             {bill["billDiscountTotal"].toFixed(2)}
           </Text>
         </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill["totalBillProfit"].toFixed(2)}
-          </Text>
-        </td>
+        <ProtectedComponent role={access.BILL_PROFIT_ROW}>
+          <td>
+            <Text color="black" weight={500}>
+              {bill["totalBillProfit"].toFixed(2)}
+            </Text>
+          </td>
+        </ProtectedComponent>
         <td>
           <Text color="black" weight={500}>
             {new Date(bill["createdAt"]).toLocaleString()}
