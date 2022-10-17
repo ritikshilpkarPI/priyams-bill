@@ -1,7 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input, Table, Text, Loader, TextInput } from "@mantine/core";
+import { Button, Input, Loader, Table, Text, TextInput } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
+import BillNarrator from "../components/BillNarrator";
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -286,7 +287,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     useContext(AppStateContext);
   const [itemsList, itemsReducer] = itemsStateAndDispatch;
   const [billItems, dispatch] = billItemsStateAndDispatch;
-  const initialItemList = itemsList;
+  const initialItemList = [...itemsList];
   const [phoneError, setPhoneError] = useState("");
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
 
@@ -381,6 +382,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
 
   return (
     <div className="billing-container">
+      <h4 style={{marginBottom: "20px"}}>Total Items : {itemsList.length}</h4>
       <div className="header">
         <h1>PRIYAM STORES</h1>
         <h3>112-C, Indrapuri, Bhopal - 462022</h3>
@@ -450,6 +452,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
         >
           Save and Print
         </Button>
+        <BillNarrator billTotal={bill.billAmountTotal} />
       </div>
 
       <Table

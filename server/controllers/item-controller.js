@@ -36,6 +36,7 @@ const addItems = async (req, res) => {
     itemStockQuantity,
     minimumStockQuantity,
     itemBrandName,
+    useByDate,
     slabPricing = [],
   } = req.body;
 
@@ -63,6 +64,7 @@ const addItems = async (req, res) => {
       itemStockQuantity,
       minimumStockQuantity,
       itemMRPperUnit,
+      useByDate,
       itemDiscountPerUnit: itemMRPperUnit - itemSellingPricePerUnit,
       itemPerUnitDiscountPercentage:
         ((itemMRPperUnit - itemSellingPricePerUnit) / itemMRPperUnit) * 100,

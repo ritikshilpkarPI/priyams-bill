@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Button, Loader, Table, Text, Collapse } from "@mantine/core";
 import { Axios } from "../utils/axios";
-import { Table, Text, Loader, Collapse, Button } from "@mantine/core";
 import { useHistory } from "react-router-dom";
+import ProtectedComponent from "src/components/ProtectedComponent";
+import access from '../access';
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
   const [loader, setLoader] = useState(false);
-
   useEffect(() => {
     setLoader(true);
     const getBillFeed = async () => {
@@ -84,11 +85,16 @@ const BillFeed = ({ bills = [] }) => {
               <th>
                 <Text align="center">Bill Discount</Text>
               </th>
-              <th>
-                <Text align="center">Bill Profit</Text>
-              </th>
+              <ProtectedComponent role={access.BILL_PROFIT_ROW}>
+                <th>
+                  <Text align="center">Bill Profit</Text>
+                </th>
+              </ProtectedComponent>
               <th>
                 <Text align="center">Bill date</Text>
+              </th>
+              <th>
+                <Text align="center">Whatsapp Bill</Text>
               </th>
               <th>
                 <Text align="center">Items</Text>
@@ -96,8 +102,8 @@ const BillFeed = ({ bills = [] }) => {
             </tr>
           </thead>
           <tbody className="body">
-            {allBills.map((item, idx) => {
-              return <TableRow key={`${item}$${idx}`} item={item} idx={idx} />;
+            {allBills.map((bill, idx) => {
+              return <TableRow key={`${bill}$${idx}`} bill={bill} idx={idx} />;
             })}
           </tbody>
         </Table>
@@ -106,12 +112,44 @@ const BillFeed = ({ bills = [] }) => {
   );
 };
 
-const TableRow = ({ item, idx }) => {
+const TableRow = ({ bill, idx }) => {
   const [open, setOpen] = useState(false);
   let history = useHistory();
   function handleClick(id) {
-    history.push(`/${id}`);
+    history.push(`/edit/${id}`);
   }
+  const sendCustomerMessage = async (id) => {
+    await Axios.request({
+      url: "/api/billing/sendMessage",
+      method: "post",
+      data: {
+        id: id,
+      },
+      headers: {
+        Cookie: "",
+      },
+    });
+  };
+  const sendBill = (bill) => {
+    const link = `${window.location.origin}/showbill/${bill._id}`;
+    const number = bill.customerPhone;
+    const message = `Hello, ${bill.customerName
+      } this is your bill for your purchase at Priyam Stores on ${new Date(
+        bill.createdAt
+      ).toLocaleString()}.
+    Please view your bill by clicking on the link below:
+    ${link}`;
+    // Appending the phone number to the URL
+    let url = `https://web.whatsapp.com/send?phone=+91${number}`;
+
+    // Appending the message to the URL by encoding it
+    url += `&text=${encodeURI(message)}&app_absent=0`;
+
+    // Open our newly created URL in a new tab to send the message
+    window.open(url);
+
+    sendCustomerMessage(bill._id);
+  };
   return (
     <>
       <tr
@@ -126,66 +164,77 @@ const TableRow = ({ item, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["customerName"]}
+            {bill["customerName"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["customerPhone"]}
+            {bill["customerPhone"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billAmountTotal"].toFixed(2)}
+            {bill["billAmountTotal"].toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billMRPTotal"].toFixed(2)}
+            {bill["billMRPTotal"].toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["cashPay"]?.toFixed(2)}
+            {bill["cashPay"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["upiPay"]?.toFixed(2)}
+            {bill["upiPay"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["amountReturn"]?.toFixed(2)}
+            {bill["amountReturn"]?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["totalNumberOfItems"]}
+            {bill["totalNumberOfItems"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["totalNumberOfUniqueItems"]}
+            {bill["totalNumberOfUniqueItems"]}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {item["billDiscountTotal"].toFixed(2)}
+            {bill["billDiscountTotal"].toFixed(2)}
           </Text>
         </td>
+        <ProtectedComponent role={access.BILL_PROFIT_ROW}>
+          <td>
+            <Text color="black" weight={500}>
+              {bill["totalBillProfit"].toFixed(2)}
+            </Text>
+          </td>
+        </ProtectedComponent>
         <td>
           <Text color="black" weight={500}>
-            {item["totalBillProfit"].toFixed(2)}
+            {new Date(bill["createdAt"]).toLocaleString()}
           </Text>
         </td>
         <td>
-          <Text color="black" weight={500}>
-            {new Date(item["createdAt"]).toLocaleString()}
-          </Text>
+          <Button
+            color={bill.messageSend ? "blue" : "green"}
+            disabled={bill.customerPhone && bill.customerName ? false : true}
+            onClick={() => sendBill(bill)}
+          >
+            Send Bill
+          </Button>
         </td>
         <td>
-          <Button onClick={() => handleClick(item["_id"])}>Edit Bill</Button>
+          <Button onClick={() => handleClick(bill["_id"])}>Edit Bill</Button>
         </td>
       </tr>
       <tr>
@@ -211,13 +260,13 @@ const TableRow = ({ item, idx }) => {
               </tr>
             </thead>
             <tbody className="body">
-              {item.items.map((itemObj, idx) => {
-                // const itemDetail = (itemObj && itemObj.itemDetail) || {};
+              {bill.items.map((billItemObj, idx) => {
+                // const itemDetail = (billItemObj && billItemObj.itemDetail) || {};
                 // const {
                 //   itemDetail,
                 //   itemQuantityInBill,
                 //   itemSellingPriceTotal,
-                // } = itemObj;
+                // } = billItemObj;
                 return (
                   <tr key={idx}>
                     <td>
@@ -227,22 +276,23 @@ const TableRow = ({ item, idx }) => {
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemObj?.itemDetail?.itemName || "Item name not found"}
+                        {billItemObj?.itemDetail?.itemName ||
+                          "Item name not found"}
                       </Text>
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemObj?.itemQuantityInBill}
+                        {billItemObj?.itemQuantityInBill}
                       </Text>
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemObj?.itemMRPtotal}
+                        {billItemObj?.itemMRPtotal}
                       </Text>
                     </td>
                     <td>
                       <Text color="black" weight={500}>
-                        {itemObj?.itemSellingPriceTotal}
+                        {billItemObj?.itemSellingPriceTotal}
                       </Text>
                     </td>
                   </tr>
