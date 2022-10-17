@@ -65,6 +65,7 @@ const ItemsList = () => {
 
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
+    console.log(name, value);
     setNewItemInput({ ...newItemInput, [name]: value });
     const filteredItems = itemsList.filter(
       (itemObj) =>
@@ -74,6 +75,7 @@ const ItemsList = () => {
           .toLowerCase()
           .includes(value.toString().toLowerCase())
     );
+    console.log(filteredItems);
     setItems([...filteredItems]);
   };
 
@@ -213,7 +215,7 @@ const ItemsList = () => {
       // >
       //   <Text>Delete</Text>
       // </Button>
-      <Image src="./images/cross.svg" width={18} style={{marginLeft:'20px'}} loading={apiLoading} onClick={handleDeleteItem} />
+      <Image src="/images/cross.svg" width={18} style={{marginLeft:'20px'}} loading={apiLoading} onClick={handleDeleteItem} />
     );
   };
 
@@ -998,7 +1000,7 @@ const ItemsList = () => {
           <ItemQuantityUnitRow style={style} index={index} />
         </td>
         <td>
-          <ItemUseByDateRow style={style} index={index} />
+          {/* <ItemUseByDateRow style={style} index={index} /> */}
         </td>
         <td>
           <ItemMRPRow style={style} index={index} />
