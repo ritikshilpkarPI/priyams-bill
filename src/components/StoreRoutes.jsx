@@ -15,7 +15,8 @@ import {
     OpenClose,
     StockQuantity,
     Report,
-    Login
+    Login,
+    PurchaseOrder
 } from '../Pages'
 
 const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
@@ -48,6 +49,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                     </ProtectedComponent>
                     <Route exact path="/stockquantity" component={StockQuantity} />
                     <Route exact path="/allBill" component={BillFeed} />
+                    <Route exact path="/purchase" component={PurchaseOrder} />
                     <ProtectedComponent role={access.REPORT_PAGE_ROUTE}>
                         <Route exact path="/report" component={Report} />
                     </ProtectedComponent>

@@ -1,0 +1,39 @@
+.purchase-order-container {
+    border: 1px solid red;
+
+    td, th{
+        border: 1px solid blue;
+    }
+
+    .text-input{
+        width: 200px;
+        margin: 0 4px;
+    }
+    
+    .number-input{
+        width: 100px;
+        margin: 0 4px;
+    }
+    
+    .select-input{
+        width: 120px;
+        margin: 0 4px;
+    }
+
+    .page-title {
+        margin-bottom: 20px;
+    }
+
+    .mantine-186fes1 {
+        width: auto;
+    }
+
+    .mantine-gqmpge {
+        width: 100%;
+        padding: 0 9px;
+    }
+
+    .mantine-186fes1 tbody tr td{
+        padding: 0;
+    }
+}
