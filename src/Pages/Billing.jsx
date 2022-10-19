@@ -1075,7 +1075,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
         <div className="print-table-body">
           {bill.billItems.map((item, index) => {
             const itemObj = { ...item, ...item.itemDetail };
-            console.log(itemObj);
+            console.log(bill);
             return (
               <div key={index} className="print-table-row">
                 <p>{itemObj["itemName"]}</p>
@@ -1086,12 +1086,16 @@ const Billing = ({ billID = "", loaderDisplay }) => {
               </div>
             )
           })}
-          <div className="print-table-row">
+          {/* <div className="print-table-row">
             <p>Total</p>
             <p className="bold-text">{bill?.totalNumberOfItems?.toFixed(2)}</p>
             <p></p>
             <p></p>
             <p className="bold-text">{bill?.billAmountTotal?.toFixed(2)}</p>
+          </div> */}
+          <div className="bill-amount-row">
+              <div>Quantity: {bill?.totalNumberOfItems?.toFixed(2)}</div>
+              <div>Bill Total: {bill?.billAmountTotal?.toFixed(2)}</div>
           </div>
           <div className="amount-section">
             <p className="head">Amount Paid by Customer</p>
