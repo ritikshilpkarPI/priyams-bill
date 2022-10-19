@@ -1079,10 +1079,10 @@ const Billing = ({ billID = "", loaderDisplay }) => {
             return (
               <div key={index} className="print-table-row">
                 <p>{itemObj["itemName"]}</p>
-                <p>{itemObj["itemQuantityInBill"]}</p>
+                <p className="bold-text">{itemObj["itemQuantityInBill"]}</p>
                 <p>{itemObj["itemMRPperUnit"]}</p>
                 <p>{itemObj["itemSellingPricePerUnit"].toFixed(2)}</p>
-                <p>{(itemObj["itemSellingPricePerUnit"] * itemObj["itemQuantityInBill"]).toFixed(2)}</p>
+                <p className="bold-text">{(itemObj["itemSellingPricePerUnit"] * itemObj["itemQuantityInBill"]).toFixed(2)}</p>
               </div>
             )
           })}

@@ -261,7 +261,10 @@ input[type="number"] {
       flex-direction: column;
       justify-content: center;
       margin-bottom: 20px;
-      // border: 2px solid red;
+    }
+    
+    .print-table-head{
+      border-bottom: 3px solid black;
     }
 
     .print-table-head,
@@ -288,6 +291,8 @@ input[type="number"] {
       .bold-text {
         font-weight: 700;
       }
+
+      // item-total-amount
     }
 
     .bill-amount-row {
