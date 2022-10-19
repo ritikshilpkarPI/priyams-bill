@@ -3,7 +3,7 @@ const tableHead = [
     "Brand Name",
     "Item Name",
     "Category",
-    "Quantity",
+    "Item Qn.",
     "Unit",
     "Expiry date",
     "MRP",
@@ -20,7 +20,7 @@ const addItemRow = [
     },
     {
         type: "TextInput",
-        name: "BrandName",
+        name: "itemBrandName",
     },
     {
         type: "TextInput",
@@ -28,7 +28,7 @@ const addItemRow = [
     },
     {
         type: "Select",
-        name: "Category",
+        name: "itemCategory",
         data: [
             { value: 'react', label: 'React' },
             { value: 'ng', label: 'Angular' },
@@ -38,11 +38,11 @@ const addItemRow = [
     },
     {
         type: "NumberInput",
-        name: "Quantity",
+        name: "itemQuantity",
     },
     {
         type: "Select",
-        name: "Unit",
+        name: "itemUnit",
         data: [
             { value: 'react', label: 'React' },
             { value: 'ng', label: 'Angular' },
@@ -52,23 +52,23 @@ const addItemRow = [
     },
     {
         type: "Custom",
-        name: "useByDate",
+        name: "itemUseByDate",
     },
     {
         type: "NumberInput",
-        name: "MRP",
+        name: "itemMRPperUnit",
     },
     {
         type: "NumberInput",
-        name: "Cost",
+        name: "itemCostPricePerUnit",
     },
     {
         type: "NumberInput",
-        name: "Sell Price",
+        name: "itemSellingPricePerUnit",
     },
     {
         type: "NumberInput",
-        name: "Purchase quantity",
+        name: "itemTotalStockQuantity",
     },
     {
         type: "icon",

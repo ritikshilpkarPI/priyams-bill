@@ -2,7 +2,6 @@ import React from 'react'
 import { tableHead } from "./constant";
 
 const Header = () => {
-    console.log(tableHead);
     return (
         <thead>
             <tr>
