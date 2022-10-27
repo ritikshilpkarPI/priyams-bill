@@ -10,6 +10,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 .app {
   .appContainer {
     height: 100vh;
@@ -17,15 +18,13 @@
 }
 
 :root {
-  --orange-violet-gradient: linear-gradient(
-    277.04deg,
-    #7267ba -48.69%,
-    #7267ba -23.36%,
-    #ca44a9 35.4%,
-    #ee6477 63.27%,
-    #efd029 136.04%,
-    #efd029 206.71%
-  );
+  --orange-violet-gradient: linear-gradient(277.04deg,
+      #7267ba -48.69%,
+      #7267ba -23.36%,
+      #ca44a9 35.4%,
+      #ee6477 63.27%,
+      #efd029 136.04%,
+      #efd029 206.71%);
   --light-gray-text-color: #8f8f8f;
   --light-gray-background: #e8e5ff;
   --light-gray-border-color: #e4e4e4;
@@ -52,6 +51,7 @@ input[type="number"] {
 
   .home-nav {
     display: flex;
+
     li {
       padding: 10px;
       margin: 5px;
@@ -63,6 +63,7 @@ input[type="number"] {
     }
   }
 }
+
 .show-data:hover {
   background-color: lightgray;
 }
@@ -70,6 +71,7 @@ input[type="number"] {
 .rowOpen-main {
   background-color: rgb(247, 224, 228);
 }
+
 .rowOpen {
   background-color: rgb(219, 233, 205);
 }
@@ -93,9 +95,11 @@ input[type="number"] {
   .bill-btns {
     padding: 5px;
   }
+
   .quantity-text {
     display: none;
   }
+
   .final-bill {
     margin-right: 10px;
     align-items: flex-end;
@@ -112,6 +116,10 @@ input[type="number"] {
   }
 }
 
+.print-container {
+  display: none;
+}
+
 @media print {
   .nav-btn {
     display: none;
@@ -120,7 +128,8 @@ input[type="number"] {
   .billing-container {
     margin-top: 10px;
     justify-content: center;
-    display: flex;
+    // display: flex;
+    display: none;
     flex-direction: column;
 
     .header {
@@ -136,6 +145,7 @@ input[type="number"] {
     .bill-table {
       max-width: 10px;
       margin-right: 200px;
+
       tr {
         th {
           word-spacing: 999999px;
@@ -149,6 +159,7 @@ input[type="number"] {
       }
 
       .body {
+
         tr:first-child,
         td:nth-child(-n + 2) {
           display: none;
@@ -159,6 +170,7 @@ input[type="number"] {
         }
 
         .bill-item-row {
+
           .itemQuantityInBill,
           .itemMRPperUnit,
           .itemSellingPricePerUnit,
@@ -167,6 +179,7 @@ input[type="number"] {
             width: 10px;
             font-size: 40px;
           }
+
           .slabPricing {
             display: none;
           }
@@ -188,9 +201,11 @@ input[type="number"] {
         .print-text {
           font-size: 36px;
         }
+
         .quantity-text {
           display: block;
         }
+
         .quantity-input {
           display: none;
         }
@@ -203,6 +218,7 @@ input[type="number"] {
       width: 60%;
       justify-content: center;
       border: 10px dashed black;
+
       .discount-text {
         font-size: 50px;
         margin-right: 20px;
@@ -219,18 +235,113 @@ input[type="number"] {
     .final-bill {
       text-align: left;
       word-spacing: 999999px;
+
       .print-text {
         font-size: 36px;
       }
+
       .quantity-text {
         display: flex;
       }
+
       .quantity-input {
         display: none;
       }
     }
   }
+
+  .staffname {
+    display: none;
+  }
+
+  .print-container {
+    display: block;
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .print-table-head{
+      border-bottom: 3px solid black;
+    }
+
+    .print-table-head,
+    .print-table-row {
+      display: flex;
+      justify-content: end;
+
+      p {
+        padding: 5px;
+        text-align: center;
+        width: 70px;
+        font-size: 17px;
+        white-space: nowrap;
+        border-top: 1px solid rgb(238, 233, 233);
+      }
+
+      p:nth-child(1) {
+        flex: 1;
+        overflow: hidden;
+        text-align: left;
+        padding: 5px;
+      }
+
+      .bold-text {
+        font-weight: 700;
+      }
+
+      // item-total-amount
+    }
+
+    .bill-amount-row {
+      display: flex;
+      padding: 20px 0;
+      justify-content: space-between;
+      font-size: 22px;
+      font-weight: 600;
+      margin-top: 10px;
+      border-top: 4px double black;
+    }
+
+    .amount-section {
+      border-top: 4px double black;
+      border-bottom: 4px double black;
+      padding: 10px;
+
+      .head {
+        text-align: center;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .show-amount {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+
+        .final-amount {
+          font-weight: 700;
+          font-size: 25px;
+        }
+      }
+    }
+
+    .discount-section {
+      border: 2px dashed black;
+      padding: 20px 0;
+      margin-top: 20px;
+
+      p {
+        font-size: 22px;
+        font-weight: 700;
+      }
+    }
+  }
 }
+
 // Billing css
 
 .data-result {
@@ -240,9 +351,11 @@ input[type="number"] {
   overflow-y: scroll;
   height: 400px;
 }
+
 .search-container {
   position: relative;
 }
+
 .total {
   text-align: right;
   margin-top: 6rem;
@@ -251,6 +364,7 @@ input[type="number"] {
   font-size: 18px;
   font-weight: bold;
 }
+
 .operation-button {
   display: flex;
   justify-content: space-evenly;
@@ -274,15 +388,18 @@ input[type="number"] {
   overflow: hidden;
   overflow-y: auto;
   padding: 1rem 3rem;
+
   .print-btn {
     margin-bottom: 1rem;
   }
+
   table {
     tbody {
       tr {
         .data-cell {
           padding: "0 6px";
           width: 130px;
+
           div {
             border: none;
             outline: none;
@@ -290,54 +407,65 @@ input[type="number"] {
             padding: 0.5rem;
           }
         }
+
         .data-cell:nth-child(1) {
           width: 60px;
         }
+
         .data-cell:nth-child(2) {
           width: 350px;
         }
+
         .data-cell:nth-child(3) {
           width: 180px;
         }
       }
     }
   }
+
   .footer {
     position: absolute;
     bottom: 10px;
   }
 }
+
 @media print {
   .print-btn {
     display: none;
   }
 }
+
 @media screen and (max-width: 900px) {
   .customer-container {
     padding: 1rem 1rem;
+
     .table-container {
       padding-left: 1rem;
       padding-right: 1rem;
       width: 100%;
       overflow: scroll;
       margin-bottom: 3rem;
+
       table {
         tbody {
           tr {
             .data-cell {
-              div {
-              }
+              div {}
             }
+
             .data-cell:nth-child(1) {
               width: 60px;
             }
+
             .data-cell:nth-child(2) {
               width: 350px;
             }
+
             .data-cell:nth-child(3) {
               width: 180px;
             }
           }
+
           .final-bill {
             td {
               .mantine-uawhwc {
@@ -348,11 +476,13 @@ input[type="number"] {
         }
       }
     }
+
     .footer {
       position: relative;
     }
   }
 }
+
 // Logout button
 .logout-btn {
   background-color: black;
