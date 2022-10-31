@@ -164,4 +164,38 @@ $fourteenColWidth: 140px;
             }
         }
     }
+
+    .useby-date-container{
+        // border: 1px solid red;
+
+        #useByDate{
+            width: 100%;
+            border: 1px solid rgb(203, 199, 199);
+            width: 195px;
+            // margin-bottom: 3px;
+        }
+
+        .new-date-row{
+            display: flex;
+            width: 195px;
+            align-items: center;
+            margin: 3px 0;
+
+            .mantine-gqmpge {
+                width: 105px;
+            }
+
+            .per-date-quantity {
+                margin: 0 5px 0;
+                .mantine-gqmpge {
+                    width: 50px;
+                }
+            }
+
+            .delete-icon{
+                margin-left: 5px;
+                cursor: pointer;
+            }
+        }
+    }
 }

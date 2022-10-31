@@ -13,6 +13,8 @@ import {
   Image,
   Textarea,
   Select,
+  TextInput,
+  NumberInput
 } from "@mantine/core";
 
 // import { DatePicker } from '@mantine/dates';
@@ -32,6 +34,7 @@ const ITEM_INITIAL_INPUT = {
   itemSellingPricePerUnit: "",
   itemStockQuantity: "",
   minimumStockQuantity: "",
+  useByDate: []
 };
 
 let itemToBeUpdated = {};
@@ -50,8 +53,9 @@ const ItemsList = () => {
   const [openScanner, setOpenScanner] = useState(false);
   const inputTable = useRef();
   const [tableWidth, setTableWidth] = useState();
-  const [useByDate, setUseByDate] = useState();
+  // const [useByDate, setUseByDate] = useState();
   const [dateArray, setDateArray] = useState([]);
+  const [useByDateData, setuseByDateData] = useState([]);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -96,7 +100,7 @@ const ItemsList = () => {
     const { name, value } = e.target;
     let newDates = [...dateArray, value];
     setDateArray(newDates.sort());
-    setUseByDate();
+    // setUseByDate();
     setNewItemInput({ ...newItemInput, [name]: newDates.sort() });
     const filteredItems = itemsList.filter(
       (itemObj) =>
@@ -142,28 +146,28 @@ const ItemsList = () => {
 
     let itemObject;
     if (slabArray.length !== 0) {
-      itemObject = { ...newItemInput, slabPricing: slabArray };
+      itemObject = { ...newItemInput, slabPricing: slabArray, useByDate: useByDateData };
     } else {
-      itemObject = { ...newItemInput };
+      itemObject = { ...newItemInput, useByDate: useByDateData };
     }
 
     console.log(itemObject);
 
-    setApiLoading(true);
-    (async () => {
-      const newItem = await Axios.request({
-        url: "/api/inventory/addNewItem",
-        method: "post",
-        data: { ...itemObject },
-        headers: {
-          Cookie: "",
-        },
-      });
-      dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
-    })();
-    setApiLoading(false);
-    setSlabArray([]);
-    setNewItemInput(ITEM_INITIAL_INPUT);
+    // setApiLoading(true);
+    // (async () => {
+    //   const newItem = await Axios.request({
+    //     url: "/api/inventory/addNewItem",
+    //     method: "post",
+    //     data: { ...itemObject },
+    //     headers: {
+    //       Cookie: "",
+    //     },
+    //   });
+    //   dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
+    // })();
+    // setApiLoading(false);
+    // setSlabArray([]);
+    // setNewItemInput(ITEM_INITIAL_INPUT);
   };
 
   const handleItemInputChange = (e, itemInput, setItemInput, index) => {
@@ -215,7 +219,7 @@ const ItemsList = () => {
       // >
       //   <Text>Delete</Text>
       // </Button>
-      <Image src="/images/cross.svg" width={18} style={{marginLeft:'20px'}} loading={apiLoading} onClick={handleDeleteItem} />
+      <Image src="/images/cross.svg" width={18} style={{ marginLeft: '20px' }} loading={apiLoading} onClick={handleDeleteItem} />
     );
   };
 
@@ -727,9 +731,9 @@ const ItemsList = () => {
   const ItemSoftDeleteButtonRow = ({ index, style }) => {
     return (
       // <tr>
-        // <td>
-          <SoftDeleteButton style={style} index={index} items={items} />
-        // </td>
+      // <td>
+      <SoftDeleteButton style={style} index={index} items={items} />
+      // </td>
       // </tr>
     );
   };
@@ -1074,6 +1078,57 @@ const ItemsList = () => {
     );
   };
 
+  const UseByDateElement = () => {
+    const [selectedDate, setSelectedDate] = useState('');
+
+    // To add new date 
+    const addNewDate = (e) => {
+      setSelectedDate(e.target.value);
+      const dateSelected = useByDateData.findIndex((item) => item.date === e.target.value);
+      if (dateSelected !== -1) {
+        alert('date already selected!');
+        return;
+      }
+      let dateArray = [...useByDateData, { date: e.target.value, value: 0 }]
+      dateArray.sort((a, b) => {
+        return (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0)
+      });
+
+      setuseByDateData([...dateArray]);
+      // setNewItemInput({...newItemInput, useByDate: [...dateArray]});
+    }
+
+    // To change any date item quantity 
+    const handleAddDateInputChange = (e, index) => {
+      let newDateObj = { date: useByDateData[index].date, value: e };
+      useByDateData.splice(index, 1, newDateObj);
+      setuseByDateData(useByDateData);
+      // setNewItemInput({...newItemInput, useByDate: useByDateData})
+    }
+
+    // To remove any date 
+    const deleteDate = (e, index) => {
+      useByDateData.splice(index, 1);
+      setuseByDateData([...useByDateData]);
+      // setNewItemInput({...newItemInput, useByDate: [...useByDateData]});
+    }
+
+    return (
+      <div className='useby-date-container'>
+        <input type="date" name="useByDate" id="useByDate" value={selectedDate} onChange={(e) => addNewDate(e)} />
+        {useByDateData.map((item, index) => {
+          return (
+            <div key={index} className="new-date-row">
+              <TextInput value={item.date} readOnly></TextInput>
+              <NumberInput className='per-date-quantity' value={item.value} onChange={(e) => handleAddDateInputChange(e, index)} hideControls></NumberInput>
+              <Image className='delete-icon' src='images/cross.svg' width={14} onClick={(e) => deleteDate(e, index)}></Image>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
     <div className="inventory-items-container">
       <div className="top-buttons">
@@ -1370,8 +1425,7 @@ const ItemsList = () => {
                 />
               </td>
               <td>
-                <input style={{ width: '100%' }} type="date" name="useByDate" id="useByDate" value={useByDate} onChange={(e) => setUseDates(e)} />
-                <Textarea defaultValue={dateArray}></Textarea>
+                <UseByDateElement />
               </td>
               <td>
                 <Input
