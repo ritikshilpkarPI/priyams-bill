@@ -116,6 +116,10 @@ input[type="number"] {
   }
 }
 
+.print-container {
+  display: none;
+}
+
 @media print {
   .nav-btn {
     display: none;
@@ -124,7 +128,8 @@ input[type="number"] {
   .billing-container {
     margin-top: 10px;
     justify-content: center;
-    display: flex;
+    // display: flex;
+    display: none;
     flex-direction: column;
 
     .header {
@@ -241,6 +246,97 @@ input[type="number"] {
 
       .quantity-input {
         display: none;
+      }
+    }
+  }
+
+  .staffname {
+    display: none;
+  }
+
+  .print-container {
+    display: block;
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .print-table-head{
+      border-bottom: 3px solid black;
+    }
+
+    .print-table-head,
+    .print-table-row {
+      display: flex;
+      justify-content: end;
+
+      p {
+        padding: 5px;
+        text-align: center;
+        width: 70px;
+        font-size: 17px;
+        white-space: nowrap;
+        border-top: 1px solid rgb(238, 233, 233);
+      }
+
+      p:nth-child(1) {
+        flex: 1;
+        overflow: hidden;
+        text-align: left;
+        padding: 5px;
+      }
+
+      .bold-text {
+        font-weight: 700;
+      }
+
+      // item-total-amount
+    }
+
+    .bill-amount-row {
+      display: flex;
+      padding: 20px 0;
+      justify-content: space-between;
+      font-size: 22px;
+      font-weight: 600;
+      margin-top: 10px;
+      border-top: 4px double black;
+    }
+
+    .amount-section {
+      border-top: 4px double black;
+      border-bottom: 4px double black;
+      padding: 10px;
+
+      .head {
+        text-align: center;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .show-amount {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+
+        .final-amount {
+          font-weight: 700;
+          font-size: 25px;
+        }
+      }
+    }
+
+    .discount-section {
+      border: 2px dashed black;
+      padding: 20px 0;
+      margin-top: 20px;
+
+      p {
+        font-size: 22px;
+        font-weight: 700;
       }
     }
   }
