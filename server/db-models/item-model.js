@@ -23,7 +23,7 @@ const ItemSchem = new mongoose.Schema(
     brandName: { type: String },
     category: { type: String, enum: ["Rice", "Pulse", "Beverage", "Spice"] },
     useByDate: { type: Array },
-    quantity: { type: String, enum: ["Kilo", "Grams", "Liter", "Mililiter", "Piece"] },
+    quantity: { type: String, enum: ["Kilo", "Grams", "Litre", "Mililiter", "Piece"] },
   },
   { strict: false, timestamps: true }
 );

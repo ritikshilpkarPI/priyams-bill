@@ -30,10 +30,11 @@ const addItemRow = [
         type: "Select",
         name: "itemCategory",
         data: [
-            { value: 'react', label: 'React' },
-            { value: 'ng', label: 'Angular' },
-            { value: 'svelte', label: 'Svelte' },
-            { value: 'vue', label: 'Vue' },
+            { value: 'Rice', label: 'Rice' },
+            { value: 'Pulse', label: 'Pulse' },
+            { value: 'Beverage', label: 'Beverage' },
+            { value: 'Spice', label: 'Spice' },
+            { value: 'Biscuit', label: 'Biscuit' },
         ]
     },
     {
@@ -44,10 +45,11 @@ const addItemRow = [
         type: "Select",
         name: "itemUnit",
         data: [
-            { value: 'react', label: 'React' },
-            { value: 'ng', label: 'Angular' },
-            { value: 'svelte', label: 'Svelte' },
-            { value: 'vue', label: 'Vue' },
+            { value: 'Kilo', label: 'Kg' },
+            { value: 'Grams', label: 'grams' },
+            { value: 'Litre', label: 'litre' },
+            { value: 'Mililiter', label: 'ml' },
+            { value: 'Piece', label: 'pcs.' },
         ]
     },
     {
@@ -74,6 +76,20 @@ const addItemRow = [
         type: "icon",
         src: "images/add.svg",
     },
-]
+];
 
-export { tableHead, addItemRow };
+const itemInitialObj = {
+    itemBarcode: '',
+    itemBrandName: '',
+    itemName: '',
+    itemCategory: '',
+    itemQuantity: '',
+    itemUnit: '',
+    itemUseByDate: [],
+    itemMRPperUnit: '',
+    itemCostPricePerUnit: '',
+    itemSellingPricePerUnit: '',
+    itemTotalStockQuantity: '',
+};
+
+export { tableHead, addItemRow, itemInitialObj };
