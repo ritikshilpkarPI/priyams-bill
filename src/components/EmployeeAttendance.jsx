@@ -35,6 +35,7 @@ const EmployeeAttendance = () => {
                 data: {
                     name: name,
                     arrivingTime: date,
+                    date: date,
                 }
             });
             localStorage.setItem(result.data.message.name, JSON.stringify(result.data.message));
@@ -52,6 +53,7 @@ const EmployeeAttendance = () => {
                         arrivingTime: attendee.arrivingTime,
                         name: attendee.name,
                         leavingTime: date,
+                        date: attendee.date,
                         totalHoursOfWork: totalHours,// Saving total hours in milliseconds
                         workHoursCompleted: totalHours >= totalWorkHoursInMillis
                     }

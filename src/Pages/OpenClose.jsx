@@ -13,8 +13,7 @@ import { AppStateContext } from "../AppState/appState.context";
 import AddExpense from "../components/AddExpense";
 import ProtectedComponent from "src/components/ProtectedComponent";
 import access from '../access';
-import EmployeeAttendance from "./EmployeeAttendance";
-
+import EmployeeAttendance from "../components/EmployeeAttendance";
 const INITIAL_VALS = {
   twoThousand: 0,
   fiveHundred: 0,
