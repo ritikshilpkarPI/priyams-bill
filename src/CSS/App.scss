@@ -262,15 +262,15 @@ input[type="number"] {
       justify-content: center;
       margin-bottom: 20px;
     }
-    
-    .print-table-head{
+
+    .print-table-head {
       border-bottom: 3px solid black;
     }
 
     .print-table-head,
     .print-table-row {
       display: flex;
-      justify-content: end;
+      justify-content: flex-end;
 
       p {
         padding: 5px;
@@ -507,4 +507,9 @@ p.staffname {
   text-align: right;
   margin: 5px 20px 0 0;
   color: gray;
+}
+
+// Attendance css
+.attendance-container {
+  margin-top: 2rem;
 }
