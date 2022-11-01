@@ -54,7 +54,7 @@ const ItemsList = () => {
   const inputTable = useRef();
   const [tableWidth, setTableWidth] = useState();
   // const [useByDate, setUseByDate] = useState();
-  const [dateArray, setDateArray] = useState([]);
+  // const [dateArray, setDateArray] = useState([]);
   const [useByDateData, setuseByDateData] = useState([]);
 
   useEffect(() => {
@@ -96,22 +96,22 @@ const ItemsList = () => {
     setItems([...filteredItems]);
   }
 
-  const setUseDates = (e) => {
-    const { name, value } = e.target;
-    let newDates = [...dateArray, value];
-    setDateArray(newDates.sort());
-    // setUseByDate();
-    setNewItemInput({ ...newItemInput, [name]: newDates.sort() });
-    const filteredItems = itemsList.filter(
-      (itemObj) =>
-        itemObj[name] &&
-        itemObj[name]
-          .toString()
-          .toLowerCase()
-          .includes(value.toString().toLowerCase())
-    );
-    setItems([...filteredItems]);
-  }
+  // const setUseDates = (e) => {
+  //   const { name, value } = e.target;
+  //   let newDates = [...dateArray, value];
+  //   setDateArray(newDates.sort());
+  //   // setUseByDate();
+  //   setNewItemInput({ ...newItemInput, [name]: newDates.sort() });
+  //   const filteredItems = itemsList.filter(
+  //     (itemObj) =>
+  //       itemObj[name] &&
+  //       itemObj[name]
+  //         .toString()
+  //         .toLowerCase()
+  //         .includes(value.toString().toLowerCase())
+  //   );
+  //   setItems([...filteredItems]);
+  // }
 
   const handleCheckboxFilter = (filterName) => {
     setFilterItems(filterName);
@@ -153,26 +153,29 @@ const ItemsList = () => {
 
     console.log(itemObject);
 
-    // setApiLoading(true);
-    // (async () => {
-    //   const newItem = await Axios.request({
-    //     url: "/api/inventory/addNewItem",
-    //     method: "post",
-    //     data: { ...itemObject },
-    //     headers: {
-    //       Cookie: "",
-    //     },
-    //   });
-    //   dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
-    // })();
-    // setApiLoading(false);
-    // setSlabArray([]);
-    // setNewItemInput(ITEM_INITIAL_INPUT);
+    setApiLoading(true);
+    (async () => {
+      const newItem = await Axios.request({
+        url: "/api/inventory/addNewItem",
+        method: "post",
+        data: { ...itemObject },
+        headers: {
+          Cookie: "",
+        },
+      });
+      dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
+    })();
+    setApiLoading(false);
+    setSlabArray([]);
+    setNewItemInput(ITEM_INITIAL_INPUT);
   };
 
   const handleItemInputChange = (e, itemInput, setItemInput, index) => {
     const { name, value, type } = e.target;
-    itemToBeUpdated = { [index]: { ...items[index] } };
+    console.log("itemToBeUpdated", itemToBeUpdated);
+    itemToBeUpdated = { [index]: { ...items[index], ...itemToBeUpdated[index] } };
+    // itemToBeUpdated = { [index]: { ...items[index] } };
+    console.log(type)
     setItemInput({
       ...itemInput,
       [name]: type === "number" ? Number(value) : value,
@@ -183,7 +186,7 @@ const ItemsList = () => {
   // const handleItemSelectChange = (e, itemInput, setItemInput, index) => {
   const handleItemSelectChange = (value, name, index, itemInput, setItemInput) => {
     // const { name, value, type } = e.target;
-    itemToBeUpdated = { [index]: { ...items[index] } };
+    itemToBeUpdated = { [index]: { ...items[index], ...itemToBeUpdated[index] } };
     setItemInput({
       ...itemInput,
       [name]: value,
@@ -356,23 +359,12 @@ const ItemsList = () => {
 
   const ItemUseByDateRow = ({ index }) => {
     const name = "useByDate";
-    const [itemInput, setItemInput] = useState({
-      useByDate: items[index][name],
-    });
+    // console.log(items[index][name]);
+    // const [itemInput, setItemInput] = useState({
+    //   useByDate: items[index][name],
+    // });
     return (
-      <>
-        <TableRow
-          index={index}
-          style={{ width: "100px" }}
-          items={items}
-          itemsList={itemsList}
-          dispatch={dispatch}
-          handleItemInputChange={handleItemSelectChange}
-          itemInput={itemInput}
-          setItemInput={setItemInput}
-          name={name}
-        />
-      </>
+      <ShowUseByDateElement data={items[index][name]} index={index} />
     );
   };
 
@@ -1004,7 +996,7 @@ const ItemsList = () => {
           <ItemQuantityUnitRow style={style} index={index} />
         </td>
         <td>
-          {/* <ItemUseByDateRow style={style} index={index} /> */}
+          <ItemUseByDateRow style={style} index={index} />
         </td>
         <td>
           <ItemMRPRow style={style} index={index} />
@@ -1057,10 +1049,13 @@ const ItemsList = () => {
 
   // To adjust height of the rows
   const itemRowSize = (index) => {
+    // console.log(items[index]);
     if (items[index]?.slabPricing.length >= 1) {
       return items[index].slabPricing.length * 21 + 22 + 28;
+    } else if (items[index].useByDate.length >= 1) {
+      return items[index].useByDate.length * 40 + 90;
     } else {
-      return 60;
+      return 120;
     }
   };
 
@@ -1080,7 +1075,7 @@ const ItemsList = () => {
 
   const UseByDateElement = () => {
     const [selectedDate, setSelectedDate] = useState('');
-
+    // const [savedDates, setSavedDates] = useState(data);
     // To add new date 
     const addNewDate = (e) => {
       setSelectedDate(e.target.value);
@@ -1117,9 +1112,70 @@ const ItemsList = () => {
       <div className='useby-date-container'>
         <input type="date" name="useByDate" id="useByDate" value={selectedDate} onChange={(e) => addNewDate(e)} />
         {useByDateData.map((item, index) => {
+          {/* {data?.map((item, index) => { */ }
           return (
             <div key={index} className="new-date-row">
               <TextInput value={item.date} readOnly></TextInput>
+              <NumberInput className='per-date-quantity' value={item.value} onChange={(e) => handleAddDateInputChange(e, index)} hideControls></NumberInput>
+              <Image className='delete-icon' src='images/cross.svg' width={14} onClick={(e) => deleteDate(e, index)}></Image>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  const ShowUseByDateElement = ({ data, index }) => {
+    const [selectedDate, setSelectedDate] = useState('');
+    const [savedDates, setSavedDates] = useState(data);
+    // console.log(data, index);
+    // To add new date 
+    const addNewDate = (e) => {
+      setSelectedDate(e.target.value);
+      const dateSelected = savedDates.findIndex((item) => item.date === e.target.value);
+      if (dateSelected !== -1) {
+        alert('date already selected!');
+        return;
+      }
+      let dateArray = [...savedDates, { date: e.target.value, value: 0 }]
+      dateArray.sort((a, b) => {
+        return (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0)
+      });
+
+      setSavedDates([...dateArray]);
+      console.log([...dateArray], itemToBeUpdated[index]);
+      // let newItemToUpdate = ;
+      itemToBeUpdated = {[index]: { ...items[index], ...itemToBeUpdated[index], useByDate: [...dateArray] }};
+      // console.log(itemToBeUpdated, {...itemToBeUpdated[index]});
+      // setNewItemInput({...newItemInput, useByDate: [...dateArray]});
+    }
+
+    // To change any date item quantity 
+    const handleAddDateInputChange = (e, inputIndex) => {
+      let newDateObj = { date: savedDates[inputIndex].date, value: e };
+      savedDates.splice(inputIndex, 1, newDateObj);
+      setSavedDates(savedDates);
+      console.log({[index]: { ...items[index], ...itemToBeUpdated[index], useByDate: savedDates }});
+      itemToBeUpdated = {[index]: { ...items[index], ...itemToBeUpdated[index], useByDate: savedDates }};
+      // setNewItemInput({...newItemInput, useByDate: useByDateData})
+    }
+
+    // To remove any date 
+    const deleteDate = (e, inputIndex) => {
+      savedDates.splice(inputIndex, 1);
+      setSavedDates([...savedDates]);
+      itemToBeUpdated = {[index]: { ...items[index], ...itemToBeUpdated[index], useByDate: [...savedDates] }};
+      // setNewItemInput({...newItemInput, useByDate: [...useByDateData]});
+    }
+
+    return (
+      <div className='useby-date-container'>
+        <input type="date" name="useByDate" id="useByDate" value={selectedDate} onChange={(e) => addNewDate(e)} />
+        {/* {useByDateData.map((item, index) => { */}
+        {savedDates?.map((item, index) => {
+          return (
+            <div key={index} className="new-date-row">
+              <TextInput value={item.date.slice(0, 10)} readOnly></TextInput>
               <NumberInput className='per-date-quantity' value={item.value} onChange={(e) => handleAddDateInputChange(e, index)} hideControls></NumberInput>
               <Image className='delete-icon' src='images/cross.svg' width={14} onClick={(e) => deleteDate(e, index)}></Image>
             </div>
@@ -1535,10 +1591,6 @@ const TableRow = ({
         onChange={(val) => handleItemInputChange(val, name, index, itemInput, setItemInput)}
       />
     );
-  } else if (name === "useByDate") {
-    return (
-      <Input component="button">{name === "useByDate" && itemInput.useByDate.length ? itemInput.useByDate[0] : itemInput[name]}</Input>
-    )
   } else {
     const Component = name === "itemName" ? Textarea : Input;
     return (
@@ -1559,6 +1611,7 @@ const TableRow = ({
 const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
+    console.log(itemToBeUpdated[index], index, itemToBeUpdated);
     const { _id } = itemToBeUpdated[index];
     setApiLoading(true);
     const updatedItem = await Axios.request({
@@ -1585,7 +1638,7 @@ const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
     // >
     //   <Text>Update</Text>
     // </Button>
-    <Image src="images/check.svg" loading={apiLoading} onClick={handleAddItem} width={22} style={{ marginLeft: '15px' }} />
+    <Image src="images/check.svg" loading={apiLoading} onClick={handleAddItem} width={22} style={{ marginLeft: '15px', cursor: 'pointer' }} />
   );
 };
 
