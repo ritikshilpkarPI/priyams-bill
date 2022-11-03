@@ -69,7 +69,7 @@ const ItemsList = () => {
 
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+    // console.log(name, value);
     setNewItemInput({ ...newItemInput, [name]: value });
     const filteredItems = itemsList.filter(
       (itemObj) =>
@@ -79,7 +79,7 @@ const ItemsList = () => {
           .toLowerCase()
           .includes(value.toString().toLowerCase())
     );
-    console.log(filteredItems);
+    // console.log(filteredItems);
     setItems([...filteredItems]);
   };
 
@@ -151,7 +151,7 @@ const ItemsList = () => {
       itemObject = { ...newItemInput, useByDate: useByDateData };
     }
 
-    console.log(itemObject);
+    // console.log(itemObject);
 
     setApiLoading(true);
     (async () => {
@@ -163,6 +163,7 @@ const ItemsList = () => {
           Cookie: "",
         },
       });
+      // console.log(newItem);
       dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
     })();
     setApiLoading(false);
@@ -172,10 +173,10 @@ const ItemsList = () => {
 
   const handleItemInputChange = (e, itemInput, setItemInput, index) => {
     const { name, value, type } = e.target;
-    console.log("itemToBeUpdated", itemToBeUpdated);
+    // console.log("itemToBeUpdated", itemToBeUpdated);
     itemToBeUpdated = { [index]: { ...items[index], ...itemToBeUpdated[index] } };
     // itemToBeUpdated = { [index]: { ...items[index] } };
-    console.log(type)
+    // console.log(type)
     setItemInput({
       ...itemInput,
       [name]: type === "number" ? Number(value) : value,
@@ -208,6 +209,9 @@ const ItemsList = () => {
           Cookie: "some_cookie",
         },
       });
+      if (deletedItem.status === 200) {
+        alert('Item deleted...')
+      }
       const newList = deletedItem.data.items;
       dispatch({ type: "NEW_ITEMS_LIST", payload: [...newList] });
       setApiLoading(false);
@@ -222,7 +226,7 @@ const ItemsList = () => {
       // >
       //   <Text>Delete</Text>
       // </Button>
-      <Image src="/images/cross.svg" width={18} style={{ marginLeft: '20px' }} loading={apiLoading} onClick={handleDeleteItem} />
+      <Image src="/images/cross.svg" width={18} style={{ marginLeft: '20px', cursor: 'pointer' }} loading={apiLoading} onClick={handleDeleteItem} />
     );
   };
 
@@ -335,6 +339,7 @@ const ItemsList = () => {
       </>
     );
   };
+
   const ItemQuantityUnitRow = ({ index }) => {
     const name = "quantityUnitName";
     const [itemInput, setItemInput] = useState({
@@ -1116,7 +1121,7 @@ const ItemsList = () => {
           return (
             <div key={index} className="new-date-row">
               <TextInput value={item.date} readOnly></TextInput>
-              <NumberInput className='per-date-quantity' value={item.value} onChange={(e) => handleAddDateInputChange(e, index)} hideControls></NumberInput>
+              <NumberInput className='per-date-quantity' value={item.value} style={{ padding: '7px 7px' }} onChange={(e) => handleAddDateInputChange(e, index)} hideControls></NumberInput>
               <Image className='delete-icon' src='images/cross.svg' width={14} onClick={(e) => deleteDate(e, index)}></Image>
             </div>
           )
@@ -1145,7 +1150,7 @@ const ItemsList = () => {
       setSavedDates([...dateArray]);
       console.log([...dateArray], itemToBeUpdated[index]);
       // let newItemToUpdate = ;
-      itemToBeUpdated = {[index]: { ...items[index], ...itemToBeUpdated[index], useByDate: [...dateArray] }};
+      itemToBeUpdated = { [index]: { ...items[index], ...itemToBeUpdated[index], useByDate: [...dateArray] } };
       // console.log(itemToBeUpdated, {...itemToBeUpdated[index]});
       // setNewItemInput({...newItemInput, useByDate: [...dateArray]});
     }
@@ -1155,8 +1160,8 @@ const ItemsList = () => {
       let newDateObj = { date: savedDates[inputIndex].date, value: e };
       savedDates.splice(inputIndex, 1, newDateObj);
       setSavedDates(savedDates);
-      console.log({[index]: { ...items[index], ...itemToBeUpdated[index], useByDate: savedDates }});
-      itemToBeUpdated = {[index]: { ...items[index], ...itemToBeUpdated[index], useByDate: savedDates }};
+      console.log({ [index]: { ...items[index], ...itemToBeUpdated[index], useByDate: savedDates } });
+      itemToBeUpdated = { [index]: { ...items[index], ...itemToBeUpdated[index], useByDate: savedDates } };
       // setNewItemInput({...newItemInput, useByDate: useByDateData})
     }
 
@@ -1164,7 +1169,7 @@ const ItemsList = () => {
     const deleteDate = (e, inputIndex) => {
       savedDates.splice(inputIndex, 1);
       setSavedDates([...savedDates]);
-      itemToBeUpdated = {[index]: { ...items[index], ...itemToBeUpdated[index], useByDate: [...savedDates] }};
+      itemToBeUpdated = { [index]: { ...items[index], ...itemToBeUpdated[index], useByDate: [...savedDates] } };
       // setNewItemInput({...newItemInput, useByDate: [...useByDateData]});
     }
 
@@ -1622,6 +1627,10 @@ const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
         Cookie: "some_cookie",
       },
     });
+    console.log(updatedItem.status);
+    if (updatedItem.status === 200) {
+      alert('Item updated...');
+    }
     itemToBeUpdated = {};
     const newList = [...items];
     newList.splice(index, 1, { ...updatedItem.data.message });
