@@ -15,7 +15,8 @@ import {
     OpenClose,
     StockQuantity,
     Report,
-    Login
+    Login,
+    Attendance
 } from '../Pages'
 
 const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
@@ -40,12 +41,12 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                         )}
                     />
                     <Route path="/openClose" component={OpenClose} />
-
                     <Route exact path="/inventory" component={ItemsList} />
                     <Route exact path="/" component={Home} />
                     <ProtectedComponent role={access.DAY_BILL_ROUTE}>
                         <Route exact path="/dayBill" component={DayWiseBillFeed} />
                     </ProtectedComponent>
+                    <Route exact path="/attendance" component={Attendance} />
                     <Route exact path="/stockquantity" component={StockQuantity} />
                     <Route exact path="/allBill" component={BillFeed} />
                     <ProtectedComponent role={access.REPORT_PAGE_ROUTE}>

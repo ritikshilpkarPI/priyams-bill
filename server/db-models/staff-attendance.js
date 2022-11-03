@@ -8,6 +8,7 @@ const StaffAttendanceSchema = new mongoose.Schema(
         date: { type: Date },
         totalHoursOfWork: { type: Number },
         workHoursCompleted: { type: Boolean },
+        attendance: { type: Boolean }
     }
 );
 
