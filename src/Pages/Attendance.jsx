@@ -1,53 +1,79 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Table, Loader } from '@mantine/core'
+import { Table, Loader, Collapse, Title } from '@mantine/core'
+import { DateRangePicker } from '@mantine/dates';
+
 function msToTime(duration) {
     const seconds = duration / 1000;
     const hours = seconds / 3600
     return Math.floor(hours);
 }
-// function pad(number) {
-//     var result = "" + number;
-//     if (result.length < 2) {
-//         result = "0" + result;
-//     }
 
-//     return result;
-// }
-
-// let minutesPerDay = 60 * 24;
-// function millisToDaysHoursMinutes(millis) {
-//     var seconds = millis / 1000;
-//     var totalMinutes = seconds / 60;
-
-//     var days = totalMinutes / minutesPerDay;
-//     totalMinutes -= minutesPerDay * days;
-//     var hours = totalMinutes / 60;
-//     totalMinutes -= hours * 60;
-
-//     return days > 1 ? days + "." + pad(hours) + "." + pad(totalMinutes) : 0;
-// }
 const Attendance = () => {
     const [attendance, setAttendance] = useState([])
+    const [dateWiseAttendance, setDateWiseAttendance] = useState([])
     const [loader, setLoader] = useState(false);
+    const [loader2, setLoader2] = useState(false)
+    const [open, setOpen] = useState(false)
+    const [name, setname] = useState("");
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' }
+    const region = "en-US"
+    const [value, setValue] = useState([
+        new Date(),
+        new Date(),
+    ])
+    console.log({ value });
     const getAttendance = async () => {
-        const attendance = await axios.request({
-            url: "/api/attendance/dailyAttendance",
-            method: "post",
-        })
-        const monthlyattendance = await axios.request({
-            url: "/api/attendance/monthlyAttendance",
-            method: "get",
-        })
-        console.log({ attendance, monthlyattendance });
-        setAttendance(monthlyattendance.data.message)
+        setLoader(true)
+        try {
+            const monthlyattendance = await axios.request({
+                url: "/api/attendance/monthlyAttendance",
+                method: "get",
+            })
+            setAttendance(monthlyattendance.data.message)
+            setLoader(false)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const getDateWiseAttendance = async (name) => {
+        setname(name)
+        setLoader2(true)
+        try {
+            const result = await axios.request({
+                url: `/api/attendance/dailyAttendance`,
+                method: "post",
+                data: {
+                    startDate: value[0].toLocaleDateString(region, options),
+                    endDate: value[1].toLocaleDateString(region, options),
+                    name
+                }
+            });
+            setDateWiseAttendance(result.data.message)
+        } catch (error) {
+            console.log(error);
+        }
+        setLoader2(false)
     }
     useEffect(() => {
         getAttendance()
-        // monthlyattendance()
     }, [])
-    const rows = attendance.map((element, index) => (
+    const rows2 = dateWiseAttendance.map((element, index) => (
         <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{element.date}</td>
+            <td>{element.attendance ? "Present" : "Absent"}</td>
+            <td>{element.arrivingTime}</td>
+            <td>{element.leavingTime}</td>
+            <td>{msToTime(element.totalHoursOfWork)}</td>
+            <td>{element.workHoursCompleted ? "Completed" : "Not Completed"}</td>
+        </tr>
+    ))
+    const rows = attendance.map((element, index) => (
+        <tr key={index} onClick={() => {
+            getDateWiseAttendance(element._id);
+            setOpen(!open)
+        }}>
             <td>{index + 1}</td>
             <td>{element._id}</td>
             <td>{element.workingDays}</td>
@@ -57,9 +83,16 @@ const Attendance = () => {
     ));
 
     return (
-        <div>
+        <div className="attendance-wrapper">
+            <DateRangePicker
+                label="Select Date"
+                placeholder="Pick dates range"
+                value={value}
+                onChange={setValue}
+                className="date-picker"
+            />
             {
-                loader ? <Loader color="blue" size="xl" /> :
+                loader ? <Loader color="blue" size="lg" /> :
 
                     <Table highlightOnHover withBorder withColumnBorders>
                         <thead>
@@ -74,7 +107,34 @@ const Attendance = () => {
                         <tbody>{rows}</tbody>
                     </Table>
             }
-
+            {
+                loader2 ? <Title order={3}>Data is fetching for {name}</Title> : ''
+            }
+            {
+                loader2 ?
+                    <Loader color="blue" size="lg" /> :
+                    !dateWiseAttendance.length ? <>
+                        <Title className="table-title" order={2}>No Data is present for {name} on this Date</Title>
+                        <p>Try to choose different dates</p>
+                    </> :
+                        open ? <Collapse in={open}>
+                            <Title className="table-title" order={3}>Viewing Attendance for {name}  </Title>
+                            <Table classNames="attendance-table" highlightOnHover withBorder withColumnBorders>
+                                <thead>
+                                    <tr>
+                                        <th>SR NO</th>
+                                        <th>Date</th>
+                                        <th>Present/Absent</th>
+                                        <th>In Time</th>
+                                        <th>Out Time</th>
+                                        <th>Total Working Hours</th>
+                                        <th>Work Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>{rows2}</tbody>
+                            </Table>
+                        </Collapse> : ''
+            }
         </div>
     )
 }

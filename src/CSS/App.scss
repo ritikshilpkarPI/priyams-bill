@@ -448,9 +448,6 @@ input[type="number"] {
       table {
         tbody {
           tr {
-            .data-cell {
-              div {}
-            }
 
             .data-cell:nth-child(1) {
               width: 60px;
@@ -512,4 +509,25 @@ p.staffname {
 // Attendance css
 .attendance-container {
   margin-top: 2rem;
+}
+
+.attendance-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.date-picker {
+  width: 300px;
+  margin-bottom: 1rem;
+}
+
+.attendance-table {
+  margin-top: 2rem;
+}
+
+.table-title {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }

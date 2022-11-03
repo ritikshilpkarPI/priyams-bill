@@ -36,6 +36,21 @@ const EmployeeAttendance = () => {
         if (name === attendee?.name && state === "arrival") {
             alert(`You have already made attendance for ${name} Arrival `)
         }
+        if (state === "absent") {
+            try {
+                await Axios.request({
+                    url: `/api/attendance/markAbsent`,
+                    method: "post",
+                    data: {
+                        name,
+                        date: dateString,
+                    }
+                });
+                alert(`You have successfully marked Absent  for ${name} `)
+            } catch (error) {
+                console.log(error)
+            }
+        }
         if (name !== attendee?.name && state === "arrival") {
             try {
                 const result = await Axios.request({
@@ -45,15 +60,14 @@ const EmployeeAttendance = () => {
                         name,
                         arrivingTime: timeString,
                         date: dateString,
-                        attendance
+                        attendance: attendance === "present" ? true : false
                     }
                 });
                 localStorage.setItem(result.data.message.name, JSON.stringify(true));
-                alert(`You have marked the Arrival attendance for ${name} `)
+                alert(`You have successfully marked the Arrival attendance for ${name} `)
             } catch (error) {
                 console.log(error)
             }
-
         }
         if (name === attendee?.name && state === "leave") {
             try {
@@ -73,7 +87,7 @@ const EmployeeAttendance = () => {
                         }
                     }
                 });
-                alert(`You have marked the Leaving attendance for ${name} `)
+                alert(`You have successfully marked the Leaving attendance for ${name} `)
             } catch (error) {
                 console.log(error);
             }
