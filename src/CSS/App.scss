@@ -271,7 +271,7 @@ input[type="number"] {
     .print-table-head,
     .print-table-row {
       display: flex;
-      justify-content: end;
+      justify-content: flex-end;
 
       p {
         padding: 5px;

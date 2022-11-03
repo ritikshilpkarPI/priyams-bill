@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { Select, TextInput, NumberInput, Image } from '@mantine/core';
 import { addItemRow, itemInitialObj } from './constant';
+import { AppStateContext } from 'src/AppState/appState.context';
 
 // To set use by date on item while adding 
-const UseByDateElement = ({ itemObjState }) => {
-    const [useByDateData, setuseByDateData] = useState([]);
+const UseByDateElement = ({ itemObjState, elementDateData }) => {
+    const [useByDateData, setuseByDateData] = useState(elementDateData || []);
     const [selectedDate, setSelectedDate] = useState('');
 
     // To add new date 
@@ -54,62 +55,95 @@ const UseByDateElement = ({ itemObjState }) => {
     )
 }
 
-const addItemToList = (itemObj, allItem) => {
-    console.log(itemInitialObj);
-    allItem[1]([...allItem[0], itemObj[0]]);
-    itemObj[1]({...itemInitialObj})
-}
 
 // Add item row or first row
-const RowItem = ({ item, itemState, allItem }) => {
-    console.log('rowitem', itemState[0][item.name])
+const RowItem = ({ item, itemObjState }) => {
+    const { purchaseItemsStateAndDispatch } = useContext(AppStateContext);
+    const [purchaseItems, dispatch] = purchaseItemsStateAndDispatch;
+    const [itemObj, setItemObj] = itemObjState;
+
+    // To add item in list 
+    const addItemToList = () => {
+        dispatch({ type: 'UPDATE_PURCHASE_ITEMS_LIST', payload: [...purchaseItems, itemObj] });
+        setItemObj(itemInitialObj);
+    }
+
+    // Handle input change on different input fields
     const handleItemInputChange = (e, type, name) => {
         if (type === 'text') {
-            itemState[1]({ ...itemState[0], [e.target.name]: e.target.value })
+            setItemObj({ ...itemObj, [e.target.name]: e.target.value })
         } else if (type === 'number') {
-            itemState[1]({ ...itemState[0], [name]: e })
+            setItemObj({ ...itemObj, [name]: e })
         } else if (type === 'select') {
-            itemState[1]({ ...itemState[0], [name]: e })
+            setItemObj({ ...itemObj, [name]: e });
         }
     }
 
+
     const itemTypeMap = {
-        TextInput: (item) => <TextInput className='text-input' value={itemState[0][item.name]} name={item.name} onChange={(e) => handleItemInputChange(e, 'text')}></TextInput>,
-        NumberInput: (item) => <NumberInput className='number-input' value={itemState[0][item.name]} onChange={(e) => handleItemInputChange(e, 'number', item.name)} hideControls />,
+        TextInput: (item) => <TextInput className='text-input' value={itemObj[item.name]} name={item.name} onChange={(e) => handleItemInputChange(e, 'text')}></TextInput>,
+        NumberInput: (item) => <NumberInput className='number-input' value={Number(itemObj[item.name])} onChange={(e) => handleItemInputChange(e, 'number', item.name)} hideControls />,
         Select: (item) => <Select
             name={item.name}
             className='select-input'
             data={item.data}
             onChange={(e) => handleItemInputChange(e, 'select', item.name)}
         />,
-        Custom: () => <UseByDateElement itemObjState={itemState} />,
-        icon: (item) => <div className="add-icon" onClick={() => addItemToList(itemState, allItem)}><Image src={item.src} width={20} /></div>
+        Custom: () => <UseByDateElement itemObjState={[itemObj, setItemObj]} />,
+        icon: (item) => <div className="add-icon" onClick={addItemToList}><Image src={item.src} width={20} /></div>
     }
 
-    return itemTypeMap[item.type](item)
+    return itemTypeMap[item.type](item);
+}
+
+const AddItemRow = () => {
+    const [itemObj, setItemObj] = useState(itemInitialObj);
+
+    return (
+        <tr>
+            {addItemRow.map((item, index) => {
+                return <td key={index}>
+                    <RowItem item={item} itemObjState={[itemObj, setItemObj]} />
+                </td>
+            })}
+        </tr>
+    )
+};
+
+const ShowTableItems = () => {
+    const { purchaseItemsStateAndDispatch } = useContext(AppStateContext);
+
+    return (
+        <>
+            {
+                purchaseItemsStateAndDispatch[0].map((element, index) => {
+                    console.log(element);
+                    return (
+                        <tr key={index}>
+                            <td>{element.itemBarcode}</td>
+                            <td>{element.itemBrandName}</td>
+                            <td>{element.itemName}</td>
+                            <td>{element.itemCategory}</td>
+                            <td>{element.itemQuantity}</td>
+                            <td>{element.itemUnit}</td>
+                            <td><UseByDateElement elementDateData={element.itemUseByDate} /></td>
+                            <td>{element.itemMRPperUnit}</td>
+                            <td>{element.itemCostPricePerUnit}</td>
+                            <td>{element.itemSellingPricePerUnit}</td>
+                            <td>{element.itemTotalStockQuantity}</td>
+                        </tr>
+                    )
+                })
+            }
+        </>
+    )
 }
 
 const PurchaseOrderBody = () => {
-    const [itemObj, setItemObj] = useState(itemInitialObj);
-    const [allPurchasedItem, setAllPurchasedItem] = useState([]);
-    console.log(allPurchasedItem);
-
     return (
         <tbody>
-            <tr>
-                {addItemRow.map((item, index) => {
-                    return <td key={index}>
-                        <RowItem item={item} allItem={[allPurchasedItem, setAllPurchasedItem]} itemState={[itemObj, setItemObj]} />
-                    </td>
-                })}
-            </tr>
-            <tr>
-                <td>1210</td>
-                <td>sdfasd</td>
-                <td>asdf</td>
-                <td>asdf</td>
-                <td>asd</td>
-            </tr>
+            <AddItemRow />
+            <ShowTableItems />
         </tbody>
     )
 }
