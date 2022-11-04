@@ -13,7 +13,7 @@ import { AppStateContext } from "../AppState/appState.context";
 import AddExpense from "../components/AddExpense";
 import ProtectedComponent from "src/components/ProtectedComponent";
 import access from '../access';
-
+import EmployeeAttendance from "../components/EmployeeAttendance";
 const INITIAL_VALS = {
   twoThousand: 0,
   fiveHundred: 0,
@@ -338,6 +338,7 @@ const OpenClose = () => {
           gap: "20px",
           marginTop: "20px"
         }}
+        className="left-side-opening-container"
       >
         <div
           style={{
@@ -485,7 +486,10 @@ const OpenClose = () => {
             </Button>
           </div>
         </div>
-        <AddExpense date={expenseDataDate} />
+        <div className="right-side-opening-container">
+          <AddExpense date={expenseDataDate} />
+          <EmployeeAttendance />
+        </div>
       </div>
       <Title style={{ margin: "44px" }} order={2}>
         All Procedures

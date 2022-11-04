@@ -11,3 +11,4 @@ export const StockQuantity = lazy(() => import("./StockQuantity"));
 export const Report = lazy(() => import("./Report"));
 export const Login = lazy(() => import("./Login"));
 export const PurchaseOrder = lazy(() => import("./PurchaseOrder"));
+export const Attendance = lazy(() => import("./Attendance"));

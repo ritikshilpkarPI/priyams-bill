@@ -506,3 +506,29 @@ p.staffname {
   margin: 5px 20px 0 0;
   color: gray;
 }
+
+// Attendance css
+.attendance-container {
+  margin-top: 2rem;
+}
+
+.attendance-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.date-picker {
+  width: 300px;
+  margin-bottom: 1rem;
+}
+
+.attendance-table {
+  margin-top: 2rem;
+}
+
+.table-title {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
