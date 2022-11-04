@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Table, Loader, Collapse, Title } from '@mantine/core'
+import { Table, Loader, Title } from '@mantine/core'
 import { DateRangePicker } from '@mantine/dates';
 
 function msToTime(duration) {
@@ -22,7 +22,6 @@ const Attendance = () => {
         new Date(),
         new Date(),
     ])
-    console.log({ value });
     const getAttendance = async () => {
         setLoader(true)
         try {
@@ -61,10 +60,10 @@ const Attendance = () => {
     const rows2 = dateWiseAttendance.map((element, index) => (
         <tr key={index}>
             <td>{index + 1}</td>
-            <td>{element.date}</td>
+            <td>{new Date(element.date).toLocaleDateString("en-US", { year: 'numeric', month: 'numeric', day: 'numeric' })}</td>
             <td>{element.attendance ? "Present" : "Absent"}</td>
-            <td>{element.arrivingTime}</td>
-            <td>{element.leavingTime}</td>
+            <td>{new Date(element.arrivingTime).toLocaleTimeString()}</td>
+            <td>{new Date(element.leavingTime).toLocaleTimeString()}</td>
             <td>{msToTime(element.totalHoursOfWork)}</td>
             <td>{element.workHoursCompleted ? "Completed" : "Not Completed"}</td>
         </tr>
@@ -117,9 +116,9 @@ const Attendance = () => {
                         <Title className="table-title" order={2}>No Data is present for {name} on this Date</Title>
                         <p>Try to choose different dates</p>
                     </> :
-                        open ? <Collapse in={open}>
+                        <>
                             <Title className="table-title" order={3}>Viewing Attendance for {name}  </Title>
-                            <Table classNames="attendance-table" highlightOnHover withBorder withColumnBorders>
+                            <Table className="attendance-table" highlightOnHover withBorder withColumnBorders>
                                 <thead>
                                     <tr>
                                         <th>SR NO</th>
@@ -133,7 +132,8 @@ const Attendance = () => {
                                 </thead>
                                 <tbody>{rows2}</tbody>
                             </Table>
-                        </Collapse> : ''
+
+                        </>
             }
         </div>
     )
