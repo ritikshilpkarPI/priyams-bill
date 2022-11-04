@@ -7,4 +7,5 @@ export const PAGES = {
     openClose: "Open Close",
     stockquantity: "Shortage Items",
     report: "Report",
+    attendance: "Attendance"
 };

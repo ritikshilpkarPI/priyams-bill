@@ -16,7 +16,6 @@ const BillNarrator = ({ billTotal }) => {
   function speak(text, voice, rate, pitch, volume, lang) {
     // create a SpeechSynthesisUtterance to configure the how text to be spoken
     let speakData = new SpeechSynthesisUtterance();
-    // console.log(speakData);
     speakData.volume = volume; // From 0 to 1
     speakData.rate = rate; // From 0.1 to 10
     speakData.pitch = pitch; // From 0 to 2

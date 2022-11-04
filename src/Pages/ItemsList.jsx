@@ -527,7 +527,7 @@ const ItemsList = () => {
     return (
       <div style={{ paddingTop: "0px", width: "155px" }}>
         <div
-          style={{ display: "flex", justifyContent: "end", margin: "3px 0" }}
+          style={{ display: "flex", justifyContent: "flex-end", margin: "3px 0" }}
         >
           <Image
             onClick={addNewSlab}
@@ -850,7 +850,7 @@ const ItemsList = () => {
     return (
       <div style={{ paddingTop: "0px" }}>
         <div
-          style={{ display: "flex", justifyContent: "end", margin: "3px 0" }}
+          style={{ display: "flex", justifyContent: "flex-end", margin: "3px 0" }}
         >
           <Image
             onClick={addNewSlab}
