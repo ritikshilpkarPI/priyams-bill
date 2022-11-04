@@ -10,3 +10,4 @@ export const OpenClose = lazy(() => import("./OpenClose"));
 export const StockQuantity = lazy(() => import("./StockQuantity"));
 export const Report = lazy(() => import("./Report"));
 export const Login = lazy(() => import("./Login"));
+export const Attendance = lazy(() => import("./Attendance"));
