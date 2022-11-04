@@ -38,6 +38,7 @@ const ITEM_INITIAL_INPUT = {
 };
 
 let itemToBeUpdated = {};
+let categoryArray = ['Bakery', 'Beverage', 'Dairy and Frozen', 'Staple', 'Personal care', 'Packaged Food', 'Home and Kitchen', 'Stationery', 'Grocery', 'Baby and kids', 'Electronic', 'Spices and fast food', 'Pooja', 'Oil and ghee', 'Sweet and Chocolate', 'Plastic', 'Miscellanous'];
 
 const ItemsList = () => {
   const [items, setItems] = useState([]);
@@ -1494,7 +1495,7 @@ const ItemsList = () => {
                 />
               </td>
               <td>
-                <Select
+                {/* <Select
                   placeholder="Category"
                   data={[
                     { value: "Rice", label: "Rice" },
@@ -1504,6 +1505,14 @@ const ItemsList = () => {
                   ]}
                   value={newItemInput["itemCategory"]}
                   onChange={(val) => handleSelectChange(val, "itemCategory")}
+                /> */}
+                <Select
+                  // label="What item is the best?"
+                  placeholder="Pick one"
+                  searchable
+                  nothingFound="No options"
+                  maxDropdownHeight={280}
+                  data={categoryArray}
                 />
               </td>
               <td>
@@ -1621,18 +1630,18 @@ const TableRow = ({
     const data =
       name === "quantityUnitName"
         ? [
-            { value: "kg", label: "kg" },
-            { value: "grams", label: "grams" },
-            { value: "liter", label: "liter" },
-            { value: "ml", label: "ml" },
-            { value: "Piece", label: "Piece" },
-          ]
+          { value: "kg", label: "kg" },
+          { value: "grams", label: "grams" },
+          { value: "liter", label: "liter" },
+          { value: "ml", label: "ml" },
+          { value: "Piece", label: "Piece" },
+        ]
         : [
-            { value: "Rice", label: "Rice" },
-            { value: "Pulse", label: "Pulse" },
-            { value: "Beverage", label: "Beverage" },
-            { value: "Spice", label: "Spice" },
-          ];
+          { value: "Rice", label: "Rice" },
+          { value: "Pulse", label: "Pulse" },
+          { value: "Beverage", label: "Beverage" },
+          { value: "Spice", label: "Spice" },
+        ];
 
     return (
       <Select
