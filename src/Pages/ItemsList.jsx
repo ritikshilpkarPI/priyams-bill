@@ -1047,7 +1047,7 @@ const ItemsList = () => {
     if (csvFile) {
       Papa.parse(csvFile, {
         complete: async function (results) {
-          const response = await Axios.request({
+          await Axios.request({
             url: "/api/inventory/addbulkitems",
             method: "post",
             data: results.data,
@@ -1129,9 +1129,6 @@ const ItemsList = () => {
           onChange={(e) => addNewDate(e)}
         />
         {useByDateData.map((item, index) => {
-          {
-            /* {data?.map((item, index) => { */
-          }
           return (
             <div key={index} className="new-date-row">
               <TextInput value={item.date} readOnly></TextInput>
