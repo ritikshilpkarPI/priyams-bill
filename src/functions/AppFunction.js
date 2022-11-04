@@ -10,7 +10,7 @@ const AppFunction = (history, location) => {
     const { itemsStateAndDispatch } = useContext(AppStateContext);
     const [itemsList, dispatch] = itemsStateAndDispatch;
     const [loaderDisplay, setLoaderDisplay] = useState(true);
-    const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
+    const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[2]);
     const staffName = JSON.parse(localStorage.getItem("priyam-store"))?.name;
     const staffUserName = JSON.parse(
         localStorage.getItem("priyam-store")

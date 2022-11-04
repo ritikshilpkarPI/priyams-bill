@@ -383,7 +383,9 @@ const Billing = ({ billID = "", loaderDisplay }) => {
   return (
     <>
       <div className="billing-container">
-        <h4 style={{ marginBottom: "20px" }}>Total Items : {itemsList.length}</h4>
+        <h4 style={{ marginBottom: "20px" }}>
+          Total Items : {itemsList.length}
+        </h4>
         <div className="header">
           <h1>PRIYAM STORES</h1>
           <h3>112-C, Indrapuri, Bhopal - 462022</h3>
@@ -605,7 +607,8 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                                 itemQuantityInBill:
                                   billItem.itemQuantityInBill + 1,
                               },
-                              itemQuantityInBill: billItem.itemQuantityInBill + 1,
+                              itemQuantityInBill:
+                                billItem.itemQuantityInBill + 1,
                             };
                             bill.billItems.splice(index, 1);
                             setBill((prev) => ({
@@ -624,7 +627,9 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                                   itemDetail,
                                   itemQuantityInBill:
                                     itemDetail.itemQuantityInBill,
-                                  itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+                                  itemMRPtotal: Number(
+                                    itemDetail.itemMRPperUnit
+                                  ),
                                   itemDiscountTotal:
                                     itemDetail.itemDiscountPerUnit,
                                   itemSellingPriceTotal: Number(
@@ -644,9 +649,11 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                             billItems: [
                               {
                                 itemDetail,
-                                itemQuantityInBill: itemDetail.itemQuantityInBill,
+                                itemQuantityInBill:
+                                  itemDetail.itemQuantityInBill,
                                 itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-                                itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+                                itemDiscountTotal:
+                                  itemDetail.itemDiscountPerUnit,
                                 itemSellingPriceTotal: Number(
                                   itemDetail.itemSellingPricePerUnit
                                 ),
@@ -822,7 +829,8 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               disabled
                               defaultValue={
                                 index !== itemObj.slabPricing.length - 1
-                                  ? Number(itemObj.slabPricing[index + 1][1]) - 1
+                                  ? Number(itemObj.slabPricing[index + 1][1]) -
+                                    1
                                   : ""
                               }
                             />{" "}
@@ -1075,27 +1083,24 @@ const Billing = ({ billID = "", loaderDisplay }) => {
         <div className="print-table-body">
           {bill.billItems.map((item, index) => {
             const itemObj = { ...item, ...item.itemDetail };
-            console.log(bill);
             return (
               <div key={index} className="print-table-row">
                 <p>{itemObj["itemName"]}</p>
                 <p className="bold-text">{itemObj["itemQuantityInBill"]}</p>
                 <p>{itemObj["itemMRPperUnit"]}</p>
                 <p>{itemObj["itemSellingPricePerUnit"].toFixed(2)}</p>
-                <p className="bold-text">{(itemObj["itemSellingPricePerUnit"] * itemObj["itemQuantityInBill"]).toFixed(2)}</p>
+                <p className="bold-text">
+                  {(
+                    itemObj["itemSellingPricePerUnit"] *
+                    itemObj["itemQuantityInBill"]
+                  ).toFixed(2)}
+                </p>
               </div>
-            )
+            );
           })}
-          {/* <div className="print-table-row">
-            <p>Total</p>
-            <p className="bold-text">{bill?.totalNumberOfItems?.toFixed(2)}</p>
-            <p></p>
-            <p></p>
-            <p className="bold-text">{bill?.billAmountTotal?.toFixed(2)}</p>
-          </div> */}
           <div className="bill-amount-row">
-              <div>Quantity: {bill?.totalNumberOfItems?.toFixed(2)}</div>
-              <div>Bill Total: {bill?.billAmountTotal?.toFixed(2)}</div>
+            <div>Quantity: {bill?.totalNumberOfItems?.toFixed(2)}</div>
+            <div>Bill Total: {bill?.billAmountTotal?.toFixed(2)}</div>
           </div>
           <div className="amount-section">
             <p className="head">Amount Paid by Customer</p>
@@ -1115,9 +1120,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
             </div>
           </div>
           <div className="discount-section">
-            <p>
-              You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP
-            </p>
+            <p>You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP</p>
           </div>
         </div>
       </div>

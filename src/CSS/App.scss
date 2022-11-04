@@ -2,6 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&family=Poppins&display=swap");
 
 @import "./login";
+@import "./inventoryList";
 @import "./expenses";
 
 * {
@@ -17,13 +18,15 @@
 }
 
 :root {
-  --orange-violet-gradient: linear-gradient(277.04deg,
-      #7267ba -48.69%,
-      #7267ba -23.36%,
-      #ca44a9 35.4%,
-      #ee6477 63.27%,
-      #efd029 136.04%,
-      #efd029 206.71%);
+  --orange-violet-gradient: linear-gradient(
+    277.04deg,
+    #7267ba -48.69%,
+    #7267ba -23.36%,
+    #ca44a9 35.4%,
+    #ee6477 63.27%,
+    #efd029 136.04%,
+    #efd029 206.71%
+  );
   --light-gray-text-color: #8f8f8f;
   --light-gray-background: #e8e5ff;
   --light-gray-border-color: #e4e4e4;
@@ -158,7 +161,6 @@ input[type="number"] {
       }
 
       .body {
-
         tr:first-child,
         td:nth-child(-n + 2) {
           display: none;
@@ -169,7 +171,6 @@ input[type="number"] {
         }
 
         .bill-item-row {
-
           .itemQuantityInBill,
           .itemMRPperUnit,
           .itemSellingPricePerUnit,
@@ -448,7 +449,6 @@ input[type="number"] {
       table {
         tbody {
           tr {
-
             .data-cell:nth-child(1) {
               width: 60px;
             }
