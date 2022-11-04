@@ -14,8 +14,7 @@ const addDailyAttendanceArrival = async (req, res) => {
             await attendance.save()
             res.status(200).json({ message: attendance })
         } else {
-            res.status(400).json({ message: "You have already put attendance for today" })
-
+            res.status(230).json({ message: "You have already put attendance for today" })
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -46,7 +45,15 @@ const getDatesWiseAttendance = async (req, res) => {
     try {
         const allAttendance = await DailyAttendance.aggregate([
             {
-                $match: { "date": { $gte: new Date(startDate), $lt: new Date(endDate) }, "name": name }
+                $match: {
+                    date: { $gt: new Date(new Date(startDate).setHours(00, 00, 00)), $lt: new Date(new Date(endDate).setHours(23, 59, 59)) },
+                    name
+                }
+            },
+            {
+                $sort: {
+                    date: 1
+                }
             }
 
         ])

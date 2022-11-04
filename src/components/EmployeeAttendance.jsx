@@ -3,10 +3,9 @@ import { Group, Title, Select, Button } from '@mantine/core';
 import { useState } from 'react';
 import Axios from 'axios';
 const nameOptionAndValues = [
-    { value: 'rajesh', label: 'Raju' },
     { value: 'anjali', label: 'Anjali' },
-    { value: 'binod', label: 'Binod' },
-    { value: 'vue', label: 'Vue' },
+    { value: 'abhishek', label: 'Abhishek' },
+    { value: 'rajesh', label: 'Rajesh' },
 ]
 const attendanceOptions = [
     { value: 'arrival', label: "Arrival" },
@@ -25,18 +24,15 @@ const EmployeeAttendance = () => {
     const handleAttendance = async () => {
         // Checks if the staff has marks the attendance for arrival and stops him 
         // for doing it again.
+        const date = new Date();
+        const dateString = date.toLocaleDateString("en-US", { year: 'numeric', month: 'numeric', day: 'numeric' })
+        const attendee = JSON.parse(localStorage.getItem(name));
         if (!name) {
             alert("Select the name for attendance")
             return;
-        }
-        const date = new Date();
-        const timeString = date.toLocaleTimeString("en-US")
-        const dateString = date.toLocaleDateString({ year: 'numeric', month: 'numeric', day: 'numeric' })
-        const attendee = JSON.parse(localStorage.getItem(name));
-        if (name === attendee?.name && state === "arrival") {
+        } else if (name === attendee?.name && state === "arrival") {
             alert(`You have already made attendance for ${name} Arrival `)
-        }
-        if (state === "absent") {
+        } else if (state === "absent") {
             try {
                 await Axios.request({
                     url: `/api/attendance/markAbsent`,
@@ -50,26 +46,28 @@ const EmployeeAttendance = () => {
             } catch (error) {
                 console.log(error)
             }
-        }
-        if (name !== attendee?.name && state === "arrival") {
+        } else if (name !== attendee?.name && state === "arrival") {
             try {
                 const result = await Axios.request({
                     url: `/api/attendance/dailyAttendanceArrival`,
                     method: "post",
                     data: {
                         name,
-                        arrivingTime: timeString,
+                        arrivingTime: date,
                         date: dateString,
                         attendance: attendance === "present" ? true : false
                     }
                 });
-                localStorage.setItem(result.data.message.name, JSON.stringify(true));
-                alert(`You have successfully marked the Arrival attendance for ${name} `)
+                if (result.status === 200) {
+                    localStorage.setItem(result.data.message.name, JSON.stringify(result.data.message));
+                    alert(`You have successfully marked the Arrival attendance for ${name} `)
+                } else {
+                    alert(result.data.message)
+                }
             } catch (error) {
                 console.log(error)
             }
-        }
-        if (name === attendee?.name && state === "leave") {
+        } else if (name === attendee?.name && state === "leave") {
             try {
                 let totalHours = date.getTime() - new Date(attendee.arrivingTime).getTime();
                 await Axios.request({
@@ -80,7 +78,7 @@ const EmployeeAttendance = () => {
                         attendanceToBeUpdated: {
                             arrivingTime: attendee.arrivingTime,
                             name: attendee.name,
-                            leavingTime: dateString,
+                            leavingTime: date,
                             date: attendee.date,
                             totalHoursOfWork: totalHours,// Saving total hours in milliseconds
                             workHoursCompleted: totalHours >= totalWorkHoursInMillis
@@ -91,6 +89,8 @@ const EmployeeAttendance = () => {
             } catch (error) {
                 console.log(error);
             }
+        } else {
+            alert(`You need to add arriving Data first for ${name} `)
         }
         setName("")
     };
