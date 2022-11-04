@@ -54,7 +54,6 @@ const getDayWiseProcedures = async (req, res) => {
         },
         date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } ,
       },
-
     },
     {$group: {
         _id:  "$date",

@@ -27,11 +27,16 @@ const addItems = async (req, res) => {
   const {
     itemBarcode,
     itemName,
+    itemCategory,
+    itemPerUnitQuantity,
+    quantityUnitName,
     itemMRPperUnit,
     itemCostPricePerUnit,
     itemSellingPricePerUnit,
     itemStockQuantity,
     minimumStockQuantity,
+    itemBrandName,
+    useByDate,
     slabPricing = [],
   } = req.body;
 
@@ -51,10 +56,15 @@ const addItems = async (req, res) => {
 
     const newItem = await new Item({
       itemBarcode,
+      itemBrandName,
       itemName,
+      itemCategory,
+      itemPerUnitQuantity,
+      quantityUnitName,
       itemStockQuantity,
       minimumStockQuantity,
       itemMRPperUnit,
+      useByDate,
       itemDiscountPerUnit: itemMRPperUnit - itemSellingPricePerUnit,
       itemPerUnitDiscountPercentage:
         ((itemMRPperUnit - itemSellingPricePerUnit) / itemMRPperUnit) * 100,

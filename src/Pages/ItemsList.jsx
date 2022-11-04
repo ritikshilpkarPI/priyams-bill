@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
@@ -12,14 +12,19 @@ import {
   Loader,
   Image,
   Textarea,
+  Select,
+  TextInput,
+  NumberInput,
 } from "@mantine/core";
+
+// import { DatePicker } from '@mantine/dates';
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import Papa from "papaparse";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
-import ProtectedComponent from "../components/ProtectedComponent";
-import access from "../access.js";
+// import ProtectedComponent from "src/components/ProtectedComponent";
+// import access from "../access.js";
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
@@ -29,6 +34,7 @@ const ITEM_INITIAL_INPUT = {
   itemSellingPricePerUnit: "",
   itemStockQuantity: "",
   minimumStockQuantity: "",
+  useByDate: [],
 };
 
 let itemToBeUpdated = {};
@@ -45,6 +51,11 @@ const ItemsList = () => {
   const [slabArray, setSlabArray] = useState([]);
   const [stopStream] = useState(false);
   const [openScanner, setOpenScanner] = useState(false);
+  const inputTable = useRef();
+  const [tableWidth, setTableWidth] = useState();
+  // const [useByDate, setUseByDate] = useState();
+  // const [dateArray, setDateArray] = useState([]);
+  const [useByDateData, setuseByDateData] = useState([]);
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -69,6 +80,36 @@ const ItemsList = () => {
     );
     setItems([...filteredItems]);
   };
+
+  const handleSelectChange = (value, name) => {
+    setNewItemInput({ ...newItemInput, [name]: value });
+    const filteredItems = itemsList.filter(
+      (itemObj) =>
+        itemObj[name] &&
+        itemObj[name]
+          .toString()
+          .toLowerCase()
+          .includes(value.toString().toLowerCase())
+    );
+    setItems([...filteredItems]);
+  };
+
+  // const setUseDates = (e) => {
+  //   const { name, value } = e.target;
+  //   let newDates = [...dateArray, value];
+  //   setDateArray(newDates.sort());
+  //   // setUseByDate();
+  //   setNewItemInput({ ...newItemInput, [name]: newDates.sort() });
+  //   const filteredItems = itemsList.filter(
+  //     (itemObj) =>
+  //       itemObj[name] &&
+  //       itemObj[name]
+  //         .toString()
+  //         .toLowerCase()
+  //         .includes(value.toString().toLowerCase())
+  //   );
+  //   setItems([...filteredItems]);
+  // }
 
   const handleCheckboxFilter = (filterName) => {
     setFilterItems(filterName);
@@ -103,9 +144,13 @@ const ItemsList = () => {
 
     let itemObject;
     if (slabArray.length !== 0) {
-      itemObject = { ...newItemInput, slabPricing: slabArray };
+      itemObject = {
+        ...newItemInput,
+        slabPricing: slabArray,
+        useByDate: useByDateData,
+      };
     } else {
-      itemObject = { ...newItemInput };
+      itemObject = { ...newItemInput, useByDate: useByDateData };
     }
 
     setApiLoading(true);
@@ -127,10 +172,29 @@ const ItemsList = () => {
 
   const handleItemInputChange = (e, itemInput, setItemInput, index) => {
     const { name, value, type } = e.target;
-    itemToBeUpdated = { [index]: { ...items[index] } };
+    itemToBeUpdated = {
+      [index]: { ...items[index], ...itemToBeUpdated[index] },
+    };
     setItemInput({
       ...itemInput,
       [name]: type === "number" ? Number(value) : value,
+    });
+    itemToBeUpdated[index][name] = value;
+  };
+
+  const handleItemSelectChange = (
+    value,
+    name,
+    index,
+    itemInput,
+    setItemInput
+  ) => {
+    itemToBeUpdated = {
+      [index]: { ...items[index], ...itemToBeUpdated[index] },
+    };
+    setItemInput({
+      ...itemInput,
+      [name]: value,
     });
     itemToBeUpdated[index][name] = value;
   };
@@ -149,20 +213,30 @@ const ItemsList = () => {
           Cookie: "some_cookie",
         },
       });
+      if (deletedItem.status === 200) {
+        alert("Item deleted...");
+      }
       const newList = deletedItem.data.items;
       dispatch({ type: "NEW_ITEMS_LIST", payload: [...newList] });
       setApiLoading(false);
     };
 
     return (
-      <Button
-        color="red"
+      // <Button
+      //   color="red"
+      //   loading={apiLoading}
+      //   onClick={handleDeleteItem}
+      //   style={{ ...style }}
+      // >
+      //   <Text>Delete</Text>
+      // </Button>
+      <Image
+        src="/images/cross.svg"
+        width={18}
+        style={{ marginLeft: "20px", cursor: "pointer" }}
         loading={apiLoading}
         onClick={handleDeleteItem}
-        style={{ ...style }}
-      >
-        <Text>Delete</Text>
-      </Button>
+      />
     );
   };
 
@@ -175,7 +249,29 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "160px" }}
+          // style={{ width: "140px" }}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const BrandNameRow = ({ index }) => {
+    const name = "itemBrandName";
+    const [itemInput, setItemInput] = useState({
+      itemBrandName: items[index][name],
+    });
+    return (
+      <>
+        <TableRow
+          index={index}
+          // style={{ width: "140px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -197,7 +293,7 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "250px" }}
+          // style={{ width: "250px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -208,6 +304,77 @@ const ItemsList = () => {
         />
       </>
     );
+  };
+
+  const ItemCategoryRow = ({ index }) => {
+    const name = "itemCategory";
+    const [itemInput, setItemInput] = useState({
+      itemCategory: items[index][name],
+    });
+    return (
+      <>
+        <TableRow
+          index={index}
+          // style={{ width: "100px" }}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemSelectChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemPerUnitQuantityRow = ({ index }) => {
+    const name = "itemPerUnitQuantity";
+    const [itemInput, setItemInput] = useState({
+      itemPerUnitQuantity: items[index][name],
+    });
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={{ width: "100px" }}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemInputChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemQuantityUnitRow = ({ index }) => {
+    const name = "quantityUnitName";
+    const [itemInput, setItemInput] = useState({
+      quantityUnitName: items[index][name],
+    });
+    return (
+      <>
+        <TableRow
+          index={index}
+          style={{ width: "100px" }}
+          items={items}
+          itemsList={itemsList}
+          dispatch={dispatch}
+          handleItemInputChange={handleItemSelectChange}
+          itemInput={itemInput}
+          setItemInput={setItemInput}
+          name={name}
+        />
+      </>
+    );
+  };
+
+  const ItemUseByDateRow = ({ index }) => {
+    const name = "useByDate";
+    return <ShowUseByDateElement data={items[index][name]} index={index} />;
   };
 
   const ItemMRPRow = ({ index, style }) => {
@@ -549,26 +716,26 @@ const ItemsList = () => {
 
   const ItemUpdateButtonRow = ({ index, style }) => {
     return (
-      <tr>
-        <td>
-          <UpdateItemButton
-            style={style}
-            dispatch={dispatch}
-            index={index}
-            items={items}
-            setItems={setItems}
-          />
-        </td>
-      </tr>
+      // <tr>
+      // <td>
+      <UpdateItemButton
+        style={style}
+        dispatch={dispatch}
+        index={index}
+        items={items}
+        setItems={setItems}
+      />
+      // </td>
+      // </tr>
     );
   };
   const ItemSoftDeleteButtonRow = ({ index, style }) => {
     return (
-      <tr>
-        <td>
-          <SoftDeleteButton style={style} index={index} items={items} />
-        </td>
-      </tr>
+      // <tr>
+      // <td>
+      <SoftDeleteButton style={style} index={index} items={items} />
+      // </td>
+      // </tr>
     );
   };
 
@@ -817,45 +984,66 @@ const ItemsList = () => {
           ...style,
           display: "flex",
           // border: `${minimumStock ? "1px solid #F4877A" : ""}`,
-          // borderRadius: "8px",
         }}
       >
-        <td style={{ padding: "10" }}>
+        <td>
           <BarcodeRow style={style} index={index} />
         </td>
-        <td style={{ padding: "0" }}>
+        <td>
+          <BrandNameRow style={style} index={index} />
+        </td>
+        <td>
           <ItemNameRow style={style} index={index} />
         </td>
-        <td style={{ padding: "0" }}>
+        <td>
+          <ItemCategoryRow style={style} index={index} />
+        </td>
+        <td>
+          <ItemPerUnitQuantityRow style={style} index={index} />
+        </td>
+        <td>
+          <ItemQuantityUnitRow style={style} index={index} />
+        </td>
+        <td>
+          <ItemUseByDateRow style={style} index={index} />
+        </td>
+        <td>
           <ItemMRPRow style={style} index={index} />
         </td>
-        <td style={{ padding: "0" }}>
+        <td>
           <ItemCostPriceRow style={style} index={index} />
         </td>
-        <td style={{ padding: "0" }}>
+        <td>
           <ItemSellingPriceRow style={style} index={index} />
         </td>
-        <td style={{ padding: "0", width: "220px" }}>
+        <td>
           <ItemSlabPriceRow style={style} index={index} />
         </td>
-        <td style={{ padding: "0" }}>
+        <td>
           <ItemStockQuantityRow style={style} index={index} />
         </td>
-        <td style={{ padding: "0" }}>
+        <td>
           <ItemMinimumStockQuantityRow style={style} index={index} />
         </td>
-        <td>
+        <td style={{ display: "flex" }}>
           <ItemUpdateButtonRow index={index} />
-        </td>
-        <td>
           <ItemSoftDeleteButtonRow index={index} />
         </td>
+        {/* <td>
+          <ItemSoftDeleteButtonRow index={index} />
+        </td> */}
       </tr>
     );
   };
 
   // To update item data through uploading CSV file
   useEffect(() => {
+    if (typeof window != "undefined") {
+      setTableWidth(
+        window.getComputedStyle(inputTable.current).getPropertyValue("width")
+      );
+    }
+
     if (csvFile) {
       Papa.parse(csvFile, {
         complete: async function (results) {
@@ -873,8 +1061,10 @@ const ItemsList = () => {
   const itemRowSize = (index) => {
     if (items[index]?.slabPricing.length >= 1) {
       return items[index].slabPricing.length * 21 + 22 + 28;
+    } else if (items[index].useByDate.length >= 1) {
+      return items[index].useByDate.length * 40 + 90;
     } else {
-      return 60;
+      return 120;
     }
   };
 
@@ -882,35 +1072,192 @@ const ItemsList = () => {
     return (
       <List
         className="list-it"
-        height={window.innerHeight - 250}
+        height={window.innerHeight - 320}
         itemCount={items.length}
         itemSize={itemRowSize}
-        width={1360}
+        width={tableWidth}
       >
         {rows}
       </List>
     );
   };
 
+  const UseByDateElement = () => {
+    const [selectedDate, setSelectedDate] = useState("");
+    // const [savedDates, setSavedDates] = useState(data);
+    // To add new date
+    const addNewDate = (e) => {
+      setSelectedDate(e.target.value);
+      const dateSelected = useByDateData.findIndex(
+        (item) => item.date === e.target.value
+      );
+      if (dateSelected !== -1) {
+        alert("date already selected!");
+        return;
+      }
+      let dateArray = [...useByDateData, { date: e.target.value, value: 0 }];
+      dateArray.sort((a, b) => {
+        return a.date > b.date ? 1 : b.date > a.date ? -1 : 0;
+      });
+
+      setuseByDateData([...dateArray]);
+      // setNewItemInput({...newItemInput, useByDate: [...dateArray]});
+    };
+
+    // To change any date item quantity
+    const handleAddDateInputChange = (e, index) => {
+      let newDateObj = { date: useByDateData[index].date, value: e };
+      useByDateData.splice(index, 1, newDateObj);
+      setuseByDateData(useByDateData);
+      // setNewItemInput({...newItemInput, useByDate: useByDateData})
+    };
+
+    // To remove any date
+    const deleteDate = (e, index) => {
+      useByDateData.splice(index, 1);
+      setuseByDateData([...useByDateData]);
+      // setNewItemInput({...newItemInput, useByDate: [...useByDateData]});
+    };
+
+    return (
+      <div className="useby-date-container">
+        <input
+          type="date"
+          name="useByDate"
+          id="useByDate"
+          value={selectedDate}
+          onChange={(e) => addNewDate(e)}
+        />
+        {useByDateData.map((item, index) => {
+          return (
+            <div key={index} className="new-date-row">
+              <TextInput value={item.date} readOnly></TextInput>
+              <NumberInput
+                className="per-date-quantity"
+                value={item.value}
+                style={{ padding: "7px 7px" }}
+                onChange={(e) => handleAddDateInputChange(e, index)}
+                hideControls
+              ></NumberInput>
+              <Image
+                className="delete-icon"
+                src="images/cross.svg"
+                width={14}
+                onClick={(e) => deleteDate(e, index)}
+              ></Image>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const ShowUseByDateElement = ({ data, index }) => {
+    const [selectedDate, setSelectedDate] = useState("");
+    const [savedDates, setSavedDates] = useState(data);
+    // To add new date
+    const addNewDate = (e) => {
+      setSelectedDate(e.target.value);
+      const dateSelected = savedDates.findIndex(
+        (item) => item.date === e.target.value
+      );
+      if (dateSelected !== -1) {
+        alert("date already selected!");
+        return;
+      }
+      let dateArray = [...savedDates, { date: e.target.value, value: 0 }];
+      dateArray.sort((a, b) => {
+        return a.date > b.date ? 1 : b.date > a.date ? -1 : 0;
+      });
+      setSavedDates([...dateArray]);
+      itemToBeUpdated = {
+        [index]: {
+          ...items[index],
+          ...itemToBeUpdated[index],
+          useByDate: [...dateArray],
+        },
+      };
+    };
+
+    // To change any date item quantity
+    const handleAddDateInputChange = (e, inputIndex) => {
+      let newDateObj = { date: savedDates[inputIndex].date, value: e };
+      savedDates.splice(inputIndex, 1, newDateObj);
+      setSavedDates(savedDates);
+      itemToBeUpdated = {
+        [index]: {
+          ...items[index],
+          ...itemToBeUpdated[index],
+          useByDate: savedDates,
+        },
+      };
+    };
+
+    // To remove any date
+    const deleteDate = (e, inputIndex) => {
+      savedDates.splice(inputIndex, 1);
+      setSavedDates([...savedDates]);
+      itemToBeUpdated = {
+        [index]: {
+          ...items[index],
+          ...itemToBeUpdated[index],
+          useByDate: [...savedDates],
+        },
+      };
+    };
+
+    return (
+      <div className="useby-date-container">
+        <input
+          type="date"
+          name="useByDate"
+          id="useByDate"
+          value={selectedDate}
+          onChange={(e) => addNewDate(e)}
+        />
+        {savedDates?.map((item, index) => {
+          return (
+            <div key={index} className="new-date-row">
+              <TextInput value={item.date.slice(0, 10)} readOnly></TextInput>
+              <NumberInput
+                className="per-date-quantity"
+                value={item.value}
+                onChange={(e) => handleAddDateInputChange(e, index)}
+                hideControls
+              ></NumberInput>
+              <Image
+                className="delete-icon"
+                src="images/cross.svg"
+                width={14}
+                onClick={(e) => deleteDate(e, index)}
+              ></Image>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
-    <>
-      <ProtectedComponent role={access.UPLOAD_CSV_BUTTON}>
-        <FileButton onChange={setCsvFile}>
+    <div className="inventory-items-container">
+      <div className="top-buttons">
+        {/* <ProtectedComponent role={access.UPLOAD_CSV_BUTTON}> */}
+        <FileButton onChange={setCsvFile} className="upload-btn">
           {(props) => <Button {...props}>Upload CSV</Button>}
         </FileButton>
-      </ProtectedComponent>
-      {/* <ProtectedComponent role={access.DOWNLOAD_CSV_BUTTON}> */}
-      <Button
-        disabled={!items.length}
-        style={{ background: "#0da20a", margin: "5px", float: "right" }}
-        onClick={downloadFile}
-      >
-        Download CSV
-      </Button>
-      {/* </ProtectedComponent> */}
-      <Button onClick={() => setOpenScanner(!openScanner)}>
-        Barcode Scanner
-      </Button>
+        {/* </ProtectedComponent> */}
+        <Button
+          disabled={!items.length}
+          onClick={downloadFile}
+          className="download-btn"
+        >
+          Download CSV
+        </Button>
+        <Button onClick={() => setOpenScanner(!openScanner)}>
+          Barcode Scanner
+        </Button>
+      </div>
+      <h4 className="total-item-count">Total Items : {items.length}</h4>
       {openScanner && (
         <BarcodeScannerComponent
           width={500}
@@ -926,145 +1273,190 @@ const ItemsList = () => {
           }}
         />
       )}
-      <div style={{ width: "1360px", margin: "30px auto 0" }}>
-        <h4>Total Items : {items.length}</h4>
+      <div>
         <Table
-          style={{ width: "auto" }}
           striped
           highlightOnHover
           verticalSpacing="xl"
+          className="item-input-table"
+          ref={inputTable}
         >
           <thead className="heading">
             <tr>
-              <th style={{ width: "160px", textAlign: "center" }}>
+              <th>
                 <Text>Bar Code</Text>
-                <div style={{ marginTop: "1rem" }}>
-                  <input
-                    type="checkbox"
-                    checked={filterItems === "itemBarcode"}
-                    label="Filter Barcode"
-                    value="Filter Barcode"
-                    onChange={() => handleCheckboxFilter("itemBarcode")}
-                  />
-                </div>
+                <input
+                  type="checkbox"
+                  checked={filterItems === "itemBarcode"}
+                  label="Filter Barcode"
+                  value="Filter Barcode"
+                  onChange={() => handleCheckboxFilter("itemBarcode")}
+                />
               </th>
-              <th style={{ width: "250px", textAlign: "center" }}>
+              <th>
+                <Text>Brand Name</Text>
+                <input
+                  type="checkbox"
+                  checked={filterItems === "itemBrandName"}
+                  label="Filter Brand Name"
+                  value="Filter Brand Name"
+                  onChange={() => handleCheckboxFilter("itemBrandName")}
+                />
+              </th>
+              <th>
                 <Text>
                   Item Name
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
                 </Text>
-                <div style={{ marginTop: "1rem" }}>
-                  <input
-                    type="checkbox"
-                    checked={filterItems === "itemName"}
-                    label="Filter Name"
-                    value="Filter Name"
-                    onChange={() => handleCheckboxFilter("itemName")}
-                  />
-                </div>
+                <input
+                  type="checkbox"
+                  checked={filterItems === "itemName"}
+                  label="Filter Name"
+                  value="Filter Name"
+                  onChange={() => handleCheckboxFilter("itemName")}
+                />
               </th>
-              <th style={{ width: "100px", textAlign: "center" }}>
+              <th>
+                <Text>
+                  Category
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+              </th>
+              <th>
+                <Text>
+                  Item Quantity
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+                <input
+                  type="checkbox"
+                  checked={filterItems === "itemPerUnitQuantity"}
+                  label="Filter Item Quantity"
+                  value="Filter Item Quantity"
+                  onChange={() => handleCheckboxFilter("itemPerUnitQuantity")}
+                />
+              </th>
+              <th>
+                <Text>
+                  Unit
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+                <input
+                  type="checkbox"
+                  checked={filterItems === "quantityUnitName"}
+                  label="Filter Item Unit"
+                  value="Filter Item Unit"
+                  onChange={() => handleCheckboxFilter("quantityUnitName")}
+                />
+              </th>
+              <th>
+                <Text>
+                  Use by date
+                  <span style={{ color: "red", display: "inline-block" }}>
+                    *
+                  </span>
+                </Text>
+                <input
+                  type="checkbox"
+                  checked={filterItems === "quantityUnitName"}
+                  label="Filter Item Unit"
+                  value="Filter Item Unit"
+                  onChange={() => handleCheckboxFilter("quantityUnitName")}
+                />
+              </th>
+              <th>
                 <Text>
                   MRP/Unit
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
                 </Text>
-                <div style={{ marginTop: "1rem" }}>
-                  <input
-                    type="checkbox"
-                    label="Filter MRP/Unit"
-                    value="Filter  MRP/Unit"
-                    checked={filterItems === "itemMRPperUnit"}
-                    onChange={() => handleCheckboxFilter("itemMRPperUnit")}
-                  />
-                </div>
+                <input
+                  type="checkbox"
+                  label="Filter MRP/Unit"
+                  value="Filter  MRP/Unit"
+                  checked={filterItems === "itemMRPperUnit"}
+                  onChange={() => handleCheckboxFilter("itemMRPperUnit")}
+                />
               </th>
-              <th style={{ width: "100px", textAlign: "center" }}>
+              <th>
                 <Text>
                   Cost/Unit
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
-                  <div style={{ marginTop: "1rem" }}>
-                    <input
-                      type="checkbox"
-                      label="Filter With Cost Price"
-                      value="Filter With Cost Price"
-                      checked={filterItems === "itemCostPricePerUnit"}
-                      onChange={() =>
-                        handleCheckboxFilter("itemCostPricePerUnit")
-                      }
-                    />
-                  </div>
                 </Text>
+                <input
+                  type="checkbox"
+                  label="Filter With Cost Price"
+                  value="Filter With Cost Price"
+                  checked={filterItems === "itemCostPricePerUnit"}
+                  onChange={() => handleCheckboxFilter("itemCostPricePerUnit")}
+                />
               </th>
-              <th style={{ width: "100px", textAlign: "center" }}>
+              <th>
                 <Text>
-                  Selling Price/Unit
+                  SP/Unit
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
                 </Text>
-                <div style={{ marginTop: "1rem" }}>
-                  <input
-                    type="checkbox"
-                    label="Filter With Selling Price"
-                    value="Filter With Selling Price"
-                    checked={filterItems === "itemSellingPricePerUnit"}
-                    onChange={() =>
-                      handleCheckboxFilter("itemSellingPricePerUnit")
-                    }
-                  />
-                </div>
+                <input
+                  type="checkbox"
+                  label="Filter With Selling Price"
+                  value="Filter With Selling Price"
+                  checked={filterItems === "itemSellingPricePerUnit"}
+                  onChange={() =>
+                    handleCheckboxFilter("itemSellingPricePerUnit")
+                  }
+                />
               </th>
-              <th style={{ width: "250px", textAlign: "center" }}>
+              <th>
                 <Text>
-                  Slab Pricing
+                  Slabs
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
                 </Text>
               </th>
-              <th style={{ width: "100px", textAlign: "center" }}>
+              <th>
                 <Text>
                   Total Stock
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
                 </Text>
-                <div style={{ marginTop: "1rem" }}>
-                  <input
-                    type="checkbox"
-                    label="Filter With Total Stock"
-                    value="Filter With Total Stock"
-                    checked={filterItems === "itemStockQuantity"}
-                    onChange={() => handleCheckboxFilter("itemStockQuantity")}
-                  />
-                </div>
+                <input
+                  type="checkbox"
+                  label="Filter With Total Stock"
+                  value="Filter With Total Stock"
+                  checked={filterItems === "itemStockQuantity"}
+                  onChange={() => handleCheckboxFilter("itemStockQuantity")}
+                />
               </th>
-              <th style={{ width: "100px", textAlign: "center" }}>
+              <th>
                 <Text>
-                  Minimum Stock
+                  Min Stock
                   <span style={{ color: "red", display: "inline-block" }}>
                     *
                   </span>
                 </Text>
-                <div style={{ marginTop: "1rem" }}>
-                  <input
-                    type="checkbox"
-                    checked={filterItems === "minimumStockQuantity"}
-                    label="Filter With Minimum Stock"
-                    value="Filter With Minimum Stock"
-                    onChange={() =>
-                      handleCheckboxFilter("minimumStockQuantity")
-                    }
-                  />
-                </div>
+                <input
+                  type="checkbox"
+                  checked={filterItems === "minimumStockQuantity"}
+                  label="Filter With Minimum Stock"
+                  value="Filter With Minimum Stock"
+                  onChange={() => handleCheckboxFilter("minimumStockQuantity")}
+                />
               </th>
-              <th style={{ width: "150px", textAlign: "center" }}>
+              <th>
                 <Text>Update Button</Text>
               </th>
             </tr>
@@ -1076,7 +1468,6 @@ const ItemsList = () => {
             <tr className="bill-row">
               <td>
                 <Input
-                  style={{ width: "160px" }}
                   value={newItemInput["itemBarcode"]}
                   onChange={handleNewItemInput}
                   name="itemBarcode"
@@ -1086,8 +1477,16 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
+                  value={newItemInput["itemBrandName"]}
+                  onChange={handleNewItemInput}
+                  name="itemBrandName"
                   type="text"
-                  style={{ width: "250px" }}
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Input
+                  type="text"
                   value={newItemInput["itemName"]}
                   onChange={handleNewItemInput}
                   name="itemName"
@@ -1095,8 +1494,48 @@ const ItemsList = () => {
                 />
               </td>
               <td>
+                <Select
+                  placeholder="Category"
+                  data={[
+                    { value: "Rice", label: "Rice" },
+                    { value: "Pulse", label: "Pulse" },
+                    { value: "Beverage", label: "Beverage" },
+                    { value: "Spice", label: "Spice" },
+                  ]}
+                  value={newItemInput["itemCategory"]}
+                  onChange={(val) => handleSelectChange(val, "itemCategory")}
+                />
+              </td>
+              <td>
                 <Input
-                  style={{ width: "100px" }}
+                  value={newItemInput["itemPerUnitQuantity"]}
+                  onChange={handleNewItemInput}
+                  name="itemPerUnitQuantity"
+                  type="number"
+                  autoComplete="off"
+                />
+              </td>
+              <td>
+                <Select
+                  placeholder="Pick one"
+                  data={[
+                    { value: "kg", label: "kg" },
+                    { value: "grams", label: "grams" },
+                    { value: "liter", label: "liter" },
+                    { value: "ml", label: "ml" },
+                    { value: "Piece", label: "Piece" },
+                  ]}
+                  value={newItemInput["quantityUnitName"]}
+                  onChange={(val) =>
+                    handleSelectChange(val, "quantityUnitName")
+                  }
+                />
+              </td>
+              <td>
+                <UseByDateElement />
+              </td>
+              <td>
+                <Input
                   value={newItemInput["itemMRPperUnit"]}
                   onChange={handleNewItemInput}
                   name="itemMRPperUnit"
@@ -1106,7 +1545,6 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  style={{ width: "100px" }}
                   value={newItemInput["itemCostPricePerUnit"]}
                   onChange={handleNewItemInput}
                   name="itemCostPricePerUnit"
@@ -1116,7 +1554,6 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  style={{ width: "100px" }}
                   value={newItemInput["itemSellingPricePerUnit"]}
                   onChange={handleNewItemInput}
                   name="itemSellingPricePerUnit"
@@ -1129,7 +1566,6 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  style={{ width: "100px" }}
                   value={newItemInput["itemStockQuantity"]}
                   onChange={handleNewItemInput}
                   name="itemStockQuantity"
@@ -1139,7 +1575,6 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  style={{ width: "100px" }}
                   value={newItemInput["minimumStockQuantity"]}
                   onChange={handleNewItemInput}
                   name="minimumStockQuantity"
@@ -1148,11 +1583,7 @@ const ItemsList = () => {
                 />
               </td>
               <td>
-                <Button
-                  loading={apiLoading}
-                  onClick={addItemToDb}
-                  style={{ width: "140px" }}
-                >
+                <Button loading={apiLoading} onClick={addItemToDb}>
                   ADD NEW ITEM
                 </Button>
               </td>
@@ -1168,13 +1599,13 @@ const ItemsList = () => {
         >
           <Loader />
         </div>
-        <Table style={{ width: "auto", margin: "0 auto" }}>
+        <Table className="show-items-table">
           <tbody>
             <ListComponents />
           </tbody>
         </Table>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -1186,24 +1617,48 @@ const TableRow = ({
   name,
   index,
 }) => {
-  const Component = name === "itemName" ? Textarea : Input;
-  return (
-    <tr className="bill-row">
-      <td>
-        <Component
-          style={{ ...style }}
-          variant="unstyled"
-          value={itemInput[name]}
-          onChange={(e) =>
-            handleItemInputChange(e, itemInput, setItemInput, index)
-          }
-          name={name}
-          type="search"
-          autoComplete="off"
-        />
-      </td>
-    </tr>
-  );
+  if (name === "quantityUnitName" || name === "itemCategory") {
+    const data =
+      name === "quantityUnitName"
+        ? [
+            { value: "kg", label: "kg" },
+            { value: "grams", label: "grams" },
+            { value: "liter", label: "liter" },
+            { value: "ml", label: "ml" },
+            { value: "Piece", label: "Piece" },
+          ]
+        : [
+            { value: "Rice", label: "Rice" },
+            { value: "Pulse", label: "Pulse" },
+            { value: "Beverage", label: "Beverage" },
+            { value: "Spice", label: "Spice" },
+          ];
+
+    return (
+      <Select
+        placeholder="Pick one"
+        data={data}
+        value={itemInput[name]}
+        onChange={(val) =>
+          handleItemInputChange(val, name, index, itemInput, setItemInput)
+        }
+      />
+    );
+  } else {
+    const Component = name === "itemName" ? Textarea : Input;
+    return (
+      <Component
+        variant="unstyled"
+        value={itemInput[name]}
+        onChange={(e) =>
+          handleItemInputChange(e, itemInput, setItemInput, index)
+        }
+        name={name}
+        type="search"
+        autoComplete="off"
+      />
+    );
+  }
 };
 
 const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
@@ -1219,6 +1674,9 @@ const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
         Cookie: "some_cookie",
       },
     });
+    if (updatedItem.status === 200) {
+      alert("Item updated...");
+    }
     itemToBeUpdated = {};
     const newList = [...items];
     newList.splice(index, 1, { ...updatedItem.data.message });
@@ -1228,13 +1686,20 @@ const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
   };
 
   return (
-    <Button
+    // <Button
+    //   loading={apiLoading}
+    //   onClick={handleAddItem}
+    // // style={{ ...style, margin: "0 15px" }}
+    // >
+    //   <Text>Update</Text>
+    // </Button>
+    <Image
+      src="images/check.svg"
       loading={apiLoading}
       onClick={handleAddItem}
-      style={{ ...style, margin: "0 15px" }}
-    >
-      <Text>Update</Text>
-    </Button>
+      width={22}
+      style={{ marginLeft: "15px", cursor: "pointer" }}
+    />
   );
 };
 

@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const quantityUnitNameEnum = ["kg", "grams", "liter", "ml", "Piece"];
+const inventoryItemCategory = ["Rice", "Pulse", "Beverage", "Spice"];
 
 const ItemSchem = new mongoose.Schema(
   {
@@ -20,10 +22,21 @@ const ItemSchem = new mongoose.Schema(
     lastUpdateAt: { type: Date },
     slabPricing: { type: Array },
     minStockReached: { type: Boolean, default: false },
-    brandName: { type: String },
-    category: { type: String, enum: ["Rice", "Pulse", "Beverage", "Spice"] },
-    useByDate: { type: Array },
-    quantity: { type: String, enum: ["Kilo", "Grams", "Liter", "Mililiter", "Piece"] },
+    itemBrandName: { type: String },
+    itemCategory: { type: String, enum: inventoryItemCategory },
+    useByDate: [
+      {
+        date: {
+          type: Date
+        },
+        quantity: {
+          type: Number
+        }
+      }
+    ],
+    quantityUnitName: { type: String, enum: quantityUnitNameEnum },
+    gstPercentage: { type: Number },
+    itemPerUnitQuantity: { type: Number },
   },
   { strict: false, timestamps: true }
 );
