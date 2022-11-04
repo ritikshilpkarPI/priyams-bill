@@ -51,7 +51,7 @@ const getDatesWiseAttendance = async (req, res) => {
       {
         $match: {
           date: {
-            $gt: new Date(new Date(startDate).setHours(00, 00, 00)),
+            $gt: new Date(new Date(startDate).setHours(0, 0, 0)),
             $lt: new Date(new Date(endDate).setHours(23, 59, 59)),
           },
           name,
