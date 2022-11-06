@@ -2,7 +2,7 @@ $firstColWidth: 180px;
 $secondColWidth: 140px;
 $thirdColWidth: 250px;
 $forthColWidth: 200px;
-$fifthColWidth: 70px;
+$fifthColWidth: 90px;
 $sixthColWidth: 140px;
 $seventhColWidth: 200px;
 $eightColWidth: 100px;
@@ -13,7 +13,7 @@ $twelfthColWidth: 100px;
 $thirteenColWidth: 100px;
 $fourteenColWidth: 140px;
 
-.mantine-DatePicker-month tbody tr td{
+.mantine-DatePicker-month tbody tr td {
     padding: 0;
 }
 
@@ -80,7 +80,13 @@ $fourteenColWidth: 140px;
                 td {
                     padding: 15px 5px;
                 }
+                td.useby-date-picker {
+                    padding: 0;
+                }
             }
+        }
+        .useby-date-picker tr td {
+            padding: 0;
         }
     }
 
@@ -165,17 +171,29 @@ $fourteenColWidth: 140px;
         }
     }
 
-    .useby-date-container{
-        // border: 1px solid red;
+    .useby-date-container {
+        
+        .add-date-container {
+            display: flex;
+            align-items: center;
+            
+            .add-icon{
+                margin-left: 5px;
+                border: 1px solid red;
+                cursor: pointer;
+                // padding: 10px;
+                // width: 20px;
+            }
+        }
 
-        #useByDate{
+        #useByDate {
             width: 100%;
             border: 1px solid rgb(203, 199, 199);
             width: 195px;
             // margin-bottom: 3px;
         }
 
-        .new-date-row{
+        .new-date-row {
             display: flex;
             width: 195px;
             align-items: center;
@@ -191,13 +209,13 @@ $fourteenColWidth: 140px;
                     width: 50px;
                 }
 
-                input{
+                input {
                     padding: 7px 2px;
                     text-align: center;
                 }
             }
 
-            .delete-icon{
+            .delete-icon {
                 margin-left: 5px;
                 cursor: pointer;
             }

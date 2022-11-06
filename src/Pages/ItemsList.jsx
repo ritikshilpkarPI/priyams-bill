@@ -17,7 +17,7 @@ import {
   NumberInput,
 } from "@mantine/core";
 
-// import { DatePicker } from '@mantine/dates';
+import { DatePicker } from '@mantine/dates';
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
@@ -1084,19 +1084,23 @@ const ItemsList = () => {
   };
 
   const UseByDateElement = () => {
-    const [selectedDate, setSelectedDate] = useState("");
-    // const [savedDates, setSavedDates] = useState(data);
+    // const [selectedDate, setSelectedDate] = useState("");
+    const [newUseByDateVal, setNewUseByDateVal] = useState();
+    const changedDateFormat = `${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''}${new Date(newUseByDateVal).getDate()}-${(new Date(newUseByDateVal).getMonth() + 1) <= 9 ? 0 : ''}${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getFullYear()}`;
+    console.log(newUseByDateVal, new Date(newUseByDateVal).getDate());
+
     // To add new date
-    const addNewDate = (e) => {
-      setSelectedDate(e.target.value);
+    const addNewDate = (selectedDate) => {
+      console.log(selectedDate);
+      // setSelectedDate(e.target.value);
       const dateSelected = useByDateData.findIndex(
-        (item) => item.date === e.target.value
+        (item) => item.date === selectedDate
       );
       if (dateSelected !== -1) {
         alert("date already selected!");
         return;
       }
-      let dateArray = [...useByDateData, { date: e.target.value, value: 0 }];
+      let dateArray = [...useByDateData, { date: selectedDate, value: 0 }];
       dateArray.sort((a, b) => {
         return a.date > b.date ? 1 : b.date > a.date ? -1 : 0;
       });
@@ -1122,13 +1126,23 @@ const ItemsList = () => {
 
     return (
       <div className="useby-date-container">
-        <input
-          type="date"
-          name="useByDate"
-          id="useByDate"
-          value={selectedDate}
-          onChange={(e) => addNewDate(e)}
-        />
+        <div className="add-date-container">
+          <DatePicker
+            className="useby-date-picker"
+            placeholder="Pick date"
+            inputFormat="DD/MM/YYYY"
+            value={newUseByDateVal}
+            onChange={(day) => {console.log(day);setNewUseByDateVal(day)}}
+            style={{width: '140px'}}
+          />
+          <Image
+                className="add-icon"
+                src="images/add.svg"
+                width={24}
+                height={24}
+                onClick={() => addNewDate(changedDateFormat)}
+              ></Image>
+        </div>
         {useByDateData.map((item, index) => {
           return (
             <div key={index} className="new-date-row">
@@ -1636,17 +1650,14 @@ const TableRow = ({
           { value: "ml", label: "ml" },
           { value: "Piece", label: "Piece" },
         ]
-        : [
-          { value: "Rice", label: "Rice" },
-          { value: "Pulse", label: "Pulse" },
-          { value: "Beverage", label: "Beverage" },
-          { value: "Spice", label: "Spice" },
-        ];
+        : categoryArray;
 
     return (
       <Select
         placeholder="Pick one"
         data={data}
+        searchable
+        nothingFound="No options"
         value={itemInput[name]}
         onChange={(val) =>
           handleItemInputChange(val, name, index, itemInput, setItemInput)
