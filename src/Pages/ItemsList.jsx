@@ -29,6 +29,10 @@ import BarcodeScannerComponent from "react-qr-barcode-scanner";
 const ITEM_INITIAL_INPUT = {
   itemBarcode: "",
   itemName: "",
+  itemBrandName: "",
+  itemCategory: "",
+  itemPerUnitQuantity: "",
+  quantityUnitName: "",
   itemMRPperUnit: "",
   itemCostPricePerUnit: "",
   itemSellingPricePerUnit: "",
@@ -54,8 +58,6 @@ const ItemsList = () => {
   const [openScanner, setOpenScanner] = useState(false);
   const inputTable = useRef();
   const [tableWidth, setTableWidth] = useState();
-  // const [useByDate, setUseByDate] = useState();
-  // const [dateArray, setDateArray] = useState([]);
   const [useByDateData, setuseByDateData] = useState([]);
 
   useEffect(() => {
@@ -94,23 +96,6 @@ const ItemsList = () => {
     );
     setItems([...filteredItems]);
   };
-
-  // const setUseDates = (e) => {
-  //   const { name, value } = e.target;
-  //   let newDates = [...dateArray, value];
-  //   setDateArray(newDates.sort());
-  //   // setUseByDate();
-  //   setNewItemInput({ ...newItemInput, [name]: newDates.sort() });
-  //   const filteredItems = itemsList.filter(
-  //     (itemObj) =>
-  //       itemObj[name] &&
-  //       itemObj[name]
-  //         .toString()
-  //         .toLowerCase()
-  //         .includes(value.toString().toLowerCase())
-  //   );
-  //   setItems([...filteredItems]);
-  // }
 
   const handleCheckboxFilter = (filterName) => {
     setFilterItems(filterName);
@@ -154,6 +139,8 @@ const ItemsList = () => {
       itemObject = { ...newItemInput, useByDate: useByDateData };
     }
 
+    console.log(itemObject);
+
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
@@ -168,6 +155,7 @@ const ItemsList = () => {
     })();
     setApiLoading(false);
     setSlabArray([]);
+    setuseByDateData([]);
     setNewItemInput(ITEM_INITIAL_INPUT);
   };
 
@@ -223,14 +211,6 @@ const ItemsList = () => {
     };
 
     return (
-      // <Button
-      //   color="red"
-      //   loading={apiLoading}
-      //   onClick={handleDeleteItem}
-      //   style={{ ...style }}
-      // >
-      //   <Text>Delete</Text>
-      // </Button>
       <Image
         src="/images/cross.svg"
         width={18}
@@ -250,7 +230,6 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          // style={{ width: "140px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -272,7 +251,6 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          // style={{ width: "140px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -294,7 +272,6 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          // style={{ width: "250px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -316,7 +293,6 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          // style={{ width: "100px" }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -587,7 +563,7 @@ const ItemsList = () => {
                 value={item[1]}
                 onChange={(e) => handleOldInput(e.target, index, "key")}
                 disabled={!editable}
-              />{" "}
+              />
               -
               <input
                 type="number"
@@ -596,6 +572,7 @@ const ItemsList = () => {
                   textAlign: "center",
                   border: "none",
                   outline: "none",
+                  padding: '7px 0px'
                 }}
                 disabled
                 defaultValue={
@@ -608,13 +585,14 @@ const ItemsList = () => {
               <input
                 type="number"
                 style={{
-                  width: "40px",
+                  width: "50px",
                   textAlign: "center",
                   border: "none",
                   outline: "none",
+                  padding: "7px 0",
                   borderBottom: editable ? "1px solid black" : "none",
                 }}
-                value={item[2]}
+                value={Number(item[2])?.toFixed(2)}
                 onChange={(e) => handleOldInput(e.target, index, "value")}
                 disabled={!editable}
               />
@@ -651,11 +629,12 @@ const ItemsList = () => {
             <input
               type="number"
               style={{
-                width: "40px",
+                width: "50px",
                 textAlign: "center",
                 border: "none",
                 outline: "none",
                 borderBottom: "1px solid black",
+                padding: '7px 0'
               }}
               name="value"
               onChange={(e) => handleNewInput(e.target)}
@@ -717,8 +696,6 @@ const ItemsList = () => {
 
   const ItemUpdateButtonRow = ({ index, style }) => {
     return (
-      // <tr>
-      // <td>
       <UpdateItemButton
         style={style}
         dispatch={dispatch}
@@ -726,17 +703,11 @@ const ItemsList = () => {
         items={items}
         setItems={setItems}
       />
-      // </td>
-      // </tr>
     );
   };
   const ItemSoftDeleteButtonRow = ({ index, style }) => {
     return (
-      // <tr>
-      // <td>
       <SoftDeleteButton style={style} index={index} items={items} />
-      // </td>
-      // </tr>
     );
   };
 
@@ -976,18 +947,15 @@ const ItemsList = () => {
   };
 
   const rows = ({ index, style }) => {
-    // const minimumStock =
-    //   itemsList[index].minimumStockQuantity >=
-    //   itemsList[index].itemStockQuantity;
     return (
       <tr
         style={{
           ...style,
           display: "flex",
-          // border: `${minimumStock ? "1px solid #F4877A" : ""}`,
         }}
+        className="table-row"
       >
-        <td>
+        <td className="table-row-component">
           <BarcodeRow style={style} index={index} />
         </td>
         <td>
@@ -1030,9 +998,6 @@ const ItemsList = () => {
           <ItemUpdateButtonRow index={index} />
           <ItemSoftDeleteButtonRow index={index} />
         </td>
-        {/* <td>
-          <ItemSoftDeleteButtonRow index={index} />
-        </td> */}
       </tr>
     );
   };
@@ -1063,7 +1028,7 @@ const ItemsList = () => {
     if (items[index]?.slabPricing.length >= 1) {
       return items[index].slabPricing.length * 21 + 22 + 28;
     } else if (items[index].useByDate.length >= 1) {
-      return items[index].useByDate.length * 40 + 90;
+      return 130;
     } else {
       return 120;
     }
@@ -1084,29 +1049,32 @@ const ItemsList = () => {
   };
 
   const UseByDateElement = () => {
-    // const [selectedDate, setSelectedDate] = useState("");
     const [newUseByDateVal, setNewUseByDateVal] = useState();
-    const changedDateFormat = `${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''}${new Date(newUseByDateVal).getDate()}-${(new Date(newUseByDateVal).getMonth() + 1) <= 9 ? 0 : ''}${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getFullYear()}`;
-    console.log(newUseByDateVal, new Date(newUseByDateVal).getDate());
+
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${(new Date(newUseByDateVal).getMonth() + 1) <= 9 ? 0 : ''}${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''}${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
-      console.log(selectedDate);
-      // setSelectedDate(e.target.value);
+      if (selectedDate.slice(0, 3) === 'NaN') {
+        alert('Select a date first!');
+        return;
+      }
+
       const dateSelected = useByDateData.findIndex(
         (item) => item.date === selectedDate
       );
+
       if (dateSelected !== -1) {
         alert("date already selected!");
         return;
       }
+
       let dateArray = [...useByDateData, { date: selectedDate, value: 0 }];
       dateArray.sort((a, b) => {
         return a.date > b.date ? 1 : b.date > a.date ? -1 : 0;
       });
 
       setuseByDateData([...dateArray]);
-      // setNewItemInput({...newItemInput, useByDate: [...dateArray]});
     };
 
     // To change any date item quantity
@@ -1114,14 +1082,12 @@ const ItemsList = () => {
       let newDateObj = { date: useByDateData[index].date, value: e };
       useByDateData.splice(index, 1, newDateObj);
       setuseByDateData(useByDateData);
-      // setNewItemInput({...newItemInput, useByDate: useByDateData})
     };
 
     // To remove any date
     const deleteDate = (e, index) => {
       useByDateData.splice(index, 1);
       setuseByDateData([...useByDateData]);
-      // setNewItemInput({...newItemInput, useByDate: [...useByDateData]});
     };
 
     return (
@@ -1132,58 +1098,70 @@ const ItemsList = () => {
             placeholder="Pick date"
             inputFormat="DD/MM/YYYY"
             value={newUseByDateVal}
-            onChange={(day) => {console.log(day);setNewUseByDateVal(day)}}
-            style={{width: '140px'}}
+            onChange={(day) => { console.log(day); setNewUseByDateVal(day) }}
+            style={{ width: '140px' }}
           />
           <Image
-                className="add-icon"
-                src="images/add.svg"
-                width={24}
-                height={24}
-                onClick={() => addNewDate(changedDateFormat)}
-              ></Image>
+            className="add-icon"
+            src="images/add.svg"
+            width={24}
+            height={24}
+            onClick={() => addNewDate(changedDateFormat)}
+          ></Image>
         </div>
-        {useByDateData.map((item, index) => {
-          return (
-            <div key={index} className="new-date-row">
-              <TextInput value={item.date} readOnly></TextInput>
-              <NumberInput
-                className="per-date-quantity"
-                value={item.value}
-                style={{ padding: "7px 7px" }}
-                onChange={(e) => handleAddDateInputChange(e, index)}
-                hideControls
-              ></NumberInput>
-              <Image
-                className="delete-icon"
-                src="images/cross.svg"
-                width={14}
-                onClick={(e) => deleteDate(e, index)}
-              ></Image>
-            </div>
-          );
-        })}
+        <div className="all-dates add-item-row-usebydate">
+          {useByDateData.map((item, index) => {
+            return (
+              <div key={index} className="new-date-row">
+                <TextInput value={item.date} readOnly></TextInput>
+                <NumberInput
+                  className="per-date-quantity"
+                  value={item.value}
+                  style={{ padding: "7px 7px" }}
+                  onChange={(e) => handleAddDateInputChange(e, index)}
+                  hideControls
+                ></NumberInput>
+                <Image
+                  className="delete-icon"
+                  src="images/cross.svg"
+                  width={14}
+                  onClick={(e) => deleteDate(e, index)}
+                ></Image>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   };
 
   const ShowUseByDateElement = ({ data, index }) => {
-    const [selectedDate, setSelectedDate] = useState("");
     const [savedDates, setSavedDates] = useState(data);
+    const [newUseByDateVal, setNewUseByDateVal] = useState();
+
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${(new Date(newUseByDateVal).getMonth() + 1) <= 9 ? 0 : ''}${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''}${new Date(newUseByDateVal).getDate()}`;
+
     // To add new date
-    const addNewDate = (e) => {
-      setSelectedDate(e.target.value);
-      const dateSelected = savedDates.findIndex(
-        (item) => item.date === e.target.value
+    const addNewDate = (selectedDate) => {
+      if (selectedDate.slice(0, 3) === 'NaN') {
+        alert('Select a date first!');
+        return;
+      }
+
+      const dateSelected = useByDateData.findIndex(
+        (item) => item.date === selectedDate
       );
+
       if (dateSelected !== -1) {
         alert("date already selected!");
         return;
       }
-      let dateArray = [...savedDates, { date: e.target.value, value: 0 }];
+
+      let dateArray = [...savedDates, { date: selectedDate, value: 0 }];
       dateArray.sort((a, b) => {
         return a.date > b.date ? 1 : b.date > a.date ? -1 : 0;
       });
+
       setSavedDates([...dateArray]);
       itemToBeUpdated = {
         [index]: {
@@ -1223,32 +1201,44 @@ const ItemsList = () => {
 
     return (
       <div className="useby-date-container">
-        <input
-          type="date"
-          name="useByDate"
-          id="useByDate"
-          value={selectedDate}
-          onChange={(e) => addNewDate(e)}
-        />
-        {savedDates?.map((item, index) => {
-          return (
-            <div key={index} className="new-date-row">
-              <TextInput value={item.date.slice(0, 10)} readOnly></TextInput>
-              <NumberInput
-                className="per-date-quantity"
-                value={item.value}
-                onChange={(e) => handleAddDateInputChange(e, index)}
-                hideControls
-              ></NumberInput>
-              <Image
-                className="delete-icon"
-                src="images/cross.svg"
-                width={14}
-                onClick={(e) => deleteDate(e, index)}
-              ></Image>
-            </div>
-          );
-        })}
+        <div className="add-date-container">
+          <DatePicker
+            className="useby-date-picker"
+            placeholder="Pick date"
+            inputFormat="DD/MM/YYYY"
+            value={newUseByDateVal}
+            onChange={(day) => { console.log(day); setNewUseByDateVal(day) }}
+            style={{ width: '140px' }}
+          />
+          <Image
+            className="add-icon"
+            src="images/add.svg"
+            width={24}
+            height={24}
+            onClick={() => addNewDate(changedDateFormat)}
+          ></Image>
+        </div>
+        <div className="all-dates">
+          {savedDates?.map((item, index) => {
+            return (
+              <div key={index} className="new-date-row">
+                <TextInput value={item.date.slice(0, 10)} readOnly></TextInput>
+                <NumberInput
+                  className="per-date-quantity"
+                  value={item.value}
+                  onChange={(e) => handleAddDateInputChange(e, index)}
+                  hideControls
+                ></NumberInput>
+                <Image
+                  className="delete-icon"
+                  src="images/cross.svg"
+                  width={14}
+                  onClick={(e) => deleteDate(e, index)}
+                ></Image>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   };
@@ -1283,7 +1273,6 @@ const ItemsList = () => {
               handleNewItemInput({
                 target: { name: "itemBarcode", value: result.text },
               });
-              // setStopStream(true);
             }
           }}
         />
@@ -1297,8 +1286,8 @@ const ItemsList = () => {
           ref={inputTable}
         >
           <thead className="heading">
-            <tr>
-              <th>
+            <tr className="table-row">
+              <th className="table-head-component">
                 <Text>Bar Code</Text>
                 <input
                   type="checkbox"
@@ -1478,7 +1467,7 @@ const ItemsList = () => {
           </thead>
           <tbody
             style={{ display: loaderDisplay ? "none" : "" }}
-            className="body"
+            className="add-item-row-body"
           >
             <tr className="bill-row">
               <td>
@@ -1509,24 +1498,14 @@ const ItemsList = () => {
                 />
               </td>
               <td>
-                {/* <Select
-                  placeholder="Category"
-                  data={[
-                    { value: "Rice", label: "Rice" },
-                    { value: "Pulse", label: "Pulse" },
-                    { value: "Beverage", label: "Beverage" },
-                    { value: "Spice", label: "Spice" },
-                  ]}
-                  value={newItemInput["itemCategory"]}
-                  onChange={(val) => handleSelectChange(val, "itemCategory")}
-                /> */}
                 <Select
-                  // label="What item is the best?"
                   placeholder="Pick one"
                   searchable
                   nothingFound="No options"
                   maxDropdownHeight={280}
                   data={categoryArray}
+                  value={newItemInput["itemCategory"]}
+                  onChange={(val) => handleSelectChange(val, "itemCategory")}
                 />
               </td>
               <td>
@@ -1623,7 +1602,7 @@ const ItemsList = () => {
           <Loader />
         </div>
         <Table className="show-items-table">
-          <tbody>
+          <tbody className="add-item-row-body">
             <ListComponents />
           </tbody>
         </Table>
@@ -1706,13 +1685,6 @@ const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
   };
 
   return (
-    // <Button
-    //   loading={apiLoading}
-    //   onClick={handleAddItem}
-    // // style={{ ...style, margin: "0 15px" }}
-    // >
-    //   <Text>Update</Text>
-    // </Button>
     <Image
       src="images/check.svg"
       loading={apiLoading}

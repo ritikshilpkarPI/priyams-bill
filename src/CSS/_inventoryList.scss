@@ -2,8 +2,8 @@ $firstColWidth: 180px;
 $secondColWidth: 140px;
 $thirdColWidth: 250px;
 $forthColWidth: 200px;
-$fifthColWidth: 90px;
-$sixthColWidth: 140px;
+$fifthColWidth: 120px;
+$sixthColWidth: 130px;
 $seventhColWidth: 200px;
 $eightColWidth: 100px;
 $ninthColWidth: 100px;
@@ -18,7 +18,6 @@ $fourteenColWidth: 140px;
 }
 
 .inventory-items-container {
-    // border: 1px solid green;
     margin-top: 12px;
 
     .top-buttons {
@@ -49,7 +48,6 @@ $fourteenColWidth: 140px;
 
     .total-item-count {
         padding: 20px 0;
-        // border: 1px solid red;
     }
 
     .item-input-table {
@@ -61,7 +59,6 @@ $fourteenColWidth: 140px;
         thead {
             padding: 0;
             tr {
-                // border: 1px solid blue;
                 th {
                     padding: 10px;
                     text-align: center;
@@ -90,14 +87,12 @@ $fourteenColWidth: 140px;
         }
     }
 
-    thead tr th:nth-child(1),
-    tbody tr td:nth-child(1) {
+    thead tr th.table-head-component:nth-child(1),
+    tbody tr td.table-row-component:nth-child(1) {
         width: $firstColWidth;
-        // border: 1px solid red;
     }
-    thead tr th:nth-child(2),
+    thead tr th.table-head-component:nth-child(2),
     tbody tr td:nth-child(2) {
-        // border: 1px solid green;
         width: $secondColWidth;
     }
     thead tr th:nth-child(3),
@@ -107,7 +102,6 @@ $fourteenColWidth: 140px;
     thead tr th:nth-child(4),
     tbody tr td:nth-child(4) {
         width: $forthColWidth;
-        // border: 1px solid black;
     }
     thead tr th:nth-child(5),
     tbody tr td:nth-child(5) {
@@ -115,12 +109,12 @@ $fourteenColWidth: 140px;
     }
     thead tr th:nth-child(6),
     tbody tr td:nth-child(6) {
-        // border: 1px solid blue;
         width: $sixthColWidth;
         padding: 5px;
     }
     thead tr th:nth-child(7),
     tbody tr td:nth-child(7) {
+        // border: 1px solid blue;
         width: $seventhColWidth;
     }
     thead tr th:nth-child(8),
@@ -145,14 +139,18 @@ $fourteenColWidth: 140px;
     }
     thead tr th:nth-child(13),
     tbody tr td:nth-child(13) {
-        // border: 1px solid gray;
         width: $thirteenColWidth;
     }
 
     thead tr th:nth-child(14),
     tbody tr td:nth-child(14) {
-        // border: 1px solid gray;
         width: $fourteenColWidth;
+    }
+
+    .mantine-DatePicker-dropdown.mantine-1rhg0ql thead tr th,
+    .mantine-DatePicker-dropdown.mantine-1rhg0ql tbody tr td {
+        width: auto;
+        display: table-cell;
     }
 
     .show-items-table {
@@ -163,8 +161,6 @@ $fourteenColWidth: 140px;
                     input,
                     select {
                         padding: 7px 15px;
-                        // border: 1px solid red;
-                        // width: 100%;
                     }
                 }
             }
@@ -172,17 +168,17 @@ $fourteenColWidth: 140px;
     }
 
     .useby-date-container {
-        
         .add-date-container {
             display: flex;
             align-items: center;
-            
-            .add-icon{
+
+            .useby-date-picker tbody tr td {
+                padding: 0;
+            }
+
+            .add-icon {
                 margin-left: 5px;
-                border: 1px solid red;
                 cursor: pointer;
-                // padding: 10px;
-                // width: 20px;
             }
         }
 
@@ -190,35 +186,44 @@ $fourteenColWidth: 140px;
             width: 100%;
             border: 1px solid rgb(203, 199, 199);
             width: 195px;
-            // margin-bottom: 3px;
         }
 
-        .new-date-row {
-            display: flex;
-            width: 195px;
-            align-items: center;
-            margin: 3px 0;
+        .all-dates {
+            height: 80px;
+            overflow: scroll;
 
-            .mantine-gqmpge {
-                width: 110px;
-            }
+            .new-date-row {
+                display: flex;
+                width: 205px;
+                align-items: center;
+                margin: 3px 0;
 
-            .per-date-quantity {
-                margin: 0 5px 0;
                 .mantine-gqmpge {
-                    width: 50px;
+                    width: 95px;
+                    padding: 6px;
                 }
 
-                input {
-                    padding: 7px 2px;
-                    text-align: center;
+                .per-date-quantity {
+                    margin: 0 5px 0;
+                    .mantine-gqmpge {
+                        width: 50px;
+                    }
+
+                    input {
+                        padding: 7px 2px;
+                        text-align: center;
+                    }
+                }
+
+                .delete-icon {
+                    margin-left: 5px;
+                    cursor: pointer;
                 }
             }
+        }
 
-            .delete-icon {
-                margin-left: 5px;
-                cursor: pointer;
-            }
+        .all-dates.add-item-row-usebydate{
+            height: auto;
         }
     }
 }
