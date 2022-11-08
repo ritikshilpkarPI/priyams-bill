@@ -923,7 +923,7 @@ const ItemsList = () => {
                 outline: "none",
               }}
               disabled
-            />{" "}
+            />
             =
             <input
               type="number"
