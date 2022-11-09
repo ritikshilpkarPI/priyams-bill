@@ -5,7 +5,6 @@ import Axios from "axios";
 const nameOptionAndValues = [
   { value: "anjali", label: "Anjali" },
   { value: "abhishek", label: "Abhishek" },
-  { value: "rajesh", label: "Rajesh" },
 ];
 const attendanceOptions = [
   { value: "arrival", label: "Arrival" },
