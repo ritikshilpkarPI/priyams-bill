@@ -464,7 +464,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 <div
                   className="user-profile-data"
                 >
-                  <Table striped highlightOnHover withColumnBorders style={{ backgroundColor: "white" }}>
+                  <Table withBorder withColumnBorders striped highlightOnHover style={{ backgroundColor: "white" }}>
                     <thead>
                       <td>Name</td>
                       <td>Mobile No</td>
