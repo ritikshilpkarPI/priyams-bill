@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const quantityUnitNameEnum = ["kg", "grams", "liter", "ml", "Piece"];
-const inventoryItemCategory = ["Rice", "Pulse", "Beverage", "Spice"];
+const inventoryItemCategory =['Bakery', 'Beverage', 'Dairy and Frozen', 'Staple', 'Personal care', 'Packaged Food', 'Home and Kitchen', 'Stationery', 'Grocery', 'Baby and kids', 'Electronic', 'Spices and fast food', 'Pooja', 'Oil and ghee', 'Sweet and Chocolate', 'Plastic', 'Miscellanous'];
 
 const ItemSchem = new mongoose.Schema(
   {
