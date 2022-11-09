@@ -283,7 +283,7 @@ function findNameOrNumber(string, value) {
       return false;
     }
   }
-  return true
+  return true;
 }
 
 const Billing = ({ billID = "", loaderDisplay }) => {
@@ -298,30 +298,30 @@ const Billing = ({ billID = "", loaderDisplay }) => {
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const initialItemList = [...itemsList];
   const [phoneError, setPhoneError] = useState("");
-  const [userProfileData, setUserDataProfile] = useState([])
-  const [filterUserProfile, setFilterUserProfile] = useState([])
+  const [userProfileData, setUserDataProfile] = useState([]);
+  const [filterUserProfile, setFilterUserProfile] = useState([]);
   const [showProfileData, setShowProfileData] = useState(false);
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
 
   const getUserData = async () => {
     try {
-      const response = await axios.get("/api/billing/userDetails")
-      setUserDataProfile(response.data.message)
+      const response = await axios.get("/api/billing/userDetails");
+      setUserDataProfile(response.data.message);
     } catch (error) {
       console.log(error.message);
     }
-  }
-  useEffect(() => getUserData(), [])
+  };
+  useEffect(() => getUserData(), []);
 
   const handleUserSearch = (e) => {
-    setShowProfileData(true)
-    const users = userProfileData.filter(data => {
-      const str = e.target.dataset.name === "name" ? data.customerName : data._id
-      return findNameOrNumber(str, e.target.value)
+    setShowProfileData(true);
+    const users = userProfileData.filter((data) => {
+      const str =
+        e.target.dataset.name === "name" ? data.customerName : data._id;
+      return findNameOrNumber(str, e.target.value);
     });
-    setFilterUserProfile(users)
-  }
-
+    setFilterUserProfile(users);
+  };
 
   // To refresh page
 
@@ -431,12 +431,13 @@ const Billing = ({ billID = "", loaderDisplay }) => {
               data-name="name"
               style={{ width: "180px" }}
               value={bill.customerName}
+              onBlur={() => setShowProfileData(false)}
               onChange={(e) => {
                 setBill((prevBill) => ({
                   ...prevBill,
                   customerName: e.target.value,
-                }))
-                handleUserSearch(e)
+                }));
+                handleUserSearch(e);
               }}
             />
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -444,6 +445,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 type="number"
                 label="Customer Phone No."
                 value={bill.customerPhone}
+                onBlur={() => setShowProfileData(false)}
                 style={{ width: "180px", paddingBottom: "4px" }}
                 onChange={(e) => {
                   e.target.value.length !== 10
@@ -453,55 +455,58 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                     ...prevBill,
                     customerPhone: e.target.value,
                   }));
-                  handleUserSearch(e)
+                  handleUserSearch(e);
                 }}
               />
               <div style={{ height: "10px", color: "red" }}>{phoneError}</div>
             </div>
 
-            {
-              showProfileData && Boolean(filterUserProfile.length) ? (
-                <div
-                  className="user-profile-data"
+            {showProfileData && Boolean(filterUserProfile.length) ? (
+              <div className="user-profile-data">
+                <Table
+                  withBorder
+                  withColumnBorders
+                  striped
+                  highlightOnHover
+                  style={{ backgroundColor: "white" }}
                 >
-                  <Table withBorder withColumnBorders striped highlightOnHover style={{ backgroundColor: "white" }}>
-                    <thead>
-                      <td>Name</td>
-                      <td>Mobile No</td>
-                    </thead>
-                    <tbody>
-                      {filterUserProfile.map((value, key) => {
-                        return (
-                          <tr
-                            onClick={() => {
-                              setBill((prevBill) => ({
-                                ...prevBill,
-                                customerPhone: value._id,
-                                customerName: value.customerName
-                              }))
-                              setShowProfileData(false)
-                              setPhoneError("")
-                            }
-                            }
-                            key={key}
-                            style={{
-                              padding: "5px",
-                              fontSize: "16px",
-                              fontStyle: "bold",
-                              cursor: "pointer",
-                            }}
-                            className="show-data"
-                          >
-                            <td>{value._id}</td>
-                            <td>{value.customerName}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </Table>
-                </div>
-              ) : ''
-            }
+                  <thead>
+                    <td>Name</td>
+                    <td>Mobile No</td>
+                  </thead>
+                  <tbody>
+                    {filterUserProfile.map((value, key) => {
+                      return (
+                        <tr
+                          onClick={() => {
+                            setBill((prevBill) => ({
+                              ...prevBill,
+                              customerPhone: value._id,
+                              customerName: value.customerName,
+                            }));
+                            setShowProfileData(false);
+                            setPhoneError("");
+                          }}
+                          key={key}
+                          style={{
+                            padding: "5px",
+                            fontSize: "16px",
+                            fontStyle: "bold",
+                            cursor: "pointer",
+                          }}
+                          className="show-data"
+                        >
+                          <td>{value.customerName}</td>
+                          <td>{value._id}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
 
           <Button
@@ -910,7 +915,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               defaultValue={
                                 index !== itemObj.slabPricing.length - 1
                                   ? Number(itemObj.slabPricing[index + 1][1]) -
-                                  1
+                                    1
                                   : ""
                               }
                             />{" "}
