@@ -29,6 +29,7 @@ $fourteenColWidth: 140px;
             transition: 0.3s ease;
             background-color: black;
             border: 2px solid black;
+
             &:hover {
                 background-color: white;
                 color: black;
@@ -39,6 +40,7 @@ $fourteenColWidth: 140px;
             transition: 0.3s ease;
             background-color: rgb(10, 119, 30);
             border: 2px solid rgb(10, 119, 30);
+
             &:hover {
                 background-color: white;
                 color: rgb(10, 119, 30);
@@ -51,180 +53,195 @@ $fourteenColWidth: 140px;
     }
 
     .item-input-table {
-        width: calc(
-            #{$firstColWidth} + #{$secondColWidth} + #{$thirdColWidth} + #{$forthColWidth} + #{$fifthColWidth} + #{$sixthColWidth} +
-                #{$seventhColWidth} + #{$eightColWidth} + #{$ninthColWidth} + #{$tenthColWidth} + #{$eleventhColWidth} +
-                #{$twelfthColWidth} + #{$thirteenColWidth + #{$fourteenColWidth}}
-        );
-        thead {
-            padding: 0;
-            tr {
-                th {
-                    padding: 10px;
-                    text-align: center;
+        width: calc(#{$firstColWidth} + #{$secondColWidth} + #{$thirdColWidth} + #{$forthColWidth} + #{$fifthColWidth} + #{$sixthColWidth} + #{$seventhColWidth} + #{$eightColWidth} + #{$ninthColWidth} + #{$tenthColWidth} + #{$eleventhColWidth} + #{$twelfthColWidth} + #{$thirteenColWidth + #{$fourteenColWidth}
+        });
 
-                    input[type="checkbox"] {
-                        margin-top: 5px;
-                        cursor: pointer;
-                        width: 16px;
-                    }
-                }
-            }
-        }
+    thead {
+        padding: 0;
 
-        tbody {
-            tr {
-                td {
-                    padding: 15px 5px;
-                }
-                td.useby-date-picker {
-                    padding: 0;
-                }
-            }
-        }
-        .useby-date-picker tr td {
-            padding: 0;
-        }
-    }
+        tr {
+            th {
+                padding: 10px;
+                text-align: center;
 
-    thead tr th.table-head-component:nth-child(1),
-    tbody tr td.table-row-component:nth-child(1) {
-        width: $firstColWidth;
-    }
-    thead tr th.table-head-component:nth-child(2),
-    tbody tr td:nth-child(2) {
-        width: $secondColWidth;
-    }
-    thead tr th:nth-child(3),
-    tbody tr td:nth-child(3) {
-        width: $thirdColWidth;
-    }
-    thead tr th:nth-child(4),
-    tbody tr td:nth-child(4) {
-        width: $forthColWidth;
-    }
-    thead tr th:nth-child(5),
-    tbody tr td:nth-child(5) {
-        width: $fifthColWidth;
-    }
-    thead tr th:nth-child(6),
-    tbody tr td:nth-child(6) {
-        width: $sixthColWidth;
-        padding: 5px;
-    }
-    thead tr th:nth-child(7),
-    tbody tr td:nth-child(7) {
-        // border: 1px solid blue;
-        width: $seventhColWidth;
-    }
-    thead tr th:nth-child(8),
-    tbody tr td:nth-child(8) {
-        width: $eightColWidth;
-    }
-    thead tr th:nth-child(9),
-    tbody tr td:nth-child(9) {
-        width: $ninthColWidth;
-    }
-    thead tr th:nth-child(10),
-    tbody tr td:nth-child(10) {
-        width: $tenthColWidth;
-    }
-    thead tr th:nth-child(11),
-    tbody tr td:nth-child(11) {
-        width: $eleventhColWidth;
-    }
-    thead tr th:nth-child(12),
-    tbody tr td:nth-child(12) {
-        width: $twelfthColWidth;
-    }
-    thead tr th:nth-child(13),
-    tbody tr td:nth-child(13) {
-        width: $thirteenColWidth;
-    }
-
-    thead tr th:nth-child(14),
-    tbody tr td:nth-child(14) {
-        width: $fourteenColWidth;
-    }
-
-    .mantine-DatePicker-dropdown.mantine-1rhg0ql thead tr th,
-    .mantine-DatePicker-dropdown.mantine-1rhg0ql tbody tr td {
-        width: auto;
-        display: table-cell;
-    }
-
-    .show-items-table {
-        tbody {
-            tr {
-                td {
-                    display: block;
-                    input,
-                    select {
-                        padding: 7px 15px;
-                    }
+                input[type="checkbox"] {
+                    margin-top: 5px;
+                    cursor: pointer;
+                    width: 16px;
                 }
             }
         }
     }
 
-    .useby-date-container {
-        .add-date-container {
-            display: flex;
-            align-items: center;
+    tbody {
+        tr {
+            td {
+                padding: 15px 5px;
+            }
 
-            .useby-date-picker tbody tr td {
+            td.useby-date-picker {
                 padding: 0;
             }
+        }
+    }
 
-            .add-icon {
+    .useby-date-picker tr td {
+        padding: 0;
+    }
+}
+
+thead tr th.table-head-component:nth-child(1),
+tbody tr td.table-row-component:nth-child(1) {
+    width: $firstColWidth;
+}
+
+thead tr th.table-head-component:nth-child(2),
+tbody tr td:nth-child(2) {
+    width: $secondColWidth;
+}
+
+thead tr th:nth-child(3),
+tbody tr td:nth-child(3) {
+    width: $thirdColWidth;
+}
+
+thead tr th:nth-child(4),
+tbody tr td:nth-child(4) {
+    width: $forthColWidth;
+}
+
+thead tr th:nth-child(5),
+tbody tr td:nth-child(5) {
+    width: $fifthColWidth;
+}
+
+thead tr th:nth-child(6),
+tbody tr td:nth-child(6) {
+    width: $sixthColWidth;
+    padding: 5px;
+}
+
+thead tr th:nth-child(7),
+tbody tr td:nth-child(7) {
+    // border: 1px solid blue;
+    width: $seventhColWidth;
+}
+
+thead tr th:nth-child(8),
+tbody tr td:nth-child(8) {
+    width: $eightColWidth;
+}
+
+thead tr th:nth-child(9),
+tbody tr td:nth-child(9) {
+    width: $ninthColWidth;
+}
+
+thead tr th:nth-child(10),
+tbody tr td:nth-child(10) {
+    width: $tenthColWidth;
+}
+
+thead tr th:nth-child(11),
+tbody tr td:nth-child(11) {
+    width: $eleventhColWidth;
+}
+
+thead tr th:nth-child(12),
+tbody tr td:nth-child(12) {
+    width: $twelfthColWidth;
+}
+
+thead tr th:nth-child(13),
+tbody tr td:nth-child(13) {
+    width: $thirteenColWidth;
+}
+
+thead tr th:nth-child(14),
+tbody tr td:nth-child(14) {
+    width: $fourteenColWidth;
+}
+
+.mantine-DatePicker-dropdown.mantine-1rhg0ql thead tr th,
+.mantine-DatePicker-dropdown.mantine-1rhg0ql tbody tr td {
+    width: auto;
+    display: table-cell;
+}
+
+.show-items-table {
+    tbody {
+        tr {
+            td {
+                display: block;
+
+                input,
+                select {
+                    padding: 7px 15px;
+                }
+            }
+        }
+    }
+}
+
+.useby-date-container {
+    .add-date-container {
+        display: flex;
+        align-items: center;
+
+        .useby-date-picker tbody tr td {
+            padding: 0;
+        }
+
+        .add-icon {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+    }
+
+    #useByDate {
+        width: 100%;
+        border: 1px solid rgb(203, 199, 199);
+        width: 195px;
+    }
+
+    .all-dates {
+        height: 80px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+
+        .new-date-row {
+            display: flex;
+            width: 205px;
+            align-items: center;
+            margin: 3px 0;
+
+            .mantine-gqmpge {
+                width: 95px;
+                padding: 6px;
+            }
+
+            .per-date-quantity {
+                margin: 0 5px 0;
+
+                .mantine-gqmpge {
+                    width: 50px;
+                }
+
+                input {
+                    padding: 7px 2px;
+                    text-align: center;
+                }
+            }
+
+            .delete-icon {
                 margin-left: 5px;
                 cursor: pointer;
             }
         }
-
-        #useByDate {
-            width: 100%;
-            border: 1px solid rgb(203, 199, 199);
-            width: 195px;
-        }
-
-        .all-dates {
-            height: 80px;
-            overflow-y: scroll;
-            overflow-x: hidden;
-
-            .new-date-row {
-                display: flex;
-                width: 205px;
-                align-items: center;
-                margin: 3px 0;
-
-                .mantine-gqmpge {
-                    width: 95px;
-                    padding: 6px;
-                }
-
-                .per-date-quantity {
-                    margin: 0 5px 0;
-                    .mantine-gqmpge {
-                        width: 50px;
-                    }
-
-                    input {
-                        padding: 7px 2px;
-                        text-align: center;
-                    }
-                }
-
-                .delete-icon {
-                    margin-left: 5px;
-                    cursor: pointer;
-                }
-            }
-        }
-
-        .all-dates.add-item-row-usebydate{
-            height: auto;
-        }
     }
+
+    .all-dates.add-item-row-usebydate {
+        height: auto;
+    }
+}
 }
