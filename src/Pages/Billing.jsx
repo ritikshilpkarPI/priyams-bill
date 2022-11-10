@@ -431,7 +431,10 @@ const Billing = ({ billID = "", loaderDisplay }) => {
               data-name="name"
               style={{ width: "180px" }}
               value={bill.customerName}
-              onBlur={() => setShowProfileData(false)}
+              onBlur={(e) => {
+                e.preventDefault()
+                setShowProfileData(false)
+              }}
               onChange={(e) => {
                 setBill((prevBill) => ({
                   ...prevBill,
@@ -445,7 +448,10 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 type="number"
                 label="Customer Phone No."
                 value={bill.customerPhone}
-                onBlur={() => setShowProfileData(false)}
+                onBlur={(e) => {
+                  e.preventDefault()
+                  setShowProfileData(false)
+                }}
                 style={{ width: "180px", paddingBottom: "4px" }}
                 onChange={(e) => {
                   e.target.value.length !== 10
@@ -471,14 +477,16 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   style={{ backgroundColor: "white" }}
                 >
                   <thead>
-                    <td>Name</td>
-                    <td>Mobile No</td>
+                    <tr>
+                      <td>Name</td>
+                      <td>Mobile No</td>
+                    </tr>
                   </thead>
                   <tbody>
                     {filterUserProfile.map((value, key) => {
                       return (
                         <tr
-                          onClick={() => {
+                          onMouseDown={() => {
                             setBill((prevBill) => ({
                               ...prevBill,
                               customerPhone: value._id,
@@ -915,7 +923,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               defaultValue={
                                 index !== itemObj.slabPricing.length - 1
                                   ? Number(itemObj.slabPricing[index + 1][1]) -
-                                    1
+                                  1
                                   : ""
                               }
                             />{" "}
