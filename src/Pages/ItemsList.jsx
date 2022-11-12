@@ -956,9 +956,6 @@ const ItemsList = () => {
         className="table-row"
       >
         <td className="table-row-component">
-          {index + 1}
-        </td>
-        <td className="table-row-component">
           <BarcodeRow style={style} index={index} />
         </td>
         <td>
@@ -1291,9 +1288,6 @@ const ItemsList = () => {
           <thead className="heading">
             <tr className="table-row">
               <th className="table-head-component">
-                <Text>SR No</Text>
-              </th>
-              <th className="table-head-component">
                 <Text>Bar Code</Text>
                 <input
                   type="checkbox"
@@ -1476,7 +1470,6 @@ const ItemsList = () => {
             className="add-item-row-body"
           >
             <tr className="bill-row">
-              <td></td>
               <td>
                 <Input
                   value={newItemInput["itemBarcode"]}
