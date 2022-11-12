@@ -308,7 +308,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
       const response = await axios.get("/api/billing/userDetails");
       setUserDataProfile(response.data.message);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
   useEffect(() => getUserData(), []);
@@ -432,8 +432,8 @@ const Billing = ({ billID = "", loaderDisplay }) => {
               style={{ width: "180px" }}
               value={bill.customerName}
               onBlur={(e) => {
-                e.preventDefault()
-                setShowProfileData(false)
+                e.preventDefault();
+                setShowProfileData(false);
               }}
               onChange={(e) => {
                 setBill((prevBill) => ({
@@ -449,8 +449,8 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 label="Customer Phone No."
                 value={bill.customerPhone}
                 onBlur={(e) => {
-                  e.preventDefault()
-                  setShowProfileData(false)
+                  e.preventDefault();
+                  setShowProfileData(false);
                 }}
                 style={{ width: "180px", paddingBottom: "4px" }}
                 onChange={(e) => {
@@ -923,7 +923,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               defaultValue={
                                 index !== itemObj.slabPricing.length - 1
                                   ? Number(itemObj.slabPricing[index + 1][1]) -
-                                  1
+                                    1
                                   : ""
                               }
                             />{" "}
@@ -1181,12 +1181,12 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 <p>{itemObj["itemName"]}</p>
                 <p className="bold-text">{itemObj["itemQuantityInBill"]}</p>
                 <p>{itemObj["itemMRPperUnit"]}</p>
-                <p>{itemObj["itemSellingPricePerUnit"].toFixed(2)}</p>
+                <p>{itemObj["itemSellingPricePerUnit"].toFixed(2) || 0}</p>
                 <p className="bold-text">
                   {(
                     itemObj["itemSellingPricePerUnit"] *
                     itemObj["itemQuantityInBill"]
-                  ).toFixed(2)}
+                  ).toFixed(2) || 0}
                 </p>
               </div>
             );
