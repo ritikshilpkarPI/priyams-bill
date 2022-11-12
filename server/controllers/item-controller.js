@@ -47,7 +47,9 @@ const addItems = async (req, res) => {
       !itemName ||
       !itemSellingPricePerUnit ||
       !itemStockQuantity ||
-      !minimumStockQuantity
+      !minimumStockQuantity ||
+      !itemCategory ||
+      !quantityUnitName
     ) {
       return res
         .status(501)
@@ -111,12 +113,10 @@ const addBulkItems = async (request, response) => {
     const itembarcode = csvData[0].findIndex((item) => item === "itemBarcode");
 
     if (slabPricingStart === -1)
-      return response
-        .status(503)
-        .json({
-          status: false,
-          message: "Uploaded sheet does not has tp1 column in its header",
-        });
+      return response.status(503).json({
+        status: false,
+        message: "Uploaded sheet does not has tp1 column in its header",
+      });
     await Promise.all(
       csvData.map(async (item, index) => {
         if (index !== 0) {

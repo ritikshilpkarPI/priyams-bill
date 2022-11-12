@@ -140,7 +140,9 @@ const ItemsList = () => {
       !newItemInput.itemName ||
       !newItemInput.itemSellingPricePerUnit ||
       !newItemInput.itemStockQuantity ||
-      !newItemInput.minimumStockQuantity
+      !newItemInput.minimumStockQuantity ||
+      !newItemInput.itemCategory ||
+      !newItemInput.quantityUnitName
     ) {
       alert("Fill all required fields!");
       return;
