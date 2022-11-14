@@ -723,6 +723,7 @@ const ItemsList = () => {
         dispatch={dispatch}
         index={index}
         items={items}
+        itemsList={itemsList}
         setItems={setItems}
       />
     );
@@ -1696,7 +1697,14 @@ const TableRow = ({
   }
 };
 
-const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
+const UpdateItemButton = ({
+  dispatch,
+  items,
+  index,
+  style,
+  setItems,
+  itemsList,
+}) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeUpdated[index];
@@ -1713,10 +1721,16 @@ const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
       alert("Item updated...");
     }
     itemToBeUpdated = {};
-    const newList = [...items];
-    newList.splice(index, 1, { ...updatedItem.data.message });
-    setItems(newList);
-    dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });
+    let newItemsList = [...itemsList];
+    newItemsList.splice(
+      itemsList.findIndex((item) => item._id === _id),
+      1
+    );
+    newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
+    dispatch({
+      type: "UPDATE_ITEMS_LIST",
+      payload: newItemsList,
+    });
     setApiLoading(false);
   };
 
