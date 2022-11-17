@@ -220,7 +220,6 @@ const editBill = async (req, res) => {
         model: "Item",
       },
     });
-
     prevBill.items.map(async prev => {
       const newItem = billItems.filter(item => String(item._id) === String(prev._id))
       if (!newItem.length) {
