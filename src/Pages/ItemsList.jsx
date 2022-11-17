@@ -17,7 +17,7 @@ import {
   NumberInput,
 } from "@mantine/core";
 
-import { DatePicker } from '@mantine/dates';
+import { DatePicker } from "@mantine/dates";
 
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
@@ -42,7 +42,25 @@ const ITEM_INITIAL_INPUT = {
 };
 
 let itemToBeUpdated = {};
-let categoryArray = ['Bakery', 'Beverage', 'Dairy and Frozen', 'Staple', 'Personal care', 'Packaged Food', 'Home and Kitchen', 'Stationery', 'Grocery', 'Baby and kids', 'Electronic', 'Spices and fast food', 'Pooja', 'Oil and ghee', 'Sweet and Chocolate', 'Plastic', 'Miscellanous'];
+let categoryArray = [
+  "Bakery",
+  "Beverage",
+  "Dairy and Frozen",
+  "Staple",
+  "Personal care",
+  "Packaged Food",
+  "Home and Kitchen",
+  "Stationery",
+  "Grocery",
+  "Baby and kids",
+  "Electronic",
+  "Spices and fast food",
+  "Pooja",
+  "Oil and ghee",
+  "Sweet and Chocolate",
+  "Plastic",
+  "Miscellanous",
+];
 
 const ItemsList = () => {
   const [items, setItems] = useState([]);
@@ -122,7 +140,9 @@ const ItemsList = () => {
       !newItemInput.itemName ||
       !newItemInput.itemSellingPricePerUnit ||
       !newItemInput.itemStockQuantity ||
-      !newItemInput.minimumStockQuantity
+      !newItemInput.minimumStockQuantity ||
+      !newItemInput.itemCategory ||
+      !newItemInput.quantityUnitName
     ) {
       alert("Fill all required fields!");
       return;
@@ -138,8 +158,6 @@ const ItemsList = () => {
     } else {
       itemObject = { ...newItemInput, useByDate: useByDateData };
     }
-
-    console.log(itemObject);
 
     setApiLoading(true);
     (async () => {
@@ -504,7 +522,11 @@ const ItemsList = () => {
     return (
       <div style={{ paddingTop: "0px", width: "155px" }}>
         <div
-          style={{ display: "flex", justifyContent: "flex-end", margin: "3px 0" }}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            margin: "3px 0",
+          }}
         >
           <Image
             onClick={addNewSlab}
@@ -572,7 +594,7 @@ const ItemsList = () => {
                   textAlign: "center",
                   border: "none",
                   outline: "none",
-                  padding: '7px 0px'
+                  padding: "7px 0px",
                 }}
                 disabled
                 defaultValue={
@@ -634,7 +656,7 @@ const ItemsList = () => {
                 border: "none",
                 outline: "none",
                 borderBottom: "1px solid black",
-                padding: '7px 0'
+                padding: "7px 0",
               }}
               name="value"
               onChange={(e) => handleNewInput(e.target)}
@@ -701,14 +723,13 @@ const ItemsList = () => {
         dispatch={dispatch}
         index={index}
         items={items}
+        itemsList={itemsList}
         setItems={setItems}
       />
     );
   };
   const ItemSoftDeleteButtonRow = ({ index, style }) => {
-    return (
-      <SoftDeleteButton style={style} index={index} items={items} />
-    );
+    return <SoftDeleteButton style={style} index={index} items={items} />;
   };
 
   const downloadFile = async () => {
@@ -822,7 +843,11 @@ const ItemsList = () => {
     return (
       <div style={{ paddingTop: "0px" }}>
         <div
-          style={{ display: "flex", justifyContent: "flex-end", margin: "3px 0" }}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            margin: "3px 0",
+          }}
         >
           <Image
             onClick={addNewSlab}
@@ -1051,12 +1076,16 @@ const ItemsList = () => {
   const UseByDateElement = () => {
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${(new Date(newUseByDateVal).getMonth() + 1) <= 9 ? 0 : ''}${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''}${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
+      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getMonth() + 1}-${
+      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
-      if (selectedDate.slice(0, 3) === 'NaN') {
-        alert('Select a date first!');
+      if (selectedDate.slice(0, 3) === "NaN") {
+        alert("Select a date first!");
         return;
       }
 
@@ -1098,8 +1127,10 @@ const ItemsList = () => {
             placeholder="Pick date"
             inputFormat="DD/MM/YYYY"
             value={newUseByDateVal}
-            onChange={(day) => { console.log(day); setNewUseByDateVal(day) }}
-            style={{ width: '140px' }}
+            onChange={(day) => {
+              setNewUseByDateVal(day);
+            }}
+            style={{ width: "140px" }}
           />
           <Image
             className="add-icon"
@@ -1139,12 +1170,16 @@ const ItemsList = () => {
     const [savedDates, setSavedDates] = useState(data);
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${(new Date(newUseByDateVal).getMonth() + 1) <= 9 ? 0 : ''}${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''}${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
+      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getMonth() + 1}-${
+      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
-      if (selectedDate.slice(0, 3) === 'NaN') {
-        alert('Select a date first!');
+      if (selectedDate.slice(0, 3) === "NaN") {
+        alert("Select a date first!");
         return;
       }
 
@@ -1207,8 +1242,10 @@ const ItemsList = () => {
             placeholder="Pick date"
             inputFormat="DD/MM/YYYY"
             value={newUseByDateVal}
-            onChange={(day) => { console.log(day); setNewUseByDateVal(day) }}
-            style={{ width: '140px' }}
+            onChange={(day) => {
+              setNewUseByDateVal(day);
+            }}
+            style={{ width: "140px" }}
           />
           <Image
             className="add-icon"
@@ -1623,12 +1660,12 @@ const TableRow = ({
     const data =
       name === "quantityUnitName"
         ? [
-          { value: "kg", label: "kg" },
-          { value: "grams", label: "grams" },
-          { value: "liter", label: "liter" },
-          { value: "ml", label: "ml" },
-          { value: "Piece", label: "Piece" },
-        ]
+            { value: "kg", label: "kg" },
+            { value: "grams", label: "grams" },
+            { value: "liter", label: "liter" },
+            { value: "ml", label: "ml" },
+            { value: "Piece", label: "Piece" },
+          ]
         : categoryArray;
 
     return (
@@ -1660,7 +1697,14 @@ const TableRow = ({
   }
 };
 
-const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
+const UpdateItemButton = ({
+  dispatch,
+  items,
+  index,
+  style,
+  setItems,
+  itemsList,
+}) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
     const { _id } = itemToBeUpdated[index];
@@ -1677,10 +1721,16 @@ const UpdateItemButton = ({ dispatch, items, index, style, setItems }) => {
       alert("Item updated...");
     }
     itemToBeUpdated = {};
-    const newList = [...items];
-    newList.splice(index, 1, { ...updatedItem.data.message });
-    setItems(newList);
-    dispatch({ type: "UPDATE_ITEMS_LIST", payload: [...newList] });
+    let newItemsList = [...itemsList];
+    newItemsList.splice(
+      itemsList.findIndex((item) => item._id === _id),
+      1
+    );
+    newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
+    dispatch({
+      type: "UPDATE_ITEMS_LIST",
+      payload: newItemsList,
+    });
     setApiLoading(false);
   };
 
