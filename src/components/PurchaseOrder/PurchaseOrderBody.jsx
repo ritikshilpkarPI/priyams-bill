@@ -1,60 +1,99 @@
 import { useState, useContext } from 'react'
 import { Select, TextInput, NumberInput, Image } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
 import { addItemRow, itemInitialObj } from './constant';
 import { AppStateContext } from 'src/AppState/appState.context';
 
 // To set use by date on item while adding 
-const UseByDateElement = ({ itemObjState, elementDateData }) => {
-    const [useByDateData, setuseByDateData] = useState(elementDateData || []);
-    const [selectedDate, setSelectedDate] = useState('');
+const UseByDateElement = ({ itemObjState = [] }) => {
+    const [newUseByDateVal, setNewUseByDateVal] = useState();
+    console.log({itemObjState});
+    const [useByDateData = {}, setuseByDateData = () => {}] = itemObjState;
 
-    // To add new date 
-    const addNewDate = (e) => {
-        setSelectedDate(e.target.value);
-        const dateSelected = useByDateData.findIndex((item) => item.date === e.target.value);
-        if (dateSelected !== -1) {
-            alert('date already selected!');
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${(new Date(newUseByDateVal).getMonth() + 1) <= 9 ? 0 : ''}${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''}${new Date(newUseByDateVal).getDate()}`;
+
+    // To add new date
+    const addNewDate = (selectedDate) => {
+        // console.log(selectedDate);
+        if (!newUseByDateVal) {
+            alert('Select a date first!');
             return;
         }
-        let dateArray = [...useByDateData, { date: e.target.value, value: 0 }]
+
+        const dateSelected = useByDateData["itemUseByDate"].findIndex(
+            (item) => item.date === selectedDate
+        );
+
+        if (dateSelected !== -1) {
+            alert("date already selected!");
+            return;
+        }
+
+        let dateArray = [...useByDateData["itemUseByDate"], { date: selectedDate, value: 0 }];
         dateArray.sort((a, b) => {
-            return (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0)
+            return a.date > b.date ? 1 : b.date > a.date ? -1 : 0;
         });
-        setuseByDateData([...dateArray]);
-        itemObjState[1]({ ...itemObjState[0], "itemUseByDate": [...dateArray] })
-    }
 
-    // To change any date item quantity 
+        setuseByDateData({ ...useByDateData, itemUseByDate: dateArray });
+    };
+
+    // To change any date item quantity
     const handleAddDateInputChange = (e, index) => {
-        let newDateObj = { date: useByDateData[index].date, value: e };
-        useByDateData.splice(index, 1, newDateObj);
-        setuseByDateData(useByDateData);
-        itemObjState[1]({ ...itemObjState[0], "itemUseByDate": useByDateData });
-    }
+        let newDateObj = { date: useByDateData["itemUseByDate"][index].date, value: e };
+        useByDateData["itemUseByDate"].splice(index, 1, newDateObj);
+        setuseByDateData({ ...useByDateData, itemUseByDate: useByDateData["itemUseByDate"] });
+    };
 
-    // To remove any date 
+    // To remove any date
     const deleteDate = (e, index) => {
-        useByDateData.splice(index, 1);
-        setuseByDateData([...useByDateData]);
-        itemObjState[1]({ ...itemObjState[0], "itemUseByDate": [...useByDateData] })
-    }
+        useByDateData["itemUseByDate"].splice(index, 1);
+        setuseByDateData({ ...useByDateData, itemUseByDate: useByDateData["itemUseByDate"] });
+    };
 
     return (
-        <div className='useby-date-container'>
-            <input type="date" name="useByDate" id="useByDate" value={selectedDate} onChange={(e) => addNewDate(e)} />
-            {useByDateData.map((item, index) => {
-                return (
-                    <div key={index} className="new-date-row">
-                        <TextInput value={item.date} readOnly></TextInput>
-                        <NumberInput className='per-date-quantity' value={item.value} onChange={(e) => handleAddDateInputChange(e, index)} hideControls></NumberInput>
-                        <Image className='delete-icon' src='images/cross.svg' width={14} onClick={(e) => deleteDate(e, index)}></Image>
-                    </div>
-                )
-            })}
+        <div className="useby-date-container">
+            <div className="add-date-container">
+                <DatePicker
+                    className="useby-date-picker"
+                    placeholder="Pick date"
+                    inputFormat="DD/MM/YYYY"
+                    value={newUseByDateVal}
+                    onChange={(day) => setNewUseByDateVal(day)}
+                    style={{ width: '140px' }}
+                />
+                <Image
+                    className="add-icon"
+                    src="images/add.svg"
+                    width={24}
+                    height={24}
+                    onClick={() => newUseByDateVal && addNewDate(changedDateFormat)}
+                ></Image>
+            </div>
+            <div className="all-dates add-item-row-usebydate">
+                {useByDateData?.itemUseByDate?.length && useByDateData.itemUseByDate.map((item, index) => {
+                    return (
+                        <div key={index} className="new-date-row">
+                            <TextInput value={item.date} readOnly></TextInput>
+                            <NumberInput
+                                className="per-date-quantity"
+                                value={item.value}
+                                style={{ padding: "7px 7px" }}
+                                onChange={(e) => handleAddDateInputChange(e, index)}
+                                hideControls
+                            ></NumberInput>
+                            <Image
+                                className="delete-icon"
+                                src="images/cross.svg"
+                                width={14}
+                                onClick={(e) => deleteDate(e, index)}
+                            ></Image>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
-    )
-}
-
+    );
+};
 
 // Add item row or first row
 const RowItem = ({ item, itemObjState }) => {
@@ -112,12 +151,12 @@ const AddItemRow = () => {
 
 const ShowTableItems = () => {
     const { purchaseItemsStateAndDispatch } = useContext(AppStateContext);
+    const [purchaseItems] = purchaseItemsStateAndDispatch;
 
     return (
         <>
             {
-                purchaseItemsStateAndDispatch[0].map((element, index) => {
-                    console.log(element);
+                purchaseItems.map((element, index) => {
                     return (
                         <tr key={index}>
                             <td>{element.itemBarcode}</td>

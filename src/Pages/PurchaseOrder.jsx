@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../components/PurchaseOrder/Header';
 import { Table, Title } from '@mantine/core';
 import PurchaseOrderBody from '../components/PurchaseOrder/PurchaseOrderBody';
+import PurchaseDetail from '../components/PurchaseOrder/PurchaseDetail';
 
 const PurchaseOrder = () => {
     return (
@@ -11,6 +12,7 @@ const PurchaseOrder = () => {
                 <Header />
                 <PurchaseOrderBody />
             </Table>
+            <PurchaseDetail />
         </div>
     )
 }
