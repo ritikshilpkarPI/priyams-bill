@@ -7,7 +7,8 @@ const expenseRoutes = require('./expense-routes');
 const authRoutes = require('./auth-routes');
 const staffRoutes = require('./staff-routes');
 const reportRoutes = require('./report-routes');
-const attendanceRoutes = require('./attendance-routes')
+const attendanceRoutes = require('./attendance-routes');
+const orderRoutes = require("./purchase-orders-routes")
 
 router.use("/api/auth", authRoutes);
 router.use("/api/inventory", itemRoutes);
@@ -17,5 +18,6 @@ router.use("/api", staffRoutes);
 router.use("/api", expenseRoutes);
 router.use("/api/report", reportRoutes);
 router.use("/api/attendance", attendanceRoutes);
+router.use("/api/purchaseOrder", orderRoutes)
 
 module.exports = router;

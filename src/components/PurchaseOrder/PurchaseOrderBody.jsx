@@ -10,13 +10,11 @@ const UseByDateElement = ({ itemObjState = [] }) => {
   const { purchaseInputItemStateAndDispatch } = useContext(AppStateContext);
   const { 1: purchaseItemInputDispatch } = purchaseInputItemStateAndDispatch;
   console.log({ itemObjState });
-  const [useByDateData = {}, setuseByDateData = () => {}] = itemObjState;
+  const [useByDateData = {}, setuseByDateData = () => { }] = itemObjState;
 
-  const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-    new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
-  }${new Date(newUseByDateVal).getMonth() + 1}-${
-    new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
-  }${new Date(newUseByDateVal).getDate()}`;
+  const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getDate()}`;
 
   // To add new date
   const addNewDate = (selectedDate) => {
@@ -125,7 +123,7 @@ const RowItem = ({ item, itemObjState }) => {
   const [purchaseItems, dispatch] = purchaseItemsStateAndDispatch;
   const { purchaseItemInput, purchaseItemInputDispatch } =
     purchaseInputItemStateAndDispatch;
-  console.log(item);
+  console.log({ item, purchaseItems });
   //   const [itemObj, setItemObj] = itemObjState;
 
   // To add item in list
@@ -162,7 +160,7 @@ const RowItem = ({ item, itemObjState }) => {
     TextInput: (item) => (
       <TextInput
         className="text-input"
-        value={purchaseItemInput.item.type}
+        value={item.type}
         name={item.name}
         onChange={(e) => handleItemInputChange(e, "text")}
       ></TextInput>
@@ -170,7 +168,7 @@ const RowItem = ({ item, itemObjState }) => {
     NumberInput: (item) => (
       <NumberInput
         className="number-input"
-        value={Number(purchaseItemInput.item.type)}
+        value={Number(item.type)}
         onChange={(e) => handleItemInputChange(e, "number", item.name)}
         hideControls
       />
@@ -200,7 +198,7 @@ const RowItem = ({ item, itemObjState }) => {
 
 const AddItemRow = () => {
   //   const [itemObj, setItemObj] = useState(itemInitialObj);
-
+  console.log({ addItemRow });
   return (
     <tr>
       {addItemRow.map((item, index) => {
@@ -218,6 +216,7 @@ const AddItemRow = () => {
 const ShowTableItems = () => {
   const { purchaseItemsStateAndDispatch } = useContext(AppStateContext);
   const [purchaseItems] = purchaseItemsStateAndDispatch;
+  console.log({ purchaseItems });
 
   return (
     <>
