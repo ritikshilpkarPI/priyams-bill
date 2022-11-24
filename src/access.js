@@ -16,6 +16,7 @@ const access = {
 
   // All Bills Page
   BILL_PROFIT_ROW: ["admin"],
+  DELETE_BILL_ROW: ["admin"],
 };
 
 export default access;

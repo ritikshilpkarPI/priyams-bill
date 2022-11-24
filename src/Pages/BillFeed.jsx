@@ -99,9 +99,11 @@ const BillFeed = ({ bills = [] }) => {
               <th>
                 <Text align="center">Items</Text>
               </th>
-              <th>
-                <Text align="center">Delete Bill</Text>
-              </th>
+              <ProtectedComponent role={access.DELETE_BILL_ROW}>
+                <th>
+                  <Text align="center">Delete Bill</Text>
+                </th>
+              </ProtectedComponent>
             </tr>
           </thead>
           <tbody className="body">
@@ -253,11 +255,13 @@ const TableRow = ({ bill, idx }) => {
         <td>
           <Button onClick={() => handleClick(bill["_id"])}>Edit Bill</Button>
         </td>
-        <td>
-          <Button onClick={() => handleDeleteBill(bill["_id"])}>
-            Delete Bill
-          </Button>
-        </td>
+        <ProtectedComponent role={access.DELETE_BILL_ROW}>
+          <td>
+            <Button onClick={() => handleDeleteBill(bill["_id"])}>
+              Delete Bill
+            </Button>
+          </td>
+        </ProtectedComponent>
       </tr>
       <tr>
         <Collapse in={open}>

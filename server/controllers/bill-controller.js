@@ -220,10 +220,35 @@ const editBill = async (req, res) => {
         model: "Item",
       },
     });
-    // console.log({
-    //   billWithoutDbConstants,
-    //   prevBill: JSON.stringify(prevBill.items),
-    // });
+    prevBill.items.map(async prev => {
+      const newItem = billItems.filter(item => String(item._id) === String(prev._id))
+      if (!newItem.length) {
+        const qnt = prev.itemQuantityInBill
+        let item = await Item.findById(prev.itemDetail._id);
+        item.itemStockQuantity += qnt
+        await item.save()
+      } else {
+        let item = await Item.findById(prev.itemDetail._id)
+        if (prev.itemQuantityInBill > newItem[0].itemQuantityInBill) {
+          const qnt = prev.itemQuantityInBill - newItem[0].itemQuantityInBill
+          item.itemStockQuantity += qnt
+          await item.save()
+        } else if (prev.itemQuantityInBill < newItem[0].itemQuantityInBill) {
+          const qnt = newItem[0].itemQuantityInBill - prev.itemQuantityInBill
+          item.itemStockQuantity -= qnt
+          await item.save()
+        }
+      }
+    })
+    billItems.map(async (newItem) => {
+      const oldItem = prevBill.items.filter(item => String(item._id) === String(newItem._id))
+      if (!oldItem.length) {
+        const qnt = newItem.itemQuantityInBill
+        const item = await Item.findById(newItem.itemDetail._id);
+        item.itemStockQuantity -= qnt
+        await item.save()
+      }
+    })
     const changeBill = await Bill.findByIdAndUpdate(
       id,
       billWithoutDbConstants,
