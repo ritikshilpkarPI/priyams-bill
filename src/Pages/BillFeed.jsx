@@ -3,7 +3,7 @@ import { Button, Loader, Table, Text, Collapse } from "@mantine/core";
 import { Axios } from "../utils/axios";
 import { useHistory } from "react-router-dom";
 import ProtectedComponent from "src/components/ProtectedComponent";
-import access from '../access';
+import access from "../access";
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
@@ -99,6 +99,9 @@ const BillFeed = ({ bills = [] }) => {
               <th>
                 <Text align="center">Items</Text>
               </th>
+              <th>
+                <Text align="center">Delete Bill</Text>
+              </th>
             </tr>
           </thead>
           <tbody className="body">
@@ -118,6 +121,19 @@ const TableRow = ({ bill, idx }) => {
   function handleClick(id) {
     history.push(`/edit/${id}`);
   }
+
+  async function handleDeleteBill(id) {
+    await Axios.request({
+      url: "/api/billing/deleteBill",
+      method: "delete",
+      data: {
+        id: id,
+      },
+      headers: {
+        Cookie: "",
+      },
+    });
+  }
   const sendCustomerMessage = async (id) => {
     await Axios.request({
       url: "/api/billing/sendMessage",
@@ -133,10 +149,11 @@ const TableRow = ({ bill, idx }) => {
   const sendBill = (bill) => {
     const link = `${window.location.origin}/showbill/${bill._id}`;
     const number = bill.customerPhone;
-    const message = `Hello, ${bill.customerName
-      } this is your bill for your purchase at Priyam Stores on ${new Date(
-        bill.createdAt
-      ).toLocaleString()}.
+    const message = `Hello, ${
+      bill.customerName
+    } this is your bill for your purchase at Priyam Stores on ${new Date(
+      bill.createdAt
+    ).toLocaleString()}.
     Please view your bill by clicking on the link below:
     ${link}`;
     // Appending the phone number to the URL
@@ -235,6 +252,11 @@ const TableRow = ({ bill, idx }) => {
         </td>
         <td>
           <Button onClick={() => handleClick(bill["_id"])}>Edit Bill</Button>
+        </td>
+        <td>
+          <Button onClick={() => handleDeleteBill(bill["_id"])}>
+            Delete Bill
+          </Button>
         </td>
       </tr>
       <tr>

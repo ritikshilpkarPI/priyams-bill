@@ -7,15 +7,17 @@ const {
   getEditBill,
   editBill,
   sendMessage,
-  userDetails
+  userDetails,
+  deleteBill,
 } = require("../controllers/bill-controller");
 
 billRoutes.post("/newBill", addNewBill);
 billRoutes.get("/getBillFeed", getAllBill);
 billRoutes.get("/allDailyBills", getDayWiseBills);
 billRoutes.get("/getEditBill/:id", getEditBill);
-billRoutes.put("/editBill", editBill)
-billRoutes.post("/sendMessage", sendMessage)
-billRoutes.get("/userDetails", userDetails)
+billRoutes.put("/editBill", editBill);
+billRoutes.post("/sendMessage", sendMessage);
+billRoutes.get("/userDetails", userDetails);
+billRoutes.delete("/deleteBill", deleteBill);
 
 module.exports = billRoutes;

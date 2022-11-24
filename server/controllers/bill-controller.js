@@ -294,22 +294,33 @@ const userDetails = async (req, res) => {
       {
         $match: {
           customerPhone: {
-            $ne: null
-          }
-        }
+            $ne: null,
+          },
+        },
       },
       {
         $group: {
           _id: "$customerPhone",
-          customerName: { "$first": "$customerName" }
-        }
-      }
-    ])
+          customerName: { $first: "$customerName" },
+        },
+      },
+    ]);
     res.status(200).json({ message: userDetails });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
+
+const deleteBill = async (req, res) => {
+  try {
+    const id = req.body.id;
+    const bill = await Bill.findByIdAndRemove(id);
+    res.status(200).json({ message: bill });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
   addNewBill,
@@ -318,5 +329,6 @@ module.exports = {
   getEditBill,
   editBill,
   sendMessage,
-  userDetails
+  userDetails,
+  deleteBill,
 };
