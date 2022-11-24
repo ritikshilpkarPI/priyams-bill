@@ -214,7 +214,7 @@ async function addNewBill(
   };
   const objectOfInterest = billID ? editApi : createApi;
 
-  const response = await Axios.request({
+  await Axios.request({
     ...objectOfInterest,
     headers: {
       Cookie: "",
@@ -921,7 +921,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               defaultValue={
                                 index !== itemObj.slabPricing.length - 1
                                   ? Number(itemObj.slabPricing[index + 1][1]) -
-                                    1
+                                  1
                                   : ""
                               }
                             />{" "}
