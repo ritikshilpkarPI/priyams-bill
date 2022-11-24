@@ -222,7 +222,7 @@ async function addNewBill(
   });
   window.print();
   setApiLoading(false);
-  setBill(BILL_INITIAL_STATE);
+  setBill(BILL_INITIAL_STATE)
   itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
 }
 
@@ -302,7 +302,6 @@ const Billing = ({ billID = "", loaderDisplay }) => {
   const [filterUserProfile, setFilterUserProfile] = useState([]);
   const [showProfileData, setShowProfileData] = useState(false);
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
-
   const getUserData = async () => {
     try {
       const response = await axios.get("/api/billing/userDetails");
@@ -322,7 +321,6 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     });
     setFilterUserProfile(users);
   };
-
   // To refresh page
 
   // To save bill items in billItem Reducer
@@ -858,7 +856,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
               </td>
             </tr>
             {bill.billItems.map((item, idx) => {
-              const itemObj = { ...item, ...item.itemDetail };
+              const itemObj = { ...item.itemDetail, ...item };
               return (
                 <tr
                   className="bill-item-row"
@@ -923,7 +921,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               defaultValue={
                                 index !== itemObj.slabPricing.length - 1
                                   ? Number(itemObj.slabPricing[index + 1][1]) -
-                                    1
+                                  1
                                   : ""
                               }
                             />{" "}
@@ -1231,7 +1229,6 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
     billItemsCopy[idx]["itemQuantityInBill"] = Number(e.target.value);
     setBill((prev) => ({ ...prev, billItems: [...billItemsCopy] }));
   };
-
   return (
     <>
       <Text
