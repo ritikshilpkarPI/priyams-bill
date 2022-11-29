@@ -9,7 +9,9 @@ const usePurchaseOrder = () => {
         items: [],
         payment: '',
         billAmount: '',
-        paidAMount: '',
+        paidAmount: '',
+        remark: '',
+        paidBy: ''
     })
     const [state, setState] = useState('')
     const form = useForm({
@@ -80,7 +82,8 @@ const usePurchaseOrder = () => {
         handleItemFrom,
         handleExpiryDate,
         setDate,
-        date
+        date,
+        setOrderDetails
     }
 }
 
