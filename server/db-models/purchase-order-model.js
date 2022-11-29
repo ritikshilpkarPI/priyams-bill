@@ -21,7 +21,7 @@ const purchaseOrderSchema = new mongoose.Schema({
             sellingPrice: Number,
             mrp: String,
             costPrice: Number,
-            createdAt: Date.now,
+            createdAt: { type: Date, default: Date.now },
             expiryDates: [
                 { date: Date }
             ]
@@ -31,7 +31,10 @@ const purchaseOrderSchema = new mongoose.Schema({
     billAmount: Number,
     paidAmount: Number,
     paidBy: String,
-    paymentDate: Date.now
+    paymentDate: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 // pre hook to make is Approved true or false if approver is their
