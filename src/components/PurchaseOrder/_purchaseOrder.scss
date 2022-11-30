@@ -120,8 +120,48 @@
     justify-content: space-between;
     align-items: flex-end;
     margin-top: 1rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .detail-container {
     margin-top: 2rem;
+}
+
+.dropdown-list-container {
+    position: relative;
+    top: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.12);
+    width: 300px;
+    overflow: scroll;
+    height: 400px;
+}
+
+.expiry-date-showcase {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 1rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    div:first-child {
+        input {
+            width: 110px;
+        }
+    }
+
+    div:nth-child(2) {
+        div {
+            input {
+                width: 150px;
+            }
+
+        }
+    }
+
+    button {
+        width: 110px;
+    }
+
 }

@@ -3,6 +3,7 @@ import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title } from 
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
+import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
 
 
 const PurchaseOrderItems = () => {
@@ -16,20 +17,21 @@ const PurchaseOrderItems = () => {
         handleExpiryDate,
         setDate,
         date,
-        setOrderDetails
+        setOrderDetails,
+        handleSelectOrderItems,
+        openDrawer,
+        setOpenDrawer,
+        expiryQuantity,
+        setExpiryQuantity
     } = usePurchaseOrder()
-    // let searchWord = form.values.inputName
-    // console.log({ searchWord });
+
     const {
-        itemsList,
         filterItems
     } = useNameSearchItem(form.values.inputName)
-
-    console.log({ filterItems });
     return (
         <>
 
-            <OrderForm handleItemFrom={handleItemFrom} form={form} setOpened={setOpened} opened={opened} handleExpiryDate={handleExpiryDate} setDate={setDate} date={date} filterItems={filterItems} />
+            <OrderForm expiryQuantity={expiryQuantity} setExpiryQuantity={setExpiryQuantity} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} handleItemFrom={handleItemFrom} form={form} setOpened={setOpened} opened={opened} handleExpiryDate={handleExpiryDate} setDate={setDate} date={date} filterItems={filterItems} handleSelectOrderItems={handleSelectOrderItems} />
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>

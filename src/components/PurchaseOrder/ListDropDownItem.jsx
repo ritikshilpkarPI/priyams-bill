@@ -1,10 +1,10 @@
 import { Table } from "@mantine/core"
 
 
-const ListDropDownItem = ({ itemList }) => {
+const ListDropDownItem = ({ itemList, handleSelectOrderItems }) => {
     console.log({ itemList });
     const rows = itemList.map((element) => (
-        <tr key={element.itemBarcode}>
+        <tr onClick={() => handleSelectOrderItems(element)} key={element.itemBarcode}>
             <td>{element.itemBarcode}</td>
             <td>{element.itemName}</td>
             <td>{element.itemMRPperUnit}</td>
@@ -12,7 +12,7 @@ const ListDropDownItem = ({ itemList }) => {
     ));
     return (
         <div className="dropdown-list-container">
-            <Table>
+            <Table withColumnBorders striped>
                 <thead>
                     <tr>
                         <th>Barcode</th>

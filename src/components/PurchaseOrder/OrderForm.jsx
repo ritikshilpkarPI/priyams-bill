@@ -3,7 +3,7 @@ import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select, F
 import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 
-const OrderForm = ({ setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems }) => {
+const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems }) => {
     return (
         <Drawer
             opened={opened}
@@ -11,10 +11,8 @@ const OrderForm = ({ setOpened, handleItemFrom, form, opened, handleExpiryDate, 
             title="Register"
             padding="lg"
             size="xl"
-
-        // lockScroll={false}
         >
-            <Box sx={{ maxWidth: 300 }} mx="auto" my={'lg'} >
+            <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
                 <form onSubmit={form.onSubmit((values) => handleItemFrom(values))}>
                     <TextInput
                         withAsterisk
@@ -32,11 +30,12 @@ const OrderForm = ({ setOpened, handleItemFrom, form, opened, handleExpiryDate, 
                         withAsterisk
                         label="Input Name"
                         placeholder="item name"
+                        onClick={() => setOpenDrawer(true)}
                         {...form.getInputProps('inputName')}
                     />
                     {
-                        filterItems &&
-                        <ListDropDownItem itemList={filterItems} />
+                        filterItems && openDrawer &&
+                        <ListDropDownItem itemList={filterItems} handleSelectOrderItems={handleSelectOrderItems} />
                     }
 
                     <NumberInput
@@ -118,9 +117,42 @@ const OrderForm = ({ setOpened, handleItemFrom, form, opened, handleExpiryDate, 
                     />
                     <div className='date-container'>
 
-                        <DatePicker placeholder="Pick date" label="Event date" withAsterisk value={date} onChange={setDate} />
+                        {/* <DatePicker placeholder="Pick date" label="Event date" withAsterisk={true} value={date} onChange={(day) => setDate(day)} /> */}
+                        <DatePicker
+                            className="useby-date-picker"
+                            placeholder="Pick date"
+                            label="Expiry  date"
+                            inputFormat="MM/DD/YYYY"
+                            value={date}
+                            onChange={(day) => setDate(day)}
+                            style={{ width: "140px" }}
+                        />
+                        <NumberInput
+                            withAsterisk
+                            width={"30px"}
+                            label="Quantity"
+                            placeholder="quantity"
+                            value={expiryQuantity}
+                            onChange={(qnt) => setExpiryQuantity(qnt)}
+                        />
                         <Button onClick={handleExpiryDate}>Enter Date</Button>
                     </div>
+                    {
+                        form.values.expiryDates.length ? form.values.expiryDates.map(date => {
+                            return <div className='expiry-date-showcase' >
+                                <TextInput
+                                    value={date.date}
+                                    readOnly
+
+                                />
+                                <TextInput
+                                    readOnly
+                                    value={date.quantity}
+                                />
+                                <Button>Delete</Button>
+                            </div>
+                        }) : ''
+                    }
 
 
 

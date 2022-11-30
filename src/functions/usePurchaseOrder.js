@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { useForm } from '@mantine/form';
 import { Button } from "@mantine/core";
+import useBarcodeSearchItems from "./useBarcodeSearchItems";
 const usePurchaseOrder = () => {
     const [opened, setOpened] = useState(false);
     const [date, setDate] = useState("");
+    const [expiryQuantity, setExpiryQuantity] = useState(0);
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    const [openDrawer, setOpenDrawer] = useState(false)
     const [orderDetails, setOrderDetails] = useState({
         items: [],
         payment: '',
@@ -36,6 +39,26 @@ const usePurchaseOrder = () => {
         validate: {
         },
     });
+
+    const handleSelectOrderItems = (item) => {
+        form.setValues((prev) => ({
+            barcode: item.itemBarcode,
+            inputName: item.itemName,
+            stockQuantity: item.itemStockQuantity,
+            minimumQuantity: item.minimumStockQuantity,
+            itemQuantity: '',
+            unit: '',
+            procurementSource: '',
+            dealerName: '',
+            phoneNumber: '',
+            itemRemark: '',
+            sellingPrice: item.itemSellingPricePerUnit,
+            mrp: item.itemMRPperUnit,
+            costPrice: item.itemCostPricePerUnit,
+            expiryDates: []
+        }));
+        setOpenDrawer(false)
+    }
     const handleItemFrom = (values) => {
         setOrderDetails((prev) => ({
             ...prev,
@@ -45,14 +68,22 @@ const usePurchaseOrder = () => {
         setOpened(false)
     }
     const handleExpiryDate = () => {
-        console.log({ date: new Date(date).toLocaleDateString("en-US", options) });
-        form.insertListItem('expiryDates', new Date(date).toLocaleDateString("en-US", options));
+        if (!date && expiryQuantity === 0) {
+            return alert("add Date and expiry quantity ")
+        }
+        form.insertListItem('expiryDates', { date: new Date(date).toLocaleDateString("en-US", options), quantity: expiryQuantity });
         setDate("")
+        setExpiryQuantity(0)
     }
+    const {
+        barcodeFilteredItem
+    } = useBarcodeSearchItems(form.values.barcode, handleSelectOrderItems)
     useEffect(() => {
+        if (Object.keys(barcodeFilteredItem).length) {
+            handleSelectOrderItems(barcodeFilteredItem)
+        }
         setState('')
-    }, [])
-    console.log({ orderDetails });
+    }, [form.values.barcode])
     const rows = orderDetails.items.map((element) => (
         <tr key={element.barcode}>
             <td>{element.barcode}</td>
@@ -83,7 +114,12 @@ const usePurchaseOrder = () => {
         handleExpiryDate,
         setDate,
         date,
-        setOrderDetails
+        setOrderDetails,
+        handleSelectOrderItems,
+        openDrawer,
+        setOpenDrawer,
+        expiryQuantity,
+        setExpiryQuantity
     }
 }
 

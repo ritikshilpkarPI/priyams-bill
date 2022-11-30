@@ -2,11 +2,9 @@ import { useContext } from "react";
 import { AppStateContext } from "src/AppState/appState.context";
 
 const useNameSearchItem = (searchWord) => {
-    console.log({ searchWord });
     const { itemsStateAndDispatch, billItemsStateAndDispatch } =
         useContext(AppStateContext);
     const [itemsList, itemsReducer] = itemsStateAndDispatch;
-    // const filterItems = itemsList.filter(item => console.log(item.itemName.toLowerCase()))
     const filterItems = itemsList.filter(item => item.itemName && searchWord && item.itemName.toLowerCase().includes(searchWord.toLowerCase()))
     return {
         itemsList,
