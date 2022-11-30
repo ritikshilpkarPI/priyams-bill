@@ -10,9 +10,6 @@ const purchaseOrderSchema = new mongoose.Schema({
             minimumQuantity: Number,
             itemQuantity: Number,
             unit: String,
-            procurementSource: String,
-            dealerName: String,
-            phoneNumber: String,
             itemRemark: String,
             bill_photo: {
                 id: String,
@@ -27,7 +24,10 @@ const purchaseOrderSchema = new mongoose.Schema({
             ]
         }
     ],
+    procurementSource: String,
     payment: String,
+    dealerName: String,
+    phoneNumber: String,
     billAmount: Number,
     paidAmount: Number,
     paidBy: String,

@@ -65,31 +65,6 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                         placeholder="unit"
                         {...form.getInputProps('unit')}
                     />
-                    <Select
-                        label="Procurement Source"
-                        placeholder='pick one'
-                        required
-                        data={[
-                            { value: 'walmert', label: 'Walmert' },
-                            { value: 'dmart', label: 'D Mart' },
-                            { value: 'city', label: 'City' },
-                            { value: 'distributor', label: 'Distributor' },
-                        ]}
-                        {...form.getInputProps("procurementSource")}
-                    />
-                    <TextInput
-                        withAsterisk
-                        required
-                        label="Dealer Name"
-                        placeholder="dealer name"
-                        {...form.getInputProps('dealerName')}
-                    />
-                    <NumberInput
-                        withAsterisk
-                        label="Mobile Number"
-                        placeholder="mobile number"
-                        {...form.getInputProps('phoneNumber')}
-                    />
                     <Textarea
                         label="Remarks"
                         placeholder="remark"

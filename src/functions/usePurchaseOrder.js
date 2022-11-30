@@ -14,7 +14,10 @@ const usePurchaseOrder = () => {
         billAmount: '',
         paidAmount: '',
         remark: '',
-        paidBy: ''
+        paidBy: '',
+        procurementSource: '',
+        dealerName: '',
+        phoneNumber: '',
     })
     const [state, setState] = useState('')
     const form = useForm({
@@ -25,9 +28,6 @@ const usePurchaseOrder = () => {
             minimumQuantity: '',
             itemQuantity: '',
             unit: '',
-            procurementSource: '',
-            dealerName: '',
-            phoneNumber: '',
             itemRemark: '',
             // billPhoto: '',
             sellingPrice: '',
