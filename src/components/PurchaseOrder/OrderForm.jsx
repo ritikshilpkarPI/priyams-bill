@@ -8,7 +8,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
         <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
-            title="Register"
+            title="Order Details"
             padding="lg"
             size="xl"
         >
@@ -29,6 +29,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                     <TextInput
                         withAsterisk
                         label="Input Name"
+                        required
                         placeholder="item name"
                         onClick={() => setOpenDrawer(true)}
                         {...form.getInputProps('inputName')}
@@ -42,6 +43,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                         withAsterisk
                         label="Stock Quantity"
                         placeholder="stock quantity"
+                        required
                         {...form.getInputProps('stockQuantity')}
                     />
                     <NumberInput
@@ -53,6 +55,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                     <NumberInput
                         withAsterisk
                         label="Item Quantity"
+                        required
                         placeholder="item quantity"
                         {...form.getInputProps('itemQuantity')}
                     />
@@ -65,6 +68,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                     <Select
                         label="Procurement Source"
                         placeholder='pick one'
+                        required
                         data={[
                             { value: 'walmert', label: 'Walmert' },
                             { value: 'dmart', label: 'D Mart' },
@@ -75,6 +79,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                     />
                     <TextInput
                         withAsterisk
+                        required
                         label="Dealer Name"
                         placeholder="dealer name"
                         {...form.getInputProps('dealerName')}
@@ -100,18 +105,21 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                     <NumberInput
                         withAsterisk
                         label="Selling Price"
+                        required
                         placeholder="selling price"
                         {...form.getInputProps('sellingPrice')}
                     />
                     <NumberInput
                         withAsterisk
                         label="MRP"
+                        required
                         placeholder="mrp"
                         {...form.getInputProps('mrp')}
                     />
                     <NumberInput
                         withAsterisk
                         label="Cost Price"
+                        required
                         placeholder="cost price"
                         {...form.getInputProps('costPrice')}
                     />
@@ -138,8 +146,8 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                         <Button onClick={handleExpiryDate}>Enter Date</Button>
                     </div>
                     {
-                        form.values.expiryDates.length ? form.values.expiryDates.map(date => {
-                            return <div className='expiry-date-showcase' >
+                        form.values.expiryDates.length ? form.values.expiryDates.map((date, index) => {
+                            return (<div className='expiry-date-showcase' key={index + 1} >
                                 <TextInput
                                     value={date.date}
                                     readOnly
@@ -150,8 +158,8 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                                     value={date.quantity}
                                 />
                                 <Button>Delete</Button>
-                            </div>
-                        }) : ''
+                            </div>)
+                        }) : ('')
                     }
 
 

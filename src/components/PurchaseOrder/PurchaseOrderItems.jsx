@@ -97,9 +97,9 @@ const PurchaseOrderItems = () => {
                         placeholder="remarks"
                         label="Your Remarks"
                         value={orderDetails.remark}
-                        onChange={(value) => setOrderDetails((prev) => ({
+                        onChange={(e) => setOrderDetails((prev) => ({
                             ...prev,
-                            remark: value,
+                            remark: e.target.value,
                         }))}
                     />
 
@@ -109,30 +109,34 @@ const PurchaseOrderItems = () => {
                     </Group>
                 </Box>
             </div>
+            <div>
 
-            {
-                orderDetails.items.length ?
-                    <Table width={"100%"}>
-                        <thead>
-                            <tr>
-                                <th>Barcode</th>
-                                <th>Item name</th>
-                                <th>Stock Quantity</th>
-                                <th>Minimum Quantity</th>
-                                <th>Item Quantity</th>
-                                <th>Unit</th>
-                                <th>Procurement Source</th>
-                                <th>Dealer Name</th>
-                                <th>Phone Number</th>
-                                <th>Selling Price</th>
-                                <th>MRP</th>
-                                <th>Cost Price</th>
-                                <th>Expiry Dates</th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table> : ''
-            }
+                {
+                    orderDetails.items.length ?
+                        <Table width={"100%"} withColumnBorders striped withBorder>
+                            <thead>
+                                <tr>
+                                    <th>Barcode</th>
+                                    <th>Item name</th>
+                                    <th>Stock Quantity</th>
+                                    <th>Minimum Quantity</th>
+                                    <th>Item Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Procurement Source</th>
+                                    <th>Dealer Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Selling Price</th>
+                                    <th>MRP</th>
+                                    <th>Cost Price</th>
+                                    <th>Expiry Dates</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>{rows}</tbody>
+                        </Table> : <div></div>
+                }
+
+            </div>
         </>
     );
 

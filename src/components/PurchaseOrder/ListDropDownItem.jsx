@@ -3,8 +3,8 @@ import { Table } from "@mantine/core"
 
 const ListDropDownItem = ({ itemList, handleSelectOrderItems }) => {
     console.log({ itemList });
-    const rows = itemList.map((element) => (
-        <tr onClick={() => handleSelectOrderItems(element)} key={element.itemBarcode}>
+    const rows = itemList.map((element, index) => (
+        <tr onClick={() => handleSelectOrderItems(element)} key={index + 1}>
             <td>{element.itemBarcode}</td>
             <td>{element.itemName}</td>
             <td>{element.itemMRPperUnit}</td>

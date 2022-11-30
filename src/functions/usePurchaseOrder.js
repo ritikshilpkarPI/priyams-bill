@@ -37,6 +37,7 @@ const usePurchaseOrder = () => {
         },
 
         validate: {
+            phoneNumber: (value) => (/^[0-9]{10}$/.test(value) ? null : 'Invalid email')
         },
     });
 
@@ -84,8 +85,8 @@ const usePurchaseOrder = () => {
         }
         setState('')
     }, [form.values.barcode])
-    const rows = orderDetails.items.map((element) => (
-        <tr key={element.barcode}>
+    const rows = orderDetails.items.map((element, index) => (
+        <tr key={index + 1}>
             <td>{element.barcode}</td>
             <td>{element.inputName}</td>
             <td>{element.stockQuantity}</td>
@@ -99,11 +100,15 @@ const usePurchaseOrder = () => {
             <td>{element.mrp}</td>
             <td>{element.costPrice}</td>
             <td>{element.expiryDates.map(date => {
-                return <tr> <td>{date}</td></tr>
+                return <tr>
+                    <td>Date: {date.date}</td>
+                    <td>Quantity: {date.quantity}</td>
+                </tr>
             })}</td>
             <td><Button>Edit</Button></td>
         </tr>
     ));
+    console.log({ orderDetails });
     return {
         form,
         rows,
