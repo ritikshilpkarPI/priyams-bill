@@ -37,7 +37,7 @@ const usePurchaseOrder = () => {
         },
 
         validate: {
-            phoneNumber: (value) => (/^[0-9]{10}$/.test(value) ? null : 'Invalid email')
+            phoneNumber: (value) => (/^[0-9]{10}$/.test(value) ? null : 'Invalid Mobile Number'),
         },
     });
 
