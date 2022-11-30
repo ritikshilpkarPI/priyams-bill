@@ -1,7 +1,9 @@
 
 import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select, FileInput, Table } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-const OrderForm = ({ setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date }) => {
+import ListDropDownItem from './ListDropDownItem';
+
+const OrderForm = ({ setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems }) => {
     return (
         <Drawer
             opened={opened}
@@ -32,6 +34,10 @@ const OrderForm = ({ setOpened, handleItemFrom, form, opened, handleExpiryDate, 
                         placeholder="item name"
                         {...form.getInputProps('inputName')}
                     />
+                    {
+                        filterItems &&
+                        <ListDropDownItem itemList={filterItems} />
+                    }
 
                     <NumberInput
                         withAsterisk

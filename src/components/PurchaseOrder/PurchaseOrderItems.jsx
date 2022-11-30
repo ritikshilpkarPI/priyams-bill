@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title } from '@mantine/core';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
+import useNameSearchItem from 'src/functions/useNameSearchItems';
 
 
 const PurchaseOrderItems = () => {
@@ -17,10 +18,18 @@ const PurchaseOrderItems = () => {
         date,
         setOrderDetails
     } = usePurchaseOrder()
+    // let searchWord = form.values.inputName
+    // console.log({ searchWord });
+    const {
+        itemsList,
+        filterItems
+    } = useNameSearchItem(form.values.inputName)
+
+    console.log({ filterItems });
     return (
         <>
 
-            <OrderForm handleItemFrom={handleItemFrom} form={form} setOpened={setOpened} opened={opened} handleExpiryDate={handleExpiryDate} setDate={setDate} date={date} />
+            <OrderForm handleItemFrom={handleItemFrom} form={form} setOpened={setOpened} opened={opened} handleExpiryDate={handleExpiryDate} setDate={setDate} date={date} filterItems={filterItems} />
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
