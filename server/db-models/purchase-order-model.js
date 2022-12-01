@@ -31,6 +31,7 @@ const purchaseOrderSchema = new mongoose.Schema({
     billAmount: Number,
     paidAmount: Number,
     paidBy: String,
+    chequeNumber: String,
     paymentDate: {
         type: Date,
         default: Date.now

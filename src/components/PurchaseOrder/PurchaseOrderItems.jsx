@@ -126,6 +126,19 @@ const PurchaseOrderItems = ({ history }) => {
                                 phoneNumber: value,
                             }))}
                         />
+                        {
+                            orderDetails.paidBy === "cheque" &&
+                            <NumberInput
+                                withAsterisk
+                                required
+                                label="Cheque number"
+                                placeholder="checque number"
+                                onChange={(value) => setOrderDetails((prev) => ({
+                                    ...prev,
+                                    chequeNumber: value,
+                                }))}
+                            />
+                        }
                     </Group>
                     <Textarea
                         sx={{ width: "60%", marginTop: "1rem" }}

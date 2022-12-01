@@ -20,6 +20,7 @@ const usePurchaseOrder = (history) => {
         procurementSource: '',
         dealerName: '',
         phoneNumber: '',
+        chequeNumber: ''
     })
     const [state, setState] = useState('')
     const form = useForm({
