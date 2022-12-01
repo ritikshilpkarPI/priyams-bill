@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title } from '@mantine/core';
+import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title, TextInput } from '@mantine/core';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
@@ -91,6 +91,40 @@ const PurchaseOrderItems = () => {
                                 paidAmount: value,
                             }))}
                         />
+                        <Select
+                            label="Procurement Source"
+                            placeholder='pick one'
+                            required
+                            data={[
+                                { value: 'walmert', label: 'Walmert' },
+                                { value: 'dmart', label: 'D Mart' },
+                                { value: 'city', label: 'City' },
+                                { value: 'distributor', label: 'Distributor' },
+                            ]}
+                            onChange={(value) => setOrderDetails((prev) => ({
+                                ...prev,
+                                procurementSource: value,
+                            }))}
+                        />
+                        <TextInput
+                            withAsterisk
+                            required
+                            label="Dealer Name"
+                            placeholder="dealer name"
+                            onChange={(e) => setOrderDetails((prev) => ({
+                                ...prev,
+                                dealerName: e.target.value,
+                            }))}
+                        />
+                        <NumberInput
+                            withAsterisk
+                            label="Mobile Number"
+                            placeholder="mobile number"
+                            onChange={(value) => setOrderDetails((prev) => ({
+                                ...prev,
+                                phoneNumber: value,
+                            }))}
+                        />
                     </Group>
                     <Textarea
                         sx={{ width: "60%", marginTop: "1rem" }}
@@ -122,9 +156,6 @@ const PurchaseOrderItems = () => {
                                     <th>Minimum Quantity</th>
                                     <th>Item Quantity</th>
                                     <th>Unit</th>
-                                    <th>Procurement Source</th>
-                                    <th>Dealer Name</th>
-                                    <th>Phone Number</th>
                                     <th>Selling Price</th>
                                     <th>MRP</th>
                                     <th>Cost Price</th>

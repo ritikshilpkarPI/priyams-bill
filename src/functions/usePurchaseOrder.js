@@ -14,7 +14,10 @@ const usePurchaseOrder = () => {
         billAmount: '',
         paidAmount: '',
         remark: '',
-        paidBy: ''
+        paidBy: '',
+        procurementSource: '',
+        dealerName: '',
+        phoneNumber: '',
     })
     const [state, setState] = useState('')
     const form = useForm({
@@ -25,9 +28,6 @@ const usePurchaseOrder = () => {
             minimumQuantity: '',
             itemQuantity: '',
             unit: '',
-            procurementSource: '',
-            dealerName: '',
-            phoneNumber: '',
             itemRemark: '',
             // billPhoto: '',
             sellingPrice: '',
@@ -37,7 +37,11 @@ const usePurchaseOrder = () => {
         },
 
         validate: {
-            phoneNumber: (value) => (/^[0-9]{10}$/.test(value) ? null : 'Invalid Mobile Number'),
+            stockQuantity: (value) => (value > 0 ? null : 'Stock Quantity should be greater than 0'),
+            itemQuantity: (value) => (value > 0 ? null : 'Item Quantity should be greater than 0'),
+            sellingPrice: (value) => (value > 0 ? null : 'Selling price should be greater than 0'),
+            mrp: (value) => (value > 0 ? null : 'MRP should be greater than 0'),
+            costPrice: (value) => (value > 0 ? null : 'Cost Price should be greater than 0'),
         },
     });
 
@@ -49,9 +53,6 @@ const usePurchaseOrder = () => {
             minimumQuantity: item.minimumStockQuantity,
             itemQuantity: '',
             unit: '',
-            procurementSource: '',
-            dealerName: '',
-            phoneNumber: '',
             itemRemark: '',
             sellingPrice: item.itemSellingPricePerUnit,
             mrp: item.itemMRPperUnit,
