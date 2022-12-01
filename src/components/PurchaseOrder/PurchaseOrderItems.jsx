@@ -6,7 +6,7 @@ import useNameSearchItem from 'src/functions/useNameSearchItems';
 import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
 
 
-const PurchaseOrderItems = () => {
+const PurchaseOrderItems = ({ history }) => {
     const {
         form,
         rows,
@@ -22,8 +22,9 @@ const PurchaseOrderItems = () => {
         openDrawer,
         setOpenDrawer,
         expiryQuantity,
-        setExpiryQuantity
-    } = usePurchaseOrder()
+        setExpiryQuantity,
+        addPurchadeOrder
+    } = usePurchaseOrder(history)
 
     const {
         filterItems
@@ -139,14 +140,14 @@ const PurchaseOrderItems = () => {
 
 
                     <Group position="right" mt="md">
-                        <Button type="submit">Submit</Button>
+                        <Button onClick={addPurchadeOrder} type="submit">Submit</Button>
                     </Group>
                 </Box>
             </div>
             <div>
 
                 {
-                    orderDetails.items.length ?
+                    orderDetails.purchasedItems.length ?
                         <Table width={"100%"} withColumnBorders striped withBorder>
                             <thead>
                                 <tr>

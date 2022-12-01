@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import { useForm } from '@mantine/form';
 import { Button } from "@mantine/core";
 import useBarcodeSearchItems from "./useBarcodeSearchItems";
-const usePurchaseOrder = () => {
+import { Axios } from "src/utils/axios";
+
+const usePurchaseOrder = (history) => {
     const [opened, setOpened] = useState(false);
     const [date, setDate] = useState("");
     const [expiryQuantity, setExpiryQuantity] = useState(0);
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
     const [openDrawer, setOpenDrawer] = useState(false)
     const [orderDetails, setOrderDetails] = useState({
-        items: [],
+        purchasedItems: [],
         payment: '',
         billAmount: '',
         paidAmount: '',
@@ -28,6 +30,7 @@ const usePurchaseOrder = () => {
             minimumQuantity: '',
             itemQuantity: '',
             unit: '',
+            email: '',
             itemRemark: '',
             // billPhoto: '',
             sellingPrice: '',
@@ -45,7 +48,25 @@ const usePurchaseOrder = () => {
         },
     });
 
+    const addPurchadeOrder = async () => {
+        console.log({ orderDetails });
+        try {
+            const result = await Axios({
+                method: "POST",
+                url: '/api/purchaseOrder/addNewOrder',
+                data: {
+                    new_order: orderDetails
+                }
+            })
+            console.log({ result });
+            // history.push("/")
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     const handleSelectOrderItems = (item) => {
+        console.log({ item });
         form.setValues((prev) => ({
             barcode: item.itemBarcode,
             inputName: item.itemName,
@@ -64,7 +85,7 @@ const usePurchaseOrder = () => {
     const handleItemFrom = (values) => {
         setOrderDetails((prev) => ({
             ...prev,
-            items: [...prev.items, values],
+            purchasedItems: [...prev.purchasedItems, values],
         }));
         form.reset();
         setOpened(false)
@@ -86,7 +107,7 @@ const usePurchaseOrder = () => {
         }
         setState('')
     }, [form.values.barcode])
-    const rows = orderDetails.items.map((element, index) => (
+    const rows = orderDetails.purchasedItems.map((element, index) => (
         <tr key={index + 1}>
             <td>{element.barcode}</td>
             <td>{element.inputName}</td>
@@ -94,9 +115,6 @@ const usePurchaseOrder = () => {
             <td>{element.minimumQuantity}</td>
             <td>{element.itemQuantity}</td>
             <td>{element.unit}</td>
-            <td>{element.procurementSource}</td>
-            <td>{element.dealerName}</td>
-            <td>{element.phoneNumber}</td>
             <td>{element.sellingPrice}</td>
             <td>{element.mrp}</td>
             <td>{element.costPrice}</td>
@@ -125,7 +143,8 @@ const usePurchaseOrder = () => {
         openDrawer,
         setOpenDrawer,
         expiryQuantity,
-        setExpiryQuantity
+        setExpiryQuantity,
+        addPurchadeOrder
     }
 }
 
