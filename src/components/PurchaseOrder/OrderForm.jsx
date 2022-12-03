@@ -3,7 +3,7 @@ import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select, F
 import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 
-const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems }) => {
+const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems }) => {
     return (
         <Drawer
             opened={opened}
@@ -132,7 +132,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, setExpiryQuantity, setOpenDrawe
                                     readOnly
                                     value={date.quantity}
                                 />
-                                <Button>Delete</Button>
+                                <Button onClick={() => handleDateDelete(date)}>Delete</Button>
                             </div>)
                         }) : ('')
                     }

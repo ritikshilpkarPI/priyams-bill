@@ -23,7 +23,8 @@ const PurchaseOrderItems = ({ history }) => {
         setOpenDrawer,
         expiryQuantity,
         setExpiryQuantity,
-        addPurchadeOrder
+        addPurchadeOrder,
+        handleDateDelete
     } = usePurchaseOrder(history)
 
     const {
@@ -32,7 +33,7 @@ const PurchaseOrderItems = ({ history }) => {
     return (
         <>
 
-            <OrderForm expiryQuantity={expiryQuantity} setExpiryQuantity={setExpiryQuantity} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} handleItemFrom={handleItemFrom} form={form} setOpened={setOpened} opened={opened} handleExpiryDate={handleExpiryDate} setDate={setDate} date={date} filterItems={filterItems} handleSelectOrderItems={handleSelectOrderItems} />
+            <OrderForm expiryQuantity={expiryQuantity} handleDateDelete={handleDateDelete} setExpiryQuantity={setExpiryQuantity} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} handleItemFrom={handleItemFrom} form={form} setOpened={setOpened} opened={opened} handleExpiryDate={handleExpiryDate} setDate={setDate} date={date} filterItems={filterItems} handleSelectOrderItems={handleSelectOrderItems} />
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
@@ -158,28 +159,31 @@ const PurchaseOrderItems = ({ history }) => {
                 </Box>
             </div>
             <div>
+                <div className='list-items-container'>
 
-                {
-                    orderDetails.purchasedItems.length ?
-                        <Table width={"100%"} withColumnBorders striped withBorder>
-                            <thead>
-                                <tr>
-                                    <th>Barcode</th>
-                                    <th>Item name</th>
-                                    <th>Stock Quantity</th>
-                                    <th>Minimum Quantity</th>
-                                    <th>Item Quantity</th>
-                                    <th>Unit</th>
-                                    <th>Selling Price</th>
-                                    <th>MRP</th>
-                                    <th>Cost Price</th>
-                                    <th>Expiry Dates</th>
-                                    <th>Update</th>
-                                </tr>
-                            </thead>
-                            <tbody>{rows}</tbody>
-                        </Table> : <div></div>
-                }
+                    {
+                        orderDetails.purchasedItems.length ?
+                            <Table withColumnBorders striped withBorder>
+                                <thead>
+                                    <tr>
+                                        <th>Barcode</th>
+                                        <th>Item name</th>
+                                        <th>Stock Quantity</th>
+                                        <th>Minimum Quantity</th>
+                                        <th>Item Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Selling Price</th>
+                                        <th>MRP</th>
+                                        <th>Cost Price</th>
+                                        <th>Expiry Dates</th>
+                                        <th>Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody>{rows}</tbody>
+                            </Table> : <div></div>
+                    }
+
+                </div>
 
             </div>
         </>

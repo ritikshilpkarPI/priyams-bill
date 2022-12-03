@@ -65,6 +65,14 @@ const usePurchaseOrder = (history) => {
             console.log(error.message);
         }
     }
+    const handleDateDelete = async (dateItem) => {
+        console.log({ dateItem });
+        const dates = form.values.expiryDates.filter(element => element.date !== dateItem.date)
+        console.log({ dates });
+        form.setValues((prev) => ({
+            expiryDates: dates
+        }));
+    }
 
     const handleSelectOrderItems = (item) => {
         console.log({ item });
@@ -145,7 +153,8 @@ const usePurchaseOrder = (history) => {
         setOpenDrawer,
         expiryQuantity,
         setExpiryQuantity,
-        addPurchadeOrder
+        addPurchadeOrder,
+        handleDateDelete
     }
 }
 
