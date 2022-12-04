@@ -66,16 +66,13 @@ const usePurchaseOrder = (history) => {
         }
     }
     const handleDateDelete = async (dateItem) => {
-        console.log({ dateItem });
         const dates = form.values.expiryDates.filter(element => element.date !== dateItem.date)
-        console.log({ dates });
         form.setValues((prev) => ({
             expiryDates: dates
         }));
     }
 
     const handleSelectOrderItems = (item) => {
-        console.log({ item });
         form.setValues((prev) => ({
             barcode: item.itemBarcode,
             inputName: item.itemName,
@@ -98,6 +95,23 @@ const usePurchaseOrder = (history) => {
         }));
         form.reset();
         setOpened(false)
+    }
+    const handledleItemEdit = (item) => {
+        console.log({ item });
+        setOpened(true)
+        form.setValues((prev) => ({
+            barcode: item.barcode,
+            inputName: item.inputName,
+            stockQuantity: item.stockQuantity,
+            minimumQuantity: item.minimumQuantity,
+            itemQuantity: item.itemQuantity,
+            unit: item.unit,
+            itemRemark: item.itemRemark,
+            sellingPrice: item.sellingPrice,
+            mrp: item.mrp,
+            costPrice: item.costPrice,
+            expiryDates: [...item.expiryDates]
+        }));
     }
     const handleExpiryDate = () => {
         if (!date && expiryQuantity === 0) {
@@ -133,7 +147,7 @@ const usePurchaseOrder = (history) => {
                     <td>Quantity: {date.quantity}</td>
                 </tr>
             })}</td>
-            <td><Button>Edit</Button></td>
+            <td><Button onClick={() => handledleItemEdit(element)}>Edit</Button></td>
         </tr>
     ));
     console.log({ orderDetails });
@@ -154,7 +168,8 @@ const usePurchaseOrder = (history) => {
         expiryQuantity,
         setExpiryQuantity,
         addPurchadeOrder,
-        handleDateDelete
+        handleDateDelete,
+        handledleItemEdit
     }
 }
 

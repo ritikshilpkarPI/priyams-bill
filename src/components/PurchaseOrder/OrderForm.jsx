@@ -4,6 +4,7 @@ import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 
 const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems }) => {
+    console.log({ form });
     return (
         <Drawer
             opened={opened}
@@ -121,7 +122,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                         <Button onClick={handleExpiryDate}>Enter Date</Button>
                     </div>
                     {
-                        form.values.expiryDates.length ? form.values.expiryDates.map((date, index) => {
+                        form.values.expiryDates?.length ? form.values.expiryDates.map((date, index) => {
                             return (<div className='expiry-date-showcase' key={index + 1} >
                                 <TextInput
                                     value={date.date}

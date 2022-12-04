@@ -24,7 +24,7 @@ const PurchaseOrderItems = ({ history }) => {
         expiryQuantity,
         setExpiryQuantity,
         addPurchadeOrder,
-        handleDateDelete
+        handleDateDelete,
     } = usePurchaseOrder(history)
 
     const {
