@@ -5,30 +5,7 @@ import useNameSearchItem from 'src/functions/useNameSearchItems';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import ListDropDownItem from './ListDropDownItem';
 
-const OrderForm = () => {
-    const {
-        form,
-        rows,
-        opened,
-        orderDetails,
-        setOpened,
-        handleItemFrom,
-        handleExpiryDate,
-        setDate,
-        date,
-        setOrderDetails,
-        handleSelectOrderItems,
-        openDrawer,
-        setOpenDrawer,
-        expiryQuantity,
-        setExpiryQuantity,
-        addPurchadeOrder,
-        handleDateDelete,
-
-    } = usePurchaseOrder()
-    const {
-        filterItems
-    } = useNameSearchItem(form.values.inputName)
+const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems }) => {
     return (
         <Drawer
             opened={opened}
