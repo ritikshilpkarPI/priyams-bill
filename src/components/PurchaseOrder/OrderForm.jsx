@@ -4,7 +4,6 @@ import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 
 const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems }) => {
-    console.log({ form });
     return (
         <Drawer
             opened={opened}
