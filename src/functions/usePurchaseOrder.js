@@ -89,12 +89,21 @@ const usePurchaseOrder = (history) => {
         setOpenDrawer(false)
     }
     const handleItemFrom = (values) => {
-        setOrderDetails((prev) => ({
-            ...prev,
-            purchasedItems: [...prev.purchasedItems, values],
-        }));
-        form.reset();
-        setOpened(false)
+        let sum = 0;
+        values.expiryDates.forEach(element => {
+            sum += element.quantity
+        })
+        console.log({ sum });
+        if (sum === values.stockQuantity) {
+            setOrderDetails((prev) => ({
+                ...prev,
+                purchasedItems: [...prev.purchasedItems, values],
+            }));
+            form.reset();
+            setOpened(false)
+            return;
+        }
+        alert("Total expiry dates and stock quantity  is not matching")
     }
     const handledleItemEdit = (item) => {
         console.log({ item });

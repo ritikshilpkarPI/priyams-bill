@@ -1,10 +1,34 @@
 
 import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select, FileInput, Table } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
+import useNameSearchItem from 'src/functions/useNameSearchItems';
+import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import ListDropDownItem from './ListDropDownItem';
 
-const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems }) => {
-    console.log({ form });
+const OrderForm = () => {
+    const {
+        form,
+        rows,
+        opened,
+        orderDetails,
+        setOpened,
+        handleItemFrom,
+        handleExpiryDate,
+        setDate,
+        date,
+        setOrderDetails,
+        handleSelectOrderItems,
+        openDrawer,
+        setOpenDrawer,
+        expiryQuantity,
+        setExpiryQuantity,
+        addPurchadeOrder,
+        handleDateDelete,
+
+    } = usePurchaseOrder()
+    const {
+        filterItems
+    } = useNameSearchItem(form.values.inputName)
     return (
         <Drawer
             opened={opened}

@@ -27,13 +27,13 @@ const PurchaseOrderItems = ({ history }) => {
         handleDateDelete,
     } = usePurchaseOrder(history)
 
-    const {
-        filterItems
-    } = useNameSearchItem(form.values.inputName)
+    // const {
+    //     filterItems
+    // } = useNameSearchItem(form.values.inputName)
     return (
         <>
 
-            <OrderForm expiryQuantity={expiryQuantity} handleDateDelete={handleDateDelete} setExpiryQuantity={setExpiryQuantity} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} handleItemFrom={handleItemFrom} form={form} setOpened={setOpened} opened={opened} handleExpiryDate={handleExpiryDate} setDate={setDate} date={date} filterItems={filterItems} handleSelectOrderItems={handleSelectOrderItems} />
+            <OrderForm />
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
