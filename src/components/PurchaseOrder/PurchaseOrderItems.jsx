@@ -27,13 +27,29 @@ const PurchaseOrderItems = ({ history }) => {
         handleDateDelete,
     } = usePurchaseOrder(history)
 
-    // const {
-    //     filterItems
-    // } = useNameSearchItem(form.values.inputName)
+    const {
+        filterItems
+    } = useNameSearchItem(form.values.inputName)
     return (
         <>
 
-            <OrderForm />
+            <OrderForm 
+            openDrawer = {openDrawer} 
+            expiryQuantity={expiryQuantity} 
+            handleDateDelete={handleDateDelete}
+             setExpiryQuantity={setExpiryQuantity} 
+             setOpenDrawer={setOpenDrawer} 
+             setOpened={setOpened} 
+             handleItemFrom={handleItemFrom} 
+             form={form} 
+             opened={opened} 
+             handleExpiryDate={handleExpiryDate} 
+             setDate={setDate} 
+             date={date} 
+             filterItems={filterItems} 
+             handleSelectOrderItems={handleSelectOrderItems}
+             
+            />
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
@@ -50,7 +66,7 @@ const PurchaseOrderItems = ({ history }) => {
                                 { value: 'partiallypaid', label: 'Partially Paid' },
                                 { value: 'credit', label: 'Credit' },
                             ]}
-                            value={orderDetails.payment}
+                            value={orderDetails.payment == 'credit'?'credit':orderDetails.billAmount <= orderDetails.paidAmount ? 'fullypaid':'partiallypaid'}
                             onChange={(value) => setOrderDetails((prev) => ({
                                 ...prev,
                                 payment: value,
@@ -122,10 +138,15 @@ const PurchaseOrderItems = ({ history }) => {
                             withAsterisk
                             label="Mobile Number"
                             placeholder="mobile number"
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                phoneNumber: value,
-                            }))}
+                            formatter={(value) => String(value).length <= 10 ? value : String(value).substring(0,10)}
+                            onChange={(value) => {    
+                                if(String(value).length <= 10){
+                                    setOrderDetails((prev) => ({
+                                        ...prev,
+                                        phoneNumber: value,
+                                    }))
+                                }                      
+                            }}
                         />
                         {
                             orderDetails.paidBy === "cheque" &&

@@ -1,21 +1,22 @@
 
-import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select, FileInput, Table } from '@mantine/core';
+import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select, FileInput, Table , Switch } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import ListDropDownItem from './ListDropDownItem';
 
-const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems }) => {
+const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems}) => {
     return (
         <Drawer
             opened={opened}
-            onClose={() => setOpened(false)}
+            onClose={() => {form.reset(); setOpened(false)}}
             title="Order Details"
             padding="lg"
             size="xl"
         >
-            <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
+                <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
                 <form onSubmit={form.onSubmit((values) => handleItemFrom(values))}>
+                 <Switch checked={form.values.validate}  label='validate'  {...form.getInputProps('validate')} />
                     <TextInput
                         withAsterisk
                         label="Barcode"

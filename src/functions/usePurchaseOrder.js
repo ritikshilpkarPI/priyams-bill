@@ -20,7 +20,7 @@ const usePurchaseOrder = (history) => {
         procurementSource: '',
         dealerName: '',
         phoneNumber: '',
-        chequeNumber: ''
+        chequeNumber: '',
     })
     const [state, setState] = useState('')
     const form = useForm({
@@ -37,20 +37,24 @@ const usePurchaseOrder = (history) => {
             sellingPrice: '',
             mrp: '',
             costPrice: '',
-            expiryDates: []
+            expiryDates: [],
+            validate:false
         },
-
         validate: {
-            stockQuantity: (value) => (value > 0 ? null : 'Stock Quantity should be greater than 0'),
-            itemQuantity: (value) => (value > 0 ? null : 'Item Quantity should be greater than 0'),
-            sellingPrice: (value) => (value > 0 ? null : 'Selling price should be greater than 0'),
-            mrp: (value) => (value > 0 ? null : 'MRP should be greater than 0'),
-            costPrice: (value) => (value > 0 ? null : 'Cost Price should be greater than 0'),
-        },
-    });
-
+            stockQuantity: (value) => (form.values.validate ?(value > 0 ? null : 'Stock Quantity should be greater than 0'):null),
+            itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0':null),
+            sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0':null),
+            mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0':null),
+            costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0':null),
+        }
+    }); 
+ 
     const addPurchadeOrder = async () => {
-        console.log({ orderDetails });
+       
+        if(String(orderDetails.phoneNumber).length != 10){
+            alert('Please enter valid phone number');
+            return;
+        }
         try {
             const result = await Axios({
                 method: "POST",
@@ -59,7 +63,6 @@ const usePurchaseOrder = (history) => {
                     new_order: orderDetails
                 }
             })
-            console.log({ result });
             // history.push("/")
         } catch (error) {
             console.log(error.message);
@@ -78,13 +81,9 @@ const usePurchaseOrder = (history) => {
             inputName: item.itemName,
             stockQuantity: item.itemStockQuantity,
             minimumQuantity: item.minimumStockQuantity,
-            itemQuantity: '',
-            unit: '',
-            itemRemark: '',
             sellingPrice: item.itemSellingPricePerUnit,
             mrp: item.itemMRPperUnit,
             costPrice: item.itemCostPricePerUnit,
-            expiryDates: []
         }));
         setOpenDrawer(false)
     }
@@ -93,21 +92,22 @@ const usePurchaseOrder = (history) => {
         values.expiryDates.forEach(element => {
             sum += element.quantity
         })
-        console.log({ sum });
         if (sum === values.stockQuantity) {
+            orderDetails.purchasedItems = orderDetails.purchasedItems.filter((item)=> item.barcode!=values.barcode);
             setOrderDetails((prev) => ({
                 ...prev,
                 purchasedItems: [...prev.purchasedItems, values],
             }));
             form.reset();
             setOpened(false)
+           
             return;
         }
-        alert("Total expiry dates and stock quantity  is not matching")
-    }
+        
+            alert("Total expiry dates and stock quantity  is not matching")
+   }
     const handledleItemEdit = (item) => {
-        console.log({ item });
-        setOpened(true)
+        
         form.setValues((prev) => ({
             barcode: item.barcode,
             inputName: item.inputName,
@@ -119,8 +119,13 @@ const usePurchaseOrder = (history) => {
             sellingPrice: item.sellingPrice,
             mrp: item.mrp,
             costPrice: item.costPrice,
-            expiryDates: [...item.expiryDates]
+            expiryDates: [...item.expiryDates],
+            unit:item.unit,
+            validate:item.validate
         }));
+        setOpened(true)
+
+       
     }
     const handleExpiryDate = () => {
         if (!date && expiryQuantity === 0) {
@@ -159,7 +164,7 @@ const usePurchaseOrder = (history) => {
             <td><Button onClick={() => handledleItemEdit(element)}>Edit</Button></td>
         </tr>
     ));
-    console.log({ orderDetails });
+    
     return {
         form,
         rows,
@@ -178,7 +183,7 @@ const usePurchaseOrder = (history) => {
         setExpiryQuantity,
         addPurchadeOrder,
         handleDateDelete,
-        handledleItemEdit
+        handledleItemEdit,
     }
 }
 
