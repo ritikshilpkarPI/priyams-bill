@@ -21,7 +21,10 @@ const usePurchaseOrder = (history) => {
         dealerName: '',
         phoneNumber: '',
         chequeNumber: '',
+        billPhotos:[]
     })
+    const [orderList, setOrderList] = useState([]);
+    
     const [state, setState] = useState('')
     const form = useForm({
         initialValues: {
@@ -33,7 +36,6 @@ const usePurchaseOrder = (history) => {
             unit: '',
             email: '',
             itemRemark: '',
-            // billPhoto: '',
             sellingPrice: '',
             mrp: '',
             costPrice: '',
@@ -184,6 +186,8 @@ const usePurchaseOrder = (history) => {
         addPurchadeOrder,
         handleDateDelete,
         handledleItemEdit,
+        orderList,
+        setOrderList
     }
 }
 

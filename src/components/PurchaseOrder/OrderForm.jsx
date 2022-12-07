@@ -74,12 +74,6 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                         withAsterisk
                         {...form.getInputProps('itemRemark')}
                     />
-                    {/* <FileInput
-                            placeholder="Select Your Bill"
-                            label="Your resume"
-                            withAsterisk
-                            {...form.getInputProps('billPhoto')}
-                        /> */}
                     <NumberInput
                         withAsterisk
                         label="Selling Price"

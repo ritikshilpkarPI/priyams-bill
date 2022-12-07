@@ -4,8 +4,10 @@ import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
 import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
+import { FileInput } from '@mantine/core';
 
-
+import {ReceiptPreview} from './ReceiptPreview'
+import BillUpoloader from './BillUpoloader';
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
@@ -25,6 +27,8 @@ const PurchaseOrderItems = ({ history }) => {
         setExpiryQuantity,
         addPurchadeOrder,
         handleDateDelete,
+        orderList,
+        setOrderList,
     } = usePurchaseOrder(history)
 
     const {
@@ -114,7 +118,7 @@ const PurchaseOrderItems = ({ history }) => {
                             placeholder='pick one'
                             required
                             data={[
-                                { value: 'walmert', label: 'Walmert' },
+                                { value: 'walmart', label: 'Walmart' },
                                 { value: 'dmart', label: 'D Mart' },
                                 { value: 'city', label: 'City' },
                                 { value: 'distributor', label: 'Distributor' },
@@ -172,8 +176,9 @@ const PurchaseOrderItems = ({ history }) => {
                             remark: e.target.value,
                         }))}
                     />
-
-
+                    {/* <AddReceipt orderList={orderList} setOrderList={setOrderList}/> */}
+                    <BillUpoloader  />
+                    <ReceiptPreview orderList={orderList}/>
                     <Group position="right" mt="md">
                         <Button onClick={addPurchadeOrder} type="submit">Submit</Button>
                     </Group>
