@@ -21,8 +21,33 @@ const usePurchaseOrder = (history) => {
         dealerName: '',
         phoneNumber: '',
         chequeNumber: '',
-        billPhotos:[]
+        // billPhotos:[]
     })
+    const purchaseForm = useForm({
+        initialValues:{
+            purchasedItems: [],
+            payment: '',
+            billAmount: 0,
+            paidAmount: 0,
+            remark: '',
+            paidBy: '',
+            procurementSource: '',
+            dealerName: '',
+            phoneNumber: 0,
+            chequeNumber: '',
+        },
+        validate:{
+            payment:(value) => (value > 0 ? null : 'Please fill this field'),
+            billAmount:(value) => (value > 0 ? null : 'Please fill this field'),
+            remark:(value) => (value.length > 0 ? null : 'Please fill this field'),
+            paidBy:(value) => (value.length > 0 ? null : 'Please fill this field'),
+            dealerName:(value) => (value > 0 ? null : 'Please fill this field'),
+            phoneNumber:(value) => (value > 0 ? null : 'Please fill this field'),
+            chequeNumber:(value) => (value > 0 ? null : 'Please fill this field'),
+            procurementSource:(value) => (value > 0 ? null : 'Please fill this field'),
+        }
+    })
+
     const [orderList, setOrderList] = useState([]);
     
     const [state, setState] = useState('')
@@ -50,13 +75,30 @@ const usePurchaseOrder = (history) => {
             costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0':null),
         }
     }); 
- 
+    const PurchaseList = useForm({
+        initialValues:{
+            details:[],
+            bills:[]
+        }
+    })
+    const addDetails = () =>{
+        if(purchaseForm.validate()){
+            PurchaseList.values.details = [...PurchaseList.values.details,{...purchaseForm.values}]
+            purchaseForm.reset();
+
+        }
+        
+    }
     const addPurchadeOrder = async () => {
        
-        if(String(orderDetails.phoneNumber).length != 10){
-            alert('Please enter valid phone number');
-            return;
-        }
+        // PurchaseList.values.details.map((receipt)=>{
+        //     if(String(receipt.phoneNumber).length != 10){
+        //         alert('Please enter valid phone number');
+        //         return;
+        //     }
+        // })
+        
+        
         try {
             const result = await Axios({
                 method: "POST",
@@ -95,7 +137,7 @@ const usePurchaseOrder = (history) => {
             sum += element.quantity
         })
         if (sum === values.stockQuantity) {
-            orderDetails.purchasedItems = orderDetails.purchasedItems.filter((item)=> item.barcode!=values.barcode);
+            orderDetails.purchasedItems = orderDetails.purchasedItems.filter((item)=> item.barcode !== values.barcode);
             setOrderDetails((prev) => ({
                 ...prev,
                 purchasedItems: [...prev.purchasedItems, values],
@@ -187,7 +229,10 @@ const usePurchaseOrder = (history) => {
         handleDateDelete,
         handledleItemEdit,
         orderList,
-        setOrderList
+        setOrderList,
+        PurchaseList,
+        purchaseForm,
+        addDetails,
     }
 }
 

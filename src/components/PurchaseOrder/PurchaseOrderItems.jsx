@@ -1,4 +1,4 @@
-import React from 'react'
+import React ,{useEffect} from 'react'
 import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title, TextInput } from '@mantine/core';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
@@ -6,8 +6,9 @@ import useNameSearchItem from 'src/functions/useNameSearchItems';
 import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
 import { FileInput } from '@mantine/core';
 
-import {ReceiptPreview} from './ReceiptPreview'
-import BillUpoloader from './BillUpoloader';
+import BillUploader from './BillUploader';
+import ShowPurchaseDetails from './ShowPurchaseDetails';
+import Forms from './Forms';
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
@@ -29,11 +30,15 @@ const PurchaseOrderItems = ({ history }) => {
         handleDateDelete,
         orderList,
         setOrderList,
+        PurchaseList,
+        purchaseForm,
+        addDetails
     } = usePurchaseOrder(history)
 
     const {
         filterItems
     } = useNameSearchItem(form.values.inputName)
+   
     return (
         <>
 
@@ -60,130 +65,12 @@ const PurchaseOrderItems = ({ history }) => {
 
             <div className='detail-container'>
                 <Title order={2}>Purchase Details</Title>
-                <Box sx={{ maxWidth: "80%" }} mx="auto">
-                    <Group>
-                        <Select
-                            label="Payment"
-                            placeholder='pick one payment option'
-                            data={[
-                                { value: 'fullypaid', label: 'Fully Paid' },
-                                { value: 'partiallypaid', label: 'Partially Paid' },
-                                { value: 'credit', label: 'Credit' },
-                            ]}
-                            value={orderDetails.payment == 'credit'?'credit':orderDetails.billAmount <= orderDetails.paidAmount ? 'fullypaid':'partiallypaid'}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                payment: value,
-                            }))}
-                        />
-
-                        <NumberInput
-                            withAsterisk
-                            label="Bill Amount"
-                            placeholder="total bill amount"
-                            value={orderDetails.billAmount}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                billAmount: value,
-                            }))}
-                        />
-                        <Select
-                            label="Paid by"
-                            placeholder='pick one'
-                            data={[
-                                { value: 'cash', label: 'cash' },
-                                { value: 'upi', label: 'UPI' },
-                                { value: 'cheque', label: 'Cheque' },
-                                { value: 'prepaid', label: 'Prepaid' },
-                                { value: 'neft', label: 'NEFT' },
-                            ]}
-                            value={orderDetails.paidBy}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                paidBy: value,
-                            }))}
-                        />
-                        <NumberInput
-                            withAsterisk
-                            label="Paid Amount"
-                            placeholder="total paid amount"
-                            value={orderDetails.paidAmount}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                paidAmount: value,
-                            }))}
-                        />
-                        <Select
-                            label="Procurement Source"
-                            placeholder='pick one'
-                            required
-                            data={[
-                                { value: 'walmart', label: 'Walmart' },
-                                { value: 'dmart', label: 'D Mart' },
-                                { value: 'city', label: 'City' },
-                                { value: 'distributor', label: 'Distributor' },
-                            ]}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                procurementSource: value,
-                            }))}
-                        />
-                        <TextInput
-                            withAsterisk
-                            required
-                            label="Dealer Name"
-                            placeholder="dealer name"
-                            onChange={(e) => setOrderDetails((prev) => ({
-                                ...prev,
-                                dealerName: e.target.value,
-                            }))}
-                        />
-                        <NumberInput
-                            withAsterisk
-                            label="Mobile Number"
-                            placeholder="mobile number"
-                            formatter={(value) => String(value).length <= 10 ? value : String(value).substring(0,10)}
-                            onChange={(value) => {    
-                                if(String(value).length <= 10){
-                                    setOrderDetails((prev) => ({
-                                        ...prev,
-                                        phoneNumber: value,
-                                    }))
-                                }                      
-                            }}
-                        />
-                        {
-                            orderDetails.paidBy === "cheque" &&
-                            <NumberInput
-                                withAsterisk
-                                required
-                                label="Cheque number"
-                                placeholder="checque number"
-                                onChange={(value) => setOrderDetails((prev) => ({
-                                    ...prev,
-                                    chequeNumber: value,
-                                }))}
-                            />
-                        }
-                    </Group>
-                    <Textarea
-                        sx={{ width: "60%", marginTop: "1rem" }}
-                        placeholder="remarks"
-                        label="Your Remarks"
-                        value={orderDetails.remark}
-                        onChange={(e) => setOrderDetails((prev) => ({
-                            ...prev,
-                            remark: e.target.value,
-                        }))}
-                    />
-                    {/* <AddReceipt orderList={orderList} setOrderList={setOrderList}/> */}
-                    <BillUpoloader  />
-                    <ReceiptPreview orderList={orderList}/>
-                    <Group position="right" mt="md">
-                        <Button onClick={addPurchadeOrder} type="submit">Submit</Button>
-                    </Group>
-                </Box>
+                <Forms PurchaseList={PurchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
+                <Group position="right" mt="md">
+                        <Button  type="submit">Submit</Button>
+                 </Group>
             </div>
+                   <BillUploader PurchaseList={PurchaseList}/>
             <div>
                 <div className='list-items-container'>
 
