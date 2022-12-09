@@ -11,7 +11,6 @@ const usePurchaseOrder = (history) => {
     const [expiryQuantity, setExpiryQuantity] = useState(0);
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
     const [openDrawer, setOpenDrawer] = useState(false)
-    const [orderDetails, setOrderDetails] = useState([])
     const [editIndex,setEditIndex] = useState(-1);
     const [slabs,setSlabs] = useState([])
     const purchaseForm = useForm({
@@ -45,6 +44,9 @@ const usePurchaseOrder = (history) => {
             startValue:1,
             endValue:1,
             pricing:0,
+        },
+        validate:{
+            pricing:(value)=>(value>0?null:'price should be greated than 0')
         }
     })
     const form = useForm({
@@ -111,7 +113,7 @@ const usePurchaseOrder = (history) => {
         }
     }
     const addPurchadeOrderValidate = async ()=>{
-        orderDetails.map((order)=>{
+        purchaseList.orders.map((order)=>{
             if(!order.validate){
                 alert('please validate all orders');
                 return;
@@ -161,12 +163,7 @@ const usePurchaseOrder = (history) => {
         })
         if (sum === values.stockQuantity || !form.values.validate) {
             form.values.slabPrice = [...slabs]
-            if(orderDetails.length > 0){
-                setOrderDetails([...orderDetails.filter((item)=> item.barcode !== values.barcode),values])
-            }else{
-                setOrderDetails([values]);
-            }
-            setPurchaseList({...purchaseList,orders:[...orderDetails.filter((item)=> item.barcode !== values.barcode),values]})
+            setPurchaseList({...purchaseList,orders:[...purchaseList.orders.filter((item)=> item.barcode !== values.barcode),values]})
 
             form.reset();
             setSlabs([])
@@ -201,15 +198,17 @@ const usePurchaseOrder = (history) => {
        
     }
     const deleteOrder = (index) => {
-        setOrderDetails([...orderDetails.filter((item,i)=> i !== index)]);
-        setPurchaseList({...purchaseList,orders:[...orderDetails.filter((item,i)=> i !== index)]})
+        setPurchaseList({...purchaseList,orders:[...purchaseList.orders.filter((item,i)=> i !== index)]})
     }
     const deletePurchaseDetail = (index) =>{
         setPurchaseList({...purchaseList,details:[...purchaseList.details.filter((item,i) => i !=  index)]});
     }
     const addSlabPrice = () =>{
-        setSlabs([...slabs,{...slabForm.values}])
-        slabForm.reset(); 
+        slabForm.validate();
+        if(slabForm.isValid()){
+            setSlabs([...slabs,{...slabForm.values}])
+            slabForm.reset(); 
+        }
     } 
     const deleteSlab = (index) =>{
         setSlabs([...slabs.filter((slab,i)=> i!=index)]);
@@ -230,7 +229,7 @@ const usePurchaseOrder = (history) => {
             handleSelectOrderItems(barcodeFilteredItem)
         }
     }, [form.values.barcode])
-    const rows = orderDetails.map((element, index) => (
+    const rows = purchaseList.orders.map((element, index) => (
         <tr key={index + 1}>
             <td>{element.barcode}</td>
             <td>{element.inputName}</td>
@@ -264,13 +263,11 @@ const usePurchaseOrder = (history) => {
         form,
         rows,
         opened,
-        orderDetails,
         setOpened,
         handleItemFrom,
         handleExpiryDate,
         setDate,
         date,
-        setOrderDetails,
         handleSelectOrderItems,
         openDrawer,
         setOpenDrawer,

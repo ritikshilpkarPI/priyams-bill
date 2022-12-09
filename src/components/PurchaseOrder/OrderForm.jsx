@@ -140,26 +140,26 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                     <Group>
                     <NumberInput
                             withAsterisk
-                            width={"30px"}
-                            label="Start value"
-                            placeholder="start value"
+                            style={{width:'15vmin'}}
+                            label="Start Quantity"
+                            placeholder="start quantity"
                             {...slabForm.getInputProps('startValue')}
                         />
                         <NumberInput
                             withAsterisk
-                            width={"30px"}
-                            label="End value"
-                            placeholder="end value"
+                            style={{width:'15vmin'}}
+                            label="End Quantity"
+                            placeholder="end quantity"
                             {...slabForm.getInputProps('endValue')}
                         />
                         <NumberInput
                             withAsterisk
-                            width={"30px"}
+                            style={{width:'15vmin'}}
                             label="Price"
                             placeholder="price"
                             {...slabForm.getInputProps('pricing')}
                         />
-                        <Button onClick={(e)=>{e.preventDefault(); addSlabPrice()}} type="">+</Button>
+                        <Button style={{marginTop:'3.5vmin'}} onClick={(e)=>{e.preventDefault(); addSlabPrice()}} type="">+</Button>
                     </Group>
                     <ShowSlabPricing deleteSlab={deleteSlab} slabs={slabs}/>
                     <Group position="right" mt="md">

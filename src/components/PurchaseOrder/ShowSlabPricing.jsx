@@ -14,7 +14,7 @@ const ShowSlabPricing = ({slabs,deleteSlab}) => {
   return (
     <div>
       {slabs.length ? (
-        <Table withColumnBorders striped withBorder>
+        <Table style={{marginTop:'2vmin'}} withColumnBorders striped withBorder>
           <thead>
             <tr>
               <th>Start Value</th>

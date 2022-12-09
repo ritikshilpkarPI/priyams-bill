@@ -15,13 +15,11 @@ const PurchaseOrderItems = ({ history }) => {
         form,
         rows,
         opened,
-        orderDetails,
         setOpened,
         handleItemFrom,
         handleExpiryDate,
         setDate,
         date,
-        setOrderDetails,
         handleSelectOrderItems,
         openDrawer,
         setOpenDrawer,
@@ -100,7 +98,9 @@ const PurchaseOrderItems = ({ history }) => {
                 <div className='list-items-container'>
 
                     {
-                        orderDetails.length ?
+                        purchaseList.orders.length ?
+                       <>
+                        <h3 style={{margin:'2vmin'}}>Order Detail List</h3>
                             <Table withColumnBorders striped withBorder>
                                 <thead>
                                     <tr>
@@ -118,7 +118,8 @@ const PurchaseOrderItems = ({ history }) => {
                                     </tr>
                                 </thead>
                                 <tbody>{rows}</tbody>
-                            </Table> : <div></div>
+                            </Table>
+                       </> : <div></div>
                     }
 
                 </div>

@@ -19,6 +19,8 @@ const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail , deletePurch
   return (
     <div>
       {purchaseList.details.length ? (
+        <>
+        <h3 style={{margin:'2vmin'}}>Purchase Detail List</h3>
         <Table withColumnBorders striped withBorder>
           <thead>
             <tr>
@@ -35,6 +37,7 @@ const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail , deletePurch
           </thead>
           <tbody>{rows}</tbody>
         </Table>
+        </>
       ) : (
         <div></div>
       )}
