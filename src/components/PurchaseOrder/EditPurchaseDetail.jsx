@@ -1,13 +1,18 @@
-import { Box, Button, Group, NumberInput, Select, Textarea, TextInput } from '@mantine/core'
-import React ,{useState} from 'react'
-import ShowPurchaseDetails from './ShowPurchaseDetails'
 
-const Forms = ({purchaseForm,purchaseList , addDetails , addPurchadeOrder}) => {
-    
-  return (
-    <form onSubmit={purchaseForm.onSubmit((values) => console.log(values))}>
-    <   Box sx={{ maxWidth: "80%" }} mx="auto">
-                    <Group>
+import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select } from '@mantine/core';
+
+const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, addDetails,purchaseForm}) => {
+    return (
+        <Drawer
+            opened={openPurchaseDrawer}
+            onClose={() => {purchaseForm.reset(); setPurchaseDrawer(false)}}
+            title="Order Details"
+            padding="lg"
+            size="xl"
+        >
+                <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
+                <form onSubmit={addDetails}>
+                <Group>
                         <Select
                             label="Payment"
                             placeholder='pick one payment option'
@@ -93,12 +98,11 @@ const Forms = ({purchaseForm,purchaseList , addDetails , addPurchadeOrder}) => {
                         {...purchaseForm.getInputProps('remark')}
                     />
                     <Group position="right" mt="md">
-                        <Button type="submit" onClick={addDetails}>Add Details</Button>
-                    </Group>                    
-        </Box>
-        </form>  
-  )
+                        <Button type="submit">Add Details</Button>
+                    </Group>
+                </form>
+            </Box>
+        </Drawer>
+    )
 }
-
-export default Forms
-
+export default EditPurchaseDetail

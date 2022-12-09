@@ -1,7 +1,7 @@
 import React from "react";
-import { Table } from "@mantine/core";
-const ShowPurchaseDetails = ({ PurchaseList }) => {
-  const rows = PurchaseList.values.details.map((element, index) => (
+import { Button, Table } from "@mantine/core";
+const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail }) => {
+  const rows = purchaseList.details.map((element, index) => (
     <tr key={index + 1}>
         <td>{element.dealerName}</td>
         <td>{element.phoneNumber}</td>
@@ -12,12 +12,12 @@ const ShowPurchaseDetails = ({ PurchaseList }) => {
         <td>{element.chequeNumber}</td>
         <td>{element.procurementSource}</td>
         <td>{element.remark}</td>
-        <td></td>
+        <td><Button onClick={() => handlePurchaseDetail(element)}>Edit</Button></td>
     </tr>
   ));
   return (
     <div>
-      {PurchaseList.values.details.length ? (
+      {purchaseList.details.length ? (
         <Table withColumnBorders striped withBorder>
           <thead>
             <tr>

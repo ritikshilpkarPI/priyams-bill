@@ -9,6 +9,7 @@ import { FileInput } from '@mantine/core';
 import BillUploader from './BillUploader';
 import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
+import EditPurchaseDetail from './EditPurchaseDetail';
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
@@ -30,9 +31,13 @@ const PurchaseOrderItems = ({ history }) => {
         handleDateDelete,
         orderList,
         setOrderList,
-        PurchaseList,
+        purchaseList,
+        setPurchaseList,
         purchaseForm,
-        addDetails
+        addDetails,
+        handlePurchaseDetail,
+        openPurchaseDrawer,
+        setPurchaseDrawer
     } = usePurchaseOrder(history)
 
     const {
@@ -59,23 +64,30 @@ const PurchaseOrderItems = ({ history }) => {
              handleSelectOrderItems={handleSelectOrderItems}
              
             />
+            <EditPurchaseDetail
+            openPurchaseDrawer ={openPurchaseDrawer}
+            setPurchaseDrawer = {setPurchaseDrawer}
+            addDetails={addDetails}
+            purchaseForm ={purchaseForm}
+             />
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
 
             <div className='detail-container'>
                 <Title order={2}>Purchase Details</Title>
-                <Forms PurchaseList={PurchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
-                <Group position="right" mt="md">
+                <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
+                <ShowPurchaseDetails purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
+                <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList}/>
+                <Group position="center" mt="">
                         <Button  type="submit">Submit</Button>
                  </Group>
             </div>
-                   <BillUploader PurchaseList={PurchaseList}/>
             <div>
                 <div className='list-items-container'>
 
                     {
-                        orderDetails.purchasedItems.length ?
+                        orderDetails.length ?
                             <Table withColumnBorders striped withBorder>
                                 <thead>
                                     <tr>

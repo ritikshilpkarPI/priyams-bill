@@ -3,12 +3,12 @@ import { Button, Group } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { Carousel } from '@mantine/carousel';
 
-const BillUploader = ({PurchaseList}) => {
+const BillUploader = ({purchaseList, setPurchaseList}) => {
   const openRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
   
   useEffect(() => {
-    PurchaseList.values.bills = selectedImages;
+    setPurchaseList({...purchaseList,bills:selectedImages})
   }, [selectedImages]);
   
   const onSelectFile = (event) => {
@@ -30,7 +30,7 @@ const BillUploader = ({PurchaseList}) => {
     URL.revokeObjectURL(image);
   }
   return (
-    <section style={{marginTop:'5vmin'}}>
+    <section style={{width:'80%',margin:'auto',marginTop:'5vmin'}}>
       <Dropzone
         openRef={openRef}
         activateOnClick={false}

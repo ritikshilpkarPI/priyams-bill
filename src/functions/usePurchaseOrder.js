@@ -6,23 +6,12 @@ import { Axios } from "src/utils/axios";
 
 const usePurchaseOrder = (history) => {
     const [opened, setOpened] = useState(false);
+    const [openPurchaseDrawer,setPurchaseDrawer] = useState(false);
     const [date, setDate] = useState("");
     const [expiryQuantity, setExpiryQuantity] = useState(0);
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
     const [openDrawer, setOpenDrawer] = useState(false)
-    const [orderDetails, setOrderDetails] = useState({
-        purchasedItems: [],
-        payment: '',
-        billAmount: '',
-        paidAmount: '',
-        remark: '',
-        paidBy: '',
-        procurementSource: '',
-        dealerName: '',
-        phoneNumber: '',
-        chequeNumber: '',
-        // billPhotos:[]
-    })
+    const [orderDetails, setOrderDetails] = useState([])
     const purchaseForm = useForm({
         initialValues:{
             purchasedItems: [],
@@ -37,14 +26,13 @@ const usePurchaseOrder = (history) => {
             chequeNumber: '',
         },
         validate:{
-            payment:(value) => (value > 0 ? null : 'Please fill this field'),
-            billAmount:(value) => (value > 0 ? null : 'Please fill this field'),
+            payment:(value) => (value.length > 0 ? null : 'Please fill this field'),
             remark:(value) => (value.length > 0 ? null : 'Please fill this field'),
             paidBy:(value) => (value.length > 0 ? null : 'Please fill this field'),
-            dealerName:(value) => (value > 0 ? null : 'Please fill this field'),
-            phoneNumber:(value) => (value > 0 ? null : 'Please fill this field'),
-            chequeNumber:(value) => (value > 0 ? null : 'Please fill this field'),
-            procurementSource:(value) => (value > 0 ? null : 'Please fill this field'),
+            dealerName:(value) => (value.length > 0 ? null : 'Please fill this field'),
+            phoneNumber:(value) => (String(value).length === 10  ? null : 'Enter valid mobile number'),
+            chequeNumber:(value) => (purchaseForm.values.chequeNumber === 'credit'?String(value).length > 0 ? null : 'Please fill this field':null),
+            procurementSource:(value) => (value.length > 0 ? null : 'Please fill this field'),
         }
     })
 
@@ -75,17 +63,18 @@ const usePurchaseOrder = (history) => {
             costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0':null),
         }
     }); 
-    const PurchaseList = useForm({
-        initialValues:{
-            details:[],
-            bills:[]
-        }
+    const [purchaseList,setPurchaseList] = useState({
+        details:[],
+        bills:[],
+        orders:[],
     })
+    console.log({purchaseList})
+    console.log(purchaseList)
     const addDetails = () =>{
-        if(purchaseForm.validate()){
-            PurchaseList.values.details = [...PurchaseList.values.details,{...purchaseForm.values}]
+        
+        if(purchaseForm.isValid()){
+            setPurchaseList({...purchaseList,details:[...purchaseList.details,{...purchaseForm.values}]})
             purchaseForm.reset();
-
         }
         
     }
@@ -104,7 +93,7 @@ const usePurchaseOrder = (history) => {
                 method: "POST",
                 url: '/api/purchaseOrder/addNewOrder',
                 data: {
-                    new_order: orderDetails
+                    new_order: ''
                 }
             })
             // history.push("/")
@@ -131,17 +120,22 @@ const usePurchaseOrder = (history) => {
         }));
         setOpenDrawer(false)
     }
+    const handlePurchaseDetail = (element) =>{
+            setPurchaseDrawer(true);
+    }
     const handleItemFrom = (values) => {
         let sum = 0;
         values.expiryDates.forEach(element => {
             sum += element.quantity
         })
         if (sum === values.stockQuantity) {
-            orderDetails.purchasedItems = orderDetails.purchasedItems.filter((item)=> item.barcode !== values.barcode);
-            setOrderDetails((prev) => ({
-                ...prev,
-                purchasedItems: [...prev.purchasedItems, values],
-            }));
+            if(orderDetails.length > 0){
+                setOrderDetails([...orderDetails.filter((item)=> item.barcode !== values.barcode),values])
+            }else{
+                setOrderDetails([values]);
+            }
+            setPurchaseList({...purchaseList,orders:orderDetails})
+
             form.reset();
             setOpened(false)
            
@@ -188,7 +182,7 @@ const usePurchaseOrder = (history) => {
         }
         setState('')
     }, [form.values.barcode])
-    const rows = orderDetails.purchasedItems.map((element, index) => (
+    const rows = orderDetails.map((element, index) => (
         <tr key={index + 1}>
             <td>{element.barcode}</td>
             <td>{element.inputName}</td>
@@ -230,9 +224,13 @@ const usePurchaseOrder = (history) => {
         handledleItemEdit,
         orderList,
         setOrderList,
-        PurchaseList,
+        purchaseList,
+        setPurchaseList,
         purchaseForm,
         addDetails,
+        handlePurchaseDetail,
+        openPurchaseDrawer,
+        setPurchaseDrawer,
     }
 }
 
