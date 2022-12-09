@@ -68,8 +68,6 @@ const usePurchaseOrder = (history) => {
         bills:[],
         orders:[],
     })
-    console.log({purchaseList})
-    console.log(purchaseList)
     const addDetails = () =>{
         
         if(purchaseForm.isValid()){
@@ -95,7 +93,7 @@ const usePurchaseOrder = (history) => {
                 method: "POST",
                 url: '/api/purchaseOrder/addNewOrder',
                 data: {
-                    new_order: ''
+                    new_order: purchaseList
                 }
             })
             // history.push("/")
@@ -139,16 +137,17 @@ const usePurchaseOrder = (history) => {
     }
     const handleItemFrom = (values) => {
         let sum = 0;
+        
         values.expiryDates.forEach(element => {
             sum += element.quantity
         })
-        if (sum === values.stockQuantity) {
+        if (sum === values.stockQuantity || !form.values.validate) {
             if(orderDetails.length > 0){
                 setOrderDetails([...orderDetails.filter((item)=> item.barcode !== values.barcode),values])
             }else{
                 setOrderDetails([values]);
             }
-            setPurchaseList({...purchaseList,orders:orderDetails})
+            setPurchaseList({...purchaseList,orders:[...orderDetails.filter((item)=> item.barcode !== values.barcode),values]})
 
             form.reset();
             setOpened(false)
@@ -158,6 +157,7 @@ const usePurchaseOrder = (history) => {
         
             alert("Total expiry dates and stock quantity  is not matching")
    }
+   
     const handledleItemEdit = (item) => {
         
         form.setValues((prev) => ({
@@ -208,10 +208,18 @@ const usePurchaseOrder = (history) => {
             <td>{element.mrp}</td>
             <td>{element.costPrice}</td>
             <td>{element.expiryDates.map(date => {
-                return <tr>
-                    <td>Date: {date.date}</td>
-                    <td>Quantity: {date.quantity}</td>
-                </tr>
+                return <table key={index}>
+                    <tbody>
+                    <tr>
+                        <th>Date</th>
+                        <td>{date.date}</td>
+                    </tr>
+                    <tr>
+                        <th>Quantity</th>
+                         <td>{date.quantity}</td>
+                    </tr>
+                    </tbody>
+                </table>
             })}</td>
             <td><Button onClick={() => handledleItemEdit(element)}>Edit</Button></td>
         </tr>

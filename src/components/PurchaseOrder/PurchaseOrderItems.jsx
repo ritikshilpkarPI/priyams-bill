@@ -81,7 +81,7 @@ const PurchaseOrderItems = ({ history }) => {
                 <ShowPurchaseDetails purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
                 <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList}/>
                 <Group position="center" mt="">
-                        <Button  type="submit">Submit</Button>
+                        <Button onClick={addPurchadeOrder} type="submit">Submit</Button>
                  </Group>
             </div>
             <div>

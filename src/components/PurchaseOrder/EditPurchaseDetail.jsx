@@ -11,7 +11,7 @@ const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetail
             size="xl"
         >
                 <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
-                <form onSubmit={(e)=>{e.preventDefault(); updateDetails(e);}}>
+                <form onSubmit={(e)=>{e.preventDefault(); updateDetails(e); }}>
                 <Group>
                         <Select
                             label="Payment"

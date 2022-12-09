@@ -2,10 +2,10 @@ import { Box, Button, Group, NumberInput, Select, Textarea, TextInput } from '@m
 import React ,{useState} from 'react'
 import ShowPurchaseDetails from './ShowPurchaseDetails'
 
-const Forms = ({purchaseForm,purchaseList , addDetails , addPurchadeOrder}) => {
+const Forms = ({purchaseForm, addDetails}) => {
     
   return (
-    <form onSubmit={purchaseForm.onSubmit((values) => console.log(values))}>
+    <form onSubmit={(e)=>{e.preventDefault(); addDetails()}}>
     <   Box sx={{ maxWidth: "80%" }} mx="auto">
                     <Group>
                         <Select
@@ -93,7 +93,7 @@ const Forms = ({purchaseForm,purchaseList , addDetails , addPurchadeOrder}) => {
                         {...purchaseForm.getInputProps('remark')}
                     />
                     <Group position="right" mt="md">
-                        <Button type="submit" onClick={addDetails}>Add Details</Button>
+                        <Button type="submit">Add Details</Button>
                     </Group>                    
         </Box>
         </form>  

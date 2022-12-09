@@ -47,8 +47,8 @@ const BillUploader = ({purchaseList, setPurchaseList}) => {
         {selectedImages &&
           selectedImages.map((image, index) => {
             return (
-                <Carousel.Slide  style={{height:'100%',width:'100%',position:'relative'}}>
-                <img src={image} style={{height:'100%'}}  maxWidth={520}  alt="upload" />
+                <Carousel.Slide key={index}  style={{height:'100%',width:'100%',position:'relative'}}>
+                <img src={image} style={{height:'100%'}}  maxwidth={520}  alt="upload" />
                 <img style={{cursor:'pointer',position:'absolute',top:'0%',left:'90%'}} height={50} src={window.location.origin + '/closeicon.png'} onClick={()=>{deleteHandler(image)}}  alt="X" />
                </Carousel.Slide>
             );
