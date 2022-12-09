@@ -38,7 +38,9 @@ const PurchaseOrderItems = ({ history }) => {
         handlePurchaseDetail,
         openPurchaseDrawer,
         setPurchaseDrawer,
-        updateDetails
+        updateDetails,
+        addPurchadeOrderValidate,
+        deletePurchaseDetail
     } = usePurchaseOrder(history)
 
     const {
@@ -78,10 +80,11 @@ const PurchaseOrderItems = ({ history }) => {
             <div className='detail-container'>
                 <Title order={2}>Purchase Details</Title>
                 <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
-                <ShowPurchaseDetails purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
+                <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
                 <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList}/>
                 <Group position="center" mt="">
-                        <Button onClick={addPurchadeOrder} type="submit">Submit</Button>
+                        <Button style={{backgroundColor:'#1098AD'}} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
+                        <Button style={{backgroundColor:'#40C057'}} onClick={addPurchadeOrder} type="submit">Save</Button>
                  </Group>
             </div>
             <div>

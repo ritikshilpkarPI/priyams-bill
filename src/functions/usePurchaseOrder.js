@@ -87,7 +87,7 @@ const usePurchaseOrder = (history) => {
 
     }
     const addPurchadeOrder = async () => {
-        
+       
         try {
             const result = await Axios({
                 method: "POST",
@@ -100,6 +100,15 @@ const usePurchaseOrder = (history) => {
         } catch (error) {
             console.log(error.message);
         }
+    }
+    const addPurchadeOrderValidate = async ()=>{
+        orderDetails.map((order)=>{
+            if(!order.validate){
+                alert('please validate all orders');
+                return;
+            }
+        })
+        addPurchadeOrder();
     }
     const handleDateDelete = async (dateItem) => {
         const dates = form.values.expiryDates.filter(element => element.date !== dateItem.date)
@@ -179,6 +188,13 @@ const usePurchaseOrder = (history) => {
 
        
     }
+    const deleteOrder = (index) => {
+        setOrderDetails([...orderDetails.filter((item,i)=> i !== index)]);
+        setPurchaseList({...purchaseList,orders:[...orderDetails.filter((item,i)=> i !== index)]})
+    }
+    const deletePurchaseDetail = (index) =>{
+        setPurchaseList({...purchaseList,details:[...purchaseList.details.filter((item,i) => i !=  index)]});
+    }
     const handleExpiryDate = () => {
         if (!date && expiryQuantity === 0) {
             return alert("add Date and expiry quantity ")
@@ -222,6 +238,7 @@ const usePurchaseOrder = (history) => {
                 </table>
             })}</td>
             <td><Button onClick={() => handledleItemEdit(element)}>Edit</Button></td>
+            <td><Button style={{backgroundColor:'#F03E3E'}} onClick={() => deleteOrder(index)}>Delete</Button></td>
         </tr>
     ));
     
@@ -253,7 +270,9 @@ const usePurchaseOrder = (history) => {
         handlePurchaseDetail,
         openPurchaseDrawer,
         setPurchaseDrawer,
-        updateDetails
+        updateDetails,
+        addPurchadeOrderValidate,
+        deletePurchaseDetail
     }
 }
 

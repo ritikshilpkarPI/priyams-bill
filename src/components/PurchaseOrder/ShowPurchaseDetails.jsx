@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Table } from "@mantine/core";
-const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail }) => {
+const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail , deletePurchaseDetail }) => {
   const rows = purchaseList.details.map((element, index) => (
     <tr key={index + 1}>
         <td>{element.dealerName}</td>
@@ -13,6 +13,7 @@ const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail }) => {
         <td>{element.procurementSource}</td>
         <td>{element.remark}</td>
         <td><Button onClick={() => handlePurchaseDetail(element,index)}>Edit</Button></td>
+        <td><Button style={{backgroundColor:'#F03E3E'}} onClick={() => deletePurchaseDetail(index)}>Delete</Button></td>
     </tr>
   ));
   return (
