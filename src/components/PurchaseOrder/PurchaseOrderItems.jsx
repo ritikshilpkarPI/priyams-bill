@@ -40,7 +40,12 @@ const PurchaseOrderItems = ({ history }) => {
         setPurchaseDrawer,
         updateDetails,
         addPurchadeOrderValidate,
-        deletePurchaseDetail
+        deletePurchaseDetail,
+        slabForm,
+        addSlabPrice,
+        deleteSlab,
+        slabs,
+        setSlabs
     } = usePurchaseOrder(history)
 
     const {
@@ -65,7 +70,11 @@ const PurchaseOrderItems = ({ history }) => {
              date={date} 
              filterItems={filterItems} 
              handleSelectOrderItems={handleSelectOrderItems}
-             
+             slabForm={slabForm}
+             addSlabPrice={addSlabPrice}
+             deleteSlab={deleteSlab}
+             slabs={slabs}
+             setSlabs={setSlabs}
             />
             <EditPurchaseDetail
             openPurchaseDrawer ={openPurchaseDrawer}

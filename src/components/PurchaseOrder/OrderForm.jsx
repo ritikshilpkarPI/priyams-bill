@@ -4,12 +4,13 @@ import { DatePicker } from '@mantine/dates';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import ListDropDownItem from './ListDropDownItem';
+import ShowSlabPricing from './ShowSlabPricing';
 
-const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems}) => {
+const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems , slabForm,addSlabPrice,deleteSlab,slabs,setSlabs}) => {
     return (
         <Drawer
             opened={opened}
-            onClose={() => {form.reset(); setOpened(false)}}
+            onClose={() => {form.reset(); setSlabs([]); setOpened(false)}}
             title="Order Details"
             padding="lg"
             size="xl"
@@ -135,7 +136,32 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                     }
 
 
-
+                    <div style={{marginBottom:'1vmin'}}>Slab Pricing</div>
+                    <Group>
+                    <NumberInput
+                            withAsterisk
+                            width={"30px"}
+                            label="Start value"
+                            placeholder="start value"
+                            {...slabForm.getInputProps('startValue')}
+                        />
+                        <NumberInput
+                            withAsterisk
+                            width={"30px"}
+                            label="End value"
+                            placeholder="end value"
+                            {...slabForm.getInputProps('endValue')}
+                        />
+                        <NumberInput
+                            withAsterisk
+                            width={"30px"}
+                            label="Price"
+                            placeholder="price"
+                            {...slabForm.getInputProps('pricing')}
+                        />
+                        <Button onClick={(e)=>{e.preventDefault(); addSlabPrice()}} type="">+</Button>
+                    </Group>
+                    <ShowSlabPricing deleteSlab={deleteSlab} slabs={slabs}/>
                     <Group position="right" mt="md">
                         <Button type="submit">Submit</Button>
                     </Group>

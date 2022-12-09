@@ -13,6 +13,7 @@ const usePurchaseOrder = (history) => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [orderDetails, setOrderDetails] = useState([])
     const [editIndex,setEditIndex] = useState(-1);
+    const [slabs,setSlabs] = useState([])
     const purchaseForm = useForm({
         initialValues:{
             payment: '',
@@ -24,6 +25,7 @@ const usePurchaseOrder = (history) => {
             dealerName: '',
             phoneNumber: 0,
             chequeNumber: '',
+            
         },
         validate:{
             payment:(value) => (value.length > 0 ? null : 'Please fill this field'),
@@ -38,7 +40,13 @@ const usePurchaseOrder = (history) => {
 
     const [orderList, setOrderList] = useState([]);
     
-    const [state, setState] = useState('')
+    const slabForm = useForm({
+        initialValues:{
+            startValue:1,
+            endValue:1,
+            pricing:0,
+        }
+    })
     const form = useForm({
         initialValues: {
             barcode: '',
@@ -53,7 +61,8 @@ const usePurchaseOrder = (history) => {
             mrp: '',
             costPrice: '',
             expiryDates: [],
-            validate:false
+            validate:false,
+            slabPrice:[]
         },
         validate: {
             stockQuantity: (value) => (form.values.validate ?(value > 0 ? null : 'Stock Quantity should be greater than 0'):null),
@@ -69,7 +78,7 @@ const usePurchaseOrder = (history) => {
         orders:[],
     })
     const addDetails = () =>{
-        
+        purchaseForm.validate();
         if(purchaseForm.isValid()){
             setPurchaseList({...purchaseList,details:[...purchaseList.details,{...purchaseForm.values}]})
             purchaseForm.reset();
@@ -77,6 +86,7 @@ const usePurchaseOrder = (history) => {
         
     }
     const updateDetails = (e) =>{
+        purchaseForm.validate()
         if(purchaseForm.isValid()){
             let detailArray = purchaseList.details.filter((item,index)=> index != editIndex);
             setPurchaseList({...purchaseList,details:[...detailArray,{...purchaseForm.values}]});
@@ -87,7 +97,6 @@ const usePurchaseOrder = (history) => {
 
     }
     const addPurchadeOrder = async () => {
-       
         try {
             const result = await Axios({
                 method: "POST",
@@ -151,6 +160,7 @@ const usePurchaseOrder = (history) => {
             sum += element.quantity
         })
         if (sum === values.stockQuantity || !form.values.validate) {
+            form.values.slabPrice = [...slabs]
             if(orderDetails.length > 0){
                 setOrderDetails([...orderDetails.filter((item)=> item.barcode !== values.barcode),values])
             }else{
@@ -159,6 +169,7 @@ const usePurchaseOrder = (history) => {
             setPurchaseList({...purchaseList,orders:[...orderDetails.filter((item)=> item.barcode !== values.barcode),values]})
 
             form.reset();
+            setSlabs([])
             setOpened(false)
            
             return;
@@ -182,8 +193,9 @@ const usePurchaseOrder = (history) => {
             costPrice: item.costPrice,
             expiryDates: [...item.expiryDates],
             unit:item.unit,
-            validate:item.validate
+            validate:item.validate,
         }));
+        setSlabs([...item.slabPrice])
         setOpened(true)
 
        
@@ -194,6 +206,13 @@ const usePurchaseOrder = (history) => {
     }
     const deletePurchaseDetail = (index) =>{
         setPurchaseList({...purchaseList,details:[...purchaseList.details.filter((item,i) => i !=  index)]});
+    }
+    const addSlabPrice = () =>{
+        setSlabs([...slabs,{...slabForm.values}])
+        slabForm.reset(); 
+    } 
+    const deleteSlab = (index) =>{
+        setSlabs([...slabs.filter((slab,i)=> i!=index)]);
     }
     const handleExpiryDate = () => {
         if (!date && expiryQuantity === 0) {
@@ -210,7 +229,6 @@ const usePurchaseOrder = (history) => {
         if (Object.keys(barcodeFilteredItem).length) {
             handleSelectOrderItems(barcodeFilteredItem)
         }
-        setState('')
     }, [form.values.barcode])
     const rows = orderDetails.map((element, index) => (
         <tr key={index + 1}>
@@ -272,7 +290,12 @@ const usePurchaseOrder = (history) => {
         setPurchaseDrawer,
         updateDetails,
         addPurchadeOrderValidate,
-        deletePurchaseDetail
+        deletePurchaseDetail,
+        slabForm,
+        addSlabPrice,
+        deleteSlab,
+        slabs,
+        setSlabs
     }
 }
 
