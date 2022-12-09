@@ -12,9 +12,9 @@ const usePurchaseOrder = (history) => {
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
     const [openDrawer, setOpenDrawer] = useState(false)
     const [orderDetails, setOrderDetails] = useState([])
+    const [editIndex,setEditIndex] = useState(-1);
     const purchaseForm = useForm({
         initialValues:{
-            purchasedItems: [],
             payment: '',
             billAmount: 0,
             paidAmount: 0,
@@ -78,15 +78,17 @@ const usePurchaseOrder = (history) => {
         }
         
     }
+    const updateDetails = (e) =>{
+        if(purchaseForm.isValid()){
+            let detailArray = purchaseList.details.filter((item,index)=> index != editIndex);
+            setPurchaseList({...purchaseList,details:[...detailArray,{...purchaseForm.values}]});
+            purchaseForm.reset();
+        }
+        setEditIndex(-1);
+        setPurchaseDrawer(false)
+
+    }
     const addPurchadeOrder = async () => {
-       
-        // PurchaseList.values.details.map((receipt)=>{
-        //     if(String(receipt.phoneNumber).length != 10){
-        //         alert('Please enter valid phone number');
-        //         return;
-        //     }
-        // })
-        
         
         try {
             const result = await Axios({
@@ -120,8 +122,20 @@ const usePurchaseOrder = (history) => {
         }));
         setOpenDrawer(false)
     }
-    const handlePurchaseDetail = (element) =>{
-            setPurchaseDrawer(true);
+    const handlePurchaseDetail = (element,index) =>{
+         purchaseForm.setValues((prev)=>({
+            payment: element.payment,
+            billAmount: element.billAmount,
+            paidAmount: element.paidAmount,
+            remark: element.remark,
+            paidBy: element.paidBy,
+            procurementSource: element.procurementSource,
+            dealerName: element.dealerName,
+            phoneNumber: element.phoneNumber,
+            chequeNumber: element.chequeNumber,
+         }))
+         setEditIndex(index);
+         setPurchaseDrawer(true);
     }
     const handleItemFrom = (values) => {
         let sum = 0;
@@ -231,6 +245,7 @@ const usePurchaseOrder = (history) => {
         handlePurchaseDetail,
         openPurchaseDrawer,
         setPurchaseDrawer,
+        updateDetails
     }
 }
 

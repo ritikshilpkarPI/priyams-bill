@@ -1,7 +1,7 @@
 
 import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select } from '@mantine/core';
 
-const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, addDetails,purchaseForm}) => {
+const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetails,purchaseForm}) => {
     return (
         <Drawer
             opened={openPurchaseDrawer}
@@ -11,7 +11,7 @@ const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, addDetails,p
             size="xl"
         >
                 <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
-                <form onSubmit={addDetails}>
+                <form onSubmit={(e)=>{e.preventDefault(); updateDetails(e);}}>
                 <Group>
                         <Select
                             label="Payment"
@@ -98,7 +98,7 @@ const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, addDetails,p
                         {...purchaseForm.getInputProps('remark')}
                     />
                     <Group position="right" mt="md">
-                        <Button type="submit">Add Details</Button>
+                        <Button type="submit">Update Details</Button>
                     </Group>
                 </form>
             </Box>

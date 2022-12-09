@@ -12,7 +12,7 @@ const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail }) => {
         <td>{element.chequeNumber}</td>
         <td>{element.procurementSource}</td>
         <td>{element.remark}</td>
-        <td><Button onClick={() => handlePurchaseDetail(element)}>Edit</Button></td>
+        <td><Button onClick={() => handlePurchaseDetail(element,index)}>Edit</Button></td>
     </tr>
   ));
   return (

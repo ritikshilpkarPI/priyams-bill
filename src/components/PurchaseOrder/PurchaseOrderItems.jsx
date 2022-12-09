@@ -37,7 +37,8 @@ const PurchaseOrderItems = ({ history }) => {
         addDetails,
         handlePurchaseDetail,
         openPurchaseDrawer,
-        setPurchaseDrawer
+        setPurchaseDrawer,
+        updateDetails
     } = usePurchaseOrder(history)
 
     const {
@@ -67,7 +68,7 @@ const PurchaseOrderItems = ({ history }) => {
             <EditPurchaseDetail
             openPurchaseDrawer ={openPurchaseDrawer}
             setPurchaseDrawer = {setPurchaseDrawer}
-            addDetails={addDetails}
+            updateDetails={updateDetails}
             purchaseForm ={purchaseForm}
              />
             <Group position="center">
