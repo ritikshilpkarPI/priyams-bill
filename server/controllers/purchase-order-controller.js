@@ -1,12 +1,17 @@
 const PurchaseOrder = require("../db-models/purchase-order-model");
 
 const addOrder = async (req, res) => {
-    const { new_order } = req.body
     try {
-        const order = await PurchaseOrder.create(new_order)
-        res.status(201).send({ message: order })
+        const { details , bills,orders } = req.body.new_order
+        const purchaseOrder = {
+            purchasedItems:[...orders],
+            purchaseDetails:[...details],
+            billPhotos:[...bills]
+        }
+        const order = await PurchaseOrder.create(purchaseOrder)
+        res.status(201).send({ message: order ,success:true})
     } catch (error) {
-        res.status(400).send(error.message)
+        res.status(400).send({message:error.message,success:false})
     }
 }
 const getOrders = async (req, res) => {

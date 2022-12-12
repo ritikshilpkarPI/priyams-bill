@@ -5,12 +5,7 @@ import { Carousel } from '@mantine/carousel';
 
 const BillUploader = ({purchaseList, setPurchaseList}) => {
   const openRef = useRef(null);
-  const [selectedImages, setSelectedImages] = useState([]);
-  
-  useEffect(() => {
-    setPurchaseList({...purchaseList,bills:selectedImages})
-  }, [selectedImages]);
-  
+    
   const onSelectFile = (event) => {
     const selectedFiles = event.target.files;
     const selectedFilesArray = Array.from(selectedFiles);
@@ -19,14 +14,13 @@ const BillUploader = ({purchaseList, setPurchaseList}) => {
       return URL.createObjectURL(file);
     });
 
-    setSelectedImages((previousImages) => previousImages.concat(imagesArray));
-    
+    setPurchaseList({...purchaseList,bills:[...purchaseList.bills,...imagesArray]});
     // FOR BUG IN CHROME
     event.target.value = "";
   };
 
   function deleteHandler(image) {
-    setSelectedImages(selectedImages.filter((e) => e !== image));
+    setPurchaseList({...purchaseList,bills:purchaseList.bills.filter((e) => e !== image)});
     URL.revokeObjectURL(image);
   }
   return (
@@ -42,10 +36,10 @@ const BillUploader = ({purchaseList, setPurchaseList}) => {
         </Group>
       </Dropzone>
       {
-        selectedImages.length > 0 ?
+        purchaseList.bills.length > 0 ?
         <Carousel sx={{ maxWidth: 600 }} style={{marginTop:'5vmin'}} mx="auto" withIndicators height={400}>
-        {selectedImages &&
-          selectedImages.map((image, index) => {
+        {purchaseList.bills &&
+          purchaseList.bills.map((image, index) => {
             return (
                 <Carousel.Slide key={index}  style={{height:'100%',width:'100%',position:'relative'}}>
                 <img src={image} style={{height:'100%'}}  maxwidth={520}  alt="upload" />

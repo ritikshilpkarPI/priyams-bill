@@ -13,6 +13,12 @@ const usePurchaseOrder = (history) => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [editIndex,setEditIndex] = useState(-1);
     const [slabs,setSlabs] = useState([])
+    const [message, setMessage] = useState({
+        success:false,
+        failed:false,
+        error:"",
+        status:""
+    });
     const purchaseForm = useForm({
         initialValues:{
             payment: '',
@@ -78,6 +84,8 @@ const usePurchaseOrder = (history) => {
         details:[],
         bills:[],
         orders:[],
+        isSaved:false,
+        isDraft:false
     })
     const addDetails = () =>{
         purchaseForm.validate();
@@ -98,8 +106,10 @@ const usePurchaseOrder = (history) => {
         setPurchaseDrawer(false)
 
     }
-    const addPurchadeOrder = async () => {
+    const addPurchadeOrder = async (isDraft) => {
+        
         try {
+            setPurchaseList({...purchaseList,isSaved:!isDraft,isDraft});
             const result = await Axios({
                 method: "POST",
                 url: '/api/purchaseOrder/addNewOrder',
@@ -107,9 +117,23 @@ const usePurchaseOrder = (history) => {
                     new_order: purchaseList
                 }
             })
-            // history.push("/")
+            if(result.data.success){
+                setPurchaseList({
+                    details:[],
+                    bills:[],
+                    orders:[],
+                    isSaved:false,
+                    isDraft:false
+                });
+                let status = isDraft?"Draft Successfully":"Saved Successfully"
+                setMessage({success:true,failed:false,status})
+            }else{
+                setMessage({success:false,failed:true,error:result.data.message})
+            }
+            console.log(result)
         } catch (error) {
             console.log(error.message);
+            setMessage({success:false,failed:true,error:error.message})
         }
     }
     const addPurchadeOrderValidate = async ()=>{
@@ -119,7 +143,7 @@ const usePurchaseOrder = (history) => {
                 return;
             }
         })
-        addPurchadeOrder();
+        addPurchadeOrder(true);
     }
     const handleDateDelete = async (dateItem) => {
         const dates = form.values.expiryDates.filter(element => element.date !== dateItem.date)
@@ -292,7 +316,9 @@ const usePurchaseOrder = (history) => {
         addSlabPrice,
         deleteSlab,
         slabs,
-        setSlabs
+        setSlabs,
+        message,
+        setMessage,
     }
 }
 

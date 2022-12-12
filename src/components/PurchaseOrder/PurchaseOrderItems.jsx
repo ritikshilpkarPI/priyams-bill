@@ -1,5 +1,7 @@
 import React ,{useEffect} from 'react'
 import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title, TextInput } from '@mantine/core';
+import { Notification } from '@mantine/core';
+import { IconCheck, IconX } from '@tabler/icons';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
@@ -43,7 +45,9 @@ const PurchaseOrderItems = ({ history }) => {
         addSlabPrice,
         deleteSlab,
         slabs,
-        setSlabs
+        setSlabs,
+        message,
+        setMessage,
     } = usePurchaseOrder(history)
 
     const {
@@ -80,6 +84,12 @@ const PurchaseOrderItems = ({ history }) => {
             updateDetails={updateDetails}
             purchaseForm ={purchaseForm}
              />
+            <Notification style={{display:message.success?"flex":"none",width:'50vmin',height:"10vmin"}}  onClose={()=>{setMessage({success:false,failed:false})}} icon={<IconCheck size={18} />} color="teal" title={message.status}>
+                Purchase Details saved successfully
+            </Notification>
+            <Notification style={{display:message.failed?"flex":"none",width:'50vmin',height:"10vmin"}} onClose={()=>{setMessage({success:false,failed:false})}} icon={<IconX size={18} />} color="red" title="Failed, cannot save details">
+                {message.error}
+            </Notification>
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
@@ -88,10 +98,10 @@ const PurchaseOrderItems = ({ history }) => {
                 <Title order={2}>Purchase Details</Title>
                 <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
                 <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
-                <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList}/>
+                <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} />
                 <Group position="center" mt="">
                         <Button style={{backgroundColor:'#1098AD'}} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
-                        <Button style={{backgroundColor:'#40C057'}} onClick={addPurchadeOrder} type="submit">Save</Button>
+                        <Button style={{backgroundColor:'#40C057'}} onClick={()=>{addPurchadeOrder(false)}} type="submit">Save</Button>
                  </Group>
             </div>
             <div>
