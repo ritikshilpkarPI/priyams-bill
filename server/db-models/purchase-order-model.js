@@ -39,8 +39,7 @@ const purchaseOrderSchema = new mongoose.Schema({
         }
     ],
     billPhotos:[],
-    isSaved:false,
-    isDraft:false
+    isDraft:Boolean
 })
 
 // pre hook to make is Approved true or false if approver is their

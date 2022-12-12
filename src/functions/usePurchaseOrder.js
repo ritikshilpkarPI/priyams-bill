@@ -109,12 +109,12 @@ const usePurchaseOrder = (history) => {
     const addPurchadeOrder = async (isDraft) => {
         
         try {
-            setPurchaseList({...purchaseList,isSaved:!isDraft,isDraft});
+          
             const result = await Axios({
                 method: "POST",
                 url: '/api/purchaseOrder/addNewOrder',
                 data: {
-                    new_order: purchaseList
+                    new_order: {purchaseList,isDraft}
                 }
             })
             if(result.data.success){
@@ -130,7 +130,7 @@ const usePurchaseOrder = (history) => {
             }else{
                 setMessage({success:false,failed:true,error:result.data.message})
             }
-            console.log(result)
+
         } catch (error) {
             console.log(error.message);
             setMessage({success:false,failed:true,error:error.message})
