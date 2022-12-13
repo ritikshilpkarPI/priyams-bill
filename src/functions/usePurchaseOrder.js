@@ -246,12 +246,12 @@ const usePurchaseOrder = (history) => {
     }
     const {
         barcodeFilteredItem
-    } = useBarcodeSearchItems(form.values.barcode, handleSelectOrderItems)
+    } = useBarcodeSearchItems(form.values.barcode, handleSelectOrderItems);
     useEffect(() => {
         if (Object.keys(barcodeFilteredItem).length) {
             handleSelectOrderItems(barcodeFilteredItem)
         }
-    }, [form.values.barcode,barcodeFilteredItem])
+    }, [form.values.barcode, barcodeFilteredItem])
     const rows = purchaseList.orders.map((element, index) => (
         <tr key={index + 1}>
             <td>{element.barcode}</td>
