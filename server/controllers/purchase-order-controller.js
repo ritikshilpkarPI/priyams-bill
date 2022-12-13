@@ -20,11 +20,20 @@ const getOrders = async (req, res) => {
         const orders = await PurchaseOrder.find({})
         res.status(201).send({ message: orders })
     } catch (error) {
-        res.status(400).send(error.message)
+        res.status(400).send({message:error.message})
     }
 }
-
+const getDetailsById = async(req,res) => {
+    const id = req.params.id;
+    try{
+        const data = await PurchaseOrder.findById(id);
+        res.status(201).send({data});
+    }catch(err){
+        res.status(400).send({message:err})
+    }
+}
 module.exports = {
     addOrder,
-    getOrders
+    getOrders,
+    getDetailsById
 }

@@ -17,8 +17,10 @@ import {
     Report,
     Login,
     PurchaseOrder,
-    Attendance
+    Attendance,
+    Approval
 } from '../Pages'
+
 
 const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
     return (
@@ -55,6 +57,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                         <Route exact path="/report" component={Report} />
                     </ProtectedComponent>
                     <Route exact path="/edit/:billingID" component={EditBill} />
+                    <Route exact path="/approval" component={Approval}/>
                 </ProtectedRoutes>
             </Switch>
         </Suspense>

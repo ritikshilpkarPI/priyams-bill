@@ -4,6 +4,7 @@ import { Button } from "@mantine/core";
 import useBarcodeSearchItems from "./useBarcodeSearchItems";
 import { Axios } from "src/utils/axios";
 
+import { useLocation } from "react-router-dom"
 const usePurchaseOrder = (history) => {
     const [opened, setOpened] = useState(false);
     const [openPurchaseDrawer,setPurchaseDrawer] = useState(false);
@@ -13,6 +14,8 @@ const usePurchaseOrder = (history) => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [editIndex,setEditIndex] = useState(-1);
     const [slabs,setSlabs] = useState([])
+    const [allPurchaseList,setAllPurchaseList] = useState([])
+    const myLocation = useLocation();
     const [message, setMessage] = useState({
         success:false,
         failed:false,
@@ -87,6 +90,21 @@ const usePurchaseOrder = (history) => {
         isSaved:false,
         isDraft:false
     })
+    const id = myLocation.state?.id;
+   
+    const getDetails = async() =>{
+       try{
+        const res = await Axios({
+            method:'GET',
+            url:'/api/purchaseOrder/orderDetails/'+id,
+    
+        })
+        console.log(res)
+       }catch(err){
+        console.log(err)
+       }
+
+    }
     const addDetails = () =>{
         purchaseForm.validate();
         if(purchaseForm.isValid()){
@@ -109,7 +127,8 @@ const usePurchaseOrder = (history) => {
     const addPurchadeOrder = async (isDraft) => {
         
         try {
-          
+            
+            // setAllPurchaseList([...allPurchaseList,{...purchaseList}])
             const result = await Axios({
                 method: "POST",
                 url: '/api/purchaseOrder/addNewOrder',
@@ -199,7 +218,7 @@ const usePurchaseOrder = (history) => {
             alert("Total expiry dates and stock quantity  is not matching")
    }
    
-    const handledleItemEdit = (item) => {
+    const handleItemEdit = (item) => {
         
         form.setValues((prev) => ({
             barcode: item.barcode,
@@ -249,43 +268,17 @@ const usePurchaseOrder = (history) => {
         barcodeFilteredItem
     } = useBarcodeSearchItems(form.values.barcode, handleSelectOrderItems)
     useEffect(() => {
+        if(id){
+            getDetails();
+        }
         if (Object.keys(barcodeFilteredItem).length) {
             handleSelectOrderItems(barcodeFilteredItem)
         }
     }, [form.values.barcode])
-    const rows = purchaseList.orders.map((element, index) => (
-        <tr key={index + 1}>
-            <td>{element.barcode}</td>
-            <td>{element.inputName}</td>
-            <td>{element.stockQuantity}</td>
-            <td>{element.minimumQuantity}</td>
-            <td>{element.itemQuantity}</td>
-            <td>{element.unit}</td>
-            <td>{element.sellingPrice}</td>
-            <td>{element.mrp}</td>
-            <td>{element.costPrice}</td>
-            <td>{element.expiryDates.map(date => {
-                return <table key={index}>
-                    <tbody>
-                    <tr>
-                        <th>Date</th>
-                        <td>{date.date}</td>
-                    </tr>
-                    <tr>
-                        <th>Quantity</th>
-                         <td>{date.quantity}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            })}</td>
-            <td><Button onClick={() => handledleItemEdit(element)}>Edit</Button></td>
-            <td><Button style={{backgroundColor:'#F03E3E'}} onClick={() => deleteOrder(index)}>Delete</Button></td>
-        </tr>
-    ));
+   
     
     return {
         form,
-        rows,
         opened,
         setOpened,
         handleItemFrom,
@@ -299,7 +292,6 @@ const usePurchaseOrder = (history) => {
         setExpiryQuantity,
         addPurchadeOrder,
         handleDateDelete,
-        handledleItemEdit,
         orderList,
         setOrderList,
         purchaseList,
@@ -319,6 +311,9 @@ const usePurchaseOrder = (history) => {
         setSlabs,
         message,
         setMessage,
+        handleItemEdit,
+        deleteOrder,
+        allPurchaseList
     }
 }
 
