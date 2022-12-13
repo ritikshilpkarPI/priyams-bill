@@ -6,7 +6,7 @@ const addDailyAttendanceArrival = async (req, res) => {
       name: req.body.name,
       date: req.body.date,
     });
-
+   console.log("checkInside", checkInside)
     if (!checkInside.length) {
       let attendance = new DailyAttendance({
         name: req.body.name,
@@ -26,21 +26,61 @@ const addDailyAttendanceArrival = async (req, res) => {
   }
 };
 const addDailyAttendanceLeaving = async (req, res) => {
-  const { id, attendanceToBeUpdated } = req.body;
+  const { name, date } = req.body;
+console.log("name", name)
+console.log("date", date)
   try {
-    // let attendance = await DailyAttendance.findByIdAndUpdate(id, attendanceToBeUpdated, {
-    //     new: true
-    // })
+    let attendancecheck = await DailyAttendance.findOne({
+      name: req.body.name,
+      date: req.body.date,
+    });
+    console.log("---------------", attendancecheck);
+    if(attendancecheck){
+      if(!attendancecheck.todaysLeave){
+      let totalHours = Date.now() - new Date(attendancecheck.arrivingTime).getTime();
+      console.log("dfghjk", totalHours)
+      // attendanceToBeUpdated: {
+      //   arrivingTime: date,
+      //   name: name,
+      //   leavingTime: date,
+      //   date: attendee.date,
+      //   totalHoursOfWork: totalHours, // Saving total hours in milliseconds
+      //   workHoursCompleted: totalHours >= totalWorkHoursInMillis,
+      // },
+     
+      let attendanceToBeUpdated = {
+        arrivingTime: attendancecheck.arrivingTime,
+        name: attendancecheck.name,
+        leavingTime: Date.now(),
+        date: attendancecheck.date,
+        totalHoursOfWork: totalHours, // Saving total hours in milliseconds
+        workHoursCompleted: totalHours >= 40680000,
+        todaysLeave: true,
+      }
+      
+      try{
     const attendance = await DailyAttendance.findByIdAndUpdate(
-      id,
+      attendancecheck,
       attendanceToBeUpdated,
       {
         new: true,
         upsert: true,
       }
     );
+    console.log("attendance", attendance)
     res.status(200).json({ message: attendance });
-  } catch (error) {
+    } catch(error){
+      console.log("error-----------------", error)
+    }
+
+
+  } else{
+    res.status(230).json({ message: "You have already put attendance for today" });
+  }  } 
+  else {
+    res.status(230).json({ message: "You need to add arriving Data first " });
+  }}
+   catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
