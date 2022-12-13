@@ -251,7 +251,7 @@ const usePurchaseOrder = (history) => {
         if (Object.keys(barcodeFilteredItem).length) {
             handleSelectOrderItems(barcodeFilteredItem)
         }
-    }, [form.values.barcode, barcodeFilteredItem])
+    }, [form.values.barcode])
     const rows = purchaseList.orders.map((element, index) => (
         <tr key={index + 1}>
             <td>{element.barcode}</td>
