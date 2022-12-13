@@ -6,7 +6,7 @@ const addDailyAttendanceArrival = async (req, res) => {
       name: req.body.name,
       date: req.body.date,
     });
-   console.log("checkInside", checkInside)
+  //  console.log("checkInside", checkInside)
     if (!checkInside.length) {
       let attendance = new DailyAttendance({
         name: req.body.name,
@@ -27,18 +27,17 @@ const addDailyAttendanceArrival = async (req, res) => {
 };
 const addDailyAttendanceLeaving = async (req, res) => {
   const { name, date } = req.body;
-console.log("name", name)
-console.log("date", date)
+
   try {
     let attendancecheck = await DailyAttendance.findOne({
       name: req.body.name,
       date: req.body.date,
     });
-    console.log("---------------", attendancecheck);
+    console.log("attendancecheck", attendancecheck);
     if(attendancecheck){
       if(!attendancecheck.todaysLeave){
       let totalHours = Date.now() - new Date(attendancecheck.arrivingTime).getTime();
-      console.log("dfghjk", totalHours)
+     
       // attendanceToBeUpdated: {
       //   arrivingTime: date,
       //   name: name,
@@ -67,7 +66,7 @@ console.log("date", date)
         upsert: true,
       }
     );
-    console.log("attendance", attendance)
+   
     res.status(200).json({ message: attendance });
     } catch(error){
       console.log("error-----------------", error)

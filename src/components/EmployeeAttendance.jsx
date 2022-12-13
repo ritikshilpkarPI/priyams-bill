@@ -33,10 +33,9 @@ const EmployeeAttendance = () => {
       month: "numeric",
       day: "numeric",
     });
-    // console.log(localStorage.getItem(name))
-    const attendee = JSON.parse(localStorage.getItem(name));
-  console.log("attendee",attendee, attendee?.name, name, state)
-  // console.log(attendee.name)
+   
+    // const attendee = JSON.parse(localStorage.getItem(name));
+ 
    
     if (!name) {
       alert("Select the name for attendance");
@@ -44,35 +43,6 @@ const EmployeeAttendance = () => {
     } else if (state === "arrival" && attendance === "absent") {
       alert("You cannot mark absent for arrival");
       return;
-    } else if (state === "arrival" && false) {
-      try {
-        const result = await Axios.request({
-          url: `/api/attendance/dailyAttendanceArrival`,
-          method: "post",
-          data: {
-            name,
-            arrivingTime: date,
-            date: dateString,
-            attendance: attendance === "present" ? true : false,
-          },
-        });
-        if (result.status === 200) {
-          localStorage.setItem(
-            result.data.message.name,
-            JSON.stringify(result.data.message)
-          );
-          alert(
-            `You have successfully marked the Arrival attendance for ${name} `
-          );
-        } else {
-          alert(result.data.message);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    } 
-    else if (name === attendee?.name && state === "arrival") {
-      alert(`You have already made attendance for ${name} Arrival `);
     } 
     else if (state === "absent") {
       try {
@@ -88,7 +58,7 @@ const EmployeeAttendance = () => {
       } catch (error) {
         console.error(error);
       }
-    } else if (name !== attendee?.name && state === "arrival") {
+    } else if (state === "arrival") {
       try {
         const result = await Axios.request({
           url: `/api/attendance/dailyAttendanceArrival`,
@@ -101,10 +71,6 @@ const EmployeeAttendance = () => {
           },
         });
         if (result.status === 200) {
-          localStorage.setItem(
-            result.data.message.name,
-            JSON.stringify(result.data.message)
-          );
           alert(
             `You have successfully marked the Arrival attendance for ${name} `
           );
@@ -118,7 +84,7 @@ const EmployeeAttendance = () => {
       console.log("into the adding leave function")
       // console.log("attendee", attendee.id)
       try {
-        console.log("a")
+        
         // let totalHours =
         //   date.getTime() - new Date(attendee.arrivingTime).getTime();
         //   console.log(typeof attendee.arrivingTime)
@@ -138,7 +104,7 @@ const EmployeeAttendance = () => {
             // },
           },
         });
-        console.log(a)
+       
         if(a.status === 230){
           alert(a.data.message)
         } else {
@@ -180,7 +146,7 @@ const EmployeeAttendance = () => {
           onChange={(value) => setAttendance(value)}
           defaultValue={attendance}
         />
-        <Button onClick={handleAttendance}>Submit</Button>
+        <Button style={{ marginTop: "24px" }} onClick={handleAttendance}>Submit</Button>
       </Group>
     </div>
   );
