@@ -12,5 +12,6 @@ export const routes = {
     allBills: "/allBill",
     billReport: "/report",
     editBill: "/edit/:billingID",
-    approval:'/approval'
+    approval:'/approval',
+    editPurchaseOrder: "/"
 }

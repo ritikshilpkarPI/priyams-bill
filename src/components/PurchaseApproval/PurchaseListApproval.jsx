@@ -2,7 +2,6 @@ import { Button, Table } from '@mantine/core';
 import React from 'react'
 import { Link } from 'react-router-dom';
 const PurchaseListApproval = ({list,index}) => {
-  console.log({list})
   return (
     <div>
       {list ? (
@@ -30,9 +29,9 @@ const PurchaseListApproval = ({list,index}) => {
             <td>{list.totalPaidAmount}</td>
             <td>{list.procurementSource}</td>
             <td>{list.remark}</td>
-            <td><Link  to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link></td>
-            <td><Button>Approve</Button></td>
-            <td><Button>Reject</Button></td>
+            <td><Link style={{backgroundColor:'#1098AD',textDecoration:'none',height:'5vmin',padding:'1vmin 2vmin',color:'white',borderRadius:'0.5vmin'}} to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link></td>
+            <td><Button style={{backgroundColor:'#40C057'}}>Approve</Button></td>
+            <td><Button style={{backgroundColor:'#F03E3E'}}>Reject</Button></td>
           </tbody>
         </Table>
         </>

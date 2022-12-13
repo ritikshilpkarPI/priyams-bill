@@ -10,7 +10,7 @@ const Approval = () => {
         console.log(data.message)
         setList(data.message);
        })
-    }, [list]);
+    }, []);
   return (
     <div>
       <PurchaseDetailsApproval allPurchaseList={list}/>

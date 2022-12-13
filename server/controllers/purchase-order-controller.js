@@ -42,8 +42,9 @@ const getDetailsById = async(req,res) => {
 }
 const updateDetailsById = async(req,res) =>{
     try {
-        const { details , bills,orders,billAmount,remark,totalPaidAmount,payment,procurementSource,dealerName,phoneNumber} = req.body.new_order.purchaseList;
+        const { details , bills,orders,billAmount,remark,totalPaidAmount,payment,procurementSource,dealerName,phoneNumber} = req.body.new_order.purchaseObj;
         const isDraft = req.body.new_order.isDraft;
+        const id = req.body.new_order.id;
         const purchaseOrder = {
            purchasedItems:[...orders],
            purchaseDetails:[...details],
@@ -59,6 +60,7 @@ const updateDetailsById = async(req,res) =>{
        }
         const order = await PurchaseOrder.findByIdAndUpdate(id,purchaseOrder)
         res.status(201).send({ message: order ,success:true})
+
     } catch (error) {
         res.status(400).send({message:error.message,success:false})
     }

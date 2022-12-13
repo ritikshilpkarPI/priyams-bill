@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import useBarcodeSearchItems from "./useBarcodeSearchItems";
 import { Axios } from "src/utils/axios";
-
+import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 const usePurchaseOrder = (history) => {
   const [opened, setOpened] = useState(false);
@@ -14,6 +14,7 @@ const usePurchaseOrder = (history) => {
   const [editIndex, setEditIndex] = useState(-1);
   const [slabs, setSlabs] = useState([]);
   const myLocation = useLocation();
+  const locate = useHistory();
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -137,10 +138,11 @@ const usePurchaseOrder = (history) => {
       const data = res.data.data;
 
       purchaseForm.values.remark = data.remark;
-      purchaseForm.values.payment = data.payment;
+      purchaseForm.values.payment =data.payment;
       purchaseForm.values.dealerName = data.dealerName;
-      purchaseForm.values.phoneNumber = data.phoneNumber;
+      purchaseForm.values.phoneNumber =data.phoneNumber;
       purchaseForm.values.procurementSource = data.procurementSource;
+      purchaseForm.values.billAmount = data.billAmount;
       setPurchaseList({
         orders: data.purchasedItems,
         details: data.purchaseDetails,
@@ -151,6 +153,7 @@ const usePurchaseOrder = (history) => {
         dealerName: purchaseForm.values.dealerName,
         phoneNumber: purchaseForm.values.phoneNumber,
         totalPaidAmount: data.totalPaidAmount,
+        billAmount:purchaseForm.values.billAmount,
       });
     } catch (err) {
       console.log(err);
@@ -194,8 +197,8 @@ const usePurchaseOrder = (history) => {
   };
 
   const updateDetails = (e) => {
-    purchaseForm.validate();
-    if (purchaseForm.isValid()) {
+    // purchaseForm.validate();
+    if (true) {
       let detailArray = purchaseList.details.filter(
         (item, index) => index !== editIndex
       );
@@ -209,9 +212,27 @@ const usePurchaseOrder = (history) => {
     setPurchaseDrawer(false);
   };
   const addPurchadeOrder = async (isDraft) => {
+      const {
+        billAmount,
+        remark,
+        payment,
+        procurementSource,
+        dealerName,
+        phoneNumber,
+      } = purchaseForm.values;
+      const objvalues = {
+        ...purchaseList,
+          billAmount,remark,payment,procurementSource,dealerName,phoneNumber
+      }
+      setPurchaseList({
+          ...objvalues
+        })
+    
+        
+
     try {
       let result = id
-        ? await updateOrderApi(isDraft)
+        ? await updateOrderApi(isDraft, objvalues)
         : await addOrderApi(isDraft);
       if (result.data.success) {
         setPurchaseList({
@@ -229,6 +250,8 @@ const usePurchaseOrder = (history) => {
         });
         let status = isDraft ? "Draft Successfully" : "Saved Successfully";
         setMessage({ success: true, failed: false, status });
+        purchaseForm.reset();
+        locate.push('/approval')
       } else {
         setMessage({
           success: false,
@@ -250,12 +273,12 @@ const usePurchaseOrder = (history) => {
       },
     });
   };
-  const updateOrderApi = async (isDraft) => {
+  const updateOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
       method: "POST",
       url: "/api/purchaseOrder/updateDetails",
       data: {
-        new_order: { purchaseList, isDraft, id },
+        new_order: { purchaseObj, isDraft, id },
       },
     });
   };

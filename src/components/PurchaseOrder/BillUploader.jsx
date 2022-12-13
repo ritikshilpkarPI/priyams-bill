@@ -13,7 +13,6 @@ const BillUploader = ({purchaseList, setPurchaseList}) => {
     const imagesArray = selectedFilesArray.map((file) => {
       return URL.createObjectURL(file);
     });
-
     setPurchaseList({...purchaseList,bills:[...purchaseList.bills,...imagesArray]});
     // FOR BUG IN CHROME
     event.target.value = "";
