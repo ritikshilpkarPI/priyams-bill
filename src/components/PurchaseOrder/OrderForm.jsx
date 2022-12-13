@@ -1,8 +1,6 @@
 
-import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select, FileInput, Table , Switch } from '@mantine/core';
+import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Switch } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import useNameSearchItem from 'src/functions/useNameSearchItems';
-import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 

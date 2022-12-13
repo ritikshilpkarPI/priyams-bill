@@ -1,12 +1,11 @@
-import React ,{useEffect} from 'react'
-import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title, TextInput } from '@mantine/core';
+import React  from 'react'
+import { Button, Group, Table, Title} from '@mantine/core';
 import { Notification } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
-import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
-import { FileInput } from '@mantine/core';
+
 
 import BillUploader from './BillUploader';
 import ShowPurchaseDetails from './ShowPurchaseDetails';
@@ -29,8 +28,6 @@ const PurchaseOrderItems = ({ history }) => {
         setExpiryQuantity,
         addPurchadeOrder,
         handleDateDelete,
-        orderList,
-        setOrderList,
         purchaseList,
         setPurchaseList,
         purchaseForm,

@@ -98,7 +98,7 @@ const usePurchaseOrder = (history) => {
     const updateDetails = (e) =>{
         purchaseForm.validate()
         if(purchaseForm.isValid()){
-            let detailArray = purchaseList.details.filter((item,index)=> index != editIndex);
+            let detailArray = purchaseList.details.filter((item,index)=> index !== editIndex);
             setPurchaseList({...purchaseList,details:[...detailArray,{...purchaseForm.values}]});
             purchaseForm.reset();
         }
@@ -137,7 +137,7 @@ const usePurchaseOrder = (history) => {
         }
     }
     const addPurchadeOrderValidate = async ()=>{
-        purchaseList.orders.map((order)=>{
+        purchaseList.orders.forEach((order)=>{
             if(!order.validate){
                 alert('please validate all orders');
                 return;
@@ -213,7 +213,6 @@ const usePurchaseOrder = (history) => {
             mrp: item.mrp,
             costPrice: item.costPrice,
             expiryDates: [...item.expiryDates],
-            unit:item.unit,
             validate:item.validate,
         }));
         setSlabs([...item.slabPrice])
@@ -225,7 +224,7 @@ const usePurchaseOrder = (history) => {
         setPurchaseList({...purchaseList,orders:[...purchaseList.orders.filter((item,i)=> i !== index)]})
     }
     const deletePurchaseDetail = (index) =>{
-        setPurchaseList({...purchaseList,details:[...purchaseList.details.filter((item,i) => i !=  index)]});
+        setPurchaseList({...purchaseList,details:[...purchaseList.details.filter((item,i) => i !==  index)]});
     }
     const addSlabPrice = () =>{
         slabForm.validate();
@@ -235,7 +234,7 @@ const usePurchaseOrder = (history) => {
         }
     } 
     const deleteSlab = (index) =>{
-        setSlabs([...slabs.filter((slab,i)=> i!=index)]);
+        setSlabs([...slabs.filter((slab,i)=> i!==index)]);
     }
     const handleExpiryDate = () => {
         if (!date && expiryQuantity === 0) {
@@ -252,7 +251,7 @@ const usePurchaseOrder = (history) => {
         if (Object.keys(barcodeFilteredItem).length) {
             handleSelectOrderItems(barcodeFilteredItem)
         }
-    }, [form.values.barcode])
+    }, [form.values.barcode,barcodeFilteredItem])
     const rows = purchaseList.orders.map((element, index) => (
         <tr key={index + 1}>
             <td>{element.barcode}</td>
