@@ -66,8 +66,16 @@ const Attendance = () => {
       </td>
       <td>{element.attendance ? "Present" : "Absent"}</td>
       <td>{new Date(element.arrivingTime).toLocaleTimeString()}</td>
-      <td>{element.leavingTime ? new Date(element.leavingTime).toLocaleTimeString() : 'No Data'}</td>
-      <td>{element.totalHoursOfWork ? msToTime(element.totalHoursOfWork) : 'No Data'}</td>
+      <td>
+        {element.leavingTime
+          ? new Date(element.leavingTime).toLocaleTimeString()
+          : "No Data"}
+      </td>
+      <td>
+        {element.totalHoursOfWork
+          ? msToTime(element.totalHoursOfWork)
+          : "No Data"}
+      </td>
       <td>{element.workHoursCompleted ? "Completed" : "Not Completed"}</td>
     </tr>
   ));
@@ -86,7 +94,6 @@ const Attendance = () => {
       <td>{element.holidays}</td>
     </tr>
   ));
-  console.log({ dateWiseAttendance });
   return (
     <div className="attendance-wrapper">
       <DateRangePicker

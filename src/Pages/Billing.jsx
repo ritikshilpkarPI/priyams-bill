@@ -3,6 +3,7 @@ import { Button, Input, Loader, Table, Text, TextInput } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import BillNarrator from "../components/BillNarrator";
+import axios from "axios";
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -221,7 +222,7 @@ async function addNewBill(
   });
   window.print();
   setApiLoading(false);
-  setBill(BILL_INITIAL_STATE);
+  setBill(BILL_INITIAL_STATE)
   itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
 }
 
@@ -276,6 +277,14 @@ function handleItemNameFilter(
   });
   setFilteredData(filteredData);
 }
+function findNameOrNumber(string, value) {
+  for (let i = 0; i < value.toString().length; i++) {
+    if (string.toString()[i] !== value[i]) {
+      return false;
+    }
+  }
+  return true;
+}
 
 const Billing = ({ billID = "", loaderDisplay }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
@@ -289,8 +298,29 @@ const Billing = ({ billID = "", loaderDisplay }) => {
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const initialItemList = [...itemsList];
   const [phoneError, setPhoneError] = useState("");
+  const [userProfileData, setUserDataProfile] = useState([]);
+  const [filterUserProfile, setFilterUserProfile] = useState([]);
+  const [showProfileData, setShowProfileData] = useState(false);
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
+  const getUserData = async () => {
+    try {
+      const response = await axios.get("/api/billing/userDetails");
+      setUserDataProfile(response.data.message);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => getUserData(), []);
 
+  const handleUserSearch = (e) => {
+    setShowProfileData(true);
+    const users = userProfileData.filter((data) => {
+      const str =
+        e.target.dataset.name === "name" ? data.customerName : data._id;
+      return findNameOrNumber(str, e.target.value);
+    });
+    setFilterUserProfile(users);
+  };
   // To refresh page
 
   // To save bill items in billItem Reducer
@@ -396,20 +426,30 @@ const Billing = ({ billID = "", loaderDisplay }) => {
           <div style={{ display: "flex", gap: "30px" }}>
             <TextInput
               label="Customer Name"
+              data-name="name"
               style={{ width: "180px" }}
               value={bill.customerName}
-              onChange={(e) =>
+              onBlur={(e) => {
+                e.preventDefault();
+                setShowProfileData(false);
+              }}
+              onChange={(e) => {
                 setBill((prevBill) => ({
                   ...prevBill,
                   customerName: e.target.value,
-                }))
-              }
+                }));
+                handleUserSearch(e);
+              }}
             />
             <div style={{ display: "flex", flexDirection: "column" }}>
               <TextInput
                 type="number"
                 label="Customer Phone No."
                 value={bill.customerPhone}
+                onBlur={(e) => {
+                  e.preventDefault();
+                  setShowProfileData(false);
+                }}
                 style={{ width: "180px", paddingBottom: "4px" }}
                 onChange={(e) => {
                   e.target.value.length !== 10
@@ -419,11 +459,62 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                     ...prevBill,
                     customerPhone: e.target.value,
                   }));
+                  handleUserSearch(e);
                 }}
               />
               <div style={{ height: "10px", color: "red" }}>{phoneError}</div>
             </div>
+
+            {showProfileData && Boolean(filterUserProfile.length) ? (
+              <div className="user-profile-data">
+                <Table
+                  withBorder
+                  withColumnBorders
+                  striped
+                  highlightOnHover
+                  style={{ backgroundColor: "white" }}
+                >
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Mobile No</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filterUserProfile.map((value, key) => {
+                      return (
+                        <tr
+                          onMouseDown={() => {
+                            setBill((prevBill) => ({
+                              ...prevBill,
+                              customerPhone: value._id,
+                              customerName: value.customerName,
+                            }));
+                            setShowProfileData(false);
+                            setPhoneError("");
+                          }}
+                          key={key}
+                          style={{
+                            padding: "5px",
+                            fontSize: "16px",
+                            fontStyle: "bold",
+                            cursor: "pointer",
+                          }}
+                          className="show-data"
+                        >
+                          <td>{value.customerName}</td>
+                          <td>{value._id}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
+
           <Button
             sx={{ background: "black", marginRight: "5px" }}
             onClick={() => refreshPage(setBill, BILL_INITIAL_STATE)}
@@ -765,7 +856,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
               </td>
             </tr>
             {bill.billItems.map((item, idx) => {
-              const itemObj = { ...item, ...item.itemDetail };
+              const itemObj = { ...item.itemDetail, ...item };
               return (
                 <tr
                   className="bill-item-row"
@@ -830,7 +921,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               defaultValue={
                                 index !== itemObj.slabPricing.length - 1
                                   ? Number(itemObj.slabPricing[index + 1][1]) -
-                                    1
+                                  1
                                   : ""
                               }
                             />{" "}
@@ -1088,12 +1179,12 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 <p>{itemObj["itemName"]}</p>
                 <p className="bold-text">{itemObj["itemQuantityInBill"]}</p>
                 <p>{itemObj["itemMRPperUnit"]}</p>
-                <p>{itemObj["itemSellingPricePerUnit"].toFixed(2)}</p>
+                <p>{itemObj["itemSellingPricePerUnit"].toFixed(2) || 0}</p>
                 <p className="bold-text">
                   {(
                     itemObj["itemSellingPricePerUnit"] *
                     itemObj["itemQuantityInBill"]
-                  ).toFixed(2)}
+                  ).toFixed(2) || 0}
                 </p>
               </div>
             );
@@ -1138,7 +1229,6 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
     billItemsCopy[idx]["itemQuantityInBill"] = Number(e.target.value);
     setBill((prev) => ({ ...prev, billItems: [...billItemsCopy] }));
   };
-
   return (
     <>
       <Text

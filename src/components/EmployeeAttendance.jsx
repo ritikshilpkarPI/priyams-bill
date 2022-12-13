@@ -4,8 +4,10 @@ import { useState } from "react";
 import Axios from "axios";
 const nameOptionAndValues = [
   { value: "anjali", label: "Anjali" },
-  { value: "abhishek", label: "Abhishek" },
-  { value: "rajesh", label: "Rajesh" },
+  { value: "naveen", label: "Naveen" },
+  { value: "shivam", label: "Shivam" },
+  { value: "shahbaz", label: "Shahbaz" },
+  { value: "mohit", label: "Mohit" },
 ];
 const attendanceOptions = [
   { value: "arrival", label: "Arrival" },
