@@ -26,19 +26,55 @@ const EmployeeAttendance = () => {
   const handleAttendance = async () => {
     // Checks if the staff has marks the attendance for arrival and stops him
     // for doing it again.
+    
     const date = new Date();
     const dateString = date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "numeric",
       day: "numeric",
     });
+    // console.log(localStorage.getItem(name))
     const attendee = JSON.parse(localStorage.getItem(name));
+  console.log("attendee",attendee, attendee?.name, name, state)
+  // console.log(attendee.name)
+   
     if (!name) {
       alert("Select the name for attendance");
       return;
-    } else if (name === attendee?.name && state === "arrival") {
+    } else if (state === "arrival" && attendance === "absent") {
+      alert("You cannot mark absent for arrival");
+      return;
+    } else if (state === "arrival" && false) {
+      try {
+        const result = await Axios.request({
+          url: `/api/attendance/dailyAttendanceArrival`,
+          method: "post",
+          data: {
+            name,
+            arrivingTime: date,
+            date: dateString,
+            attendance: attendance === "present" ? true : false,
+          },
+        });
+        if (result.status === 200) {
+          localStorage.setItem(
+            result.data.message.name,
+            JSON.stringify(result.data.message)
+          );
+          alert(
+            `You have successfully marked the Arrival attendance for ${name} `
+          );
+        } else {
+          alert(result.data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } 
+    else if (name === attendee?.name && state === "arrival") {
       alert(`You have already made attendance for ${name} Arrival `);
-    } else if (state === "absent") {
+    } 
+    else if (state === "absent") {
       try {
         await Axios.request({
           url: `/api/attendance/markAbsent`,
@@ -78,32 +114,43 @@ const EmployeeAttendance = () => {
       } catch (error) {
         console.error(error);
       }
-    } else if (name === attendee?.name && state === "leave") {
+    } else if (state === "leave") {
+      console.log("into the adding leave function")
+      // console.log("attendee", attendee.id)
       try {
-        let totalHours =
-          date.getTime() - new Date(attendee.arrivingTime).getTime();
-        await Axios.request({
+        console.log("a")
+        // let totalHours =
+        //   date.getTime() - new Date(attendee.arrivingTime).getTime();
+        //   console.log(typeof attendee.arrivingTime)
+       let a = await Axios.request({
           url: `/api/attendance/dailyAttendanceLeaving`,
           method: "post",
           data: {
-            id: attendee._id,
-            attendanceToBeUpdated: {
-              arrivingTime: attendee.arrivingTime,
-              name: attendee.name,
-              leavingTime: date,
-              date: attendee.date,
-              totalHoursOfWork: totalHours, // Saving total hours in milliseconds
-              workHoursCompleted: totalHours >= totalWorkHoursInMillis,
-            },
+            name: name,
+            date: dateString,
+            // attendanceToBeUpdated: {
+            //   arrivingTime: date,
+            //   name: name,
+            //   leavingTime: date,
+            //   date: attendee.date,
+            //   totalHoursOfWork: totalHours, // Saving total hours in milliseconds
+            //   workHoursCompleted: totalHours >= totalWorkHoursInMillis,
+            // },
           },
         });
+        console.log(a)
+        if(a.status === 230){
+          alert(a.data.message)
+        } else {
         alert(
           `You have successfully marked the Leaving attendance for ${name} `
         );
+        }
       } catch (error) {
         console.error(error);
       }
-    } else {
+    } 
+    else {
       alert(`You need to add arriving Data first for ${name} `);
     }
     setName("");
