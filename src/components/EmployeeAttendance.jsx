@@ -15,7 +15,7 @@ const presentAbsentOptions = [
   { value: "present", label: "Present" },
   { value: "absent", label: "Absent" },
 ];
-const totalWorkHoursInMillis = 40680000;
+
 const EmployeeAttendance = () => {
   const [name, setName] = useState("");
   const [state, setState] = useState("arrival");
@@ -83,23 +83,12 @@ const EmployeeAttendance = () => {
       // console.log("attendee", attendee.id)
       try {
         
-        // let totalHours =
-        //   date.getTime() - new Date(attendee.arrivingTime).getTime();
-        //   console.log(typeof attendee.arrivingTime)
        let a = await Axios.request({
           url: `/api/attendance/dailyAttendanceLeaving`,
           method: "post",
           data: {
             name: name,
             date: dateString,
-            // attendanceToBeUpdated: {
-            //   arrivingTime: date,
-            //   name: name,
-            //   leavingTime: date,
-            //   date: attendee.date,
-            //   totalHoursOfWork: totalHours, // Saving total hours in milliseconds
-            //   workHoursCompleted: totalHours >= totalWorkHoursInMillis,
-            // },
           },
         });
        

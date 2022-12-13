@@ -33,20 +33,11 @@ const addDailyAttendanceLeaving = async (req, res) => {
       name: req.body.name,
       date: req.body.date,
     });
-    console.log("attendancecheck", attendancecheck);
-    if(attendancecheck){
+    if(attendancecheck && attendancecheck.attendance){
       if(!attendancecheck.todaysLeave){
       let totalHours = Date.now() - new Date(attendancecheck.arrivingTime).getTime();
      
-      // attendanceToBeUpdated: {
-      //   arrivingTime: date,
-      //   name: name,
-      //   leavingTime: date,
-      //   date: attendee.date,
-      //   totalHoursOfWork: totalHours, // Saving total hours in milliseconds
-      //   workHoursCompleted: totalHours >= totalWorkHoursInMillis,
-      // },
-     
+
       let attendanceToBeUpdated = {
         arrivingTime: attendancecheck.arrivingTime,
         name: attendancecheck.name,
@@ -69,7 +60,7 @@ const addDailyAttendanceLeaving = async (req, res) => {
    
     res.status(200).json({ message: attendance });
     } catch(error){
-      console.log("error-----------------", error)
+      res.status(500).json({ error: error.message });
     }
 
 
@@ -77,7 +68,7 @@ const addDailyAttendanceLeaving = async (req, res) => {
     res.status(230).json({ message: "You have already put attendance for today" });
   }  } 
   else {
-    res.status(230).json({ message: "You need to add arriving Data first " });
+    res.status(401).json({ message: "You need to add arriving Data first " });
   }}
    catch (error) {
     res.status(500).json({ error: error.message });
@@ -133,7 +124,7 @@ const markAbsent = async (req, res) => {
     const result = new DailyAttendance({
       name: req.body.name,
       arrivingTime: "00",
-      date: "2022-11-04T18:30:00.000Z",
+      date: req.body.date,
       attendance: false,
       leavingTime: "00",
       totalHoursOfWork: 0,
