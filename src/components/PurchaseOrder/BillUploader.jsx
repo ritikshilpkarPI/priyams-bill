@@ -1,4 +1,4 @@
-import React, { useState ,useRef,useEffect } from "react";
+import React, {useRef } from "react";
 import { Button, Group } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { Carousel } from '@mantine/carousel';

@@ -1,18 +1,14 @@
-import React ,{useEffect} from 'react'
-import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title, TextInput } from '@mantine/core';
+import React  from 'react'
+import { Button, Group, Title } from '@mantine/core';
 import { Notification } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
-import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
-import { FileInput } from '@mantine/core';
-
 import BillUploader from './BillUploader';
 import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
-import PurchaseDetailsApproval from '../PurchaseApproval/PurchaseDetailsApproval';
 import ShowOrderDetail from './ShowOrderDetail';
 
 const PurchaseOrderItems = ({ history }) => {
@@ -31,8 +27,6 @@ const PurchaseOrderItems = ({ history }) => {
         setExpiryQuantity,
         addPurchadeOrder,
         handleDateDelete,
-        orderList,
-        setOrderList,
         purchaseList,
         setPurchaseList,
         purchaseForm,
@@ -52,7 +46,6 @@ const PurchaseOrderItems = ({ history }) => {
         setMessage,
         handleItemEdit,
         deleteOrder,
-        allPurchaseList
     } = usePurchaseOrder(history)
 
     const {
@@ -107,9 +100,6 @@ const PurchaseOrderItems = ({ history }) => {
                         <Button style={{backgroundColor:'#1098AD'}} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
                         <Button style={{backgroundColor:'#40C057'}} onClick={()=>{addPurchadeOrder(false)}} type="submit">Save</Button>
                  </Group>
-            </div>
-            <div>
-            <PurchaseDetailsApproval allPurchaseList={allPurchaseList} purchaseList={purchaseList} setPurchaseList={setPurchaseList} />
             </div>
             <div>
                 <div className='list-items-container'>

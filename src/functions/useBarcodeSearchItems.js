@@ -4,9 +4,9 @@ import { AppStateContext } from "src/AppState/appState.context";
 const itemsByBarcode = {};
 
 const useBarcodeSearchItems = (searchValue, handleSelectOrderItems) => {
-    const { itemsStateAndDispatch, billItemsStateAndDispatch } =
+    const { itemsStateAndDispatch } =
         useContext(AppStateContext);
-    const [itemsList, itemsReducer] = itemsStateAndDispatch;
+    const [itemsList] = itemsStateAndDispatch;
     if (!Object.keys(itemsByBarcode).length) {
         itemsList.forEach(obj => {
             if (obj["itemBarcode"]) {

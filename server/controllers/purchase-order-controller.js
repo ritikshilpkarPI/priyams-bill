@@ -32,8 +32,26 @@ const getDetailsById = async(req,res) => {
         res.status(400).send({message:err})
     }
 }
+const updateDetailsById = async(req,res) =>{
+    try {
+        const { details , bills,orders} = req.body.new_order.purchaseList;
+        const {id} = req.body.new_order;
+         const purchaseOrder = {
+            purchasedItems:[...orders],
+            purchaseDetails:[...details],
+            billPhotos:[...bills],
+            isDraft:req.body.new_order.isDraft
+        }
+        const order = await PurchaseOrder.findByIdAndUpdate(id,purchaseOrder)
+        res.status(201).send({ message: order ,success:true})
+    } catch (error) {
+        res.status(400).send({message:error.message,success:false})
+    }
+    
+}
 module.exports = {
     addOrder,
     getOrders,
-    getDetailsById
+    getDetailsById,
+    updateDetailsById
 }

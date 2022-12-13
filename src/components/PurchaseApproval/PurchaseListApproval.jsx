@@ -1,12 +1,9 @@
 import { Button, Table } from '@mantine/core';
-import React,{createContext, useState} from 'react'
-import { Navigate } from 'react-router';
+import React from 'react'
 import { Link } from 'react-router-dom';
-// import { useNavigate } from "react-router-dom";
-// import { Navigate } from "react-router-dom";
 const PurchaseListApproval = ({list,index}) => {
     let total = 0;
-        list.purchaseDetails.map((curr)=>{
+        list.purchaseDetails.forEach((curr)=>{
            total = total + curr.paidAmount
         })
     

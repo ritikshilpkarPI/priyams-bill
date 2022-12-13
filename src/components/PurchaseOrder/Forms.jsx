@@ -1,6 +1,5 @@
 import { Box, Button, Group, NumberInput, Select, Textarea, TextInput } from '@mantine/core'
-import React ,{useState} from 'react'
-import ShowPurchaseDetails from './ShowPurchaseDetails'
+import React from 'react'
 
 const Forms = ({purchaseForm, addDetails}) => {
     

@@ -1,7 +1,4 @@
-import { Button, Table } from "@mantine/core";
 import React from "react";
-import ShowOrderDetail from "../PurchaseOrder/ShowOrderDetail";
-import ShowPurchaseDetails from "../PurchaseOrder/ShowPurchaseDetails";
 import PurchaseListApproval from "./PurchaseListApproval";
 
 

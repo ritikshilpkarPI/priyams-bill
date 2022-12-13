@@ -1,6 +1,6 @@
 import { Button, Table } from '@mantine/core';
 import React from 'react'
-import { useEffect } from 'react';
+
 
 const ShowSlabPricing = ({slabs,deleteSlab}) => {
     const rows = slabs.map((element, index) => (

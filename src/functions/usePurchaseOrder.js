@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useForm } from '@mantine/form';
-import { Button } from "@mantine/core";
 import useBarcodeSearchItems from "./useBarcodeSearchItems";
 import { Axios } from "src/utils/axios";
 
@@ -14,7 +13,6 @@ const usePurchaseOrder = (history) => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [editIndex,setEditIndex] = useState(-1);
     const [slabs,setSlabs] = useState([])
-    const [allPurchaseList,setAllPurchaseList] = useState([])
     const myLocation = useLocation();
     const [message, setMessage] = useState({
         success:false,
@@ -99,7 +97,12 @@ const usePurchaseOrder = (history) => {
             url:'/api/purchaseOrder/orderDetails/'+id,
     
         })
-        console.log(res)
+        const data = res.data.data;
+        setPurchaseList({
+            orders:data.purchasedItems,
+            details:data.purchaseDetails,
+            bills:data.billPhotos
+        })
        }catch(err){
         console.log(err)
        }
@@ -116,7 +119,7 @@ const usePurchaseOrder = (history) => {
     const updateDetails = (e) =>{
         purchaseForm.validate()
         if(purchaseForm.isValid()){
-            let detailArray = purchaseList.details.filter((item,index)=> index != editIndex);
+            let detailArray = purchaseList.details.filter((item,index)=> index !== editIndex);
             setPurchaseList({...purchaseList,details:[...detailArray,{...purchaseForm.values}]});
             purchaseForm.reset();
         }
@@ -128,14 +131,8 @@ const usePurchaseOrder = (history) => {
         
         try {
             
-            // setAllPurchaseList([...allPurchaseList,{...purchaseList}])
-            const result = await Axios({
-                method: "POST",
-                url: '/api/purchaseOrder/addNewOrder',
-                data: {
-                    new_order: {purchaseList,isDraft}
-                }
-            })
+            let result = id ? await updateOrderApi(isDraft) : await addOrderApi(isDraft)
+
             if(result.data.success){
                 setPurchaseList({
                     details:[],
@@ -155,8 +152,26 @@ const usePurchaseOrder = (history) => {
             setMessage({success:false,failed:true,error:error.message})
         }
     }
+    const addOrderApi = async(isDraft)=>{
+        return await Axios({
+            method: "POST",
+            url:'/api/purchaseOrder/addNewOrder',
+            data: {
+                new_order: {purchaseList,isDraft}
+            }
+        })
+    }
+    const updateOrderApi = async(isDraft)=>{
+        return await Axios({
+            method: "POST",
+            url:'/api/purchaseOrder/updateDetails',
+            data: {
+                new_order: {purchaseList,isDraft,id}
+            }
+        }) 
+    }
     const addPurchadeOrderValidate = async ()=>{
-        purchaseList.orders.map((order)=>{
+        purchaseList.orders.forEach((order)=>{
             if(!order.validate){
                 alert('please validate all orders');
                 return;
@@ -244,7 +259,7 @@ const usePurchaseOrder = (history) => {
         setPurchaseList({...purchaseList,orders:[...purchaseList.orders.filter((item,i)=> i !== index)]})
     }
     const deletePurchaseDetail = (index) =>{
-        setPurchaseList({...purchaseList,details:[...purchaseList.details.filter((item,i) => i !=  index)]});
+        setPurchaseList({...purchaseList,details:[...purchaseList.details.filter((item,i) => i !==  index)]});
     }
     const addSlabPrice = () =>{
         slabForm.validate();
@@ -254,7 +269,7 @@ const usePurchaseOrder = (history) => {
         }
     } 
     const deleteSlab = (index) =>{
-        setSlabs([...slabs.filter((slab,i)=> i!=index)]);
+        setSlabs([...slabs.filter((slab,i)=> i!==index)]);
     }
     const handleExpiryDate = () => {
         if (!date && expiryQuantity === 0) {
@@ -313,7 +328,6 @@ const usePurchaseOrder = (history) => {
         setMessage,
         handleItemEdit,
         deleteOrder,
-        allPurchaseList
     }
 }
 
