@@ -11,31 +11,35 @@ const purchaseOrderSchema = new mongoose.Schema({
             itemQuantity: Number,
             unit: String,
             itemRemark: String,
-            bill_photo: {
-                id: String,
-                secure_url: String
-            },
             sellingPrice: Number,
             mrp: String,
             costPrice: Number,
             createdAt: { type: Date, default: Date.now },
             expiryDates: [
                 { date: Date }
-            ]
+            ],
+            slabPrice:[{
+                startValue:Number,
+                endValue:Number,
+                pricing:Number,
+            }]
         }
     ],
-    procurementSource: String,
-    payment: String,
-    dealerName: String,
-    phoneNumber: String,
-    billAmount: Number,
-    paidAmount: Number,
-    paidBy: String,
-    chequeNumber: String,
-    paymentDate: {
-        type: Date,
-        default: Date.now
-    }
+    purchaseDetails:[
+        {
+            payment: String,
+            billAmount: Number,
+            paidAmount : Number,
+            remark : String,
+            paidBy:String,
+            procurementSource:String,
+            dealerName:String,
+            phoneNumber:Number,
+            chequeNumber:String,
+        }
+    ],
+    billPhotos:[],
+    isDraft:Boolean
 })
 
 // pre hook to make is Approved true or false if approver is their

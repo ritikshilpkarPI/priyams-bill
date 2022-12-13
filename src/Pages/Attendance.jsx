@@ -95,7 +95,7 @@ const Attendance = () => {
     </tr>
   ));
   return (
-    <div className="attendance-wrapper">
+    <tr className="attendance-wrapper">
       <DateRangePicker
         label="Select Date"
         placeholder="Pick dates range"
@@ -155,7 +155,7 @@ const Attendance = () => {
           </Table>
         </>
       )}
-    </div>
+    </tr>
   );
 };
 

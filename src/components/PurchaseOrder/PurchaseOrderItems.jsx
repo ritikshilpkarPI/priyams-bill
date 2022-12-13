@@ -1,23 +1,26 @@
-import React from 'react'
-import { Button, Group, Box, Textarea, NumberInput, Select, Table, Title, TextInput } from '@mantine/core';
+import React  from 'react'
+import { Button, Group, Table, Title} from '@mantine/core';
+import { Notification } from '@mantine/core';
+import { IconCheck, IconX } from '@tabler/icons';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
-import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
 
 
+import BillUploader from './BillUploader';
+import ShowPurchaseDetails from './ShowPurchaseDetails';
+import Forms from './Forms';
+import EditPurchaseDetail from './EditPurchaseDetail';
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
         rows,
         opened,
-        orderDetails,
         setOpened,
         handleItemFrom,
         handleExpiryDate,
         setDate,
         date,
-        setOrderDetails,
         handleSelectOrderItems,
         openDrawer,
         setOpenDrawer,
@@ -25,11 +28,29 @@ const PurchaseOrderItems = ({ history }) => {
         setExpiryQuantity,
         addPurchadeOrder,
         handleDateDelete,
+        purchaseList,
+        setPurchaseList,
+        purchaseForm,
+        addDetails,
+        handlePurchaseDetail,
+        openPurchaseDrawer,
+        setPurchaseDrawer,
+        updateDetails,
+        addPurchadeOrderValidate,
+        deletePurchaseDetail,
+        slabForm,
+        addSlabPrice,
+        deleteSlab,
+        slabs,
+        setSlabs,
+        message,
+        setMessage,
     } = usePurchaseOrder(history)
 
     const {
         filterItems
     } = useNameSearchItem(form.values.inputName)
+   
     return (
         <>
 
@@ -48,142 +69,45 @@ const PurchaseOrderItems = ({ history }) => {
              date={date} 
              filterItems={filterItems} 
              handleSelectOrderItems={handleSelectOrderItems}
-             
+             slabForm={slabForm}
+             addSlabPrice={addSlabPrice}
+             deleteSlab={deleteSlab}
+             slabs={slabs}
+             setSlabs={setSlabs}
             />
+            <EditPurchaseDetail
+            openPurchaseDrawer ={openPurchaseDrawer}
+            setPurchaseDrawer = {setPurchaseDrawer}
+            updateDetails={updateDetails}
+            purchaseForm ={purchaseForm}
+             />
+            <Notification style={{display:message.success?"flex":"none",width:'50vmin',height:"10vmin"}}  onClose={()=>{setMessage({success:false,failed:false})}} icon={<IconCheck size={18} />} color="teal" title={message.status}>
+                Purchase Details saved successfully
+            </Notification>
+            <Notification style={{display:message.failed?"flex":"none",width:'50vmin',height:"10vmin"}} onClose={()=>{setMessage({success:false,failed:false})}} icon={<IconX size={18} />} color="red" title="Failed, cannot save details">
+                {message.error}
+            </Notification>
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
 
             <div className='detail-container'>
                 <Title order={2}>Purchase Details</Title>
-                <Box sx={{ maxWidth: "80%" }} mx="auto">
-                    <Group>
-                        <Select
-                            label="Payment"
-                            placeholder='pick one payment option'
-                            data={[
-                                { value: 'fullypaid', label: 'Fully Paid' },
-                                { value: 'partiallypaid', label: 'Partially Paid' },
-                                { value: 'credit', label: 'Credit' },
-                            ]}
-                            value={orderDetails.payment == 'credit'?'credit':orderDetails.billAmount <= orderDetails.paidAmount ? 'fullypaid':'partiallypaid'}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                payment: value,
-                            }))}
-                        />
-
-                        <NumberInput
-                            withAsterisk
-                            label="Bill Amount"
-                            placeholder="total bill amount"
-                            value={orderDetails.billAmount}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                billAmount: value,
-                            }))}
-                        />
-                        <Select
-                            label="Paid by"
-                            placeholder='pick one'
-                            data={[
-                                { value: 'cash', label: 'cash' },
-                                { value: 'upi', label: 'UPI' },
-                                { value: 'cheque', label: 'Cheque' },
-                                { value: 'prepaid', label: 'Prepaid' },
-                                { value: 'neft', label: 'NEFT' },
-                            ]}
-                            value={orderDetails.paidBy}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                paidBy: value,
-                            }))}
-                        />
-                        <NumberInput
-                            withAsterisk
-                            label="Paid Amount"
-                            placeholder="total paid amount"
-                            value={orderDetails.paidAmount}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                paidAmount: value,
-                            }))}
-                        />
-                        <Select
-                            label="Procurement Source"
-                            placeholder='pick one'
-                            required
-                            data={[
-                                { value: 'walmert', label: 'Walmert' },
-                                { value: 'dmart', label: 'D Mart' },
-                                { value: 'city', label: 'City' },
-                                { value: 'distributor', label: 'Distributor' },
-                            ]}
-                            onChange={(value) => setOrderDetails((prev) => ({
-                                ...prev,
-                                procurementSource: value,
-                            }))}
-                        />
-                        <TextInput
-                            withAsterisk
-                            required
-                            label="Dealer Name"
-                            placeholder="dealer name"
-                            onChange={(e) => setOrderDetails((prev) => ({
-                                ...prev,
-                                dealerName: e.target.value,
-                            }))}
-                        />
-                        <NumberInput
-                            withAsterisk
-                            label="Mobile Number"
-                            placeholder="mobile number"
-                            formatter={(value) => String(value).length <= 10 ? value : String(value).substring(0,10)}
-                            onChange={(value) => {    
-                                if(String(value).length <= 10){
-                                    setOrderDetails((prev) => ({
-                                        ...prev,
-                                        phoneNumber: value,
-                                    }))
-                                }                      
-                            }}
-                        />
-                        {
-                            orderDetails.paidBy === "cheque" &&
-                            <NumberInput
-                                withAsterisk
-                                required
-                                label="Cheque number"
-                                placeholder="checque number"
-                                onChange={(value) => setOrderDetails((prev) => ({
-                                    ...prev,
-                                    chequeNumber: value,
-                                }))}
-                            />
-                        }
-                    </Group>
-                    <Textarea
-                        sx={{ width: "60%", marginTop: "1rem" }}
-                        placeholder="remarks"
-                        label="Your Remarks"
-                        value={orderDetails.remark}
-                        onChange={(e) => setOrderDetails((prev) => ({
-                            ...prev,
-                            remark: e.target.value,
-                        }))}
-                    />
-
-
-                    <Group position="right" mt="md">
-                        <Button onClick={addPurchadeOrder} type="submit">Submit</Button>
-                    </Group>
-                </Box>
+                <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
+                <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
+                <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} />
+                <Group position="center" mt="">
+                        <Button style={{backgroundColor:'#1098AD'}} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
+                        <Button style={{backgroundColor:'#40C057'}} onClick={()=>{addPurchadeOrder(false)}} type="submit">Save</Button>
+                 </Group>
             </div>
             <div>
                 <div className='list-items-container'>
 
                     {
-                        orderDetails.purchasedItems.length ?
+                        purchaseList.orders.length ?
+                       <>
+                        <h3 style={{margin:'2vmin'}}>Order Detail List</h3>
                             <Table withColumnBorders striped withBorder>
                                 <thead>
                                     <tr>
@@ -201,7 +125,8 @@ const PurchaseOrderItems = ({ history }) => {
                                     </tr>
                                 </thead>
                                 <tbody>{rows}</tbody>
-                            </Table> : <div></div>
+                            </Table>
+                       </> : <div></div>
                     }
 
                 </div>

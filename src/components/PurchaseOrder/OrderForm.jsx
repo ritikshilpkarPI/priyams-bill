@@ -1,15 +1,14 @@
 
-import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select, FileInput, Table , Switch } from '@mantine/core';
+import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Switch } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import useNameSearchItem from 'src/functions/useNameSearchItems';
-import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import ListDropDownItem from './ListDropDownItem';
+import ShowSlabPricing from './ShowSlabPricing';
 
-const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems}) => {
+const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems , slabForm,addSlabPrice,deleteSlab,slabs,setSlabs}) => {
     return (
         <Drawer
             opened={opened}
-            onClose={() => {form.reset(); setOpened(false)}}
+            onClose={() => {form.reset(); setSlabs([]); setOpened(false)}}
             title="Order Details"
             padding="lg"
             size="xl"
@@ -74,12 +73,6 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                         withAsterisk
                         {...form.getInputProps('itemRemark')}
                     />
-                    {/* <FileInput
-                            placeholder="Select Your Bill"
-                            label="Your resume"
-                            withAsterisk
-                            {...form.getInputProps('billPhoto')}
-                        /> */}
                     <NumberInput
                         withAsterisk
                         label="Selling Price"
@@ -141,7 +134,32 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                     }
 
 
-
+                    <div style={{marginBottom:'1vmin'}}>Slab Pricing</div>
+                    <Group>
+                    <NumberInput
+                            withAsterisk
+                            style={{width:'15vmin'}}
+                            label="Start Quantity"
+                            placeholder="start quantity"
+                            {...slabForm.getInputProps('startValue')}
+                        />
+                        <NumberInput
+                            withAsterisk
+                            style={{width:'15vmin'}}
+                            label="End Quantity"
+                            placeholder="end quantity"
+                            {...slabForm.getInputProps('endValue')}
+                        />
+                        <NumberInput
+                            withAsterisk
+                            style={{width:'15vmin'}}
+                            label="Price"
+                            placeholder="price"
+                            {...slabForm.getInputProps('pricing')}
+                        />
+                        <Button style={{marginTop:'3.5vmin'}} onClick={(e)=>{e.preventDefault(); addSlabPrice()}} type="">+</Button>
+                    </Group>
+                    <ShowSlabPricing deleteSlab={deleteSlab} slabs={slabs}/>
                     <Group position="right" mt="md">
                         <Button type="submit">Submit</Button>
                     </Group>
