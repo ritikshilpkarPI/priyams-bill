@@ -3,39 +3,32 @@ import { Button, Table } from "@mantine/core";
 const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail , deletePurchaseDetail }) => {
   const rows = purchaseList.details.map((element, index) => (
     <tr key={index + 1}>
-        <td>{element.dealerName}</td>
-        <td>{element.phoneNumber}</td>
-        <td>{element.payment}</td>
-        <td>{element.billAmount}</td>
         <td>{element.paidAmount}</td>
         <td>{element.paidBy}</td>
         <td>{element.chequeNumber}</td>
-        <td>{element.procurementSource}</td>
-        <td>{element.remark}</td>
         <td><Button onClick={() => handlePurchaseDetail(element,index)}>Edit</Button></td>
         <td><Button style={{backgroundColor:'#F03E3E'}} onClick={() => deletePurchaseDetail(index)}>Delete</Button></td>
     </tr>
   ));
+
   return (
     <div>
       {purchaseList.details.length ? (
         <>
         <h3 style={{margin:'2vmin'}}>Purchase Detail List</h3>
-        <Table withColumnBorders striped withBorder>
+        <Table style={{width:'80%',margin:'auto'}} withColumnBorders striped withBorder>
           <thead>
             <tr>
-              <th>Dealer Name</th>
-              <th>Phone Number</th>
-              <th>Payment</th>
-              <th>Bill Amount</th>
               <th>Paid Amount</th>
               <th>Paid By</th>
               <th>Cheque Number</th>
-              <th>Procurement Source</th>
-              <th>Remark</th>
             </tr>
           </thead>
-          <tbody>{rows}</tbody>
+          <tbody>{rows}
+          <tr>
+            <td><b>Total : {purchaseList.totalPaidAmount} </b></td>
+          </tr>
+          </tbody>
         </Table>
         </>
       ) : (

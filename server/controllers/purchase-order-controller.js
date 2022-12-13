@@ -2,13 +2,21 @@ const PurchaseOrder = require("../db-models/purchase-order-model");
 
 const addOrder = async (req, res) => {
     try {
-        const { details , bills,orders} = req.body.new_order.purchaseList;
-         const purchaseOrder = {
-            purchasedItems:[...orders],
-            purchaseDetails:[...details],
-            billPhotos:[...bills],
-            isDraft:req.body.new_order.isDraft
-        }
+        const { details , bills,orders,billAmount,remark,totalPaidAmount,payment,procurementSource,dealerName,phoneNumber} = req.body.new_order.purchaseList;
+        const isDraft = req.body.new_order.isDraft;
+        const purchaseOrder = {
+           purchasedItems:[...orders],
+           purchaseDetails:[...details],
+           billPhotos:[...bills],
+           isDraft,
+           billAmount,
+           remark,
+           totalPaidAmount,
+           payment,
+           procurementSource,
+           dealerName,
+           phoneNumber,
+       }
         const order = await PurchaseOrder.create(purchaseOrder)
         res.status(201).send({ message: order ,success:true})
     } catch (error) {
@@ -34,14 +42,21 @@ const getDetailsById = async(req,res) => {
 }
 const updateDetailsById = async(req,res) =>{
     try {
-        const { details , bills,orders} = req.body.new_order.purchaseList;
-        const {id} = req.body.new_order;
-         const purchaseOrder = {
-            purchasedItems:[...orders],
-            purchaseDetails:[...details],
-            billPhotos:[...bills],
-            isDraft:req.body.new_order.isDraft
-        }
+        const { details , bills,orders,billAmount,remark,totalPaidAmount,payment,procurementSource,dealerName,phoneNumber} = req.body.new_order.purchaseList;
+        const isDraft = req.body.new_order.isDraft;
+        const purchaseOrder = {
+           purchasedItems:[...orders],
+           purchaseDetails:[...details],
+           billPhotos:[...bills],
+           isDraft,
+           billAmount,
+           remark,
+           totalPaidAmount,
+           payment,
+           procurementSource,
+           dealerName,
+           phoneNumber,
+       }
         const order = await PurchaseOrder.findByIdAndUpdate(id,purchaseOrder)
         res.status(201).send({ message: order ,success:true})
     } catch (error) {

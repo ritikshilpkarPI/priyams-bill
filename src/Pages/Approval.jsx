@@ -8,7 +8,7 @@ const Approval = () => {
        .then((res)=>res.json())
        .then((data)=>{
         console.log(data.message)
-        setList([...data.message]);
+        setList(data.message);
        })
     }, [list]);
   return (

@@ -3,7 +3,7 @@ import PurchaseListApproval from "./PurchaseListApproval";
 
 
 const PurchaseDetailsApproval = ({allPurchaseList}) => {
-
+  
   return (
     <div>
         <h3>Purchase Details, approval required</h3>

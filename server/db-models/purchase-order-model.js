@@ -27,18 +27,19 @@ const purchaseOrderSchema = new mongoose.Schema({
     ],
     purchaseDetails:[
         {
-            payment: String,
-            billAmount: Number,
             paidAmount : Number,
-            remark : String,
             paidBy:String,
-            procurementSource:String,
-            dealerName:String,
-            phoneNumber:Number,
             chequeNumber:String,
         }
     ],
     billPhotos:[],
+    billAmount:Number,
+    remark:String,
+    totalPaidAmount:String,
+    payment:String,
+    procurementSource:String,
+    dealerName:String,
+    phoneNumber:Number,
     isDraft:Boolean
 })
 
