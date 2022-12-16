@@ -2,13 +2,13 @@ const cron = require('node-cron');
 const { DailyAttendance } = require("./db-models/staff-attendance");
 
 
-//   runs every day at 11:59 pm
+//   runs every day at 11:00 pm
 
 cron.schedule('00 23 * * *', async () => {
-    // 00 23 * * *
+    // 00 23 * * *       - 11:00 pm
     
 
-    //   targeting who not put leave and not put attendance
+    //   targeting who not put leave and  put arrivinig attendance
     try {
         let checkInside = await DailyAttendance.find({
             todaysLeave: false
@@ -39,7 +39,7 @@ checkInside.forEach(async (element) => {
             upsert: true,
           }
         );
-       
+
         }
         catch(error){
             console.log(error);
