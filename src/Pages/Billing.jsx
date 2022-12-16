@@ -522,13 +522,6 @@ const Billing = ({ billID = "", loaderDisplay }) => {
             Refresh
           </Button>
           <Button
-            sx={{ marginRight: "5px" }}
-            className="print-btn"
-            onClick={() => window.print()}
-          >
-            Print
-          </Button>
-          <Button
             disabled={!bill.billItems.length || bill.amountReturn < 0}
             className="print-btn"
             onClick={() =>
