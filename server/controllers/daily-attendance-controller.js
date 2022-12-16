@@ -11,7 +11,7 @@ const addDailyAttendanceArrival = async (req, res) => {
       let attendance = new DailyAttendance({
         name: req.body.name,
         arrivingTime: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: req.body.date,
         attendance: req.body.attendance,
         todaysLeave:false
       });
