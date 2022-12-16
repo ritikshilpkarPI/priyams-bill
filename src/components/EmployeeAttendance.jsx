@@ -44,7 +44,7 @@ const EmployeeAttendance = () => {
       alert("You cannot mark absent for arrival");
       return;
     } 
-    else if (state === "absent") {
+    else if (attendance === "absent") {
       try {
         await Axios.request({
           url: `/api/attendance/markAbsent`,
@@ -81,8 +81,6 @@ const EmployeeAttendance = () => {
         console.error(error);
       }
     } else if (state === "leave") {
-      console.log("into the adding leave function")
-      // console.log("attendee", attendee.id)
       try {
         
        let a = await Axios.request({
@@ -96,7 +94,8 @@ const EmployeeAttendance = () => {
        
         if(a.status === 230){
           alert(a.data.message)
-        } else {
+        } 
+        else {
         alert(
           `You have successfully marked the Leaving attendance for ${name} `
         );
