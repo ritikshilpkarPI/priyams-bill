@@ -4,7 +4,10 @@ import { useState } from "react";
 import Axios from "axios";
 const nameOptionAndValues = [
   { value: "anjali", label: "Anjali" },
-  { value: "abhishek", label: "Abhishek" },
+  { value: "naveen", label: "Naveen" },
+  { value: "shivam", label: "Shivam" },
+  { value: "shahbaz", label: "Shahbaz" },
+  { value: "mohit", label: "Mohit" },
 ];
 const attendanceOptions = [
   { value: "arrival", label: "Arrival" },
@@ -14,7 +17,7 @@ const presentAbsentOptions = [
   { value: "present", label: "Present" },
   { value: "absent", label: "Absent" },
 ];
-const totalWorkHoursInMillis = 40680000;
+
 const EmployeeAttendance = () => {
   const [name, setName] = useState("");
   const [state, setState] = useState("arrival");
@@ -23,19 +26,25 @@ const EmployeeAttendance = () => {
   const handleAttendance = async () => {
     // Checks if the staff has marks the attendance for arrival and stops him
     // for doing it again.
+    
     const date = new Date();
     const dateString = date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "numeric",
       day: "numeric",
     });
-    const attendee = JSON.parse(localStorage.getItem(name));
+   
+    // const attendee = JSON.parse(localStorage.getItem(name));
+ 
+   
     if (!name) {
       alert("Select the name for attendance");
       return;
-    } else if (name === attendee?.name && state === "arrival") {
-      alert(`You have already made attendance for ${name} Arrival `);
-    } else if (state === "absent") {
+    } else if (state === "arrival" && attendance === "absent") {
+      alert("You cannot mark absent for arrival");
+      return;
+    } 
+    else if (state === "absent") {
       try {
         await Axios.request({
           url: `/api/attendance/markAbsent`,
@@ -49,7 +58,7 @@ const EmployeeAttendance = () => {
       } catch (error) {
         console.error(error);
       }
-    } else if (name !== attendee?.name && state === "arrival") {
+    } else if (state === "arrival") {
       try {
         const result = await Axios.request({
           url: `/api/attendance/dailyAttendanceArrival`,
@@ -62,10 +71,6 @@ const EmployeeAttendance = () => {
           },
         });
         if (result.status === 200) {
-          localStorage.setItem(
-            result.data.message.name,
-            JSON.stringify(result.data.message)
-          );
           alert(
             `You have successfully marked the Arrival attendance for ${name} `
           );
@@ -75,32 +80,32 @@ const EmployeeAttendance = () => {
       } catch (error) {
         console.error(error);
       }
-    } else if (name === attendee?.name && state === "leave") {
+    } else if (state === "leave") {
+      console.log("into the adding leave function")
+      // console.log("attendee", attendee.id)
       try {
-        let totalHours =
-          date.getTime() - new Date(attendee.arrivingTime).getTime();
-        await Axios.request({
+        
+       let a = await Axios.request({
           url: `/api/attendance/dailyAttendanceLeaving`,
           method: "post",
           data: {
-            id: attendee._id,
-            attendanceToBeUpdated: {
-              arrivingTime: attendee.arrivingTime,
-              name: attendee.name,
-              leavingTime: date,
-              date: attendee.date,
-              totalHoursOfWork: totalHours, // Saving total hours in milliseconds
-              workHoursCompleted: totalHours >= totalWorkHoursInMillis,
-            },
+            name: name,
+            date: dateString,
           },
         });
+       
+        if(a.status === 230){
+          alert(a.data.message)
+        } else {
         alert(
           `You have successfully marked the Leaving attendance for ${name} `
         );
+        }
       } catch (error) {
         console.error(error);
       }
-    } else {
+    } 
+    else {
       alert(`You need to add arriving Data first for ${name} `);
     }
     setName("");
@@ -130,7 +135,7 @@ const EmployeeAttendance = () => {
           onChange={(value) => setAttendance(value)}
           defaultValue={attendance}
         />
-        <Button onClick={handleAttendance}>Submit</Button>
+        <Button style={{ marginTop: "24px" }} onClick={handleAttendance}>Submit</Button>
       </Group>
     </div>
   );
