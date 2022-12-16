@@ -6,13 +6,14 @@ const addDailyAttendanceArrival = async (req, res) => {
       name: req.body.name,
       date: req.body.date,
     });
-  //  console.log("checkInside", checkInside)
+ 
     if (!checkInside.length) {
       let attendance = new DailyAttendance({
         name: req.body.name,
-        arrivingTime: req.body.arrivingTime,
-        date: req.body.date,
+        arrivingTime: new Date(Date.now()),
+        date: new Date(Date.now()),
         attendance: req.body.attendance,
+        todaysLeave:false
       });
       await attendance.save();
       res.status(200).json({ message: attendance });
@@ -35,13 +36,13 @@ const addDailyAttendanceLeaving = async (req, res) => {
     });
     if(attendancecheck && attendancecheck.attendance){
       if(!attendancecheck.todaysLeave){
-      let totalHours = Date.now() - new Date(attendancecheck.arrivingTime).getTime();
+      let totalHours = new Date(Date.now()) - new Date(attendancecheck.arrivingTime).getTime();
      
 
       let attendanceToBeUpdated = {
         arrivingTime: attendancecheck.arrivingTime,
         name: attendancecheck.name,
-        leavingTime: Date.now(),
+        leavingTime: new Date(),
         date: attendancecheck.date,
         totalHoursOfWork: totalHours, // Saving total hours in milliseconds
         workHoursCompleted: totalHours >= 40680000,
@@ -50,7 +51,7 @@ const addDailyAttendanceLeaving = async (req, res) => {
       
       try{
     const attendance = await DailyAttendance.findByIdAndUpdate(
-      attendancecheck,
+      attendancecheck._id,
       attendanceToBeUpdated,
       {
         new: true,
@@ -66,9 +67,10 @@ const addDailyAttendanceLeaving = async (req, res) => {
 
   } else{
     res.status(230).json({ message: "You have already put attendance for today" });
-  }  } 
+  }  
+} 
   else {
-    res.status(401).json({ message: "You need to add arriving Data first " });
+    res.status(230).json({ message: "You need to add arriving Data first " });
   }}
    catch (error) {
     res.status(500).json({ error: error.message });
