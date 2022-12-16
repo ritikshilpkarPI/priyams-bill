@@ -6,13 +6,14 @@ const addDailyAttendanceArrival = async (req, res) => {
       name: req.body.name,
       date: req.body.date,
     });
-
+ 
     if (!checkInside.length) {
       let attendance = new DailyAttendance({
         name: req.body.name,
-        arrivingTime: req.body.arrivingTime,
+        arrivingTime: new Date(Date.now()),
         date: req.body.date,
         attendance: req.body.attendance,
+        todaysLeave:false
       });
       await attendance.save();
       res.status(200).json({ message: attendance });
@@ -26,21 +27,52 @@ const addDailyAttendanceArrival = async (req, res) => {
   }
 };
 const addDailyAttendanceLeaving = async (req, res) => {
-  const { id, attendanceToBeUpdated } = req.body;
+  const { name, date } = req.body;
+
   try {
-    // let attendance = await DailyAttendance.findByIdAndUpdate(id, attendanceToBeUpdated, {
-    //     new: true
-    // })
+    let attendancecheck = await DailyAttendance.findOne({
+      name: req.body.name,
+      date: req.body.date,
+    });
+    if(attendancecheck && attendancecheck.attendance){
+      if(!attendancecheck.todaysLeave){
+      let totalHours = new Date(Date.now()) - new Date(attendancecheck.arrivingTime).getTime();
+     
+
+      let attendanceToBeUpdated = {
+        arrivingTime: attendancecheck.arrivingTime,
+        name: attendancecheck.name,
+        leavingTime: new Date(),
+        date: attendancecheck.date,
+        totalHoursOfWork: totalHours, // Saving total hours in milliseconds
+        workHoursCompleted: totalHours >= 40680000,
+        todaysLeave: true,
+      }
+      
+      try{
     const attendance = await DailyAttendance.findByIdAndUpdate(
-      id,
+      attendancecheck._id,
       attendanceToBeUpdated,
       {
         new: true,
         upsert: true,
       }
     );
+   
     res.status(200).json({ message: attendance });
-  } catch (error) {
+    } catch(error){
+      res.status(500).json({ error: error.message });
+    }
+
+
+  } else{
+    res.status(230).json({ message: "You have already put attendance for today" });
+  }  
+} 
+  else {
+    res.status(230).json({ message: "You need to add arriving Data first " });
+  }}
+   catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
@@ -94,7 +126,7 @@ const markAbsent = async (req, res) => {
     const result = new DailyAttendance({
       name: req.body.name,
       arrivingTime: "00",
-      date: "2022-11-04T18:30:00.000Z",
+      date: req.body.date,
       attendance: false,
       leavingTime: "00",
       totalHoursOfWork: 0,

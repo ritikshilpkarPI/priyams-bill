@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const serverless = require("serverless-http");
 const routers = require("./routes");
 const { data } = require("./data/data");
-
+require('./nodeCron')
 const app = express();
 
 app.use(express.json({limit: '30mb'}));
@@ -73,4 +73,5 @@ async function connectDB() {
   // await addCsvDataToMongoAsJson(dbConnector);
 }
 connectDB();
+
 module.exports.handler = serverless(app);
