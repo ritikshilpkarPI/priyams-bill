@@ -13,6 +13,7 @@ const usePurchaseOrder = (history) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [editIndex, setEditIndex] = useState(-1);
   const [slabs, setSlabs] = useState([]);
+  const [isNotGetUpdated,setIsNotGetUpdated] = useState(true); 
   const myLocation = useLocation();
   const locate = useHistory();
   const [message, setMessage] = useState({
@@ -189,13 +190,13 @@ const usePurchaseOrder = (history) => {
         dealerName,
         phoneNumber,
         totalPaidAmount: purchaseList.totalPaidAmount + paidAmount,
+        
       });
       purchaseForm.values.paidAmount = 0;
       purchaseForm.values.paidBy = "";
     
     }
   };
-
   const updateDetails = (e) => {
     // purchaseForm.validate();
     if (true) {
@@ -329,7 +330,6 @@ const usePurchaseOrder = (history) => {
   };
   const handleItemFrom = (values) => {
     let sum = 0;
-
     values.expiryDates.forEach((element) => {
       sum += element.quantity;
     });
@@ -412,8 +412,9 @@ const usePurchaseOrder = (history) => {
     handleSelectOrderItems
   );
   useEffect(() => {
-    if (id) {
+    if (id && isNotGetUpdated) {
       getDetails();
+      setIsNotGetUpdated(false);
     }
     if (Object.keys(barcodeFilteredItem).length) {
       handleSelectOrderItems(barcodeFilteredItem);
