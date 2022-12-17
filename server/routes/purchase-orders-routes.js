@@ -5,7 +5,7 @@ const {
     getOrders,
     getDetailsById,
     updateDetailsById
-} = require("../controllers/purchase-order-controller");
+} = require("../controllers/purchase-order-controller");   
 
 // itemRoutes.post("/newbill", userSignupValidator, runValidation, userSignup);
 orderRoutes.get("/orders", getOrders);
