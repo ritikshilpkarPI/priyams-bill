@@ -7,7 +7,6 @@ const Approval = () => {
        fetch("/api/purchaseOrder/orders")
        .then((res)=>res.json())
        .then((data)=>{
-        console.log(data.message)
         setList(data.message);
        })
     }, []);
