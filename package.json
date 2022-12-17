@@ -58,6 +58,7 @@
     "multer": "^1.4.4",
     "multer-s3": "^2.9.0",
     "netlify-lambda": "^1.6.3",
+    "node-cron": "^3.0.2",
     "node-sass": "^7.0.1",
     "papaparse": "^5.3.2",
     "path": "^0.12.7",
