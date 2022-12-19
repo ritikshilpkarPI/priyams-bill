@@ -56,7 +56,67 @@ const usePurchaseOrder = (history) => {
     },
   });
 
-  const [orderList, setOrderList] = useState([]);
+    const [orderList, setOrderList] = useState([]);
+    
+    const slabForm = useForm({
+        initialValues:{
+            startValue:1,
+            endValue:1,
+            pricing:0,
+        },
+        validate:{
+            pricing:(value)=>(value>0?null:'price should be greated than 0')
+        }
+    })
+    const form = useForm({
+        initialValues: {
+            barcode: '',
+            inputName: '',
+            stockQuantity: '',
+            minimumQuantity: '',
+            itemQuantity: '',
+            unit: '',
+            email: '',
+            itemRemark: '',
+            sellingPrice: '',
+            mrp: '',
+            costPrice: '',
+            expiryDates: [],
+            validate:false,
+            slabPrice:[]
+        },
+        validate: {
+            stockQuantity: (value) => (form.values.validate ?(value > 0 ? null : 'Stock Quantity should be greater than 0'):null),
+            itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0':null),
+            sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0':null),
+            mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0':null),
+            costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0':null),
+        }
+    }); 
+    const [purchaseList,setPurchaseList] = useState({
+        details:[],
+        bills:[],
+        orders:[],
+        isSaved:false,
+        isDraft:false
+    })
+    const addDetails = () =>{
+        purchaseForm.validate();
+        if(purchaseForm.isValid()){
+            setPurchaseList({...purchaseList,details:[...purchaseList.details,{...purchaseForm.values}]})
+            purchaseForm.reset();
+        }
+        
+    }
+    const updateDetails = (e) =>{
+        purchaseForm.validate()
+        if(purchaseForm.isValid()){
+            let detailArray = purchaseList.details.filter((item,index)=> index !== editIndex);
+            setPurchaseList({...purchaseList,details:[...detailArray,{...purchaseForm.values}]});
+            purchaseForm.reset();
+        }
+        setEditIndex(-1);
+        setPurchaseDrawer(false)
 
   const slabForm = useForm({
     initialValues: {
@@ -160,8 +220,25 @@ const usePurchaseOrder = (history) => {
         billAmount:purchaseForm.values.billAmount,
         bills:[]
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+            console.log(error.message);
+            setMessage({success:false,failed:true,error:error.message})
+        }
+    }
+    const addPurchadeOrderValidate = async ()=>{
+        purchaseList.orders.forEach((order)=>{
+            if(!order.validate){
+                alert('please validate all orders');
+                return;
+            }
+        })
+        addPurchadeOrder(true);
+    }
+    const handleDateDelete = async (dateItem) => {
+        const dates = form.values.expiryDates.filter(element => element.date !== dateItem.date)
+        form.setValues((prev) => ({
+            expiryDates: dates
+        }));
     }
   };
 
@@ -238,6 +315,22 @@ const usePurchaseOrder = (history) => {
         })
     
         
+        form.setValues((prev) => ({
+            barcode: item.barcode,
+            inputName: item.inputName,
+            stockQuantity: item.stockQuantity,
+            minimumQuantity: item.minimumQuantity,
+            itemQuantity: item.itemQuantity,
+            unit: item.unit,
+            itemRemark: item.itemRemark,
+            sellingPrice: item.sellingPrice,
+            mrp: item.mrp,
+            costPrice: item.costPrice,
+            expiryDates: [...item.expiryDates],
+            validate:item.validate,
+        }));
+        setSlabs([...item.slabPrice])
+        setOpened(true)
 
     try {
       let result = id
@@ -367,7 +460,6 @@ const usePurchaseOrder = (history) => {
 
       return;
     }
-
     alert("Total expiry dates and stock quantity  is not matching");
   };
 
