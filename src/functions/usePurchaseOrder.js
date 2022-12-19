@@ -16,6 +16,8 @@ const usePurchaseOrder = (history) => {
   const [isNotGetUpdated,setIsNotGetUpdated] = useState(true); 
   const myLocation = useLocation();
   const locate = useHistory();
+  const [cloudBills,setCloudBills] = useState([]);
+  const [deleteBills,setDeleteBills] = useState([]);
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -50,6 +52,7 @@ const usePurchaseOrder = (history) => {
           : null,
       procurementSource: (value) =>
         value.length > 0 ? null : "Please fill this field",
+        billAmount: (value) => value > 0 ? null:"Bill Amount should be greater than 0"
     },
   });
 
@@ -144,17 +147,18 @@ const usePurchaseOrder = (history) => {
       purchaseForm.values.phoneNumber =data.phoneNumber;
       purchaseForm.values.procurementSource = data.procurementSource;
       purchaseForm.values.billAmount = data.billAmount;
+      setCloudBills(data.billPhotos);
       setPurchaseList({
         orders: data.purchasedItems,
         details: data.purchaseDetails,
-        bills: data.billPhotos,
         remark: purchaseForm.values.remark,
         payment: purchaseForm.values.payment,
         procurementSource: purchaseForm.values.procurementSource,
         dealerName: purchaseForm.values.dealerName,
         phoneNumber: purchaseForm.values.phoneNumber,
-        totalPaidAmount: data.totalPaidAmount,
+        totalPaidAmount: Number(data.totalPaidAmount),
         billAmount:purchaseForm.values.billAmount,
+        bills:[]
       });
     } catch (err) {
       console.log(err);
@@ -189,7 +193,7 @@ const usePurchaseOrder = (history) => {
         procurementSource,
         dealerName,
         phoneNumber,
-        totalPaidAmount: purchaseList.totalPaidAmount + paidAmount,
+        totalPaidAmount: purchaseList.totalPaidAmount + Number(paidAmount),
         
       });
       purchaseForm.values.paidAmount = 0;
@@ -198,7 +202,6 @@ const usePurchaseOrder = (history) => {
     }
   };
   const updateDetails = (e) => {
-    // purchaseForm.validate();
     if (true) {
       let detailArray = purchaseList.details.filter(
         (item, index) => index !== editIndex
@@ -212,7 +215,12 @@ const usePurchaseOrder = (history) => {
     setEditIndex(-1);
     setPurchaseDrawer(false);
   };
+
   const addPurchadeOrder = async (isDraft) => {
+    const errorObj = purchaseForm.validate().errors;
+    if(errorObj.hasOwnProperty('phoneNumber')||errorObj.hasOwnProperty('procurementSource')||errorObj.hasOwnProperty('remark')||errorObj.hasOwnProperty('billAmount')){
+      return;
+    }
       const {
         billAmount,
         remark,
@@ -234,7 +242,8 @@ const usePurchaseOrder = (history) => {
     try {
       let result = id
         ? await updateOrderApi(isDraft, objvalues)
-        : await addOrderApi(isDraft);
+        : await addOrderApi(isDraft,objvalues);
+      
       if (result.data.success) {
         setPurchaseList({
           details: [],
@@ -265,21 +274,25 @@ const usePurchaseOrder = (history) => {
       setMessage({ success: false, failed: true, error: error.message });
     }
   };
-  const addOrderApi = async (isDraft) => {
+  const addOrderApi = async (isDraft,purchaseObj) => {
     return await Axios({
       method: "POST",
       url: "/api/purchaseOrder/addNewOrder",
       data: {
-        new_order: { purchaseList, isDraft },
+        new_order: { purchaseObj, isDraft},
+        uploadedImages:cloudBills
       },
     });
   };
+
   const updateOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
       method: "POST",
       url: "/api/purchaseOrder/updateDetails",
       data: {
-        new_order: { purchaseObj, isDraft, id },
+        new_order: { purchaseObj, isDraft, id},
+        uploadedImages:cloudBills,
+        deleteBills
       },
     });
   };
@@ -300,7 +313,10 @@ const usePurchaseOrder = (history) => {
       expiryDates: dates,
     }));
   };
-
+ const deleteCloudBills = (index) =>{
+  setDeleteBills([...deleteBills,...cloudBills.filter((item,i) => i==index)])
+  setCloudBills([...cloudBills.filter((item,i)=> i!==index)]);
+ }
   const handleSelectOrderItems = (item) => {
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
@@ -457,6 +473,8 @@ const usePurchaseOrder = (history) => {
     setMessage,
     handleItemEdit,
     deleteOrder,
+    cloudBills,
+    deleteCloudBills
   };
 };
 

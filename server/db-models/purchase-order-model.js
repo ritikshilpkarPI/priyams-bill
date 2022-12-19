@@ -32,7 +32,10 @@ const purchaseOrderSchema = new mongoose.Schema({
             chequeNumber:String,
         }
     ],
-    billPhotos:[],
+    billPhotos:[{
+        public_id:String,
+        secure_url:String
+    }],
     billAmount:Number,
     remark:String,
     totalPaidAmount:String,
