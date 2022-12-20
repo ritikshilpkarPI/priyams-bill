@@ -1076,11 +1076,9 @@ const ItemsList = () => {
   const UseByDateElement = () => {
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+      }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1170,11 +1168,9 @@ const ItemsList = () => {
     const [savedDates, setSavedDates] = useState(data);
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+      }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1259,7 +1255,7 @@ const ItemsList = () => {
           {savedDates?.map((item, index) => {
             return (
               <div key={index} className="new-date-row">
-                <TextInput value={item.date.slice(0, 10)} readOnly></TextInput>
+                <TextInput value={item.date?.slice(0, 10)} readOnly></TextInput>
                 <NumberInput
                   className="per-date-quantity"
                   value={item.value}
@@ -1660,12 +1656,12 @@ const TableRow = ({
     const data =
       name === "quantityUnitName"
         ? [
-            { value: "kg", label: "kg" },
-            { value: "grams", label: "grams" },
-            { value: "liter", label: "liter" },
-            { value: "ml", label: "ml" },
-            { value: "Piece", label: "Piece" },
-          ]
+          { value: "kg", label: "kg" },
+          { value: "grams", label: "grams" },
+          { value: "liter", label: "liter" },
+          { value: "ml", label: "ml" },
+          { value: "Piece", label: "Piece" },
+        ]
         : categoryArray;
 
     return (
