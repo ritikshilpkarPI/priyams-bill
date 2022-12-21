@@ -12,7 +12,7 @@ const Approval = () => {
     }, []);
   return (
     <div>
-      <PurchaseDetailsApproval allPurchaseList={list}/>
+      <PurchaseDetailsApproval allPurchaseList={list} setAllPurchaseList={setList}/>
     </div>
   )
 }

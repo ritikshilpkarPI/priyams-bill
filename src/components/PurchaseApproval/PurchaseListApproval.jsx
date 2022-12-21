@@ -1,7 +1,42 @@
 import { Button, Table } from '@mantine/core';
 import React from 'react'
 import { Link } from 'react-router-dom';
-const PurchaseListApproval = ({list,index}) => {
+import { Axios } from 'src/utils/axios';
+const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) => {
+  const rejectOrder = async(id,index) => {
+   const ans =  window.confirm("Are you sure you want to reject this order?");
+   if(!ans) return;
+    try{
+      const res = await Axios({
+        method:'POST',
+        url:'/api/approval/rejectOrder/'+id,
+      })
+      const array = [...allPurchaseList];
+      array[index] = res.data.order;
+      setAllPurchaseList(array);
+      window.alert("Order rejected successfully");
+    }catch(err){
+      console.log(err);
+      window.alert('Something went wrong,unable to reject order')
+    }
+  }
+  const approveOrder = async(id) => {
+    const ans =  window.confirm("Are you sure you want to approve this order?");
+    if(!ans) return;
+    try{
+      const res = await Axios({
+        method:'POST',
+        url:'/api/approval/approveOrder/'+id,
+      })
+      const array = [...allPurchaseList];
+      array[index] = res.data.order;
+      setAllPurchaseList(array);
+      window.alert("Order approved successfully");
+    }catch(err){
+      console.log(err);
+      window.alert('Something went wrong,unable to approve order');
+    }
+  }
   return (
     <div>
       {list ? (
@@ -29,9 +64,18 @@ const PurchaseListApproval = ({list,index}) => {
             <td>{list.totalPaidAmount}</td>
             <td>{list.procurementSource}</td>
             <td>{list.remark}</td>
-            <td><Link style={{backgroundColor:'#1098AD',textDecoration:'none',height:'5vmin',padding:'1vmin 2vmin',color:'white',borderRadius:'0.5vmin'}} to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link></td>
-            <td><Button style={{backgroundColor:'#40C057'}}>Approve</Button></td>
-            <td><Button style={{backgroundColor:'#F03E3E'}}>Reject</Button></td>
+            {
+              list.isRejected || list.isApproved ? (
+                list.isRejected ? (<td>rejected</td>) :(<td>approved</td>)
+              ): (
+                <>
+                <td><Link style={{backgroundColor:'#1098AD',textDecoration:'none',height:'5vmin',padding:'1vmin 2vmin',color:'white',borderRadius:'0.5vmin'}} to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
+                </td>
+              <td><Button style={{backgroundColor:'#40C057'}} onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
+              <td><Button style={{backgroundColor:'#F03E3E'}} onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>
+                </>
+              )
+            }
           </tbody>
         </Table>
         </>

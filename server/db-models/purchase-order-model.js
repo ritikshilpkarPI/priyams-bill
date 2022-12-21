@@ -43,7 +43,15 @@ const purchaseOrderSchema = new mongoose.Schema({
     procurementSource:String,
     dealerName:String,
     phoneNumber:Number,
-    isDraft:Boolean
+    isDraft:Boolean,
+    isApproved:{
+        type:Boolean,
+        default : false
+    },
+    isRejected:{
+        type:Boolean,
+        default:false
+    }
 })
 
 // pre hook to make is Approved true or false if approver is their
