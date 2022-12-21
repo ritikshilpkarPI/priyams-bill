@@ -71,7 +71,7 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
             <td>{list.procurementSource}</td>
             <td>{list.remark}</td>
             {
-              list.isRejected || list.isApproved ? (
+              JSON.parse(localStorage.getItem("priyam-store")).role === 'admin' && list.isRejected || list.isApproved ? (
                 list.isRejected ? (<td style={{color:'red'}}>rejected</td>) :(<td style={{color:'seagreen'}}>approved</td>)
               ): (
                 <>
