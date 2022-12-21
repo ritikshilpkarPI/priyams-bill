@@ -10,6 +10,9 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
       const res = await Axios({
         method:'POST',
         url:'/api/approval/rejectOrder/'+id,
+        data:{
+          username:JSON.parse(localStorage.getItem("priyam-store")).username
+        }
       })
       const array = [...allPurchaseList];
       array[index] = res.data.order;
@@ -27,6 +30,9 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
       const res = await Axios({
         method:'POST',
         url:'/api/approval/approveOrder/'+id,
+        data:{
+          username:JSON.parse(localStorage.getItem("priyam-store")).username
+        }
       })
       const array = [...allPurchaseList];
       array[index] = res.data.order;
@@ -66,16 +72,25 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
             <td>{list.remark}</td>
             {
               list.isRejected || list.isApproved ? (
-                list.isRejected ? (<td>rejected</td>) :(<td>approved</td>)
+                list.isRejected ? (<td style={{color:'red'}}>rejected</td>) :(<td style={{color:'seagreen'}}>approved</td>)
               ): (
                 <>
                 <td><Link style={{backgroundColor:'#1098AD',textDecoration:'none',height:'5vmin',padding:'1vmin 2vmin',color:'white',borderRadius:'0.5vmin'}} to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
                 </td>
-              <td><Button style={{backgroundColor:'#40C057'}} onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
-              <td><Button style={{backgroundColor:'#F03E3E'}} onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>
+                {
+                  JSON.parse(localStorage.getItem("priyam-store")).role === 'admin' ?(
+                   <>
+                    <td><Button style={{backgroundColor:'#40C057'}} onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
+                    <td><Button style={{backgroundColor:'#F03E3E'}} onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>
+                   </>
+                  )
+                  :
+                  <></>
+                }
                 </>
               )
             }
+          
           </tbody>
         </Table>
         </>
