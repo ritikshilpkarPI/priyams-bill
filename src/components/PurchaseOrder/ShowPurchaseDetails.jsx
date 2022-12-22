@@ -32,7 +32,7 @@ const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail , deletePurch
         </Table>
         </>
       ) : (
-        <div></div>
+        <></>
       )}
     </div>
   );

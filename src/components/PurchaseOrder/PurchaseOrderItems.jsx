@@ -48,7 +48,7 @@ const PurchaseOrderItems = ({ history }) => {
         handleItemEdit,
         deleteOrder,
         cloudBills,
-        deleteCloudBills
+        deleteCloudBills,
     } = usePurchaseOrder(history)
 
     const {

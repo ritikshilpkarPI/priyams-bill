@@ -12,11 +12,13 @@ const purchaseOrderSchema = new mongoose.Schema({
             unit: String,
             itemRemark: String,
             sellingPrice: Number,
-            mrp: String,
+            mrp: Number,
             costPrice: Number,
             createdAt: { type: Date, default: Date.now },
             expiryDates: [
-                { date: Date }
+                { date: Date,
+                  quantity : Number
+                 }
             ],
             slabPrice:[{
                 startValue:Number,

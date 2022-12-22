@@ -18,6 +18,7 @@ const usePurchaseOrder = (history) => {
   const locate = useHistory();
   const [cloudBills,setCloudBills] = useState([]);
   const [deleteBills,setDeleteBills] = useState([]);
+  const [isEditable, setIsEditable] = useState(true);
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -57,9 +58,8 @@ const usePurchaseOrder = (history) => {
   });
 
     const [orderList, setOrderList] = useState([]);
-    
     const slabForm = useForm({
-        initialValues:{
+      initialValues:{
             startValue:1,
             endValue:1,
             pricing:0,
@@ -72,27 +72,28 @@ const usePurchaseOrder = (history) => {
         initialValues: {
             barcode: '',
             inputName: '',
-            stockQuantity: '',
-            minimumQuantity: '',
-            itemQuantity: '',
-            unit: '',
+            stockQuantity: 0,
+            minimumQuantity: 0,
+            itemQuantity: 0,
+            unit: 0,
             email: '',
             itemRemark: '',
-            sellingPrice: '',
-            mrp: '',
-            costPrice: '',
+            sellingPrice: 0,
+            mrp: 0,
+            costPrice: 0,
             expiryDates: [],
             validate:false,
             slabPrice:[]
-        },
-        validate: {
+          },
+          validate: {
             stockQuantity: (value) => (form.values.validate ?(value > 0 ? null : 'Stock Quantity should be greater than 0'):null),
             itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0':null),
             sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0':null),
             mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0':null),
             costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0':null),
-        }
-    }); 
+          }
+        }); 
+    
     const [purchaseList,setPurchaseList] = useState({
         details:[],
         bills:[],
@@ -101,7 +102,6 @@ const usePurchaseOrder = (history) => {
         isDraft:false
     })
   const id = myLocation.state?.id;
-
   const getDetails = async () => {
     try {
       const res = await Axios({
@@ -112,7 +112,7 @@ const usePurchaseOrder = (history) => {
 
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment =data.payment;
-      purchaseForm.values.dealerName = data.dealerName;
+      purchaseForm.values.dealerName = data.dealerName?data.dealerName:"";
       purchaseForm.values.phoneNumber =data.phoneNumber;
       purchaseForm.values.procurementSource = data.procurementSource;
       purchaseForm.values.billAmount = data.billAmount;
@@ -317,26 +317,30 @@ const usePurchaseOrder = (history) => {
     });
     if (sum === values.stockQuantity || !form.values.validate) {
       form.values.slabPrice = [...slabs];
+      let ordersUpdated = [...purchaseList.orders.filter((order)=> order.barcode !== values.barcode)]
       setPurchaseList({
         ...purchaseList,
         orders: [
-          ...purchaseList.orders.filter(
-            (item) => item.barcode !== values.barcode
-          ),
-          values,
+          ...ordersUpdated,
+          values
         ],
       });
 
       form.reset();
       setSlabs([]);
       setOpened(false);
-
+      setEditIndex(-1)
+      setIsEditable(true)
       return;
     }
     alert("Total expiry dates and stock quantity  is not matching");
   };
 
-  const handleItemEdit = (item) => {
+  const handleItemEdit = (item,index) => {
+    setIsEditable(false)
+    if(index){
+      setEditIndex(index);
+    }
     form.setValues((prev) => ({
       barcode: item.barcode,
       inputName: item.inputName,
@@ -397,7 +401,7 @@ const usePurchaseOrder = (history) => {
       getDetails();
       setIsNotGetUpdated(false);
     }
-    if (Object.keys(barcodeFilteredItem).length) {
+    if (Object.keys(barcodeFilteredItem).length && isEditable) {
       handleSelectOrderItems(barcodeFilteredItem);
     }
   }, [form.values.barcode]);
@@ -439,7 +443,7 @@ const usePurchaseOrder = (history) => {
     handleItemEdit,
     deleteOrder,
     cloudBills,
-    deleteCloudBills
+    deleteCloudBills,
   };
 };
 

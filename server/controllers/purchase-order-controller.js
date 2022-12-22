@@ -20,6 +20,7 @@ const addOrder = async (req, res) => {
       procurementSource,
       dealerName,
       phoneNumber,
+      minimumQuantity,
     } = req.body.new_order.purchaseObj;
     const isDraft = req.body.new_order.isDraft;
 
@@ -36,6 +37,7 @@ const addOrder = async (req, res) => {
       procurementSource,
       dealerName,
       phoneNumber,
+      minimumQuantity
     };
     const order = await PurchaseOrder.create(purchaseOrder);
     res.status(201).send({ message: order, success: true });
@@ -73,6 +75,7 @@ const updateDetailsById = async (req, res) => {
       procurementSource,
       dealerName,
       phoneNumber,
+      minimumQuantity
     } = req.body.new_order.purchaseObj;
     const isDraft = req.body.new_order.isDraft;
     const id = req.body.new_order.id;
@@ -100,6 +103,7 @@ const updateDetailsById = async (req, res) => {
       procurementSource,
       dealerName,
       phoneNumber,
+      minimumQuantity
     };
     let order = await PurchaseOrder.findByIdAndUpdate(id, purchaseOrder);
 
@@ -108,7 +112,18 @@ const updateDetailsById = async (req, res) => {
     res.status(400).send({ message: error.message, success: false });
   }
 };
-
+const draftOrder = async (req,res)=>{
+  
+  try{
+    const {id} = req.body;
+    const order = await PurchaseOrder.findByIdAndUpdate(id,{
+      isDraft:true
+    },{new : true});
+    res.status(200).send({message:"order drafted successfully",success:true,order});
+  }catch(err){
+    res.status(400).send({message:err.message,success:false})
+  }
+}
 const uploadImages = (images) => {
   return new Promise((resolve, reject) => {
     var billPhotos = [];
@@ -155,4 +170,5 @@ module.exports = {
   getOrders,
   getDetailsById,
   updateDetailsById,
+  draftOrder
 };

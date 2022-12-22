@@ -23,7 +23,7 @@ const ShowSlabPricing = ({slabs,deleteSlab}) => {
           <tbody>{rows}</tbody>
         </Table>
       ) : (
-        <div></div>
+        <></>
       )}
     </div>
   )
