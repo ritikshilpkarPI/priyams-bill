@@ -19,6 +19,7 @@ const usePurchaseOrder = (history) => {
   const [cloudBills,setCloudBills] = useState([]);
   const [deleteBills,setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
+  const [prevPaidAmount, setPrevPaidAmount] = useState(0);
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -127,7 +128,7 @@ const usePurchaseOrder = (history) => {
         phoneNumber: purchaseForm.values.phoneNumber,
         totalPaidAmount: Number(data.totalPaidAmount),
         billAmount:purchaseForm.values.billAmount,
-        bills:[]
+        bills:[],
       });
     } catch (error) {
             console.log(error.message);
@@ -178,22 +179,31 @@ const usePurchaseOrder = (history) => {
         procurementSource,
         dealerName,
         phoneNumber,
-        totalPaidAmount: purchaseList.totalPaidAmount + Number(paidAmount),
+        totalPaidAmount: purchaseList.totalPaidAmount?purchaseList.totalPaidAmount + purchaseForm.values.paidAmount:purchaseForm.values.paidAmount,
         
       });
+
       purchaseForm.values.paidAmount = 0;
       purchaseForm.values.paidBy = "";
     
     }
   };
   const updateDetails = (e) => {
+    let prevTotal = purchaseList.totalPaidAmount;
+    let newPaidAmount = purchaseForm.values.paidAmount;
+    let newTotal = prevPaidAmount > newPaidAmount ? prevTotal +(newPaidAmount - prevPaidAmount) : prevTotal - prevPaidAmount + newPaidAmount;
     if (true) {
       let detailArray = purchaseList.details.filter(
         (item, index) => index !== editIndex
       );
       setPurchaseList({
         ...purchaseList,
-        details: [...detailArray, { ...purchaseForm.values }],
+        details: [...detailArray,  {
+          paidAmount: purchaseForm.values.paidAmount,
+          paidBy: purchaseForm.values.paidBy,
+          chequeNumber: purchaseForm.values.chequeNumber,
+        },],
+        totalPaidAmount:newTotal
       });
       purchaseForm.reset();
     }
@@ -226,7 +236,6 @@ const usePurchaseOrder = (history) => {
       let result = id
         ? await updateOrderApi(isDraft, objvalues)
         : await addOrderApi(isDraft,objvalues);
-      
       if (result.data.success) {
         setPurchaseList({
           details: [],
@@ -297,16 +306,17 @@ const usePurchaseOrder = (history) => {
   };
   const handlePurchaseDetail = (element, index) => {
     purchaseForm.setValues((prev) => ({
-      payment: element.payment,
-      billAmount: element.billAmount,
-      paidAmount: element.paidAmount,
-      remark: element.remark,
-      paidBy: element.paidBy,
-      procurementSource: element.procurementSource,
-      dealerName: element.dealerName,
-      phoneNumber: element.phoneNumber,
-      chequeNumber: element.chequeNumber,
+      payment: element.payment||'',
+      billAmount: element.billAmount||0,
+      paidAmount: element.paidAmount||0,
+      remark: element.remark||'',
+      paidBy: element.paidBy||'',
+      procurementSource: element.procurementSource||'',
+      dealerName: element.dealerName||'',
+      phoneNumber: element.phoneNumber||'',
+      chequeNumber: element.chequeNumber||'',
     }));
+    setPrevPaidAmount(element.paidAmount)
     setEditIndex(index);
     setPurchaseDrawer(true);
   };

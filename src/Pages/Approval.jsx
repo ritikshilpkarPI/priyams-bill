@@ -9,7 +9,7 @@ const Approval = () => {
        .then((data)=>{
         const role = JSON.parse(localStorage.getItem("priyam-store")).role;
         let pendingArray = data.orders.filter(
-          (list) => list.isRejected === false && list.isApproved === false && (role === 'admin' ? list.isDraft === true:true)
+          (list) => list.isRejected === false && list.isApproved === false && (role === 'admin' ? list.isDraft === true:list.isDraft === false)
         );
         let approvedArray = [];
 
@@ -19,7 +19,7 @@ const Approval = () => {
           );
         }
         let rejectedArray = data.orders.filter(
-          (list) => list.isRejected === true && list.isDraft === false
+          (list) => list.isRejected === true
         );
         setList([...pendingArray,...rejectedArray,...approvedArray]);
        })

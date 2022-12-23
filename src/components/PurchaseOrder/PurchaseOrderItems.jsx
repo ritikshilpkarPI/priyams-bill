@@ -97,7 +97,7 @@ const PurchaseOrderItems = ({ history }) => {
             <div className='detail-container'>
                 <Title order={2}>Purchase Details</Title>
                 <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
-                <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
+                <ShowPurchaseDetails  deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
                 <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills}/>
                 <Group position="center" mt="">
                         <Button style={{backgroundColor:'#1098AD'}} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
@@ -106,7 +106,7 @@ const PurchaseOrderItems = ({ history }) => {
             </div>
             <div>
                 <div className='list-items-container'>
-                    <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder}/>
+                    <ShowOrderDetail  purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder}/>
                 </div>
 
             </div>
