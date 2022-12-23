@@ -14,6 +14,7 @@ const purchaseOrderSchema = new mongoose.Schema({
             sellingPrice: Number,
             mrp: Number,
             costPrice: Number,
+            validate:Boolean,
             createdAt: { type: Date, default: Date.now },
             expiryDates: [
                 { date: Date,

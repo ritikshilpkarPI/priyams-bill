@@ -53,8 +53,8 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
     const order  = allPurchaseList[index];
     let validate = true;
     order.purchasedItems.forEach((item)=>{
-      if(item.barcode.length <= 0 || item.inputName.length <= 0 || item.stockQuantity <= 0 || item.sellingPrice <= 0 || item.minimumQuantity <= 0 || item.mrp <= 0 || item.costPrice <= 0){
-        alert('Cannot draft orders, some fields are missing,please fill all the fields');
+      if(!item.validate){
+        alert('Cannot draft orders, please validate the orders');
         validate = false;
         return;
       }

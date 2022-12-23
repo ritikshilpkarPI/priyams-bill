@@ -79,7 +79,6 @@ const updateDetailsById = async (req, res) => {
     } = req.body.new_order.purchaseObj;
     const isDraft = req.body.new_order.isDraft;
     const id = req.body.new_order.id;
-
     //ALREADY UPLOADED IMAGES
     const uploadedImages = req.body.uploadedImages;
     const delImages = req.body.deleteBills;

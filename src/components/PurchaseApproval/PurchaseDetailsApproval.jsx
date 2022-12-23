@@ -21,7 +21,6 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
       setAllPurchaseList([...rejectedArray, ...approvedArray, ...pendingArray]);
     }
   };
-
   return (
     <div style={{ width: "100%" ,marginBottom:'10vmin'}}>
       <h3>Purchase Details, approval required</h3>
