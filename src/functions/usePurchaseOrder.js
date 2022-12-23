@@ -380,6 +380,7 @@ const usePurchaseOrder = (history) => {
     setPurchaseList({
       ...purchaseList,
       details: [...purchaseList.details.filter((item, i) => i !== index)],
+      totalPaidAmount:purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount
     });
   };
   const addSlabPrice = () => {
