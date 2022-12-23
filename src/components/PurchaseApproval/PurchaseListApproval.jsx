@@ -52,7 +52,6 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
     }
     const order  = allPurchaseList[index];
     let validate = true;
-
     order.purchasedItems.forEach((item)=>{
       if(item.barcode.length <= 0 || item.inputName.length <= 0 || item.stockQuantity <= 0 || item.sellingPrice <= 0 || item.minimumQuantity <= 0 || item.mrp <= 0 || item.costPrice <= 0){
         alert('Cannot draft orders, some fields are missing,please fill all the fields');
@@ -109,6 +108,11 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
             <td>{list.procurementSource}</td>
             <td>{list.remark}</td>
             {
+              list.isApproved?<></>:<td><Link style={{backgroundColor:'#1098AD',textDecoration:'none',height:'5vmin',padding:'1vmin 2vmin',color:'white',borderRadius:'0.5vmin'}} to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
+              </td>
+            }
+            {
+              
               JSON.parse(localStorage.getItem("priyam-store")).role === 'admin'?
               list.isRejected || list.isApproved ? (
                 list.isRejected ? (<td style={{color:'red'}}>rejected</td>) :(<td style={{color:'seagreen'}}>approved</td>)
@@ -127,8 +131,6 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
                 <td style={{color:'red'}}>rejected</td>
                 </>
                }
-                <td><Link style={{backgroundColor:'#1098AD',textDecoration:'none',height:'5vmin',padding:'1vmin 2vmin',color:'white',borderRadius:'0.5vmin'}} to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
-                </td>
               </>
             }
             </tr>
