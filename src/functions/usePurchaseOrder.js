@@ -183,8 +183,11 @@ const usePurchaseOrder = (history) => {
         
       });
 
-      purchaseForm.values.paidAmount = 0;
-      purchaseForm.values.paidBy = "";
+      purchaseForm.setValues((prev)=>({
+        paidAmount:0,
+        chequeNumber:'',
+        paidBy:''
+      }))
     
     }
   };
@@ -205,8 +208,12 @@ const usePurchaseOrder = (history) => {
         },],
         totalPaidAmount:newTotal
       });
-      purchaseForm.reset();
     }
+    purchaseForm.setValues((prev)=>({
+      paidAmount:0,
+      chequeNumber:'',
+      paidBy:''
+    }))
     setEditIndex(-1);
     setPurchaseDrawer(false);
   };
@@ -306,14 +313,8 @@ const usePurchaseOrder = (history) => {
   };
   const handlePurchaseDetail = (element, index) => {
     purchaseForm.setValues((prev) => ({
-      payment: element.payment||'',
-      billAmount: element.billAmount||0,
       paidAmount: element.paidAmount||0,
-      remark: element.remark||'',
       paidBy: element.paidBy||'',
-      procurementSource: element.procurementSource||'',
-      dealerName: element.dealerName||'',
-      phoneNumber: element.phoneNumber||'',
       chequeNumber: element.chequeNumber||'',
     }));
     setPrevPaidAmount(element.paidAmount)
