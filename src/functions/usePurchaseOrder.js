@@ -19,6 +19,7 @@ const usePurchaseOrder = (history) => {
   const [cloudBills,setCloudBills] = useState([]);
   const [deleteBills,setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
+  const [Loading, setLoading] = useState(false)
   const [prevPaidAmount, setPrevPaidAmount] = useState(0);
   const [message, setMessage] = useState({
     success: false,
@@ -220,12 +221,24 @@ const usePurchaseOrder = (history) => {
     setEditIndex(-1);
     setPurchaseDrawer(false);
   };
-
+  const hideScrollBar = ()=>{
+    document.body.style.overflowY='hidden';
+    document.body.style.overflowX='hidden';
+  }
+  const showScrollBar = ()=>{
+    document.body.style.overflowY='visible'
+    document.body.style.overflowX='visible';
+  }
   const addPurchadeOrder = async (isDraft) => {
     const errorObj = purchaseForm.validate().errors;
     if(errorObj.hasOwnProperty('phoneNumber')||errorObj.hasOwnProperty('procurementSource')||errorObj.hasOwnProperty('remark')||errorObj.hasOwnProperty('billAmount')){
       return;
     }
+
+    setLoading(true);
+    window.scrollTo(0,0);
+    hideScrollBar();
+
       const {
         billAmount,
         remark,
@@ -263,6 +276,7 @@ const usePurchaseOrder = (history) => {
         let status = isDraft ? "Draft Successfully" : "Saved Successfully";
         setMessage({ success: true, failed: false, status });
         purchaseForm.reset();
+        showScrollBar();
         locate.push('/approval')
       } else {
         setMessage({
@@ -271,9 +285,13 @@ const usePurchaseOrder = (history) => {
           error: result.data.message,
         });
       }
+      showScrollBar();
+      setLoading(false)
     } catch (error) {
       console.log(error.message);
       setMessage({ success: false, failed: true, error: error.message });
+      showScrollBar();
+      setLoading(false)
     }
   };
   const addOrderApi = async (isDraft,purchaseObj) => {
@@ -459,6 +477,7 @@ const usePurchaseOrder = (history) => {
     deleteOrder,
     cloudBills,
     deleteCloudBills,
+    Loading
   };
 };
 

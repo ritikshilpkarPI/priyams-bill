@@ -1,5 +1,5 @@
 import React  from 'react'
-import { Button, Group, Table, Title} from '@mantine/core';
+import { Button, Group, Loader, LoadingOverlay, Table, Title} from '@mantine/core';
 import { Notification } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
@@ -49,6 +49,7 @@ const PurchaseOrderItems = ({ history }) => {
         deleteOrder,
         cloudBills,
         deleteCloudBills,
+        Loading
     } = usePurchaseOrder(history)
 
     const {
@@ -56,6 +57,7 @@ const PurchaseOrderItems = ({ history }) => {
     } = useNameSearchItem(form.values.inputName)
     return (
         <>
+        <LoadingOverlay style={{width:`${document.body.scrollWidth}`,height:`${document.body.scrollHeight}`,position:'absolute'}} visible={Loading} overlayBlur={1} />
 
             <OrderForm 
             openDrawer = {openDrawer} 
@@ -93,6 +95,9 @@ const PurchaseOrderItems = ({ history }) => {
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
+
+            
+                
 
             <div className='detail-container'>
                 <Title order={2}>Purchase Details</Title>
