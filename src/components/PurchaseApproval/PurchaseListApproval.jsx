@@ -52,10 +52,14 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
     }
     const order  = allPurchaseList[index];
     let validate = true;
+    let once = true;
     order.purchasedItems.forEach((item)=>{
       if(!item.validate){
-        alert('Cannot draft orders, please validate the orders');
         validate = false;
+        if(once){
+          alert('Cannot draft orders, please validate the orders');
+          once=false;
+        }
         return;
       }
     })

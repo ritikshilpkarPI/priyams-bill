@@ -136,12 +136,15 @@ const usePurchaseOrder = (history) => {
         }
     }
     const addPurchadeOrderValidate = async ()=>{
+      let flag = false;
         purchaseList.orders.forEach((order)=>{
             if(!order.validate){
                 alert('please validate all orders');
+                flag = true;
                 return;
             }
         })
+        if(flag) return;
         addPurchadeOrder(true);
     }
     const handleDateDelete = async (dateItem) => {
