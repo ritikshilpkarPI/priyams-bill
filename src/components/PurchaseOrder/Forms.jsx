@@ -1,5 +1,5 @@
 import { Box, Button, Group, NumberInput, Select, Textarea, TextInput } from '@mantine/core'
-import React  from 'react'
+import React from 'react'
 
 const Forms = ({purchaseForm, addDetails}) => {
     

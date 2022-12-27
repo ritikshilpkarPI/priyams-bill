@@ -8,5 +8,6 @@ export const PAGES = {
     stockquantity: "Shortage Items",
     report: "Report",
     purchase: "Purchase",
-    attendance: "Attendance"
+    attendance: "Attendance",
+    approval:"Approval"
 };

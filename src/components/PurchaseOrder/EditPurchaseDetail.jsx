@@ -1,37 +1,20 @@
 
 import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select } from '@mantine/core';
-
+import '../../CSS/editPurchaseDetail.css'
 const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetails,purchaseForm}) => {
+
     return (
         <Drawer
             opened={openPurchaseDrawer}
             onClose={() => {purchaseForm.reset(); setPurchaseDrawer(false)}}
-            title="Order Details"
-            padding="lg"
-            size="xl"
+            title="Paid Details"
+            position='left'
+            padding="xl"
+            size={300}
         >
-                <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
+                <Box sx={{ maxWidth: 400 }} className="edit-purchase-box" mx="auto" my={'lg'}>
                 <form onSubmit={(e)=>{e.preventDefault(); updateDetails(e); }}>
                 <Group>
-                        <Select
-                            label="Payment"
-                            placeholder='pick one payment option'
-                            data={[
-                                { value: 'fullypaid', label: 'Fully Paid' },
-                                { value: 'partiallypaid', label: 'Partially Paid' },
-                                { value: 'credit', label: 'Credit' },
-                            ]}
-                           
-                            {...purchaseForm.getInputProps('payment')}
-                        />
-
-                        <NumberInput
-                            withAsterisk
-                            label="Bill Amount"
-                            placeholder="total bill amount"
-                            
-                            {...purchaseForm.getInputProps('billAmount')}
-                        />
                         <Select
                             label="Paid by"
                             placeholder='pick one'
@@ -51,35 +34,7 @@ const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetail
                             placeholder="total paid amount"
                             
                             {...purchaseForm.getInputProps('paidAmount')}
-                        />
-                        <Select
-                            label="Procurement Source"
-                            placeholder='pick one'
-                            required
-                            data={[
-                                { value: 'walmart', label: 'Walmart' },
-                                { value: 'dmart', label: 'D Mart' },
-                                { value: 'city', label: 'City' },
-                                { value: 'distributor', label: 'Distributor' },
-                            ]}
-                            {...purchaseForm.getInputProps('procurementSource')}
-                        />
-                        <TextInput
-                            withAsterisk
-                            required
-                            label="Dealer Name"
-                            placeholder="dealer name"
-                            {...purchaseForm.getInputProps('dealerName')}
-                        />
-                        <NumberInput
-                            withAsterisk
-                            label="Mobile Number"
-                            placeholder="mobile number"
-                           
-                            formatter={(value) => String(value) === '0' ?'': String(value).length <= 10 ? value : String(value).substring(0,10)}
-                            {...purchaseForm.getInputProps('phoneNumber')}
-                        />
-                       
+                        />                      
                         {   
                             purchaseForm.getInputProps('paidBy').value === "cheque" &&
                             <NumberInput
@@ -91,13 +46,7 @@ const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetail
                             />
                         }
                     </Group>
-                    <Textarea
-                        sx={{ width: "60%", marginTop: "1rem" }}
-                        placeholder="remarks"
-                        label="Your Remarks"
-                        {...purchaseForm.getInputProps('remark')}
-                    />
-                    <Group position="right" mt="md">
+                    <Group position="left" style={{marginTop:'3vmin'}}>
                         <Button type="submit">Update Details</Button>
                     </Group>
                 </form>

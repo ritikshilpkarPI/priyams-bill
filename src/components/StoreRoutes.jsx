@@ -17,8 +17,10 @@ import {
     Report,
     Login,
     PurchaseOrder,
-    Attendance
+    Attendance,
+    Approval
 } from '../Pages'
+
 
 const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
     return (
@@ -51,10 +53,12 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                     <Route exact path="/stockquantity" component={StockQuantity} />
                     <Route exact path="/allBill" component={BillFeed} />
                     <Route exact path="/purchase" component={PurchaseOrder} />
+                    {/* <Route exact path="/purchase/:id" component={PurchaseOrder} /> */}
                     <ProtectedComponent role={access.REPORT_PAGE_ROUTE}>
                         <Route exact path="/report" component={Report} />
                     </ProtectedComponent>
                     <Route exact path="/edit/:billingID" component={EditBill} />
+                    <Route exact path="/approval" component={Approval}/>
                 </ProtectedRoutes>
             </Switch>
         </Suspense>

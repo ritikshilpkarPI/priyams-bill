@@ -6,15 +6,15 @@ import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
 
-
 import BillUploader from './BillUploader';
 import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
+import ShowOrderDetail from './ShowOrderDetail';
+
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
-        rows,
         opened,
         setOpened,
         handleItemFrom,
@@ -45,12 +45,15 @@ const PurchaseOrderItems = ({ history }) => {
         setSlabs,
         message,
         setMessage,
+        handleItemEdit,
+        deleteOrder,
+        cloudBills,
+        deleteCloudBills
     } = usePurchaseOrder(history)
 
     const {
         filterItems
     } = useNameSearchItem(form.values.inputName)
-   
     return (
         <>
 
@@ -95,7 +98,7 @@ const PurchaseOrderItems = ({ history }) => {
                 <Title order={2}>Purchase Details</Title>
                 <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
                 <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
-                <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} />
+                <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills}/>
                 <Group position="center" mt="">
                         <Button style={{backgroundColor:'#1098AD'}} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
                         <Button style={{backgroundColor:'#40C057'}} onClick={()=>{addPurchadeOrder(false)}} type="submit">Save</Button>
@@ -103,32 +106,7 @@ const PurchaseOrderItems = ({ history }) => {
             </div>
             <div>
                 <div className='list-items-container'>
-
-                    {
-                        purchaseList.orders.length ?
-                       <>
-                        <h3 style={{margin:'2vmin'}}>Order Detail List</h3>
-                            <Table withColumnBorders striped withBorder>
-                                <thead>
-                                    <tr>
-                                        <th>Barcode</th>
-                                        <th>Item name</th>
-                                        <th>Stock Quantity</th>
-                                        <th>Minimum Quantity</th>
-                                        <th>Item Quantity</th>
-                                        <th>Unit</th>
-                                        <th>Selling Price</th>
-                                        <th>MRP</th>
-                                        <th>Cost Price</th>
-                                        <th>Expiry Dates</th>
-                                        <th>Update</th>
-                                    </tr>
-                                </thead>
-                                <tbody>{rows}</tbody>
-                            </Table>
-                       </> : <div></div>
-                    }
-
+                    <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder}/>
                 </div>
 
             </div>
