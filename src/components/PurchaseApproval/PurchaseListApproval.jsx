@@ -84,25 +84,10 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
     }
   }
   return (
-    <div>
+    <>
       {list? (
         <>
-        <Table className='purchase-list' withColumnBorders striped withBorder>
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>Dealer Name</th>
-              <th>Phone Number</th>
-              <th>Payment</th>
-              <th>Bill Amount</th>
-              <th>Paid Amount</th>
-              <th>Procurement Source</th>
-              <th>Remark</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
+
             <td>{index+1}</td>
             <td>{list.dealerName}</td>
             <td>{list.phoneNumber}</td>
@@ -117,7 +102,9 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
                 <>
                     {
                       list.isRejected || list.isApproved ? (
-                        list.isRejected ? (<td style={{color:'red'}}>rejected</td>) :(<td style={{color:'seagreen'}}>approved</td>)
+                        list.isRejected ? (<><td style={{color:'red'}}>rejected</td></>) :(<><td style={{color:'seagreen'}}>approved</td></>
+                        )
+  
                       ):
                       <>
                       <td><Link className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
@@ -141,14 +128,12 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
                  </td>
                 </>
               }
-            </tr>
-          </tbody>
-        </Table>
+          
         </>
       ) : (
         <></>
       )}
-    </div>
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PurchaseListApproval from "./PurchaseListApproval";
-import { Select } from "@mantine/core";
+import { Select, Table } from "@mantine/core";
 import '../../CSS/purchaseApproval.css'
 const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
   const filterOrders = (value) => {
@@ -39,17 +39,36 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
         ]}
         onChange={filterOrders}
       />
-      {allPurchaseList.map((list, index) => {
-        return (
-          <PurchaseListApproval
-            allPurchaseList={allPurchaseList}
-            setAllPurchaseList={setAllPurchaseList}
-            key={index}
-            list={list}
-            index={index}
-          />
+      <Table className='purchase-list' withColumnBorders striped withBorder>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Dealer Name</th>
+              <th>Phone Number</th>
+              <th>Payment</th>
+              <th>Bill Amount</th>
+              <th>Paid Amount</th>
+              <th>Procurement Source</th>
+              <th>Remark</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          {allPurchaseList.map((list, index) => {
+        return (            
+          <tr>
+            <PurchaseListApproval
+              allPurchaseList={allPurchaseList}
+              setAllPurchaseList={setAllPurchaseList}
+              key={index}
+              list={list}
+              index={index}
+            />
+          </tr>
         );
       })}
+      </tbody>
+       </Table>
     </div>
   );
 };

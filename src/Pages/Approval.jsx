@@ -25,7 +25,7 @@ const Approval = () => {
               }else if(totalArray[i].isDraft){
                 pendingArray.push(totalArray[i]);
               }
-          }else if(!totalArray[i].isDraft){
+          }else{
             if(totalArray[i].isRejected){
               rejectedArray.push(totalArray[i]);
             }else if(!totalArray[i].isApproved){
