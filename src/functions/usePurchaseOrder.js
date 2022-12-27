@@ -4,6 +4,7 @@ import useBarcodeSearchItems from "./useBarcodeSearchItems";
 import { Axios } from "src/utils/axios";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+
 const usePurchaseOrder = (history) => {
   const [opened, setOpened] = useState(false);
   const [openPurchaseDrawer, setPurchaseDrawer] = useState(false);
@@ -134,7 +135,7 @@ const usePurchaseOrder = (history) => {
       console.log(error.message);
       setMessage({ success: false, failed: true, error: error.message })
     }
-  }
+  };
   const addPurchadeOrderValidate = async () => {
     let flag = false;
     purchaseList.orders.forEach((order) => {
@@ -164,7 +165,6 @@ const usePurchaseOrder = (history) => {
         procurementSource,
         dealerName,
         phoneNumber,
-        paidAmount,
       } = purchaseForm.values;
       setPurchaseList({
         ...purchaseList,
@@ -433,8 +433,8 @@ const usePurchaseOrder = (history) => {
     if (Object.keys(barcodeFilteredItem).length && isEditable) {
       handleSelectOrderItems(barcodeFilteredItem);
     }
+    // eslint-disable-next-line
   }, [form.values.barcode]);
-
   return {
     form,
     opened,
