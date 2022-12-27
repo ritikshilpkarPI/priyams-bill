@@ -2,7 +2,7 @@ import { Button, Table } from '@mantine/core';
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { Axios } from 'src/utils/axios';
-
+import '../../CSS/purchaseApproval.css'
 const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) => {
   const rejectOrder = async(id,index) => {
    const ans =  window.confirm("Are you sure you want to reject this order?");
@@ -87,7 +87,7 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
     <div>
       {list ? (
         <>
-        <Table style={{width:'90%',margin:'auto'}} withColumnBorders striped withBorder>
+        <Table className='purchase-list' withColumnBorders striped withBorder>
           <thead>
             <tr>
               <th>S.No</th>
@@ -132,7 +132,11 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
                <td><Button style={{backgroundColor:'#40C057'}} onClick={()=>{draftOrder(list._id,index)}}>Draft</Button></td>
                 :
                 <>
-                <td style={{color:'red'}}>rejected</td>
+                <td><Link className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
+                </td>
+              <td><Button className='approve-btn' onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
+              <td><Button className='reject-btn' onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>
+
                 </>
                }
               </>

@@ -1,6 +1,6 @@
 
 import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select } from '@mantine/core';
-
+import '../../CSS/editPurchaseDetail.css'
 const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetails,purchaseForm}) => {
 
     return (
@@ -12,7 +12,7 @@ const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetail
             padding="xl"
             size={300}
         >
-                <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} style={{display:'flex',justifyContent:'center'}}>
+                <Box sx={{ maxWidth: 400 }} className="edit-purchase-box" mx="auto" my={'lg'}>
                 <form onSubmit={(e)=>{e.preventDefault(); updateDetails(e); }}>
                 <Group>
                         <Select

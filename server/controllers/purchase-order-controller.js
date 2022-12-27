@@ -2,9 +2,9 @@ const PurchaseOrder = require("../db-models/purchase-order-model");
 const cloudinary = require("cloudinary");
 
 cloudinary.config({
-  cloud_name: "ddyxdmsbt",
-  api_key: "746828226867264",
-  api_secret: "MTDkW6-kwXmA6m7ZpL7XXhADvk8",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
 });
 
 const addOrder = async (req, res) => {

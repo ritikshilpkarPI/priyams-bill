@@ -16,7 +16,7 @@ const ShowPurchaseDetails = ({ purchaseList , handlePurchaseDetail , deletePurch
       {purchaseList.details.length ? (
         <>
         <h3 style={{margin:'2vmin'}}>Purchase Detail List</h3>
-        <Table style={{width:'80%',margin:'auto'}} withColumnBorders striped withBorder>
+        <Table className="show-detail-table" withColumnBorders striped withBorder>
           <thead>
             <tr>
               <th>Paid Amount</th>
