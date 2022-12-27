@@ -5,6 +5,7 @@ import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 
 const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems , slabForm,addSlabPrice,deleteSlab,slabs,setSlabs}) => {
+    
     return (
         <Drawer
             opened={opened}
@@ -103,7 +104,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                             label="Expiry  date"
                             inputFormat="MM/DD/YYYY"
                             value={date}
-                            onChange={(day) => setDate(day)}
+                            onChange={(day) => {setDate(day);}}
                             style={{ width: "140px" }}
                         />
                         <NumberInput
@@ -120,7 +121,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                         form.values.expiryDates?.length ? form.values.expiryDates.map((date, index) => {
                             return (<div className='expiry-date-showcase' key={index + 1} >
                                 <TextInput
-                                    value={date.date}
+                                    value={new Date(date.date).toLocaleDateString()}
                                     readOnly
 
                                 />

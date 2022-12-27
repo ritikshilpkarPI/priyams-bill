@@ -1,5 +1,5 @@
 import React  from 'react'
-import { Button, Group, Table, Title} from '@mantine/core';
+import { Button, Group, Loader, LoadingOverlay, Table, Title} from '@mantine/core';
 import { Notification } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
@@ -11,7 +11,7 @@ import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
-
+import '../../CSS/purchaseOrder.css'
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
@@ -48,7 +48,8 @@ const PurchaseOrderItems = ({ history }) => {
         handleItemEdit,
         deleteOrder,
         cloudBills,
-        deleteCloudBills
+        deleteCloudBills,
+        Loading
     } = usePurchaseOrder(history)
 
     const {
@@ -56,6 +57,7 @@ const PurchaseOrderItems = ({ history }) => {
     } = useNameSearchItem(form.values.inputName)
     return (
         <>
+        <LoadingOverlay className='purchase-loader' visible={Loading} overlayBlur={1} />
 
             <OrderForm 
             openDrawer = {openDrawer} 
@@ -94,10 +96,13 @@ const PurchaseOrderItems = ({ history }) => {
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
 
+            
+                
+
             <div className='detail-container'>
                 <Title order={2}>Purchase Details</Title>
                 <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails}/>
-                <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
+                <ShowPurchaseDetails  deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail}/>
                 <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills}/>
                 <Group position="center" mt="">
                         <Button style={{backgroundColor:'#1098AD'}} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
@@ -106,7 +111,7 @@ const PurchaseOrderItems = ({ history }) => {
             </div>
             <div>
                 <div className='list-items-container'>
-                    <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder}/>
+                    <ShowOrderDetail  purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder}/>
                 </div>
 
             </div>

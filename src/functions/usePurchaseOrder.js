@@ -18,6 +18,9 @@ const usePurchaseOrder = (history) => {
   const locate = useHistory();
   const [cloudBills,setCloudBills] = useState([]);
   const [deleteBills,setDeleteBills] = useState([]);
+  const [isEditable, setIsEditable] = useState(true);
+  const [Loading, setLoading] = useState(false)
+  const [prevPaidAmount, setPrevPaidAmount] = useState(0);
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -57,9 +60,8 @@ const usePurchaseOrder = (history) => {
   });
 
     const [orderList, setOrderList] = useState([]);
-    
     const slabForm = useForm({
-        initialValues:{
+      initialValues:{
             startValue:1,
             endValue:1,
             pricing:0,
@@ -72,27 +74,28 @@ const usePurchaseOrder = (history) => {
         initialValues: {
             barcode: '',
             inputName: '',
-            stockQuantity: '',
-            minimumQuantity: '',
-            itemQuantity: '',
-            unit: '',
+            stockQuantity: 0,
+            minimumQuantity: 0,
+            itemQuantity: 0,
+            unit: 0,
             email: '',
             itemRemark: '',
-            sellingPrice: '',
-            mrp: '',
-            costPrice: '',
+            sellingPrice: 0,
+            mrp: 0,
+            costPrice: 0,
             expiryDates: [],
             validate:false,
             slabPrice:[]
-        },
-        validate: {
+          },
+          validate: {
             stockQuantity: (value) => (form.values.validate ?(value > 0 ? null : 'Stock Quantity should be greater than 0'):null),
             itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0':null),
             sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0':null),
             mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0':null),
             costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0':null),
-        }
-    }); 
+          }
+        }); 
+    
     const [purchaseList,setPurchaseList] = useState({
         details:[],
         bills:[],
@@ -101,7 +104,6 @@ const usePurchaseOrder = (history) => {
         isDraft:false
     })
   const id = myLocation.state?.id;
-
   const getDetails = async () => {
     try {
       const res = await Axios({
@@ -112,7 +114,7 @@ const usePurchaseOrder = (history) => {
 
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment =data.payment;
-      purchaseForm.values.dealerName = data.dealerName;
+      purchaseForm.values.dealerName = data.dealerName?data.dealerName:"";
       purchaseForm.values.phoneNumber =data.phoneNumber;
       purchaseForm.values.procurementSource = data.procurementSource;
       purchaseForm.values.billAmount = data.billAmount;
@@ -127,7 +129,7 @@ const usePurchaseOrder = (history) => {
         phoneNumber: purchaseForm.values.phoneNumber,
         totalPaidAmount: Number(data.totalPaidAmount),
         billAmount:purchaseForm.values.billAmount,
-        bills:[]
+        bills:[],
       });
     } catch (error) {
             console.log(error.message);
@@ -135,12 +137,15 @@ const usePurchaseOrder = (history) => {
         }
     }
     const addPurchadeOrderValidate = async ()=>{
+      let flag = false;
         purchaseList.orders.forEach((order)=>{
             if(!order.validate){
                 alert('please validate all orders');
+                flag = true;
                 return;
             }
         })
+        if(flag) return;
         addPurchadeOrder(true);
     }
     const handleDateDelete = async (dateItem) => {
@@ -178,34 +183,61 @@ const usePurchaseOrder = (history) => {
         procurementSource,
         dealerName,
         phoneNumber,
-        totalPaidAmount: purchaseList.totalPaidAmount + Number(paidAmount),
+        totalPaidAmount: purchaseList.totalPaidAmount?purchaseList.totalPaidAmount + purchaseForm.values.paidAmount:purchaseForm.values.paidAmount,
         
       });
-      purchaseForm.values.paidAmount = 0;
-      purchaseForm.values.paidBy = "";
+
+      purchaseForm.setValues((prev)=>({
+        paidAmount:0,
+        chequeNumber:'',
+        paidBy:''
+      }))
     
     }
   };
   const updateDetails = (e) => {
+    let prevTotal = purchaseList.totalPaidAmount;
+    let newPaidAmount = purchaseForm.values.paidAmount;
+    let newTotal = prevPaidAmount > newPaidAmount ? prevTotal +(newPaidAmount - prevPaidAmount) : prevTotal - prevPaidAmount + newPaidAmount;
     if (true) {
       let detailArray = purchaseList.details.filter(
         (item, index) => index !== editIndex
       );
       setPurchaseList({
         ...purchaseList,
-        details: [...detailArray, { ...purchaseForm.values }],
+        details: [...detailArray,  {
+          paidAmount: purchaseForm.values.paidAmount,
+          paidBy: purchaseForm.values.paidBy,
+          chequeNumber: purchaseForm.values.chequeNumber,
+        },],
+        totalPaidAmount:newTotal
       });
-      purchaseForm.reset();
     }
+    purchaseForm.setValues((prev)=>({
+      paidAmount:0,
+      chequeNumber:'',
+      paidBy:''
+    }))
     setEditIndex(-1);
     setPurchaseDrawer(false);
   };
-
+  const hideScrollBar = ()=>{
+    window.scrollTo(0,0);
+    document.body.style.overflowY='hidden';
+    document.body.style.overflowX='hidden';
+  }
+  const showScrollBar = ()=>{
+    document.body.style.overflowY='visible'
+    document.body.style.overflowX='visible';
+  }
   const addPurchadeOrder = async (isDraft) => {
     const errorObj = purchaseForm.validate().errors;
     if(errorObj.hasOwnProperty('phoneNumber')||errorObj.hasOwnProperty('procurementSource')||errorObj.hasOwnProperty('remark')||errorObj.hasOwnProperty('billAmount')){
       return;
     }
+
+    setLoading(true);
+    hideScrollBar();
       const {
         billAmount,
         remark,
@@ -226,7 +258,6 @@ const usePurchaseOrder = (history) => {
       let result = id
         ? await updateOrderApi(isDraft, objvalues)
         : await addOrderApi(isDraft,objvalues);
-      
       if (result.data.success) {
         setPurchaseList({
           details: [],
@@ -244,6 +275,7 @@ const usePurchaseOrder = (history) => {
         let status = isDraft ? "Draft Successfully" : "Saved Successfully";
         setMessage({ success: true, failed: false, status });
         purchaseForm.reset();
+        showScrollBar();
         locate.push('/approval')
       } else {
         setMessage({
@@ -252,9 +284,13 @@ const usePurchaseOrder = (history) => {
           error: result.data.message,
         });
       }
+      showScrollBar();
+      setLoading(false)
     } catch (error) {
       console.log(error.message);
       setMessage({ success: false, failed: true, error: error.message });
+      showScrollBar();
+      setLoading(false)
     }
   };
   const addOrderApi = async (isDraft,purchaseObj) => {
@@ -297,16 +333,11 @@ const usePurchaseOrder = (history) => {
   };
   const handlePurchaseDetail = (element, index) => {
     purchaseForm.setValues((prev) => ({
-      payment: element.payment,
-      billAmount: element.billAmount,
-      paidAmount: element.paidAmount,
-      remark: element.remark,
-      paidBy: element.paidBy,
-      procurementSource: element.procurementSource,
-      dealerName: element.dealerName,
-      phoneNumber: element.phoneNumber,
-      chequeNumber: element.chequeNumber,
+      paidAmount: element.paidAmount||0,
+      paidBy: element.paidBy||'',
+      chequeNumber: element.chequeNumber||'',
     }));
+    setPrevPaidAmount(element.paidAmount)
     setEditIndex(index);
     setPurchaseDrawer(true);
   };
@@ -317,26 +348,30 @@ const usePurchaseOrder = (history) => {
     });
     if (sum === values.stockQuantity || !form.values.validate) {
       form.values.slabPrice = [...slabs];
+      let ordersUpdated = [...purchaseList.orders.filter((order)=> order.barcode !== values.barcode)]
       setPurchaseList({
         ...purchaseList,
         orders: [
-          ...purchaseList.orders.filter(
-            (item) => item.barcode !== values.barcode
-          ),
-          values,
+          ...ordersUpdated,
+          values
         ],
       });
 
       form.reset();
       setSlabs([]);
       setOpened(false);
-
+      setEditIndex(-1)
+      setIsEditable(true)
       return;
     }
     alert("Total expiry dates and stock quantity  is not matching");
   };
 
-  const handleItemEdit = (item) => {
+  const handleItemEdit = (item,index) => {
+    setIsEditable(false)
+    if(index){
+      setEditIndex(index);
+    }
     form.setValues((prev) => ({
       barcode: item.barcode,
       inputName: item.inputName,
@@ -365,6 +400,7 @@ const usePurchaseOrder = (history) => {
     setPurchaseList({
       ...purchaseList,
       details: [...purchaseList.details.filter((item, i) => i !== index)],
+      totalPaidAmount:purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount
     });
   };
   const addSlabPrice = () => {
@@ -397,7 +433,7 @@ const usePurchaseOrder = (history) => {
       getDetails();
       setIsNotGetUpdated(false);
     }
-    if (Object.keys(barcodeFilteredItem).length) {
+    if (Object.keys(barcodeFilteredItem).length && isEditable) {
       handleSelectOrderItems(barcodeFilteredItem);
     }
   }, [form.values.barcode]);
@@ -439,7 +475,8 @@ const usePurchaseOrder = (history) => {
     handleItemEdit,
     deleteOrder,
     cloudBills,
-    deleteCloudBills
+    deleteCloudBills,
+    Loading
   };
 };
 

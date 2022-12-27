@@ -1,20 +1,19 @@
 import React from "react";
 import PurchaseListApproval from "./PurchaseListApproval";
-import { Select } from "@mantine/core";
+import { Select, Table } from "@mantine/core";
 import '../../CSS/purchaseApproval.css'
 const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
   const filterOrders = (value) => {
     let pendingArray = [];
     let approvedArray = [];
     let rejectedArray = [];
-    let totalArray = allPurchaseList;
-    for (let i = 0; i < totalArray.length; i++) {
-      if (totalArray[i].isRejected === true) {
-        rejectedArray.push(totalArray[i]);
-      } else if (totalArray[i].isApproved === true) {
-        approvedArray.push(totalArray[i]);
+    for (let i = 0; i < allPurchaseList.length; i++) {
+      if (allPurchaseList[i].isRejected === true) {
+        rejectedArray.push(allPurchaseList[i]);
+      } else if (allPurchaseList[i].isApproved === true) {
+        approvedArray.push(allPurchaseList[i]);
       } else {
-        pendingArray.push(totalArray[i]);
+        pendingArray.push(allPurchaseList[i]);
       }
     }
     if (value === "pending") {
@@ -25,6 +24,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
       setAllPurchaseList([...rejectedArray, ...approvedArray, ...pendingArray]);
     }
   };
+
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
@@ -39,17 +39,36 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
         ]}
         onChange={filterOrders}
       />
-      {allPurchaseList.map((list, index) => {
-        return (
-          <PurchaseListApproval
-            allPurchaseList={allPurchaseList}
-            setAllPurchaseList={setAllPurchaseList}
-            key={index}
-            list={list}
-            index={index}
-          />
+      <Table className='purchase-list' withColumnBorders striped withBorder>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Dealer Name</th>
+              <th>Phone Number</th>
+              <th>Payment</th>
+              <th>Bill Amount</th>
+              <th>Paid Amount</th>
+              <th>Procurement Source</th>
+              <th>Remark</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          {allPurchaseList.map((list, index) => {
+        return (            
+          <tr>
+            <PurchaseListApproval
+              allPurchaseList={allPurchaseList}
+              setAllPurchaseList={setAllPurchaseList}
+              key={index}
+              list={list}
+              index={index}
+            />
+          </tr>
         );
       })}
+      </tbody>
+       </Table>
     </div>
   );
 };
