@@ -121,7 +121,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                         form.values.expiryDates?.length ? form.values.expiryDates.map((date, index) => {
                             return (<div className='expiry-date-showcase' key={index + 1} >
                                 <TextInput
-                                    value={String(date.date).slice(0,10)}
+                                    value={new Date(date.date).toLocaleDateString()}
                                     readOnly
 
                                 />

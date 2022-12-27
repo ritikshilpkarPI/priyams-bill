@@ -222,6 +222,7 @@ const usePurchaseOrder = (history) => {
     setPurchaseDrawer(false);
   };
   const hideScrollBar = ()=>{
+    window.scrollTo(0,0);
     document.body.style.overflowY='hidden';
     document.body.style.overflowX='hidden';
   }
@@ -236,9 +237,7 @@ const usePurchaseOrder = (history) => {
     }
 
     setLoading(true);
-    window.scrollTo(0,0);
     hideScrollBar();
-
       const {
         billAmount,
         remark,

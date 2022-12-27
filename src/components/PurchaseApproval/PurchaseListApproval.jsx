@@ -85,7 +85,7 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
   }
   return (
     <div>
-      {list ? (
+      {list? (
         <>
         <Table className='purchase-list' withColumnBorders striped withBorder>
           <thead>
@@ -111,36 +111,36 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
             <td>{list.totalPaidAmount}</td>
             <td>{list.procurementSource}</td>
             <td>{list.remark}</td>
-            {
-              list.isApproved?<></>:<td><Link style={{backgroundColor:'#1098AD',textDecoration:'none',height:'5vmin',padding:'1vmin 2vmin',color:'white',borderRadius:'0.5vmin'}} to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
-              </td>
-            }
-            {
-              
-              JSON.parse(localStorage.getItem("priyam-store")).role === 'admin'?
-              list.isRejected || list.isApproved ? (
-                list.isRejected ? (<td style={{color:'red'}}>rejected</td>) :(<td style={{color:'seagreen'}}>approved</td>)
-              ):
-              <>
-               <td><Button style={{backgroundColor:'#40C057'}} onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
-               <td><Button style={{backgroundColor:'#F03E3E'}} onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>   
-              </>
-              :
-              <>
-               {
-                !list.isRejected ?
-               <td><Button style={{backgroundColor:'#40C057'}} onClick={()=>{draftOrder(list._id,index)}}>Draft</Button></td>
+              {
+                JSON.parse(localStorage.getItem("priyam-store")).role === 'admin'
+                ? 
+                <>
+                    {
+                      list.isRejected || list.isApproved ? (
+                        list.isRejected ? (<td style={{color:'red'}}>rejected</td>) :(<td style={{color:'seagreen'}}>approved</td>)
+                      ):
+                      <>
+                      <td><Link className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
+                      </td>
+                       <td><Button className='approve-btn' onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
+                       <td><Button className='reject-btn'  onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>   
+                      </>
+                    }
+                </>
                 :
                 <>
-                <td><Link className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
-                </td>
-              <td><Button className='approve-btn' onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
-              <td><Button className='reject-btn' onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>
-
+                {
+                  list.isRejected
+                   ?
+                   <td style={{color:'red'}}>rejected</td>
+                   :<>
+                   <td><Button className='approve-btn' onClick={()=>{draftOrder(list._id,index)}}>Draft</Button></td>
+                   </>
+                }
+                 <td><Link className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
+                 </td>
                 </>
-               }
-              </>
-            }
+              }
             </tr>
           </tbody>
         </Table>

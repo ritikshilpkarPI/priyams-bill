@@ -7,14 +7,13 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
     let pendingArray = [];
     let approvedArray = [];
     let rejectedArray = [];
-    let totalArray = allPurchaseList;
-    for (let i = 0; i < totalArray.length; i++) {
-      if (totalArray[i].isRejected === true) {
-        rejectedArray.push(totalArray[i]);
-      } else if (totalArray[i].isApproved === true) {
-        approvedArray.push(totalArray[i]);
+    for (let i = 0; i < allPurchaseList.length; i++) {
+      if (allPurchaseList[i].isRejected === true) {
+        rejectedArray.push(allPurchaseList[i]);
+      } else if (allPurchaseList[i].isApproved === true) {
+        approvedArray.push(allPurchaseList[i]);
       } else {
-        pendingArray.push(totalArray[i]);
+        pendingArray.push(allPurchaseList[i]);
       }
     }
     if (value === "pending") {
@@ -25,6 +24,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
       setAllPurchaseList([...rejectedArray, ...approvedArray, ...pendingArray]);
     }
   };
+
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>

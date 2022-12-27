@@ -11,7 +11,7 @@ import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
-
+import '../../CSS/purchaseOrder.css'
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
@@ -57,7 +57,7 @@ const PurchaseOrderItems = ({ history }) => {
     } = useNameSearchItem(form.values.inputName)
     return (
         <>
-        <LoadingOverlay style={{width:`${document.body.scrollWidth}`,height:`${document.body.scrollHeight}`,position:'absolute'}} visible={Loading} overlayBlur={1} />
+        <LoadingOverlay className='purchase-loader' visible={Loading} overlayBlur={1} />
 
             <OrderForm 
             openDrawer = {openDrawer} 
