@@ -14,13 +14,13 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
       <td>{element.mrp}</td>
       <td>{element.costPrice}</td>
       <td>
-        {element.expiryDates.map((date,index) => {
+        {element.expiryDates.map((date, index) => {
           return (
             <table key={index}>
               <tbody>
                 <tr>
                   <th>Date</th>
-                  <td>{String(date.date).slice(0,10)}</td>
+                  <td>{String(date.date).slice(0, 10)}</td>
                 </tr>
                 <tr>
                   <th>Quantity</th>
@@ -31,8 +31,9 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
           );
         })}
       </td>
+      <td>{element.itemRemark || "No remarks"}</td>
       <td>
-        <Button onClick={() => handleItemEdit(element,index)}>Edit</Button>
+        <Button onClick={() => handleItemEdit(element, index)}>Edit</Button>
       </td>
       <td>
         <Button
@@ -62,6 +63,7 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
                 <th>MRP</th>
                 <th>Cost Price</th>
                 <th>Expiry Dates</th>
+                <th>Remarks</th>
                 <th>Update</th>
               </tr>
             </thead>

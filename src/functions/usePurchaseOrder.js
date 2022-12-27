@@ -13,11 +13,11 @@ const usePurchaseOrder = (history) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [editIndex, setEditIndex] = useState(-1);
   const [slabs, setSlabs] = useState([]);
-  const [isNotGetUpdated,setIsNotGetUpdated] = useState(true); 
+  const [isNotGetUpdated, setIsNotGetUpdated] = useState(true);
   const myLocation = useLocation();
   const locate = useHistory();
-  const [cloudBills,setCloudBills] = useState([]);
-  const [deleteBills,setDeleteBills] = useState([]);
+  const [cloudBills, setCloudBills] = useState([]);
+  const [deleteBills, setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
   const [Loading, setLoading] = useState(false)
   const [prevPaidAmount, setPrevPaidAmount] = useState(0);
@@ -41,7 +41,6 @@ const usePurchaseOrder = (history) => {
     },
     validate: {
       payment: (value) => (value.length > 0 ? null : "Please fill this field"),
-      remark: (value) => (value.length > 0 ? null : "Please fill this field"),
       paidBy: (value) => (value.length > 0 ? null : "Please fill this field"),
       dealerName: (value) =>
         value.length > 0 ? null : "Please fill this field",
@@ -55,54 +54,54 @@ const usePurchaseOrder = (history) => {
           : null,
       procurementSource: (value) =>
         value.length > 0 ? null : "Please fill this field",
-        billAmount: (value) => value > 0 ? null:"Bill Amount should be greater than 0"
+      billAmount: (value) => value > 0 ? null : "Bill Amount should be greater than 0"
     },
   });
 
-    const [orderList, setOrderList] = useState([]);
-    const slabForm = useForm({
-      initialValues:{
-            startValue:1,
-            endValue:1,
-            pricing:0,
-        },
-        validate:{
-            pricing:(value)=>(value>0?null:'price should be greated than 0')
-        }
-    })
-    const form = useForm({
-        initialValues: {
-            barcode: '',
-            inputName: '',
-            stockQuantity: 0,
-            minimumQuantity: 0,
-            itemQuantity: 0,
-            unit: 0,
-            email: '',
-            itemRemark: '',
-            sellingPrice: 0,
-            mrp: 0,
-            costPrice: 0,
-            expiryDates: [],
-            validate:false,
-            slabPrice:[]
-          },
-          validate: {
-            stockQuantity: (value) => (form.values.validate ?(value > 0 ? null : 'Stock Quantity should be greater than 0'):null),
-            itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0':null),
-            sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0':null),
-            mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0':null),
-            costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0':null),
-          }
-        }); 
-    
-    const [purchaseList,setPurchaseList] = useState({
-        details:[],
-        bills:[],
-        orders:[],
-        isSaved:false,
-        isDraft:false
-    })
+  const [orderList, setOrderList] = useState([]);
+  const slabForm = useForm({
+    initialValues: {
+      startValue: 1,
+      endValue: 1,
+      pricing: 0,
+    },
+    validate: {
+      pricing: (value) => (value > 0 ? null : 'price should be greated than 0')
+    }
+  })
+  const form = useForm({
+    initialValues: {
+      barcode: '',
+      inputName: '',
+      stockQuantity: 0,
+      minimumQuantity: 0,
+      itemQuantity: 0,
+      unit: 0,
+      email: '',
+      itemRemark: '',
+      sellingPrice: 0,
+      mrp: 0,
+      costPrice: 0,
+      expiryDates: [],
+      validate: false,
+      slabPrice: []
+    },
+    validate: {
+      stockQuantity: (value) => (form.values.validate ? (value > 0 ? null : 'Stock Quantity should be greater than 0') : null),
+      itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0' : null),
+      sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0' : null),
+      mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0' : null),
+      costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
+    }
+  });
+
+  const [purchaseList, setPurchaseList] = useState({
+    details: [],
+    bills: [],
+    orders: [],
+    isSaved: false,
+    isDraft: false
+  })
   const id = myLocation.state?.id;
   const getDetails = async () => {
     try {
@@ -113,9 +112,9 @@ const usePurchaseOrder = (history) => {
       const data = res.data.data;
 
       purchaseForm.values.remark = data.remark;
-      purchaseForm.values.payment =data.payment;
-      purchaseForm.values.dealerName = data.dealerName?data.dealerName:"";
-      purchaseForm.values.phoneNumber =data.phoneNumber;
+      purchaseForm.values.payment = data.payment;
+      purchaseForm.values.dealerName = data.dealerName ? data.dealerName : "";
+      purchaseForm.values.phoneNumber = data.phoneNumber;
       purchaseForm.values.procurementSource = data.procurementSource;
       purchaseForm.values.billAmount = data.billAmount;
       setCloudBills(data.billPhotos);
@@ -128,32 +127,32 @@ const usePurchaseOrder = (history) => {
         dealerName: purchaseForm.values.dealerName,
         phoneNumber: purchaseForm.values.phoneNumber,
         totalPaidAmount: Number(data.totalPaidAmount),
-        billAmount:purchaseForm.values.billAmount,
-        bills:[],
+        billAmount: purchaseForm.values.billAmount,
+        bills: [],
       });
     } catch (error) {
-            console.log(error.message);
-            setMessage({success:false,failed:true,error:error.message})
-        }
+      console.log(error.message);
+      setMessage({ success: false, failed: true, error: error.message })
     }
-    const addPurchadeOrderValidate = async ()=>{
-      let flag = false;
-        purchaseList.orders.forEach((order)=>{
-            if(!order.validate){
-                alert('please validate all orders');
-                flag = true;
-                return;
-            }
-        })
-        if(flag) return;
-        addPurchadeOrder(true);
-    }
-    const handleDateDelete = async (dateItem) => {
-        const dates = form.values.expiryDates.filter(element => element.date !== dateItem.date)
-        form.setValues((prev) => ({
-            expiryDates: dates
-        }));
-    }
+  }
+  const addPurchadeOrderValidate = async () => {
+    let flag = false;
+    purchaseList.orders.forEach((order) => {
+      if (!order.validate) {
+        alert('please validate all orders');
+        flag = true;
+        return;
+      }
+    })
+    if (flag) return;
+    addPurchadeOrder(true);
+  }
+  const handleDateDelete = async (dateItem) => {
+    const dates = form.values.expiryDates.filter(element => element.date !== dateItem.date)
+    form.setValues((prev) => ({
+      expiryDates: dates
+    }));
+  }
 
   const addDetails = () => {
     purchaseForm.validate();
@@ -183,81 +182,81 @@ const usePurchaseOrder = (history) => {
         procurementSource,
         dealerName,
         phoneNumber,
-        totalPaidAmount: purchaseList.totalPaidAmount?purchaseList.totalPaidAmount + purchaseForm.values.paidAmount:purchaseForm.values.paidAmount,
-        
+        totalPaidAmount: purchaseList.totalPaidAmount ? purchaseList.totalPaidAmount + purchaseForm.values.paidAmount : purchaseForm.values.paidAmount,
+
       });
 
-      purchaseForm.setValues((prev)=>({
-        paidAmount:0,
-        chequeNumber:'',
-        paidBy:''
+      purchaseForm.setValues((prev) => ({
+        paidAmount: 0,
+        chequeNumber: '',
+        paidBy: ''
       }))
-    
+
     }
   };
   const updateDetails = (e) => {
     let prevTotal = purchaseList.totalPaidAmount;
     let newPaidAmount = purchaseForm.values.paidAmount;
-    let newTotal = prevPaidAmount > newPaidAmount ? prevTotal +(newPaidAmount - prevPaidAmount) : prevTotal - prevPaidAmount + newPaidAmount;
+    let newTotal = prevPaidAmount > newPaidAmount ? prevTotal + (newPaidAmount - prevPaidAmount) : prevTotal - prevPaidAmount + newPaidAmount;
     if (true) {
       let detailArray = purchaseList.details.filter(
         (item, index) => index !== editIndex
       );
       setPurchaseList({
         ...purchaseList,
-        details: [...detailArray,  {
+        details: [...detailArray, {
           paidAmount: purchaseForm.values.paidAmount,
           paidBy: purchaseForm.values.paidBy,
           chequeNumber: purchaseForm.values.chequeNumber,
         },],
-        totalPaidAmount:newTotal
+        totalPaidAmount: newTotal
       });
     }
-    purchaseForm.setValues((prev)=>({
-      paidAmount:0,
-      chequeNumber:'',
-      paidBy:''
+    purchaseForm.setValues((prev) => ({
+      paidAmount: 0,
+      chequeNumber: '',
+      paidBy: ''
     }))
     setEditIndex(-1);
     setPurchaseDrawer(false);
   };
-  const hideScrollBar = ()=>{
-    window.scrollTo(0,0);
-    document.body.style.overflowY='hidden';
-    document.body.style.overflowX='hidden';
+  const hideScrollBar = () => {
+    window.scrollTo(0, 0);
+    document.body.style.overflowY = 'hidden';
+    document.body.style.overflowX = 'hidden';
   }
-  const showScrollBar = ()=>{
-    document.body.style.overflowY='visible'
-    document.body.style.overflowX='visible';
+  const showScrollBar = () => {
+    document.body.style.overflowY = 'visible'
+    document.body.style.overflowX = 'visible';
   }
   const addPurchadeOrder = async (isDraft) => {
     const errorObj = purchaseForm.validate().errors;
-    if(errorObj.hasOwnProperty('phoneNumber')||errorObj.hasOwnProperty('procurementSource')||errorObj.hasOwnProperty('remark')||errorObj.hasOwnProperty('billAmount')){
+    if (errorObj.hasOwnProperty('phoneNumber') || errorObj.hasOwnProperty('procurementSource') || errorObj.hasOwnProperty('remark') || errorObj.hasOwnProperty('billAmount')) {
       return;
     }
 
     setLoading(true);
     hideScrollBar();
-      const {
-        billAmount,
-        remark,
-        payment,
-        procurementSource,
-        dealerName,
-        phoneNumber,
-      } = purchaseForm.values;
-      const objvalues = {
-        ...purchaseList,
-          billAmount,remark,payment,procurementSource,dealerName,phoneNumber
-      }
-      setPurchaseList({
-          ...objvalues
-        })
+    const {
+      billAmount,
+      remark,
+      payment,
+      procurementSource,
+      dealerName,
+      phoneNumber,
+    } = purchaseForm.values;
+    const objvalues = {
+      ...purchaseList,
+      billAmount, remark, payment, procurementSource, dealerName, phoneNumber
+    }
+    setPurchaseList({
+      ...objvalues
+    })
 
     try {
       let result = id
         ? await updateOrderApi(isDraft, objvalues)
-        : await addOrderApi(isDraft,objvalues);
+        : await addOrderApi(isDraft, objvalues);
       if (result.data.success) {
         setPurchaseList({
           details: [],
@@ -293,32 +292,31 @@ const usePurchaseOrder = (history) => {
       setLoading(false)
     }
   };
-  const addOrderApi = async (isDraft,purchaseObj) => {
+  const addOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
       method: "POST",
       url: "/api/purchaseOrder/addNewOrder",
       data: {
-        new_order: { purchaseObj, isDraft},
-        uploadedImages:cloudBills
+        new_order: { purchaseObj, isDraft },
+        uploadedImages: cloudBills
       },
     });
   };
-
   const updateOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
       method: "POST",
       url: "/api/purchaseOrder/updateDetails",
       data: {
-        new_order: { purchaseObj, isDraft, id},
-        uploadedImages:cloudBills,
+        new_order: { purchaseObj, isDraft, id },
+        uploadedImages: cloudBills,
         deleteBills
       },
     });
   };
- const deleteCloudBills = (index) =>{
-  setDeleteBills([...deleteBills,...cloudBills.filter((item,i) => i==index)])
-  setCloudBills([...cloudBills.filter((item,i)=> i!==index)]);
- }
+  const deleteCloudBills = (index) => {
+    setDeleteBills([...deleteBills, ...cloudBills.filter((item, i) => i == index)])
+    setCloudBills([...cloudBills.filter((item, i) => i !== index)]);
+  }
   const handleSelectOrderItems = (item) => {
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
@@ -333,9 +331,9 @@ const usePurchaseOrder = (history) => {
   };
   const handlePurchaseDetail = (element, index) => {
     purchaseForm.setValues((prev) => ({
-      paidAmount: element.paidAmount||0,
-      paidBy: element.paidBy||'',
-      chequeNumber: element.chequeNumber||'',
+      paidAmount: element.paidAmount || 0,
+      paidBy: element.paidBy || '',
+      chequeNumber: element.chequeNumber || '',
     }));
     setPrevPaidAmount(element.paidAmount)
     setEditIndex(index);
@@ -348,7 +346,7 @@ const usePurchaseOrder = (history) => {
     });
     if (sum === values.stockQuantity || !form.values.validate) {
       form.values.slabPrice = [...slabs];
-      let ordersUpdated = [...purchaseList.orders.filter((order)=> order.barcode !== values.barcode)]
+      let ordersUpdated = [...purchaseList.orders.filter((order) => order.barcode !== values.barcode)]
       setPurchaseList({
         ...purchaseList,
         orders: [
@@ -367,9 +365,9 @@ const usePurchaseOrder = (history) => {
     alert("Total expiry dates and stock quantity  is not matching");
   };
 
-  const handleItemEdit = (item,index) => {
+  const handleItemEdit = (item, index) => {
     setIsEditable(false)
-    if(index){
+    if (index) {
       setEditIndex(index);
     }
     form.setValues((prev) => ({
@@ -400,7 +398,7 @@ const usePurchaseOrder = (history) => {
     setPurchaseList({
       ...purchaseList,
       details: [...purchaseList.details.filter((item, i) => i !== index)],
-      totalPaidAmount:purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount
+      totalPaidAmount: purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount
     });
   };
   const addSlabPrice = () => {

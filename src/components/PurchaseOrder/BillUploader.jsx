@@ -3,12 +3,12 @@ import { Button, Group } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import { Carousel } from "@mantine/carousel";
 import '../../CSS/billUploader.css'
-const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBills }) => {
+const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBills }) => {
   const openRef = useRef(null);
-  const onSelectFile = (event) => {
-    const selectedFiles = event.target.files;
-    const selectedFilesArray = Array.from(selectedFiles);
-    selectedFilesArray.map((file) => {
+  const onSelectFile = (files) => {
+    console.log({ files })
+    const selectedFilesArray = Array.from(files);
+    files.map((file) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
@@ -18,7 +18,6 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBi
         });
       };
     });
-    event.target.value = "";
   };
 
   function deleteHandler(image) {
@@ -34,7 +33,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBi
         openRef={openRef}
         activateOnClick={false}
         styles={{ inner: { pointerEvents: "all" } }}
-        onChange={onSelectFile}
+        onDrop={onSelectFile}
       >
         <Group position="center">
           <Button
@@ -91,7 +90,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBi
               >
                 <img
                   src={image.secure_url}
-                 className="bill-image"
+                  className="bill-image"
                   maxwidth={120}
                   alt="upload"
                 />

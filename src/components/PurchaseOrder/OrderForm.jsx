@@ -4,19 +4,19 @@ import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 
-const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems , slabForm,addSlabPrice,deleteSlab,slabs,setSlabs}) => {
-    
+const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuantity, setOpenDrawer, setOpened, handleItemFrom, form, opened, handleExpiryDate, setDate, date, filterItems, handleSelectOrderItems, slabForm, addSlabPrice, deleteSlab, slabs, setSlabs }) => {
+
     return (
         <Drawer
             opened={opened}
-            onClose={() => {form.reset(); setSlabs([]); setOpened(false)}}
+            onClose={() => { form.reset(); setSlabs([]); setOpened(false) }}
             title="Order Details"
             padding="lg"
             size="xl"
         >
-                <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
+            <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'} >
                 <form onSubmit={form.onSubmit((values) => handleItemFrom(values))}>
-                 <Switch checked={form.values.validate}  label='validate'  {...form.getInputProps('validate')} />
+                    <Switch checked={form.values.validate} label='validate'  {...form.getInputProps('validate')} />
                     <TextInput
                         withAsterisk
                         label="Barcode"
@@ -71,7 +71,6 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                     <Textarea
                         label="Remarks"
                         placeholder="remark"
-                        withAsterisk
                         {...form.getInputProps('itemRemark')}
                     />
                     <NumberInput
@@ -104,7 +103,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                             label="Expiry  date"
                             inputFormat="MM/DD/YYYY"
                             value={date}
-                            onChange={(day) => {setDate(day);}}
+                            onChange={(day) => { setDate(day); }}
                             style={{ width: "140px" }}
                         />
                         <NumberInput
@@ -135,32 +134,32 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                     }
 
 
-                    <div style={{marginBottom:'1vmin'}}>Slab Pricing</div>
+                    <div style={{ marginBottom: '1vmin' }}>Slab Pricing</div>
                     <Group>
-                    <NumberInput
+                        <NumberInput
                             withAsterisk
-                            style={{width:'15vmin'}}
+                            style={{ width: '15vmin' }}
                             label="Start Quantity"
                             placeholder="start quantity"
                             {...slabForm.getInputProps('startValue')}
                         />
                         <NumberInput
                             withAsterisk
-                            style={{width:'15vmin'}}
+                            style={{ width: '15vmin' }}
                             label="End Quantity"
                             placeholder="end quantity"
                             {...slabForm.getInputProps('endValue')}
                         />
                         <NumberInput
                             withAsterisk
-                            style={{width:'15vmin'}}
+                            style={{ width: '15vmin' }}
                             label="Price"
                             placeholder="price"
                             {...slabForm.getInputProps('pricing')}
                         />
-                        <Button style={{marginTop:'3.5vmin'}} onClick={(e)=>{e.preventDefault(); addSlabPrice()}} type="">+</Button>
+                        <Button style={{ marginTop: '3.5vmin' }} onClick={(e) => { e.preventDefault(); addSlabPrice() }} type="">+</Button>
                     </Group>
-                    <ShowSlabPricing deleteSlab={deleteSlab} slabs={slabs}/>
+                    <ShowSlabPricing deleteSlab={deleteSlab} slabs={slabs} />
                     <Group position="right" mt="md">
                         <Button type="submit">Submit</Button>
                     </Group>
