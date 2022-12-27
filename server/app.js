@@ -10,7 +10,7 @@ const fileUpload = require('express-fileupload')
 require('./nodeCron')
 const app = express();
 
-app.use(express.json({limit: '500mb'}));
+app.use(express.json({ limit: '500mb' }));
 app.use(cookieParser());
 app.use(
   cors({
@@ -20,8 +20,8 @@ app.use(
 
 app.use(express.urlencoded({ limit: "500mb", extended: true }));
 app.use(fileUpload({
-  useTempFiles : true,
-  tempFileDir : '/tmp/'
+  useTempFiles: true,
+  tempFileDir: '/tmp/'
 }))
 let dbConnector = "";
 let arrayToInsert = [];
@@ -57,8 +57,6 @@ async function addCsvDataToMongoAsJson(dbConnector) {
   // });
   return;
 }
-app.use("/.netlify/functions/app", routers);
-
 const mongoUriEnvMap = {
   staging: process.env.STAGING_DB,
   production: process.env.PROD_DB,
