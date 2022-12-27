@@ -1254,7 +1254,7 @@ const ItemsList = () => {
           {savedDates?.map((item, index) => {
             return (
               <div key={index} className="new-date-row">
-                <TextInput value={item.date.slice(0, 10)} readOnly></TextInput>
+                <TextInput value={item.date?.slice(0, 10)} readOnly></TextInput>
                 <NumberInput
                   className="per-date-quantity"
                   value={item.value}
