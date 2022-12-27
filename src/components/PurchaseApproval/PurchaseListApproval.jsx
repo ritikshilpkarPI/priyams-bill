@@ -102,17 +102,17 @@ const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) =
                 <>
                     {
                       list.isRejected || list.isApproved ? (
-                        list.isRejected ? (<><td style={{color:'red'}}>rejected</td></>) :(<><td style={{color:'seagreen'}}>approved</td></>
+                        list.isRejected ? (<><td style={{color:'red'}}>rejected</td></>) :(<><td style={{color:'seagreen'}}>approved</td> </>
                         )
   
                       ):
                       <>
                       <td><Link className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
                       </td>
-                       <td><Button className='approve-btn' onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
-                       <td><Button className='reject-btn'  onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>   
                       </>
                     }
+                    <td><Button disabled={list.isRejected|| list.isApproved} className='approve-btn' onClick={()=>{approveOrder(list._id,index)}}>Approve</Button></td>
+                    <td><Button disabled={list.isApproved || list.isRejected} className='reject-btn'  onClick={()=>{rejectOrder(list._id,index)}}>Reject</Button></td>   
                 </>
                 :
                 <>
