@@ -57,10 +57,6 @@ async function addCsvDataToMongoAsJson(dbConnector) {
   // });
   return;
 }
-app.use("/.netlify/functions/app", routers);
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-});
 const mongoUriEnvMap = {
   staging: process.env.STAGING_DB,
   production: process.env.PROD_DB,
