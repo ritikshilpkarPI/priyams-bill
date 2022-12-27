@@ -4,21 +4,28 @@ import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDet
 const Approval = () => {
     const [list, setList] = useState([]);
     useEffect(() => {
-       fetch("/api/purchaseOrder/orders")
+       callAPI();
+    }, []);
+    const callAPI = () =>{
+      fetch("/api/purchaseOrder/orders")
        .then((res)=>res.json())
        .then((data)=>{
-        let pendingArray = data.message.filter(
-          (list) => list.isRejected === false && list.isApproved === false
-        );
-        let approvedArray = data.message.filter(
-          (list) => list.isApproved === true
-        );
-        let rejectedArray = data.message.filter(
-          (list) => list.isRejected === true
-        );
+        let pendingArray = [];
+        let approvedArray = [];
+        let rejectedArray = [];
+        let totalArray = data.message;
+        for(let i=0;i<totalArray.length;i++){
+          if(totalArray[i].isRejected === true){
+            rejectedArray.push(totalArray[i]);
+          }else if(totalArray[i].isApproved === true){
+            approvedArray.push(totalArray[i]);
+          }else{
+            pendingArray.push(totalArray[i]);
+          }
+        }
         setList([...pendingArray,...rejectedArray,...approvedArray]);
        })
-    }, []);
+    }
   return (
     <div>
       <PurchaseDetailsApproval allPurchaseList={list} setAllPurchaseList={setList}/>

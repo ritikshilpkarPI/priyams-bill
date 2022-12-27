@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Button, Group } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import { Carousel } from "@mantine/carousel";
-
+import '../../CSS/billUploader.css'
 const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBills }) => {
   const openRef = useRef(null);
   const onSelectFile = (event) => {
@@ -29,7 +29,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBi
     URL.revokeObjectURL(image);
   }
   return (
-    <section style={{ width: "80%", margin: "auto", marginTop: "5vmin" }}>
+    <section className="bill-uploader-section">
       <Dropzone
         openRef={openRef}
         activateOnClick={false}
@@ -49,7 +49,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBi
       {purchaseList.bills?.length > 0 || cloudBills.length > 0 ? (
         <Carousel
           sx={{ maxWidth: 600 }}
-          style={{ marginTop: "5vmin" }}
+          className='bill-carousel'
           mx="auto"
           withIndicators
           height={400}
@@ -67,17 +67,12 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBi
                 >
                   <img
                     src={image}
-                    style={{ height: "100%" }}
+                    className="bill-image"
                     maxwidth={520}
                     alt="upload"
                   />
                   <img
-                    style={{
-                      cursor: "pointer",
-                      position: "absolute",
-                      top: "0%",
-                      left: "90%",
-                    }}
+                    className="bill-image-point"
                     height={50}
                     src={window.location.origin + "/closeicon.png"}
                     onClick={() => {
@@ -96,17 +91,12 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBi
               >
                 <img
                   src={image.secure_url}
-                  style={{ height: "100%" }}
-                  maxwidth={520}
+                 className="bill-image"
+                  maxwidth={120}
                   alt="upload"
                 />
                 <img
-                  style={{
-                    cursor: "pointer",
-                    position: "absolute",
-                    top: "0%",
-                    left: "90%",
-                  }}
+                  className="bill-image-point"
                   height={50}
                   src={window.location.origin + "/closeicon.png"}
                   onClick={() => {

@@ -1,18 +1,22 @@
 import React from "react";
 import PurchaseListApproval from "./PurchaseListApproval";
 import { Select } from "@mantine/core";
-
+import '../../CSS/purchaseApproval.css'
 const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
   const filterOrders = (value) => {
-    let pendingArray = allPurchaseList.filter(
-      (list) => list.isRejected === false && list.isApproved === false
-    );
-    let approvedArray = allPurchaseList.filter(
-      (list) => list.isApproved === true
-    );
-    let rejectedArray = allPurchaseList.filter(
-      (list) => list.isRejected === true
-    );
+    let pendingArray = [];
+    let approvedArray = [];
+    let rejectedArray = [];
+    let totalArray = allPurchaseList;
+    for (let i = 0; i < totalArray.length; i++) {
+      if (totalArray[i].isRejected === true) {
+        rejectedArray.push(totalArray[i]);
+      } else if (totalArray[i].isApproved === true) {
+        approvedArray.push(totalArray[i]);
+      } else {
+        pendingArray.push(totalArray[i]);
+      }
+    }
     if (value === "pending") {
       setAllPurchaseList([...pendingArray, ...rejectedArray, ...approvedArray]);
     } else if (value === "approved") {
@@ -22,9 +26,10 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
     }
   };
   return (
-    <div style={{ width: "100%" }}>
+    <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
-      <Select style={{width:'200px', margin:'2vmin auto'}}
+      <Select
+        style={{ width: "200px", margin: "2vmin auto" }}
         label="Sort By"
         placeholder="Pending orders"
         data={[
