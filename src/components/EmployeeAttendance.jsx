@@ -2,6 +2,7 @@ import React from "react";
 import { Group, Title, Select, Button } from "@mantine/core";
 import { useState } from "react";
 import Axios from "axios";
+import '../CSS/employeeAttendance.css'
 const nameOptionAndValues = [
   { value: "anjali", label: "Anjali" },
   { value: "naveen", label: "Naveen" },
@@ -134,7 +135,7 @@ const EmployeeAttendance = () => {
           onChange={(value) => setAttendance(value)}
           defaultValue={attendance}
         />
-        <Button style={{ marginTop: "24px" }} onClick={handleAttendance}>Submit</Button>
+        <Button class="attendance-button" onClick={handleAttendance}>Submit</Button>
       </Group>
     </div>
   );

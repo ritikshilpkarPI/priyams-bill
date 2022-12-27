@@ -6,10 +6,11 @@ const mongoose = require("mongoose");
 const serverless = require("serverless-http");
 const routers = require("./routes");
 const { data } = require("./data/data");
+const fileUpload = require('express-fileupload')
 require('./nodeCron')
 const app = express();
 
-app.use(express.json({limit: '30mb'}));
+app.use(express.json({limit: '500mb'}));
 app.use(cookieParser());
 app.use(
   cors({
@@ -17,8 +18,11 @@ app.use(
   })
 );
 
-app.use(express.urlencoded({ limit: "30mb", extended: true }));
-
+app.use(express.urlencoded({ limit: "500mb", extended: true }));
+app.use(fileUpload({
+  useTempFiles : true,
+  tempFileDir : '/tmp/'
+}))
 let dbConnector = "";
 let arrayToInsert = [];
 async function addCsvDataToMongoAsJson(dbConnector) {
