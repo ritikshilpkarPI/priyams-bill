@@ -32,6 +32,7 @@ const AppFunction = (history, location) => {
       dispatch({ type: "NEW_ITEMS_LIST", payload: itemsData });
       setLoaderDisplay(false);
     })();
+    // eslint-disable-next-line
   }, [dispatch]);
 
   useEffect(() => {
