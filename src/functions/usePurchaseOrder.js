@@ -22,6 +22,7 @@ const usePurchaseOrder = (history) => {
   const [isEditable, setIsEditable] = useState(true);
   const [Loading, setLoading] = useState(false)
   const [prevPaidAmount, setPrevPaidAmount] = useState(0);
+  const [state, setState] = useState({})
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -434,6 +435,9 @@ const usePurchaseOrder = (history) => {
       handleSelectOrderItems(barcodeFilteredItem);
     }
     // eslint-disable-next-line
+    return () => {
+      setState({}); // This worked for me
+    };
   }, [form.values.barcode]);
   return {
     form,

@@ -113,7 +113,7 @@ const updateDetailsById = async (req, res) => {
     res.status(201).send({ message: order, success: true });
   } catch (error) {
     console.log({ error })
-    res.status(400).send({ message: error.message, success: false });
+    res.status(400).send({ error, success: false });
   }
 };
 const draftOrder = async (req, res) => {
