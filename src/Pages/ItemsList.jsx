@@ -81,7 +81,6 @@ const ItemsList = () => {
   useEffect(() => {
     setItems([...itemsList]);
   }, [itemsList]);
-
   useEffect(() => {
     if (items.length) {
       setloaderDisplay(false);

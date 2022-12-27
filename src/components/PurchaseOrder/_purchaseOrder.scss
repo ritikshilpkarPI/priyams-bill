@@ -1,0 +1,173 @@
+.purchase-order-container {
+    .text-input {
+        width: 200px;
+        margin: 0 4px;
+    }
+
+    .number-input {
+        width: 100px;
+        margin: 0 4px;
+    }
+
+    .select-input {
+        width: 120px;
+        margin: 0 4px;
+    }
+
+    .page-title {
+        margin-bottom: 20px;
+    }
+
+    .useby-date-container {
+        // border: 1px solid red;
+
+        #useByDate {
+            width: 100%;
+            border: 1px solid rgb(203, 199, 199);
+            width: 195px;
+            // margin-bottom: 3px;
+        }
+
+        .new-date-row {
+            display: flex;
+            width: 195px;
+            align-items: center;
+            margin: 3px 0;
+
+            .mantine-gqmpge {
+                width: 105px;
+            }
+
+            .per-date-quantity {
+                margin: 0 5px 0;
+
+                .mantine-gqmpge {
+                    width: 50px;
+                }
+            }
+
+            .delete-icon {
+                margin-left: 5px;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .add-icon {
+        // border: 1px solid red;
+        padding: 5px 0;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+    }
+
+    .mantine-186fes1 {
+        width: auto;
+    }
+
+    .mantine-gqmpge {
+        width: 100%;
+        padding: 0 9px;
+    }
+
+    .mantine-186fes1 tbody tr td {
+        padding: 0;
+    }
+}
+
+.purchase-detail-container {
+    width: 1100px;
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 19px 0px rgba(0, 0, 0, 0.12);
+    margin: 50px auto;
+
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+
+        .save-btn {
+            background-color: rgb(41, 40, 40);
+            margin-left: 10px;
+
+            &:hover {
+                background-color: black;
+            }
+        }
+    }
+
+    .purchase-details {
+        display: flex;
+        margin-top: 20px;
+        text-align: left;
+
+        &>* {
+            margin: 0 5px;
+        }
+
+        .remark-input {
+            width: 290px;
+        }
+    }
+}
+
+.mantine-Drawer-drawer {
+    overflow: scroll !important;
+}
+
+.date-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 1rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.detail-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.dropdown-list-container {
+    position: relative;
+    top: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.12);
+    width: 300px;
+    overflow: scroll;
+    height: 400px;
+}
+
+.expiry-date-showcase {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 1rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    div:first-child {
+        input {
+            width: 110px;
+        }
+    }
+
+    div:nth-child(2) {
+        div {
+            input {
+                width: 150px;
+            }
+
+        }
+    }
+
+    button {
+        width: 110px;
+    }
+
+}
+
+.list-items-container {
+    width: 90%;
+    margin: auto;
+}

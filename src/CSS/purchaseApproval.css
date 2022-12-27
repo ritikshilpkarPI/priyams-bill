@@ -1,0 +1,22 @@
+.purchase-approval{
+    width: 100%;
+    margin-bottom: 5vmin;
+}
+.purchase-list{
+    width: 100%;
+    margin: auto;
+}
+.purchase-list-edit{
+    height:5vmin;
+    padding:1vmin 2vmin;
+    color:white;
+    border-radius:0.5vmin;
+    background-color:#1098AD;
+    text-decoration: none;
+}
+.approve-btn{
+    background-color:#40C057;
+}
+.reject-btn{
+    background-color:#F03E3E;
+}
