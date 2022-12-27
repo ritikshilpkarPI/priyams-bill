@@ -28,7 +28,7 @@ const AppFunction = (history, location) => {
           Cookie: "",
         },
       });
-      const itemsData = fetch.data.message?.items;
+      const itemsData = fetch?.data?.message?.items;
       dispatch({ type: "NEW_ITEMS_LIST", payload: itemsData });
       setLoaderDisplay(false);
     })();
