@@ -426,6 +426,7 @@ const usePurchaseOrder = (history) => {
     form.values.barcode,
     handleSelectOrderItems
   );
+  console.log({ state });
   useEffect(() => {
     if (id && isNotGetUpdated) {
       getDetails();
@@ -434,10 +435,10 @@ const usePurchaseOrder = (history) => {
     if (Object.keys(barcodeFilteredItem).length && isEditable) {
       handleSelectOrderItems(barcodeFilteredItem);
     }
-    // eslint-disable-next-line
     return () => {
       setState({}); // This worked for me
     };
+    // eslint-disable-next-line
   }, [form.values.barcode]);
   return {
     form,
