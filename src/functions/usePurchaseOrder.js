@@ -314,7 +314,7 @@ const usePurchaseOrder = (history) => {
     });
   };
   const deleteCloudBills = (index) => {
-    setDeleteBills([...deleteBills, ...cloudBills.filter((item, i) => i == index)])
+    setDeleteBills([...deleteBills, ...cloudBills.filter((item, i) => i === index)])
     setCloudBills([...cloudBills.filter((item, i) => i !== index)]);
   }
   const handleSelectOrderItems = (item) => {
@@ -382,7 +382,6 @@ const usePurchaseOrder = (history) => {
       mrp: item.mrp,
       costPrice: item.costPrice,
       expiryDates: [...item.expiryDates],
-      unit: item.unit,
       validate: item.validate,
     }));
     setSlabs([...item.slabPrice]);

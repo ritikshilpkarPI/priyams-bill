@@ -6,9 +6,7 @@ import '../../CSS/billUploader.css'
 const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBills }) => {
   const openRef = useRef(null);
   const onSelectFile = (files) => {
-    console.log({ files })
-    const selectedFilesArray = Array.from(files);
-    files.map((file) => {
+    files.forEach((file) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {

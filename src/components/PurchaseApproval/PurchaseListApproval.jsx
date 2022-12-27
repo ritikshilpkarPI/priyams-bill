@@ -1,4 +1,4 @@
-import { Button, Table } from '@mantine/core';
+import { Button } from '@mantine/core';
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { Axios } from 'src/utils/axios';
@@ -71,7 +71,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
   const saveDraft = async (id, index) => {
 
     try {
-      const res = await Axios({
+      await Axios({
         method: "POST",
         url: "/api/purchaseOrder/draftOrder",
         data: { id },

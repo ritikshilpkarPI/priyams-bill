@@ -1,4 +1,3 @@
-import { CloudHSM } from 'aws-sdk';
 import React, { useEffect, useState } from 'react'
 import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDetailsApproval';
 
