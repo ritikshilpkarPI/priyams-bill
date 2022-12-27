@@ -24,7 +24,7 @@ const Approval = () => {
             rejectedArray.push(totalArray[i]);
           } else if (totalArray[i].isApproved) {
             approvedArray.push(totalArray[i]);
-          } else {
+          } else if (totalArray[i].isDraft) {
             pendingArray.push(totalArray[i]);
           }
         } else {
@@ -41,10 +41,6 @@ const Approval = () => {
     } catch (error) {
       console.error(error)
     }
-    // fetch("/api/purchaseOrder/orders")
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //   })
   }
 
   return (
