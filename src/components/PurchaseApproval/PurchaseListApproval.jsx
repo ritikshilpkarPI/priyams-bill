@@ -71,12 +71,14 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
   const saveDraft = async (id, index) => {
 
     try {
-      await Axios({
+      let res = await Axios({
         method: "POST",
         url: "/api/purchaseOrder/draftOrder",
         data: { id },
       });
-      setAllPurchaseList([...allPurchaseList.filter((item, i) => i !== index)]);
+      const array = [...allPurchaseList];
+      array[index] = res.data.order;
+      setAllPurchaseList(array);
       alert('Order drafted successfully')
     } catch (err) {
       console.log(err)

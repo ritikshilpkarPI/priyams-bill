@@ -1,9 +1,9 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDetailsApproval';
 
 const Approval = () => {
     const [list, setList] = useState([]);
+    const [filter, setFilter] = useState([]);
     useEffect(() => {
        callAPI();
     }, []);
@@ -37,12 +37,13 @@ const Approval = () => {
           }
         }
         setList([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
+        setFilter([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
        })
     }
    
   return (
     <div>
-      <PurchaseDetailsApproval allPurchaseList={list} setAllPurchaseList={setList} />
+      <PurchaseDetailsApproval allList={list} allPurchaseList={filter} setAllPurchaseList={setFilter} />
     </div>
   )
 }
