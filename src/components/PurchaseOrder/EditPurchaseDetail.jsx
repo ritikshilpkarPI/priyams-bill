@@ -1,20 +1,20 @@
 
-import { Drawer, Button, Group, Box, TextInput, Textarea, NumberInput, Select } from '@mantine/core';
+import { Drawer, Button, Group, Box, NumberInput, Select } from '@mantine/core';
 import '../../CSS/editPurchaseDetail.css'
-const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetails,purchaseForm}) => {
+const EditPurchaseDetail = ({ setPurchaseDrawer, openPurchaseDrawer, updateDetails, purchaseForm }) => {
 
     return (
         <Drawer
             opened={openPurchaseDrawer}
-            onClose={() => {purchaseForm.reset(); setPurchaseDrawer(false)}}
+            onClose={() => { purchaseForm.reset(); setPurchaseDrawer(false) }}
             title="Paid Details"
             position='left'
             padding="xl"
             size={300}
         >
-                <Box sx={{ maxWidth: 400 }} className="edit-purchase-box" mx="auto" my={'lg'}>
-                <form onSubmit={(e)=>{e.preventDefault(); updateDetails(e); }}>
-                <Group>
+            <Box sx={{ maxWidth: 400 }} className="edit-purchase-box" mx="auto" my={'lg'}>
+                <form onSubmit={(e) => { e.preventDefault(); updateDetails(e); }}>
+                    <Group>
                         <Select
                             label="Paid by"
                             placeholder='pick one'
@@ -25,17 +25,17 @@ const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetail
                                 { value: 'prepaid', label: 'Prepaid' },
                                 { value: 'neft', label: 'NEFT' },
                             ]}
-                            
+
                             {...purchaseForm.getInputProps('paidBy')}
                         />
                         <NumberInput
                             withAsterisk
                             label="Paid Amount"
                             placeholder="total paid amount"
-                            
+
                             {...purchaseForm.getInputProps('paidAmount')}
-                        />                      
-                        {   
+                        />
+                        {
                             purchaseForm.getInputProps('paidBy').value === "cheque" &&
                             <NumberInput
                                 withAsterisk
@@ -46,7 +46,7 @@ const EditPurchaseDetail = ({setPurchaseDrawer, openPurchaseDrawer, updateDetail
                             />
                         }
                     </Group>
-                    <Group position="left" style={{marginTop:'3vmin'}}>
+                    <Group position="left" style={{ marginTop: '3vmin' }}>
                         <Button type="submit">Update Details</Button>
                     </Group>
                 </form>

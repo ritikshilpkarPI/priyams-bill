@@ -2,11 +2,11 @@ import React, { useRef } from "react";
 import { Button, Group } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import { Carousel } from "@mantine/carousel";
-
-const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBills }) => {
+import '../../CSS/billUploader.css'
+const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBills }) => {
   const openRef = useRef(null);
   const onSelectFile = (files) => {
-    files.map((file) => {
+    files.forEach((file) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
@@ -93,8 +93,8 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills ,deleteCloudBi
               >
                 <img
                   src={image.secure_url}
-                  style={{ height: "100%" }}
-                  maxwidth={520}
+                  className="bill-image"
+                  maxwidth={120}
                   alt="upload"
                 />
                 <img

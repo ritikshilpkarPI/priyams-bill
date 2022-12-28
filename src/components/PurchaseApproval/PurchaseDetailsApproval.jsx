@@ -40,35 +40,34 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
         onChange={filterOrders}
       />
       <Table className='purchase-list' withColumnBorders striped withBorder>
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>Dealer Name</th>
-              <th>Phone Number</th>
-              <th>Payment</th>
-              <th>Bill Amount</th>
-              <th>Paid Amount</th>
-              <th>Procurement Source</th>
-              <th>Remark</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-          {allPurchaseList.map((list, index) => {
-        return (            
+        <thead>
           <tr>
-            <PurchaseListApproval
-              allPurchaseList={allPurchaseList}
-              setAllPurchaseList={setAllPurchaseList}
-              key={index}
-              list={list}
-              index={index}
-            />
+            <th>S.No</th>
+            <th>Dealer Name</th>
+            <th>Phone Number</th>
+            <th>Payment</th>
+            <th>Bill Amount</th>
+            <th>Paid Amount</th>
+            <th>Procurement Source</th>
+            <th>Remark</th>
+            <th>Status</th>
           </tr>
-        );
-      })}
-      </tbody>
-       </Table>
+        </thead>
+        <tbody>
+          {allPurchaseList.map((list, index) => {
+            return (
+              <tr key={index}>
+                <PurchaseListApproval
+                  allPurchaseList={allPurchaseList}
+                  setAllPurchaseList={setAllPurchaseList}
+                  list={list}
+                  index={index}
+                />
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
     </div>
   );
 };

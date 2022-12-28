@@ -1,91 +1,91 @@
-import { Button, Table } from '@mantine/core';
+import { Button } from '@mantine/core';
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { Axios } from 'src/utils/axios';
 import '../../CSS/purchaseApproval.css'
-const PurchaseListApproval = ({list,index,allPurchaseList,setAllPurchaseList}) => {
-  const rejectOrder = async(id,index) => {
-   const ans =  window.confirm("Are you sure you want to reject this order?");
-   if(!ans) return;
-    try{
+const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList, key }) => {
+  const rejectOrder = async (id, index) => {
+    const ans = window.confirm("Are you sure you want to reject this order?");
+    if (!ans) return;
+    try {
       const res = await Axios({
-        method:'POST',
-        url:'/api/approval/rejectOrder/'+id,
-        data:{
-          username:JSON.parse(localStorage.getItem("priyam-store")).username
+        method: 'POST',
+        url: '/api/approval/rejectOrder/' + id,
+        data: {
+          username: JSON.parse(localStorage.getItem("priyam-store")).username
         }
       })
       const array = [...allPurchaseList];
       array[index] = res.data.order;
       setAllPurchaseList(array);
       window.alert("Order rejected successfully");
-    }catch(err){
+    } catch (err) {
       console.log(err);
       window.alert('Something went wrong,unable to reject order')
     }
   }
-  const approveOrder = async(id,index) => {
-    const ans =  window.confirm("Are you sure you want to approve this order?");
-    if(!ans) return;
-    try{
+  const approveOrder = async (id, index) => {
+    const ans = window.confirm("Are you sure you want to approve this order?");
+    if (!ans) return;
+    try {
       const res = await Axios({
-        method:'POST',
-        url:'/api/approval/approveOrder/'+id,
-        data:{
-          username:JSON.parse(localStorage.getItem("priyam-store")).username
+        method: 'POST',
+        url: '/api/approval/approveOrder/' + id,
+        data: {
+          username: JSON.parse(localStorage.getItem("priyam-store")).username
         }
       })
       const array = [...allPurchaseList];
       array[index] = res.data.order;
       setAllPurchaseList(array);
       window.alert("Order approved successfully");
-    }catch(err){
+    } catch (err) {
       console.log(err);
       window.alert('Something went wrong,unable to approve order');
     }
   }
-  
-  const draftOrder = (id,index) =>{
+
+  const draftOrder = (id, index) => {
     const ans = window.confirm("Do you want to draft this order ?")
-    if(!ans){
+    if (!ans) {
       return;
     }
-    const order  = allPurchaseList[index];
+    const order = allPurchaseList[index];
     let validate = true;
     let once = true;
-    order.purchasedItems.forEach((item)=>{
-      if(!item.validate){
+    order.purchasedItems.forEach((item) => {
+      if (!item.validate) {
         validate = false;
-        if(once){
+        if (once) {
           alert('Cannot draft orders, please validate the orders');
-          once=false;
+          once = false;
         }
         return;
       }
     })
-    if(!validate){
+    if (!validate) {
       return;
     }
-     saveDraft(id,index);
+    saveDraft(id, index);
   }
-  const saveDraft = async (id,index)=>{
-    
-    try{
-      const res = await Axios({
+  const saveDraft = async (id, index) => {
+
+    try {
+      await Axios({
         method: "POST",
         url: "/api/purchaseOrder/draftOrder",
         data: { id },
       });
-      setAllPurchaseList([...allPurchaseList.filter((item,i) => i !== index)]);
+      setAllPurchaseList([...allPurchaseList.filter((item, i) => i !== index)]);
       alert('Order drafted successfully')
-    }catch(err){
-        console.log(err)
-        alert(`Something went wrong.Unable to draft the order`)
+    } catch (err) {
+      console.log(err)
+      alert(`Something went wrong.Unable to draft the order`)
     }
   }
   return (
     <>
-      {list? (
+      {list ? (
         <>
 
             <td>{index+1}</td>

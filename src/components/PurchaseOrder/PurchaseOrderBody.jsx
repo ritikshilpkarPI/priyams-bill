@@ -9,7 +9,6 @@ const UseByDateElement = ({ itemObjState = [] }) => {
   const [newUseByDateVal, setNewUseByDateVal] = useState();
   const { purchaseInputItemStateAndDispatch } = useContext(AppStateContext);
   const { 1: purchaseItemInputDispatch } = purchaseInputItemStateAndDispatch;
-  console.log({ itemObjState });
   const [useByDateData = {}, setuseByDateData = () => { }] = itemObjState;
 
   const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
@@ -18,7 +17,7 @@ const UseByDateElement = ({ itemObjState = [] }) => {
 
   // To add new date
   const addNewDate = (selectedDate) => {
-    // console.log(selectedDate);
+
     if (!newUseByDateVal) {
       alert("Select a date first!");
       return;
@@ -123,7 +122,6 @@ const RowItem = ({ item, itemObjState }) => {
   const [purchaseItems, dispatch] = purchaseItemsStateAndDispatch;
   const { purchaseItemInput, purchaseItemInputDispatch } =
     purchaseInputItemStateAndDispatch;
-  console.log({ item, purchaseItems });
   //   const [itemObj, setItemObj] = itemObjState;
 
   // To add item in list
@@ -198,7 +196,6 @@ const RowItem = ({ item, itemObjState }) => {
 
 const AddItemRow = () => {
   //   const [itemObj, setItemObj] = useState(itemInitialObj);
-  console.log({ addItemRow });
   return (
     <tr>
       {addItemRow.map((item, index) => {
@@ -216,7 +213,7 @@ const AddItemRow = () => {
 const ShowTableItems = () => {
   const { purchaseItemsStateAndDispatch } = useContext(AppStateContext);
   const [purchaseItems] = purchaseItemsStateAndDispatch;
-  console.log({ purchaseItems });
+
 
   return (
     <>

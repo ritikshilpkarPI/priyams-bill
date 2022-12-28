@@ -81,7 +81,6 @@ const ItemsList = () => {
   useEffect(() => {
     setItems([...itemsList]);
   }, [itemsList]);
-  console.log({items});
   useEffect(() => {
     if (items.length) {
       setloaderDisplay(false);
@@ -1076,11 +1075,9 @@ const ItemsList = () => {
   const UseByDateElement = () => {
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+      }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1170,11 +1167,9 @@ const ItemsList = () => {
     const [savedDates, setSavedDates] = useState(data);
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+      }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1660,12 +1655,12 @@ const TableRow = ({
     const data =
       name === "quantityUnitName"
         ? [
-            { value: "kg", label: "kg" },
-            { value: "grams", label: "grams" },
-            { value: "liter", label: "liter" },
-            { value: "ml", label: "ml" },
-            { value: "Piece", label: "Piece" },
-          ]
+          { value: "kg", label: "kg" },
+          { value: "grams", label: "grams" },
+          { value: "liter", label: "liter" },
+          { value: "ml", label: "ml" },
+          { value: "Piece", label: "Piece" },
+        ]
         : categoryArray;
 
     return (

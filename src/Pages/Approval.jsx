@@ -1,5 +1,5 @@
-import { CloudHSM } from 'aws-sdk';
-import React,{useEffect,useState} from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDetailsApproval';
 
 const Approval = () => {
@@ -42,7 +42,7 @@ const Approval = () => {
    
   return (
     <div>
-      <PurchaseDetailsApproval allPurchaseList={list} setAllPurchaseList={setList}/>
+      <PurchaseDetailsApproval allPurchaseList={list} setAllPurchaseList={setList} />
     </div>
   )
 }

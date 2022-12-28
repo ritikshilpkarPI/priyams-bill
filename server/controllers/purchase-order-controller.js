@@ -25,6 +25,7 @@ const addOrder = async (req, res) => {
     const isDraft = req.body.new_order.isDraft;
 
     let billPhotos = await uploadImages(bills);
+
     const purchaseOrder = {
       purchasedItems: [...orders],
       purchaseDetails: [...details],
@@ -42,6 +43,7 @@ const addOrder = async (req, res) => {
     const order = await PurchaseOrder.create(purchaseOrder);
     res.status(201).send({ message: order, success: true });
   } catch (error) {
+    console.log({ error })
     res.status(400).send({ message: error.message, success: false });
   }
 };
@@ -59,6 +61,7 @@ const getDetailsById = async (req, res) => {
     const data = await PurchaseOrder.findById(id);
     res.status(201).send({ data });
   } catch (err) {
+    console.log({ err })
     res.status(400).send({ message: err });
   }
 };
@@ -103,26 +106,28 @@ const updateDetailsById = async (req, res) => {
       dealerName,
       phoneNumber,
       minimumQuantity,
-      isRejected:false,
+      isRejected: false,
     };
     let order = await PurchaseOrder.findByIdAndUpdate(id, purchaseOrder);
 
     res.status(201).send({ message: order, success: true });
   } catch (error) {
-    res.status(400).send({ message: error.message, success: false });
+    console.log({ error })
+    res.status(400).send({ error, success: false });
   }
 };
-const draftOrder = async (req,res)=>{
-  
-  try{
-    const {id} = req.body;
-    const order = await PurchaseOrder.findByIdAndUpdate(id,{
-      isDraft:true,
-      isRejected:false
-    },{new : true});
-    res.status(200).send({message:"order drafted successfully",success:true,order});
-  }catch(err){
-    res.status(400).send({message:err.message,success:false})
+const draftOrder = async (req, res) => {
+
+  try {
+    const { id } = req.body;
+    const order = await PurchaseOrder.findByIdAndUpdate(id, {
+      isDraft: true,
+      isRejected: false
+    }, { new: true });
+    res.status(200).send({ message: "order drafted successfully", success: true, order });
+  } catch (err) {
+    console.log({ err })
+    res.status(400).send({ message: err.message, success: false })
   }
 }
 const uploadImages = (images) => {
@@ -144,6 +149,7 @@ const uploadImages = (images) => {
           resolve(billPhotos);
         }
       } catch (err) {
+        console.log({ err })
         reject(err);
       }
     });
@@ -161,6 +167,7 @@ const deleteImages = (images) => {
           resolve();
         }
       } catch (err) {
+        console.log({ err })
         reject(err);
       }
     });
