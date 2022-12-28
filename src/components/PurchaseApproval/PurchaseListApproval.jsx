@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { Axios } from 'src/utils/axios';
 import '../../CSS/purchaseApproval.css'
-const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList, key }) => {
+const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList, saveDraft }) => {
   const rejectOrder = async (id, index) => {
     const ans = window.confirm("Are you sure you want to reject this order?");
     if (!ans) return;

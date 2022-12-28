@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDetailsApproval';
+import { Axios } from 'src/utils/axios';
 
 const Approval = () => {
     const [list, setList] = useState([]);
@@ -7,10 +8,11 @@ const Approval = () => {
     useEffect(() => {
        callAPI();
     }, []);
-    const callAPI = () =>{
-      fetch("/api/purchaseOrder/orders")
-       .then((res)=>res.json())
-       .then((data)=>{
+    const callAPI = async() =>{
+     try{
+      const {data} = await Axios({
+        url:'/api/purchaseOrder/orders'
+      })
         let pendingArray = [];
         let approvedArray = [];
         let rejectedArray = [];
@@ -38,7 +40,9 @@ const Approval = () => {
         }
         setList([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
         setFilter([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
-       })
+     }catch(err){
+      console.log(err);
+     }
     }
    
   return (

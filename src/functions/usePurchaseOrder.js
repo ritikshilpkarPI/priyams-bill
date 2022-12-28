@@ -22,7 +22,7 @@ const usePurchaseOrder = (history) => {
   const [isEditable, setIsEditable] = useState(true);
   const [Loading, setLoading] = useState(false)
   const [prevPaidAmount, setPrevPaidAmount] = useState(0);
-  const [state, setState] = useState({})
+  const [, setState] = useState({})
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -78,7 +78,7 @@ const usePurchaseOrder = (history) => {
       stockQuantity: 0,
       minimumQuantity: 0,
       itemQuantity: 0,
-      unit: 0,
+      unit: '',
       email: '',
       itemRemark: '',
       sellingPrice: 0,
@@ -167,6 +167,7 @@ const usePurchaseOrder = (history) => {
         dealerName,
         phoneNumber,
       } = purchaseForm.values;
+      let totalAmount = (purchaseList.totalPaidAmount ? purchaseList.totalPaidAmount + purchaseForm.values.paidAmount : purchaseForm.values.paidAmount)
       setPurchaseList({
         ...purchaseList,
         details: [
@@ -183,7 +184,7 @@ const usePurchaseOrder = (history) => {
         procurementSource,
         dealerName,
         phoneNumber,
-        totalPaidAmount: purchaseList.totalPaidAmount ? purchaseList.totalPaidAmount + purchaseForm.values.paidAmount : purchaseForm.values.paidAmount,
+        totalPaidAmount: Number((Math.round(totalAmount * 100) / 100).toFixed(2)),
 
       });
 
@@ -210,7 +211,7 @@ const usePurchaseOrder = (history) => {
           paidBy: purchaseForm.values.paidBy,
           chequeNumber: purchaseForm.values.chequeNumber,
         },],
-        totalPaidAmount: newTotal
+        totalPaidAmount: Number((Math.round(newTotal * 100) / 100).toFixed(2))
       });
     }
     purchaseForm.setValues((prev) => ({
@@ -303,6 +304,7 @@ const usePurchaseOrder = (history) => {
       },
     });
   };
+
   const updateOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
       method: "POST",
@@ -395,10 +397,11 @@ const usePurchaseOrder = (history) => {
     });
   };
   const deletePurchaseDetail = (index) => {
+    let totalAmount = (purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount)
     setPurchaseList({
       ...purchaseList,
       details: [...purchaseList.details.filter((item, i) => i !== index)],
-      totalPaidAmount: purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount
+      totalPaidAmount: Number((Math.round(totalAmount * 100) / 100).toFixed(2))
     });
   };
   const addSlabPrice = () => {
@@ -426,7 +429,6 @@ const usePurchaseOrder = (history) => {
     form.values.barcode,
     handleSelectOrderItems
   );
-  console.log({ state });
   useEffect(() => {
     if (id && isNotGetUpdated) {
       getDetails();
