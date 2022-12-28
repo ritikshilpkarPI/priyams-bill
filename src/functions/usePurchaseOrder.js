@@ -303,7 +303,7 @@ const usePurchaseOrder = (history) => {
       },
     });
   };
-
+console.log({purchaseList})
   const updateOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
       method: "POST",

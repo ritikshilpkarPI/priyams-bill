@@ -14,6 +14,7 @@ const Approval = () => {
         let pendingArray = [];
         let approvedArray = [];
         let rejectedArray = [];
+        let draftArray = [];
         let totalArray = data.orders;
         const role = JSON.parse(localStorage.getItem("priyam-store")).role;
         for(let i=0;i<totalArray.length;i++){
@@ -23,6 +24,8 @@ const Approval = () => {
               }else if(totalArray[i].isApproved){
                 approvedArray.push(totalArray[i]);
               }else if(totalArray[i].isDraft){
+                draftArray.push(totalArray[i]);
+              }else{
                 pendingArray.push(totalArray[i]);
               }
           }else{
@@ -33,7 +36,7 @@ const Approval = () => {
             }
           }
         }
-        setList([...pendingArray,...rejectedArray,...approvedArray]);
+        setList([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
        })
     }
    
