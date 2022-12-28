@@ -397,10 +397,11 @@ const usePurchaseOrder = (history) => {
     });
   };
   const deletePurchaseDetail = (index) => {
+    let totalAmount = (purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount)
     setPurchaseList({
       ...purchaseList,
       details: [...purchaseList.details.filter((item, i) => i !== index)],
-      totalPaidAmount: (purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount)
+      totalPaidAmount: Number((Math.round(totalAmount * 100) / 100).toFixed(2))
     });
   };
   const addSlabPrice = () => {
