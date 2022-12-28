@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { Axios } from 'src/utils/axios';
 import '../../CSS/purchaseApproval.css'
-const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList, key }) => {
+const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList, saveDraft }) => {
   const rejectOrder = async (id, index) => {
     const ans = window.confirm("Are you sure you want to reject this order?");
     if (!ans) return;
@@ -68,21 +68,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
     }
     saveDraft(id, index);
   }
-  const saveDraft = async (id, index) => {
-
-    try {
-      await Axios({
-        method: "POST",
-        url: "/api/purchaseOrder/draftOrder",
-        data: { id },
-      });
-      setAllPurchaseList([...allPurchaseList.filter((item, i) => i !== index)]);
-      alert('Order drafted successfully')
-    } catch (err) {
-      console.log(err)
-      alert(`Something went wrong.Unable to draft the order`)
-    }
-  }
+  
   return (
     <>
       {list ? (

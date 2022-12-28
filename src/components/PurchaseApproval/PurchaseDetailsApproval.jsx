@@ -2,6 +2,7 @@ import React from "react";
 import PurchaseListApproval from "./PurchaseListApproval";
 import { Select, Table } from "@mantine/core";
 import '../../CSS/purchaseApproval.css'
+import { Axios } from "src/utils/axios";
 const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
   const filterOrders = (value) => {
     let pendingArray = [];
@@ -24,7 +25,26 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
       setAllPurchaseList([...rejectedArray, ...approvedArray, ...pendingArray]);
     }
   };
+  const saveDraft = async (id, index) => {
 
+    try {
+      const {order}  = await Axios({
+        method: "POST",
+        url: "/api/purchaseOrder/draftOrder",
+        data: { id },
+      });
+      if(JSON.parse(localStorage.getItem("priyam-store")).role === 'admin'){
+        setAllPurchaseList([...allPurchaseList.filter((item, i) => i !== index),order]);
+      }
+      else{
+        setAllPurchaseList([...allPurchaseList.filter((item, i) => i !== index)]);
+      }
+      alert('Order drafted successfully')
+    } catch (err) {
+      console.log(err)
+      alert(`Something went wrong.Unable to draft the order`)
+    }
+  }
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
@@ -62,6 +82,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
                   setAllPurchaseList={setAllPurchaseList}
                   list={list}
                   index={index}
+                  saveDraft={saveDraft}
                 />
               </tr>
             );
