@@ -78,6 +78,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                         label="Selling Price"
                         required
                         placeholder="selling price"
+                        precision={2}
                         {...form.getInputProps('sellingPrice')}
                     />
                     <NumberInput
@@ -85,6 +86,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                         label="MRP"
                         required
                         placeholder="mrp"
+                        precision={2}
                         {...form.getInputProps('mrp')}
                     />
                     <NumberInput
@@ -92,6 +94,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                         label="Cost Price"
                         required
                         placeholder="cost price"
+                        precision={2}
                         {...form.getInputProps('costPrice')}
                     />
                     <div className='date-container'>
@@ -155,6 +158,7 @@ const OrderForm = ({ openDrawer, expiryQuantity, handleDateDelete, setExpiryQuan
                             style={{ width: '15vmin' }}
                             label="Price"
                             placeholder="price"
+                            precision={2}
                             {...slabForm.getInputProps('pricing')}
                         />
                         <Button style={{ marginTop: '3.5vmin' }} onClick={(e) => { e.preventDefault(); addSlabPrice() }} type="">+</Button>

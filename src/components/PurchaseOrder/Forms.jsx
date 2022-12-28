@@ -34,6 +34,7 @@ const Forms = ({ purchaseForm, addDetails }) => {
             withAsterisk
             label="Bill Amount"
             placeholder="total bill amount"
+            precision={2}
             {...purchaseForm.getInputProps("billAmount")}
           />
           <Select
@@ -52,6 +53,7 @@ const Forms = ({ purchaseForm, addDetails }) => {
             withAsterisk
             label="Paid Amount"
             placeholder="total paid amount"
+            precision={2}
             {...purchaseForm.getInputProps("paidAmount")}
           />
           <Select

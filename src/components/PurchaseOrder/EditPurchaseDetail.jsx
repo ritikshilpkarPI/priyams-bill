@@ -6,7 +6,7 @@ const EditPurchaseDetail = ({ setPurchaseDrawer, openPurchaseDrawer, updateDetai
     return (
         <Drawer
             opened={openPurchaseDrawer}
-            onClose={() => { purchaseForm.reset(); setPurchaseDrawer(false) }}
+            onClose={() => { purchaseForm.values.paidBy=''; purchaseForm.values.paidAmount=0; setPurchaseDrawer(false) }}
             title="Paid Details"
             position='left'
             padding="xl"
@@ -32,7 +32,7 @@ const EditPurchaseDetail = ({ setPurchaseDrawer, openPurchaseDrawer, updateDetai
                             withAsterisk
                             label="Paid Amount"
                             placeholder="total paid amount"
-
+                            precision={2}
                             {...purchaseForm.getInputProps('paidAmount')}
                         />
                         {

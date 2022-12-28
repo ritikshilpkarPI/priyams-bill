@@ -15,7 +15,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
           bills: [...purchaseList.bills, reader.result],
         });
       };
-    });
+    }); 
   };
 
   function deleteHandler(image) {
@@ -26,7 +26,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
     URL.revokeObjectURL(image);
   }
   return (
-    <section className="bill-uploader-section">
+    <section style={{ width: "80%", margin: "auto", marginTop: "5vmin" }}>
       <Dropzone
         openRef={openRef}
         activateOnClick={false}
@@ -46,7 +46,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
       {purchaseList.bills?.length > 0 || cloudBills.length > 0 ? (
         <Carousel
           sx={{ maxWidth: 600 }}
-          className='bill-carousel'
+          style={{ marginTop: "5vmin" }}
           mx="auto"
           withIndicators
           height={400}
@@ -64,12 +64,17 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
                 >
                   <img
                     src={image}
-                    className="bill-image"
+                    style={{ height: "100%" }}
                     maxwidth={520}
                     alt="upload"
                   />
                   <img
-                    className="bill-image-point"
+                    style={{
+                      cursor: "pointer",
+                      position: "absolute",
+                      top: "0%",
+                      left: "90%",
+                    }}
                     height={50}
                     src={window.location.origin + "/closeicon.png"}
                     onClick={() => {
@@ -93,7 +98,12 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
                   alt="upload"
                 />
                 <img
-                  className="bill-image-point"
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    top: "0%",
+                    left: "90%",
+                  }}
                   height={50}
                   src={window.location.origin + "/closeicon.png"}
                   onClick={() => {
