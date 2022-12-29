@@ -92,12 +92,12 @@ const PurchaseOrderItems = ({ history }) => {
             <Notification style={{ display: message.failed ? "flex" : "none", width: '50vmin', height: "10vmin" }} onClose={() => { setMessage({ success: false, failed: false }) }} icon={<IconX size={18} />} color="red" title="Failed, cannot save details">
                 {message.error}
             </Notification>
-            <Group position="center" mt="">
+            <Group position="center">
                 <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
                 <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
             </Group>
-            <Group position="center">
-                <Button onClick={() => setOpened(true)}>Add Order Item</Button>
+            <Group position="center" style={{marginTop:'5vmin'}}>
+                <Button onClick={() => setOpened(true)}>Add Item</Button>
             </Group>
 
 
