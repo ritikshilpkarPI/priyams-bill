@@ -92,6 +92,10 @@ const PurchaseOrderItems = ({ history }) => {
             <Notification style={{ display: message.failed ? "flex" : "none", width: '50vmin', height: "10vmin" }} onClose={() => { setMessage({ success: false, failed: false }) }} icon={<IconX size={18} />} color="red" title="Failed, cannot save details">
                 {message.error}
             </Notification>
+            <Group position="center" mt="">
+                <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
+                <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
+            </Group>
             <Group position="center">
                 <Button onClick={() => setOpened(true)}>Add Order Item</Button>
             </Group>
@@ -100,15 +104,11 @@ const PurchaseOrderItems = ({ history }) => {
 
 
             <div className='detail-container'>
-                <Title order={2}>Purchase Details</Title>
-                <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails} />
+            <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder} />
+                <Title order={3}>Payment Details</Title>
+                <Forms purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails} />
                 <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail} />
-                <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills} />
-                <Group position="center" mt="">
-                    <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
-                    <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
-                </Group>
-                    <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder} />
+                    
             </div>
             <div>
                 <div className='list-items-container'>

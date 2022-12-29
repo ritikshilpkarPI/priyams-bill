@@ -26,7 +26,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
     URL.revokeObjectURL(image);
   }
   return (
-    <section style={{ width: "80%", margin: "auto", marginTop: "5vmin" }}>
+    <section style={{ width: "100%", margin: "auto", marginTop: "5vmin" }}>
       <Dropzone
         openRef={openRef}
         activateOnClick={false}
