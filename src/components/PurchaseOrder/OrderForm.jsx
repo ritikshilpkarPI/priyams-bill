@@ -11,7 +11,7 @@ import {
 import { DatePicker } from "@mantine/dates";
 import ListDropDownItem from "./ListDropDownItem";
 import ShowSlabPricing from "./ShowSlabPricing";
-
+import '../../CSS/orderForm.css'
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -41,18 +41,18 @@ const OrderForm = ({
         setSlabs([]);
         setOpened(false);
       }}
-      title="Item Details"
       padding="lg"
       size="xl"
+      style={{height:'100%'} }
     >
       <Box sx={{ maxWidth: 400 }} mx="auto" my={"lg"}>
-        <form onSubmit={form.onSubmit((values) => handleItemFrom(values))}>
+        <form className="order-form" onSubmit={form.onSubmit((values) => handleItemFrom(values))}>
           <Switch
             checked={form.values.validate}
             label="validate"
             {...form.getInputProps("validate")}
           />
-          <Group>
+          <Group className="order-flex-class">
             <TextInput
               withAsterisk={form.values.validate}
               label="Barcode"
@@ -80,7 +80,7 @@ const OrderForm = ({
               handleSelectOrderItems={handleSelectOrderItems}
             />
           )}
-          <Group>
+          <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
               label="Pkt. Amt."
@@ -95,7 +95,13 @@ const OrderForm = ({
               {...form.getInputProps("unit")}
             />
           </Group>
-          <Group>
+          <Group className="order-flex-class">
+            <NumberInput
+              withAsterisk={form.values.validate}
+              label="Minimum Quantity"
+              placeholder="minimum quantity"
+              {...form.getInputProps("minimumQuantity")}
+            />
             <NumberInput
               withAsterisk={form.values.validate}
               label="Current Stock"
@@ -103,15 +109,9 @@ const OrderForm = ({
               disabled
               {...form.getInputProps("stockQuantity")}
             />
-            <NumberInput
-              withAsterisk={form.values.validate}
-              label="Minimum Quantity"
-              placeholder="minimum quantity"
-              {...form.getInputProps("minimumQuantity")}
-            />
           </Group>
 
-          <Group>
+          <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
               label="M.R.P"
@@ -179,7 +179,7 @@ const OrderForm = ({
                 );
               })
             : ""}
-          <Group>
+          <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
               style={{ width: "15vmin" }}
