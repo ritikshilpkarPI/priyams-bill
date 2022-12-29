@@ -4,6 +4,7 @@ import { Axios } from 'src/utils/axios';
 
 const Approval = () => {
     const [list, setList] = useState([]);
+    const [filter, setFilter] = useState([]);
     useEffect(() => {
        callAPI();
     }, []);
@@ -38,6 +39,7 @@ const Approval = () => {
           }
         }
         setList([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
+        setFilter([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
      }catch(err){
       console.log(err);
      }
@@ -45,7 +47,7 @@ const Approval = () => {
    
   return (
     <div>
-      <PurchaseDetailsApproval allPurchaseList={list} setAllPurchaseList={setList} />
+      <PurchaseDetailsApproval callAPI={callAPI} allList={list} allPurchaseList={filter} setAllPurchaseList={setFilter} />
     </div>
   )
 }

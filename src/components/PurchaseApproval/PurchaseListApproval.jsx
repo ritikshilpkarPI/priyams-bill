@@ -1,24 +1,22 @@
 import { Button } from '@mantine/core';
-import React from 'react'
+import React  from 'react'
 import { Link } from 'react-router-dom';
 import { Axios } from 'src/utils/axios';
 import '../../CSS/purchaseApproval.css'
-const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList, saveDraft }) => {
+const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList , setIndexDetail,callAPI }) => {
   const rejectOrder = async (id, index) => {
     const ans = window.confirm("Are you sure you want to reject this order?");
     if (!ans) return;
     try {
-      const res = await Axios({
+      await Axios({
         method: 'POST',
         url: '/api/approval/rejectOrder/' + id,
         data: {
           username: JSON.parse(localStorage.getItem("priyam-store")).username
         }
       })
-      const array = [...allPurchaseList];
-      array[index] = res.data.order;
-      setAllPurchaseList(array);
       window.alert("Order rejected successfully");
+      callAPI();
     } catch (err) {
       console.log(err);
       window.alert('Something went wrong,unable to reject order')
@@ -28,17 +26,15 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
     const ans = window.confirm("Are you sure you want to approve this order?");
     if (!ans) return;
     try {
-      const res = await Axios({
+       await Axios({
         method: 'POST',
         url: '/api/approval/approveOrder/' + id,
         data: {
           username: JSON.parse(localStorage.getItem("priyam-store")).username
         }
       })
-      const array = [...allPurchaseList];
-      array[index] = res.data.order;
-      setAllPurchaseList(array);
       window.alert("Order approved successfully");
+      callAPI();
     } catch (err) {
       console.log(err);
       window.alert('Something went wrong,unable to approve order');
@@ -67,6 +63,21 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
       return;
     }
     saveDraft(id, index);
+    callAPI();
+  }
+  const saveDraft = async (id, index) => {
+
+    try {
+      await Axios({
+        method: "POST",
+        url: "/api/purchaseOrder/draftOrder",
+        data: { id },
+      });
+      alert('Order drafted successfully')
+    } catch (err) {
+      console.log(err)
+      alert(`Something went wrong.Unable to draft the order`)
+    }
   }
   
   return (
@@ -91,7 +102,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
                    {
                     list.isApproved
                     ?
-                    <td><Button>Details</Button></td>
+                    <td><Button onClick={()=> setIndexDetail(index)}>Details</Button></td>
                     :
                     <td><Link disabled={list.isApproved} className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
                     </td>
@@ -115,6 +126,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
       ) : (
         <></>
       )}
+     
     </>
   )
 }
