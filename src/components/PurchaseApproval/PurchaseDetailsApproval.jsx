@@ -1,9 +1,12 @@
-import React from "react";
+import React,{useState} from "react";
 import PurchaseListApproval from "./PurchaseListApproval";
-import { Select, Table } from "@mantine/core";
+import { Button, Select, Table } from "@mantine/core";
 import '../../CSS/purchaseApproval.css'
-import { Axios } from "src/utils/axios";
-const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
+
+import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
+import ShowOrderDetailTable from "./ShowOrderDetailTable";
+const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList , callAPI}) => {
+  const [indexDetail, setIndexDetail] = useState(-1);
   const filterOrders = (value) => {
     let filter = []
     if (value === "draft") {
@@ -26,7 +29,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
       }
     } else if (value === "saved") {
       for (let i = 0; i < allList.length; i++) {
-         if(!allList[i].isDraft && !allList[i].isApproved && !allList.isRejected){
+         if(!(allList[i].isDraft || allList[i].isRejected || allList[i].isApproved)){
           filter.push(allList[i]);
         }
       }
@@ -34,27 +37,8 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
       filter = [...allList]
     }
     setAllPurchaseList([...filter])
+    setIndexDetail(-1)
   };
-  const saveDraft = async (id, index) => {
-
-    try {
-      const {order}  = await Axios({
-        method: "POST",
-        url: "/api/purchaseOrder/draftOrder",
-        data: { id },
-      });
-      if(JSON.parse(localStorage.getItem("priyam-store")).role === 'admin'){
-        setAllPurchaseList([...allPurchaseList.filter((item, i) => i !== index),order]);
-      }
-      else{
-        setAllPurchaseList([...allPurchaseList.filter((item, i) => i !== index)]);
-      }
-      alert('Order drafted successfully')
-    } catch (err) {
-      console.log(err)
-      alert(`Something went wrong.Unable to draft the order`)
-    }
-  }
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
@@ -72,7 +56,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
         onChange={filterOrders}
       />
 
-          {allPurchaseList.length === 0
+          {allPurchaseList.length === 0 
           ?
           <div className="message">
             No Orders
@@ -95,19 +79,43 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList }) => {
           <tbody>
             {allPurchaseList.map((list, index) => {
               return (
+                indexDetail >=0 ?
+                index === indexDetail
+                ?
                 <tr key={index}>
                   <PurchaseListApproval
                     allPurchaseList={allPurchaseList}
                     setAllPurchaseList={setAllPurchaseList}
                     list={list}
                     index={index}
+                    setIndexDetail={setIndexDetail}
+                    callAPI={callAPI}
+    
                   />
                 </tr>
+                :<></>
+                :<tr key={index}>
+                <PurchaseListApproval
+                  allPurchaseList={allPurchaseList}
+                  setAllPurchaseList={setAllPurchaseList}
+                  list={list}
+                  index={index}
+                  setIndexDetail={setIndexDetail}
+                  callAPI={callAPI}
+                />
+              </tr>
               );
             })}
           </tbody>
         </Table>
           }
+       {indexDetail >= 0 ?
+         <> 
+         <div className="closebtn"><Button onClick={()=> setIndexDetail(-1)}>Close</Button></div>
+         <ShowPurchaseOrderTable purchaseList={allPurchaseList[indexDetail]} />
+         <ShowOrderDetailTable purchaseList={allPurchaseList[indexDetail]} /></>
+          :<></>
+       }
     </div>
   );
 };

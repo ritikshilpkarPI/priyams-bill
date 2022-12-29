@@ -108,10 +108,10 @@ const PurchaseOrderItems = ({ history }) => {
                     <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
                     <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
                 </Group>
+                    <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder} />
             </div>
             <div>
                 <div className='list-items-container'>
-                    <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder} />
                 </div>
 
             </div>

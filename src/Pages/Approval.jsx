@@ -47,7 +47,7 @@ const Approval = () => {
    
   return (
     <div>
-      <PurchaseDetailsApproval allList={list} allPurchaseList={filter} setAllPurchaseList={setFilter} />
+      <PurchaseDetailsApproval callAPI={callAPI} allList={list} allPurchaseList={filter} setAllPurchaseList={setFilter} />
     </div>
   )
 }
