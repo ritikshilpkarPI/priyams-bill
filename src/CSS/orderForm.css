@@ -9,3 +9,6 @@
     flex-direction: column;
     height: 100%;
 }
+.form-input-tops{
+    width: 28vmin;
+}

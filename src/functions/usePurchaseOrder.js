@@ -89,7 +89,6 @@ const usePurchaseOrder = (history) => {
       slabPrice: []
     },
     validate: {
-      stockQuantity: (value) => (form.values.validate ? (value > 0 ? null : 'Stock Quantity should be greater than 0') : null),
       itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0' : null),
       sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0' : null),
       mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0' : null),

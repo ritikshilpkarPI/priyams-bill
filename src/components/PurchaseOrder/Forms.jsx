@@ -99,8 +99,8 @@ const Forms = ({ purchaseForm, addDetails ,purchaseList,setPurchaseList,cloudBil
               {...purchaseForm.getInputProps("chequeNumber")}
             />
           )}
-          <Textarea
-          // sx={{ width: "60%", marginTop: "1rem" }}
+          <TextInput
+          sx={{ width: "20%"}}
           placeholder="remarks"
           label="Your Remarks"
           {...purchaseForm.getInputProps("remark")}
