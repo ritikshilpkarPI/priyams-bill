@@ -3,9 +3,10 @@ import { useForm } from "@mantine/form";
 import useBarcodeSearchItems from "./useBarcodeSearchItems";
 import { Axios } from "src/utils/axios";
 import { useHistory } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const usePurchaseOrder = (history) => {
+  const {id} =  useParams();
   const [opened, setOpened] = useState(false);
   const [openPurchaseDrawer, setPurchaseDrawer] = useState(false);
   const [date, setDate] = useState("");
@@ -15,7 +16,6 @@ const usePurchaseOrder = (history) => {
   const [editIndex, setEditIndex] = useState(-1);
   const [slabs, setSlabs] = useState([]);
   const [isNotGetUpdated, setIsNotGetUpdated] = useState(true);
-  const myLocation = useLocation();
   const locate = useHistory();
   const [cloudBills, setCloudBills] = useState([]);
   const [deleteBills, setDeleteBills] = useState([]);
@@ -104,12 +104,12 @@ const usePurchaseOrder = (history) => {
     isSaved: false,
     isDraft: false
   })
-  const id = myLocation.state?.id;
-  const getDetails = async () => {
+  // const my_id = myLocation.state?.id;
+  const getDetails = async (search_id) => {
     try {
       const res = await Axios({
         method: "GET",
-        url: "/api/purchaseOrder/orderDetails/" + id,
+        url: "/api/purchaseOrder/orderDetails/" + search_id,
       });
       const data = res.data.data;
 
@@ -342,21 +342,31 @@ const usePurchaseOrder = (history) => {
     setEditIndex(index);
     setPurchaseDrawer(true);
   };
-  const handleItemFrom = (values) => {
+  const handleItemFrom = async(values) => {
     let sum = 0;
     values.expiryDates.forEach((element) => {
       sum += element.quantity;
     });
     if (sum === values.stockQuantity || !form.values.validate) {
       form.values.slabPrice = [...slabs];
-      let ordersUpdated = [...purchaseList.orders.filter((order) => order.barcode !== values.barcode)]
-      setPurchaseList({
-        ...purchaseList,
-        orders: [
-          ...ordersUpdated,
-          values
-        ],
-      });
+      const new_order = {...values}
+      try{
+        onLoader()
+        
+        const {data}  = editIndex >=0 ?await updateOrderByIndex(new_order,editIndex):( id ?await updateSavedOrder(new_order) :await saveOrder(new_order));
+        const {order} = data;
+        const {_id} = order;
+       offLoader();
+       if(!id){
+         locate.push(`/purchase/${_id}`)
+       }else{
+        getDetails(id)
+       }
+      }catch(err){
+        console.log(err);
+        offLoader();
+        alert('unable to add order, something went wrong...')
+      }
 
       form.reset();
       setSlabs([]);
@@ -368,9 +378,37 @@ const usePurchaseOrder = (history) => {
     alert("Total expiry dates and stock quantity  is not matching");
   };
 
+  const saveOrder = async(new_order) =>{
+    return await Axios({
+      method:'POST',
+      url:'/api/purchaseOrder/saveOrder',
+      data:{
+        new_order
+      }
+    })
+  }
+  const updateSavedOrder = async (new_order) =>{
+    return await Axios({
+      method:'POST',
+      url:`/api/purchaseOrder/updateSavedOrder/${id}`,
+      data:{
+        new_order
+      }
+    })
+  }
+  const updateOrderByIndex = async(new_order,index)=>{
+    return await Axios({
+      method:'POST',
+      url:`/api/purchaseOrder/updateOrderByIndex/${id}`,
+      data:{
+        new_order,
+        index
+      }
+    })
+  }
   const handleItemEdit = (item, index) => {
     setIsEditable(false)
-    if (index) {
+    if (index  >= 0) {
       setEditIndex(index);
     }
     form.setValues((prev) => ({
@@ -390,12 +428,37 @@ const usePurchaseOrder = (history) => {
     setSlabs([...item.slabPrice]);
     setOpened(true);
   };
-  const deleteOrder = (index) => {
-    setPurchaseList({
-      ...purchaseList,
-      orders: [...purchaseList.orders.filter((item, i) => i !== index)],
-    });
+  const deleteOrder = async (order_id) => {
+    // setPurchaseList({
+    //   ...purchaseList,
+    //   orders: [...purchaseList.orders.filter((item, i) => i !== index)],
+    // });
+    try{
+    onLoader();
+    const {data} = await Axios({
+      method:'POST',
+      url:`/api/purchaseOrder/deleteItem/${id}`,
+      data:{
+        itemId:order_id
+      }
+    })
+    const {order} = data;
+    const {_id} = order;
+    offLoader()
+    getDetails(id)
+    }catch(err){
+      offLoader()
+      console.log({err})
+    }
   };
+  const onLoader = () =>{
+    setLoading(true);
+    hideScrollBar();
+  }
+  const offLoader = () =>{
+    setLoading(false);
+    showScrollBar();
+  }
   const deletePurchaseDetail = (index) => {
     let totalAmount = (purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount)
     setPurchaseList({
@@ -430,8 +493,8 @@ const usePurchaseOrder = (history) => {
     handleSelectOrderItems
   );
   useEffect(() => {
-    if (id && isNotGetUpdated) {
-      getDetails();
+    if(id && isNotGetUpdated){
+      getDetails(id);
       setIsNotGetUpdated(false);
     }
     if (Object.keys(barcodeFilteredItem).length && isEditable) {

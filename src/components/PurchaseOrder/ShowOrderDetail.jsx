@@ -38,7 +38,7 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
       <td>
         <Button
           style={{ backgroundColor: "#F03E3E" }}
-          onClick={() => deleteOrder(index)}
+          onClick={() => deleteOrder(element._id)}
         >
           Delete
         </Button>

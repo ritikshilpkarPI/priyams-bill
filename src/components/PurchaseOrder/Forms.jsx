@@ -8,8 +8,9 @@ import {
   TextInput,
 } from "@mantine/core";
 import React from "react";
+import BillUploader from "./BillUploader";
 
-const Forms = ({ purchaseForm, addDetails }) => {
+const Forms = ({ purchaseForm, addDetails ,purchaseList,setPurchaseList,cloudBills,deleteCloudBills}) => {
   return (
     <form
       onSubmit={(e) => {
@@ -98,16 +99,21 @@ const Forms = ({ purchaseForm, addDetails }) => {
               {...purchaseForm.getInputProps("chequeNumber")}
             />
           )}
-        </Group>
-        <Textarea
-          sx={{ width: "60%", marginTop: "1rem" }}
+          <Textarea
+          // sx={{ width: "60%", marginTop: "1rem" }}
           placeholder="remarks"
           label="Your Remarks"
           {...purchaseForm.getInputProps("remark")}
         />
-        <Group position="right" mt="md">
-          <Button type="submit">Add Details</Button>
+        <Button type="submit">Add Details</Button>
         </Group>
+        {/* <Textarea
+          sx={{ width: "60%", marginTop: "1rem" }}
+          placeholder="remarks"
+          label="Your Remarks"
+          {...purchaseForm.getInputProps("remark")}
+        /> */}
+        <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills} />
       </Box>
     </form>
   );

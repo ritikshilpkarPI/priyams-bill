@@ -93,22 +93,22 @@ const PurchaseOrderItems = ({ history }) => {
                 {message.error}
             </Notification>
             <Group position="center">
-                <Button onClick={() => setOpened(true)}>Add Order Item</Button>
+                <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
+                <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
+            </Group>
+            <Group position="center" style={{marginTop:'5vmin'}}>
+                <Button onClick={() => setOpened(true)}>Add Item</Button>
             </Group>
 
 
 
 
             <div className='detail-container'>
-                <Title order={2}>Purchase Details</Title>
-                <Forms purchaseList={purchaseList} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails} />
+            <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder} />
+                <Title order={3}>Payment Details</Title>
+                <Forms purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails} />
                 <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail} />
-                <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills} />
-                <Group position="center" mt="">
-                    <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
-                    <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
-                </Group>
-                    <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder} />
+                    
             </div>
             <div>
                 <div className='list-items-container'>

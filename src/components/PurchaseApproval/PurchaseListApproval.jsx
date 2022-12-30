@@ -104,7 +104,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
                     ?
                     <td><Button onClick={()=> setIndexDetail(index)}>Details</Button></td>
                     :
-                    <td><Link disabled={list.isApproved} className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
+                    <td><Link disabled={list.isApproved} className='purchase-list-edit' to={{pathname:`/purchase/${list._id}`,state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
                     </td>
                    }
                     {list.isDraft?
@@ -116,7 +116,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
                 </>
                 :
                 <>
-                 <td><Link className='purchase-list-edit' to={{pathname:"/purchase",state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
+                 <td><Link className='purchase-list-edit' to={{pathname:`/purchase/${list._id}`,state:{isEditedByAdmin:true,id:list._id}}}>Edit</Link>
                  </td>
                  <td><Button disabled={list.isRejected} className='approve-btn' onClick={()=>{draftOrder(list._id,index)}}>Draft</Button></td>
                 </>
