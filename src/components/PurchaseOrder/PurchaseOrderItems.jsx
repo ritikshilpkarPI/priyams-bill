@@ -5,8 +5,6 @@ import { IconCheck, IconX } from '@tabler/icons';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
-
-import BillUploader from './BillUploader';
 import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
@@ -96,7 +94,7 @@ const PurchaseOrderItems = ({ history }) => {
                 <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
                 <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
             </Group>
-            <Group position="center" style={{marginTop:'5vmin'}}>
+            <Group position="center" style={{ marginTop: '5vmin' }}>
                 <Button onClick={() => setOpened(true)}>Add Item</Button>
             </Group>
 
@@ -104,11 +102,11 @@ const PurchaseOrderItems = ({ history }) => {
 
 
             <div className='detail-container'>
-            <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder} />
+                <ShowOrderDetail purchaseList={purchaseList} handleItemEdit={handleItemEdit} deleteOrder={deleteOrder} />
                 <Title order={3}>Payment Details</Title>
                 <Forms purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills} purchaseForm={purchaseForm} addPurchadeOrder={addPurchadeOrder} addDetails={addDetails} />
                 <ShowPurchaseDetails deletePurchaseDetail={deletePurchaseDetail} purchaseList={purchaseList} handlePurchaseDetail={handlePurchaseDetail} />
-                    
+
             </div>
             <div>
                 <div className='list-items-container'>
