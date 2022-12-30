@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 const usePurchaseOrder = (history) => {
-  const {id} =  useParams();
+  const { id } = useParams();
   const [opened, setOpened] = useState(false);
   const [openPurchaseDrawer, setPurchaseDrawer] = useState(false);
   const [date, setDate] = useState("");
@@ -343,27 +343,27 @@ const usePurchaseOrder = (history) => {
     setEditIndex(index);
     setPurchaseDrawer(true);
   };
-  const handleItemFrom = async(values) => {
+  const handleItemFrom = async (values) => {
     let sum = 0;
     values.expiryDates.forEach((element) => {
       sum += element.quantity;
     });
     if (sum === values.stockQuantity || !form.values.validate) {
       form.values.slabPrice = [...slabs];
-      const new_order = {...values}
-      try{
+      const new_order = { ...values }
+      try {
         onLoader()
-        
-        const {data}  = editIndex >=0 ?await updateOrderByIndex(new_order,editIndex):( id ?await updateSavedOrder(new_order) :await saveOrder(new_order));
-        const {order} = data;
-        const {_id} = order;
-       offLoader();
-       if(!id){
-         locate.push(`/purchase/${_id}`)
-       }else{
-        getDetails(id)
-       }
-      }catch(err){
+
+        const { data } = editIndex >= 0 ? await updateOrderByIndex(new_order, editIndex) : (id ? await updateSavedOrder(new_order) : await saveOrder(new_order));
+        const { order } = data;
+        const { _id } = order;
+        offLoader();
+        if (!id) {
+          locate.push(`/purchase/${_id}`)
+        } else {
+          getDetails(id)
+        }
+      } catch (err) {
         console.log(err);
         offLoader();
         alert('unable to add order, something went wrong...')
@@ -379,29 +379,29 @@ const usePurchaseOrder = (history) => {
     alert("Total expiry dates and stock quantity  is not matching");
   };
 
-  const saveOrder = async(new_order) =>{
+  const saveOrder = async (new_order) => {
     return await Axios({
-      method:'POST',
-      url:'/api/purchaseOrder/saveOrder',
-      data:{
+      method: 'POST',
+      url: '/api/purchaseOrder/saveOrder',
+      data: {
         new_order
       }
     })
   }
-  const updateSavedOrder = async (new_order) =>{
+  const updateSavedOrder = async (new_order) => {
     return await Axios({
-      method:'POST',
-      url:`/api/purchaseOrder/updateSavedOrder/${id}`,
-      data:{
+      method: 'POST',
+      url: `/api/purchaseOrder/updateSavedOrder/${id}`,
+      data: {
         new_order
       }
     })
   }
-  const updateOrderByIndex = async(new_order,index)=>{
+  const updateOrderByIndex = async (new_order, index) => {
     return await Axios({
-      method:'POST',
-      url:`/api/purchaseOrder/updateOrderByIndex/${id}`,
-      data:{
+      method: 'POST',
+      url: `/api/purchaseOrder/updateOrderByIndex/${id}`,
+      data: {
         new_order,
         index
       }
@@ -409,7 +409,7 @@ const usePurchaseOrder = (history) => {
   }
   const handleItemEdit = (item, index) => {
     setIsEditable(false)
-    if (index  >= 0) {
+    if (index >= 0) {
       setEditIndex(index);
     }
     form.setValues((prev) => ({
@@ -445,14 +445,14 @@ const usePurchaseOrder = (history) => {
     getDetails(id)
     }catch(err){
       offLoader()
-      console.log({err})
+      console.log({ err })
     }
   };
-  const onLoader = () =>{
+  const onLoader = () => {
     setLoading(true);
     hideScrollBar();
   }
-  const offLoader = () =>{
+  const offLoader = () => {
     setLoading(false);
     showScrollBar();
   }
@@ -498,7 +498,7 @@ const usePurchaseOrder = (history) => {
     handleSelectOrderItems
   );
   useEffect(() => {
-    if(id && isNotGetUpdated){
+    if (id && isNotGetUpdated) {
       getDetails(id);
       setIsNotGetUpdated(false);
     }
