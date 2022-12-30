@@ -13,7 +13,7 @@ const EditPurchaseDetail = ({ setPurchaseDrawer, openPurchaseDrawer, updateDetai
             size={300}
         >
             <Box sx={{ maxWidth: 400 }} className="edit-purchase-box" mx="auto" my={'lg'}>
-                <form onSubmit={(e) => { e.preventDefault(); updateDetails(e); }}>
+                <form onSubmit={(e) => { e.preventDefault(); updateDetails(e); setPurchaseDrawer(false)}}>
                     <Group>
                         <Select
                             label="Paid by"
