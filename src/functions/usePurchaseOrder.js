@@ -21,7 +21,7 @@ const usePurchaseOrder = (history) => {
   const [deleteBills, setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
   const [Loading, setLoading] = useState(false)
-  const [prevPaidAmount, setPrevPaidAmount] = useState(0);
+  const [, setPrevPaidAmount] = useState(0);
   const [, setState] = useState({})
   const [message, setMessage] = useState({
     success: false,
@@ -159,68 +159,68 @@ const usePurchaseOrder = (history) => {
   }
 
   const addDetails = async () => {
-      const payment = {
-        paidAmount:purchaseForm.values.paidAmount,
-        chequeNumber:purchaseForm.values.chequeNumber,
-        paidBy:purchaseForm.values.paidBy
+    const payment = {
+      paidAmount: purchaseForm.values.paidAmount,
+      chequeNumber: purchaseForm.values.chequeNumber,
+      paidBy: purchaseForm.values.paidBy
+    }
+    try {
+      onLoader();
+      const { data } = id ? await updateSavedPayment(payment) : await savePayment(payment);
+      const { order } = data;
+      const { _id } = order;
+      offLoader();
+      if (id) {
+        getDetails(id);
+      } else {
+        locate.push(`/purchase/${_id}`)
       }
-      try{
-        onLoader();
-        const {data} =   id ?await updateSavedPayment(payment) :await savePayment(payment);
-        const {order} = data;
-        const {_id} = order;
-        offLoader();
-        if(id){
-          getDetails(id);
-        }else{
-          locate.push(`/purchase/${_id}`)
-        }
-      }catch(err){
-        offLoader();
-        alert('something went wrong...')
-        console.log({err})
-      }
+    } catch (err) {
+      offLoader();
+      alert('something went wrong...')
+      console.log({ err })
+    }
 
   };
-  const savePayment = async(payment) => {
+  const savePayment = async (payment) => {
     return await Axios({
-      method:'POST',
-      url:'/api/payment/savePayment',
-      data:{
+      method: 'POST',
+      url: '/api/payment/savePayment',
+      data: {
         payment
       }
     })
   }
-  const updateSavedPayment = async(payment) =>{
+  const updateSavedPayment = async (payment) => {
     return await Axios({
-    method:'POST',
-    url:`/api/payment/updateSavedPayment/${id}`,
-    data:{
-      payment,
-    }
+      method: 'POST',
+      url: `/api/payment/updateSavedPayment/${id}`,
+      data: {
+        payment,
+      }
     })
   }
   const updateDetails = async (e) => {
     const payment = {
-      paidBy:purchaseForm.values.paidBy,
-      paidAmount:purchaseForm.values.paidAmount,
-      chequeNumber:purchaseForm.values.chequeNumber
+      paidBy: purchaseForm.values.paidBy,
+      paidAmount: purchaseForm.values.paidAmount,
+      chequeNumber: purchaseForm.values.chequeNumber
     }
-    try{
+    try {
       onLoader();
-      await updatePaymentById(payment,editIndex);
+      await updatePaymentById(payment, editIndex);
       getDetails(id);
       offLoader();
-    }catch(err){
+    } catch (err) {
       offLoader();
-      console.log({err})
+      console.log({ err })
     }
   };
-  const updatePaymentById = async (payment,index) =>{
+  const updatePaymentById = async (payment, index) => {
     await Axios({
-      method:'POST',
-      url:`/api/payment/updatePaymentById/${id}`,
-      data:{
+      method: 'POST',
+      url: `/api/payment/updatePaymentById/${id}`,
+      data: {
         index,
         payment
       }
@@ -241,7 +241,7 @@ const usePurchaseOrder = (history) => {
       return;
     }
 
-   onLoader();
+    onLoader();
     const {
       billAmount,
       remark,
@@ -430,20 +430,21 @@ const usePurchaseOrder = (history) => {
     setOpened(true);
   };
   const deleteOrder = async (order_id) => {
-    try{
-    onLoader();
-    const {data} = await Axios({
-      method:'POST',
-      url:`/api/purchaseOrder/deleteItem/${id}`,
-      data:{
-        itemId:order_id
-      }
-    })
-    const {order} = data;
-    const {_id} = order;
-    offLoader()
-    getDetails(id)
-    }catch(err){
+    try {
+      onLoader();
+      const { data } = await Axios({
+        method: 'POST',
+        url: `/api/purchaseOrder/deleteItem/${id}`,
+        data: {
+          itemId: order_id
+        }
+      })
+      const { order } = data;
+      const { _id } = order;
+      console.log({ _id });
+      offLoader()
+      getDetails(id)
+    } catch (err) {
       offLoader()
       console.log({ err })
     }
@@ -456,20 +457,20 @@ const usePurchaseOrder = (history) => {
     setLoading(false);
     showScrollBar();
   }
-  const deletePurchaseDetail = async(index) => {
-    try{
+  const deletePurchaseDetail = async (index) => {
+    try {
       onLoader();
       await Axios({
-        method:'POST',
-        url:`/api/payment/deletePaymentById/${id}`,
-        data:{
+        method: 'POST',
+        url: `/api/payment/deletePaymentById/${id}`,
+        data: {
           index
         }
       })
       offLoader();
       getDetails(id);
-    }catch(err){
-      console.log({err})
+    } catch (err) {
+      console.log({ err })
     }
   };
   const addSlabPrice = () => {
