@@ -44,7 +44,7 @@ const OrderForm = ({
       }}
       padding="sm"
       size="xl"
-      style={{height:'100%'} }
+     
     >
       <Box sx={{ maxWidth: 400 }} mx="auto" my={"lg"}>
         <form className="order-form" onSubmit={form.onSubmit((values) => handleItemFrom(values))}>

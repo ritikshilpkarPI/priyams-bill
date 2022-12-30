@@ -106,6 +106,7 @@ const usePurchaseOrder = (history) => {
   // const my_id = myLocation.state?.id;
   const getDetails = async (search_id) => {
     try {
+      onLoader();
       const res = await Axios({
         method: "GET",
         url: "/api/purchaseOrder/orderDetails/" + search_id,
@@ -131,9 +132,11 @@ const usePurchaseOrder = (history) => {
         billAmount: purchaseForm.values.billAmount,
         bills: [],
       });
+      offLoader();
     } catch (error) {
       console.log(error.message);
       setMessage({ success: false, failed: true, error: error.message })
+      offLoader();
     }
   };
   const addPurchadeOrderValidate = async () => {
@@ -155,72 +158,74 @@ const usePurchaseOrder = (history) => {
     }));
   }
 
-  const addDetails = () => {
-    purchaseForm.validate();
-    if (purchaseForm.isValid()) {
-      const {
-        billAmount,
-        remark,
-        payment,
-        procurementSource,
-        dealerName,
-        phoneNumber,
-      } = purchaseForm.values;
-      let totalAmount = (purchaseList.totalPaidAmount ? purchaseList.totalPaidAmount + purchaseForm.values.paidAmount : purchaseForm.values.paidAmount)
-      setPurchaseList({
-        ...purchaseList,
-        details: [
-          ...purchaseList.details,
-          {
-            paidAmount: purchaseForm.values.paidAmount,
-            paidBy: purchaseForm.values.paidBy,
-            chequeNumber: purchaseForm.values.chequeNumber,
-          },
-        ],
-        billAmount,
-        remark,
-        payment,
-        procurementSource,
-        dealerName,
-        phoneNumber,
-        totalPaidAmount: Number((Math.round(totalAmount * 100) / 100).toFixed(2)),
+  const addDetails = async () => {
+      const payment = {
+        paidAmount:purchaseForm.values.paidAmount,
+        chequeNumber:purchaseForm.values.chequeNumber,
+        paidBy:purchaseForm.values.paidBy
+      }
+      try{
+        onLoader();
+        const {data} =   id ?await updateSavedPayment(payment) :await savePayment(payment);
+        const {order} = data;
+        const {_id} = order;
+        offLoader();
+        if(id){
+          getDetails(id);
+        }else{
+          locate.push(`/purchase/${_id}`)
+        }
+      }catch(err){
+        offLoader();
+        alert('something went wrong...')
+        console.log({err})
+      }
 
-      });
-
-      purchaseForm.setValues((prev) => ({
-        paidAmount: 0,
-        chequeNumber: '',
-        paidBy: ''
-      }))
-
+  };
+  const savePayment = async(payment) => {
+    return await Axios({
+      method:'POST',
+      url:'/api/payment/savePayment',
+      data:{
+        payment
+      }
+    })
+  }
+  const updateSavedPayment = async(payment) =>{
+    return await Axios({
+    method:'POST',
+    url:`/api/payment/updateSavedPayment/${id}`,
+    data:{
+      payment,
+    }
+    })
+  }
+  const updateDetails = async (e) => {
+    const payment = {
+      paidBy:purchaseForm.values.paidBy,
+      paidAmount:purchaseForm.values.paidAmount,
+      chequeNumber:purchaseForm.values.chequeNumber
+    }
+    try{
+      onLoader();
+      await updatePaymentById(payment,editIndex);
+      getDetails(id);
+      offLoader();
+    }catch(err){
+      offLoader();
+      console.log({err})
     }
   };
-  const updateDetails = (e) => {
-    let prevTotal = purchaseList.totalPaidAmount;
-    let newPaidAmount = purchaseForm.values.paidAmount;
-    let newTotal = prevPaidAmount > newPaidAmount ? prevTotal + (newPaidAmount - prevPaidAmount) : prevTotal - prevPaidAmount + newPaidAmount;
-    if (true) {
-      let detailArray = purchaseList.details.filter(
-        (item, index) => index !== editIndex
-      );
-      setPurchaseList({
-        ...purchaseList,
-        details: [...detailArray, {
-          paidAmount: purchaseForm.values.paidAmount,
-          paidBy: purchaseForm.values.paidBy,
-          chequeNumber: purchaseForm.values.chequeNumber,
-        },],
-        totalPaidAmount: Number((Math.round(newTotal * 100) / 100).toFixed(2))
-      });
-    }
-    purchaseForm.setValues((prev) => ({
-      paidAmount: 0,
-      chequeNumber: '',
-      paidBy: ''
-    }))
-    setEditIndex(-1);
-    setPurchaseDrawer(false);
-  };
+  const updatePaymentById = async (payment,index) =>{
+    await Axios({
+      method:'POST',
+      url:`/api/payment/updatePaymentById/${id}`,
+      data:{
+        index,
+        payment
+      }
+    })
+  }
   const hideScrollBar = () => {
     window.scrollTo(0, 0);
     document.body.style.overflowY = 'hidden';
@@ -236,8 +241,7 @@ const usePurchaseOrder = (history) => {
       return;
     }
 
-    setLoading(true);
-    hideScrollBar();
+   onLoader();
     const {
       billAmount,
       remark,
@@ -275,7 +279,7 @@ const usePurchaseOrder = (history) => {
         let status = isDraft ? "Draft Successfully" : "Saved Successfully";
         setMessage({ success: true, failed: false, status });
         purchaseForm.reset();
-        showScrollBar();
+        offLoader();
         locate.push('/approval')
       } else {
         setMessage({
@@ -284,13 +288,11 @@ const usePurchaseOrder = (history) => {
           error: result.data.message,
         });
       }
-      showScrollBar();
-      setLoading(false)
+      offLoader();
     } catch (error) {
       console.log(error.message);
       setMessage({ success: false, failed: true, error: error.message });
-      showScrollBar();
-      setLoading(false)
+      offLoader();
     }
   };
   const addOrderApi = async (isDraft, purchaseObj) => {
@@ -428,10 +430,6 @@ const usePurchaseOrder = (history) => {
     setOpened(true);
   };
   const deleteOrder = async (order_id) => {
-    // setPurchaseList({
-    //   ...purchaseList,
-    //   orders: [...purchaseList.orders.filter((item, i) => i !== index)],
-    // });
     try{
     onLoader();
     const {data} = await Axios({
@@ -458,13 +456,21 @@ const usePurchaseOrder = (history) => {
     setLoading(false);
     showScrollBar();
   }
-  const deletePurchaseDetail = (index) => {
-    let totalAmount = (purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount)
-    setPurchaseList({
-      ...purchaseList,
-      details: [...purchaseList.details.filter((item, i) => i !== index)],
-      totalPaidAmount: Number((Math.round(totalAmount * 100) / 100).toFixed(2))
-    });
+  const deletePurchaseDetail = async(index) => {
+    try{
+      onLoader();
+      await Axios({
+        method:'POST',
+        url:`/api/payment/deletePaymentById/${id}`,
+        data:{
+          index
+        }
+      })
+      offLoader();
+      getDetails(id);
+    }catch(err){
+      console.log({err})
+    }
   };
   const addSlabPrice = () => {
     slabForm.validate();
