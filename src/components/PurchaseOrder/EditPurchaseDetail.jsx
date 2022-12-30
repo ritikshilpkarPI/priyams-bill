@@ -6,14 +6,14 @@ const EditPurchaseDetail = ({ setPurchaseDrawer, openPurchaseDrawer, updateDetai
     return (
         <Drawer
             opened={openPurchaseDrawer}
-            onClose={() => { purchaseForm.reset(); setPurchaseDrawer(false) }}
+            onClose={() => { purchaseForm.values.paidBy=''; purchaseForm.values.paidAmount=0; setPurchaseDrawer(false) }}
             title="Paid Details"
             position='left'
             padding="xl"
             size={300}
         >
             <Box sx={{ maxWidth: 400 }} className="edit-purchase-box" mx="auto" my={'lg'}>
-                <form onSubmit={(e) => { e.preventDefault(); updateDetails(e); }}>
+                <form onSubmit={(e) => { e.preventDefault(); updateDetails(e); setPurchaseDrawer(false)}}>
                     <Group>
                         <Select
                             label="Paid by"
@@ -32,7 +32,7 @@ const EditPurchaseDetail = ({ setPurchaseDrawer, openPurchaseDrawer, updateDetai
                             withAsterisk
                             label="Paid Amount"
                             placeholder="total paid amount"
-
+                            precision={2}
                             {...purchaseForm.getInputProps('paidAmount')}
                         />
                         {

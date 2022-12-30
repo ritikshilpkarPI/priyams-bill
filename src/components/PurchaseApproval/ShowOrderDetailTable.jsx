@@ -1,8 +1,8 @@
-import { Button, Table } from "@mantine/core";
+import { Table } from "@mantine/core";
 import React from "react";
 
-const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
-  const rows = purchaseList.orders.map((element, index) => (
+const ShowOrderDetailTable = ({ purchaseList}) => {
+  const rows = purchaseList.purchasedItems.map((element, index) => (
     <tr key={index + 1}>
       <td>{element.barcode}</td>
       <td>{element.inputName}</td>
@@ -20,7 +20,7 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
               <tbody>
                 <tr>
                   <th>Date</th>
-                  <td>{String(date.date).slice(0, 10)}</td>
+                  <td>{new Date(date.date).toLocaleString}</td>
                 </tr>
                 <tr>
                   <th>Quantity</th>
@@ -32,22 +32,11 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
         })}
       </td>
       <td>{element.itemRemark || "No remarks"}</td>
-      <td>
-        <Button onClick={() => handleItemEdit(element, index)}>Edit</Button>
-      </td>
-      <td>
-        <Button
-          style={{ backgroundColor: "#F03E3E" }}
-          onClick={() => deleteOrder(element._id)}
-        >
-          Delete
-        </Button>
-      </td>
     </tr>
   ));
   return (
     <>
-      {purchaseList.orders.length ? (
+      {purchaseList.purchasedItems.length ? (
         <>
           <h3 style={{ margin: "2vmin" }}>Order Detail List</h3>
           <Table withColumnBorders striped withBorder>
@@ -64,7 +53,6 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
                 <th>Cost Price</th>
                 <th>Expiry Dates</th>
                 <th>Remarks</th>
-                <th>Update</th>
               </tr>
             </thead>
             <tbody>{rows}</tbody>
@@ -77,4 +65,4 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
   );
 };
 
-export default ShowOrderDetail;
+export default ShowOrderDetailTable;

@@ -1,0 +1,43 @@
+.order-flex-class{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.order-form{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+}
+.form-input-tops{
+    width: 28vmin;
+}
+.payment-form{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.constant-payment-options{
+    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.constant-payment-input{
+    width: 10vmin;
+}
+.payment-constant-input{
+    width: 30vmin;
+}
+.payment-paid-input{
+    width: 20vmin;
+}
+.payment-paid-option{
+    width: 35%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border:2px solid grey;
+    border-style: dashed;
+    padding: 1vmin;
+}
