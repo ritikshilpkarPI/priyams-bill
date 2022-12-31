@@ -14,46 +14,49 @@ const purchaseOrderSchema = new mongoose.Schema({
             sellingPrice: Number,
             mrp: Number,
             costPrice: Number,
-            validate:Boolean,
+            currentStock: Number,
+            validate: Boolean,
             createdAt: { type: Date, default: Date.now },
             expiryDates: [
-                { date: Date,
-                  quantity : Number
-                 }
+                {
+                    date: Date,
+                    quantity: Number
+                }
             ],
-            slabPrice:[{
-                startValue:Number,
-                endValue:Number,
-                pricing:Number,
+            slabPrice: [{
+                startValue: Number,
+                endValue: Number,
+                pricing: Number,
             }]
         }
     ],
-    purchaseDetails:[
+    purchaseDetails: [
         {
-            paidAmount : Number,
-            paidBy:String,
-            chequeNumber:String,
+            paidAmount: Number,
+            paidBy: String,
+            chequeNumber: String,
         }
     ],
-    billPhotos:[{
-        public_id:String,
-        secure_url:String
+    billPhotos: [{
+        public_id: String,
+        secure_url: String
     }],
-    billAmount:Number,
-    remark:String,
-    totalPaidAmount:String,
-    payment:String,
-    procurementSource:String,
-    dealerName:String,
-    phoneNumber:Number,
-    isDraft:Boolean,
-    isApproved:{
-        type:Boolean,
-        default : false
+    billAmount: Number,
+    remark: String,
+    totalPaidAmount: String,
+    payment: String,
+    procurementSource: String,
+    dealerName: String,
+    phoneNumber: Number,
+    isDraft: Boolean,
+    createdAt: { type: Date, default: Date.now },
+    isApproved: {
+        type: Boolean,
+        default: false
     },
-    isRejected:{
-        type:Boolean,
-        default:false
+    isRejected: {
+        type: Boolean,
+        default: false
     }
 })
 
