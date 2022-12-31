@@ -1,11 +1,11 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import PurchaseListApproval from "./PurchaseListApproval";
 import { Button, Select, Table } from "@mantine/core";
 import '../../CSS/purchaseApproval.css'
 
 import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
 import ShowOrderDetailTable from "./ShowOrderDetailTable";
-const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList , callAPI}) => {
+const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList, callAPI }) => {
   const [indexDetail, setIndexDetail] = useState(-1);
   const filterOrders = (value) => {
     let filter = []
@@ -13,32 +13,33 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
       for (let i = 0; i < allList.length; i++) {
         if (allList[i].isDraft && !allList[i].isApproved) {
           filter.push(allList[i]);
-        } 
+        }
       }
     } else if (value === "approved") {
       for (let i = 0; i < allList.length; i++) {
         if (allList[i].isApproved === true) {
           filter.push(allList[i]);
-        } 
+        }
       }
     } else if (value === "rejected") {
       for (let i = 0; i < allList.length; i++) {
         if (allList[i].isRejected === true) {
           filter.push(allList[i]);
-        } 
+        }
       }
     } else if (value === "saved") {
       for (let i = 0; i < allList.length; i++) {
-         if(!(allList[i].isDraft || allList[i].isRejected || allList[i].isApproved)){
+        if (!(allList[i].isDraft || allList[i].isRejected || allList[i].isApproved)) {
           filter.push(allList[i]);
         }
       }
-    }else{
+    } else {
       filter = [...allList]
     }
     setAllPurchaseList([...filter])
     setIndexDetail(-1)
   };
+  console.log({ allList });
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
@@ -47,7 +48,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
         label="Sort By"
         placeholder="All orders"
         data={[
-          {value:"all",label:"All orders"},
+          { value: "all", label: "All orders" },
           { value: "draft", label: "Draft orders" },
           { value: "rejected", label: "Rejected orders" },
           { value: "approved", label: "Approved orders" },
@@ -56,13 +57,13 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
         onChange={filterOrders}
       />
 
-          {allPurchaseList.length === 0 
-          ?
-          <div className="message">
-            No Orders
-          </div>
-          :
-          <Table className="purchase-list" withColumnBorders striped withBorder>
+      {allPurchaseList.length === 0
+        ?
+        <div className="message">
+          No Orders
+        </div>
+        :
+        <Table className="purchase-list" withColumnBorders striped withBorder>
           <thead>
             <tr>
               <th>S.No</th>
@@ -72,6 +73,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
               <th>Bill Amount</th>
               <th>Paid Amount</th>
               <th>Procurement Source</th>
+              <th>Created At</th>
               <th>Remark</th>
               <th>Status</th>
             </tr>
@@ -79,43 +81,43 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
           <tbody>
             {allPurchaseList.map((list, index) => {
               return (
-                indexDetail >=0 ?
-                index === indexDetail
-                ?
-                <tr key={index}>
-                  <PurchaseListApproval
-                    allPurchaseList={allPurchaseList}
-                    setAllPurchaseList={setAllPurchaseList}
-                    list={list}
-                    index={index}
-                    setIndexDetail={setIndexDetail}
-                    callAPI={callAPI}
-    
-                  />
-                </tr>
-                :<></>
-                :<tr key={index}>
-                <PurchaseListApproval
-                  allPurchaseList={allPurchaseList}
-                  setAllPurchaseList={setAllPurchaseList}
-                  list={list}
-                  index={index}
-                  setIndexDetail={setIndexDetail}
-                  callAPI={callAPI}
-                />
-              </tr>
+                indexDetail >= 0 ?
+                  index === indexDetail
+                    ?
+                    <tr key={index}>
+                      <PurchaseListApproval
+                        allPurchaseList={allPurchaseList}
+                        setAllPurchaseList={setAllPurchaseList}
+                        list={list}
+                        index={index}
+                        setIndexDetail={setIndexDetail}
+                        callAPI={callAPI}
+
+                      />
+                    </tr>
+                    : <></>
+                  : <tr key={index}>
+                    <PurchaseListApproval
+                      allPurchaseList={allPurchaseList}
+                      setAllPurchaseList={setAllPurchaseList}
+                      list={list}
+                      index={index}
+                      setIndexDetail={setIndexDetail}
+                      callAPI={callAPI}
+                    />
+                  </tr>
               );
-            })}
+            }).reverse()}
           </tbody>
         </Table>
-          }
-       {indexDetail >= 0 ?
-         <> 
-         <div className="closebtn"><Button onClick={()=> setIndexDetail(-1)}>Close</Button></div>
-         <ShowPurchaseOrderTable purchaseList={allPurchaseList[indexDetail]} />
-         <ShowOrderDetailTable purchaseList={allPurchaseList[indexDetail]} /></>
-          :<></>
-       }
+      }
+      {indexDetail >= 0 ?
+        <>
+          <div className="closebtn"><Button onClick={() => setIndexDetail(-1)}>Close</Button></div>
+          <ShowPurchaseOrderTable purchaseList={allPurchaseList[indexDetail]} />
+          <ShowOrderDetailTable purchaseList={allPurchaseList[indexDetail]} /></>
+        : <></>
+      }
     </div>
   );
 };

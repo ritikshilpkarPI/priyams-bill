@@ -42,20 +42,20 @@ const usePurchaseOrder = (history) => {
       chequeNumber: "",
     },
     validate: {
-      payment: (value) => (value.length > 0 ? null : "Please fill this field"),
-      paidBy: (value) => (value.length > 0 ? null : "Please fill this field"),
+      payment: (value) => (value?.length > 0 ? null : "Please fill this field"),
+      paidBy: (value) => (value?.length > 0 ? null : "Please fill this field"),
       dealerName: (value) =>
-        value.length > 0 ? null : "Please fill this field",
-      phoneNumber: (value) =>
-        String(value).length === 10 ? null : "Enter valid mobile number",
+        value?.length > 0 ? null : "Please fill this field",
+      // phoneNumber: (value) =>
+      //   String(value).length === 10 ? null : "Enter valid mobile number",
       chequeNumber: (value) =>
         purchaseForm.values.chequeNumber === "credit"
-          ? String(value).length > 0
+          ? String(value)?.length > 0
             ? null
             : "Please fill this field"
           : null,
       procurementSource: (value) =>
-        value.length > 0 ? null : "Please fill this field",
+        value?.length > 0 ? null : "Please fill this field",
       billAmount: (value) => value > 0 ? null : "Bill Amount should be greater than 0"
     },
   });
@@ -76,6 +76,7 @@ const usePurchaseOrder = (history) => {
       barcode: '',
       inputName: '',
       stockQuantity: 0,
+      currentStock: 0,
       minimumQuantity: 0,
       itemQuantity: 0,
       unit: '',
@@ -90,9 +91,9 @@ const usePurchaseOrder = (history) => {
     },
     validate: {
       itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0' : null),
-      sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0' : null),
+      // sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0' : null),
       mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0' : null),
-      costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
+      // costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
     }
   });
 
@@ -322,10 +323,12 @@ const usePurchaseOrder = (history) => {
     setCloudBills([...cloudBills.filter((item, i) => i !== index)]);
   }
   const handleSelectOrderItems = (item) => {
+    console.log({ item });
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
       inputName: item.itemName,
-      stockQuantity: item.itemStockQuantity,
+      currentStock: item.itemStockQuantity,
+      stockQuantity: 0,
       minimumQuantity: item.minimumStockQuantity,
       sellingPrice: item.itemSellingPricePerUnit,
       mrp: item.itemMRPperUnit,
@@ -408,6 +411,7 @@ const usePurchaseOrder = (history) => {
     })
   }
   const handleItemEdit = (item, index) => {
+    console.log({ item });
     setIsEditable(false)
     if (index >= 0) {
       setEditIndex(index);
@@ -416,6 +420,7 @@ const usePurchaseOrder = (history) => {
       barcode: item.barcode,
       inputName: item.inputName,
       stockQuantity: item.stockQuantity,
+      currentStock: item.currentStock,
       minimumQuantity: item.minimumQuantity,
       itemQuantity: item.itemQuantity,
       unit: item.unit,

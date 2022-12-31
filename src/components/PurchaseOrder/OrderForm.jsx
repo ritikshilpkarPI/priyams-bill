@@ -44,7 +44,7 @@ const OrderForm = ({
       }}
       padding="sm"
       size="xl"
-     
+
     >
       <Box sx={{ maxWidth: 400 }} mx="auto" my={"lg"}>
         <form className="order-form" onSubmit={form.onSubmit((values) => handleItemFrom(values))}>
@@ -74,7 +74,7 @@ const OrderForm = ({
               required
               placeholder="item name"
               onClick={() => setOpenDrawer(true)}
-              {...form.getInputProps("inputName")}  
+              {...form.getInputProps("inputName")}
             />
           </Group>
           {Boolean(filterItems.length) && openDrawer && (
@@ -92,19 +92,19 @@ const OrderForm = ({
               placeholder="amount in 1 pack"
               {...form.getInputProps("itemQuantity")}
             />
-             <Select
-            label="unit"
-            className='form-input-tops'
-            placeholder="pick one"
-            data={[
-              { value: "gram", label: "gram" },
-              { value: "KG", label: "KG" },
-              { value: "ML", label: "ML" },
-              { value: "Litre", label: "Litre" },
-              { value: "Piece", label: "Piece" },
-            ]}
-            {...form.getInputProps("unit")}
-          />
+            <Select
+              label="unit"
+              className='form-input-tops'
+              placeholder="pick one"
+              data={[
+                { value: "gram", label: "gram" },
+                { value: "KG", label: "KG" },
+                { value: "ML", label: "ML" },
+                { value: "Litre", label: "Litre" },
+                { value: "Piece", label: "Piece" },
+              ]}
+              {...form.getInputProps("unit")}
+            />
           </Group>
           <Group className="order-flex-class">
             <NumberInput
@@ -120,7 +120,7 @@ const OrderForm = ({
               className='form-input-tops'
               placeholder="current stock quantity"
               disabled
-              {...form.getInputProps("stockQuantity")}
+              {...form.getInputProps("currentStock")}
             />
           </Group>
 
@@ -153,6 +153,13 @@ const OrderForm = ({
               {...form.getInputProps("sellingPrice")}
             />
           </Group>
+          <NumberInput
+            withAsterisk={form.values.validate}
+            label="Stock Quantity"
+            className='form-input-tops'
+            placeholder="current stock quantity"
+            {...form.getInputProps("stockQuantity")}
+          />
           <div className="date-container">
             {/* <DatePicker placeholder="Pick date" label="Event date" withAsterisk={form.values.validate}={true} value={date} onChange={(day) => setDate(day)} /> */}
             <DatePicker
@@ -168,7 +175,7 @@ const OrderForm = ({
             />
             <NumberInput
               withAsterisk={form.values.validate}
-              style={{width:'15vmin'}}
+              style={{ width: '15vmin' }}
               label="Quantity"
               placeholder="quantity"
               value={expiryQuantity}
@@ -178,19 +185,19 @@ const OrderForm = ({
           </div>
           {form.values.expiryDates?.length
             ? form.values.expiryDates.map((date, index) => {
-                return (
-                  <div className="expiry-date-showcase" key={index + 1}>
-                    <TextInput
-                      value={new Date(date.date).toLocaleDateString()}
-                      readOnly
-                    />
-                    <TextInput readOnly value={date.quantity} />
-                    <Button onClick={() => handleDateDelete(date)}>
-                      Delete
-                    </Button>
-                  </div>
-                );
-              })
+              return (
+                <div className="expiry-date-showcase" key={index + 1}>
+                  <TextInput
+                    value={new Date(date.date).toLocaleDateString()}
+                    readOnly
+                  />
+                  <TextInput readOnly value={date.quantity} />
+                  <Button onClick={() => handleDateDelete(date)}>
+                    Delete
+                  </Button>
+                </div>
+              );
+            })
             : ""}
           <Group className="order-flex-class">
             <NumberInput

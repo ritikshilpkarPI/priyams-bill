@@ -3,7 +3,7 @@ import React from "react";
 
 const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
   const rows = purchaseList.orders.map((element, index) => (
-    <tr key={index + 1}>
+    <tr className={element.validate ? "validate" : "not-validate"} key={index + 1}>
       <td>{element.barcode}</td>
       <td>{element.inputName}</td>
       <td>{element.stockQuantity}</td>
