@@ -3,9 +3,10 @@ import { useForm } from "@mantine/form";
 import useBarcodeSearchItems from "./useBarcodeSearchItems";
 import { Axios } from "src/utils/axios";
 import { useHistory } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const usePurchaseOrder = (history) => {
+  const { id } = useParams();
   const [opened, setOpened] = useState(false);
   const [openPurchaseDrawer, setPurchaseDrawer] = useState(false);
   const [date, setDate] = useState("");
@@ -15,14 +16,13 @@ const usePurchaseOrder = (history) => {
   const [editIndex, setEditIndex] = useState(-1);
   const [slabs, setSlabs] = useState([]);
   const [isNotGetUpdated, setIsNotGetUpdated] = useState(true);
-  const myLocation = useLocation();
   const locate = useHistory();
   const [cloudBills, setCloudBills] = useState([]);
   const [deleteBills, setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
   const [Loading, setLoading] = useState(false)
-  const [prevPaidAmount, setPrevPaidAmount] = useState(0);
-  const [state, setState] = useState({})
+  const [, setPrevPaidAmount] = useState(0);
+  const [, setState] = useState({})
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -78,7 +78,7 @@ const usePurchaseOrder = (history) => {
       stockQuantity: 0,
       minimumQuantity: 0,
       itemQuantity: 0,
-      unit: 0,
+      unit: '',
       email: '',
       itemRemark: '',
       sellingPrice: 0,
@@ -89,7 +89,6 @@ const usePurchaseOrder = (history) => {
       slabPrice: []
     },
     validate: {
-      stockQuantity: (value) => (form.values.validate ? (value > 0 ? null : 'Stock Quantity should be greater than 0') : null),
       itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0' : null),
       sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0' : null),
       mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0' : null),
@@ -104,12 +103,13 @@ const usePurchaseOrder = (history) => {
     isSaved: false,
     isDraft: false
   })
-  const id = myLocation.state?.id;
-  const getDetails = async () => {
+  // const my_id = myLocation.state?.id;
+  const getDetails = async (search_id) => {
     try {
+      onLoader();
       const res = await Axios({
         method: "GET",
-        url: "/api/purchaseOrder/orderDetails/" + id,
+        url: "/api/purchaseOrder/orderDetails/" + search_id,
       });
       const data = res.data.data;
 
@@ -132,9 +132,11 @@ const usePurchaseOrder = (history) => {
         billAmount: purchaseForm.values.billAmount,
         bills: [],
       });
+      offLoader();
     } catch (error) {
       console.log(error.message);
       setMessage({ success: false, failed: true, error: error.message })
+      offLoader();
     }
   };
   const addPurchadeOrderValidate = async () => {
@@ -156,71 +158,74 @@ const usePurchaseOrder = (history) => {
     }));
   }
 
-  const addDetails = () => {
-    purchaseForm.validate();
-    if (purchaseForm.isValid()) {
-      const {
-        billAmount,
-        remark,
+  const addDetails = async () => {
+    const payment = {
+      paidAmount: purchaseForm.values.paidAmount,
+      chequeNumber: purchaseForm.values.chequeNumber,
+      paidBy: purchaseForm.values.paidBy
+    }
+    try {
+      onLoader();
+      const { data } = id ? await updateSavedPayment(payment) : await savePayment(payment);
+      const { order } = data;
+      const { _id } = order;
+      offLoader();
+      if (id) {
+        getDetails(id);
+      } else {
+        locate.push(`/purchase/${_id}`)
+      }
+    } catch (err) {
+      offLoader();
+      alert('something went wrong...')
+      console.log({ err })
+    }
+
+  };
+  const savePayment = async (payment) => {
+    return await Axios({
+      method: 'POST',
+      url: '/api/payment/savePayment',
+      data: {
+        payment
+      }
+    })
+  }
+  const updateSavedPayment = async (payment) => {
+    return await Axios({
+      method: 'POST',
+      url: `/api/payment/updateSavedPayment/${id}`,
+      data: {
         payment,
-        procurementSource,
-        dealerName,
-        phoneNumber,
-      } = purchaseForm.values;
-      setPurchaseList({
-        ...purchaseList,
-        details: [
-          ...purchaseList.details,
-          {
-            paidAmount: purchaseForm.values.paidAmount,
-            paidBy: purchaseForm.values.paidBy,
-            chequeNumber: purchaseForm.values.chequeNumber,
-          },
-        ],
-        billAmount,
-        remark,
-        payment,
-        procurementSource,
-        dealerName,
-        phoneNumber,
-        totalPaidAmount: purchaseList.totalPaidAmount ? purchaseList.totalPaidAmount + purchaseForm.values.paidAmount : purchaseForm.values.paidAmount,
-
-      });
-
-      purchaseForm.setValues((prev) => ({
-        paidAmount: 0,
-        chequeNumber: '',
-        paidBy: ''
-      }))
-
+      }
+    })
+  }
+  const updateDetails = async (e) => {
+    const payment = {
+      paidBy: purchaseForm.values.paidBy,
+      paidAmount: purchaseForm.values.paidAmount,
+      chequeNumber: purchaseForm.values.chequeNumber
+    }
+    try {
+      onLoader();
+      await updatePaymentById(payment, editIndex);
+      getDetails(id);
+      offLoader();
+    } catch (err) {
+      offLoader();
+      console.log({ err })
     }
   };
-  const updateDetails = (e) => {
-    let prevTotal = purchaseList.totalPaidAmount;
-    let newPaidAmount = purchaseForm.values.paidAmount;
-    let newTotal = prevPaidAmount > newPaidAmount ? prevTotal + (newPaidAmount - prevPaidAmount) : prevTotal - prevPaidAmount + newPaidAmount;
-    if (true) {
-      let detailArray = purchaseList.details.filter(
-        (item, index) => index !== editIndex
-      );
-      setPurchaseList({
-        ...purchaseList,
-        details: [...detailArray, {
-          paidAmount: purchaseForm.values.paidAmount,
-          paidBy: purchaseForm.values.paidBy,
-          chequeNumber: purchaseForm.values.chequeNumber,
-        },],
-        totalPaidAmount: newTotal
-      });
-    }
-    purchaseForm.setValues((prev) => ({
-      paidAmount: 0,
-      chequeNumber: '',
-      paidBy: ''
-    }))
-    setEditIndex(-1);
-    setPurchaseDrawer(false);
-  };
+  const updatePaymentById = async (payment, index) => {
+    await Axios({
+      method: 'POST',
+      url: `/api/payment/updatePaymentById/${id}`,
+      data: {
+        index,
+        payment
+      }
+    })
+  }
   const hideScrollBar = () => {
     window.scrollTo(0, 0);
     document.body.style.overflowY = 'hidden';
@@ -236,8 +241,7 @@ const usePurchaseOrder = (history) => {
       return;
     }
 
-    setLoading(true);
-    hideScrollBar();
+    onLoader();
     const {
       billAmount,
       remark,
@@ -275,7 +279,7 @@ const usePurchaseOrder = (history) => {
         let status = isDraft ? "Draft Successfully" : "Saved Successfully";
         setMessage({ success: true, failed: false, status });
         purchaseForm.reset();
-        showScrollBar();
+        offLoader();
         locate.push('/approval')
       } else {
         setMessage({
@@ -284,13 +288,11 @@ const usePurchaseOrder = (history) => {
           error: result.data.message,
         });
       }
-      showScrollBar();
-      setLoading(false)
+      offLoader();
     } catch (error) {
       console.log(error.message);
       setMessage({ success: false, failed: true, error: error.message });
-      showScrollBar();
-      setLoading(false)
+      offLoader();
     }
   };
   const addOrderApi = async (isDraft, purchaseObj) => {
@@ -303,6 +305,7 @@ const usePurchaseOrder = (history) => {
       },
     });
   };
+
   const updateOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
       method: "POST",
@@ -340,21 +343,31 @@ const usePurchaseOrder = (history) => {
     setEditIndex(index);
     setPurchaseDrawer(true);
   };
-  const handleItemFrom = (values) => {
+  const handleItemFrom = async (values) => {
     let sum = 0;
     values.expiryDates.forEach((element) => {
       sum += element.quantity;
     });
     if (sum === values.stockQuantity || !form.values.validate) {
       form.values.slabPrice = [...slabs];
-      let ordersUpdated = [...purchaseList.orders.filter((order) => order.barcode !== values.barcode)]
-      setPurchaseList({
-        ...purchaseList,
-        orders: [
-          ...ordersUpdated,
-          values
-        ],
-      });
+      const new_order = { ...values }
+      try {
+        onLoader()
+
+        const { data } = editIndex >= 0 ? await updateOrderByIndex(new_order, editIndex) : (id ? await updateSavedOrder(new_order) : await saveOrder(new_order));
+        const { order } = data;
+        const { _id } = order;
+        offLoader();
+        if (!id) {
+          locate.push(`/purchase/${_id}`)
+        } else {
+          getDetails(id)
+        }
+      } catch (err) {
+        console.log(err);
+        offLoader();
+        alert('unable to add order, something went wrong...')
+      }
 
       form.reset();
       setSlabs([]);
@@ -366,9 +379,37 @@ const usePurchaseOrder = (history) => {
     alert("Total expiry dates and stock quantity  is not matching");
   };
 
+  const saveOrder = async (new_order) => {
+    return await Axios({
+      method: 'POST',
+      url: '/api/purchaseOrder/saveOrder',
+      data: {
+        new_order
+      }
+    })
+  }
+  const updateSavedOrder = async (new_order) => {
+    return await Axios({
+      method: 'POST',
+      url: `/api/purchaseOrder/updateSavedOrder/${id}`,
+      data: {
+        new_order
+      }
+    })
+  }
+  const updateOrderByIndex = async (new_order, index) => {
+    return await Axios({
+      method: 'POST',
+      url: `/api/purchaseOrder/updateOrderByIndex/${id}`,
+      data: {
+        new_order,
+        index
+      }
+    })
+  }
   const handleItemEdit = (item, index) => {
     setIsEditable(false)
-    if (index) {
+    if (index >= 0) {
       setEditIndex(index);
     }
     form.setValues((prev) => ({
@@ -388,18 +429,50 @@ const usePurchaseOrder = (history) => {
     setSlabs([...item.slabPrice]);
     setOpened(true);
   };
-  const deleteOrder = (index) => {
-    setPurchaseList({
-      ...purchaseList,
-      orders: [...purchaseList.orders.filter((item, i) => i !== index)],
-    });
+  const deleteOrder = async (order_id) => {
+    try {
+      onLoader();
+      const { data } = await Axios({
+        method: 'POST',
+        url: `/api/purchaseOrder/deleteItem/${id}`,
+        data: {
+          itemId: order_id
+        }
+      })
+      const { order } = data;
+      const { _id } = order;
+
+      console.log({ _id });
+      offLoader()
+      getDetails(id)
+    } catch (err) {
+      offLoader()
+      console.log({ err })
+    }
   };
-  const deletePurchaseDetail = (index) => {
-    setPurchaseList({
-      ...purchaseList,
-      details: [...purchaseList.details.filter((item, i) => i !== index)],
-      totalPaidAmount: purchaseList.totalPaidAmount - purchaseList.details[index].paidAmount
-    });
+  const onLoader = () => {
+    setLoading(true);
+    hideScrollBar();
+  }
+  const offLoader = () => {
+    setLoading(false);
+    showScrollBar();
+  }
+  const deletePurchaseDetail = async (index) => {
+    try {
+      onLoader();
+      await Axios({
+        method: 'POST',
+        url: `/api/payment/deletePaymentById/${id}`,
+        data: {
+          index
+        }
+      })
+      offLoader();
+      getDetails(id);
+    } catch (err) {
+      console.log({ err })
+    }
   };
   const addSlabPrice = () => {
     slabForm.validate();
@@ -426,10 +499,9 @@ const usePurchaseOrder = (history) => {
     form.values.barcode,
     handleSelectOrderItems
   );
-  console.log({ state });
   useEffect(() => {
     if (id && isNotGetUpdated) {
-      getDetails();
+      getDetails(id);
       setIsNotGetUpdated(false);
     }
     if (Object.keys(barcodeFilteredItem).length && isEditable) {

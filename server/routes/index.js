@@ -10,6 +10,7 @@ const reportRoutes = require('./report-routes');
 const attendanceRoutes = require('./attendance-routes');
 const orderRoutes = require("./purchase-orders-routes")
 const approvalRoutes = require("./approve-order-routes");
+const paymentRoutes = require("./payment-routes")
 
 router.use("/api/auth", authRoutes);
 router.use("/api/inventory", itemRoutes);
@@ -21,5 +22,6 @@ router.use("/api/report", reportRoutes);
 router.use("/api/attendance", attendanceRoutes);
 router.use("/api/purchaseOrder", orderRoutes)
 router.use("/api/approval", approvalRoutes)
+router.use("/api/payment",paymentRoutes);
 
 module.exports = router;
