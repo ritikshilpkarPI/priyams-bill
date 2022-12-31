@@ -79,6 +79,10 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
       alert(`Something went wrong.Unable to draft the order`)
     }
   }
+  const time = new Date(list.createdAt)
+  let datetext = time.toTimeString();
+  datetext = datetext.split(' ')[0];
+
   return (
     <>
       {list ? (
@@ -91,6 +95,9 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
           <td>{list.billAmount}</td>
           <td>{list.totalPaidAmount}</td>
           <td>{list.procurementSource}</td>
+          <td>
+            {new Date(list.createdAt)?.toLocaleDateString('en-US')} {datetext}
+          </td>
           <td>{list.remark}</td>
           <td>{list.isDraft ? (list.isApproved ? "Approved" : "Drafted") : (list.isRejected ? "Rejected" : "Saved")}</td>
           {
@@ -120,9 +127,6 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
                 <td><Button disabled={list.isRejected} className='approve-btn' onClick={() => { draftOrder(list._id, index) }}>Draft</Button></td>
               </>
           }
-          <td>
-            {new Date(list.createdAt)?.toLocaleDateString('en-US')}
-          </td>
 
         </>
       ) : (

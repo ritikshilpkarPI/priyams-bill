@@ -73,6 +73,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList,
               <th>Bill Amount</th>
               <th>Paid Amount</th>
               <th>Procurement Source</th>
+              <th>Created At</th>
               <th>Remark</th>
               <th>Status</th>
             </tr>
