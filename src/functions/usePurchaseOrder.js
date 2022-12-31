@@ -441,6 +441,7 @@ const usePurchaseOrder = (history) => {
       })
       const { order } = data;
       const { _id } = order;
+
       console.log({ _id });
       offLoader()
       getDetails(id)
