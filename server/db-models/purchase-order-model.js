@@ -16,18 +16,17 @@ const purchaseOrderSchema = new mongoose.Schema({
             costPrice: Number,
             currentStock: Number,
             validate: Boolean,
+            item_id:String,
+            brand: String,
+            categories: String,
             createdAt: { type: Date, default: Date.now },
             expiryDates: [
                 {
                     date: Date,
-                    quantity: Number
+                    value: Number
                 }
             ],
-            slabPrice: [{
-                startValue: Number,
-                endValue: Number,
-                pricing: Number,
-            }]
+            slabPrice: []
         }
     ],
     purchaseDetails: [

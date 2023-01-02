@@ -22,7 +22,7 @@ const ShowOrderDetailTable = ({ purchaseList}) => {
                   <td>{new Date(date.date).toLocaleString}</td>
                 </tr>
                 <tr>
-                  <td>{date.quantity}</td>
+                  <td>{date.value}</td>
                 </tr>
               </tbody>
             </table>

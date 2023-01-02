@@ -18,19 +18,26 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
       window.alert("Order rejected successfully");
       callAPI();
     } catch (err) {
-      console.log(err);
       window.alert('Something went wrong,unable to reject order')
     }
   }
-  const approveOrder = async (id, index) => {
+  const approveOrder = async (id, index,list) => {
+   
     const ans = window.confirm("Are you sure you want to approve this order?");
     if (!ans) return;
     try {
+      await Axios.request({
+        url: "/api/inventory/saveInventory",
+        method: "POST",
+        data:{
+          new_items:list.purchasedItems
+        }
+      });
       await Axios({
         method: 'POST',
         url: '/api/approval/approveOrder/' + id,
         data: {
-          username: JSON.parse(localStorage.getItem("priyam-store")).username
+          username: JSON.parse(localStorage.getItem("priyam-store")).username,
         }
       })
       window.alert("Order approved successfully");
@@ -118,7 +125,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
                     </td>
                 }
                 {list.isDraft ?
-                  <td><Button disabled={list.isRejected || list.isApproved} className='approve-btn' onClick={() => { approveOrder(list._id, index) }}>Approve</Button></td>
+                  <td><Button disabled={list.isRejected || list.isApproved} className='approve-btn' onClick={() => { approveOrder(list._id, index,list) }}>Approve</Button></td>
                   :
                   <td><Button disabled={list.isRejected || list.isApproved} className='approve-btn' onClick={() => { draftOrder(list._id, index) }}>Draft</Button></td>
                 }
