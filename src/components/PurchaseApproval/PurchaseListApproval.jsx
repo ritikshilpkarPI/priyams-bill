@@ -49,6 +49,10 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
     const order = allPurchaseList[index];
     let validate = true;
     let once = true;
+    if(!order.billAmount  || !order.dealerName?.length ){
+      alert('please fill payment details information');
+      return;
+    }
     order.purchasedItems.forEach((item) => {
       if (!item.validate) {
         validate = false;
@@ -88,7 +92,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
       {list ? (
         <>
 
-          <td>{index + 1}</td>
+          <td>{allPurchaseList.length - index}</td>
           <td>{list.dealerName}</td>
           <td>{list.phoneNumber}</td>
           <td>{list.payment}</td>

@@ -19,11 +19,9 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
             <table key={index}>
               <tbody>
                 <tr>
-                  <th>Date</th>
                   <td>{String(date.date).slice(0, 10)}</td>
                 </tr>
                 <tr>
-                  <th>Quantity</th>
                   <td>{date.quantity}</td>
                 </tr>
               </tbody>
@@ -55,9 +53,9 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
               <tr>
                 <th>Barcode</th>
                 <th>Item name</th>
-                <th>Stock Quantity</th>
+                <th>Order Quantity</th>
                 <th>Minimum Quantity</th>
-                <th>Item Quantity</th>
+                <th>Pkt. Amt. Quantity</th>
                 <th>Unit</th>
                 <th>Selling Price</th>
                 <th>MRP</th>

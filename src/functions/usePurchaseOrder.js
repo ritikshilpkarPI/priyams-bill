@@ -56,7 +56,7 @@ const usePurchaseOrder = (history) => {
           : null,
       procurementSource: (value) =>
         value?.length > 0 ? null : "Please fill this field",
-      billAmount: (value) => value > 0 ? null : "Bill Amount should be greater than 0"
+      billAmount: (value) => value > 0 ? null : "Bill Amount should be greater than 0",
     },
   });
 
@@ -323,7 +323,6 @@ const usePurchaseOrder = (history) => {
     setCloudBills([...cloudBills.filter((item, i) => i !== index)]);
   }
   const handleSelectOrderItems = (item) => {
-    console.log({ item });
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
       inputName: item.itemName,
@@ -411,7 +410,6 @@ const usePurchaseOrder = (history) => {
     })
   }
   const handleItemEdit = (item, index) => {
-    console.log({ item });
     setIsEditable(false)
     if (index >= 0) {
       setEditIndex(index);
@@ -437,17 +435,13 @@ const usePurchaseOrder = (history) => {
   const deleteOrder = async (order_id) => {
     try {
       onLoader();
-      const { data } = await Axios({
+       await Axios({
         method: 'POST',
         url: `/api/purchaseOrder/deleteItem/${id}`,
         data: {
           itemId: order_id
         }
       })
-      const { order } = data;
-      const { _id } = order;
-
-      console.log({ _id });
       offLoader()
       getDetails(id)
     } catch (err) {

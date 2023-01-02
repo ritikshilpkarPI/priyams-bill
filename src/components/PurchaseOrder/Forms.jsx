@@ -101,7 +101,7 @@ const Forms = ({ purchaseForm, addDetails, purchaseList, setPurchaseList, cloudB
               withAsterisk
               className="payment-paid-input"
               label="Paid Amount"
-              placeholder="total paid amount"
+              placeholder="paid amount"
               precision={2}
               {...purchaseForm.getInputProps("paidAmount")}
             />

@@ -123,7 +123,6 @@ const OrderForm = ({
               {...form.getInputProps("currentStock")}
             />
           </Group>
-
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
@@ -155,7 +154,7 @@ const OrderForm = ({
           </Group>
           <NumberInput
             withAsterisk={form.values.validate}
-            label="Stock Quantity"
+            label="Order Quantity"
             className='form-input-tops'
             placeholder="current stock quantity"
             {...form.getInputProps("stockQuantity")}

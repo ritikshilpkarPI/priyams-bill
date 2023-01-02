@@ -19,11 +19,9 @@ const ShowOrderDetailTable = ({ purchaseList}) => {
             <table key={index}>
               <tbody>
                 <tr>
-                  <th>Date</th>
                   <td>{new Date(date.date).toLocaleString}</td>
                 </tr>
                 <tr>
-                  <th>Quantity</th>
                   <td>{date.quantity}</td>
                 </tr>
               </tbody>
@@ -44,9 +42,9 @@ const ShowOrderDetailTable = ({ purchaseList}) => {
               <tr>
                 <th>Barcode</th>
                 <th>Item name</th>
-                <th>Stock Quantity</th>
+                <th>Order Quantity</th>
                 <th>Minimum Quantity</th>
-                <th>Item Quantity</th>
+                <th>Pkt. Amt. Quantity</th>
                 <th>Unit</th>
                 <th>Selling Price</th>
                 <th>MRP</th>

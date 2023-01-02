@@ -9,9 +9,10 @@ const Approval = () => {
     const [Loading, setLoading] = useState(false);
     useEffect(() => {
        callAPI();
+       // eslint-disable-next-line
     }, []);
     const callAPI = async() =>{
-      setLoading(true)
+      onLoader();
      try{
       const {data} = await Axios({
         url:'/api/purchaseOrder/orders'
@@ -43,13 +44,29 @@ const Approval = () => {
         }
         setList([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
         setFilter([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
-        setLoading(false)
+        offLoader()
      }catch(err){
        console.log(err);
-       setLoading(false)
+       offLoader();
      }
     }
-   
+    const onLoader = () => {
+      setLoading(true);
+      hideScrollBar();
+    }
+    const offLoader = () => {
+      setLoading(false);
+      showScrollBar();
+    }
+    const hideScrollBar = () => {
+      window.scrollTo(0, 0);
+      document.body.style.overflowY = 'hidden';
+      document.body.style.overflowX = 'hidden';
+    }
+    const showScrollBar = () => {
+      document.body.style.overflowY = 'visible'
+      document.body.style.overflowX = 'visible';
+    }
   return (
     <div>
        <LoadingOverlay className='purchase-loader' visible={Loading} overlayBlur={1} />
