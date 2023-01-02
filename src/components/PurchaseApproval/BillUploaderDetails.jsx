@@ -1,6 +1,4 @@
-import React, { useRef } from "react";
-import { Button, Group } from "@mantine/core";
-import { Dropzone } from "@mantine/dropzone";
+import React from "react";
 import { Carousel } from "@mantine/carousel";
 import '../../CSS/billUploader.css'
 const BillUploaderDetails = ({cloudBills}) => {

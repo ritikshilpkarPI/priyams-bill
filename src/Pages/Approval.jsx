@@ -9,6 +9,7 @@ const Approval = () => {
     const [Loading, setLoading] = useState(false);
     useEffect(() => {
        callAPI();
+       // eslint-disable-next-line
     }, []);
     const callAPI = async() =>{
       onLoader();
