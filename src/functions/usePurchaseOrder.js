@@ -56,7 +56,7 @@ const usePurchaseOrder = (history) => {
           : null,
       procurementSource: (value) =>
         value?.length > 0 ? null : "Please fill this field",
-      billAmount: (value) => value > 0 ? null : "Bill Amount should be greater than 0"
+      billAmount: (value) => value > 0 ? null : "Bill Amount should be greater than 0",
     },
   });
 

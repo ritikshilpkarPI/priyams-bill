@@ -49,6 +49,12 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
     const order = allPurchaseList[index];
     let validate = true;
     let once = true;
+    if(!order.billAmount  || !order.dealerName?.length ){
+      alert('please fill payment details information');
+      return;
+    }
+    console.log({order})
+    return;
     order.purchasedItems.forEach((item) => {
       if (!item.validate) {
         validate = false;

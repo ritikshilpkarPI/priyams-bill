@@ -5,7 +5,8 @@ import '../../CSS/purchaseApproval.css'
 
 import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
 import ShowOrderDetailTable from "./ShowOrderDetailTable";
-const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList, callAPI }) => {
+import BillUploaderDetails from "./BillUploaderDetails";
+const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList , callAPI}) => {
   const [indexDetail, setIndexDetail] = useState(-1);
   const filterOrders = (value) => {
     let filter = []
@@ -39,7 +40,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList,
     setAllPurchaseList([...filter])
     setIndexDetail(-1)
   };
-  console.log({ allList });
+ 
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
@@ -110,14 +111,16 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList,
             }).reverse()}
           </tbody>
         </Table>
-      }
-      {indexDetail >= 0 ?
-        <>
-          <div className="closebtn"><Button onClick={() => setIndexDetail(-1)}>Close</Button></div>
-          <ShowPurchaseOrderTable purchaseList={allPurchaseList[indexDetail]} />
-          <ShowOrderDetailTable purchaseList={allPurchaseList[indexDetail]} /></>
-        : <></>
-      }
+          }
+       {indexDetail >= 0 ?
+         <> 
+         <div className="closebtn"><Button onClick={()=> setIndexDetail(-1)}>Close</Button></div>
+         <ShowPurchaseOrderTable purchaseList={allPurchaseList[indexDetail]} />
+         <ShowOrderDetailTable purchaseList={allPurchaseList[indexDetail]} />
+         <BillUploaderDetails cloudBills={allPurchaseList[indexDetail]['billPhotos']}/>
+         </>
+          :<></>
+       }
     </div>
   );
 };
