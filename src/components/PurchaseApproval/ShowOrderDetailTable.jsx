@@ -19,10 +19,8 @@ const ShowOrderDetailTable = ({ purchaseList}) => {
             <table key={index}>
               <tbody>
                 <tr>
-                  <td>{new Date(date.date).toLocaleString}</td>
-                </tr>
-                <tr>
-                  <td>{date.quantity}</td>
+                  <td>{`${new Date(date.date).getDate()}/${new Date(date.date).getMonth()+1}/${new Date(date.date).getFullYear()}`}</td>
+                  <td>{date.value}</td>
                 </tr>
               </tbody>
             </table>

@@ -22,7 +22,7 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
                   <td>{String(date.date).slice(0, 10)}</td>
                 </tr>
                 <tr>
-                  <td>{date.quantity}</td>
+                  <td>{date.value}</td>
                 </tr>
               </tbody>
             </table>

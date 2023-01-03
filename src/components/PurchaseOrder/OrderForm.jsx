@@ -122,11 +122,11 @@ const OrderForm = ({
               className='form-input-tops'
               placeholder="pick one"
               data={[
-                { value: "gram", label: "gram" },
-                { value: "KG", label: "KG" },
-                { value: "ML", label: "ML" },
-                { value: "Litre", label: "Litre" },
-                { value: "Piece", label: "Piece" },
+                { value: "grams", label: "grams" },
+                { value: "kg", label: "kg" },
+                { value: "ml", label: "ml" },
+                { value: "liter", label: "liter" },
+                { value: "piece", label: "piece" },
               ]}
               {...form.getInputProps("unit")}
             />
@@ -146,6 +146,40 @@ const OrderForm = ({
               placeholder="current stock quantity"
               disabled
               {...form.getInputProps("currentStock")}
+            />
+          </Group>
+          <Group className="order-flex-class">
+            <TextInput
+              withAsterisk={form.values.validate}
+              label="Brand Name"
+              className='form-input-tops'
+              placeholder="brand name"
+              {...form.getInputProps("brand")}
+            />
+            <Select
+              label="Category"
+              className='form-input-tops'
+              placeholder="pick one"
+              data={[
+                { value: "Bakery", label: "Bakery" },
+                { value: "Beverage", label: "Beverage" },
+                { value: "Dairy and Frozen", label: "Dairy and Frozen" },
+                { value: "Staple", label: "Staple" },
+                { value: "Personal care", label: "Personal care" },
+                { value: "Packaged Food", label: "Packaged Food" },
+                { value: "Home and Kitchen", label: "Home and Kitchen" },
+                { value: "Stationery", label: "Stationery" },
+                { value: "Grocery", label: "Grocery" },
+                { value: "Baby and kids", label: "Baby and kids" },
+                { value: "Electronic", label: "Electronic" },
+                { value: "Spices and fast food", label: "Spices and fast food" },
+                { value: "Pooja", label: "Pooja" },
+                { value: "Oil and ghee", label: "Oil and ghee" },
+                { value: "Sweet and Chocolate", label: "Sweet and Chocolate" },
+                { value: "Plastic", label: "Plastic" },
+                { value: "Miscellanous", label: "Miscellanous" },
+              ]}
+              {...form.getInputProps("category")}
             />
           </Group>
           <Group className="order-flex-class">
@@ -215,7 +249,7 @@ const OrderForm = ({
                     value={new Date(date.date).toLocaleDateString()}
                     readOnly
                   />
-                  <TextInput readOnly value={date.quantity} />
+                  <TextInput readOnly value={date.value} />
                   <Button onClick={() => handleDateDelete(date)}>
                     Delete
                   </Button>
@@ -229,14 +263,7 @@ const OrderForm = ({
               style={{ width: "15vmin" }}
               label="Slab Start"
               placeholder="start quantity"
-              {...slabForm.getInputProps("startValue")}
-            />
-            <NumberInput
-              withAsterisk={form.values.validate}
-              style={{ width: "15vmin" }}
-              label="Slab End"
-              placeholder="end quantity"
-              {...slabForm.getInputProps("endValue")}
+              {...slabForm.getInputProps("1")}
             />
             <NumberInput
               withAsterisk={form.values.validate}
@@ -244,7 +271,7 @@ const OrderForm = ({
               label="Price"
               placeholder="price"
               precision={2}
-              {...slabForm.getInputProps("pricing")}
+              {...slabForm.getInputProps("2")}
             />
             <Button
               style={{ marginTop: "3.5vmin" }}

@@ -6,40 +6,22 @@ import '../../CSS/purchaseApproval.css'
 import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
 import ShowOrderDetailTable from "./ShowOrderDetailTable";
 import BillUploaderDetails from "./BillUploaderDetails";
-const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList , callAPI}) => {
+
+const manageList = [
+  { value: "all", label: "All orders" },
+  { value: "rejected", label: "Rejected orders" },
+  { value: "saved", label: "Saved orders" },
+]
+const adminList = [
+  { value: "all", label: "All orders" },
+  { value: "draft", label: "Draft orders" },
+  { value: "rejected", label: "Rejected orders" },
+  { value: "approved", label: "Approved orders" },
+  { value: "saved", label: "Saved orders" },
+] 
+const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrders}) => {
   const [indexDetail, setIndexDetail] = useState(-1);
-  const filterOrders = (value) => {
-    let filter = []
-    if (value === "draft") {
-      for (let i = 0; i < allList.length; i++) {
-        if (allList[i].isDraft && !allList[i].isApproved) {
-          filter.push(allList[i]);
-        }
-      }
-    } else if (value === "approved") {
-      for (let i = 0; i < allList.length; i++) {
-        if (allList[i].isApproved === true) {
-          filter.push(allList[i]);
-        }
-      }
-    } else if (value === "rejected") {
-      for (let i = 0; i < allList.length; i++) {
-        if (allList[i].isRejected === true) {
-          filter.push(allList[i]);
-        }
-      }
-    } else if (value === "saved") {
-      for (let i = 0; i < allList.length; i++) {
-        if (!(allList[i].isDraft || allList[i].isRejected || allList[i].isApproved)) {
-          filter.push(allList[i]);
-        }
-      }
-    } else {
-      filter = [...allList]
-    }
-    setAllPurchaseList([...filter])
-    setIndexDetail(-1)
-  };
+  const role = JSON.parse(localStorage.getItem("priyam-store")).role
  
   return (
     <div className="purchase-approval">
@@ -48,15 +30,9 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
         style={{ width: "200px", margin: "2vmin auto" }}
         label="Sort By"
         placeholder="All orders"
-        data={[
-          { value: "all", label: "All orders" },
-          { value: "draft", label: "Draft orders" },
-          { value: "rejected", label: "Rejected orders" },
-          { value: "approved", label: "Approved orders" },
-          { value: "saved", label: "Saved orders" },
-        ]}
-        onChange={filterOrders}
-      />
+        data={role === "admin" ? adminList : manageList}
+        onChange={getOrders}
+      /> 
 
       {allPurchaseList.length === 0
         ?
@@ -92,11 +68,11 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
                         list={list}
                         index={index}
                         setIndexDetail={setIndexDetail}
-                        callAPI={callAPI}
+                        getOrders={getOrders}
 
                       />
                     </tr>
-                    : <></>
+                    : <div key={index}></div>
                   : <tr key={index}>
                     <PurchaseListApproval
                       allPurchaseList={allPurchaseList}
@@ -104,7 +80,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
                       list={list}
                       index={index}
                       setIndexDetail={setIndexDetail}
-                      callAPI={callAPI}
+                      getOrders={getOrders}
                     />
                   </tr>
               );

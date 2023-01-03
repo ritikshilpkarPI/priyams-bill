@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { Axios } from 'src/utils/axios';
 import '../../CSS/purchaseApproval.css'
-const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList, setIndexDetail, callAPI }) => {
+const PurchaseListApproval = ({ list, index, allPurchaseList, setIndexDetail,getOrders}) => {
   const rejectOrder = async (id, index) => {
     const ans = window.confirm("Are you sure you want to reject this order?");
     if (!ans) return;
@@ -16,25 +16,32 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
         }
       })
       window.alert("Order rejected successfully");
-      callAPI();
+      getOrders('rejected');
     } catch (err) {
-      console.log(err);
       window.alert('Something went wrong,unable to reject order')
     }
   }
-  const approveOrder = async (id, index) => {
+  const approveOrder = async (id, index,list) => {
+   
     const ans = window.confirm("Are you sure you want to approve this order?");
     if (!ans) return;
     try {
+      await Axios.request({
+        url: "/api/inventory/saveInventory",
+        method: "POST",
+        data:{
+          new_items:list.purchasedItems
+        }
+      });
       await Axios({
         method: 'POST',
         url: '/api/approval/approveOrder/' + id,
         data: {
-          username: JSON.parse(localStorage.getItem("priyam-store")).username
+          username: JSON.parse(localStorage.getItem("priyam-store")).username,
         }
       })
       window.alert("Order approved successfully");
-      callAPI();
+      getOrders('approved');
     } catch (err) {
       console.log(err);
       window.alert('Something went wrong,unable to approve order');
@@ -67,7 +74,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
       return;
     }
     saveDraft(id, index);
-    callAPI();
+    getOrders('draft');
   }
   const saveDraft = async (id, index) => {
 
@@ -118,7 +125,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
                     </td>
                 }
                 {list.isDraft ?
-                  <td><Button disabled={list.isRejected || list.isApproved} className='approve-btn' onClick={() => { approveOrder(list._id, index) }}>Approve</Button></td>
+                  <td><Button disabled={list.isRejected || list.isApproved} className='approve-btn' onClick={() => { approveOrder(list._id, index,list) }}>Approve</Button></td>
                   :
                   <td><Button disabled={list.isRejected || list.isApproved} className='approve-btn' onClick={() => { draftOrder(list._id, index) }}>Draft</Button></td>
                 }

@@ -16,23 +16,25 @@ const purchaseOrderSchema = new mongoose.Schema({
             costPrice: Number,
             currentStock: Number,
             validate: Boolean,
+            item_id:String,
+            brand: String,
+            category: String,
             createdAt: { type: Date, default: Date.now },
             expiryDates: [
                 {
                     date: Date,
-                    quantity: Number
+                    value: Number
                 }
             ],
-            slabPrice: [{
-                startValue: Number,
-                endValue: Number,
-                pricing: Number,
-            }]
+            slabPrice: []
         }
     ],
     purchaseDetails: [
         {
-            paidAmount: Number,
+            paidAmount: {
+                type:Number,
+                default:0
+            },
             paidBy: String,
             chequeNumber: String,
         }
@@ -43,7 +45,10 @@ const purchaseOrderSchema = new mongoose.Schema({
     }],
     billAmount: Number,
     remark: String,
-    totalPaidAmount: String,
+    totalPaidAmount: {
+        type:String,
+        default:0
+    },
     payment: String,
     procurementSource: String,
     dealerName: String,

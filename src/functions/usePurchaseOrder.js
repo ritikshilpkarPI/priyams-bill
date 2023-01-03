@@ -63,14 +63,14 @@ const usePurchaseOrder = (history) => {
   const [orderList, setOrderList] = useState([]);
   const slabForm = useForm({
     initialValues: {
-      startValue: 1,
-      endValue: 1,
-      pricing: 0,
+      1: 0,
+      2: 0,
     },
     validate: {
-      pricing: (value) => (value > 0 ? null : 'price should be greated than 0')
+      2: (value) => (value > 0 ? null : 'price should be greated than 0')
     }
   })
+ 
   const form = useForm({
     initialValues: {
       barcode: '',
@@ -83,11 +83,14 @@ const usePurchaseOrder = (history) => {
       email: '',
       itemRemark: '',
       sellingPrice: 0,
+      brand: '',
+      category: '',
       mrp: 0,
       costPrice: 0,
       expiryDates: [],
       validate: false,
-      slabPrice: []
+      slabPrice: [],
+      item_id:''
     },
     validate: {
       itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0' : null),
@@ -104,7 +107,7 @@ const usePurchaseOrder = (history) => {
     isSaved: false,
     isDraft: false
   })
-  // const my_id = myLocation.state?.id;
+  
   const getDetails = async (search_id) => {
     try {
       onLoader();
@@ -158,7 +161,6 @@ const usePurchaseOrder = (history) => {
       expiryDates: dates
     }));
   }
-
   const addDetails = async () => {
     const payment = {
       paidAmount: purchaseForm.values.paidAmount,
@@ -329,10 +331,16 @@ const usePurchaseOrder = (history) => {
       currentStock: item.itemStockQuantity,
       stockQuantity: 0,
       minimumQuantity: item.minimumStockQuantity,
+      brand: item.itemBrandName,
+      category: item.itemCategory,
       sellingPrice: item.itemSellingPricePerUnit,
       mrp: item.itemMRPperUnit,
       costPrice: item.itemCostPricePerUnit,
+      slabPrice:item.slabPricing,
+      item_id:String(item._id),
+      unit: item.quantityUnitName
     }));
+    setSlabs(form.values.slabPrice)
     setOpenDrawer(false);
   };
   const handlePurchaseDetail = (element, index) => {
@@ -348,7 +356,7 @@ const usePurchaseOrder = (history) => {
   const handleItemFrom = async (values) => {
     let sum = 0;
     values.expiryDates.forEach((element) => {
-      sum += element.quantity;
+      sum += element.value;
     });
     if (sum === values.stockQuantity || !form.values.validate) {
       form.values.slabPrice = [...slabs];
@@ -370,7 +378,7 @@ const usePurchaseOrder = (history) => {
         offLoader();
         alert('unable to add order, something went wrong...')
       }
-
+  
       form.reset();
       setSlabs([]);
       setOpened(false);
@@ -416,7 +424,7 @@ const usePurchaseOrder = (history) => {
     }
     form.setValues((prev) => ({
       barcode: item.barcode,
-      inputName: item.inputName,
+      inputName: item.inputName.trim(),
       stockQuantity: item.stockQuantity,
       currentStock: item.currentStock,
       minimumQuantity: item.minimumQuantity,
@@ -428,7 +436,11 @@ const usePurchaseOrder = (history) => {
       costPrice: item.costPrice,
       expiryDates: [...item.expiryDates],
       validate: item.validate,
+      item_id:item.item_id,
+      brand:item.itemBrandName,
+      category:item.itemCategory
     }));
+    console.log({item})
     setSlabs([...item.slabPrice]);
     setOpened(true);
   };
@@ -489,7 +501,7 @@ const usePurchaseOrder = (history) => {
     }
     form.insertListItem("expiryDates", {
       date: new Date(date).toLocaleDateString("en-US", options),
-      quantity: expiryQuantity,
+      value: expiryQuantity,
     });
     setDate("");
     setExpiryQuantity(0);
