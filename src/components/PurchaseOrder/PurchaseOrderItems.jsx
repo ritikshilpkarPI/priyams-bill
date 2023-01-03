@@ -5,6 +5,7 @@ import { IconCheck, IconX } from '@tabler/icons';
 import usePurchaseOrder from 'src/functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from 'src/functions/useNameSearchItems';
+import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
 import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
@@ -53,6 +54,11 @@ const PurchaseOrderItems = ({ history }) => {
     const {
         filterItems
     } = useNameSearchItem(form.values.inputName)
+    //my code for work-
+    const {
+        filterItems2
+    } = useBarcodeSearchItems(form.values.barcode)
+
     return (
         <>
             <LoadingOverlay className='purchase-loader' visible={Loading} overlayBlur={1} />
@@ -71,6 +77,7 @@ const PurchaseOrderItems = ({ history }) => {
                 setDate={setDate}
                 date={date}
                 filterItems={filterItems}
+                filterItems2={filterItems2}
                 handleSelectOrderItems={handleSelectOrderItems}
                 slabForm={slabForm}
                 addSlabPrice={addSlabPrice}
