@@ -498,6 +498,7 @@ const usePurchaseOrder = (history) => {
     form.values.barcode,
     handleSelectOrderItems
   );
+  //barcode changing
   useEffect(() => {
     if (id && isNotGetUpdated) {
       getDetails(id);
