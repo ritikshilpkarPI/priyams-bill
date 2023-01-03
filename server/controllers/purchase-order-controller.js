@@ -221,6 +221,15 @@ const updateOrderByIndex = async(req,res)=>{
     res.status(400).send({message:err,success:false})
   }
 }
+const getOrdersByQuery = async(req,res)=>{
+  try{
+      const query = req.query;
+      const orders = await PurchaseOrder.find(query);
+      res.status(200).send({message:'orders found',orders})
+  }catch(err){
+      res.status(400).send({message:err});
+  }
+}
 module.exports = {
   addOrder,
   getOrders,
@@ -230,5 +239,6 @@ module.exports = {
   saveOrder,
   updateSavedOrders,
   deleteOrderItemById,
-  updateOrderByIndex
+  updateOrderByIndex,
+  getOrdersByQuery
 };

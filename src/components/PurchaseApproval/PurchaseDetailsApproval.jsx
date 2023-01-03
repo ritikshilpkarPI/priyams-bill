@@ -6,40 +6,9 @@ import '../../CSS/purchaseApproval.css'
 import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
 import ShowOrderDetailTable from "./ShowOrderDetailTable";
 import BillUploaderDetails from "./BillUploaderDetails";
-const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList , callAPI}) => {
+import { Axios } from "src/utils/axios";
+const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrders}) => {
   const [indexDetail, setIndexDetail] = useState(-1);
-  const filterOrders = (value) => {
-    let filter = []
-    if (value === "draft") {
-      for (let i = 0; i < allList.length; i++) {
-        if (allList[i].isDraft && !allList[i].isApproved) {
-          filter.push(allList[i]);
-        }
-      }
-    } else if (value === "approved") {
-      for (let i = 0; i < allList.length; i++) {
-        if (allList[i].isApproved === true) {
-          filter.push(allList[i]);
-        }
-      }
-    } else if (value === "rejected") {
-      for (let i = 0; i < allList.length; i++) {
-        if (allList[i].isRejected === true) {
-          filter.push(allList[i]);
-        }
-      }
-    } else if (value === "saved") {
-      for (let i = 0; i < allList.length; i++) {
-        if (!(allList[i].isDraft || allList[i].isRejected || allList[i].isApproved)) {
-          filter.push(allList[i]);
-        }
-      }
-    } else {
-      filter = [...allList]
-    }
-    setAllPurchaseList([...filter])
-    setIndexDetail(-1)
-  };
  
   return (
     <div className="purchase-approval">
@@ -55,7 +24,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
           { value: "approved", label: "Approved orders" },
           { value: "saved", label: "Saved orders" },
         ]}
-        onChange={filterOrders}
+        onChange={getOrders}
       />
 
       {allPurchaseList.length === 0
@@ -92,7 +61,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
                         list={list}
                         index={index}
                         setIndexDetail={setIndexDetail}
-                        callAPI={callAPI}
+                        getOrders={getOrders}
 
                       />
                     </tr>
@@ -104,7 +73,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, allList 
                       list={list}
                       index={index}
                       setIndexDetail={setIndexDetail}
-                      callAPI={callAPI}
+                      getOrders={getOrders}
                     />
                   </tr>
               );

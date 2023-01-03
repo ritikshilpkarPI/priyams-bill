@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { Axios } from 'src/utils/axios';
 import '../../CSS/purchaseApproval.css'
-const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList, setIndexDetail, callAPI }) => {
+const PurchaseListApproval = ({ list, index, allPurchaseList, setIndexDetail,getOrders}) => {
   const rejectOrder = async (id, index) => {
     const ans = window.confirm("Are you sure you want to reject this order?");
     if (!ans) return;
@@ -16,7 +16,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
         }
       })
       window.alert("Order rejected successfully");
-      callAPI();
+      getOrders('rejected');
     } catch (err) {
       window.alert('Something went wrong,unable to reject order')
     }
@@ -41,7 +41,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
         }
       })
       window.alert("Order approved successfully");
-      callAPI();
+      getOrders('approved');
     } catch (err) {
       console.log(err);
       window.alert('Something went wrong,unable to approve order');
@@ -74,7 +74,7 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setAllPurchaseList
       return;
     }
     saveDraft(id, index);
-    callAPI();
+    getOrders('draft');
   }
   const saveDraft = async (id, index) => {
 
