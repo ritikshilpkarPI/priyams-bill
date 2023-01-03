@@ -11,7 +11,6 @@ import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../../CSS/purchaseOrder.css'
-import { useNavigate } from 'react-router';
 import { useHistory, useParams } from "react-router-dom";
 const PurchaseOrderItems = ({ history }) => {
     const {
