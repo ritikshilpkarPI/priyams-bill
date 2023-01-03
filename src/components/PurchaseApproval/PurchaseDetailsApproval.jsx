@@ -6,8 +6,22 @@ import '../../CSS/purchaseApproval.css'
 import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
 import ShowOrderDetailTable from "./ShowOrderDetailTable";
 import BillUploaderDetails from "./BillUploaderDetails";
+
+const manageList = [
+  { value: "all", label: "All orders" },
+  { value: "rejected", label: "Rejected orders" },
+  { value: "saved", label: "Saved orders" },
+]
+const adminList = [
+  { value: "all", label: "All orders" },
+  { value: "draft", label: "Draft orders" },
+  { value: "rejected", label: "Rejected orders" },
+  { value: "approved", label: "Approved orders" },
+  { value: "saved", label: "Saved orders" },
+] 
 const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrders}) => {
   const [indexDetail, setIndexDetail] = useState(-1);
+  const role = JSON.parse(localStorage.getItem("priyam-store")).role
  
   return (
     <div className="purchase-approval">
@@ -16,13 +30,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrder
         style={{ width: "200px", margin: "2vmin auto" }}
         label="Sort By"
         placeholder="All orders"
-        data={[
-          { value: "all", label: "All orders" },
-          { value: "draft", label: "Draft orders" },
-          { value: "rejected", label: "Rejected orders" },
-          { value: "approved", label: "Approved orders" },
-          { value: "saved", label: "Saved orders" },
-        ]}
+        data={role === "admin" ? adminList : manageList}
         onChange={getOrders}
       />
 
