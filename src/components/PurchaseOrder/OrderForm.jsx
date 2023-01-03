@@ -13,6 +13,7 @@ import { DatePicker } from "@mantine/dates";
 import ListDropDownItem from "./ListDropDownItem";
 import ShowSlabPricing from "./ShowSlabPricing";
 import '../../CSS/orderForm.css'
+import { useState } from "react";
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -27,6 +28,7 @@ const OrderForm = ({
   setDate,
   date,
   filterItems,
+  filterItems2,
   handleSelectOrderItems,
   slabForm,
   addSlabPrice,
@@ -34,6 +36,19 @@ const OrderForm = ({
   slabs,
   setSlabs,
 }) => {
+  const[toggle,setToggle]=useState(false);
+  const[toggle1,setToggle1]=useState(false);
+  const func1=()=>{
+    setOpenDrawer(true)
+  }
+  const func2=()=>{
+    setToggle(true);
+    setToggle1(false);
+  }
+  const func3=()=>{
+    setToggle1(true);
+    setToggle(false);
+  }
   return (
     <Drawer
       opened={opened}
@@ -59,8 +74,10 @@ const OrderForm = ({
               label="Barcode"
               className='form-input-tops'
               placeholder="barcode"
+              onClick={() => { func1(); func2();}}
               {...form.getInputProps("barcode")}
             />
+           
             {/* <TextInput
                             withAsterisk={form.values.validate}
                             label="Email"
@@ -73,11 +90,19 @@ const OrderForm = ({
               className='form-input-tops'
               required
               placeholder="item name"
-              onClick={() => setOpenDrawer(true)}
+              onClick={() =>{ func1(); func3();}}
               {...form.getInputProps("inputName")}
             />
           </Group>
-          {Boolean(filterItems.length) && openDrawer && (
+           <div className="barcode-filter-shift">
+           {Boolean(filterItems2.length)  && toggle && openDrawer && (
+            <ListDropDownItem
+              itemList={filterItems2}
+              handleSelectOrderItems={handleSelectOrderItems}
+            />
+          )}
+          </div>
+          {Boolean(filterItems.length) && toggle1 && openDrawer && (
             <ListDropDownItem
               itemList={filterItems}
               handleSelectOrderItems={handleSelectOrderItems}
