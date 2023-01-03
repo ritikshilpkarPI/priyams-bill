@@ -107,8 +107,7 @@ const usePurchaseOrder = (history) => {
     isSaved: false,
     isDraft: false
   })
-  // const my_id = myLocation.state?.id;
-
+  
   const getDetails = async (search_id) => {
     try {
       onLoader();
@@ -339,7 +338,7 @@ const usePurchaseOrder = (history) => {
       costPrice: item.itemCostPricePerUnit,
       slabPrice:item.slabPricing,
       item_id:String(item._id),
-      // expiryDates:item.useByDate,
+      unit: item.quantityUnitName
     }));
     setSlabs(form.values.slabPrice)
     setOpenDrawer(false);
@@ -425,7 +424,7 @@ const usePurchaseOrder = (history) => {
     }
     form.setValues((prev) => ({
       barcode: item.barcode,
-      inputName: item.inputName,
+      inputName: item.inputName.trim(),
       stockQuantity: item.stockQuantity,
       currentStock: item.currentStock,
       minimumQuantity: item.minimumQuantity,
@@ -437,8 +436,11 @@ const usePurchaseOrder = (history) => {
       costPrice: item.costPrice,
       expiryDates: [...item.expiryDates],
       validate: item.validate,
-      item_id:item.item_id
+      item_id:item.item_id,
+      brand:item.itemBrandName,
+      category:item.itemCategory
     }));
+    console.log({item})
     setSlabs([...item.slabPrice]);
     setOpened(true);
   };

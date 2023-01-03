@@ -125,7 +125,7 @@ const OrderForm = ({
           </Group>
           <Group className="order-flex-class">
             <TextInput
-              withAsterisk
+              withAsterisk={form.values.validate}
               label="Brand Name"
               className='form-input-tops'
               placeholder="brand name"
@@ -136,23 +136,23 @@ const OrderForm = ({
               className='form-input-tops'
               placeholder="pick one"
               data={[
-                { value: "bakery", label: "Bakery" },
-                { value: "beverage", label: "Beverage" },
-                { value: "dairyandfrozen", label: "Dairy and Frozen" },
-                { value: "staple", label: "Staple" },
-                { value: "personalcare", label: "Personal care" },
-                { value: "packagedfood", label: "Packaged Food" },
-                { value: "homeandkitchen", label: "Home and Kitchen" },
-                { value: "stationery", label: "Stationery" },
-                { value: "grocery", label: "Grocery" },
-                { value: "babyandkids", label: "Baby and kids" },
-                { value: "electronic", label: "Electronic" },
-                { value: "spicesandfastfood", label: "Spices and fast food" },
-                { value: "pooja", label: "Pooja" },
-                { value: "oilandghee", label: "Oil and ghee" },
-                { value: "sweetandchocolate", label: "Sweet and Chocolate" },
-                { value: "plastic", label: "Plastic" },
-                { value: "miscellanous", label: "Miscellanous" },
+                { value: "Bakery", label: "Bakery" },
+                { value: "Beverage", label: "Beverage" },
+                { value: "Dairy and Frozen", label: "Dairy and Frozen" },
+                { value: "Staple", label: "Staple" },
+                { value: "Personal care", label: "Personal care" },
+                { value: "Packaged Food", label: "Packaged Food" },
+                { value: "Home and Kitchen", label: "Home and Kitchen" },
+                { value: "Stationery", label: "Stationery" },
+                { value: "Grocery", label: "Grocery" },
+                { value: "Baby and kids", label: "Baby and kids" },
+                { value: "Electronic", label: "Electronic" },
+                { value: "Spices and fast food", label: "Spices and fast food" },
+                { value: "Pooja", label: "Pooja" },
+                { value: "Oil and ghee", label: "Oil and ghee" },
+                { value: "Sweet and Chocolate", label: "Sweet and Chocolate" },
+                { value: "Plastic", label: "Plastic" },
+                { value: "Miscellanous", label: "Miscellanous" },
               ]}
               {...form.getInputProps("category")}
             />

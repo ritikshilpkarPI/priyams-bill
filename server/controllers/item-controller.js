@@ -168,7 +168,7 @@ const saveInventory = async (req, res) => {
         quantityUnitName: item.unit,
         itemPerUnitQuantity: item.itemQuantity,
         itemBrandName: item.brand,
-        itemCategory: item.categort
+        itemCategory: item.category
       }
       let oldItem;
       if (item.item_id) {
@@ -176,9 +176,34 @@ const saveInventory = async (req, res) => {
       }
       if (oldItem) {
         let newCostPrice = ((oldItem.itemCostPricePerUnit * oldItem.itemStockQuantity) + (itemDetails.itemStockQuantity * itemDetails.itemCostPricePerUnit)) / (oldItem.itemStockQuantity + itemDetails.itemStockQuantity);
-        let newUseByDate = [...item.expiryDates, ...oldItem.useByDate];
         let newStock = itemDetails.itemStockQuantity + oldItem.itemStockQuantity;
         let newItemPerUnit = itemDetails.itemPerUnitQuantity + oldItem.itemPerUnitQuantity;
+        
+        let newUseByDate = []
+        itemDetails.useByDate.forEach((newData)=>{
+          let dateExists = false;
+            oldItem.useByDate.forEach((oldData)=>{
+              if(new Date(oldData.date).toLocaleDateString() === new Date(newData.date).toLocaleDateString()){
+                  dateExists = true;
+                  let totalExpiryItems =  newData.value + oldData.value;
+                  newUseByDate = [...newUseByDate,{date:newData.date,value:totalExpiryItems}]
+              }
+            })
+            if(!dateExists){
+              newUseByDate = [...newUseByDate,{...newData}];
+            }
+        })
+        oldItem.useByDate.forEach((oldData)=>{
+          let dateExists = false;
+          itemDetails.useByDate.forEach((newData)=>{
+            if(new Date(oldData.date).toLocaleDateString() === new Date(newData.date).toLocaleDateString()){
+              dateExists = true;
+            }
+          })
+          if(!dateExists){
+            newUseByDate = [...newUseByDate,{...oldData}]
+          }
+        })
         let new_Item_Update = {
           ...itemDetails,
           itemCostPricePerUnit: newCostPrice.toFixed(2),

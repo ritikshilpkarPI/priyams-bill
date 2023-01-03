@@ -18,7 +18,7 @@ const purchaseOrderSchema = new mongoose.Schema({
             validate: Boolean,
             item_id:String,
             brand: String,
-            categories: String,
+            category: String,
             createdAt: { type: Date, default: Date.now },
             expiryDates: [
                 {

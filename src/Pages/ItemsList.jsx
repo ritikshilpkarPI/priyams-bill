@@ -86,7 +86,6 @@ const ItemsList = () => {
       setloaderDisplay(false);
     }
   }, [items]);
-
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
     setNewItemInput({ ...newItemInput, [name]: value });
