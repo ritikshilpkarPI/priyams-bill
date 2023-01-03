@@ -31,7 +31,10 @@ const purchaseOrderSchema = new mongoose.Schema({
     ],
     purchaseDetails: [
         {
-            paidAmount: Number,
+            paidAmount: {
+                type:Number,
+                default:0
+            },
             paidBy: String,
             chequeNumber: String,
         }
@@ -42,7 +45,10 @@ const purchaseOrderSchema = new mongoose.Schema({
     }],
     billAmount: Number,
     remark: String,
-    totalPaidAmount: String,
+    totalPaidAmount: {
+        type:String,
+        default:0
+    },
     payment: String,
     procurementSource: String,
     dealerName: String,
