@@ -88,11 +88,11 @@ const updateDetailsById = async (req, res) => {
 
     //DELETING IMAGES FROM CLOUDINARY
     await deleteImages(delImages);
-    
+
     let billPhotos = [];
     billPhotos = await uploadImages(bills);
     billPhotos = [...billPhotos, ...uploadedImages];
-    
+
     const purchaseOrder = {
       purchasedItems: [...orders],
       purchaseDetails: [...details],
@@ -173,61 +173,61 @@ const deleteImages = (images) => {
     });
   });
 };
-const saveOrder = async (req,res) =>{
-  try{
-    const {new_order} = req.body
+const saveOrder = async (req, res) => {
+  try {
+    const { new_order } = req.body
     const purchaseOrder = await PurchaseOrder.create({
-      purchasedItems:[new_order]
+      purchasedItems: [new_order]
     });
-    res.status(201).send({message:"order added successfully",success:true,order:purchaseOrder});
-  }catch(err){
-    console.log({err})
-    res.status(400).send({message:err,success:false});
+    res.status(201).send({ message: "order added successfully", success: true, order: purchaseOrder });
+  } catch (err) {
+    console.log({ err })
+    res.status(400).send({ message: err, success: false });
   }
 }
-const updateSavedOrders = async(req,res)=>{
-  try{
+const updateSavedOrders = async (req, res) => {
+  try {
     const id = req.params.id;
-    const {new_order} = req.body;
+    const { new_order } = req.body;
     const purchaseOrder = await PurchaseOrder.findById(id);
-    const updatedOrder = await purchaseOrder.updateOne({purchasedItems:[...purchaseOrder.purchasedItems,new_order]});
-    res.status(200).send({message:"order added successfully",success:true,order:updatedOrder})
-  }catch(err){
-    res.status(400).send({message:err,success:false})
+    const updatedOrder = await purchaseOrder.updateOne({ purchasedItems: [...purchaseOrder.purchasedItems, new_order] });
+    res.status(200).send({ message: "order added successfully", success: true, order: updatedOrder })
+  } catch (err) {
+    res.status(400).send({ message: err, success: false })
   }
 }
-const deleteOrderItemById = async(req,res) =>{
-  try{
+const deleteOrderItemById = async (req, res) => {
+  try {
     const purchase_id = req.params.id;
-    const {itemId} = req.body;
+    const { itemId } = req.body;
     const purchaseOrder = await PurchaseOrder.findById(purchase_id);
     const purchasedItems = purchaseOrder.purchasedItems.filter((order) => order._id != itemId);
-    const updatedOrder = await purchaseOrder.updateOne({purchasedItems});
-    res.status(200).send({message:'order deleted successfully',success:true,order:purchaseOrder,updatedOrder})
+    const updatedOrder = await purchaseOrder.updateOne({ purchasedItems });
+    res.status(200).send({ message: 'order deleted successfully', success: true, order: purchaseOrder, updatedOrder })
 
-  }catch(err){
-    res.status(400).send({message:err,success:false})
+  } catch (err) {
+    res.status(400).send({ message: err, success: false })
   }
 }
-const updateOrderByIndex = async(req,res)=>{
-  try{
+const updateOrderByIndex = async (req, res) => {
+  try {
     const purchase_id = req.params.id;
-    const {index,new_order} = req.body;
+    const { index, new_order } = req.body;
     const purchaseOrder = await PurchaseOrder.findById(purchase_id);
-    const purchasedItems = [...purchaseOrder.purchasedItems.filter((order,i)=> i!=index),new_order];
-    const updatedOrder = await purchaseOrder.updateOne({purchasedItems});
-    res.status(200).send({message:'order updated successfully',success:true,order:purchaseOrder,updatedOrder})
-  }catch(err){
-    res.status(400).send({message:err,success:false})
+    const purchasedItems = [...purchaseOrder.purchasedItems.filter((order, i) => i != index), new_order];
+    const updatedOrder = await purchaseOrder.updateOne({ purchasedItems });
+    res.status(200).send({ message: 'order updated successfully', success: true, order: purchaseOrder, updatedOrder })
+  } catch (err) {
+    res.status(400).send({ message: err, success: false })
   }
 }
-const getOrdersByQuery = async(req,res)=>{
-  try{
-      const query = req.query;
-      const orders = await PurchaseOrder.find(query);
-      res.status(200).send({message:'orders found',orders})
-  }catch(err){
-      res.status(400).send({message:err});
+const getOrdersByQuery = async (req, res) => {
+  try {
+    const query = req.query;
+    const orders = await PurchaseOrder.find({ query });
+    res.status(200).send({ message: 'orders found', orders })
+  } catch (err) {
+    res.status(400).send({ message: err });
   }
 }
 module.exports = {
