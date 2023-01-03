@@ -6,7 +6,6 @@ import '../../CSS/purchaseApproval.css'
 import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
 import ShowOrderDetailTable from "./ShowOrderDetailTable";
 import BillUploaderDetails from "./BillUploaderDetails";
-import { Axios } from "src/utils/axios";
 const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrders}) => {
   const [indexDetail, setIndexDetail] = useState(-1);
  
@@ -65,7 +64,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrder
 
                       />
                     </tr>
-                    : <></>
+                    : <div key={index}></div>
                   : <tr key={index}>
                     <PurchaseListApproval
                       allPurchaseList={allPurchaseList}
