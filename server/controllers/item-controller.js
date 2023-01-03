@@ -150,57 +150,54 @@ const addBulkItems = async (request, response) => {
   }
 };
 
-const saveInventory = async(req,res)=>{
-  try{
+const saveInventory = async (req, res) => {
+  try {
 
-    const {new_items} = req.body;
-    new_items.forEach(async (item)=>{
-      const itemDetails ={
-        itemName:item.inputName,
-        itemBarcode:item.barcode,
-        itemStockQuantity:item.stockQuantity,
-        minimumStockQuantity:item.minimumQuantity,
-        itemMRPperUnit:item.mrp,
-        itemCostPricePerUnit:item.costPrice,
-        itemSellingPricePerUnit:item.sellingPrice,
-        useByDate:item.expiryDates,
-        slabPricing:item.slabPrice,
-        quantityUnitName:item.unit,
-        itemPerUnitQuantity:item.itemQuantity,
-        itemBrandName:item.brand,
-        itemCategory:item.categort
+    const { new_items } = req.body;
+    new_items.forEach(async (item) => {
+      const itemDetails = {
+        itemName: item.inputName,
+        itemBarcode: item.barcode,
+        itemStockQuantity: item.stockQuantity,
+        minimumStockQuantity: item.minimumQuantity,
+        itemMRPperUnit: item.mrp,
+        itemCostPricePerUnit: item.costPrice,
+        itemSellingPricePerUnit: item.sellingPrice,
+        useByDate: item.expiryDates,
+        slabPricing: item.slabPrice,
+        quantityUnitName: item.unit,
+        itemPerUnitQuantity: item.itemQuantity,
+        itemBrandName: item.brand,
+        itemCategory: item.categort
       }
-      console.log({itemDetails});
       let oldItem;
-      if(item.item_id){
-         oldItem = await Item.findById(item.item_id);
-        // console.log({oldItem: JSON.parse(oldItem)})
+      if (item.item_id) {
+        oldItem = await Item.findById(item.item_id);
       }
-      if(oldItem){
-        let newCostPrice = ((oldItem.itemCostPricePerUnit*oldItem.itemStockQuantity)+(itemDetails.itemStockQuantity*itemDetails.itemCostPricePerUnit))/(oldItem.itemStockQuantity+itemDetails.itemStockQuantity);
-        let newUseByDate = [...item.expiryDates,...oldItem.useByDate];
-        console.log(`DATES`, newUseByDate);
+      if (oldItem) {
+        let newCostPrice = ((oldItem.itemCostPricePerUnit * oldItem.itemStockQuantity) + (itemDetails.itemStockQuantity * itemDetails.itemCostPricePerUnit)) / (oldItem.itemStockQuantity + itemDetails.itemStockQuantity);
+        let newUseByDate = [...item.expiryDates, ...oldItem.useByDate];
         let newStock = itemDetails.itemStockQuantity + oldItem.itemStockQuantity;
         let newItemPerUnit = itemDetails.itemPerUnitQuantity + oldItem.itemPerUnitQuantity;
         let new_Item_Update = {
           ...itemDetails,
-          itemCostPricePerUnit:newCostPrice.toFixed(2),
-          useByDate:newUseByDate,
-          itemStockQuantity:newStock,
-          itemPerUnitQuantity:newItemPerUnit,
+          itemCostPricePerUnit: newCostPrice.toFixed(2),
+          useByDate: newUseByDate,
+          itemStockQuantity: newStock,
+          itemPerUnitQuantity: newItemPerUnit,
         }
-       await oldItem.updateOne({
-          ...itemDetails,...new_Item_Update
+        await oldItem.updateOne({
+          ...itemDetails, ...new_Item_Update
         }, {
           new: true
         })
-      }else{
-        await Item.create({...itemDetails});
+      } else {
+        await Item.create({ ...itemDetails });
       }
     })
-    res.status(200).send({message:'items updated',success:true})
-  }catch(err){
-    res.status(400).send({message:err,success:false})
+    res.status(200).send({ message: 'items updated', success: true })
+  } catch (err) {
+    res.status(400).send({ message: err, success: false })
   }
 }
 module.exports = {
