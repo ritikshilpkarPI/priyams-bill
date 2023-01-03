@@ -29,7 +29,7 @@ const ItemSchem = new mongoose.Schema(
         date: {
           type: Date
         },
-        quantity: {
+        value: {
           type: Number
         }
       }

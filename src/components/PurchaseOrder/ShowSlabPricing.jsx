@@ -3,9 +3,8 @@ import React from 'react'
 const ShowSlabPricing = ({slabs,deleteSlab}) => {
     const rows = slabs.map((element, index) => (
         <tr key={index + 1}>
-            <td>{element.startValue}</td>
-            <td>{element.endValue}</td>
-            <td>{element.pricing}</td>
+            <td>{element["1"]}</td>
+            <td>{element["2"]}</td>
             <td><Button style={{backgroundColor:'#F03E3E'}} onClick={() => deleteSlab(index)}>Delete</Button></td>
         </tr>
       ));
@@ -16,7 +15,6 @@ const ShowSlabPricing = ({slabs,deleteSlab}) => {
           <thead>
             <tr>
               <th>Start Value</th>
-              <th>End Value</th>
               <th>Price</th>
             </tr>
           </thead>

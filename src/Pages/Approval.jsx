@@ -4,56 +4,61 @@ import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDet
 import { Axios } from 'src/utils/axios';
 
 const Approval = () => {
-    const [list, setList] = useState([]);
     const [filter, setFilter] = useState([]);
     const [Loading, setLoading] = useState(false);
     useEffect(() => {
-       callAPI();
+       getOrders();
+       // eslint-disable-next-line
     }, []);
-    const callAPI = async() =>{
-      setLoading(true)
-     try{
-      const {data} = await Axios({
-        url:'/api/purchaseOrder/orders'
-      })
-        let pendingArray = [];
-        let approvedArray = [];
-        let rejectedArray = [];
-        let draftArray = [];
-        let totalArray = data.orders;
+    const getOrders = async(value) => {
+      try{
+        onLoader();
+        let query = ''
         const role = JSON.parse(localStorage.getItem("priyam-store")).role;
-        for(let i=0;i<totalArray.length;i++){
-          if(role === 'admin'){
-              if(totalArray[i].isRejected){
-                rejectedArray.push(totalArray[i]);
-              }else if(totalArray[i].isApproved){
-                approvedArray.push(totalArray[i]);
-              }else if(totalArray[i].isDraft){
-                draftArray.push(totalArray[i]);
-              }else{
-                pendingArray.push(totalArray[i]);
-              }
-          }else{
-            if(totalArray[i].isRejected){
-              rejectedArray.push(totalArray[i]);
-            }else if(!totalArray[i].isApproved){
-              pendingArray.push(totalArray[i]);
-            }
-          }
+        if(value === 'approved' && role === 'admin'){
+            query = 'isApproved=true'
+        }else if(value === 'draft' && role === 'admin'){
+          query = 'isDraft=true&isApproved=false'
+        }else if(value === 'rejected'){
+          query = 'isRejected=true'
+        }else if(value === 'saved'){
+          query = 'isDraft=false&isRejected=false'
+        }else if(role !== 'admin'){
+          query = 'isApproved=false&isDraft=false'
         }
-        setList([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
-        setFilter([...draftArray,...rejectedArray,...approvedArray,...pendingArray]);
-        setLoading(false)
-     }catch(err){
-       console.log(err);
-       setLoading(false)
-     }
+        const {data}  = await Axios({
+          method:'POST',
+          url:`/api/purchaseOrder/getOrdersByQuery/?${query}`
+        })
+        const {orders} = data;
+        setFilter([...orders])
+        offLoader();
+      }catch(err){
+        offLoader();
+        console.log({err})
+      }
+    };
+    const onLoader = () => {
+      setLoading(true);
+      hideScrollBar();
     }
-   
+    const offLoader = () => {
+      setLoading(false);
+      showScrollBar();
+    }
+    const hideScrollBar = () => {
+      window.scrollTo(0, 0);
+      document.body.style.overflowY = 'hidden';
+      document.body.style.overflowX = 'hidden';
+    }
+    const showScrollBar = () => {
+      document.body.style.overflowY = 'visible'
+      document.body.style.overflowX = 'visible';
+    }
   return (
     <div>
        <LoadingOverlay className='purchase-loader' visible={Loading} overlayBlur={1} />
-      <PurchaseDetailsApproval callAPI={callAPI} allList={list} allPurchaseList={filter} setAllPurchaseList={setFilter} />
+      <PurchaseDetailsApproval  getOrders={getOrders} allPurchaseList={filter} setAllPurchaseList={setFilter} />
     </div>
   )
 }

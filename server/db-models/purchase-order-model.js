@@ -14,46 +14,54 @@ const purchaseOrderSchema = new mongoose.Schema({
             sellingPrice: Number,
             mrp: Number,
             costPrice: Number,
-            validate:Boolean,
+            currentStock: Number,
+            validate: Boolean,
+            item_id:String,
+            brand: String,
+            category: String,
             createdAt: { type: Date, default: Date.now },
             expiryDates: [
-                { date: Date,
-                  quantity : Number
-                 }
+                {
+                    date: Date,
+                    value: Number
+                }
             ],
-            slabPrice:[{
-                startValue:Number,
-                endValue:Number,
-                pricing:Number,
-            }]
+            slabPrice: []
         }
     ],
-    purchaseDetails:[
+    purchaseDetails: [
         {
-            paidAmount : Number,
-            paidBy:String,
-            chequeNumber:String,
+            paidAmount: {
+                type:Number,
+                default:0
+            },
+            paidBy: String,
+            chequeNumber: String,
         }
     ],
-    billPhotos:[{
-        public_id:String,
-        secure_url:String
+    billPhotos: [{
+        public_id: String,
+        secure_url: String
     }],
-    billAmount:Number,
-    remark:String,
-    totalPaidAmount:String,
-    payment:String,
-    procurementSource:String,
-    dealerName:String,
-    phoneNumber:Number,
-    isDraft:Boolean,
-    isApproved:{
-        type:Boolean,
-        default : false
+    billAmount: Number,
+    remark: String,
+    totalPaidAmount: {
+        type:String,
+        default:0
     },
-    isRejected:{
-        type:Boolean,
-        default:false
+    payment: String,
+    procurementSource: String,
+    dealerName: String,
+    phoneNumber: Number,
+    isDraft: Boolean,
+    createdAt: { type: Date, default: Date.now },
+    isApproved: {
+        type: Boolean,
+        default: false
+    },
+    isRejected: {
+        type: Boolean,
+        default: false
     }
 })
 

@@ -137,7 +137,12 @@
     overflow: scroll;
     height: 400px;
 }
-
+.barcode-filter-shift{
+    position: absolute;
+    top:140px;
+    z-index: 1;
+    background-color: white;
+}
 .expiry-date-showcase {
     display: flex;
     justify-content: space-between;
@@ -170,4 +175,12 @@
 .list-items-container {
     width: 90%;
     margin: auto;
+}
+
+.validate {
+    background: rgb(184, 229, 184) !important;
+}
+
+.not-validate {
+    background: rgb(239, 216, 216) !important;
 }

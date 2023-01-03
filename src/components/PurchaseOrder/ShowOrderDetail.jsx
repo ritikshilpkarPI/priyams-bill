@@ -3,7 +3,7 @@ import React from "react";
 
 const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
   const rows = purchaseList.orders.map((element, index) => (
-    <tr key={index + 1}>
+    <tr className={element.validate ? "validate" : "not-validate"} key={index + 1}>
       <td>{element.barcode}</td>
       <td>{element.inputName}</td>
       <td>{element.stockQuantity}</td>
@@ -19,12 +19,10 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
             <table key={index}>
               <tbody>
                 <tr>
-                  <th>Date</th>
                   <td>{String(date.date).slice(0, 10)}</td>
                 </tr>
                 <tr>
-                  <th>Quantity</th>
-                  <td>{date.quantity}</td>
+                  <td>{date.value}</td>
                 </tr>
               </tbody>
             </table>
@@ -55,9 +53,9 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
               <tr>
                 <th>Barcode</th>
                 <th>Item name</th>
-                <th>Stock Quantity</th>
+                <th>Order Quantity</th>
                 <th>Minimum Quantity</th>
-                <th>Item Quantity</th>
+                <th>Pkt. Amt. Quantity</th>
                 <th>Unit</th>
                 <th>Selling Price</th>
                 <th>MRP</th>

@@ -13,6 +13,7 @@ import { DatePicker } from "@mantine/dates";
 import ListDropDownItem from "./ListDropDownItem";
 import ShowSlabPricing from "./ShowSlabPricing";
 import '../../CSS/orderForm.css'
+import { useState } from "react";
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -27,6 +28,7 @@ const OrderForm = ({
   setDate,
   date,
   filterItems,
+  filterItems2,
   handleSelectOrderItems,
   slabForm,
   addSlabPrice,
@@ -34,6 +36,19 @@ const OrderForm = ({
   slabs,
   setSlabs,
 }) => {
+  const[toggle,setToggle]=useState(false);
+  const[toggle1,setToggle1]=useState(false);
+  const func1=()=>{
+    setOpenDrawer(true)
+  }
+  const func2=()=>{
+    setToggle(true);
+    setToggle1(false);
+  }
+  const func3=()=>{
+    setToggle1(true);
+    setToggle(false);
+  }
   return (
     <Drawer
       opened={opened}
@@ -44,7 +59,7 @@ const OrderForm = ({
       }}
       padding="sm"
       size="xl"
-     
+
     >
       <Box sx={{ maxWidth: 400 }} mx="auto" my={"lg"}>
         <form className="order-form" onSubmit={form.onSubmit((values) => handleItemFrom(values))}>
@@ -59,8 +74,10 @@ const OrderForm = ({
               label="Barcode"
               className='form-input-tops'
               placeholder="barcode"
+              onClick={() => { func1(); func2();}}
               {...form.getInputProps("barcode")}
             />
+           
             {/* <TextInput
                             withAsterisk={form.values.validate}
                             label="Email"
@@ -73,11 +90,19 @@ const OrderForm = ({
               className='form-input-tops'
               required
               placeholder="item name"
-              onClick={() => setOpenDrawer(true)}
-              {...form.getInputProps("inputName")}  
+              onClick={() =>{ func1(); func3();}}
+              {...form.getInputProps("inputName")}
             />
           </Group>
-          {Boolean(filterItems.length) && openDrawer && (
+           <div className="barcode-filter-shift">
+           {Boolean(filterItems2.length)  && toggle && openDrawer && (
+            <ListDropDownItem
+              itemList={filterItems2}
+              handleSelectOrderItems={handleSelectOrderItems}
+            />
+          )}
+          </div>
+          {Boolean(filterItems.length) && toggle1 && openDrawer && (
             <ListDropDownItem
               itemList={filterItems}
               handleSelectOrderItems={handleSelectOrderItems}
@@ -92,19 +117,19 @@ const OrderForm = ({
               placeholder="amount in 1 pack"
               {...form.getInputProps("itemQuantity")}
             />
-             <Select
-            label="unit"
-            className='form-input-tops'
-            placeholder="pick one"
-            data={[
-              { value: "gram", label: "gram" },
-              { value: "KG", label: "KG" },
-              { value: "ML", label: "ML" },
-              { value: "Litre", label: "Litre" },
-              { value: "Piece", label: "Piece" },
-            ]}
-            {...form.getInputProps("unit")}
-          />
+            <Select
+              label="unit"
+              className='form-input-tops'
+              placeholder="pick one"
+              data={[
+                { value: "grams", label: "grams" },
+                { value: "kg", label: "kg" },
+                { value: "ml", label: "ml" },
+                { value: "liter", label: "liter" },
+                { value: "piece", label: "piece" },
+              ]}
+              {...form.getInputProps("unit")}
+            />
           </Group>
           <Group className="order-flex-class">
             <NumberInput
@@ -120,10 +145,43 @@ const OrderForm = ({
               className='form-input-tops'
               placeholder="current stock quantity"
               disabled
-              {...form.getInputProps("stockQuantity")}
+              {...form.getInputProps("currentStock")}
             />
           </Group>
-
+          <Group className="order-flex-class">
+            <TextInput
+              withAsterisk={form.values.validate}
+              label="Brand Name"
+              className='form-input-tops'
+              placeholder="brand name"
+              {...form.getInputProps("brand")}
+            />
+            <Select
+              label="Category"
+              className='form-input-tops'
+              placeholder="pick one"
+              data={[
+                { value: "Bakery", label: "Bakery" },
+                { value: "Beverage", label: "Beverage" },
+                { value: "Dairy and Frozen", label: "Dairy and Frozen" },
+                { value: "Staple", label: "Staple" },
+                { value: "Personal care", label: "Personal care" },
+                { value: "Packaged Food", label: "Packaged Food" },
+                { value: "Home and Kitchen", label: "Home and Kitchen" },
+                { value: "Stationery", label: "Stationery" },
+                { value: "Grocery", label: "Grocery" },
+                { value: "Baby and kids", label: "Baby and kids" },
+                { value: "Electronic", label: "Electronic" },
+                { value: "Spices and fast food", label: "Spices and fast food" },
+                { value: "Pooja", label: "Pooja" },
+                { value: "Oil and ghee", label: "Oil and ghee" },
+                { value: "Sweet and Chocolate", label: "Sweet and Chocolate" },
+                { value: "Plastic", label: "Plastic" },
+                { value: "Miscellanous", label: "Miscellanous" },
+              ]}
+              {...form.getInputProps("category")}
+            />
+          </Group>
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
@@ -153,6 +211,13 @@ const OrderForm = ({
               {...form.getInputProps("sellingPrice")}
             />
           </Group>
+          <NumberInput
+            withAsterisk={form.values.validate}
+            label="Order Quantity"
+            className='form-input-tops'
+            placeholder="current stock quantity"
+            {...form.getInputProps("stockQuantity")}
+          />
           <div className="date-container">
             {/* <DatePicker placeholder="Pick date" label="Event date" withAsterisk={form.values.validate}={true} value={date} onChange={(day) => setDate(day)} /> */}
             <DatePicker
@@ -168,7 +233,7 @@ const OrderForm = ({
             />
             <NumberInput
               withAsterisk={form.values.validate}
-              style={{width:'15vmin'}}
+              style={{ width: '15vmin' }}
               label="Quantity"
               placeholder="quantity"
               value={expiryQuantity}
@@ -178,19 +243,19 @@ const OrderForm = ({
           </div>
           {form.values.expiryDates?.length
             ? form.values.expiryDates.map((date, index) => {
-                return (
-                  <div className="expiry-date-showcase" key={index + 1}>
-                    <TextInput
-                      value={new Date(date.date).toLocaleDateString()}
-                      readOnly
-                    />
-                    <TextInput readOnly value={date.quantity} />
-                    <Button onClick={() => handleDateDelete(date)}>
-                      Delete
-                    </Button>
-                  </div>
-                );
-              })
+              return (
+                <div className="expiry-date-showcase" key={index + 1}>
+                  <TextInput
+                    value={new Date(date.date).toLocaleDateString()}
+                    readOnly
+                  />
+                  <TextInput readOnly value={date.value} />
+                  <Button onClick={() => handleDateDelete(date)}>
+                    Delete
+                  </Button>
+                </div>
+              );
+            })
             : ""}
           <Group className="order-flex-class">
             <NumberInput
@@ -198,14 +263,7 @@ const OrderForm = ({
               style={{ width: "15vmin" }}
               label="Slab Start"
               placeholder="start quantity"
-              {...slabForm.getInputProps("startValue")}
-            />
-            <NumberInput
-              withAsterisk={form.values.validate}
-              style={{ width: "15vmin" }}
-              label="Slab End"
-              placeholder="end quantity"
-              {...slabForm.getInputProps("endValue")}
+              {...slabForm.getInputProps("1")}
             />
             <NumberInput
               withAsterisk={form.values.validate}
@@ -213,7 +271,7 @@ const OrderForm = ({
               label="Price"
               placeholder="price"
               precision={2}
-              {...slabForm.getInputProps("pricing")}
+              {...slabForm.getInputProps("2")}
             />
             <Button
               style={{ marginTop: "3.5vmin" }}
