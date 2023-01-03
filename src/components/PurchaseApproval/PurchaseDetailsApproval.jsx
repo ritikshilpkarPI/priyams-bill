@@ -32,7 +32,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrder
         placeholder="All orders"
         data={role === "admin" ? adminList : manageList}
         onChange={getOrders}
-      />
+      /> 
 
       {allPurchaseList.length === 0
         ?
