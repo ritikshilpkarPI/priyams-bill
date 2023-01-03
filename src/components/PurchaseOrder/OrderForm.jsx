@@ -74,6 +74,7 @@ const OrderForm = ({
               label="Barcode"
               className='form-input-tops'
               placeholder="barcode"
+              onBlur={()=> setOpenDrawer(false)}
               onClick={() => { func1(); func2();}}
               {...form.getInputProps("barcode")}
             />
