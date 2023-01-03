@@ -33,7 +33,6 @@ const PurchaseListApproval = ({ list, index, allPurchaseList, setIndexDetail,get
           new_items:list.purchasedItems
         }
       });
-      return;
       await Axios({
         method: 'POST',
         url: '/api/approval/approveOrder/' + id,
