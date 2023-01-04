@@ -99,7 +99,6 @@ const usePurchaseOrder = (history) => {
       // costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
     }
   });
-
   const [purchaseList, setPurchaseList] = useState({
     details: [],
     bills: [],
