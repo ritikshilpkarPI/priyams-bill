@@ -36,7 +36,7 @@ const ItemSchem = new mongoose.Schema(
     ],
     quantityUnitName: { type: String, enum: quantityUnitNameEnum },
     gstPercentage: { type: Number },
-    itemPerUnitQuantity: { type: Number },
+    itemPerUnitQuantity: { type: Number,  default: 0 },
   },
   { strict: false, timestamps: true }
 );
