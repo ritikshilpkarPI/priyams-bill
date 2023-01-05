@@ -71,9 +71,11 @@ const OrderForm = ({
           <Group className="order-flex-class">
             <TextInput
               withAsterisk={form.values.validate}
+              // wrapperProps=""
               label="Barcode"
               className='form-input-tops'
               placeholder="barcode"
+              
               onClick={() => { func1(); func2();}}
               {...form.getInputProps("barcode")}
             />

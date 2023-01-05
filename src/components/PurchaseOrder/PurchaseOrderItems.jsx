@@ -11,6 +11,7 @@ import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../../CSS/purchaseOrder.css'
+import { useHistory, useParams } from "react-router-dom";
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
@@ -58,9 +59,15 @@ const PurchaseOrderItems = ({ history }) => {
     const {
         filterItems2
     } = useBarcodeSearchItems(form.values.barcode)
-
+    const locate = useHistory();
+    const { id } = useParams();
     return (
         <>
+            <div className="back-button-purchase">
+                <Button className="back-button" disabled={id?false:true} onClick={()=> locate.push('/approval')}>
+                    Back
+                </Button>
+            </div>
             <LoadingOverlay className='purchase-loader' visible={Loading} overlayBlur={1} />
 
             <OrderForm
