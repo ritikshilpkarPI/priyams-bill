@@ -13,22 +13,26 @@ const Approval = () => {
     const getOrders = async(value) => {
       try{
         onLoader();
-        let query = ''
+        let query = {}
         const role = JSON.parse(localStorage.getItem("priyam-store")).role;
         if(value === 'approved' && role === 'admin'){
-            query = 'isApproved=true'
+            query = {isApproved:true}
         }else if(value === 'draft' && role === 'admin'){
-          query = 'isDraft=true&isApproved=false'
+          query = {isDraft:true,isApproved:false}
         }else if(value === 'rejected'){
-          query = 'isRejected=true'
+          query = {isRejected:true}
         }else if(value === 'saved'){
-          query = 'isDraft=false&isRejected=false'
+          query = {isDraft:false,isRejected:false}
         }else if(role !== 'admin'){
-          query = 'isApproved=false&isDraft=false'
+          query = {isApproved:false,isDraft:false}
         }
+        console.log({query});
         const {data}  = await Axios({
           method:'POST',
-          url:`/api/purchaseOrder/getOrdersByQuery/?${query}`
+          url:`/api/purchaseOrder/getOrdersByQuery/`,
+          data: {
+            query
+          }
         })
         const {orders} = data;
         setFilter([...orders])
