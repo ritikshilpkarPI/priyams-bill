@@ -30,6 +30,7 @@ const OrderForm = ({
   filterItems,
   filterItems2,
   handleSelectOrderItems,
+  handleSelectOrderItems2,
   slabForm,
   addSlabPrice,
   deleteSlab,
@@ -96,12 +97,12 @@ const OrderForm = ({
             />
           </Group>
            <div className="barcode-filter-shift">
-           {Boolean(filterItems2.length)  && toggle && openDrawer && (
+           {filterItems2.length>1?Boolean(filterItems2.length)  && toggle && openDrawer && (
             <ListDropDownItem
               itemList={filterItems2}
-              handleSelectOrderItems={handleSelectOrderItems}
+              handleSelectOrderItems2={handleSelectOrderItems2}
             />
-          )}
+          ): ""}
           </div>
           {Boolean(filterItems.length) && toggle1 && openDrawer && (
             <ListDropDownItem

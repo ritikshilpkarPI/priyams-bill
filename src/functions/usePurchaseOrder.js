@@ -4,6 +4,7 @@ import useBarcodeSearchItems from "./useBarcodeSearchItems";
 import { Axios } from "src/utils/axios";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { filter } from "mongodb/lib/core/connection/logger";
 
 const usePurchaseOrder = (history) => {
   const { id } = useParams();
@@ -70,7 +71,7 @@ const usePurchaseOrder = (history) => {
       2: (value) => (value > 0 ? null : 'price should be greated than 0')
     }
   })
- 
+
   const form = useForm({
     initialValues: {
       barcode: '',
@@ -90,7 +91,7 @@ const usePurchaseOrder = (history) => {
       expiryDates: [],
       validate: false,
       slabPrice: [],
-      item_id:''
+      item_id: ''
     },
     validate: {
       itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0' : null),
@@ -106,7 +107,7 @@ const usePurchaseOrder = (history) => {
     isSaved: false,
     isDraft: false
   })
-  
+
   const getDetails = async (search_id) => {
     try {
       onLoader();
@@ -323,7 +324,9 @@ const usePurchaseOrder = (history) => {
     setDeleteBills([...deleteBills, ...cloudBills.filter((item, i) => i === index)])
     setCloudBills([...cloudBills.filter((item, i) => i !== index)]);
   }
-  const handleSelectOrderItems = (item) => {
+  //my function for onclick barcode
+  const handleSelectOrderItems2=(item)=>{
+    console.log(item);
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
       inputName: item.itemName,
@@ -335,12 +338,35 @@ const usePurchaseOrder = (history) => {
       sellingPrice: item.itemSellingPricePerUnit,
       mrp: item.itemMRPperUnit,
       costPrice: item.itemCostPricePerUnit,
-      slabPrice:item.slabPricing,
-      item_id:String(item._id),
+      slabPrice: item.slabPricing,
+      item_id: String(item._id),
       unit: item.quantityUnitName
     }));
     setSlabs(form.values.slabPrice)
     setOpenDrawer(false);
+  }
+  const handleSelectOrderItems = (item,filterItems2) => {
+    console.log(item);
+    console.log(filterItems2);
+    if(filterItems2.length==1){
+      form.setValues((prev) => ({
+        barcode: item.itemBarcode,
+        inputName: item.itemName,
+        currentStock: item.itemStockQuantity,
+        stockQuantity: 0,
+        minimumQuantity: item.minimumStockQuantity,
+        brand: item.itemBrandName,
+        category: item.itemCategory,
+        sellingPrice: item.itemSellingPricePerUnit,
+        mrp: item.itemMRPperUnit,
+        costPrice: item.itemCostPricePerUnit,
+        slabPrice: item.slabPricing,
+        item_id: String(item._id),
+        unit: item.quantityUnitName
+      }));
+      setSlabs(form.values.slabPrice)
+      setOpenDrawer(false);
+    }
   };
   const handlePurchaseDetail = (element, index) => {
     purchaseForm.setValues((prev) => ({
@@ -377,7 +403,7 @@ const usePurchaseOrder = (history) => {
         offLoader();
         alert('unable to add order, something went wrong...')
       }
-  
+
       form.reset();
       setSlabs([]);
       setOpened(false);
@@ -435,18 +461,18 @@ const usePurchaseOrder = (history) => {
       costPrice: item.costPrice,
       expiryDates: [...item.expiryDates],
       validate: item.validate,
-      item_id:item.item_id,
-      brand:item.itemBrandName,
-      category:item.itemCategory
+      item_id: item.item_id,
+      brand: item.itemBrandName,
+      category: item.itemCategory
     }));
-    console.log({item})
+    console.log({ item })
     setSlabs([...item.slabPrice]);
     setOpened(true);
   };
   const deleteOrder = async (order_id) => {
     try {
       onLoader();
-       await Axios({
+      await Axios({
         method: 'POST',
         url: `/api/purchaseOrder/deleteItem/${id}`,
         data: {
@@ -505,7 +531,7 @@ const usePurchaseOrder = (history) => {
     setDate("");
     setExpiryQuantity(0);
   };
-  const { barcodeFilteredItem } = useBarcodeSearchItems(
+  const { barcodeFilteredItem , filterItems2} = useBarcodeSearchItems(
     form.values.barcode,
     handleSelectOrderItems
   );
@@ -516,7 +542,7 @@ const usePurchaseOrder = (history) => {
       setIsNotGetUpdated(false);
     }
     if (Object.keys(barcodeFilteredItem).length && isEditable) {
-      handleSelectOrderItems(barcodeFilteredItem);
+      handleSelectOrderItems(barcodeFilteredItem,filterItems2);
     }
     return () => {
       setState({}); // This worked for me
@@ -532,6 +558,7 @@ const usePurchaseOrder = (history) => {
     setDate,
     date,
     handleSelectOrderItems,
+    handleSelectOrderItems2,
     openDrawer,
     setOpenDrawer,
     expiryQuantity,
