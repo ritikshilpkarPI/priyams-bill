@@ -23,6 +23,7 @@ const usePurchaseOrder = (history) => {
   const [Loading, setLoading] = useState(false)
   const [, setPrevPaidAmount] = useState(0);
   const [, setState] = useState({})
+  const [disableDraft,setDisableDraft] = useState(false)
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -115,6 +116,7 @@ const usePurchaseOrder = (history) => {
         url: "/api/purchaseOrder/orderDetails/" + search_id,
       });
       const data = res.data.data;
+      console.log({data});
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment = data.payment;
       purchaseForm.values.dealerName = data.dealerName ? data.dealerName : "";
@@ -523,6 +525,21 @@ const usePurchaseOrder = (history) => {
     };
     // eslint-disable-next-line
   }, [form.values.barcode]);
+
+  useEffect(() => {
+    let flag = false;
+    purchaseList.orders.forEach((order) => {
+      if (!order.validate) {
+        flag = true;
+        return;
+      }
+    })
+    if(!purchaseForm.isValid()){
+      flag = true;
+    }
+    setDisableDraft(flag)
+  }, [purchaseList,purchaseForm])
+  
   return {
     form,
     opened,
@@ -561,7 +578,8 @@ const usePurchaseOrder = (history) => {
     deleteOrder,
     cloudBills,
     deleteCloudBills,
-    Loading
+    Loading,
+    disableDraft
   };
 };
 
