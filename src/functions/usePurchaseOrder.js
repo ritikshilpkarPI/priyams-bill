@@ -115,7 +115,6 @@ const usePurchaseOrder = (history) => {
         url: "/api/purchaseOrder/orderDetails/" + search_id,
       });
       const data = res.data.data;
-
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment = data.payment;
       purchaseForm.values.dealerName = data.dealerName ? data.dealerName : "";
@@ -134,6 +133,7 @@ const usePurchaseOrder = (history) => {
         totalPaidAmount: Number(data.totalPaidAmount),
         billAmount: purchaseForm.values.billAmount,
         bills: [],
+        isDraft: data.isDraft,
       });
       offLoader();
     } catch (error) {
