@@ -4,8 +4,6 @@ import useBarcodeSearchItems from "./useBarcodeSearchItems";
 import { Axios } from "src/utils/axios";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { filter } from "mongodb/lib/core/connection/logger";
-
 const usePurchaseOrder = (history) => {
   const { id } = useParams();
   const [opened, setOpened] = useState(false);
@@ -350,7 +348,7 @@ const usePurchaseOrder = (history) => {
   const handleSelectOrderItems = (item,filterItems2) => {
     console.log(item);
     console.log(filterItems2);
-    if(filterItems2.length==1){
+    if(filterItems2.length===1){
       form.setValues((prev) => ({
         barcode: item.itemBarcode,
         inputName: item.itemName,
