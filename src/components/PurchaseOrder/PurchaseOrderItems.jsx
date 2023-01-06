@@ -49,7 +49,9 @@ const PurchaseOrderItems = ({ history }) => {
         deleteOrder,
         cloudBills,
         deleteCloudBills,
-        Loading
+        Loading,
+    disableDraft
+
     } = usePurchaseOrder(history)
 
     const {
@@ -105,7 +107,7 @@ const PurchaseOrderItems = ({ history }) => {
                 {message.error}
             </Notification>
             <Group position="center">
-                <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
+                <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit" disabled={disableDraft}>Draft</Button>
                 <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
             </Group>
             <Group position="center" style={{ marginTop: '5vmin' }}>
