@@ -1,6 +1,24 @@
 const mongoose = require("mongoose");
 const quantityUnitNameEnum = ["kg", "grams", "liter", "ml", "Piece"];
-const inventoryItemCategory =['Bakery', 'Beverage', 'Dairy and Frozen', 'Staple', 'Personal care', 'Packaged Food', 'Home and Kitchen', 'Stationery', 'Grocery', 'Baby and kids', 'Electronic', 'Spices and fast food', 'Pooja', 'Oil and ghee', 'Sweet and Chocolate', 'Plastic', 'Miscellanous'];
+const inventoryItemCategory = [
+  "Bakery",
+  "Beverage",
+  "Dairy and Frozen",
+  "Staple",
+  "Personal care",
+  "Packaged Food",
+  "Home and Kitchen",
+  "Stationery",
+  "Grocery",
+  "Baby and kids",
+  "Electronic",
+  "Spices and fast food",
+  "Pooja",
+  "Oil and ghee",
+  "Sweet and Chocolate",
+  "Plastic",
+  "Miscellanous",
+];
 
 const ItemSchem = new mongoose.Schema(
   {
@@ -27,31 +45,19 @@ const ItemSchem = new mongoose.Schema(
     useByDate: [
       {
         date: {
-          type: Date
+          type: Date,
         },
         value: {
-          type: Number
-        }
-      }
+          type: Number,
+        },
+      },
     ],
     quantityUnitName: { type: String, enum: quantityUnitNameEnum },
     gstPercentage: { type: Number },
-    itemPerUnitQuantity: { type: Number,  default: 0 },
+    itemPerUnitQuantity: { type: Number, default: 0 },
   },
   { strict: false, timestamps: true }
 );
 
-ItemSchem.pre(["save", "findOneAndUpdate"], function (next) {
-  const updatedObj = this._update;
-  if (updatedObj) {
-    updatedObj.minStockReached =
-      Number(updatedObj.minimumStockQuantity) >=
-      Number(updatedObj.itemStockQuantity);
-  } else {
-    this.minStockReached =
-      Number(this.minimumStockQuantity) >= Number(this.itemStockQuantity);
-  }
-  next();
-});
 const Item = mongoose.model("Item", ItemSchem);
 module.exports = { Item };
