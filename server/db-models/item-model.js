@@ -30,6 +30,10 @@ const ItemSchem = new mongoose.Schema(
     itemDiscountPerUnit: { type: Number, default: 0 },
     itemPerUnitDiscountPercentage: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
+    permanentlyOutOfStock: {
+      type: Boolean,
+      default: false
+    },
     itemCostPricePerUnit: {
       type: Number,
     },
