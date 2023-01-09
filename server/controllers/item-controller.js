@@ -225,11 +225,36 @@ const saveInventory = async (req, res) => {
     res.status(400).send({ message: err, success: false })
   }
 }
+
+const filterExpiryDates = async(req,res) => {
+  const { startDate, endDate } = req.body;
+  try {
+    const expiredItems = await Item.aggregate([
+      {
+        $match: {
+          useByDate: {
+            $gt: new Date(new Date(startDate).setHours(0, 0, 0)),
+            $lt: new Date(new Date(endDate).setHours(23, 59, 59)),
+          },
+        },
+      },
+      {
+        $sort: {
+          date: 1,
+        },
+      },
+    ]);
+    res.status(200).json({ message: expiredItems });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 module.exports = {
   getItemsFeed,
   addItems,
   editItemById,
   softDeleteItem,
   addBulkItems,
-  saveInventory
+  saveInventory,
+  filterExpiryDates
 };

@@ -13,3 +13,5 @@ export const Login = lazy(() => import("./Login"));
 export const PurchaseOrder = lazy(() => import("./PurchaseOrder"));
 export const Attendance = lazy(() => import("./Attendance"));
 export const Approval = lazy(() => import("./Approval"));
+export const ExpiredItems = lazy(() => import("./ExpiredItems"));
+
