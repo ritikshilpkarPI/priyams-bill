@@ -30,13 +30,14 @@ const OrderForm = ({
   filterItems,
   filterItems2,
   handleSelectOrderItems,
+  handleSelectOrderItems2,
   slabForm,
   addSlabPrice,
   deleteSlab,
   slabs,
   setSlabs,
 }) => {
-  const[toggle,setToggle]=useState(false);
+  const[toggle,setToggle]=useState(true);
   const[toggle1,setToggle1]=useState(false);
   const func1=()=>{
     setOpenDrawer(true)
@@ -75,11 +76,10 @@ const OrderForm = ({
               label="Barcode"
               className='form-input-tops'
               placeholder="barcode"
-              
-              onClick={() => { func1(); func2();}}
+              onSelect={() => { func1(); func2();}}
               {...form.getInputProps("barcode")}
             />
-           
+
             {/* <TextInput
                             withAsterisk={form.values.validate}
                             label="Email"
@@ -97,12 +97,12 @@ const OrderForm = ({
             />
           </Group>
            <div className="barcode-filter-shift">
-           {Boolean(filterItems2.length)  && toggle && openDrawer && (
+           {filterItems2.length>1?Boolean(filterItems2.length)  && toggle && openDrawer && (
             <ListDropDownItem
               itemList={filterItems2}
-              handleSelectOrderItems={handleSelectOrderItems}
+              handleSelectOrderItems2={handleSelectOrderItems2}
             />
-          )}
+          ): ""}
           </div>
           {Boolean(filterItems.length) && toggle1 && openDrawer && (
             <ListDropDownItem

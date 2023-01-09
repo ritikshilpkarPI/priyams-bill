@@ -22,6 +22,7 @@ const PurchaseOrderItems = ({ history }) => {
         setDate,
         date,
         handleSelectOrderItems,
+        handleSelectOrderItems2,
         openDrawer,
         setOpenDrawer,
         expiryQuantity,
@@ -88,6 +89,7 @@ const PurchaseOrderItems = ({ history }) => {
                 filterItems={filterItems}
                 filterItems2={filterItems2}
                 handleSelectOrderItems={handleSelectOrderItems}
+                handleSelectOrderItems2={handleSelectOrderItems2}
                 slabForm={slabForm}
                 addSlabPrice={addSlabPrice}
                 deleteSlab={deleteSlab}
