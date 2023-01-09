@@ -1,3 +1,4 @@
+const { ObjectID } = require("bson");
 const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
@@ -6,11 +7,15 @@ const getItemsFeed = async (req, res) => {
       req.query.filters
     );
     let items = await Item.find({}, null, { sort: { itemName: 1 } });
+    items = items.filter((item) => item.permanentlyOutOfStock === false);
     if (isDeleted === false) {
       items = items.filter((item) => !item.isDeleted);
     }
     if (minStockOnly) {
-      items = items.filter((item) => item.minStockReached);
+      items = items.filter(
+        (item) =>
+          Number(item.minimumStockQuantity) >= Number(item.itemStockQuantity)
+      );
     }
     const itemCount = items.length;
     res.status(200).json({ message: { items, itemCount } });
@@ -80,12 +85,15 @@ const addItems = async (req, res) => {
 const editItemById = async (req, res) => {
   try {
     const { id, itemToBeUpdated } = req.body;
+    console.log({ itemToBeUpdated });
     const changedItem = await Item.findByIdAndUpdate(id, itemToBeUpdated, {
       new: true,
     });
+    console.log({ changedItem });
     res.status(200).json({ message: changedItem });
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(501).json({ error });
   }
 };
 
@@ -152,7 +160,6 @@ const addBulkItems = async (request, response) => {
 
 const saveInventory = async (req, res) => {
   try {
-
     const { new_items } = req.body;
     new_items.forEach(async (item) => {
       const itemDetails = {
@@ -168,61 +175,93 @@ const saveInventory = async (req, res) => {
         quantityUnitName: item.unit,
         itemPerUnitQuantity: item.itemQuantity,
         itemBrandName: item.brand,
-        itemCategory: item.category
-      }
+        itemCategory: item.category,
+      };
       let oldItem;
       if (item.item_id) {
         oldItem = await Item.findById(item.item_id);
       }
       if (oldItem) {
-        let newCostPrice = ((oldItem.itemCostPricePerUnit * oldItem.itemStockQuantity) + (itemDetails.itemStockQuantity * itemDetails.itemCostPricePerUnit)) / (oldItem.itemStockQuantity + itemDetails.itemStockQuantity);
-        let newStock = itemDetails.itemStockQuantity + oldItem.itemStockQuantity;
-        let newItemPerUnit = itemDetails.itemPerUnitQuantity + oldItem.itemPerUnitQuantity;
-        
-        let newUseByDate = []
-        itemDetails.useByDate.forEach((newData)=>{
+        let newCostPrice =
+          (oldItem.itemCostPricePerUnit * oldItem.itemStockQuantity +
+            itemDetails.itemStockQuantity * itemDetails.itemCostPricePerUnit) /
+          (oldItem.itemStockQuantity + itemDetails.itemStockQuantity);
+        let newStock =
+          itemDetails.itemStockQuantity + oldItem.itemStockQuantity;
+        let newItemPerUnit =
+          itemDetails.itemPerUnitQuantity + oldItem.itemPerUnitQuantity;
+
+        let newUseByDate = [];
+        itemDetails.useByDate.forEach((newData) => {
           let dateExists = false;
-            oldItem.useByDate.forEach((oldData)=>{
-              if(new Date(oldData.date).toLocaleDateString() === new Date(newData.date).toLocaleDateString()){
-                  dateExists = true;
-                  let totalExpiryItems =  newData.value + oldData.value;
-                  newUseByDate = [...newUseByDate,{date:newData.date,value:totalExpiryItems}]
-              }
-            })
-            if(!dateExists){
-              newUseByDate = [...newUseByDate,{...newData}];
+          oldItem.useByDate.forEach((oldData) => {
+            if (
+              new Date(oldData.date).toLocaleDateString() ===
+              new Date(newData.date).toLocaleDateString()
+            ) {
+              dateExists = true;
+              let totalExpiryItems = newData.value + oldData.value;
+              newUseByDate = [
+                ...newUseByDate,
+                { date: newData.date, value: totalExpiryItems },
+              ];
             }
-        })
-        oldItem.useByDate.forEach((oldData)=>{
+          });
+          if (!dateExists) {
+            newUseByDate = [...newUseByDate, { ...newData }];
+          }
+        });
+        oldItem.useByDate.forEach((oldData) => {
           let dateExists = false;
-          itemDetails.useByDate.forEach((newData)=>{
-            if(new Date(oldData.date).toLocaleDateString() === new Date(newData.date).toLocaleDateString()){
+          itemDetails.useByDate.forEach((newData) => {
+            if (
+              new Date(oldData.date).toLocaleDateString() ===
+              new Date(newData.date).toLocaleDateString()
+            ) {
               dateExists = true;
             }
-          })
-          if(!dateExists){
-            newUseByDate = [...newUseByDate,{...oldData}]
+          });
+          if (!dateExists) {
+            newUseByDate = [...newUseByDate, { ...oldData }];
           }
-        })
+        });
         let new_Item_Update = {
           ...itemDetails,
           itemCostPricePerUnit: newCostPrice.toFixed(2),
           useByDate: newUseByDate,
           itemStockQuantity: newStock,
           itemPerUnitQuantity: newItemPerUnit,
-        }
-        await oldItem.updateOne({
-          ...itemDetails, ...new_Item_Update
-        }, {
-          new: true
-        })
+        };
+        await oldItem.updateOne(
+          {
+            ...itemDetails,
+            ...new_Item_Update,
+          },
+          {
+            new: true,
+          }
+        );
       } else {
         await Item.create({ ...itemDetails });
       }
-    })
-    res.status(200).send({ message: 'items updated', success: true })
+    });
+    res.status(200).send({ message: "items updated", success: true });
   } catch (err) {
-    res.status(400).send({ message: err, success: false })
+    res.status(400).send({ message: err, success: false });
+  }
+};
+
+const permanentlyOutOfStock = async (req,res) => {
+  const {id} = req.params
+  try {
+    const item = await Item.findByIdAndUpdate(id, {
+      permanentlyOutOfStock: true
+    }, {
+      new: true
+    });
+    res.status(200).send({ message: "Item is successfully permanently out of stock ", success: true, item });
+  } catch (error) {
+    res.status(400).send({ message: error, success: false });
   }
 }
 module.exports = {
@@ -231,5 +270,6 @@ module.exports = {
   editItemById,
   softDeleteItem,
   addBulkItems,
-  saveInventory
+  saveInventory,
+  permanentlyOutOfStock
 };
