@@ -33,21 +33,6 @@ const StockQuantity = () => {
     setLoader(false);
   };
   useEffect(() => {
-    // if (Id !== "") {
-    //   if(window.confirm(`Are you sure you want to permanently remove the item`) == true) {
-    //     async function deletePost() {
-    //       await Axios.delete(`/api/inventory/permanentlyOutOfStock/${Id}`)
-    //         .then(response => {
-    //           console.log('Delete successful')
-    //           getAllItemsFeed();
-    //         })
-    //     }
-    //     deletePost();
-
-    //   }
-
-    // }
-
     const openDeleteModal = () =>
       openConfirmModal({
         title: 'Remove your Item Permanently',
@@ -60,21 +45,17 @@ const StockQuantity = () => {
         labels: { confirm: 'Remove Item', cancel: "No don't remove it" },
         confirmProps: { color: 'red' },
         onCancel: () => {
-          console.log('Cancel')
-          console.log(modalToggle);
-
         },
         onConfirm: () => {
           console.log('Confirmed')
           async function deletePost() {
             await Axios.delete(`/api/inventory/permanentlyOutOfStock/${Id}`)
               .then(response => {
-                console.log('Delete successful')
                 getAllItemsFeed();
               })
           }
           deletePost();
-          console.log(modalToggle);
+          
         },
       });
     if (Id !== "") {
@@ -83,11 +64,6 @@ const StockQuantity = () => {
   }, [Id, modalToggle]);
 
   const deleteItem = (index, id) => {
-    console.log('remove item ', index);
-    //logic to remove idex item from minimumQuantityItem
-    // setMinimumQuantityItem((current) =>
-    //   current.filter((item, idx) => idx !== index)
-    // );
     setId(id);
     if (modalToggle) {
       setModalToggle(false);
