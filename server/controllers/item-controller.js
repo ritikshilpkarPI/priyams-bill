@@ -1,3 +1,4 @@
+const { ObjectID } = require("bson");
 const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
@@ -6,6 +7,7 @@ const getItemsFeed = async (req, res) => {
       req.query.filters
     );
     let items = await Item.find({}, null, { sort: { itemName: 1 } });
+    items = items.filter((item) => item.permanentlyOutOfStock === false);
     if (isDeleted === false) {
       items = items.filter((item) => !item.isDeleted);
     }
@@ -248,6 +250,20 @@ const saveInventory = async (req, res) => {
     res.status(400).send({ message: err, success: false });
   }
 };
+
+const permanentlyOutOfStock = async (req,res) => {
+  const {id} = req.params
+  try {
+    const item = await Item.findByIdAndUpdate(id, {
+      permanentlyOutOfStock: true
+    }, {
+      new: true
+    });
+    res.status(200).send({ message: "Item is successfully permanently out of stock ", success: true, item });
+  } catch (error) {
+    res.status(400).send({ message: error, success: false });
+  }
+}
 module.exports = {
   getItemsFeed,
   addItems,
@@ -255,4 +271,5 @@ module.exports = {
   softDeleteItem,
   addBulkItems,
   saveInventory,
+  permanentlyOutOfStock
 };
