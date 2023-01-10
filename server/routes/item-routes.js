@@ -7,7 +7,8 @@ const {
   softDeleteItem,
   addBulkItems,
   saveInventory,
-  permanentlyOutOfStock
+  permanentlyOutOfStock,
+  filterExpiryDates
 } = require("../controllers/item-controller");
 
 // itemRoutes.post("/newbill", userSignupValidator, runValidation, userSignup);
@@ -16,7 +17,8 @@ itemRoutes.post("/addNewItem", addItems);
 itemRoutes.put("/editItemById", editItemById);
 itemRoutes.post("/softDeleteItem", softDeleteItem);
 itemRoutes.post("/addbulkitems", addBulkItems);
-itemRoutes.post("/saveInventory",saveInventory);
 itemRoutes.delete("/permanentlyOutOfStock/:id",permanentlyOutOfStock);
+itemRoutes.post("/saveInventory",saveInventory)
+itemRoutes.post("/filterExpiryDates",filterExpiryDates)
 
 module.exports = itemRoutes;

@@ -9,5 +9,6 @@ export const PAGES = {
     report: "Report",
     purchase: "Purchase",
     attendance: "Attendance",
-    approval:"Approval"
+    approval:"Approval",
+    expiredItems: "Expired Items"
 };
