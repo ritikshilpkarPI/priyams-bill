@@ -161,7 +161,7 @@ const addBulkItems = async (request, response) => {
 const saveInventory = async (req, res) => {
   try {
     const { new_items } = req.body;
-    new_items.forEach(async (item) => {
+    for (const item of new_items) {
       const itemDetails = {
         itemName: item.inputName,
         itemBarcode: item.barcode,
@@ -244,26 +244,34 @@ const saveInventory = async (req, res) => {
       } else {
         await Item.create({ ...itemDetails });
       }
-    });
+    }
     res.status(200).send({ message: "items updated", success: true });
   } catch (err) {
     res.status(400).send({ message: err, success: false });
   }
 };
 
-const permanentlyOutOfStock = async (req,res) => {
-  const {id} = req.params
+const permanentlyOutOfStock = async (req, res) => {
+  const { id } = req.params;
   try {
-    const item = await Item.findByIdAndUpdate(id, {
-      permanentlyOutOfStock: true
-    }, {
-      new: true
+    const item = await Item.findByIdAndUpdate(
+      id,
+      {
+        permanentlyOutOfStock: true,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({
+      message: "Item is successfully permanently out of stock ",
+      success: true,
+      item,
     });
-    res.status(200).send({ message: "Item is successfully permanently out of stock ", success: true, item });
   } catch (error) {
     res.status(400).send({ message: error, success: false });
   }
-}
+};
 module.exports = {
   getItemsFeed,
   addItems,
@@ -271,5 +279,5 @@ module.exports = {
   softDeleteItem,
   addBulkItems,
   saveInventory,
-  permanentlyOutOfStock
+  permanentlyOutOfStock,
 };
