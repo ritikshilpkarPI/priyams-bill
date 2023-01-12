@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const quantityUnitNameEnum = ["kg", "grams", "liter", "ml", "Piece"];
+const quantityUnitNameEnum = ["kg", "grams", "liter", "ml", "piece"];
 const inventoryItemCategory = [
   "Bakery",
   "Beverage",
@@ -32,7 +32,7 @@ const ItemSchem = new mongoose.Schema(
     isDeleted: { type: Boolean, default: false },
     permanentlyOutOfStock: {
       type: Boolean,
-      default: false
+      default: false,
     },
     itemCostPricePerUnit: {
       type: Number,
