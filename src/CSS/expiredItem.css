@@ -12,12 +12,20 @@
 .table-scroll{
     height: 27rem;
     overflow-y: scroll; 
+    scrollbar-width: none; 
 }
+.table-scroll::-webkit-scrollbar {
+    display: none;
+}
+.table-scroll {
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+  }
 .position-heading{
+    background-color: #7db3e2;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
 .date-margin{
-    margin-left: 1px;
-    margin-bottom: 1px;
+   margin: 1px;
 }

@@ -149,10 +149,10 @@ function ExpiredItemTable({ header }) {
                     <Card.Section className="table-scroll">
                         <Table striped highlightOnHover withBorder withColumnBorders >
                             <thead>
-                                <th>Item Barcode</th>
-                                <th>Item Name</th>
-                                <th>Expiry Date</th>
-                                <th>Total Item Quantity</th>
+                                <th>Barcode</th>
+                                <th>Name</th>
+                                <th>Expiry</th>
+                                <th>Total Qty</th>
                             </thead>
                             <tbody>
                                 {expiredItems &&
