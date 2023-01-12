@@ -99,6 +99,7 @@ function ExpiredItemTable({ header }) {
     };
     useEffect(() => {
         myApiCall();
+        // eslint-disable-next-line
     }, [render])
 
     useEffect(() => {
@@ -106,7 +107,7 @@ function ExpiredItemTable({ header }) {
             getExpiredData();
         }, 1000);
         return () => clearTimeout(timer);
-
+        // eslint-disable-next-line
     }, [])
 
     return (
