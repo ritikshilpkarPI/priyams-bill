@@ -11,6 +11,7 @@ import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../../CSS/purchaseOrder.css'
+import { useHistory, useParams } from "react-router-dom";
 const PurchaseOrderItems = ({ history }) => {
     const {
         form,
@@ -21,6 +22,7 @@ const PurchaseOrderItems = ({ history }) => {
         setDate,
         date,
         handleSelectOrderItems,
+        handleSelectOrderItems2,
         openDrawer,
         setOpenDrawer,
         expiryQuantity,
@@ -48,7 +50,9 @@ const PurchaseOrderItems = ({ history }) => {
         deleteOrder,
         cloudBills,
         deleteCloudBills,
-        Loading
+        Loading,
+    disableDraft
+
     } = usePurchaseOrder(history)
 
     const {
@@ -58,9 +62,15 @@ const PurchaseOrderItems = ({ history }) => {
     const {
         filterItems2
     } = useBarcodeSearchItems(form.values.barcode)
-
+    const locate = useHistory();
+    const { id } = useParams();
     return (
         <>
+            <div className="back-button-purchase">
+                <Button className="back-button" disabled={id?false:true} onClick={()=> locate.push('/approval')}>
+                    Back
+                </Button>
+            </div>
             <LoadingOverlay className='purchase-loader' visible={Loading} overlayBlur={1} />
 
             <OrderForm
@@ -79,6 +89,7 @@ const PurchaseOrderItems = ({ history }) => {
                 filterItems={filterItems}
                 filterItems2={filterItems2}
                 handleSelectOrderItems={handleSelectOrderItems}
+                handleSelectOrderItems2={handleSelectOrderItems2}
                 slabForm={slabForm}
                 addSlabPrice={addSlabPrice}
                 deleteSlab={deleteSlab}
@@ -98,7 +109,7 @@ const PurchaseOrderItems = ({ history }) => {
                 {message.error}
             </Notification>
             <Group position="center">
-                <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit">Draft</Button>
+                <Button style={{ backgroundColor: '#1098AD' }} onClick={addPurchadeOrderValidate} type="submit" disabled={disableDraft}>Draft</Button>
                 <Button style={{ backgroundColor: '#40C057' }} onClick={() => { addPurchadeOrder(false) }} type="submit">Save</Button>
             </Group>
             <Group position="center" style={{ marginTop: '5vmin' }}>

@@ -32,6 +32,7 @@
     "@mantine/dropzone": "^5.9.2",
     "@mantine/form": "^5.8.4",
     "@mantine/hooks": "^5.4.0",
+    "@mantine/modals": "^5.10.0",
     "@mantine/notifications": "^5.9.3",
     "@tabler/icons": "^1.116.1",
     "axios": "^0.24.0",

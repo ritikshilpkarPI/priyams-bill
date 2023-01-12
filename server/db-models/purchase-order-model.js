@@ -53,7 +53,7 @@ const purchaseOrderSchema = new mongoose.Schema({
     procurementSource: String,
     dealerName: String,
     phoneNumber: Number,
-    isDraft: Boolean,
+    isDraft: {type: Boolean, default: false},
     createdAt: { type: Date, default: Date.now },
     isApproved: {
         type: Boolean,

@@ -5,12 +5,18 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AppStateContextProvider } from "./AppState/appState.context";
 import { BrowserRouter } from "react-router-dom";
+import { MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 
 ReactDOM.render(
   <BrowserRouter>
     <AppStateContextProvider>
       <React.StrictMode>
-        <App />
+        <MantineProvider>
+          <ModalsProvider>
+            <App />
+          </ModalsProvider>
+        </MantineProvider>
       </React.StrictMode>
     </AppStateContextProvider>
   </BrowserRouter>,
