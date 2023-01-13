@@ -7,16 +7,16 @@ const ExpiredItems = () => {
   return (
     <>
       <Grid>
-        <Grid.Col span={6}>
+        <Grid.Col sm={6} lg={6}>
           <ExpiredItemTable header="1 day" />
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col sm={6} lg={6}>
           <ExpiredItemTable header="7 days" />
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col sm={6} lg={6}>
           <ExpiredItemTable header="15 days" />
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col sm={6} lg={6}>
           <ExpiredItemTable header="30 days" />
         </Grid.Col>
 

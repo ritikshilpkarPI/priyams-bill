@@ -1,0 +1,99 @@
+.Line-through-text-size{
+    text-decoration-line: line-through;
+    font-size: 110px;
+}
+.Line-through-size{
+    text-decoration-line: line-through; 
+    font-size:3.75rem;
+}
+.Font6rem{
+    font-size:6rem;
+}
+.Font8rem{
+    font-size:8rem;
+}
+.Font6rem{
+    font-size: 6rem;
+}
+.FontSize110px{
+    font-size: 110px;
+}
+.tableLayout{
+    table-layout: auto;
+}
+h6{
+    font-size: 1.25rem;
+}
+.outer-div{
+    display: flex;
+}
+
+table{
+    // border-spacing: 40px 0;
+    border-spacing: 10px 0;
+}
+th{
+    text-align: left;
+}
+td{
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom:1em;
+    padding: 0.2rem;
+    text-align: left;
+}
+.price-align{
+    text-align: center;
+}
+
+// input search bar
+.search-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dropdown {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid gray;
+  }
+  
+  .dropdown:empty {
+    border: none;
+  }
+  
+  .dropdown-row {
+    cursor: pointer;
+    text-align: start;
+    margin: 2px 0;
+  }
+  
+  input {
+    width: 220px;
+  }
+  
+  .search-inner {
+    display: flex;
+  }
+  .input-item-search{
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: 20rem;
+    height: 1.5rem;
+    border-radius: 5px;
+  }
+  .checkbox{
+    width: 10rem;
+    margin-left: -4rem;
+    cursor: pointer;
+  }
+  .label{
+    font-weight: bold;
+    text-align: center;
+  }
+  .search-btn{
+    height: 1.5rem;
+    margin-right: 1rem;
+  }

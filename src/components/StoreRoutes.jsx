@@ -19,8 +19,9 @@ import {
     PurchaseOrder,
     Attendance,
     Approval,
-    ExpiredItems
+    ExpiredItems,
 } from '../Pages'
+import Label from 'src/Pages/Label';
 
 
 const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
@@ -62,6 +63,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                     <Route exact path="/edit/:billingID" component={EditBill} />
                     <Route exact path="/approval" component={Approval}/>
                     <Route exact path="/expiredItems" component={ExpiredItems}/>
+                    <Route exact path="/label" component={Label}/>
                 </ProtectedRoutes>
             </Switch>
         </Suspense>

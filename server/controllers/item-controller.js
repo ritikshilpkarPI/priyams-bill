@@ -251,29 +251,35 @@ const saveInventory = async (req, res) => {
   }
 }
 
-const filterExpiryDates = async(req,res) => {
-  const {startDate,endDate} = req.body;
-  console.log({startDate,endDate})
+const filterExpiryDates = async (req, res) => {
+  const { startDate, endDate } = req.body;
+  console.log({ startDate, endDate })
   try {
     const items = await Item.find({});
+    // return res.status(200).json({ message: items });
     let expiredItems = [];
-     await items.map((item)=> {
+    await items.map((item) => {
+      // let dates = [...item.useByDate.filter((expiryDate) =>
+      //   expiryDate.date.getTime() >= new Date(startDate).getTime()
+      //   && expiryDate.date.getTime() <= new Date(endDate).getTime()
+      // )
+      // ];
       let dates = [...item.useByDate.filter((expiryDate) =>
-         expiryDate.date.getTime() >= new Date(startDate).getTime()
-         && expiryDate.date.getTime() <= new Date(endDate).getTime()
-         )
+        new Date(expiryDate.date )>= new Date(startDate)
+        && new Date(expiryDate.date) <= new Date(endDate)
+      )
       ];
-      if(dates.length > 0){
+      if (dates.length > 0) {
         let totalItems = 0;
-        dates.forEach((date)=>{
-             totalItems  = totalItems + Number(date.value);
+        dates.forEach((date) => {
+          totalItems = totalItems + Number(date.value);
         })
         let obj = {
           ...item,
-          useByDate:dates,
+          useByDate: dates,
           totalItems
         }
-        expiredItems = [...expiredItems,obj];
+        expiredItems = [...expiredItems, obj];
       }
     })
     res.status(200).json({ message: expiredItems });
