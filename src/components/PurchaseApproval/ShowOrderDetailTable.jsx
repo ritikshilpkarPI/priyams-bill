@@ -40,7 +40,7 @@ const ShowOrderDetailTable = ({ purchaseList}) => {
           <Table withColumnBorders striped withBorder>
             <thead>
               <tr>
-                <th>Barcode</th>
+                <th>Barcode-barcode</th>
                 <th>Item name</th>
                 <th>Order Quantity</th>
                 <th>Minimum Quantity</th>
@@ -50,7 +50,7 @@ const ShowOrderDetailTable = ({ purchaseList}) => {
                 <th>MRP</th>
                 <th>Cost Price</th>
                 <th>Expiry Dates</th>
-                <th>Remarks</th>
+                <th>Remarks123</th>
               </tr>
             </thead>
             <tbody>{rows}</tbody>

@@ -244,11 +244,13 @@ const OrderForm = ({
               inputFormat="MM/DD/YYYY"
               value={date}
               onChange={(day) => {
-                setDate(day);
+                let s = (String(new Date(day).toLocaleDateString("en-US")));
+                setDate(s);
               }}
               
               style={{ width: "140px" }}
             />
+            {console.log(date)}
             <NumberInput
               withAsterisk={form.values.validate}
               style={{ width: "15vmin" }}

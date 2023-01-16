@@ -51,7 +51,7 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
           <Table withColumnBorders striped withBorder>
             <thead>
               <tr>
-                <th>Barcode</th>
+                <th>Barcode123</th>
                 <th>Item name</th>
                 <th>Order Quantity</th>
                 <th>Minimum Quantity</th>

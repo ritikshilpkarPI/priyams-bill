@@ -443,6 +443,7 @@ const usePurchaseOrder = (history) => {
     })
   }
   const handleItemEdit = (item, index) => {
+    console.log("editfn",item);
     setIsEditable(false)
     if (index >= 0) {
       setEditIndex(index);
@@ -462,8 +463,8 @@ const usePurchaseOrder = (history) => {
       expiryDates: [...item.expiryDates],
       validate: item.validate,
       item_id: item.item_id,
-      brand: item.itemBrandName,
-      category: item.itemCategory
+      brand: item.brand,
+      category: item.category
     }));
     console.log({ item })
     setSlabs([...item.slabPrice]);
