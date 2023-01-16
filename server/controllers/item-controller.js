@@ -247,9 +247,46 @@ const saveInventory = async (req, res) => {
     }
     res.status(200).send({ message: "items updated", success: true });
   } catch (err) {
-    res.status(400).send({ message: err, success: false });
+    res.status(400).send({ message: err, success: false })
   }
-};
+}
+
+const filterExpiryDates = async (req, res) => {
+  const { startDate, endDate } = req.body;
+  console.log({ startDate, endDate })
+  try {
+    const items = await Item.find({});
+    // return res.status(200).json({ message: items });
+    let expiredItems = [];
+    await items.map((item) => {
+      // let dates = [...item.useByDate.filter((expiryDate) =>
+      //   expiryDate.date.getTime() >= new Date(startDate).getTime()
+      //   && expiryDate.date.getTime() <= new Date(endDate).getTime()
+      // )
+      // ];
+      let dates = [...item.useByDate.filter((expiryDate) =>
+        new Date(expiryDate.date )>= new Date(startDate)
+        && new Date(expiryDate.date) <= new Date(endDate)
+      )
+      ];
+      if (dates.length > 0) {
+        let totalItems = 0;
+        dates.forEach((date) => {
+          totalItems = totalItems + Number(date.value);
+        })
+        let obj = {
+          ...item,
+          useByDate: dates,
+          totalItems
+        }
+        expiredItems = [...expiredItems, obj];
+      }
+    })
+    res.status(200).json({ message: expiredItems });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 const permanentlyOutOfStock = async (req, res) => {
   const { id } = req.params;
@@ -279,5 +316,6 @@ module.exports = {
   softDeleteItem,
   addBulkItems,
   saveInventory,
-  permanentlyOutOfStock,
+  filterExpiryDates,
+  permanentlyOutOfStock
 };
