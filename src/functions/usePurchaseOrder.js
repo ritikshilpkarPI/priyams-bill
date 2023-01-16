@@ -97,6 +97,9 @@ const usePurchaseOrder = (history) => {
       // sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0' : null),
       mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0' : null),
       // costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
+      category: (value) => (!value ? 'Category is Compulsory' : null ),
+      brand: (value) => (!value ? 'Brand name is Compulsory' : null )
+
     }
   });
   const [purchaseList, setPurchaseList] = useState({
