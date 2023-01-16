@@ -246,6 +246,7 @@ const OrderForm = ({
               onChange={(day) => {
                 setDate(day);
               }}
+              
               style={{ width: "140px" }}
             />
             <NumberInput
