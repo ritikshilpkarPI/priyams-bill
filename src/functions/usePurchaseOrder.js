@@ -97,6 +97,9 @@ const usePurchaseOrder = (history) => {
       // sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0' : null),
       mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0' : null),
       // costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
+      category: (value) => (!value ? 'Category is Compulsory' : null ),
+      brand: (value) => (!value ? 'Brand name is Compulsory' : null )
+
     }
   });
   const [purchaseList, setPurchaseList] = useState({
@@ -443,6 +446,7 @@ const usePurchaseOrder = (history) => {
     })
   }
   const handleItemEdit = (item, index) => {
+    console.log("editfn",item);
     setIsEditable(false)
     if (index >= 0) {
       setEditIndex(index);
@@ -462,8 +466,8 @@ const usePurchaseOrder = (history) => {
       expiryDates: [...item.expiryDates],
       validate: item.validate,
       item_id: item.item_id,
-      brand: item.itemBrandName,
-      category: item.itemCategory
+      brand: item.brand,
+      category: item.category
     }));
     console.log({ item })
     setSlabs([...item.slabPrice]);

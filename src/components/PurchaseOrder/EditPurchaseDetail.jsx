@@ -2,7 +2,6 @@
 import { Drawer, Button, Group, Box, NumberInput, Select } from '@mantine/core';
 import '../../CSS/editPurchaseDetail.css'
 const EditPurchaseDetail = ({ setPurchaseDrawer, openPurchaseDrawer, updateDetails, purchaseForm }) => {
-
     return (
         <Drawer
             opened={openPurchaseDrawer}
