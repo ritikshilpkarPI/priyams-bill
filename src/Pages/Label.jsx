@@ -52,8 +52,10 @@ const Label = () => {
     };
     const handleRemoveItem=(idx)=>{
         setNewData(newData.filter((item,index) => index !== idx));
+    } 
+    const callPrint=()=>{
+        window.print();
     }
-   
     var regExp = /[a-zA-Z]/g;
     return (
         <>
@@ -62,6 +64,7 @@ const Label = () => {
                     <Input placeholder="Item Name" variant="filled"radius="md"size="md" value={value} onChange={onChange} className='input-item-search' />
                     <Button size="md" radius="md" onClick={() => onSearch(value)} > Search </Button>
                     <Checkbox label="Alignment" checked={checked} onChange={handleChange} className='checkbox' id='mantine-vehxkegqj'/>
+                    <Button size="md" radius="md" onClick={callPrint}>Print</Button>
                 </div>
                 <div className='dropdown'>
                     {data
