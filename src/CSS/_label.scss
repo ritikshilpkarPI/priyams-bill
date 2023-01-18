@@ -1,12 +1,10 @@
 .main-outer-box {
-  // display: "grid", gridTemplateColumns: "repeat(3, 1fr)", justifyItems: "center"
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
 }
 
 .main-inner-box {
-  // height: "auto", padding: "5px 0", width: "520px", border: '1px solid black', margin: '5px 0' 
   height: auto;
   padding: 5px 0;
   width: 520px;
@@ -40,15 +38,76 @@
   font-size: 110px;
 }
 
+// myLabel-css
+.myLabel {
+  border: 1px solid black;
+  margin: 2rem 0 5px;
+  height: 360px;
+  padding: 5px 0;
+  width: 340px;
+}
+
+.myLabel.checked {
+  height: auto;
+}
+
+.myLabel.length4 {
+  width: 600px;
+}
+
+.myLabel.length3 {
+  width: 520px;
+}
+
+.myLabel.length2 {
+  width: 430px;
+}
+
+// mylabel-content
+.mylabel-content {
+  margin-top: 0.5rem;
+  display: flex;
+}
+
+.mylabel-content.checked {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+//table settings
+.table-settings {
+  width: 50%;
+}
+
+.table-settings-checked {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+//Table-layout
 .tableLayout {
   table-layout: auto;
 }
 
+.tableLayout.checked {
+  position: relative;
+  left: 0.5rem;
+}
+
 h4 {
-  font-size: 1.28rem;
-  // textAlign: "center", marginBottom: "5px" 
+  font-size: 1.37rem;
   text-align: center;
   margin-bottom: 5px;
+}
+
+.h4-checked {
+  width: 60%;
+  margin: 0 auto;
+  margin-top: 0.2rem;
+  margin-bottom: 0.3rem;
 }
 
 h6 {
@@ -60,18 +119,17 @@ h6 {
 }
 
 table {
-  // border-spacing: 40px 0;
   border-spacing: 10px 0;
 }
 
 th {
   text-align: left;
-  font-size: 1.25rem;
+  font-size: 1.32rem;
 }
 
 td {
   font-weight: bold;
-  font-size: 1.25rem;
+  font-size: 1.33rem;
   margin-bottom: 1em;
   padding: 0.2rem;
   text-align: left;
@@ -93,7 +151,8 @@ td {
   background-color: white;
   display: flex;
   flex-direction: column;
-  border: 1px solid gray;
+  // border: 1px solid gray;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   margin-left: 1rem;
   border-top: none;
   font-size: large;
@@ -107,9 +166,9 @@ td {
 .dropdown-row {
   cursor: pointer;
   text-align: start;
-  margin: 2px 0;
-  background-color: #E3F6FF;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 5px 0;
+  // background-color: #E3F6FF;
+  // box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 
 input {
@@ -129,8 +188,14 @@ input {
 }
 
 .checkbox {
-  width: 10rem;
-  margin-left: -4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  font-weight: bold;
+}
+
+#mantine-vehxkegqj {
   cursor: pointer;
 }
 
@@ -159,8 +224,6 @@ input {
 }
 
 @media print {
-
-  /* visible when printed */
   .search-container {
     display: none;
   }

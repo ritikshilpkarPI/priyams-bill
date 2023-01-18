@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Loader, Button } from '@mantine/core';
+import { Loader, Button ,Input,Checkbox} from '@mantine/core';
 import { CloseButton } from '@mantine/core';
 
 const Label = () => {
@@ -44,16 +44,13 @@ const Label = () => {
     const onSearch = (searchTerm) => {
         searchTerm = String(searchTerm);
         setValue(searchTerm);
-        let toggle = !render;
-        setRender(toggle)
-        console.log("search ", searchTerm);
+        setRender(!render)
     };
     
     const handleChange = () => {
         setChecked(!checked);
     };
     const handleRemoveItem=(idx)=>{
-        console.log(idx);
         setNewData(newData.filter((item,index) => index !== idx));
     }
    
@@ -62,11 +59,9 @@ const Label = () => {
         <>
             <div className="search-container">
                 <div className="search-inner">
-                    <input type="text" placeholder='Item Name' value={value} onChange={onChange} className='input-item-search' />
-                    <Button onClick={() => onSearch(value)} className='search-btn'> Search </Button>
-                    <label for="myCheck" className='label'>Alignment</label>
-                    <input type="checkbox" id="myCheck" checked={checked}
-                        onChange={handleChange} className='checkbox' />
+                    <Input placeholder="Item Name" variant="filled"radius="md"size="md" value={value} onChange={onChange} className='input-item-search' />
+                    <Button size="md" radius="md" onClick={() => onSearch(value)} > Search </Button>
+                    <Checkbox label="Alignment" checked={checked} onChange={handleChange} className='checkbox' id='mantine-vehxkegqj'/>
                 </div>
                 <div className='dropdown'>
                     {data
@@ -102,7 +97,7 @@ const Label = () => {
                             >
                                 <span className='search-item-name-dropdown'> {item.itemBarcode}</span> 
                                 <span >  {item.itemName} </span>
-                                <hr/>
+                                {/* <hr/> */}
                                 
                             </div>
                         ))}
@@ -150,7 +145,7 @@ const Label = () => {
                                         </div>}
                                     </div>
                                     {hasSlab && (
-                                        <div className='table-settings' style={{ width: '50%' }}>
+                                        <div className='table-settings'>
                                             <table className='tableLayout'>
                                                 <thead>
                                                     <tr>
@@ -178,7 +173,6 @@ const Label = () => {
                     })}
                     {/* mynewData */}
                     {!display && newData && newData.map((item, index) => {
-                        console.log(index);
                         const sellPrice = (item.slabPricing.length && item.slabPricing[0][2]) || item.itemSellingPricePerUnit;
                         const hasSlab = item.slabPricing.length > 1;
 
@@ -191,12 +185,12 @@ const Label = () => {
 
                         return (
                             <div className='show-search-item'>
-                                <div key={index} style={{ height: checked ? "auto" : "360px", padding: "5px 0", width: String(item.itemMRPperUnit).length > 3 ? "520px" : String(item.itemMRPperUnit).length > 2 ? "430px" : "340px", border: '1px solid black', margin: '5px 0', marginTop: "2rem" }} id='myLabel'>
-                                    <h4 style={{ textAlign: "center", width: checked ? '60%' : '', margin: checked ? "0 auto" : "", marginTop: checked ? "0.2rem" : "", marginBottom: checked ? "0.3rem" : "5px" }}>
+                                <div key={index} className={`myLabel ${checked && 'checked'} length${String(item.itemMRPperUnit).length}`}  >
+                                    <h4 className={`${checked && 'h4-checked'}`}>
                                         {item.itemName.slice(0, 30)}
                                     </h4>
                                     <hr />
-                                    <div style={{ display: "flex", flexDirection: checked ? "column" : "", alignItems: checked ? "center" : "", justifyContent: checked ? "center" : "" }}>
+                                    <div className={`mylabel-content ${checked && 'checked'}`} >
                                         <div style={{ width: `${hasSlab ? '50%' : '100%'}`, display: `${hasSlab ? 'block' : 'flex'}`, justifyContent: `${!hasSlab ? 'space-around' : "center"}`, flexDirection: checked ? "column" : "" }}>
                                             <div>
                                                 <h6 >MRP</h6>
@@ -208,8 +202,8 @@ const Label = () => {
                                             </div>}
                                         </div>
                                         {hasSlab && (
-                                            <div className='table-settings' style={{ width: '50%', display: checked ? "flex" : "", justifyContent: checked ? "center" : "" }}>
-                                                <table className='tableLayout' style={{ position: checked ? "relative" : "", left: checked ? "0.5rem" : "" }}>
+                                            <div className={`${checked && 'table-settings-checked' }`}>
+                                                <table className={`tableLayout ${checked && 'checked' }`}>
                                                     <thead>
                                                         <tr>
                                                             <th >Range</th>
