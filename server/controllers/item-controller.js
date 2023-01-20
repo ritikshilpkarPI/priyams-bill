@@ -252,12 +252,14 @@ const saveInventory = async (req, res) => {
 
 const filterExpiryDates = async (req, res) => {
   const { startDate, endDate } = req.body;
-  
+  console.log({startDate,endDate})
   try {
     const items = await Item.find().select(["useByDate", "itemName", "itemBarcode"]);
+    console.log({items})
     let itemToBeExired = [];
 
-    await items.map((item) => {
+    items.map((item) => {
+      console.log(item.useByDate.length)
       if (item.useByDate.length) {
         let singleItem = { ...item._doc, useByDate : [] };
 
@@ -272,7 +274,10 @@ const filterExpiryDates = async (req, res) => {
           }
         })
         if(singleItem.useByDate.length){
+          console.log("1",itemToBeExired.length)
           itemToBeExired.push(singleItem);
+          console.log("2",itemToBeExired.length)
+
         }
       }
     });
