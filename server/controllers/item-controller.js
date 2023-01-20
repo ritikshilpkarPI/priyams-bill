@@ -1,4 +1,3 @@
-const { ObjectID } = require("bson");
 const { Item } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
@@ -253,36 +252,61 @@ const saveInventory = async (req, res) => {
 
 const filterExpiryDates = async (req, res) => {
   const { startDate, endDate } = req.body;
-  console.log({ startDate, endDate })
+  
   try {
-    const items = await Item.find({});
-    // return res.status(200).json({ message: items });
-    let expiredItems = [];
+    const items = await Item.find().select(["useByDate", "itemName", "itemBarcode"]);
+    let itemToBeExired = [];
+
     await items.map((item) => {
-      // let dates = [...item.useByDate.filter((expiryDate) =>
-      //   expiryDate.date.getTime() >= new Date(startDate).getTime()
-      //   && expiryDate.date.getTime() <= new Date(endDate).getTime()
-      // )
-      // ];
-      let dates = [...item.useByDate.filter((expiryDate) =>
-        new Date(expiryDate.date )>= new Date(startDate)
-        && new Date(expiryDate.date) <= new Date(endDate)
-      )
-      ];
-      if (dates.length > 0) {
-        let totalItems = 0;
-        dates.forEach((date) => {
-          totalItems = totalItems + Number(date.value);
+      if (item.useByDate.length) {
+        let singleItem = { ...item._doc, useByDate : [] };
+
+        item.useByDate.map((date) => {
+          const dateToCheck = new Date(date.date).toLocaleDateString();
+          const from = new Date(startDate.split("/")[2], parseInt(startDate.split("/")[1]) - 1, startDate.split("/")[0]);
+          const lastDate = new Date(endDate.split("/")[2], parseInt(endDate.split("/")[1]) - 1, endDate.split("/")[0]);
+          const check = new Date(dateToCheck.split("/")[2], parseInt(dateToCheck.split("/")[1]) - 1, dateToCheck.split("/")[0]);
+
+          if (check >= from && check <= lastDate){
+            singleItem.useByDate.push(date);
+          }
         })
-        let obj = {
-          ...item,
-          useByDate: dates,
-          totalItems
+        if(singleItem.useByDate.length){
+          itemToBeExired.push(singleItem);
         }
-        expiredItems = [...expiredItems, obj];
       }
-    })
-    res.status(200).json({ message: expiredItems });
+    });
+
+    return res.status(200).json({ message: itemToBeExired });
+
+
+    // const items = await Item.find();
+    // let expiredItems = [];
+    // await items.map((item) => {
+    //   // let dates = [...item.useByDate.filter((expiryDate) =>
+    //   //   expiryDate.date.getTime() >= new Date(startDate).getTime()
+    //   //   && expiryDate.date.getTime() <= new Date(endDate).getTime()
+    //   // )
+    //   // ];
+    //   let dates = [...item.useByDate.filter((expiryDate) =>
+    //     new Date(expiryDate.date )>= new Date(startDate)
+    //     && new Date(expiryDate.date) <= new Date(endDate)
+    //   )
+    //   ];
+    //   if (dates.length > 0) {
+    //     let totalItems = 0;
+    //     dates.forEach((date) => {
+    //       totalItems = totalItems + Number(date.value);
+    //     })
+    //     let obj = {
+    //       ...item,
+    //       useByDate: dates,
+    //       totalItems
+    //     }
+    //     expiredItems = [...expiredItems, obj];
+    //   }
+    // })
+    // res.status(200).json({ message: expiredItems });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
