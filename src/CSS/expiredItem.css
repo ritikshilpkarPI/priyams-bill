@@ -3,11 +3,9 @@
     margin-left: 1rem;
 }
 .outer-div{
-    height: 27rem;
-}
-.toggle-height {
-   
-   height: 27rem;
+    max-height: 27rem;
+    max-width: 36rem;
+    margin: 0 auto;
 }
 .table-scroll{
     height: 27rem;
@@ -23,9 +21,20 @@
   }
 .position-heading{
     background-color: #7db3e2;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
 }
 .date-margin{
    margin: 1px;
+}
+
+.parent-datePicker{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+th{
+    font-size: 1.3rem;
+}
+
+td{
+    padding-bottom: 1rem;
 }
