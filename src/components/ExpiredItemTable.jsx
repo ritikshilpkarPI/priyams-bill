@@ -5,47 +5,58 @@ import React, { useState, useEffect } from 'react';
 
 const addDays = (date, days) => {
 
-   let dayToIncr={
-        1:0,
-        7:2,
-        15:8,
-        30:16
+    let dayToIncr = {
+        1: 0,
+        7: 2,
+        15: 8,
+        30: 16
     }
-   
+
     let currentDate = new Date(date);
-    currentDate.setDate(currentDate.getDate()+dayToIncr[days]);
+    currentDate.setDate(currentDate.getDate() + dayToIncr[days]);
     let endDate = new Date(date);
-    endDate.setDate(endDate.getDate()+days );
-    return {currentDate,endDate}
+    endDate.setDate(endDate.getDate() + days);
+    return { currentDate, endDate }
 
 };
 
-const getExpiredApiData = async (startDate, endDate) => {
-    const { data } = await Axios.request({
-        url: "/api/inventory/filterExpiryDates",
-        method: "POST",
-        data: {
-            startDate: startDate.toLocaleDateString(),
-            endDate: endDate.toLocaleDateString(),
-        }
-    });
-
-    return data;
+const getExpiredItemsData = async (startDate, endDate) => {
+    try {
+        const { status, data } = await Axios.request({
+            url: "/api/inventory/filterExpiryDates",
+            method: "POST",
+            data: {
+                startDate: startDate.toLocaleDateString(),
+                endDate: endDate.toLocaleDateString(),
+            }
+        });
+        return { status, data };
+    } catch (error) {
+        return { error }
+    }
 }
 
 const ExpiredItemTable = ({ day }) => {
     const [startDateValue, setStartDateValue] = useState(new Date());
     const [endDateValue, setEndDateValue] = useState(addDays(new Date(), 30));
-    const [data, setData] = useState([]);
+    const [expiredItemsArr, setExpiredItemsArr] = useState([]);
+    const [errorMsg, setErrorMsg] = useState("");
     const [loader, setLoader] = useState(false);
 
     useEffect(() => {
         const getExpiredData = async () => {
-            const {currentDate,endDate} = addDays(startDateValue, day);
+            const { currentDate, endDate } = addDays(startDateValue, day);
             setLoader(true);
-            const response = await getExpiredApiData(currentDate, endDate);
-            setData(response.message.expiredItems);
-            setLoader(false);
+            const { status, data } = await getExpiredItemsData(currentDate, endDate);
+            if (status === 200) {
+                setExpiredItemsArr(data.message.expiredItems);
+                setLoader(false);
+            }
+            else {
+                setErrorMsg("Error try again later");
+                setLoader(false);
+            }
+
         }
         // eslint-disable-next-line
         getExpiredData();
@@ -54,66 +65,77 @@ const ExpiredItemTable = ({ day }) => {
 
     const handleDateSearch = async () => {
         setLoader(true);
-        const response = await getExpiredApiData(startDateValue, endDateValue);
-        setData(response.message.expiredItems);
-        setLoader(false);
+        const {status, data} = await getExpiredItemsData(startDateValue, endDateValue);
+        if (status === 200) {
+            setExpiredItemsArr(data.message.expiredItems);
+            setLoader(false);
+        }
+        else {
+            setErrorMsg("Error try again later");
+            setLoader(false);
+        }
     }
-    console.log(day, data);
     return (
         <div className="outer-div" >
-            {loader ? (
-                <div
-                    style={{
-                        height: "95vh",
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Loader size="md" />
-                </div>
-            ) :
-                (<Card shadow="sm" p="lg" radius="md" withBorder className=" toggle-height">
 
-                    <Card.Section>
-                        <Title order={2} className="position-heading">{day} days</Title>
-                    </Card.Section>
-                    <Card.Section>
-                        <div className="parent-datePicker">
-                            {day === 30 && <DatePicker placeholder="Start date" value={startDateValue} withAsterisk onChange={setStartDateValue} />}
-                            {day === 30 && <DatePicker placeholder="End date" value={endDateValue} withAsterisk onChange={setEndDateValue} />}
-                            {day === 30 && <Button onClick={handleDateSearch}>Search</Button>}
-                        </div>
+            <Card shadow="sm" p="lg" radius="md" withBorder className=" toggle-height">
 
-                    </Card.Section>
-                    <Card.Section className="table-scroll">
-                        <Table striped highlightOnHover withBorder withColumnBorders >
-                            <thead>
-                                <th>Barcode</th>
-                                <th>Name</th>
-                                <th>Expiry</th>
-                                <th>Total Qty</th>
-                            </thead>
+                <Card.Section>
+                    <Title order={2} className="position-heading">{day} days</Title>
+                </Card.Section>
+                {day === 30 && <Card.Section>
+                    <div className="parent-datePicker">
+                        <DatePicker placeholder="Start date" value={startDateValue} withAsterisk onChange={setStartDateValue} />
+                        <DatePicker placeholder="End date" value={endDateValue} withAsterisk onChange={setEndDateValue} />
+                        <Button onClick={handleDateSearch}>Search</Button>
+                    </div>
+
+                </Card.Section>}
+                <Card.Section className="table-scroll">
+                    <Table striped highlightOnHover withBorder withColumnBorders >
+                        <thead>
+                            <th>Barcode</th>
+                            <th>Name</th>
+                            <th>Expiry</th>
+                            <th>Total Qty</th>
+                        </thead>
+                        {loader ? (
+                            <div
+                                style={{
+                                    height: "50vh",
+                                    width: "350%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <Loader size="md" />
+                            </div>
+                        ) : (
                             <tbody>
-                                {data &&
-                                    data.map((item, index) => {
+                                {
+                                    expiredItemsArr.length ?
+                                    expiredItemsArr.map((expiredItemObj, index) => {
                                         return (
                                             <tr key={index}>
-                                                <td>{item.itemBarcode}</td>
-                                                <td>{item.itemName}</td>
-                                                <td>{new Date(item.useByDate.date).toLocaleDateString()}</td>
-                                                <td>{item.useByDate.quantity}</td>
+                                                <td>{expiredItemObj.itemBarcode}</td>
+                                                <td>{expiredItemObj.itemName}</td>
+                                                <td>{new Date(expiredItemObj.useByDate.date).toLocaleDateString()}</td>
+                                                <td>{expiredItemObj.useByDate.quantity}</td>
                                             </tr>
                                         );
-                                    })}
+                                    })
+                                    :
+                                    <div className="error"><h3>{errorMsg}</h3></div>
+
+                                }
                             </tbody>
-                        </Table>
-                    </Card.Section>
-                </Card>
-                )}
+                        )}
+
+                    </Table>
+                </Card.Section>
+            </Card>
         </div>
-        // </>
 
     )
 }

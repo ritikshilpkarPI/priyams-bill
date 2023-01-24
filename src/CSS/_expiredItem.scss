@@ -32,9 +32,17 @@
     justify-content: space-between;
 }
 th{
-    font-size: 1.3rem;
+    /* font-size: 1.3rem; */
+    font-size: 1rem;
 }
-
-td{
+.error{
+    position: relative;
+    left: 5rem;
+    top: 8rem;
+}
+.mantine-Paper-root{
+    width: 30rem;
+}
+/* td{
     padding-bottom: 1rem;
-}
+} */
