@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState, useRef } from "react";
-
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
-
 import {
   FileButton,
   Button,
@@ -16,9 +14,7 @@ import {
   TextInput,
   NumberInput,
 } from "@mantine/core";
-
 import { DatePicker } from "@mantine/dates";
-
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import Papa from "papaparse";
@@ -123,7 +119,11 @@ const ItemsList = () => {
   };
 
   const handleFilter = (name) => {
-    const filteredData = itemsList.filter((item) => item[name] === null);
+    const filteredData = itemsList.filter((item) => {
+      return (
+        !item[name] || (typeof item[name] == "object" && !item[name].length)
+      );
+    });
     setItems([...filteredData]);
   };
   const resetFilter = () => {
@@ -1074,9 +1074,11 @@ const ItemsList = () => {
   const UseByDateElement = () => {
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
-      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
-      }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
+      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getMonth() + 1}-${
+      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1166,9 +1168,11 @@ const ItemsList = () => {
     const [savedDates, setSavedDates] = useState(data);
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
-      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
-      }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
+      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getMonth() + 1}-${
+      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+    }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1253,7 +1257,10 @@ const ItemsList = () => {
           {savedDates?.map((item, index) => {
             return (
               <div key={index} className="new-date-row">
-                <TextInput value={new Date(item.date).toLocaleDateString()} readOnly></TextInput>
+                <TextInput
+                  value={new Date(item.date).toLocaleDateString()}
+                  readOnly
+                ></TextInput>
                 <NumberInput
                   className="per-date-quantity"
                   value={item.value}
@@ -1360,6 +1367,13 @@ const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <input
+                  type="checkbox"
+                  checked={filterItems === "itemCategory"}
+                  label="Filter Item Category"
+                  value="Filter Item Category"
+                  onChange={() => handleCheckboxFilter("itemCategory")}
+                />
               </th>
               <th>
                 <Text>
@@ -1400,10 +1414,10 @@ const ItemsList = () => {
                 </Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "quantityUnitName"}
+                  checked={filterItems === "useByDate"}
                   label="Filter Item Unit"
                   value="Filter Item Unit"
-                  onChange={() => handleCheckboxFilter("quantityUnitName")}
+                  onChange={() => handleCheckboxFilter("useByDate")}
                 />
               </th>
               <th>
@@ -1460,6 +1474,13 @@ const ItemsList = () => {
                     *
                   </span>
                 </Text>
+                <input
+                  type="checkbox"
+                  label="Filter Slabs"
+                  value="Filter Slabs"
+                  checked={filterItems === "slabPricing"}
+                  onChange={() => handleCheckboxFilter("slabPricing")}
+                />
               </th>
               <th>
                 <Text>
@@ -1654,12 +1675,12 @@ const TableRow = ({
     const data =
       name === "quantityUnitName"
         ? [
-          { value: "kg", label: "kg" },
-          { value: "grams", label: "grams" },
-          { value: "liter", label: "liter" },
-          { value: "ml", label: "ml" },
-          { value: "Piece", label: "Piece" },
-        ]
+            { value: "kg", label: "kg" },
+            { value: "grams", label: "grams" },
+            { value: "liter", label: "liter" },
+            { value: "ml", label: "ml" },
+            { value: "Piece", label: "Piece" },
+          ]
         : categoryArray;
 
     return (
