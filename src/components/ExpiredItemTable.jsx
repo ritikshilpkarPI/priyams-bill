@@ -1,4 +1,4 @@
-import { Button, Loader, Table, Card, Title } from "@mantine/core";
+import { Button, Loader, Table, Card, Title, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { Axios } from "src/utils/axios";
 import React, { useState, useEffect } from "react";
@@ -40,10 +40,10 @@ const ExpiredItemTable = ({ day }) => {
   const [expiredItemsArr, setExpiredItemsArr] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
   const [loader, setLoader] = useState(false);
+  const { currentDate, endDate } = addDays(startDateValue, day);
 
   useEffect(() => {
     const getExpiredData = async () => {
-      const { currentDate, endDate } = addDays(startDateValue, day);
       setLoader(true);
       const { status, data } = await getExpiredItemsData(currentDate, endDate);
       if (status === 200) {
@@ -75,17 +75,12 @@ const ExpiredItemTable = ({ day }) => {
   };
   return (
     <div className="outer-div">
-      <Card
-        shadow="sm"
-        p="lg"
-        radius="md"
-        withBorder
-        className=" toggle-height"
-      >
+      <Card shadow="sm" p="lg" radius="md" withBorder className="toggle-height">
         <Card.Section>
           <Title order={2} className="position-heading">
-            {day} days
+            {`${day} days (${expiredItemsArr.length})`}
           </Title>
+          <Text size="md">{`on ${endDate.toDateString()}`}</Text>
         </Card.Section>
         {day === 30 && (
           <Card.Section>
@@ -139,7 +134,7 @@ const ExpiredItemTable = ({ day }) => {
                             expiredItemObj.useByDate.date
                           ).toLocaleDateString()}
                         </td>
-                        <td>{expiredItemObj.useByDate.quantity}</td>
+                        <td>{expiredItemObj.useByDate.value}</td>
                       </tr>
                     );
                   })
