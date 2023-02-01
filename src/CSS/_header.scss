@@ -1,82 +1,82 @@
-#main-box-container {
-  display: block;
-  width: 200px;
-  // border: 2px solid red;
-  height: 100vh;
-  padding: 10px;
-  background-color: #f5f5f5;
-  // overflow-y: scroll;
-}
-
-/* .hamburger {
-    width: 30px;
-    height: 25px;
-    position: fixed;
-    top: 1rem;
-    left: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 2;
-    cursor: pointer;
-  }
-  
-  .line {
-    width: 100%;
-    height: 3px;
-    background-color: #000;
-  } */
-
-.profileName {
-  display: flex;
-  align-items: center;
-  // flex-direction: column;
-  // border: 2px solid green;
-
-  .hamburger-menu {
-    cursor: pointer;
-    margin-left: 5px;
-    // border: 2px solid blue;
-  }
-
-  .user-name {
-    margin-left: 20px;
-  }
-}
-
-#search-input {
-  padding: 8px 15px;
-  margin: 10px 0;
+@mixin button-style {
   width: 100%;
-}
-
-#sidebar {
-  width: 100%;
-  padding: 10px;
-  z-index: 1;
-
-  .list {
-    .main-link.billing {
-      border: 5px solid red;
-    }
-  }
-
-  /* overflow-y: scroll; */
-}
-
-// #sidebar::-webkit-scrollbar {
-//   display: none;
-// }
-.billing {
-  width: 100%;
-  padding: 12px 20px;
+  padding: 13px 20px;
   font-weight: 600;
   font-size: 14px;
   background-color: black;
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  border: none;
+  border: 2px solid black;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: rgb(45, 44, 44);
+  }
+}
+
+#main-box-container {
+  display: block;
+  width: 300px;
+  height: 100vh;
+  padding: 10px;
+  background-color: #f5f5f5;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.profileName {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+
+  .hamburger-menu {
+    cursor: pointer;
+    margin-left: 5px;
+  }
+
+  .user-name {
+    font-size: 22px;
+    text-align: center;
+    flex: 1;
+  }
+}
+
+#search-input {
+  padding: 8px 10px;
+  margin: 10px 0;
+  width: 100%;
+  font-size: 16px;
+}
+
+.sidebar {
+  width: 100%;
+  z-index: 1;
+  overflow: scroll;
+  height: calc(100vh - 240px);
+  margin-top: 10px;
+
+  .links-container {
+    background-color: rgba(230, 230, 229, 0.7);
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+
+    &:nth-child(1) {
+      margin-top: 0;
+    }
+  }
+
+  .list {
+    .main-link.billing {
+      border: 5px solid red;
+    }
+  }
+}
+
+.billing {
+  @include button-style;
 }
 
 #small-sidebar {
@@ -86,25 +86,18 @@
   left: 0;
   bottom: 0;
   display: none;
-  // background-color: aliceblue;
   padding: 20px;
   z-index: 1;
   overflow-y: scroll;
 }
 
-#small-sidebar::-webkit-scrollbar {
+#small-sidebar::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar {
   display: none;
-}
-
-#sidebar ul {
-  list-style: none;
-  padding: 0px 0px 9px;
 }
 
 .list {
   height: 78vh;
-  /* overflow-y: scroll; */
-  // border: 5px solid blue;
   overflow-y: scroll;
 }
 
@@ -112,14 +105,22 @@
   display: none;
 }
 
-#sidebar li {
-  margin: 5px 0;
+.sidebar li {
   display: flex;
   align-items: center;
-  // border: 2px solid blue;
+  padding: 7px;
+  border-radius: 4px;
+
+  a {
+    flex: 1;
+  }
+
+  &:hover {
+    background-color: #ddd;
+  }
 }
 
-#sidebar a {
+.sidebar a {
   text-decoration: none;
   color: black;
   display: block;
@@ -127,7 +128,7 @@
   margin-left: 10px;
 }
 
-#sidebar a:hover {
+.sidebar a:hover {
   background-color: #ddd;
 }
 
@@ -150,14 +151,15 @@
 
 
 .headers {
-  font-size: 14px;
-  // background-color: #FFFBF5;
+  font-size: 17px;
   text-align: left;
   cursor: pointer;
+  font-weight: 600;
+  margin: 7px 0 7px 7px;
 }
 
 .headers-list {
-  font-size: 14px;
+  font-size: 17px;
   text-align: left;
 }
 
@@ -174,22 +176,6 @@
   margin: 3px 0px;
 }
 
-/* .main-link:hover + .sub-menu {
-    display: block;
-  } */
-
 .logout {
-  width: inherit;
-  padding: 12px 20px;
-  font-weight: 600;
-  font-size: 14px;
-  background-color: black;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  border: none;
-  position: absolute;
-  left: 0rem;
-  bottom: -30px;
-  /* height: 2.5rem; */
+  @include button-style;
 }
