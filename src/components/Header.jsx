@@ -73,27 +73,54 @@
 
 // export default Header;
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useRef } from 'react'
 
 // let profileData = localStorage.getItem("priyam-store") ?? [];
 // profileData = JSON.parse(profileData);
 // let profileName = profileData.name ?? 'User name';
+
 const navbarValuesArray = [
   {
-    ITEM: [{ 'Inventory': '/label' }, { 'Shortage Items': '/label' }, { 'Expired Items': '/label' }, { 'Item Labels': '/label' }]
+    ITEM: [{ name: 'Inventory', url: '/label', icon: 'images/inventory.svg' }, { name: 'Shortage Items', url: '/label', icon: 'images/shortage.svg' },
+    { name: 'Expired Items', url: '/label', icon: 'images/expired.svg' }, { name: 'Item Labels', url: '/label', icon: 'images/label.svg' }
+    ]
   },
-  { BILL: [{ 'All Bills': '/label' }, { 'Day Bills': '/label' }, { 'Reports': '/label' }] },
-  { STAFF: [{ 'Open Close': '/label' }, { 'Attendance': '/label' }, { 'Profile (New)': '/label' }] },
+  {
+    BILL: [{ name: 'All Bills', url: '/label', icon: 'images/bill.svg' }, { name: 'Day Bills', url: '/label', icon: 'images/dailybills.svg' },
+    { name: 'Reports', url: '/label', icon: 'images/report.svg' }
+    ]
+  },
+  {
+    STAFF: [{ name: 'Open Close', url: '/label', icon: 'images/openclose.svg' },
+    { name: 'Attendance', url: '/label', icon: 'images/attendance.svg' }, { name: 'Profile (New)', url: '/label', icon: 'images/profile.svg' }
+    ]
+  },
   {
     PURCHASE: [
-      { 'Purchase Order': '/label' },
-      { 'Saved POs': '/label' },
-      { 'Drafted POs': '/label' },
-      { 'Approved POs': '/label' },
-      { 'Rejected POs': '/label' }
+      { name: 'Purchase Order', url: '/label', icon: 'images/purchaseorder.svg' },
+      { name: 'Saved POs', url: '/label', icon: 'images/savedpurchaseorder.svg' },
+      { name: 'Drafted POs', url: '/label', icon: 'images/draftpurchaseorder.svg' },
+      { name: 'Approved POs', url: '/label', icon: 'images/approvedpurchaseorder.svg' },
+      { name: 'Rejected POs', url: '/label', icon: 'images/rejectpurchaseorder.svg' }
     ]
   }
-];
+]
+// const navbarValuesArray = [
+//   {
+//     ITEM: [{ 'Inventory': '/label' }, { 'Shortage Items': '/label' }, { 'Expired Items': '/label' }, { 'Item Labels': '/label' }]
+//   },
+//   { BILL: [{ 'All Bills': '/label' }, { 'Day Bills': '/label' }, { 'Reports': '/label' }] },
+//   { STAFF: [{ 'Open Close': '/label' }, { 'Attendance': '/label' }, { 'Profile (New)': '/label' }] },
+//   {
+//     PURCHASE: [
+//       { 'Purchase Order': '/label' },
+//       { 'Saved POs': '/label' },
+//       { 'Drafted POs': '/label' },
+//       { 'Approved POs': '/label' },
+//       { 'Rejected POs': '/label' }
+//     ]
+//   }
+// ];
 // const searchNavbarValues = (navbarValuesArray, searchTerm) => {
 //   return navbarValuesArray.filter(obj => {
 //     const [key, values] = Object.entries(obj)[0];
@@ -141,7 +168,8 @@ function Header() {
       <input type="text" name="search" id="search-input" placeholder='Search' />
       <button className="billing">Billing</button>
       <div>
-        <nav id="small-sidebar">
+        <div>
+          {/* <nav id="small-sidebar">
           <div style={{ display: "flex", flexDirection: "column", lineHeight: "2rem" }}>
             <div className='img-container'><img src="images/Billing.svg" width={10} height={10} alt="billing" title="Billing" /><span className='img-title'>Billing</span></div>
             <div className='img-container'><img src="images/inventory.svg" width={20} height={20} alt="inventory" title='Inventory' /><span className='img-title'>Inventory</span></div>
@@ -159,76 +187,54 @@ function Header() {
             <div className='img-container'><img src="images/approvedpurchaseorder.svg" width={20} height={20} alt="approvedpurchaseorder" /><span className='img-title'>Approved</span></div>
             <div className='img-container'><img src="images/rejectpurchaseorder.svg" width={20} height={20} alt="rejectpurchaseorder" /><span className='img-title'>Reject</span></div>
           </div>
-        </nav>
+        </nav> */}
+        </div>
         <nav id="sidebar">
           {/* <div style={{ width: "100%", marginTop: "2rem" }}>
             <input placeholder='search' className='search-bar' value={value} />
           </div> */}
           <ul className='list'>
-              {/* <li><a className="main-link billing " style={{ color: "white" }}>Billing</a></li> */}
-            {/* <li className='itempages' style={{marginTop:"3.5rem"}}>
-            <a  className="main-link headers" onClick={() => handleToggle("itemPages")}>ITEM</a>
-            <ul class="sub-menu" id="itemPages">
-              <li><a href="#Inventory" className='headers-list'>Inventory</a></li>
-              <li><a href="#Shortage Items" className='headers-list'>Shortage Items</a></li>
-              <li><a href="#Expired Items" className='headers-list'>Expired Items</a></li>
-              <li><a href="#Item Labels" className='headers-list'>Item Labels</a></li>
-            </ul>
-          </li>
-          <li>
-            <a  className="main-link headers" onClick={() => handleToggle("billPages")}>BILL</a>
-            <ul className="sub-menu" id="billPages">
-              <li><a href="#All Bills" className='headers-list'>All Bills</a></li>
-              <li><a href="#Day Bills" className='headers-list'>Day Bills</a></li>
-              <li><a href="#Reports" className='headers-list'>Reports</a></li>
-            </ul>
-          </li>
-          <li>
-            <a  className="main-link headers" onClick={() => handleToggle("staffPages")}>STAFF</a>
-            <ul class="sub-menu" id="staffPages">
-              <li><a href="#Open Close" className='headers-list'>Open Close</a></li>
-              <li><a href="#Attendance" className='headers-list'>Attendance</a></li>
-              <li><a href="#Profile (New)" className='headers-list'>Profile (New)</a></li>
-            </ul>
-          </li>
-          <li>
-            <a  className="main-link headers" onClick={() => handleToggle("purchasePages")}> PURCHASE</a>
-            <ul class="sub-menu" id="purchasePages">
-              <li><a href="#Purchase Order" className='headers-list'>Purchase Order</a></li>
-              <li><a href="#Saved POs" className='headers-list'>Saved POs</a></li>
-              <li><a href="#Drafted POs" className='headers-list'>Drafted POs</a></li>
-              <li><a href="#Approved POs" className='headers-list'>Approved POs</a></li>
-              <li><a href="#Rejected POs" className='headers-list'>Rejected POs</a></li>
-            </ul>
-          </li> */}
-            <div style={{ marginTop: "3.5rem" }}>
+
+            <div >
               {
-                navbarValuesArray.map(obj => {
-                  const [key, values] = Object.entries(obj)[0];
-                  return (
-                    <li >
-                      <a className="main-link headers" onClick={() => handleToggle(`${key}`)}>{key}</a>
-                      <ul className="sub-menu" id={key}>
-                        {
-                          values.map(value => {
-                            const [name, path] = Object.entries(value)[0];
-                            return (
-                              <li><a href={`${path}`} className='headers-list'>{name}</a></li>
-                            )
-                          })
-                        }
-                      </ul>
-                    </li>
-                  );
+                navbarValuesArray.map(item => {
+                  for (const key in item) {
+                    const value = item[key];
+                    return (
+                      <div >
+                        <p className="main-link headers" onClick={() => handleToggle(`${key}`)}>{key}</p>
+
+                        <div className="sub-menu">
+                          <ul id={key}>
+                            {
+                              value.map(subItem => {
+                                return (
+
+                                  <li>
+                                    <img src={`${subItem.icon}`} width={20} height={20} title={`${subItem.name}`} />
+                                    <a href={`${subItem.url}`} className='headers-list'>{subItem.name}</a>
+                                  </li>
+                                )
+                              })
+                            }
+                          </ul>
+                        </div>
+
+                      </div>
+
+                    )
+
+                  }
                 })
               }
             </div>
-            <div>
+            {/* <div>
               <li><a href="#contact" class="main-link logout " style={{ color: "white" }}> LOGOUT</a></li>
-            </div>
+            </div> */}
           </ul>
         </nav>
       </div>
+      <button className="logout">Logout</button>
     </div >
   )
 }

@@ -1,10 +1,11 @@
 #main-box-container {
   display: block;
-  width: 250px;
-  border: 2px solid red;
+  width: 200px;
+  // border: 2px solid red;
   height: 100vh;
   padding: 10px;
   background-color: #f5f5f5;
+  // overflow-y: scroll;
 }
 
 /* .hamburger {
@@ -29,6 +30,7 @@
 .profileName {
   display: flex;
   align-items: center;
+  // flex-direction: column;
   // border: 2px solid green;
 
   .hamburger-menu {
@@ -42,9 +44,10 @@
   }
 }
 
-#search-input{
+#search-input {
   padding: 8px 15px;
   margin: 10px 0;
+  width: 100%;
 }
 
 #sidebar {
@@ -52,14 +55,18 @@
   padding: 10px;
   z-index: 1;
 
-  .list{
-    .main-link.billing{
+  .list {
+    .main-link.billing {
       border: 5px solid red;
     }
   }
+
   /* overflow-y: scroll; */
 }
 
+// #sidebar::-webkit-scrollbar {
+//   display: none;
+// }
 .billing {
   width: 100%;
   padding: 12px 20px;
@@ -91,16 +98,25 @@
 
 #sidebar ul {
   list-style: none;
-  padding: 10px;
+  padding: 0px 0px 9px;
 }
 
 .list {
-  height: 90vh;
+  height: 78vh;
   /* overflow-y: scroll; */
+  // border: 5px solid blue;
+  overflow-y: scroll;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
 }
 
 #sidebar li {
   margin: 5px 0;
+  display: flex;
+  align-items: center;
+  // border: 2px solid blue;
 }
 
 #sidebar a {
@@ -108,6 +124,7 @@
   color: black;
   display: block;
   padding: 1px;
+  margin-left: 10px;
 }
 
 #sidebar a:hover {
@@ -115,10 +132,7 @@
 }
 
 .sub-menu {
-  /* display: none; */
-  background-color: antiquewhite;
-  /* height: 100px; */
-  /* overflow-y: scroll; */
+  margin-left: 10px;
 }
 
 #ITEM,
@@ -133,23 +147,13 @@
   padding: 5px;
 }
 
-.logout {
-  position: absolute;
-  background-color: #f5f5f5;
-  right: 0rem;
-  bottom: 0px;
-  width: 100%;
-  /* height: 2.5rem; */
-  font-weight: 600;
-  font-size: 14px;
-  background-color: black;
-  line-height: 3;
-  border-radius: 5px;
-}
+
 
 .headers {
-  font-size: 10px;
-  background-color: #FFFBF5;
+  font-size: 14px;
+  // background-color: #FFFBF5;
+  text-align: left;
+  cursor: pointer;
 }
 
 .headers-list {
@@ -167,8 +171,25 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  margin: 3px 0px;
 }
 
 /* .main-link:hover + .sub-menu {
     display: block;
   } */
+
+.logout {
+  width: inherit;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  background-color: black;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  border: none;
+  position: absolute;
+  left: 0rem;
+  bottom: -30px;
+  /* height: 2.5rem; */
+}
