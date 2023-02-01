@@ -1,27 +1,18 @@
-import { Grid } from '@mantine/core';
+import { Grid } from "@mantine/core";
 import React from "react";
 import ExpiredItemTable from "src/components/ExpiredItemTable";
-import '../CSS/expiredItem.css'
+
 const ExpiredItems = () => {
+  const dateIntervalArr = [1, 7, 15, 30];
 
   return (
-    <>
-      <Grid>
+    <Grid>
+      {dateIntervalArr.map((dayInterval) => (
         <Grid.Col sm={6} lg={6}>
-          <ExpiredItemTable header="1 day" />
+          <ExpiredItemTable day={dayInterval} />
         </Grid.Col>
-        <Grid.Col sm={6} lg={6}>
-          <ExpiredItemTable header="7 days" />
-        </Grid.Col>
-        <Grid.Col sm={6} lg={6}>
-          <ExpiredItemTable header="15 days" />
-        </Grid.Col>
-        <Grid.Col sm={6} lg={6}>
-          <ExpiredItemTable header="30 days" />
-        </Grid.Col>
-
-      </Grid>
-    </>
+      ))}
+    </Grid>
   );
 };
 

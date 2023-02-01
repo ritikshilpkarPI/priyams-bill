@@ -1,0 +1,45 @@
+.left-spacing {
+  margin-left: 1rem;
+}
+.outer-div {
+  max-height: 27rem;
+  max-width: 36rem;
+  margin: 0 auto;
+  overflow: scroll;
+
+  .table-scroll {
+    max-height: 27rem;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    .error {
+      position: relative;
+      left: 5rem;
+      top: 8rem;
+    }
+  }
+  .table-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .position-heading {
+    background-color: #7db3e2;
+  }
+  .date-margin {
+    margin: 1px;
+  }
+
+  .parent-datePicker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  th {
+    font-size: 1rem;
+  }
+
+  .mantine-Paper-root {
+    width: 30rem;
+  }
+}

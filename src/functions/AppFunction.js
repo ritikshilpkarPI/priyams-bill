@@ -9,7 +9,7 @@ const AppFunction = (history, location) => {
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
-  const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[2]);
+  const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
   const { name: staffName = "", username: staffUserName = "" } =
     JSON.parse(localStorage.getItem("priyam-store")) || {};
 
