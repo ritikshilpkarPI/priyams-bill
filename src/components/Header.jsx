@@ -74,11 +74,10 @@
 // export default Header;
 
 import React, { useState, useEffect } from 'react'
-import '../CSS/Header.css'
 
-let profileData = localStorage.getItem("priyam-store");
-profileData = JSON.parse(profileData);
-let profileName = profileData.name;
+// let profileData = localStorage.getItem("priyam-store") ?? [];
+// profileData = JSON.parse(profileData);
+// let profileName = profileData.name ?? 'User name';
 const navbarValuesArray = [
   {
     ITEM: [{ 'Inventory': '/label' }, { 'Shortage Items': '/label' }, { 'Expired Items': '/label' }, { 'Item Labels': '/label' }]
@@ -135,9 +134,12 @@ function Header() {
   return (
     <div id='main-box-container'>
       <div className='profileName'>
-        <img src="images/hamburger.svg" width={20} height={20} className='hamburger-menu' onClick={() => handleToggle("sidebar")} />
-        <h3>{profileName}</h3>
+        <img src="images/hamburger.svg" width={25} height={25} className='hamburger-menu' onClick={() => handleToggle("sidebar")} />
+        {/* <h3>{profileName}</h3> */}
+        <h3 className='user-name'>Sachin Rawat</h3>
       </div>
+      <input type="text" name="search" id="search-input" placeholder='Search' />
+      <button className="billing">Billing</button>
       <div>
         <nav id="small-sidebar">
           <div style={{ display: "flex", flexDirection: "column", lineHeight: "2rem" }}>
@@ -159,13 +161,11 @@ function Header() {
           </div>
         </nav>
         <nav id="sidebar">
-          <div style={{ width: "100%", marginTop: "2rem" }}>
+          {/* <div style={{ width: "100%", marginTop: "2rem" }}>
             <input placeholder='search' className='search-bar' value={value} />
-          </div>
+          </div> */}
           <ul className='list'>
-            <div>
-              <li><a className="main-link billing " style={{ color: "white" }}>Billing</a></li>
-            </div>
+              {/* <li><a className="main-link billing " style={{ color: "white" }}>Billing</a></li> */}
             {/* <li className='itempages' style={{marginTop:"3.5rem"}}>
             <a  className="main-link headers" onClick={() => handleToggle("itemPages")}>ITEM</a>
             <ul class="sub-menu" id="itemPages">
@@ -208,7 +208,7 @@ function Header() {
                   return (
                     <li >
                       <a className="main-link headers" onClick={() => handleToggle(`${key}`)}>{key}</a>
-                      <ul class="sub-menu" id={key}>
+                      <ul className="sub-menu" id={key}>
                         {
                           values.map(value => {
                             const [name, path] = Object.entries(value)[0];
