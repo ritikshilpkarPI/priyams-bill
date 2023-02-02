@@ -24,6 +24,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
 }
 
 .profileName {
@@ -156,6 +157,7 @@
   cursor: pointer;
   font-weight: 600;
   margin: 7px 0 7px 7px;
+  user-select: none;
 }
 
 .headers-list {
