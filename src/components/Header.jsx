@@ -33,10 +33,12 @@ const Header = () => {
 
   const history = useHistory()
 
+  // to remove sidebar while login page is open
   let location = useLocation();
   let path = location.pathname;
   path = path.split('/')[1];
 
+  //useref hooks for sidebar toggles
   const inputElem = useRef('')
   const liItem = useRef([])
   const profile = useRef('')

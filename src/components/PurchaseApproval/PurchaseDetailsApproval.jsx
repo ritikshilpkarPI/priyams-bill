@@ -27,6 +27,7 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrder
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
+      {/* permanently removed */}
       {/* <Select
         style={{ width: "200px", margin: "2vmin auto" }}
         label="Sort By"
