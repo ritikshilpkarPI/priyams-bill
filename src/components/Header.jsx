@@ -40,7 +40,7 @@ const Header = () => {
   const inputElem = useRef('')
   const liItem = useRef([])
   const profile=useRef('')
-  const mainCont=useRef('');
+  const mainContainer=useRef('');
 
   const setInputValue = (e) => {
     setValue(e.target.value);
@@ -56,14 +56,14 @@ const Header = () => {
   }
 
   const handleToggleOuterView = () => {
-    // console.log(mainCont.current.children)
+    // console.log(mainContainer.current.children)
     if (inputElem.current.style.display === "none") {
       inputElem.current.style.display = "block";
       profile.current.children[1].style.display="block";
       profile.current.children[2].style.display="none";
-      mainCont.current.style.width="300px";
-      mainCont.current.children[2].innerText="Billing";
-      mainCont.current.children[4].innerText="Logout";
+      mainContainer.current.style.width="300px";
+      mainContainer.current.children[2].innerText="Billing";
+      mainContainer.current.children[4].innerText="Logout";
 
 
       liItem.current.forEach(ele => {
@@ -78,9 +78,9 @@ const Header = () => {
       inputElem.current.style.display = "none"
       profile.current.children[1].style.display="none";
       profile.current.children[2].style.display="block";
-      mainCont.current.style.width="100px";
-      mainCont.current.children[2].innerText="B";
-      mainCont.current.children[4].innerText="L";
+      mainContainer.current.style.width="100px";
+      mainContainer.current.children[2].innerText="B";
+      mainContainer.current.children[4].innerText="L";
 
       liItem.current.forEach(ele => {
         ele.children[0].style.display="none";
@@ -91,7 +91,7 @@ const Header = () => {
     }
   }
   return (
-    <div id='main-box-container' ref={mainCont} style={{display:path==="login"?"none":"block"}}>
+    <div id='main-box-container' ref={mainContainer} style={{display:path==="login"?"none":"block"}}>
       <div className='profileName' ref={profile}>
         <img src="images/hamburger.svg" width={25} height={25} className='hamburger-menu' alt="" onClick={handleToggleOuterView} />
         <h3 className='user-name' >Sachin Rawat</h3>

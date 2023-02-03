@@ -94,19 +94,7 @@
   @include button-style;
 }
 
-#small-sidebar {
-  width: 90px;
-  position: fixed;
-  top: 2rem;
-  left: 0;
-  bottom: 0;
-  display: none;
-  padding: 20px;
-  z-index: 1;
-  overflow-y: scroll;
-}
 
-#small-sidebar::-webkit-scrollbar,
 .sidebar::-webkit-scrollbar {
   display: none;
 }
