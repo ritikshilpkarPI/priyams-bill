@@ -1,38 +1,41 @@
 import React, { useState } from "react";
 import PurchaseListApproval from "./PurchaseListApproval";
-import { Button, Select, Table } from "@mantine/core";
+import { Button, Table } from "@mantine/core";
 import '../../CSS/purchaseApproval.css'
 
 import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
 import ShowOrderDetailTable from "./ShowOrderDetailTable";
 import BillUploaderDetails from "./BillUploaderDetails";
 
-const manageList = [
-  { value: "all", label: "All orders" },
-  { value: "rejected", label: "Rejected orders" },
-  { value: "saved", label: "Saved orders" },
-]
-const adminList = [
-  { value: "all", label: "All orders" },
-  { value: "draft", label: "Draft orders" },
-  { value: "rejected", label: "Rejected orders" },
-  { value: "approved", label: "Approved orders" },
-  { value: "saved", label: "Saved orders" },
-] 
+// const manageList = [
+//   { value: "all", label: "All orders" },
+//   { value: "rejected", label: "Rejected orders" },
+//   { value: "saved", label: "Saved orders" },
+// ]
+// const adminList = [
+//   { value: "all", label: "All orders" },
+//   { value: "drafted", label: "Draft orders" },
+//   { value: "rejected", label: "Rejected orders" },
+//   { value: "approved", label: "Approved orders" },
+//   { value: "saved", label: "Saved orders" },
+// ] 
 const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrders}) => {
   const [indexDetail, setIndexDetail] = useState(-1);
-  const role = JSON.parse(localStorage.getItem("priyam-store")).role
- 
+  // const role = JSON.parse(localStorage.getItem("priyam-store")).role
+  
+  
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
-      <Select
+      {/* <Select
         style={{ width: "200px", margin: "2vmin auto" }}
         label="Sort By"
         placeholder="All orders"
         data={role === "admin" ? adminList : manageList}
+        // value={option.toLowerCase()}
+        // defaultValue={option.toLowerCase()}
         onChange={getOrders}
-      /> 
+      />  */}
 
       {allPurchaseList.length === 0
         ?

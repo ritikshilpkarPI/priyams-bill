@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { sidebarListData } from '../constants/HeaderTypes';
-import { Link , useHistory,useLocation} from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 const handleToggle = (id) => {
   let toggledElement = document.getElementById(`linkContainer${id}`);
@@ -35,12 +35,12 @@ const Header = () => {
 
   let location = useLocation();
   let path = location.pathname;
-  path=path.split('/')[1];
-  
+  path = path.split('/')[1];
+
   const inputElem = useRef('')
   const liItem = useRef([])
-  const profile=useRef('')
-  const mainContainer=useRef('');
+  const profile = useRef('')
+  const mainContainer = useRef('');
 
   const setInputValue = (e) => {
     setValue(e.target.value);
@@ -49,49 +49,48 @@ const Header = () => {
   useEffect(() => {
     setListItemsData(searchSidebarListData(value));
   }, [value])
-  
 
-  const goToBilling=()=>{
+
+  const goToBilling = () => {
     history.push('/billing');
   }
 
   const handleToggleOuterView = () => {
-    // console.log(mainContainer.current.children)
     if (inputElem.current.style.display === "none") {
       inputElem.current.style.display = "block";
-      profile.current.children[1].style.display="block";
-      profile.current.children[2].style.display="none";
-      mainContainer.current.style.width="300px";
-      mainContainer.current.children[2].innerText="Billing";
-      mainContainer.current.children[4].innerText="Logout";
+      profile.current.children[1].style.display = "block";
+      profile.current.children[2].style.display = "none";
+      mainContainer.current.style.width = "300px";
+      mainContainer.current.children[2].innerText = "Billing";
+      mainContainer.current.children[4].innerText = "Logout";
 
 
       liItem.current.forEach(ele => {
-        ele.children[0].style.display="block";
+        ele.children[0].style.display = "block";
         ele.children[1].childNodes.forEach(element => {
-          element.children[0].children[1].style.display="block";
+          element.children[0].children[1].style.display = "block";
 
         })
       })
     }
     else {
       inputElem.current.style.display = "none"
-      profile.current.children[1].style.display="none";
-      profile.current.children[2].style.display="block";
-      mainContainer.current.style.width="100px";
-      mainContainer.current.children[2].innerText="B";
-      mainContainer.current.children[4].innerText="L";
+      profile.current.children[1].style.display = "none";
+      profile.current.children[2].style.display = "block";
+      mainContainer.current.style.width = "100px";
+      mainContainer.current.children[2].innerText = "B";
+      mainContainer.current.children[4].innerText = "L";
 
       liItem.current.forEach(ele => {
-        ele.children[0].style.display="none";
+        ele.children[0].style.display = "none";
         ele.children[1].childNodes.forEach(element => {
-          element.children[0].children[1].style.display="none";
+          element.children[0].children[1].style.display = "none";
         })
       })
     }
   }
   return (
-    <div id='main-box-container' ref={mainContainer} style={{display:path==="login"?"none":"block"}}>
+    <div id='main-box-container' ref={mainContainer} style={{ display: path === "login" ? "none" : "block" }}>
       <div className='profileName' ref={profile}>
         <img src="images/hamburger.svg" width={25} height={25} className='hamburger-menu' alt="" onClick={handleToggleOuterView} />
         <h3 className='user-name' >Sachin Rawat</h3>
@@ -117,9 +116,15 @@ const Header = () => {
                   {itemValue.map((subItem, index) => {
                     return (
                       <li key={index} >
-                        <Link to={`${subItem.url}`} >
-                        <img src={`${subItem.icon}`} width={30} height={30} title={`${subItem.name}`} alt={`${subItem.name}`} />
-                        <p className='headers-list'>{subItem.name}</p>
+                        <Link
+                          // to={`${subItem.url}`}
+                          to={{
+                            pathname: `${subItem.url}`,
+                            search:`${subItem.url}`.split('/')[1]==="approval"?`?option=${subItem.name}`:""
+                          }}
+                        >
+                          <img src={`${subItem.icon}`} width={30} height={30} title={`${subItem.name}`} alt={`${subItem.name}`} />
+                          <p className='headers-list'>{subItem.name}</p>
                         </Link>
                       </li>
                     )
