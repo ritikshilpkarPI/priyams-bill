@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { sidebarListData } from '../constants/HeaderTypes';
-import { Link , useHistory} from 'react-router-dom';
+import { Link , useHistory,useLocation} from 'react-router-dom';
 
 const handleToggle = (id) => {
   let toggledElement = document.getElementById(`linkContainer${id}`);
@@ -33,10 +33,15 @@ const Header = () => {
 
   const history = useHistory()
 
+  let location = useLocation();
+  let path = location.pathname;
+  path=path.split('/')[1];
+  
   const inputElem = useRef('')
   const liItem = useRef([])
   const profile=useRef('')
   const mainCont=useRef('');
+
   const setInputValue = (e) => {
     setValue(e.target.value);
   }
@@ -51,7 +56,7 @@ const Header = () => {
   }
 
   const handleToggleOuterView = () => {
-    console.log(mainCont.current.children)
+    // console.log(mainCont.current.children)
     if (inputElem.current.style.display === "none") {
       inputElem.current.style.display = "block";
       profile.current.children[1].style.display="block";
@@ -86,7 +91,7 @@ const Header = () => {
     }
   }
   return (
-    <div id='main-box-container' ref={mainCont}>
+    <div id='main-box-container' ref={mainCont} style={{display:path==="login"?"none":"block"}}>
       <div className='profileName' ref={profile}>
         <img src="images/hamburger.svg" width={25} height={25} className='hamburger-menu' alt="" onClick={handleToggleOuterView} />
         <h3 className='user-name' >Sachin Rawat</h3>

@@ -19,7 +19,7 @@ function App({ history, location }) {
   return (
     <div className="App">
       <Header staffName={staffName} staffUserName={staffUserName} showBill={showBill} setValue={setValue} value={value} logoutUser={logoutUser} />
-      <StoreRoutes setLoaderDisplay={setLoaderDisplay} loaderDisplay={loaderDisplay} />
+      <StoreRoutes setLoaderDisplay={setLoaderDisplay} loaderDisplay={loaderDisplay}  style={{marginLeft:"100px"}}/>
       {/* <QRComp /> */}
     </div>
   );
