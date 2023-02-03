@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const quantityUnitNameEnum = ["kg", "grams", "liter", "ml", "piece"];
 const inventoryItemCategory = [
   "Bakery",
   "Beverage",
@@ -56,7 +55,7 @@ const ItemSchem = new mongoose.Schema(
         },
       },
     ],
-    quantityUnitName: { type: String, enum: quantityUnitNameEnum },
+    quantityUnitName: { type: String },
     gstPercentage: { type: Number },
     itemPerUnitQuantity: { type: Number, default: 0 },
   },
