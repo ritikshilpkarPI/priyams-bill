@@ -34,6 +34,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                     path="/showBill/:customerBillId"
                     component={CustomerBill}
                 />
+                <div style={{marginLeft:"100px"}}>
                 <ProtectedRoutes>
                     <Route
                         path="/billing"
@@ -65,6 +66,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                     <Route exact path="/expiredItems" component={ExpiredItems}/>
                     <Route exact path="/label" component={Label}/>
                 </ProtectedRoutes>
+                </div>
             </Switch>
         </Suspense>
     )

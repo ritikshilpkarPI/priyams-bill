@@ -1,0 +1,188 @@
+@mixin button-style {
+  width: 100%;
+  // padding: 13px 20px;
+  padding: 10px 10px;
+  font-weight: 600;
+  font-size: 14px;
+  background-color: black;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  border: 2px solid black;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: rgb(45, 44, 44);
+  }
+}
+
+#main-box-container {
+  // display: block;
+  width: 300px;
+  height: 100vh;
+  padding: 10px;
+  background-color: #f5f5f5;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.profileName {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+
+  .hamburger-menu {
+    cursor: pointer;
+    margin-left: 5px;
+  }
+
+  .user-name {
+    font-size: 22px;
+    text-align: center;
+    flex: 1;
+  }
+  .profile-avatar{
+    height: 40px;
+    width: 40px;
+    padding: 12px;
+    background-color:black;
+    color: white;
+    border-radius:100%;
+    margin-left: 10px;
+    display: none;
+  }
+}
+
+#search-input {
+  padding: 8px 10px;
+  margin: 10px 0;
+  width: 100%;
+  font-size: 16px;
+}
+
+.sidebar {
+  width: 100%;
+  z-index: 1;
+  overflow: scroll;
+  height: calc(100vh - 230px);
+  margin-top: 10px;
+
+  .links-container {
+    background-color: rgba(230, 230, 229, 0.7);
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+
+    &:nth-child(1) {
+      margin-top: 0;
+    }
+  }
+
+  .list {
+    .main-link.billing {
+      border: 5px solid red;
+    }
+  }
+}
+
+.billing-link{
+  text-decoration: none
+}
+.billing {
+  @include button-style;
+}
+
+
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.list {
+  height: 78vh;
+  overflow-y: scroll;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar li {
+  display: flex;
+  align-items: center;
+  padding: 7px;
+  border-radius: 4px;
+
+  a {
+    flex: 1;
+  }
+
+  &:hover {
+    background-color: #ddd;
+  }
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: black;
+  display: block;
+  padding: 1px;
+  // margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar a:hover {
+  background-color: #ddd;
+}
+
+.sub-menu {
+  margin-left: 10px;
+}
+
+#ITEM,
+#BILL,
+#STAFF,
+#PURCHASE {
+  display: block;
+}
+
+.search-bar {
+  width: inherit;
+  padding: 5px;
+}
+
+
+
+.headers {
+  font-size: 17px;
+  text-align: left;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 7px 0 7px 7px;
+  user-select: none;
+}
+
+.headers-list {
+  font-size: 17px;
+  text-align: left;
+  margin-left: 10px;
+}
+
+.img-title {
+  font-size: 12px;
+  position: relative;
+  right: 0.5rem;
+}
+
+.img-container {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  margin: 3px 0px;
+}
+
+.logout {
+  @include button-style;
+}

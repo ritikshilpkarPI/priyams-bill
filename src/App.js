@@ -1,9 +1,8 @@
 import "./CSS/App.scss";
 import { withRouter } from "react-router-dom";
-import AppFunction from './functions/AppFunction'
+import AppFunction from "./functions/AppFunction";
 import StoreRoutes from "./components/StoreRoutes";
 import Header from "./components/Header";
-
 
 function App({ history, location }) {
   const {
@@ -18,8 +17,21 @@ function App({ history, location }) {
   } = AppFunction(history, location);
   return (
     <div className="App">
-      <Header staffName={staffName} staffUserName={staffUserName} showBill={showBill} setValue={setValue} value={value} logoutUser={logoutUser} />
-      <StoreRoutes setLoaderDisplay={setLoaderDisplay} loaderDisplay={loaderDisplay} />
+      {staffUserName && (
+        <Header
+          staffName={staffName}
+          staffUserName={staffUserName}
+          showBill={showBill}
+          setValue={setValue}
+          value={value}
+          logoutUser={logoutUser}
+        />
+      )}
+      <StoreRoutes
+        setLoaderDisplay={setLoaderDisplay}
+        loaderDisplay={loaderDisplay}
+        style={{ marginLeft: "100px" }}
+      />
       {/* <QRComp /> */}
     </div>
   );
