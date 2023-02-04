@@ -27,8 +27,15 @@ function searchSidebarListData(searchTerm) {
   return results;
 }
 
-const Header = () => {
-  const [value, setValue] = useState("");
+const Header = ({
+  staffName,
+  staffUserName,
+  showBill,
+  setValue,
+  value,
+  logoutUser,
+}) => {
+  const [inputText, setInputText] = useState("");
   const [listItemsData, setListItemsData] = useState(sidebarListData);
 
   const history = useHistory();
@@ -44,12 +51,12 @@ const Header = () => {
   const mainContainer = useRef("");
 
   const setInputValue = (e) => {
-    setValue(e.target.value);
+    setInputText(e.target.value);
   };
 
   useEffect(() => {
-    setListItemsData(searchSidebarListData(value));
-  }, [value]);
+    setListItemsData(searchSidebarListData(inputText));
+  }, [inputText]);
 
   const goToBilling = () => {
     history.push("/billing");
@@ -101,8 +108,8 @@ const Header = () => {
           alt=""
           onClick={handleToggleOuterView}
         />
-        <h3 className="user-name">Sachin Rawat</h3>
-        <div className="profile-avatar">S</div>
+        <h3 className="user-name">{staffName}</h3>
+        <div className="profile-avatar">{staffName[0].toUpperCase()}</div>
       </div>
 
       {/* Search Input */}
@@ -112,7 +119,7 @@ const Header = () => {
         name="search"
         id="search-input"
         placeholder="Search"
-        value={value}
+        value={inputText}
         onChange={(e) => setInputValue(e)}
       />
 
@@ -171,7 +178,9 @@ const Header = () => {
       </nav>
 
       {/* Logout Button */}
-      <button className="logout">Logout</button>
+      <button className="logout" onClick={logoutUser}>
+        Logout
+      </button>
     </div>
   );
 };
