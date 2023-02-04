@@ -2,10 +2,9 @@ import React from "react";
 import { Group, Title, Select, Button } from "@mantine/core";
 import { useState } from "react";
 import Axios from "axios";
-import '../CSS/employeeAttendance.css'
+import "../CSS/employeeAttendance.css";
 const nameOptionAndValues = [
   { value: "anjali", label: "Anjali" },
-  { value: "naveen", label: "Naveen" },
   { value: "shivam", label: "Shivam" },
   { value: "shahbaz", label: "Shahbaz" },
   { value: "mohit", label: "Mohit" },
@@ -27,25 +26,23 @@ const EmployeeAttendance = () => {
   const handleAttendance = async () => {
     // Checks if the staff has marks the attendance for arrival and stops him
     // for doing it again.
-    
+
     const date = new Date();
     const dateString = date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "numeric",
       day: "numeric",
     });
-   
+
     // const attendee = JSON.parse(localStorage.getItem(name));
- 
-   
+
     if (!name) {
       alert("Select the name for attendance");
       return;
     } else if (state === "arrival" && attendance === "absent") {
       alert("You cannot mark absent for arrival");
       return;
-    } 
-    else if (attendance === "absent") {
+    } else if (attendance === "absent") {
       try {
         await Axios.request({
           url: `/api/attendance/markAbsent`,
@@ -83,8 +80,7 @@ const EmployeeAttendance = () => {
       }
     } else if (state === "leave") {
       try {
-        
-       let a = await Axios.request({
+        let a = await Axios.request({
           url: `/api/attendance/dailyAttendanceLeaving`,
           method: "post",
           data: {
@@ -92,20 +88,18 @@ const EmployeeAttendance = () => {
             date: dateString,
           },
         });
-       
-        if(a.status === 230){
-          alert(a.data.message)
-        } 
-        else {
-        alert(
-          `You have successfully marked the Leaving attendance for ${name} `
-        );
+
+        if (a.status === 230) {
+          alert(a.data.message);
+        } else {
+          alert(
+            `You have successfully marked the Leaving attendance for ${name} `
+          );
         }
       } catch (error) {
         console.error(error);
       }
-    } 
-    else {
+    } else {
       alert(`You need to add arriving Data first for ${name} `);
     }
     setName("");
@@ -135,7 +129,9 @@ const EmployeeAttendance = () => {
           onChange={(value) => setAttendance(value)}
           defaultValue={attendance}
         />
-        <Button class="attendance-button" onClick={handleAttendance}>Submit</Button>
+        <Button class="attendance-button" onClick={handleAttendance}>
+          Submit
+        </Button>
       </Group>
     </div>
   );
