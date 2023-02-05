@@ -1,5 +1,13 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input, Loader, Table, Text, TextInput } from "@mantine/core";
+import {
+  Button,
+  Input,
+  Loader,
+  Table,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import BillNarrator from "../components/BillNarrator";
@@ -222,7 +230,7 @@ async function addNewBill(
   });
   window.print();
   setApiLoading(false);
-  setBill(BILL_INITIAL_STATE)
+  setBill(BILL_INITIAL_STATE);
   itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
 }
 
@@ -542,169 +550,198 @@ const Billing = ({ billID = "", loaderDisplay }) => {
           </Button>
           <BillNarrator billTotal={bill.billAmountTotal} />
         </div>
-
-        <Table
-          horizontalSpacing="sm"
-          striped
-          highlightOnHover
-          className="bill-table"
+        <div
+          style={{
+            display: "flex",
+          }}
         >
-          <thead className="table-heading">
-            <tr>
-              <th>
-                <Text weight={700} color="black" size="lg">
-                  Sl. No.
-                </Text>
-              </th>
-              <th>
-                <Text weight={700} color="black" size="lg">
-                  Bar Code
-                </Text>
-              </th>
-              <th>
-                <Text
-                  weight={700}
-                  color="black"
-                  className="header-print-text"
-                  size="lg"
-                >
-                  Item
-                </Text>
-              </th>
-              <th>
-                <Text
-                  style={{ width: "100px" }}
-                  weight={700}
-                  color="black"
-                  size="lg"
-                  className="header-print-text"
-                >
-                  Qty.
-                </Text>
-              </th>
-              <th className="header-slab-price">
-                <Text
-                  style={{ width: "100px" }}
-                  weight={700}
-                  color="black"
-                  size="lg"
-                >
-                  Slab Prices
-                </Text>
-              </th>
-              <th>
-                <Text
-                  style={{ width: "100px" }}
-                  weight={700}
-                  color="black"
-                  size="lg"
-                  className="header-print-text"
-                >
-                  MRP
-                </Text>
-              </th>
-              <th>
-                <Text
-                  style={{ width: "100px" }}
-                  weight={700}
-                  color="black"
-                  size="lg"
-                  className="header-print-text"
-                >
-                  S.P
-                </Text>
-              </th>
-
-              <th>
-                <Text
-                  style={{ width: "100px" }}
-                  weight={700}
-                  color="black"
-                  size="lg"
-                  className="header-print-text"
-                >
-                  Total
-                </Text>
-              </th>
-            </tr>
-          </thead>
-          <tbody
-            style={{ display: loaderDisplay ? "none" : "" }}
-            className="body"
+          <Table
+            horizontalSpacing="sm"
+            striped
+            highlightOnHover
+            className="bill-table"
           >
-            <tr>
-              <td>
-                <Text color="black" weight={700}>
-                  {bill.billItems.length + 1}
-                </Text>
-              </td>
-              <td>
-                <Text color="black" weight={700}>
-                  <Input
-                    className="bill-input"
-                    ref={barRef}
-                    type="number"
-                    name="itemBarcode"
-                    value={inputValue.itemBarcode}
-                    onWheel={(e) => e.target.blur()}
-                    onChange={(e) => handleItemInputChange(e, setInputValue)}
-                    autoComplete="off"
-                  />
-                </Text>
-              </td>
-              <td>
-                <Text color="black" weight={700}>
-                  <Input
-                    className="bill-input"
-                    type="text"
-                    value={inputValue.itemName}
-                    name="itemName"
-                    placeholder="search here"
-                    autoComplete="off"
-                    onChange={(e) => {
-                      handleItemNameFilter(
-                        e,
-                        setInputValue,
-                        itemsList,
-                        setFilteredData
-                      );
-                      handleItemInputChange(e, setInputValue);
-                    }}
-                  />
-                </Text>
-                {inputValue.itemName && Boolean(filteredData.length) && (
-                  <div
-                    onClick={(e) => {
-                      if (itemsByName[e.target.innerText]) {
-                        let index;
-                        let itemDetail = itemsByName[e.target.innerText];
-                        bill.billItems.map((billItem) => {
-                          index = bill.billItems.findIndex(
-                            (a) => a._id === billItem._id
-                          );
-                          if (
-                            itemDetail.itemName === billItem.itemDetail.itemName
-                          ) {
-                            const updatedItem = {
-                              ...billItem,
-                              itemDetail: {
-                                ...billItem.itemDetail,
+            <thead className="table-heading">
+              <tr>
+                <th>
+                  <Text weight={700} color="black" size="lg">
+                    Sl. No.
+                  </Text>
+                </th>
+                <th>
+                  <Text weight={700} color="black" size="lg">
+                    Bar Code
+                  </Text>
+                </th>
+                <th>
+                  <Text
+                    weight={700}
+                    color="black"
+                    className="header-print-text"
+                    size="lg"
+                  >
+                    Item
+                  </Text>
+                </th>
+                <th>
+                  <Text
+                    style={{ width: "100px" }}
+                    weight={700}
+                    color="black"
+                    size="lg"
+                    className="header-print-text"
+                  >
+                    Qty.
+                  </Text>
+                </th>
+                <th className="header-slab-price">
+                  <Text
+                    style={{ width: "100px" }}
+                    weight={700}
+                    color="black"
+                    size="lg"
+                  >
+                    Slab Prices
+                  </Text>
+                </th>
+                <th>
+                  <Text
+                    style={{ width: "100px" }}
+                    weight={700}
+                    color="black"
+                    size="lg"
+                    className="header-print-text"
+                  >
+                    MRP
+                  </Text>
+                </th>
+                <th>
+                  <Text
+                    style={{ width: "100px" }}
+                    weight={700}
+                    color="black"
+                    size="lg"
+                    className="header-print-text"
+                  >
+                    S.P
+                  </Text>
+                </th>
+
+                <th>
+                  <Text
+                    style={{ width: "100px" }}
+                    weight={700}
+                    color="black"
+                    size="lg"
+                    className="header-print-text"
+                  >
+                    Total
+                  </Text>
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              style={{ display: loaderDisplay ? "none" : "" }}
+              className="body"
+            >
+              <tr>
+                <td>
+                  <Text color="black" weight={700}>
+                    {bill.billItems.length + 1}
+                  </Text>
+                </td>
+                <td>
+                  <Text color="black" weight={700}>
+                    <Input
+                      className="bill-input"
+                      ref={barRef}
+                      type="number"
+                      name="itemBarcode"
+                      value={inputValue.itemBarcode}
+                      onWheel={(e) => e.target.blur()}
+                      onChange={(e) => handleItemInputChange(e, setInputValue)}
+                      autoComplete="off"
+                    />
+                  </Text>
+                </td>
+                <td>
+                  <Text color="black" weight={700}>
+                    <Input
+                      className="bill-input"
+                      type="text"
+                      value={inputValue.itemName}
+                      name="itemName"
+                      placeholder="search here"
+                      autoComplete="off"
+                      onChange={(e) => {
+                        handleItemNameFilter(
+                          e,
+                          setInputValue,
+                          itemsList,
+                          setFilteredData
+                        );
+                        handleItemInputChange(e, setInputValue);
+                      }}
+                    />
+                  </Text>
+                  {inputValue.itemName && Boolean(filteredData.length) && (
+                    <div
+                      onClick={(e) => {
+                        if (itemsByName[e.target.innerText]) {
+                          let index;
+                          let itemDetail = itemsByName[e.target.innerText];
+                          bill.billItems.map((billItem) => {
+                            index = bill.billItems.findIndex(
+                              (a) => a._id === billItem._id
+                            );
+                            if (
+                              itemDetail.itemName ===
+                              billItem.itemDetail.itemName
+                            ) {
+                              const updatedItem = {
+                                ...billItem,
+                                itemDetail: {
+                                  ...billItem.itemDetail,
+                                  itemQuantityInBill:
+                                    billItem.itemQuantityInBill + 1,
+                                },
                                 itemQuantityInBill:
                                   billItem.itemQuantityInBill + 1,
-                              },
-                              itemQuantityInBill:
-                                billItem.itemQuantityInBill + 1,
-                            };
-                            bill.billItems.splice(index, 1);
-                            setBill((prev) => ({
-                              totalNumberOfItems: prev.totalNumberOfItems + 1,
-                              ...prev,
-                              billItems: [updatedItem, ...prev.billItems],
-                            }));
-                          } else if (
-                            index ===
-                            bill.totalNumberOfUniqueItems - 1
-                          ) {
+                              };
+                              bill.billItems.splice(index, 1);
+                              setBill((prev) => ({
+                                totalNumberOfItems: prev.totalNumberOfItems + 1,
+                                ...prev,
+                                billItems: [updatedItem, ...prev.billItems],
+                              }));
+                            } else if (
+                              index ===
+                              bill.totalNumberOfUniqueItems - 1
+                            ) {
+                              setBill((prev) => ({
+                                ...prev,
+                                billItems: [
+                                  {
+                                    itemDetail,
+                                    itemQuantityInBill:
+                                      itemDetail.itemQuantityInBill,
+                                    itemMRPtotal: Number(
+                                      itemDetail.itemMRPperUnit
+                                    ),
+                                    itemDiscountTotal:
+                                      itemDetail.itemDiscountPerUnit,
+                                    itemSellingPriceTotal: Number(
+                                      itemDetail.itemSellingPricePerUnit
+                                    ),
+                                    _id: itemDetail._id,
+                                  },
+                                  ...prev.billItems,
+                                ],
+                              }));
+                            }
+                            return <></>;
+                          });
+                          if (bill.totalNumberOfItems === 0) {
                             setBill((prev) => ({
                               ...prev,
                               billItems: [
@@ -726,368 +763,327 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               ],
                             }));
                           }
-                          return <></>;
-                        });
-                        if (bill.totalNumberOfItems === 0) {
-                          setBill((prev) => ({
-                            ...prev,
-                            billItems: [
-                              {
-                                itemDetail,
-                                itemQuantityInBill:
-                                  itemDetail.itemQuantityInBill,
-                                itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-                                itemDiscountTotal:
-                                  itemDetail.itemDiscountPerUnit,
-                                itemSellingPriceTotal: Number(
-                                  itemDetail.itemSellingPricePerUnit
-                                ),
-                                _id: itemDetail._id,
-                              },
-                              ...prev.billItems,
-                            ],
-                          }));
+                          setInputValue(INPUT_INITIAL_STATE);
+                          setFilteredData([]);
                         }
-                        setInputValue(INPUT_INITIAL_STATE);
-                        setFilteredData([]);
-                      }
-                    }}
-                    className="data-result"
-                    style={{ minWidth: "fit-content" }}
+                      }}
+                      className="data-result"
+                      style={{ minWidth: "fit-content" }}
+                    >
+                      <Table style={{ backgroundColor: "white" }}>
+                        <thead>
+                          <td>Barcode</td>
+                          <td>Name</td>
+                          <td>MRP</td>
+                        </thead>
+                        <tbody>
+                          {filteredData.map((value, key) => {
+                            return (
+                              <tr
+                                key={key}
+                                style={{
+                                  padding: "5px",
+                                  fontSize: "16px",
+                                  fontStyle: "bold",
+                                  cursor: "pointer",
+                                }}
+                                className="show-data"
+                              >
+                                <td>{value.itemBarcode}</td>
+                                <td>{value.itemName}</td>
+                                <td>{value.itemMRPperUnit}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </div>
+                  )}
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              {bill.billItems.map((item, idx) => {
+                const itemObj = { ...item.itemDetail, ...item };
+                return (
+                  <tr
+                    className="bill-item-row"
+                    key={`${idx}${itemObj["itemName"]}`}
                   >
-                    <Table style={{ backgroundColor: "white" }}>
-                      <thead>
-                        <td>Barcode</td>
-                        <td>Name</td>
-                        <td>MRP</td>
-                      </thead>
-                      <tbody>
-                        {filteredData.map((value, key) => {
+                    <td className="idx">
+                      <Text color="black" weight={700} size="lg">
+                        {idx + 1}
+                      </Text>
+                    </td>
+                    <td className="itemBarcode">
+                      {itemObj["itemBarcode"] && (
+                        <Text color="black" weight={700} size="lg">
+                          {itemObj["itemBarcode"]}
+                        </Text>
+                      )}
+                    </td>
+                    <td className="itemName">
+                      <Text
+                        className="print-text"
+                        color="black"
+                        weight={700}
+                        size="xl"
+                      >
+                        {itemObj["itemName"]}
+                      </Text>
+                    </td>
+                    <td className="itemQuantityInBill">
+                      <QuantBtn
+                        itemObj={itemObj}
+                        idx={idx}
+                        bill={bill}
+                        setBill={setBill}
+                      />
+                    </td>
+                    <td className="slabPricing">
+                      <div>
+                        {itemObj.slabPricing?.map((item, index) => {
                           return (
-                            <tr
-                              key={key}
-                              style={{
-                                padding: "5px",
-                                fontSize: "16px",
-                                fontStyle: "bold",
-                                cursor: "pointer",
-                              }}
-                              className="show-data"
-                            >
-                              <td>{value.itemBarcode}</td>
-                              <td>{value.itemName}</td>
-                              <td>{value.itemMRPperUnit}</td>
-                            </tr>
+                            <div key={index} style={{ display: "flex" }}>
+                              <input
+                                type="number"
+                                style={{
+                                  width: "40px",
+                                  textAlign: "center",
+                                  border: "none",
+                                  outline: "none",
+                                }}
+                                value={item[1]}
+                                disabled
+                              />{" "}
+                              -
+                              <input
+                                type="number"
+                                style={{
+                                  width: "40px",
+                                  textAlign: "center",
+                                  border: "none",
+                                  outline: "none",
+                                }}
+                                disabled
+                                defaultValue={
+                                  index !== itemObj.slabPricing.length - 1
+                                    ? Number(
+                                        itemObj.slabPricing[index + 1][1]
+                                      ) - 1
+                                    : ""
+                                }
+                              />{" "}
+                              =
+                              <input
+                                type="number"
+                                style={{
+                                  width: "40px",
+                                  textAlign: "center",
+                                  border: "none",
+                                  outline: "none",
+                                }}
+                                value={item[2]}
+                                disabled
+                              />
+                            </div>
                           );
                         })}
-                      </tbody>
-                    </Table>
-                  </div>
-                )}
-              </td>
-              <td>
-                <Text color="black" weight={700}>
-                  <Input
-                    style={{ width: "90px" }}
-                    className="bill-input"
-                    type="number"
-                    placeholder="itemQuantityInBill"
-                    name="itemQuantityInBill"
-                    onChange={(e) => handleItemInputChange(e, setInputValue)}
-                    onWheel={(e) => e.target.blur()}
-                    value={inputValue.itemQuantityInBill}
-                  />
-                </Text>
-              </td>
-              <td></td>
-              <td>
-                <Text color="black" weight={700}>
-                  <Input
-                    style={{ width: "90px" }}
-                    className="bill-input"
-                    type="number"
-                    placeholder="itemMRPperUnit"
-                    name="itemMRPperUnit"
-                    onWheel={(e) => e.target.blur()}
-                    onChange={(e) => handleItemInputChange(e, setInputValue)}
-                    value={inputValue.itemMRPperUnit}
-                  />
-                </Text>
-              </td>
-              <td>
-                <Text color="black" weight={700}>
-                  <Input
-                    style={{ width: "90px" }}
-                    className="bill-input"
-                    type="number"
-                    name="itemSellingPricePerUnit"
-                    placeholder="selling price"
-                    onChange={(e) => handleItemInputChange(e, setInputValue)}
-                    onWheel={(e) => e.target.blur()}
-                    value={inputValue.itemSellingPricePerUnit}
-                  />
-                </Text>
-              </td>
-              <td></td>
-              <td>
-                <Button
-                  disabled={
-                    !(inputValue.itemName && inputValue.itemSellingPricePerUnit)
-                  }
-                  onClick={(e) =>
-                    addItemToBill(
-                      e,
-                      inputValue,
-                      itemsByName,
-                      setBill,
-                      setInputValue,
-                      INPUT_INITIAL_STATE
-                    )
-                  }
-                >
-                  ADD ITEM
-                </Button>
-              </td>
-            </tr>
-            {bill.billItems.map((item, idx) => {
-              const itemObj = { ...item.itemDetail, ...item };
-              return (
-                <tr
-                  className="bill-item-row"
-                  key={`${idx}${itemObj["itemName"]}`}
-                >
-                  <td className="idx">
-                    <Text color="black" weight={700} size="lg">
-                      {idx + 1}
-                    </Text>
-                  </td>
-                  <td className="itemBarcode">
-                    {itemObj["itemBarcode"] && (
-                      <Text color="black" weight={700} size="lg">
-                        {itemObj["itemBarcode"]}
+                      </div>
+                    </td>
+                    <td className="itemMRPperUnit">
+                      <Text
+                        className="print-text"
+                        color="black"
+                        weight={700}
+                        size="xl"
+                      >
+                        {itemObj["itemMRPperUnit"]}
                       </Text>
-                    )}
-                  </td>
-                  <td className="itemName">
+                    </td>
+                    <td className="itemSellingPricePerUnit">
+                      <Text
+                        className="print-text"
+                        color="black"
+                        weight={700}
+                        size="xl"
+                      >
+                        <ItemPrice item={itemObj} index={idx} />
+                      </Text>
+                    </td>
+
+                    <td className="itemTotal">
+                      <Text
+                        className="print-text"
+                        color="black"
+                        weight={700}
+                        size="xl"
+                      >
+                        {itemObj["itemSellingPricePerUnit"] *
+                          itemObj["itemQuantityInBill"]}
+                      </Text>
+                    </td>
+                    <td className="last-clmn">
+                      <Button
+                        className="delete-btn"
+                        onClick={() => {
+                          const newBill = [...bill.billItems];
+                          newBill.splice(idx, 1);
+                          setBill({ ...bill, billItems: [...newBill] });
+                        }}
+                      >
+                        X
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Text
+              color="blue"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+              td="underline"
+            >
+              Bill Total: {bill?.billAmountTotal?.toFixed(2)}
+            </Text>
+            <div className="discount-line">
+              <Text
+                className="discount-text"
+                size="xl"
+                color="green"
+                weight={700}
+              >
+                You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP
+              </Text>
+            </div>
+            <Table>
+              <tbody>
+                <tr className="final-bill">
+                  {/* <td className="empty-slots"></td>
+                <td className="empty-slots"></td>
+                <td className="empty-slots"></td> */}
+                  <td>
                     <Text
-                      className="print-text"
                       color="black"
-                      weight={700}
                       size="xl"
+                      weight={800}
+                      className="final-bill-text print-text"
                     >
-                      {itemObj["itemName"]}
+                      Total Items: {bill?.totalNumberOfItems?.toFixed(2)}
                     </Text>
                   </td>
-                  <td className="itemQuantityInBill">
-                    <QuantBtn
-                      itemObj={itemObj}
-                      idx={idx}
-                      bill={bill}
-                      setBill={setBill}
+                  <td>
+                    <Text
+                      color="black"
+                      size="xl"
+                      weight={800}
+                      className="final-bill-text print-text"
+                    >
+                      MRP Total: {bill?.billMRPTotal?.toFixed(2)}
+                    </Text>
+                  </td>
+                  {/* <td>
+                  <Text
+                    color="black"
+                    size="xl"
+                    weight={800}
+                    className="final-bill-text print-text"
+                  >
+                    Bill Total: {bill?.billAmountTotal?.toFixed(2)}
+                  </Text>
+                </td> */}
+                </tr>
+                <tr className="final-bill">
+                  {/* <td className="empty-slots"></td>
+                <td className="empty-slots"></td>
+                <td className="empty-slots"></td> */}
+                  <td>
+                    <Text
+                      color="black"
+                      size="xl"
+                      weight={800}
+                      className="final-bill-text print-text"
+                    >
+                      Cash Paid: {bill.cashPay}
+                    </Text>
+                    <Input
+                      style={{ width: "90px" }}
+                      type="number"
+                      invalid={bill.amountReturn < 0}
+                      value={bill.cashPay}
+                      onChange={(e) =>
+                        setBill((prev) => ({
+                          ...prev,
+                          cashPay: Number(e.target.value),
+                        }))
+                      }
+                      className="quantity-input"
+                      onWheel={(e) => e.target.blur()}
                     />
                   </td>
-                  <td className="slabPricing">
-                    <div>
-                      {itemObj.slabPricing?.map((item, index) => {
-                        return (
-                          <div key={index} style={{ display: "flex" }}>
-                            <input
-                              type="number"
-                              style={{
-                                width: "40px",
-                                textAlign: "center",
-                                border: "none",
-                                outline: "none",
-                              }}
-                              value={item[1]}
-                              disabled
-                            />{" "}
-                            -
-                            <input
-                              type="number"
-                              style={{
-                                width: "40px",
-                                textAlign: "center",
-                                border: "none",
-                                outline: "none",
-                              }}
-                              disabled
-                              defaultValue={
-                                index !== itemObj.slabPricing.length - 1
-                                  ? Number(itemObj.slabPricing[index + 1][1]) -
-                                  1
-                                  : ""
-                              }
-                            />{" "}
-                            =
-                            <input
-                              type="number"
-                              style={{
-                                width: "40px",
-                                textAlign: "center",
-                                border: "none",
-                                outline: "none",
-                              }}
-                              value={item[2]}
-                              disabled
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </td>
-                  <td className="itemMRPperUnit">
+                  <td>
                     <Text
-                      className="print-text"
                       color="black"
-                      weight={700}
                       size="xl"
+                      weight={800}
+                      className="final-bill-text print-text"
                     >
-                      {itemObj["itemMRPperUnit"]}
+                      Upi Paid: {bill.upiPay}
                     </Text>
+                    <Input
+                      style={{ width: "90px" }}
+                      type="number"
+                      invalid={bill.amountReturn < 0}
+                      value={bill.upiPay}
+                      onChange={(e) =>
+                        setBill((prev) => ({
+                          ...prev,
+                          upiPay: Number(e.target.value),
+                        }))
+                      }
+                      className="quantity-input"
+                      onWheel={(e) => e.target.blur()}
+                    />
                   </td>
-                  <td className="itemSellingPricePerUnit">
+                  {/* <td>
                     <Text
-                      className="print-text"
                       color="black"
-                      weight={700}
                       size="xl"
+                      weight={800}
+                      className="final-bill-text print-text"
                     >
-                      <ItemPrice item={itemObj} index={idx} />
+                      Amount Return: {Number(bill.amountReturn || 0)}
                     </Text>
-                  </td>
-
-                  <td className="itemTotal">
-                    <Text
-                      className="print-text"
-                      color="black"
-                      weight={700}
-                      size="xl"
-                    >
-                      {itemObj["itemSellingPricePerUnit"] *
-                        itemObj["itemQuantityInBill"]}
-                    </Text>
-                  </td>
-                  <td className="last-clmn">
-                    <Button
-                      className="delete-btn"
-                      onClick={() => {
-                        const newBill = [...bill.billItems];
-                        newBill.splice(idx, 1);
-                        setBill({ ...bill, billItems: [...newBill] });
-                      }}
-                    >
-                      X
-                    </Button>
-                  </td>
+                  </td> */}
                 </tr>
-              );
-            })}
-            <tr className="final-bill">
-              <td className="empty-slots"></td>
-              <td className="empty-slots"></td>
-              <td className="empty-slots"></td>
-              <td>
-                <Text
-                  color="black"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                >
-                  Total Items: {bill?.totalNumberOfItems?.toFixed(2)}
-                </Text>
-              </td>
-              <td>
-                <Text
-                  color="black"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                >
-                  MRP Total: {bill?.billMRPTotal?.toFixed(2)}
-                </Text>
-              </td>
-              <td>
-                <Text
-                  color="black"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                >
-                  Bill Total: {bill?.billAmountTotal?.toFixed(2)}
-                </Text>
-              </td>
-            </tr>
-            <tr className="final-bill">
-              <td className="empty-slots"></td>
-              <td className="empty-slots"></td>
-              <td className="empty-slots"></td>
-              <td>
-                <Text
-                  color="black"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                >
-                  Cash Paid: {bill.cashPay}
-                </Text>
-                <Input
-                  style={{ width: "90px" }}
-                  type="number"
-                  invalid={bill.amountReturn < 0}
-                  value={bill.cashPay}
-                  onChange={(e) =>
-                    setBill((prev) => ({
-                      ...prev,
-                      cashPay: Number(e.target.value),
-                    }))
-                  }
-                  className="quantity-input"
-                  onWheel={(e) => e.target.blur()}
-                />
-              </td>
-              <td>
-                <Text
-                  color="black"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                >
-                  Upi Paid: {bill.upiPay}
-                </Text>
-                <Input
-                  style={{ width: "90px" }}
-                  type="number"
-                  invalid={bill.amountReturn < 0}
-                  value={bill.upiPay}
-                  onChange={(e) =>
-                    setBill((prev) => ({
-                      ...prev,
-                      upiPay: Number(e.target.value),
-                    }))
-                  }
-                  className="quantity-input"
-                  onWheel={(e) => e.target.blur()}
-                />
-              </td>
-              <td>
-                <Text
-                  color="black"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                >
-                  Amount Return: {Number(bill.amountReturn || 0)}
-                </Text>
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-        <div className="discount-line">
+              </tbody>
+            </Table>
+            <Text
+              color="black"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+            >
+              Amount Return: {Number(bill.amountReturn || 0)}
+            </Text>
+          </div>
+        </div>
+        {/* <div className="discount-line">
           <Text className="discount-text" size="xl" color="black" weight={700}>
             You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP
           </Text>
-        </div>
+        </div> */}
         <div
           style={{
             display: loaderDisplay ? "flex" : "none",

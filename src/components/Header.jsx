@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { sidebarListData } from "../constants/HeaderTypes";
 import { Link, useHistory, useLocation } from "react-router-dom";
+import "../CSS/_header.scss";
 
 const handleToggle = (id) => {
   let toggledElement = document.getElementById(`linkContainer${id}`);
@@ -95,9 +96,9 @@ const Header = ({
   };
   return (
     <div
-      id="main-box-container"
+      className="main-box-container"
       ref={mainContainer}
-      style={{ display: path === "login" ? "none" : "block" }}
+      // style={{ display: path === "login" ? "none" : "block" }}
     >
       <div className="profileName" ref={profile}>
         <img

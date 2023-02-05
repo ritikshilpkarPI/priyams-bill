@@ -1,3 +1,9 @@
+@media print {
+  .main-box-container {
+    display: none;
+  }
+}
+
 @mixin button-style {
   width: 100%;
   // padding: 13px 20px;
@@ -16,8 +22,7 @@
   }
 }
 
-#main-box-container {
-  // display: block;
+.main-box-container {
   width: 300px;
   height: 100vh;
   padding: 10px;
@@ -43,13 +48,13 @@
     text-align: center;
     flex: 1;
   }
-  .profile-avatar{
+  .profile-avatar {
     height: 40px;
     width: 40px;
     padding: 12px;
-    background-color:black;
+    background-color: black;
     color: white;
-    border-radius:100%;
+    border-radius: 100%;
     margin-left: 10px;
     display: none;
   }
@@ -87,13 +92,12 @@
   }
 }
 
-.billing-link{
-  text-decoration: none
+.billing-link {
+  text-decoration: none;
 }
 .billing {
   @include button-style;
 }
-
 
 .sidebar::-webkit-scrollbar {
   display: none;
@@ -152,8 +156,6 @@
   width: inherit;
   padding: 5px;
 }
-
-
 
 .headers {
   font-size: 17px;
