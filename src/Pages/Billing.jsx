@@ -1,13 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Input,
-  Loader,
-  Table,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Button, Input, Loader, Table, Text, TextInput } from "@mantine/core";
 import { AppStateContext } from "../AppState/appState.context";
 import { Axios } from "../utils/axios";
 import BillNarrator from "../components/BillNarrator";
@@ -239,38 +231,38 @@ function handleItemInputChange(event, setInputValue) {
   setInputValue((prevState) => ({ ...prevState, [name]: value }));
 }
 
-function addItemToBill(
-  event,
-  inputValue,
-  itemsByName,
-  setBill,
-  setInputValue,
-  INPUT_INITIAL_STATE
-) {
-  event.preventDefault();
-  const itemDetail = {
-    ...inputValue,
-    itemDiscountPerUnit: inputValue.itemMRPperUnit
-      ? inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit
-      : 0,
-  };
+// function addItemToBill(
+//   event,
+//   inputValue,
+//   itemsByName,
+//   setBill,
+//   setInputValue,
+//   INPUT_INITIAL_STATE
+// ) {
+//   event.preventDefault();
+//   const itemDetail = {
+//     ...inputValue,
+//     itemDiscountPerUnit: inputValue.itemMRPperUnit
+//       ? inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit
+//       : 0,
+//   };
 
-  itemsByName[inputValue.itemName] = { ...itemDetail };
-  setBill((prev) => ({
-    ...prev,
-    billItems: [
-      {
-        itemDetail,
-        itemQuantityInBill: itemDetail.itemQuantityInBill,
-        itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-        itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-        itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-      },
-      ...prev.billItems,
-    ],
-  }));
-  setInputValue(INPUT_INITIAL_STATE);
-}
+//   itemsByName[inputValue.itemName] = { ...itemDetail };
+//   setBill((prev) => ({
+//     ...prev,
+//     billItems: [
+//       {
+//         itemDetail,
+//         itemQuantityInBill: itemDetail.itemQuantityInBill,
+//         itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+//         itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+//         itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+//       },
+//       ...prev.billItems,
+//     ],
+//   }));
+//   setInputValue(INPUT_INITIAL_STATE);
+// }
 
 function handleItemNameFilter(
   event,
