@@ -12,7 +12,7 @@
     "start": "cross-env ENV_NAME=dev npm-run-all --parallel start:server start:app",
     "client": "react-scripts start",
     "server": "netlify-lambda serve server -t 900",
-    "build": "npm run build:functions & npm run build:app",
+    "build": "npm run build:functions && npm run build:app",
     "build:app": "react-scripts build",
     "debug": "netlify dev --inspect",
     "build:functions": "netlify-lambda build server",
