@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import { parse } from "json2csv";
 import { VariableSizeList as List } from "react-window";
+import { useHistory } from "react-router-dom";
 import {
   FileButton,
   Button,
@@ -73,6 +74,8 @@ const ItemsList = () => {
   const inputTable = useRef();
   const [tableWidth, setTableWidth] = useState();
   const [useByDateData, setuseByDateData] = useState([]);
+
+  const history = useHistory();
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -969,6 +972,12 @@ const ItemsList = () => {
     );
   };
 
+  const goToPerItemListPurchaseOrder = ({index})=>{
+    console.log('checking',index);
+    let itemname=items[index].itemName
+    console.log(itemname)
+    history.push(`/inventory/${itemname}`);
+  }
   const rows = ({ index, style }) => {
     return (
       <tr
@@ -986,6 +995,7 @@ const ItemsList = () => {
         </td>
         <td>
           <ItemNameRow style={style} index={index} />
+          
         </td>
         <td>
           <ItemCategoryRow style={style} index={index} />
@@ -1020,6 +1030,10 @@ const ItemsList = () => {
         <td style={{ display: "flex" }}>
           <ItemUpdateButtonRow index={index} />
           <ItemSoftDeleteButtonRow index={index} />
+        </td>
+        {/* Button to go its purchase order */}
+        <td>
+          <Button onClick={()=>goToPerItemListPurchaseOrder({index})}>Check List</Button>
         </td>
       </tr>
     );
@@ -1514,6 +1528,9 @@ const ItemsList = () => {
               </th>
               <th>
                 <Text>Update Button</Text>
+              </th>
+              <th>
+                <Text>Go to its Purchase Order</Text>
               </th>
             </tr>
           </thead>

@@ -230,6 +230,30 @@ const getOrdersByQuery = async (req, res) => {
     res.status(400).send({ message: err });
   }
 }
+
+const getIndividualPurchaseOrder=async(req,res)=>{
+  const { id } = req.params;
+  const perItemPurchaseOrder = PurchaseOrder.aggregate([
+    {
+      $unwind: "$purchasedItems",
+    },
+    {
+      $match: { "purchasedItems.inputName": id },
+    },
+    {
+      $group: {
+        _id: "$dealerName",
+        itemDetails: { $push: "$purchasedItems" },
+      },
+    },
+    {
+      $sort: { "itemDetails.expiryDates.date": 1 },
+    },
+  ]);
+
+  const result = await perItemPurchaseOrder.exec();
+  return res.status(200).json({ message: {result} });
+}
 module.exports = {
   addOrder,
   getOrders,
@@ -240,5 +264,6 @@ module.exports = {
   updateSavedOrders,
   deleteOrderItemById,
   updateOrderByIndex,
-  getOrdersByQuery
+  getOrdersByQuery,
+  getIndividualPurchaseOrder
 };
