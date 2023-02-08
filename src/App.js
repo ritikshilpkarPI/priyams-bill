@@ -32,6 +32,7 @@ function App({ history, location }) {
         loaderDisplay={loaderDisplay}
         style={{ marginLeft: "100px" }}
       />
+
       {/* <QRComp /> */}
     </div>
   );
