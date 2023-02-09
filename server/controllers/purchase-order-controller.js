@@ -233,6 +233,7 @@ const getOrdersByQuery = async (req, res) => {
 
 const getIndividualPurchaseOrder=async(req,res)=>{
   const { id } = req.params;
+  const response = await PurchaseOrder.find({}).limit(2);
   const perItemPurchaseOrder = PurchaseOrder.aggregate([
     {
       $unwind: "$purchasedItems",
@@ -243,6 +244,7 @@ const getIndividualPurchaseOrder=async(req,res)=>{
     {
       $group: {
         _id: "$dealerName",
+        dealerId: { $first: "$_id" },
         itemDetails: { $push: "$purchasedItems" },
       },
     },
@@ -252,6 +254,7 @@ const getIndividualPurchaseOrder=async(req,res)=>{
   ]);
 
   const result = await perItemPurchaseOrder.exec();
+  console.log(response);
   return res.status(200).json({ message: {result} });
 }
 module.exports = {

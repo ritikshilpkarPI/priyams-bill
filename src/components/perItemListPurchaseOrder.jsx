@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Axios } from "src/utils/axios";
-import { Table, Loader } from '@mantine/core';
-
+import { Table, Loader,Button } from '@mantine/core';
+import { Link } from "react-router-dom";
 const PerItemListPurchaseOrder = () => {
     const [response, setResponse] = useState([]);
     const [loader, setLoader] = useState(false);
@@ -28,7 +28,7 @@ const PerItemListPurchaseOrder = () => {
 
         ItemsData()
 
-    },[id])
+    }, [id])
     console.log(response);
     return (
         <div>
@@ -47,20 +47,22 @@ const PerItemListPurchaseOrder = () => {
             ) : (
                 <>
                     <h1>Purchase Order Details for {id}</h1>
-                    <Table striped highlightOnHover withBorder withColumnBorders>
+                    <Table striped highlightOnHover withBorder withColumnBorders style={{width:"auto"}}>
                         <thead>
                             <tr>
                                 <th>Category</th>
                                 <th>Brand</th>
                                 <th>Barcode</th>
                                 <th>Qty</th>
-                                <th>Stock Quantity</th>
+                                <th>Stock Qty</th>
                                 <th>Min Qty</th>
                                 <th>MRP</th>
-                                <th>CostPrice</th>
-                                <th>Selling Price</th>
+                                <th>CP</th>
+                                <th>SP</th>
                                 <th>Expiry Date</th>
+                                <th>Slab Price</th>
                                 <th>Dealer's Name</th>
+                                <th></th>
                             </tr>
                         </thead>
                         {
@@ -70,7 +72,7 @@ const PerItemListPurchaseOrder = () => {
                                         <tr>
 
                                             {
-                                                ele.itemDetails.slice(0,1).map((item, index) => {
+                                                ele.itemDetails.slice(0, 1).map((item, index) => {
                                                     return (
                                                         <>
                                                             <td>
@@ -95,7 +97,7 @@ const PerItemListPurchaseOrder = () => {
                                                                 {item.mrp}
                                                             </td>
                                                             <td>
-                                                                {item.costPrice}
+                                                                {Number(item.costPrice).toFixed(2)}
                                                             </td>
                                                             <td>
                                                                 {item.sellingPrice}
@@ -103,15 +105,69 @@ const PerItemListPurchaseOrder = () => {
                                                             <td>
                                                                 {new Date(item.expiryDates[0].date).toLocaleDateString()}
                                                             </td>
-                                                            {/* <td>
-                                                                {item.slabPrice.length}
-                                                            </td> */}
+                                                            <td>
+                                                                <div>
+                                                                    {item.slabPrice?.map((arrEle,index) => {
+                                                                        return (
+                                                                            <div key={index} style={{ display: "flex" }}>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    style={{
+                                                                                        width: "40px",
+                                                                                        textAlign: "center",
+                                                                                        border: "none",
+                                                                                        outline: "none",
+                                                                                    }}
+                                                                                    value={arrEle[1]}
+                                                                                    disabled
+                                                                                />{" "}
+                                                                                -
+                                                                                <input
+                                                                                    type="number"
+                                                                                    style={{
+                                                                                        width: "40px",
+                                                                                        textAlign: "center",
+                                                                                        border: "none",
+                                                                                        outline: "none",
+                                                                                    }}
+                                                                                    disabled
+                                                                                    defaultValue={
+                                                                                        index !== item.slabPrice.length - 1
+                                                                                          ? Number(
+                                                                                            item.slabPrice[index + 1][1]
+                                                                                            ) - 1
+                                                                                          : ""
+                                                                                      }
+                                                                                />{" "}
+                                                                                =
+                                                                                <input
+                                                                                    type="number"
+                                                                                    style={{
+                                                                                        width: "40px",
+                                                                                        textAlign: "center",
+                                                                                        border: "none",
+                                                                                        outline: "none",
+                                                                                    }}
+                                                                                    value={arrEle[2]}
+                                                                                    disabled
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                    })}
+                                                                </div>
+                                                            </td>
                                                         </>
                                                     )
                                                 })
                                             }
                                             <td>
                                                 {ele._id}
+                                            </td>
+                                            <td>
+                                                <Link>
+                                                    <Button> Show PR</Button>
+                                                </Link>
+                                                
                                             </td>
                                         </tr>
                                     </tbody>
