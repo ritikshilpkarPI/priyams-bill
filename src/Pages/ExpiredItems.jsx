@@ -8,7 +8,7 @@ const ExpiredItems = () => {
   return (
     <Grid>
       {dateIntervalArr.map((dayInterval) => (
-        <Grid.Col sm={6} lg={6}>
+        <Grid.Col key={dayInterval} sm={6} lg={6}>
           <ExpiredItemTable day={dayInterval} />
         </Grid.Col>
       ))}

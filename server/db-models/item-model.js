@@ -63,4 +63,4 @@ const ItemSchem = new mongoose.Schema(
 );
 
 const Item = mongoose.model("Item", ItemSchem);
-module.exports = { Item };
+module.exports = { Item, inventoryItemCategory };
