@@ -7,13 +7,11 @@ const savePayment = async (req, res) => {
       purchaseDetails: [payment],
       totalPaidAmount: payment.paidAmount,
     });
-    res
-      .status(201)
-      .send({
-        message: 'order added successfully',
-        success: true,
-        order: purchaseOrder,
-      });
+    res.status(201).send({
+      message: 'order added successfully',
+      success: true,
+      order: purchaseOrder,
+    });
   } catch (err) {
     console.log({ err });
     res.status(400).send({ message: err, success: false });
@@ -30,14 +28,12 @@ const updateSavedPayment = async (req, res) => {
         Number(purchaseOrder.totalPaidAmount) + Number(payment.paidAmount)
       ).toFixed(2),
     });
-    res
-      .status(200)
-      .send({
-        message: 'order added successfully',
-        success: true,
-        order: purchaseOrder,
-        updatedOrder,
-      });
+    res.status(200).send({
+      message: 'order added successfully',
+      success: true,
+      order: purchaseOrder,
+      updatedOrder,
+    });
   } catch (err) {
     res.status(400).send({ message: err, success: false });
   }
@@ -61,14 +57,12 @@ const deletePaymentById = async (req, res) => {
       purchaseDetails,
       totalPaidAmount,
     });
-    res
-      .status(200)
-      .send({
-        message: 'order deleted successfully',
-        success: true,
-        order: purchaseOrder,
-        updatedOrder,
-      });
+    res.status(200).send({
+      message: 'order deleted successfully',
+      success: true,
+      order: purchaseOrder,
+      updatedOrder,
+    });
   } catch (err) {
     res.status(400).send({ message: err, success: false });
   }
@@ -91,14 +85,12 @@ const updatePaymentById = async (req, res) => {
       purchaseDetails,
       totalPaidAmount,
     });
-    res
-      .status(200)
-      .send({
-        message: 'order updated successfully',
-        success: true,
-        order: purchaseOrder,
-        updatedOrder,
-      });
+    res.status(200).send({
+      message: 'order updated successfully',
+      success: true,
+      order: purchaseOrder,
+      updatedOrder,
+    });
   } catch (err) {
     res.status(400).send({ message: err, success: false });
   }

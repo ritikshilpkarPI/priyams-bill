@@ -17,16 +17,12 @@
     "debug": "netlify dev --inspect",
     "build:functions": "netlify-lambda build server",
     "test": "react-scripts test --env=jsdom",
-    "format":"prettier --ignore-path .gitignore --write \"**/*.{ts,tsx,css,scss,jsx,js}\""
+    "format": "prettier --ignore-path .gitignore --write \"**/*.{ts,tsx,css,scss,jsx,js}\"",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ScreenRecorderApp/screenrecorder-app.git"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run format"
-    }
   },
   "dependencies": {
     "@emotion/cache": "^11.10.3",
@@ -107,7 +103,8 @@
     "webpack": "4.44.2",
     "webpack-cli": "^4.9.1",
     "webpack-dev-middleware": "^5.2.1",
-    "webpack-dev-server": "3.11.0"
+    "webpack-dev-server": "3.11.0",
+    "husky": "^8.0.0"
   },
   "proxy": "http://localhost:9000/.netlify/functions/app/",
   "eslintConfig": {

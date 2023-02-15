@@ -3,13 +3,11 @@ const Staff = require('../db-models/staff-model');
 const getStaff = async (request, response) => {
   try {
     const allStaffDetails = await Staff.find();
-    response
-      .status(200)
-      .json({
-        status: true,
-        message: 'details sent!',
-        details: allStaffDetails,
-      });
+    response.status(200).json({
+      status: true,
+      message: 'details sent!',
+      details: allStaffDetails,
+    });
   } catch (error) {
     response.status(500).json(error);
   }
@@ -42,13 +40,11 @@ const updateStaff = async (request, response) => {
       { username: username },
       request.body
     );
-    response
-      .status(200)
-      .json({
-        status: true,
-        message: 'staff updated!',
-        updatedItem: staffUpdate,
-      });
+    response.status(200).json({
+      status: true,
+      message: 'staff updated!',
+      updatedItem: staffUpdate,
+    });
   } catch (error) {
     response.status(500).json(error);
   }

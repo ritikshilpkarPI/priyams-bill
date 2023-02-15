@@ -47,7 +47,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
             />
             <Route path="/openClose" component={OpenClose} />
             <Route exact path="/inventory" component={ItemsList} />
-                      <Route exact path="/" component={Home} />
+                    <Route exact path="/" component={Home} />
 
             <ProtectedComponent role={access.DAY_BILL_ROUTE}>
               <Route exact path="/dayBill" component={DayWiseBillFeed} />

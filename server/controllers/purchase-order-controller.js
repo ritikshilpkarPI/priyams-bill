@@ -184,13 +184,11 @@ const saveOrder = async (req, res) => {
     const purchaseOrder = await PurchaseOrder.create({
       purchasedItems: [new_order],
     });
-    res
-      .status(201)
-      .send({
-        message: 'order added successfully',
-        success: true,
-        order: purchaseOrder,
-      });
+    res.status(201).send({
+      message: 'order added successfully',
+      success: true,
+      order: purchaseOrder,
+    });
   } catch (err) {
     console.log({ err });
     res.status(400).send({ message: err, success: false });
@@ -204,13 +202,11 @@ const updateSavedOrders = async (req, res) => {
     const updatedOrder = await purchaseOrder.updateOne({
       purchasedItems: [...purchaseOrder.purchasedItems, new_order],
     });
-    res
-      .status(200)
-      .send({
-        message: 'order added successfully',
-        success: true,
-        order: updatedOrder,
-      });
+    res.status(200).send({
+      message: 'order added successfully',
+      success: true,
+      order: updatedOrder,
+    });
   } catch (err) {
     res.status(400).send({ message: err, success: false });
   }
@@ -224,14 +220,12 @@ const deleteOrderItemById = async (req, res) => {
       (order) => order._id != itemId
     );
     const updatedOrder = await purchaseOrder.updateOne({ purchasedItems });
-    res
-      .status(200)
-      .send({
-        message: 'order deleted successfully',
-        success: true,
-        order: purchaseOrder,
-        updatedOrder,
-      });
+    res.status(200).send({
+      message: 'order deleted successfully',
+      success: true,
+      order: purchaseOrder,
+      updatedOrder,
+    });
   } catch (err) {
     res.status(400).send({ message: err, success: false });
   }
@@ -246,14 +240,12 @@ const updateOrderByIndex = async (req, res) => {
       new_order,
     ];
     const updatedOrder = await purchaseOrder.updateOne({ purchasedItems });
-    res
-      .status(200)
-      .send({
-        message: 'order updated successfully',
-        success: true,
-        order: purchaseOrder,
-        updatedOrder,
-      });
+    res.status(200).send({
+      message: 'order updated successfully',
+      success: true,
+      order: purchaseOrder,
+      updatedOrder,
+    });
   } catch (err) {
     res.status(400).send({ message: err, success: false });
   }

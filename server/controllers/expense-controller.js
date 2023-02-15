@@ -86,14 +86,12 @@ const sendDayExpenses = async (request, response) => {
       ]);
     }
 
-    response
-      .status(200)
-      .json({
-        status: true,
-        message: 'expense received',
-        data: allExpense,
-        dayTotal: dayTotal,
-      });
+    response.status(200).json({
+      status: true,
+      message: 'expense received',
+      data: allExpense,
+      dayTotal: dayTotal,
+    });
   } catch (error) {
     response.status(500).json({ error });
   }
