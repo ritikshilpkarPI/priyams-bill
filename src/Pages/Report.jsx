@@ -1,5 +1,5 @@
-import { DateRangePicker, TimeRangeInput } from "@mantine/dates";
-import { useState } from "react";
+import { DateRangePicker, TimeRangeInput } from '@mantine/dates';
+import { useState } from 'react';
 import {
   Button,
   Collapse,
@@ -8,30 +8,30 @@ import {
   Table,
   Text,
   Title,
-} from "@mantine/core";
-import { Axios } from "../utils/axios";
+} from '@mantine/core';
+import { Axios } from '../utils/axios';
 
 const Report = () => {
   const [dateRange, setDateRange] = useState();
   const [timeRange, setTimeRange] = useState();
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState('');
   const [reportResult, setReportResult] = useState({});
   const [showItemInput, setShowItemInput] = useState(false);
-  const [itemName, setItemName] = useState("");
+  const [itemName, setItemName] = useState('');
 
   const filterNameObj = {
-    totalProfit: "totalProfitSum",
-    totalAmount: "totalAmountSum",
-    totalMRP: "totalMRPSum",
-    totalDiscount: "totalDiscountSum",
-    itemBillingTrend: "itemBillingTrend",
-    allItemsBillingTrend: "allItemsBillingTrend",
+    totalProfit: 'totalProfitSum',
+    totalAmount: 'totalAmountSum',
+    totalMRP: 'totalMRPSum',
+    totalDiscount: 'totalDiscountSum',
+    itemBillingTrend: 'itemBillingTrend',
+    allItemsBillingTrend: 'allItemsBillingTrend',
   };
 
   const findResult = async () => {
     const result = await Axios.request({
       url: `/api/report/getDateRangeReport/${selectedFilter}`,
-      method: "post",
+      method: 'post',
       data: {
         startDate: new Date(dateRange[0]),
         lastDate: new Date(dateRange[1]),
@@ -40,7 +40,7 @@ const Report = () => {
         itemName: itemName,
       },
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
     setReportResult(result.data);
@@ -48,21 +48,21 @@ const Report = () => {
 
   const handleFilterOption = (e) => {
     setSelectedFilter(e);
-    e === "itemBillingTrend" ? setShowItemInput(true) : setShowItemInput(false);
+    e === 'itemBillingTrend' ? setShowItemInput(true) : setShowItemInput(false);
   };
 
   return (
     <div>
-      <div style={{ display: "flex", gap: "50px" }}>
+      <div style={{ display: 'flex', gap: '50px' }}>
         <DateRangePicker
-          style={{ width: "350px" }}
+          style={{ width: '350px' }}
           label="Date Range"
           placeholder="Pick dates range"
           value={dateRange}
           onChange={setDateRange}
         />
         <TimeRangeInput
-          style={{ width: "350px" }}
+          style={{ width: '350px' }}
           format="12"
           label="Time Range"
           value={timeRange}
@@ -70,24 +70,24 @@ const Report = () => {
           clearable
         />
       </div>
-      <div style={{ display: "flex", gap: "50px", paddingBottom: "10px" }}>
+      <div style={{ display: 'flex', gap: '50px', paddingBottom: '10px' }}>
         <Select
-          style={{ width: "350px" }}
+          style={{ width: '350px' }}
           label="Choose Filter"
           placeholder="Pick one"
           data={[
-            { value: "itemBillingTrend", label: "Single Item Billing Trend" },
-            { value: "allItemsBillingTrend", label: "All Items Billing Trend" },
-            { value: "totalProfit", label: "Total Profit sum" },
-            { value: "totalAmount", label: "Total Amount sum" },
-            { value: "totalMRP", label: "Total MRP sum" },
-            { value: "totalDiscount", label: "Total Discount sum" },
+            { value: 'itemBillingTrend', label: 'Single Item Billing Trend' },
+            { value: 'allItemsBillingTrend', label: 'All Items Billing Trend' },
+            { value: 'totalProfit', label: 'Total Profit sum' },
+            { value: 'totalAmount', label: 'Total Amount sum' },
+            { value: 'totalMRP', label: 'Total MRP sum' },
+            { value: 'totalDiscount', label: 'Total Discount sum' },
           ]}
           value={selectedFilter}
           onChange={(e) => handleFilterOption(e)}
         />
         {showItemInput ? (
-          <Input.Wrapper style={{ width: "200px" }} label="Enter Item Name">
+          <Input.Wrapper style={{ width: '200px' }} label="Enter Item Name">
             <Input
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
@@ -101,16 +101,16 @@ const Report = () => {
       <Button onClick={findResult}>Show Result</Button>
       <div>
         {reportResult?.report?.length !== 0 ? (
-          JSON.stringify(reportResult) !== "{}" ? (
-            reportResult?.filterType === "itemBillingTrend" ||
-            reportResult?.filterType === "allItemsBillingTrend" ? (
+          JSON.stringify(reportResult) !== '{}' ? (
+            reportResult?.filterType === 'itemBillingTrend' ||
+            reportResult?.filterType === 'allItemsBillingTrend' ? (
               showBillTable(reportResult)
             ) : (
               <>
                 <Title>
                   {reportResult?.report[0][filterNameObj[selectedFilter]]
                     ? selectedFilter.toLocaleUpperCase()
-                    : ""}
+                    : ''}
                 </Title>
                 <Text>
                   {reportResult?.report[0][
@@ -120,10 +120,10 @@ const Report = () => {
               </>
             )
           ) : (
-            ""
+            ''
           )
         ) : (
-          "No Report available for this date range"
+          'No Report available for this date range'
         )}
       </div>
     </div>
@@ -155,7 +155,7 @@ const showBillTable = (reportResult) => (
         <th>
           <Text align="center">Bill Discount</Text>
         </th>
-        {reportResult.filterType === "itemBillingTrend" ? (
+        {reportResult.filterType === 'itemBillingTrend' ? (
           <th>
             <Text align="center">Bill date</Text>
           </th>
@@ -186,7 +186,7 @@ const TableRow = ({ itemBill, idx, filterName }) => {
       <tr
         onClick={() => setOpen(!open)}
         className="bill-row"
-        style={{ cursor: "pointer" }}
+        style={{ cursor: 'pointer' }}
       >
         <td>
           <Text color="black" weight={500}>
@@ -201,7 +201,7 @@ const TableRow = ({ itemBill, idx, filterName }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {itemBill.items?.itemQuantityInBill || itemBill["totalQuantitysum"]}
+            {itemBill.items?.itemQuantityInBill || itemBill['totalQuantitysum']}
           </Text>
         </td>
         <td>
@@ -213,30 +213,30 @@ const TableRow = ({ itemBill, idx, filterName }) => {
         <td>
           <Text color="black" weight={500}>
             {itemBill.items?.itemMRPtotal?.toFixed(2) ||
-              itemBill["totalMRPsum"]?.toFixed(2)}
+              itemBill['totalMRPsum']?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
             {itemBill.items?.itemSellingPriceTotal?.toFixed(2) ||
-              itemBill["totalAmountSum"]?.toFixed(2)}
+              itemBill['totalAmountSum']?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
             {itemBill.items?.itemDiscountTotal?.toFixed(2) ||
-              itemBill["totalDiscountSum"]?.toFixed(2)}
+              itemBill['totalDiscountSum']?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {filterName === "itemBillingTrend"
-              ? new Date(itemBill["createdAt"])?.toLocaleString()
-              : ""}
+            {filterName === 'itemBillingTrend'
+              ? new Date(itemBill['createdAt'])?.toLocaleString()
+              : ''}
           </Text>
         </td>
       </tr>
-      {filterName !== "itemBillingTrend" ? (
+      {filterName !== 'itemBillingTrend' ? (
         <tr>
           <Collapse in={open}>
             <Table striped highlightOnHover>

@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
-import { useForm } from "@mantine/form";
-import useBarcodeSearchItems from "./useBarcodeSearchItems";
-import { Axios } from "src/utils/axios";
-import { useHistory } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useForm } from '@mantine/form';
+import useBarcodeSearchItems from './useBarcodeSearchItems';
+import { Axios } from 'src/utils/axios';
+import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 const usePurchaseOrder = (history) => {
   const { id } = useParams();
   const [opened, setOpened] = useState(false);
   const [openPurchaseDrawer, setPurchaseDrawer] = useState(false);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState('');
   const [expiryQuantity, setExpiryQuantity] = useState(0);
-  const options = { year: "numeric", month: "numeric", day: "numeric" };
+  const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
   const [openDrawer, setOpenDrawer] = useState(false);
   const [editIndex, setEditIndex] = useState(-1);
   const [slabs, setSlabs] = useState([]);
@@ -19,44 +19,45 @@ const usePurchaseOrder = (history) => {
   const [cloudBills, setCloudBills] = useState([]);
   const [deleteBills, setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
-  const [Loading, setLoading] = useState(false)
+  const [Loading, setLoading] = useState(false);
   const [, setPrevPaidAmount] = useState(0);
-  const [, setState] = useState({})
-  const [disableDraft,setDisableDraft] = useState(false)
+  const [, setState] = useState({});
+  const [disableDraft, setDisableDraft] = useState(false);
   const [message, setMessage] = useState({
     success: false,
     failed: false,
-    error: "",
-    status: "",
+    error: '',
+    status: '',
   });
   const purchaseForm = useForm({
     initialValues: {
-      payment: "",
+      payment: '',
       billAmount: 0,
       paidAmount: 0,
-      remark: "",
-      paidBy: "",
-      procurementSource: "",
-      dealerName: "",
+      remark: '',
+      paidBy: '',
+      procurementSource: '',
+      dealerName: '',
       phoneNumber: 0,
-      chequeNumber: "",
+      chequeNumber: '',
     },
     validate: {
-      payment: (value) => (value?.length > 0 ? null : "Please fill this field"),
-      paidBy: (value) => (value?.length > 0 ? null : "Please fill this field"),
+      payment: (value) => (value?.length > 0 ? null : 'Please fill this field'),
+      paidBy: (value) => (value?.length > 0 ? null : 'Please fill this field'),
       dealerName: (value) =>
-        value?.length > 0 ? null : "Please fill this field",
+        value?.length > 0 ? null : 'Please fill this field',
       // phoneNumber: (value) =>
       //   String(value).length === 10 ? null : "Enter valid mobile number",
       chequeNumber: (value) =>
-        purchaseForm.values.chequeNumber === "credit"
+        purchaseForm.values.chequeNumber === 'credit'
           ? String(value)?.length > 0
             ? null
-            : "Please fill this field"
+            : 'Please fill this field'
           : null,
       procurementSource: (value) =>
-        value?.length > 0 ? null : "Please fill this field",
-      billAmount: (value) => value > 0 ? null : "Bill Amount should be greater than 0",
+        value?.length > 0 ? null : 'Please fill this field',
+      billAmount: (value) =>
+        value > 0 ? null : 'Bill Amount should be greater than 0',
     },
   });
 
@@ -67,9 +68,9 @@ const usePurchaseOrder = (history) => {
       2: 0,
     },
     validate: {
-      2: (value) => (value > 0 ? null : 'price should be greated than 0')
-    }
-  })
+      2: (value) => (value > 0 ? null : 'price should be greated than 0'),
+    },
+  });
 
   const form = useForm({
     initialValues: {
@@ -90,38 +91,47 @@ const usePurchaseOrder = (history) => {
       expiryDates: [],
       validate: false,
       slabPrice: [],
-      item_id: ''
+      item_id: '',
     },
     validate: {
-      itemQuantity: (value) => (form.values.validate ? value > 0 ? null : 'Item Quantity should be greater than 0' : null),
+      itemQuantity: (value) =>
+        form.values.validate
+          ? value > 0
+            ? null
+            : 'Item Quantity should be greater than 0'
+          : null,
       // sellingPrice: (value) => (form.values.validate ? value > 0 ? null : 'Selling price should be greater than 0' : null),
-      mrp: (value) => (form.values.validate ? value > 0 ? null : 'MRP should be greater than 0' : null),
+      mrp: (value) =>
+        form.values.validate
+          ? value > 0
+            ? null
+            : 'MRP should be greater than 0'
+          : null,
       // costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
-      category: (value) => (!value ? 'Category is Compulsory' : null ),
-      brand: (value) => (!value ? 'Brand name is Compulsory' : null )
-
-    }
+      category: (value) => (!value ? 'Category is Compulsory' : null),
+      brand: (value) => (!value ? 'Brand name is Compulsory' : null),
+    },
   });
   const [purchaseList, setPurchaseList] = useState({
     details: [],
     bills: [],
     orders: [],
     isSaved: false,
-    isDraft: false
-  })
+    isDraft: false,
+  });
 
   const getDetails = async (search_id) => {
     try {
       onLoader();
       const res = await Axios({
-        method: "GET",
-        url: "/api/purchaseOrder/orderDetails/" + search_id,
+        method: 'GET',
+        url: '/api/purchaseOrder/orderDetails/' + search_id,
       });
       const data = res.data.data;
-      console.log({data});
+      console.log({ data });
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment = data.payment;
-      purchaseForm.values.dealerName = data.dealerName ? data.dealerName : "";
+      purchaseForm.values.dealerName = data.dealerName ? data.dealerName : '';
       purchaseForm.values.phoneNumber = data.phoneNumber;
       purchaseForm.values.procurementSource = data.procurementSource;
       purchaseForm.values.billAmount = data.billAmount;
@@ -142,7 +152,7 @@ const usePurchaseOrder = (history) => {
       offLoader();
     } catch (error) {
       console.log(error.message);
-      setMessage({ success: false, failed: true, error: error.message })
+      setMessage({ success: false, failed: true, error: error.message });
       offLoader();
     }
   };
@@ -154,64 +164,67 @@ const usePurchaseOrder = (history) => {
         flag = true;
         return;
       }
-    })
+    });
     if (flag) return;
     addPurchadeOrder(true);
-  }
+  };
   const handleDateDelete = async (dateItem) => {
-    const dates = form.values.expiryDates.filter(element => element.date !== dateItem.date)
+    const dates = form.values.expiryDates.filter(
+      (element) => element.date !== dateItem.date
+    );
     form.setValues((prev) => ({
-      expiryDates: dates
+      expiryDates: dates,
     }));
-  }
+  };
   const addDetails = async () => {
     const payment = {
       paidAmount: purchaseForm.values.paidAmount,
       chequeNumber: purchaseForm.values.chequeNumber,
-      paidBy: purchaseForm.values.paidBy
-    }
+      paidBy: purchaseForm.values.paidBy,
+    };
     try {
       onLoader();
-      const { data } = id ? await updateSavedPayment(payment) : await savePayment(payment);
+      const { data } = id
+        ? await updateSavedPayment(payment)
+        : await savePayment(payment);
       const { order } = data;
       const { _id } = order;
       offLoader();
       if (id) {
         getDetails(id);
       } else {
-        locate.push(`/purchase/${_id}`)
+        locate.push(`/purchase/${_id}`);
       }
     } catch (err) {
       offLoader();
-      alert('something went wrong...')
-      console.log({ err })
+      alert('something went wrong...');
+      console.log({ err });
     }
-
   };
   const savePayment = async (payment) => {
     return await Axios({
       method: 'POST',
       url: '/api/payment/savePayment',
       data: {
-        payment
-      }
-    })
-  }
+        payment,
+      },
+    });
+  };
   const updateSavedPayment = async (payment) => {
     return await Axios({
       method: 'POST',
       url: `/api/payment/updateSavedPayment/${id}`,
       data: {
         payment,
-      }
-    })
-  }
+      },
+    });
+  };
   const updateDetails = async (e) => {
     const payment = {
       paidBy: purchaseForm.values.paidBy,
       paidAmount: purchaseForm.values.paidAmount,
-      chequeNumber: purchaseForm.values.chequeNumber
-    }
+      chequeNumber: purchaseForm.values.chequeNumber,
+    };
     try {
       onLoader();
       await updatePaymentById(payment, editIndex);
@@ -219,7 +232,7 @@ const usePurchaseOrder = (history) => {
       offLoader();
     } catch (err) {
       offLoader();
-      console.log({ err })
+      console.log({ err });
     }
   };
   const updatePaymentById = async (payment, index) => {
@@ -228,22 +241,27 @@ const usePurchaseOrder = (history) => {
       url: `/api/payment/updatePaymentById/${id}`,
       data: {
         index,
-        payment
-      }
-    })
-  }
+        payment,
+      },
+    });
+  };
   const hideScrollBar = () => {
     window.scrollTo(0, 0);
     document.body.style.overflowY = 'hidden';
     document.body.style.overflowX = 'hidden';
-  }
+  };
   const showScrollBar = () => {
-    document.body.style.overflowY = 'visible'
+    document.body.style.overflowY = 'visible';
     document.body.style.overflowX = 'visible';
-  }
+  };
   const addPurchadeOrder = async (isDraft) => {
     const errorObj = purchaseForm.validate().errors;
-    if (errorObj.hasOwnProperty('phoneNumber') || errorObj.hasOwnProperty('procurementSource') || errorObj.hasOwnProperty('remark') || errorObj.hasOwnProperty('billAmount')) {
+    if (
+      errorObj.hasOwnProperty('phoneNumber') ||
+      errorObj.hasOwnProperty('procurementSource') ||
+      errorObj.hasOwnProperty('remark') ||
+      errorObj.hasOwnProperty('billAmount')
+    ) {
       return;
     }
 
@@ -258,11 +276,16 @@ const usePurchaseOrder = (history) => {
     } = purchaseForm.values;
     const objvalues = {
       ...purchaseList,
-      billAmount, remark, payment, procurementSource, dealerName, phoneNumber
-    }
+      billAmount,
+      remark,
+      payment,
+      procurementSource,
+      dealerName,
+      phoneNumber,
+    };
     setPurchaseList({
-      ...objvalues
-    })
+      ...objvalues,
+    });
 
     try {
       let result = id
@@ -274,19 +297,19 @@ const usePurchaseOrder = (history) => {
           bills: [],
           orders: [],
           billAmount: 0,
-          remark: "",
-          payment: "",
-          procurementSource: "",
-          dealerName: "",
+          remark: '',
+          payment: '',
+          procurementSource: '',
+          dealerName: '',
           phoneNumber: 0,
           isDraft: false,
           totalPaidAmount: 0,
         });
-        let status = isDraft ? "Draft Successfully" : "Saved Successfully";
+        let status = isDraft ? 'Draft Successfully' : 'Saved Successfully';
         setMessage({ success: true, failed: false, status });
         purchaseForm.reset();
         offLoader();
-        locate.push('/approval')
+        locate.push('/approval');
       } else {
         setMessage({
           success: false,
@@ -303,32 +326,35 @@ const usePurchaseOrder = (history) => {
   };
   const addOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
-      method: "POST",
-      url: "/api/purchaseOrder/addNewOrder",
+      method: 'POST',
+      url: '/api/purchaseOrder/addNewOrder',
       data: {
         new_order: { purchaseObj, isDraft },
-        uploadedImages: cloudBills
+        uploadedImages: cloudBills,
       },
     });
   };
 
   const updateOrderApi = async (isDraft, purchaseObj) => {
     return await Axios({
-      method: "POST",
-      url: "/api/purchaseOrder/updateDetails",
+      method: 'POST',
+      url: '/api/purchaseOrder/updateDetails',
       data: {
         new_order: { purchaseObj, isDraft, id },
         uploadedImages: cloudBills,
-        deleteBills
+        deleteBills,
       },
     });
   };
   const deleteCloudBills = (index) => {
-    setDeleteBills([...deleteBills, ...cloudBills.filter((item, i) => i === index)])
+    setDeleteBills([
+      ...deleteBills,
+      ...cloudBills.filter((item, i) => i === index),
+    ]);
     setCloudBills([...cloudBills.filter((item, i) => i !== index)]);
-  }
+  };
   //my function for onclick barcode
-  const handleSelectOrderItems2=(item)=>{
+  const handleSelectOrderItems2 = (item) => {
     console.log(item);
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
@@ -343,15 +369,15 @@ const usePurchaseOrder = (history) => {
       costPrice: item.itemCostPricePerUnit,
       slabPrice: item.slabPricing,
       item_id: String(item._id),
-      unit: item.quantityUnitName
+      unit: item.quantityUnitName,
     }));
-    setSlabs(form.values.slabPrice)
+    setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
-  }
-  const handleSelectOrderItems = (item,filterItems2) => {
+  };
+  const handleSelectOrderItems = (item, filterItems2) => {
     console.log(item);
     console.log(filterItems2);
-    if(filterItems2.length===1){
+    if (filterItems2.length === 1) {
       form.setValues((prev) => ({
         barcode: item.itemBarcode,
         inputName: item.itemName,
@@ -365,9 +391,9 @@ const usePurchaseOrder = (history) => {
         costPrice: item.itemCostPricePerUnit,
         slabPrice: item.slabPricing,
         item_id: String(item._id),
-        unit: item.quantityUnitName
+        unit: item.quantityUnitName,
       }));
-      setSlabs(form.values.slabPrice)
+      setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
     }
   };
@@ -377,7 +403,7 @@ const usePurchaseOrder = (history) => {
       paidBy: element.paidBy || '',
       chequeNumber: element.chequeNumber || '',
     }));
-    setPrevPaidAmount(element.paidAmount)
+    setPrevPaidAmount(element.paidAmount);
     setEditIndex(index);
     setPurchaseDrawer(true);
   };
@@ -388,33 +414,38 @@ const usePurchaseOrder = (history) => {
     });
     if (sum === values.stockQuantity || !form.values.validate) {
       form.values.slabPrice = [...slabs];
-      const new_order = { ...values }
+      const new_order = { ...values };
       try {
-        onLoader()
+        onLoader();
 
-        const { data } = editIndex >= 0 ? await updateOrderByIndex(new_order, editIndex) : (id ? await updateSavedOrder(new_order) : await saveOrder(new_order));
+        const { data } =
+          editIndex >= 0
+            ? await updateOrderByIndex(new_order, editIndex)
+            : id
+            ? await updateSavedOrder(new_order)
+            : await saveOrder(new_order);
         const { order } = data;
         const { _id } = order;
         offLoader();
         if (!id) {
-          locate.push(`/purchase/${_id}`)
+          locate.push(`/purchase/${_id}`);
         } else {
-          getDetails(id)
+          getDetails(id);
         }
       } catch (err) {
         console.log(err);
         offLoader();
-        alert('unable to add order, something went wrong...')
+        alert('unable to add order, something went wrong...');
       }
 
       form.reset();
       setSlabs([]);
       setOpened(false);
-      setEditIndex(-1)
-      setIsEditable(true)
+      setEditIndex(-1);
+      setIsEditable(true);
       return;
     }
-    alert("Total expiry dates and stock quantity  is not matching");
+    alert('Total expiry dates and stock quantity  is not matching');
   };
 
   const saveOrder = async (new_order) => {
@@ -422,32 +453,32 @@ const usePurchaseOrder = (history) => {
       method: 'POST',
       url: '/api/purchaseOrder/saveOrder',
       data: {
-        new_order
-      }
-    })
-  }
+        new_order,
+      },
+    });
+  };
   const updateSavedOrder = async (new_order) => {
     return await Axios({
       method: 'POST',
       url: `/api/purchaseOrder/updateSavedOrder/${id}`,
       data: {
-        new_order
-      }
-    })
-  }
+        new_order,
+      },
+    });
+  };
   const updateOrderByIndex = async (new_order, index) => {
     return await Axios({
       method: 'POST',
       url: `/api/purchaseOrder/updateOrderByIndex/${id}`,
       data: {
         new_order,
-        index
-      }
-    })
-  }
+        index,
+      },
+    });
+  };
   const handleItemEdit = (item, index) => {
-    console.log("editfn",item);
-    setIsEditable(false)
+    console.log('editfn', item);
+    setIsEditable(false);
     if (index >= 0) {
       setEditIndex(index);
     }
@@ -467,9 +498,9 @@ const usePurchaseOrder = (history) => {
       validate: item.validate,
       item_id: item.item_id,
       brand: item.brand,
-      category: item.category
+      category: item.category,
     }));
-    console.log({ item })
+    console.log({ item });
     setSlabs([...item.slabPrice]);
     setOpened(true);
   };
@@ -480,24 +511,24 @@ const usePurchaseOrder = (history) => {
         method: 'POST',
         url: `/api/purchaseOrder/deleteItem/${id}`,
         data: {
-          itemId: order_id
-        }
-      })
-      offLoader()
-      getDetails(id)
+          itemId: order_id,
+        },
+      });
+      offLoader();
+      getDetails(id);
     } catch (err) {
-      offLoader()
-      console.log({ err })
+      offLoader();
+      console.log({ err });
     }
   };
   const onLoader = () => {
     setLoading(true);
     hideScrollBar();
-  }
+  };
   const offLoader = () => {
     setLoading(false);
     showScrollBar();
-  }
+  };
   const deletePurchaseDetail = async (index) => {
     try {
       onLoader();
@@ -505,13 +536,13 @@ const usePurchaseOrder = (history) => {
         method: 'POST',
         url: `/api/payment/deletePaymentById/${id}`,
         data: {
-          index
-        }
-      })
+          index,
+        },
+      });
       offLoader();
       getDetails(id);
     } catch (err) {
-      console.log({ err })
+      console.log({ err });
     }
   };
   const addSlabPrice = () => {
@@ -526,16 +557,16 @@ const usePurchaseOrder = (history) => {
   };
   const handleExpiryDate = () => {
     if (!date && expiryQuantity === 0) {
-      return alert("add Date and expiry quantity ");
+      return alert('add Date and expiry quantity ');
     }
-    form.insertListItem("expiryDates", {
-      date: new Date(date).toLocaleDateString("en-US", options),
+    form.insertListItem('expiryDates', {
+      date: new Date(date).toLocaleDateString('en-US', options),
       value: expiryQuantity,
     });
-    setDate("");
+    setDate('');
     setExpiryQuantity(0);
   };
-  const { barcodeFilteredItem , filterItems2} = useBarcodeSearchItems(
+  const { barcodeFilteredItem, filterItems2 } = useBarcodeSearchItems(
     form.values.barcode,
     handleSelectOrderItems
   );
@@ -546,7 +577,7 @@ const usePurchaseOrder = (history) => {
       setIsNotGetUpdated(false);
     }
     if (Object.keys(barcodeFilteredItem).length && isEditable) {
-      handleSelectOrderItems(barcodeFilteredItem,filterItems2);
+      handleSelectOrderItems(barcodeFilteredItem, filterItems2);
     }
     return () => {
       setState({}); // This worked for me
@@ -561,13 +592,13 @@ const usePurchaseOrder = (history) => {
         flag = true;
         return;
       }
-    })
-    if(!purchaseForm.isValid()){
+    });
+    if (!purchaseForm.isValid()) {
       flag = true;
     }
-    setDisableDraft(flag)
-  }, [purchaseList,purchaseForm])
-  
+    setDisableDraft(flag);
+  }, [purchaseList, purchaseForm]);
+
   return {
     form,
     opened,
@@ -608,7 +639,7 @@ const usePurchaseOrder = (history) => {
     cloudBills,
     deleteCloudBills,
     Loading,
-    disableDraft
+    disableDraft,
   };
 };
 

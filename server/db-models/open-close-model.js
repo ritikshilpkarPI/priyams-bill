@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const OpenCloseSchema = new mongoose.Schema(
   {
@@ -37,5 +37,5 @@ const OpenCloseSchema = new mongoose.Schema(
   }
 );
 
-const OpenClose = mongoose.model("OpenClose", OpenCloseSchema);
+const OpenClose = mongoose.model('OpenClose', OpenCloseSchema);
 module.exports = { OpenClose };

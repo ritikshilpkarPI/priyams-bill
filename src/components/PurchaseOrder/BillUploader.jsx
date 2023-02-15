@@ -1,9 +1,14 @@
-import React, { useRef } from "react";
-import { Button, Group } from "@mantine/core";
-import { Dropzone } from "@mantine/dropzone";
-import { Carousel } from "@mantine/carousel";
-import '../../CSS/billUploader.css'
-const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBills }) => {
+import React, { useRef } from 'react';
+import { Button, Group } from '@mantine/core';
+import { Dropzone } from '@mantine/dropzone';
+import { Carousel } from '@mantine/carousel';
+import '../../CSS/billUploader.css';
+const BillUploader = ({
+  purchaseList,
+  setPurchaseList,
+  cloudBills,
+  deleteCloudBills,
+}) => {
   const openRef = useRef(null);
   const onSelectFile = (files) => {
     files.forEach((file) => {
@@ -15,7 +20,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
           bills: [...purchaseList.bills, reader.result],
         });
       };
-    }); 
+    });
   };
 
   function deleteHandler(image) {
@@ -26,11 +31,11 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
     URL.revokeObjectURL(image);
   }
   return (
-    <section style={{ width: "100%", margin: "auto", marginTop: "5vmin" }}>
+    <section style={{ width: '100%', margin: 'auto', marginTop: '5vmin' }}>
       <Dropzone
         openRef={openRef}
         activateOnClick={false}
-        styles={{ inner: { pointerEvents: "all" } }}
+        styles={{ inner: { pointerEvents: 'all' } }}
         onDrop={onSelectFile}
       >
         <Group position="center">
@@ -46,7 +51,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
       {purchaseList.bills?.length > 0 || cloudBills.length > 0 ? (
         <Carousel
           sx={{ maxWidth: 600 }}
-          style={{ marginTop: "5vmin" }}
+          style={{ marginTop: '5vmin' }}
           mx="auto"
           withIndicators
           height={400}
@@ -57,26 +62,26 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
                 <Carousel.Slide
                   key={index}
                   style={{
-                    height: "100%",
-                    width: "100%",
-                    position: "relative",
+                    height: '100%',
+                    width: '100%',
+                    position: 'relative',
                   }}
                 >
                   <img
                     src={image}
-                    style={{ height: "100%" }}
+                    style={{ height: '100%' }}
                     maxwidth={520}
                     alt="upload"
                   />
                   <img
                     style={{
-                      cursor: "pointer",
-                      position: "absolute",
-                      top: "0%",
-                      left: "90%",
+                      cursor: 'pointer',
+                      position: 'absolute',
+                      top: '0%',
+                      left: '90%',
                     }}
                     height={50}
-                    src={window.location.origin + "/closeicon.png"}
+                    src={window.location.origin + '/closeicon.png'}
                     onClick={() => {
                       deleteHandler(image);
                     }}
@@ -89,7 +94,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
             return (
               <Carousel.Slide
                 key={index}
-                style={{ height: "100%", width: "100%", position: "relative" }}
+                style={{ height: '100%', width: '100%', position: 'relative' }}
               >
                 <img
                   src={image.secure_url}
@@ -99,13 +104,13 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
                 />
                 <img
                   style={{
-                    cursor: "pointer",
-                    position: "absolute",
-                    top: "0%",
-                    left: "90%",
+                    cursor: 'pointer',
+                    position: 'absolute',
+                    top: '0%',
+                    left: '90%',
                   }}
                   height={50}
-                  src={window.location.origin + "/closeicon.png"}
+                  src={window.location.origin + '/closeicon.png'}
                   onClick={() => {
                     deleteCloudBills(index);
                   }}
@@ -116,7 +121,7 @@ const BillUploader = ({ purchaseList, setPurchaseList, cloudBills, deleteCloudBi
           })}
         </Carousel>
       ) : (
-        ""
+        ''
       )}
     </section>
   );

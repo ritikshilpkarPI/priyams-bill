@@ -1,7 +1,7 @@
 export const data = [
   {
     itemBarcode: 8901719109843,
-    itemName: "20-20 BUTTER BISCUIT 35G",
+    itemName: '20-20 BUTTER BISCUIT 35G',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.464166667,
     itemSellingPricePerUnit: 5,
@@ -10,7 +10,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719121623,
-    itemName: "20-20 CASHEW BISCUIT",
+    itemName: '20-20 CASHEW BISCUIT',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.464166667,
     itemSellingPricePerUnit: 5,
@@ -19,7 +19,7 @@ export const data = [
   },
   {
     itemBarcode: 8902080304028,
-    itemName: "7 UP 250 ML DRINK",
+    itemName: '7 UP 250 ML DRINK',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.5,
     itemSellingPricePerUnit: 20,
@@ -28,7 +28,7 @@ export const data = [
   },
   {
     itemBarcode: 8902080304059,
-    itemName: "7 UP 750 ML DRINK",
+    itemName: '7 UP 750 ML DRINK',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 38.33333333,
     itemSellingPricePerUnit: 40,
@@ -37,7 +37,7 @@ export const data = [
   },
   {
     itemBarcode: 8906005910387,
-    itemName: "AAKASH MASALA PEANUTS 150 GM",
+    itemName: 'AAKASH MASALA PEANUTS 150 GM',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 40,
     itemSellingPricePerUnit: 45,
@@ -46,7 +46,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725001667,
-    itemName: "AASHIRVAAD AATA 10 KG",
+    itemName: 'AASHIRVAAD AATA 10 KG',
     itemMRPperUnit: 440,
     itemCostPricePerUnit: 366,
     itemSellingPricePerUnit: 375,
@@ -55,7 +55,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725001650,
-    itemName: "AASHIRVAAD CHAKKI ATTA 5 kg",
+    itemName: 'AASHIRVAAD CHAKKI ATTA 5 kg',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 183.51,
     itemSellingPricePerUnit: 195,
@@ -64,7 +64,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725112004,
-    itemName: "AASHIRVAAD GULAB JAMUN MIX 180 g",
+    itemName: 'AASHIRVAAD GULAB JAMUN MIX 180 g',
     itemMRPperUnit: 130,
     itemCostPricePerUnit: 49.5,
     itemSellingPricePerUnit: 56,
@@ -73,7 +73,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725123123,
-    itemName: "AASHIRVAAD SALT 1 kg",
+    itemName: 'AASHIRVAAD SALT 1 kg',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 19.71,
     itemSellingPricePerUnit: 23,
@@ -82,7 +82,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725121228,
-    itemName: "AASHIRVAAD SELECT ATTA 5 kg",
+    itemName: 'AASHIRVAAD SELECT ATTA 5 kg',
     itemMRPperUnit: 315,
     itemCostPricePerUnit: 263.45,
     itemSellingPricePerUnit: 279,
@@ -91,7 +91,7 @@ export const data = [
   },
   {
     itemBarcode: 8901512558503,
-    itemName: "ACT II IN POPCORN MOVIE BUTTER B2G1 450g",
+    itemName: 'ACT II IN POPCORN MOVIE BUTTER B2G1 450g',
     itemMRPperUnit: 130,
     itemCostPricePerUnit: 113.85,
     itemSellingPricePerUnit: 122,
@@ -100,7 +100,7 @@ export const data = [
   },
   {
     itemBarcode: 8901512914408,
-    itemName: "ACT II INS POPCORN SWEET PANI PURI 59g",
+    itemName: 'ACT II INS POPCORN SWEET PANI PURI 59g',
     itemMRPperUnit: 33,
     itemCostPricePerUnit: 24.16,
     itemSellingPricePerUnit: 29,
@@ -109,7 +109,7 @@ export const data = [
   },
   {
     itemBarcode: 8901512540805,
-    itemName: "ACT II IPC MAGIC BUTTER 40g",
+    itemName: 'ACT II IPC MAGIC BUTTER 40g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.05,
     itemSellingPricePerUnit: 10,
@@ -118,7 +118,7 @@ export const data = [
   },
   {
     itemBarcode: 8901512556301,
-    itemName: "ACT II POPCORN MOVIE THEATRE BUTTER 70g",
+    itemName: 'ACT II POPCORN MOVIE THEATRE BUTTER 70g',
     itemMRPperUnit: 33,
     itemCostPricePerUnit: 28.41,
     itemSellingPricePerUnit: 32,
@@ -127,7 +127,7 @@ export const data = [
   },
   {
     itemBarcode: 8901512922809,
-    itemName: "ACT II SWEET CORN CHAT MASALA 121g",
+    itemName: 'ACT II SWEET CORN CHAT MASALA 121g',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 25,
     itemSellingPricePerUnit: 31.5,
@@ -136,7 +136,7 @@ export const data = [
   },
   {
     itemBarcode: 8901157045116,
-    itemName: "AER AIR SPRAY 240ml COOL SURF BLUE",
+    itemName: 'AER AIR SPRAY 240ml COOL SURF BLUE',
     itemMRPperUnit: 169,
     itemCostPricePerUnit: 109.86,
     itemSellingPricePerUnit: 129,
@@ -145,7 +145,7 @@ export const data = [
   },
   {
     itemBarcode: 8901157045093,
-    itemName: "AER AIR SPRAY 240ml PINK CRUSH",
+    itemName: 'AER AIR SPRAY 240ml PINK CRUSH',
     itemMRPperUnit: 169,
     itemCostPricePerUnit: 109.86,
     itemSellingPricePerUnit: 129,
@@ -154,7 +154,7 @@ export const data = [
   },
   {
     itemBarcode: 8901023012884,
-    itemName: "AER AIR SPRAY 240ml VIOLET VALLEYBLOOM",
+    itemName: 'AER AIR SPRAY 240ml VIOLET VALLEYBLOOM',
     itemMRPperUnit: 169,
     itemCostPricePerUnit: 109.86,
     itemSellingPricePerUnit: 129,
@@ -163,7 +163,7 @@ export const data = [
   },
   {
     itemBarcode: 8901023012877,
-    itemName: "AER AIR SPRAY MORNING MISTY 240ml",
+    itemName: 'AER AIR SPRAY MORNING MISTY 240ml',
     itemMRPperUnit: 169,
     itemCostPricePerUnit: 107.03,
     itemSellingPricePerUnit: 129,
@@ -172,7 +172,7 @@ export const data = [
   },
   {
     itemBarcode: 8906016577012,
-    itemName: "AIM MATCHBOX MRP 1",
+    itemName: 'AIM MATCHBOX MRP 1',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.5,
     itemSellingPricePerUnit: 10,
@@ -181,7 +181,7 @@ export const data = [
   },
   {
     itemBarcode: 8906006435773,
-    itemName: "ALL OUT COMBI POWER SLIDER",
+    itemName: 'ALL OUT COMBI POWER SLIDER',
     itemMRPperUnit: 95,
     itemCostPricePerUnit: 79.9,
     itemSellingPricePerUnit: 90,
@@ -190,7 +190,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430918305,
-    itemName: "AMBI PUR AIR SPRAY LAVENDER",
+    itemName: 'AMBI PUR AIR SPRAY LAVENDER',
     itemMRPperUnit: 279,
     itemCostPricePerUnit: 186,
     itemSellingPricePerUnit: 210,
@@ -199,7 +199,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430918312,
-    itemName: "AMBI PUR AIR SPRAY ROSE",
+    itemName: 'AMBI PUR AIR SPRAY ROSE',
     itemMRPperUnit: 279,
     itemCostPricePerUnit: 186,
     itemSellingPricePerUnit: 210,
@@ -208,7 +208,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430918343,
-    itemName: "AMBI PUR AIR SPRAY SANDALWOOD",
+    itemName: 'AMBI PUR AIR SPRAY SANDALWOOD',
     itemMRPperUnit: 279,
     itemCostPricePerUnit: 186,
     itemSellingPricePerUnit: 210,
@@ -217,7 +217,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430896863,
-    itemName: "AMBI PUR CAR GEL LAVENDER",
+    itemName: 'AMBI PUR CAR GEL LAVENDER',
     itemMRPperUnit: 299,
     itemCostPricePerUnit: 199.32,
     itemSellingPricePerUnit: 225,
@@ -226,7 +226,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430896870,
-    itemName: "AMBI PUR CAR GEL LEMON",
+    itemName: 'AMBI PUR CAR GEL LEMON',
     itemMRPperUnit: 299,
     itemCostPricePerUnit: 199.32,
     itemSellingPricePerUnit: 225,
@@ -235,7 +235,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430819671,
-    itemName: "AMBI PUR CAR LAVENDER SPA",
+    itemName: 'AMBI PUR CAR LAVENDER SPA',
     itemMRPperUnit: 299,
     itemCostPricePerUnit: 199.32,
     itemSellingPricePerUnit: 225,
@@ -244,7 +244,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430633086,
-    itemName: "AMBI PUR MOOD LOVE",
+    itemName: 'AMBI PUR MOOD LOVE',
     itemMRPperUnit: 299,
     itemCostPricePerUnit: 199.32,
     itemSellingPricePerUnit: 225,
@@ -253,7 +253,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430633079,
-    itemName: "AMBI PUR MOOD RELAX & UNWIND",
+    itemName: 'AMBI PUR MOOD RELAX & UNWIND',
     itemMRPperUnit: 299,
     itemCostPricePerUnit: 199.32,
     itemSellingPricePerUnit: 225,
@@ -262,7 +262,7 @@ export const data = [
   },
   {
     itemBarcode: 8901262030700,
-    itemName: "AMUL GHEE CEKA 1 L",
+    itemName: 'AMUL GHEE CEKA 1 L',
     itemMRPperUnit: 525,
     itemCostPricePerUnit: 492,
     itemSellingPricePerUnit: 505,
@@ -271,7 +271,7 @@ export const data = [
   },
   {
     itemBarcode: 8904155811073,
-    itemName: "APLUS MIX DAL 1 kg",
+    itemName: 'APLUS MIX DAL 1 kg',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 117.17,
     itemSellingPricePerUnit: 130,
@@ -280,7 +280,7 @@ export const data = [
   },
   {
     itemBarcode: 8901324036770,
-    itemName: "APSARA HB PENCIL ABSOLUTE 10 U",
+    itemName: 'APSARA HB PENCIL ABSOLUTE 10 U',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 51.2,
     itemSellingPricePerUnit: 60,
@@ -289,7 +289,7 @@ export const data = [
   },
   {
     itemBarcode: 8901324010664,
-    itemName: "APSARA NON DUST ERASER 20U",
+    itemName: 'APSARA NON DUST ERASER 20U',
     itemMRPperUnit: 3,
     itemCostPricePerUnit: 2.25,
     itemSellingPricePerUnit: 3,
@@ -298,7 +298,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176081636,
-    itemName: "ARIEL COMPLETE 1.5 KG",
+    itemName: 'ARIEL COMPLETE 1.5 KG',
     itemMRPperUnit: 355,
     itemCostPricePerUnit: 259.26,
     itemSellingPricePerUnit: 270,
@@ -307,7 +307,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176081674,
-    itemName: "ARIEL DETERGENT POWDER 500 g",
+    itemName: 'ARIEL DETERGENT POWDER 500 g',
     itemMRPperUnit: 165,
     itemCostPricePerUnit: 128.56,
     itemSellingPricePerUnit: 145,
@@ -316,7 +316,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176134868,
-    itemName: "ARIEL LIQUID 1 LTR TOP LOAD",
+    itemName: 'ARIEL LIQUID 1 LTR TOP LOAD',
     itemMRPperUnit: 220,
     itemCostPricePerUnit: 203.7,
     itemSellingPricePerUnit: 215,
@@ -325,7 +325,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176126580,
-    itemName: "ARIEL LIQUID 500ML TOP LOAD",
+    itemName: 'ARIEL LIQUID 500ML TOP LOAD',
     itemMRPperUnit: 115,
     itemCostPricePerUnit: 97.22,
     itemSellingPricePerUnit: 110,
@@ -334,7 +334,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176106650,
-    itemName: "ARIEL LIQUID MATIC FRONT LOAD 1 L",
+    itemName: 'ARIEL LIQUID MATIC FRONT LOAD 1 L',
     itemMRPperUnit: 250,
     itemCostPricePerUnit: 223.96,
     itemSellingPricePerUnit: 245,
@@ -343,7 +343,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176069696,
-    itemName: "ARIEL PERFECT WASH 1 KG",
+    itemName: 'ARIEL PERFECT WASH 1 KG',
     itemMRPperUnit: 124,
     itemCostPricePerUnit: 114.82,
     itemSellingPricePerUnit: 120,
@@ -352,7 +352,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176108630,
-    itemName: "ARIEL PERFECT WASH 500G",
+    itemName: 'ARIEL PERFECT WASH 500G',
     itemMRPperUnit: 62,
     itemCostPricePerUnit: 49.07,
     itemSellingPricePerUnit: 57,
@@ -361,7 +361,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176044365,
-    itemName: "ARIEL PERFECT WASH RS 10",
+    itemName: 'ARIEL PERFECT WASH RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.503333333,
     itemSellingPricePerUnit: 10,
@@ -370,7 +370,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030767517,
-    itemName: "AXE DENIM SHAVING CREAM 78 g",
+    itemName: 'AXE DENIM SHAVING CREAM 78 g',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 68.43,
     itemSellingPricePerUnit: 75,
@@ -379,7 +379,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030773112,
-    itemName: "AXE DENIM TALC COLOGNE 100g",
+    itemName: 'AXE DENIM TALC COLOGNE 100g',
     itemMRPperUnit: 78,
     itemCostPricePerUnit: 70.2,
     itemSellingPricePerUnit: 75,
@@ -388,7 +388,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207042317,
-    itemName: "BABOOL TOOTHPASTE 30 g",
+    itemName: 'BABOOL TOOTHPASTE 30 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.09,
     itemSellingPricePerUnit: 10,
@@ -397,7 +397,7 @@ export const data = [
   },
   {
     itemBarcode: 8906014765947,
-    itemName: "BAJAJ ALMOND DROPS HAIR OIL 45ml",
+    itemName: 'BAJAJ ALMOND DROPS HAIR OIL 45ml',
     itemMRPperUnit: 37,
     itemCostPricePerUnit: 32.3,
     itemSellingPricePerUnit: 36,
@@ -406,7 +406,7 @@ export const data = [
   },
   {
     itemBarcode: 8906014765992,
-    itemName: "BAJAJ ALMOND DROPS HAIR OIL 475ml",
+    itemName: 'BAJAJ ALMOND DROPS HAIR OIL 475ml',
     itemMRPperUnit: 305,
     itemCostPricePerUnit: 263.6,
     itemSellingPricePerUnit: 289,
@@ -415,7 +415,7 @@ export const data = [
   },
   {
     itemBarcode: 8904287001250,
-    itemName: "BAMBINO PASTA TASTY MASALA",
+    itemName: 'BAMBINO PASTA TASTY MASALA',
     itemMRPperUnit: 28,
     itemCostPricePerUnit: 24.62,
     itemSellingPricePerUnit: 27,
@@ -424,7 +424,7 @@ export const data = [
   },
   {
     itemBarcode: 8904287001243,
-    itemName: "BAMBINO PASTA CREAMY CHEESE",
+    itemName: 'BAMBINO PASTA CREAMY CHEESE',
     itemMRPperUnit: 28,
     itemCostPricePerUnit: 24.62,
     itemSellingPricePerUnit: 27,
@@ -433,7 +433,7 @@ export const data = [
   },
   {
     itemBarcode: 8906082710955,
-    itemName: "BANSI DHOOP GUGGUL",
+    itemName: 'BANSI DHOOP GUGGUL',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 7.5,
     itemSellingPricePerUnit: 10,
@@ -442,7 +442,7 @@ export const data = [
   },
   {
     itemBarcode: 8906082710962,
-    itemName: "BANSI DHOOP LOBAN",
+    itemName: 'BANSI DHOOP LOBAN',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 7.5,
     itemSellingPricePerUnit: 10,
@@ -451,7 +451,7 @@ export const data = [
   },
   {
     itemBarcode: 8906082710948,
-    itemName: "BANSI DHOOP MOGRA",
+    itemName: 'BANSI DHOOP MOGRA',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 7.5,
     itemSellingPricePerUnit: 10,
@@ -460,7 +460,7 @@ export const data = [
   },
   {
     itemBarcode: 8906082710924,
-    itemName: "BANSI DHOOP ROSE",
+    itemName: 'BANSI DHOOP ROSE',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 7.5,
     itemSellingPricePerUnit: 10,
@@ -469,7 +469,7 @@ export const data = [
   },
   {
     itemBarcode: 8906082710931,
-    itemName: "BANSI DHOOP SANDALWOOD",
+    itemName: 'BANSI DHOOP SANDALWOOD',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 7.5,
     itemSellingPricePerUnit: 10,
@@ -478,7 +478,7 @@ export const data = [
   },
   {
     itemBarcode: 8904271200294,
-    itemName: "BAYGON FLY & MOSQUITO KILLER 625ml LIME",
+    itemName: 'BAYGON FLY & MOSQUITO KILLER 625ml LIME',
     itemMRPperUnit: 310,
     itemCostPricePerUnit: 253.63,
     itemSellingPricePerUnit: 280,
@@ -487,7 +487,7 @@ export const data = [
   },
   {
     itemBarcode: 8908016386236,
-    itemName: "BEBE JAGGERY POWDER 450 g",
+    itemName: 'BEBE JAGGERY POWDER 450 g',
     itemMRPperUnit: 51,
     itemCostPricePerUnit: 31.37,
     itemSellingPricePerUnit: 40,
@@ -496,7 +496,7 @@ export const data = [
   },
   {
     itemBarcode: 8901414000438,
-    itemName: "BIKANO NAVRATAN MIX 1 kg",
+    itemName: 'BIKANO NAVRATAN MIX 1 kg',
     itemMRPperUnit: 272,
     itemCostPricePerUnit: 180.31,
     itemSellingPricePerUnit: 200,
@@ -505,7 +505,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725118914,
-    itemName: "BINGO TEDHE MEDHE MRP10",
+    itemName: 'BINGO TEDHE MEDHE MRP10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.05,
     itemSellingPricePerUnit: 10,
@@ -514,7 +514,7 @@ export const data = [
   },
   {
     itemBarcode: 8904352000287,
-    itemName: "BIOTIQUE MORNING NECTAR FACE WASH 100ml",
+    itemName: 'BIOTIQUE MORNING NECTAR FACE WASH 100ml',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 89.1,
     itemSellingPricePerUnit: 109,
@@ -523,7 +523,7 @@ export const data = [
   },
   {
     itemBarcode: 8904352002106,
-    itemName: "BIOTIQUE PAPAYA FACE SCRUB TUBE 100g",
+    itemName: 'BIOTIQUE PAPAYA FACE SCRUB TUBE 100g',
     itemMRPperUnit: 140,
     itemCostPricePerUnit: 103.95,
     itemSellingPricePerUnit: 115,
@@ -532,7 +532,7 @@ export const data = [
   },
   {
     itemBarcode: 8906009451664,
-    itemName: "BIOTIQUE SOAP BASIL PARSLEY 150 g",
+    itemName: 'BIOTIQUE SOAP BASIL PARSLEY 150 g',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 68.64,
     itemSellingPricePerUnit: 78,
@@ -541,7 +541,7 @@ export const data = [
   },
   {
     itemBarcode: 8906009451640,
-    itemName: "BIOTIQUE SOAP BIO ALMOND 150 g",
+    itemName: 'BIOTIQUE SOAP BIO ALMOND 150 g',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 68.64,
     itemSellingPricePerUnit: 78,
@@ -550,7 +550,7 @@ export const data = [
   },
   {
     itemBarcode: 8904352002359,
-    itemName: "BIOTIQUE SUNFLOWER 50+SPF FACE CRM 50g",
+    itemName: 'BIOTIQUE SUNFLOWER 50+SPF FACE CRM 50g',
     itemMRPperUnit: 220,
     itemCostPricePerUnit: 163.35,
     itemSellingPricePerUnit: 185,
@@ -559,7 +559,7 @@ export const data = [
   },
   {
     itemBarcode: 8904352001970,
-    itemName: "BIOTIQUE SUN PROTECT 30+SPF MOSTURIZER 120ML",
+    itemName: 'BIOTIQUE SUN PROTECT 30+SPF MOSTURIZER 120ML',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 146.28,
     itemSellingPricePerUnit: 170,
@@ -568,7 +568,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786260508,
-    itemName: "PRO NATURE BLACK PEPPER",
+    itemName: 'PRO NATURE BLACK PEPPER',
     itemMRPperUnit: 76,
     itemCostPricePerUnit: 63.90333333,
     itemSellingPricePerUnit: 70,
@@ -577,7 +577,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030809453,
-    itemName: "BOOST POUCH 500 g",
+    itemName: 'BOOST POUCH 500 g',
     itemMRPperUnit: 195,
     itemCostPricePerUnit: 176.17,
     itemSellingPricePerUnit: 186,
@@ -586,7 +586,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248154109,
-    itemName: "BOROPLUS ALOEVERA GEL 60ml",
+    itemName: 'BOROPLUS ALOEVERA GEL 60ml',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 38.24,
     itemSellingPricePerUnit: 46,
@@ -595,7 +595,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248101103,
-    itemName: "BOROPLUS ANTISEPTIC CREAM 19 ml",
+    itemName: 'BOROPLUS ANTISEPTIC CREAM 19 ml',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 35.81,
     itemSellingPricePerUnit: 39,
@@ -603,8 +603,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "BOROPLUS SOAP NM+TU+ALO 125g",
+    itemBarcode: '',
+    itemName: 'BOROPLUS SOAP NM+TU+ALO 125g',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 24.75,
     itemSellingPricePerUnit: 30,
@@ -613,7 +613,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063139336,
-    itemName: "BRITANNIA BOURBON 480 g COMBI PACK",
+    itemName: 'BRITANNIA BOURBON 480 g COMBI PACK',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 17.91,
     itemSellingPricePerUnit: 21,
@@ -622,7 +622,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063092587,
-    itemName: "BRITANNIA GOODDAY BUTTER 12 U X 38 g",
+    itemName: 'BRITANNIA GOODDAY BUTTER 12 U X 38 g',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.545833333,
     itemSellingPricePerUnit: 5,
@@ -631,7 +631,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063091023,
-    itemName: "BRITANNIA GOODDAY HARMONY 120g",
+    itemName: 'BRITANNIA GOODDAY HARMONY 120g',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 26.51,
     itemSellingPricePerUnit: 29,
@@ -640,7 +640,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063019188,
-    itemName: "BRITANNIA LITTLE HEARTS 34.5 g",
+    itemName: 'BRITANNIA LITTLE HEARTS 34.5 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.95,
     itemSellingPricePerUnit: 10,
@@ -649,7 +649,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063162136,
-    itemName: "BRITANNIA MARIE GOLD",
+    itemName: 'BRITANNIA MARIE GOLD',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 14.546,
     itemSellingPricePerUnit: 18,
@@ -658,7 +658,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063012509,
-    itemName: "BRITANNIA MILK BIKIS 80 g",
+    itemName: 'BRITANNIA MILK BIKIS 80 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.95,
     itemSellingPricePerUnit: 10,
@@ -667,7 +667,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063142022,
-    itemName: "BRITANNIA NUTRICHOICE DIGESTIVE 250g",
+    itemName: 'BRITANNIA NUTRICHOICE DIGESTIVE 250g',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 58.2,
     itemSellingPricePerUnit: 63,
@@ -676,7 +676,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063163287,
-    itemName: "BRITANNIA TIGER GLUCOS MRP 5",
+    itemName: 'BRITANNIA TIGER GLUCOS MRP 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.545416667,
     itemSellingPricePerUnit: 5,
@@ -685,7 +685,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063139329,
-    itemName: "BRITANNIA TREAT BOURBON",
+    itemName: 'BRITANNIA TREAT BOURBON',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.09,
     itemSellingPricePerUnit: 10,
@@ -694,7 +694,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063139213,
-    itemName: "BRITANNIA TREAT BOURBON 150 g",
+    itemName: 'BRITANNIA TREAT BOURBON 150 g',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31.34,
     itemSellingPricePerUnit: 34,
@@ -703,7 +703,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063029170,
-    itemName: "BRITANNIA TREAT JIMJAM 150 g",
+    itemName: 'BRITANNIA TREAT JIMJAM 150 g',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31.34,
     itemSellingPricePerUnit: 34,
@@ -712,7 +712,7 @@ export const data = [
   },
   {
     itemBarcode: 8901425059883,
-    itemName: "CAMLIN BOLD E PERMANENT MARKER BLUE 10U",
+    itemName: 'CAMLIN BOLD E PERMANENT MARKER BLUE 10U',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 12.76,
     itemSellingPricePerUnit: 17,
@@ -721,7 +721,7 @@ export const data = [
   },
   {
     itemBarcode: 8901425074084,
-    itemName: "CAMLIN BOLD E WHITEBOARD MARKER",
+    itemName: 'CAMLIN BOLD E WHITEBOARD MARKER',
     itemMRPperUnit: 28,
     itemCostPricePerUnit: 21.3,
     itemSellingPricePerUnit: 25,
@@ -730,7 +730,7 @@ export const data = [
   },
   {
     itemBarcode: 8901425076798,
-    itemName: "CAMLIN WHITE GLUE SQUEEZY 100 g 1U",
+    itemName: 'CAMLIN WHITE GLUE SQUEEZY 100 g 1U',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 27.11,
     itemSellingPricePerUnit: 35,
@@ -739,7 +739,7 @@ export const data = [
   },
   {
     itemBarcode: 8901425076811,
-    itemName: "CAMLIN WHITE GLUE SQUEEZY 25 g 1U",
+    itemName: 'CAMLIN WHITE GLUE SQUEEZY 25 g 1U',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 6.77,
     itemSellingPricePerUnit: 9,
@@ -748,7 +748,7 @@ export const data = [
   },
   {
     itemBarcode: 8901425076804,
-    itemName: "CAMLIN WHITE GLUE SQUEEZY 50 g 1U",
+    itemName: 'CAMLIN WHITE GLUE SQUEEZY 50 g 1U',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 13.55,
     itemSellingPricePerUnit: 17,
@@ -757,7 +757,7 @@ export const data = [
   },
   {
     itemBarcode: 8903183301914,
-    itemName: "CLASSMATE BALL PEN BLUE OCTANE",
+    itemName: 'CLASSMATE BALL PEN BLUE OCTANE',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 36.94,
     itemSellingPricePerUnit: 45,
@@ -766,7 +766,7 @@ export const data = [
   },
   {
     itemBarcode: 8902519001931,
-    itemName: "CLASSMATE DB193 A4 UNRULED 40PG 1U",
+    itemName: 'CLASSMATE DB193 A4 UNRULED 40PG 1U',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31.36,
     itemSellingPricePerUnit: 34,
@@ -775,7 +775,7 @@ export const data = [
   },
   {
     itemBarcode: 8902519001993,
-    itemName: "CLASSMATE NB199 A4 RULED 1 U X 140PG",
+    itemName: 'CLASSMATE NB199 A4 RULED 1 U X 140PG',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 49.29,
     itemSellingPricePerUnit: 54,
@@ -784,7 +784,7 @@ export const data = [
   },
   {
     itemBarcode: 8902519002211,
-    itemName: "CLASSMATE NB221 CBSE RULED 172PG",
+    itemName: 'CLASSMATE NB221 CBSE RULED 172PG',
     itemMRPperUnit: 52,
     itemCostPricePerUnit: 46.61,
     itemSellingPricePerUnit: 50,
@@ -793,7 +793,7 @@ export const data = [
   },
   {
     itemBarcode: 8902519003270,
-    itemName: "CLASSMATE NB327 A4 RULED HARD 360PG 1U",
+    itemName: 'CLASSMATE NB327 A4 RULED HARD 360PG 1U',
     itemMRPperUnit: 170,
     itemCostPricePerUnit: 152.5,
     itemSellingPricePerUnit: 165,
@@ -802,7 +802,7 @@ export const data = [
   },
   {
     itemBarcode: 8902519009807,
-    itemName: "CLASSMATE NB980 A4 RULED 84PG 1U",
+    itemName: 'CLASSMATE NB980 A4 RULED 84PG 1U',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31.36,
     itemSellingPricePerUnit: 34,
@@ -811,7 +811,7 @@ export const data = [
   },
   {
     itemBarcode: 8902519009869,
-    itemName: "CLASSMATE NB986 A4 RULED HARD 240PG 1U",
+    itemName: 'CLASSMATE NB986 A4 RULED HARD 240PG 1U',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 98.6,
     itemSellingPricePerUnit: 105,
@@ -820,7 +820,7 @@ export const data = [
   },
   {
     itemBarcode: 8901314649348,
-    itemName: "COLGATE MAX FRESH TOOTHPASTE 48 g Hanger",
+    itemName: 'COLGATE MAX FRESH TOOTHPASTE 48 g Hanger',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 9.09,
     itemSellingPricePerUnit: 20,
@@ -829,7 +829,7 @@ export const data = [
   },
   {
     itemBarcode: 8901314539205,
-    itemName: "COLGATE VEDSHAKTI TOOTHPASTE 180g",
+    itemName: 'COLGATE VEDSHAKTI TOOTHPASTE 180g',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 60.59,
     itemSellingPricePerUnit: 70,
@@ -838,7 +838,7 @@ export const data = [
   },
   {
     itemBarcode: 8901314077790,
-    itemName: "COLGATE VISIBLE WHITE TOOTHPASTE 100 g",
+    itemName: 'COLGATE VISIBLE WHITE TOOTHPASTE 100 g',
     itemMRPperUnit: 145,
     itemCostPricePerUnit: 111.22,
     itemSellingPricePerUnit: 128,
@@ -847,7 +847,7 @@ export const data = [
   },
   {
     itemBarcode: 8901537025127,
-    itemName: "DAAWAT SUPER BASMATI RICE 1kg",
+    itemName: 'DAAWAT SUPER BASMATI RICE 1kg',
     itemMRPperUnit: 185,
     itemCostPricePerUnit: 131,
     itemSellingPricePerUnit: 150,
@@ -856,7 +856,7 @@ export const data = [
   },
   {
     itemBarcode: 8901103105116,
-    itemName: "DABUR FEM BLEACH NATURAL DIAMOND 10 g",
+    itemName: 'DABUR FEM BLEACH NATURAL DIAMOND 10 g',
     itemMRPperUnit: 39,
     itemCostPricePerUnit: 32.47,
     itemSellingPricePerUnit: 36,
@@ -865,7 +865,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725132859,
-    itemName: "DARK FANTASY CHOCOFILLS MRP 10",
+    itemName: 'DARK FANTASY CHOCOFILLS MRP 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.95,
     itemSellingPricePerUnit: 10,
@@ -874,7 +874,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396348108,
-    itemName: "DETTOL DISINFECTANT LIME 200 ml",
+    itemName: 'DETTOL DISINFECTANT LIME 200 ml',
     itemMRPperUnit: 98,
     itemCostPricePerUnit: 83.13,
     itemSellingPricePerUnit: 90,
@@ -883,7 +883,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396388159,
-    itemName: "DETTOL WIPES MULTI USE ORGINAL 40 U",
+    itemName: 'DETTOL WIPES MULTI USE ORGINAL 40 U',
     itemMRPperUnit: 129,
     itemCostPricePerUnit: 106.72,
     itemSellingPricePerUnit: 119,
@@ -892,7 +892,7 @@ export const data = [
   },
   {
     itemBarcode: 8908001753784,
-    itemName: "DR. ORTHO AYURVEDIC OIL 120 ml",
+    itemName: 'DR. ORTHO AYURVEDIC OIL 120 ml',
     itemMRPperUnit: 295,
     itemCostPricePerUnit: 214,
     itemSellingPricePerUnit: 235,
@@ -901,7 +901,7 @@ export const data = [
   },
   {
     itemBarcode: 8908016682031,
-    itemName: "DR. ORTHO BALM 9.6 g",
+    itemName: 'DR. ORTHO BALM 9.6 g',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 1,
     itemSellingPricePerUnit: 25,
@@ -910,7 +910,7 @@ export const data = [
   },
   {
     itemBarcode: 8901972075350,
-    itemName: "DUKES COFFEE BOURBON 12U",
+    itemName: 'DUKES COFFEE BOURBON 12U',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 9.405,
     itemSellingPricePerUnit: 14,
@@ -919,7 +919,7 @@ export const data = [
   },
   {
     itemBarcode: 8901972006040,
-    itemName: "DUKES NICE COMBI 450 g",
+    itemName: 'DUKES NICE COMBI 450 g',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 13.61,
     itemSellingPricePerUnit: 20,
@@ -928,7 +928,7 @@ export const data = [
   },
   {
     itemBarcode: 8901571010790,
-    itemName: "ENO LEMON 30 g",
+    itemName: 'ENO LEMON 30 g',
     itemMRPperUnit: 54,
     itemCostPricePerUnit: 43.98,
     itemSellingPricePerUnit: 50,
@@ -937,7 +937,7 @@ export const data = [
   },
   {
     itemBarcode: 8901571006854,
-    itemName: "ENO LEMON 60 U X 5 g",
+    itemName: 'ENO LEMON 60 U X 5 g',
     itemMRPperUnit: 9,
     itemCostPricePerUnit: 7.43,
     itemSellingPricePerUnit: 9,
@@ -946,7 +946,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786270507,
-    itemName: "EVEREST AMCHUR POWDER",
+    itemName: 'EVEREST AMCHUR POWDER',
     itemMRPperUnit: 47,
     itemCostPricePerUnit: 39.50166667,
     itemSellingPricePerUnit: 45,
@@ -955,7 +955,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719122439,
-    itemName: "FAB BOURBON",
+    itemName: 'FAB BOURBON',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.928333333,
     itemSellingPricePerUnit: 10,
@@ -964,7 +964,7 @@ export const data = [
   },
   {
     itemBarcode: 8908000452275,
-    itemName: "FALCON UAE DATES SEEDED 500 g",
+    itemName: 'FALCON UAE DATES SEEDED 500 g',
     itemMRPperUnit: 145,
     itemCostPricePerUnit: 98.3,
     itemSellingPricePerUnit: 110,
@@ -973,7 +973,7 @@ export const data = [
   },
   {
     itemBarcode: 8901103101279,
-    itemName: "FEM FAIRNESS BLEACH SAFFRON 24g",
+    itemName: 'FEM FAIRNESS BLEACH SAFFRON 24g',
     itemMRPperUnit: 57,
     itemCostPricePerUnit: 50.78,
     itemSellingPricePerUnit: 54,
@@ -982,7 +982,7 @@ export const data = [
   },
   {
     itemBarcode: 8901860630241,
-    itemName: "FEVICOL WHITE ADHESIVE SQUEEZY 22.5g 1U",
+    itemName: 'FEVICOL WHITE ADHESIVE SQUEEZY 22.5g 1U',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.07,
     itemSellingPricePerUnit: 9.5,
@@ -991,7 +991,7 @@ export const data = [
   },
   {
     itemBarcode: 8901860630432,
-    itemName: "FEVICOL WHITE ADHESIVE SQUEEZY 45g",
+    itemName: 'FEVICOL WHITE ADHESIVE SQUEEZY 45g',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.48,
     itemSellingPricePerUnit: 19.5,
@@ -1000,7 +1000,7 @@ export const data = [
   },
   {
     itemBarcode: 8410125600467,
-    itemName: "FIGARO PURE OLIVE OIL TIN 200 ml",
+    itemName: 'FIGARO PURE OLIVE OIL TIN 200 ml',
     itemMRPperUnit: 325,
     itemCostPricePerUnit: 265.2,
     itemSellingPricePerUnit: 280,
@@ -1009,7 +1009,7 @@ export const data = [
   },
   {
     itemBarcode: 8908003634067,
-    itemName: "GAINDA NAPHTHALENE BALL 100g",
+    itemName: 'GAINDA NAPHTHALENE BALL 100g',
     itemMRPperUnit: 38,
     itemCostPricePerUnit: 19,
     itemSellingPricePerUnit: 28,
@@ -1018,7 +1018,7 @@ export const data = [
   },
   {
     itemBarcode: 8901663109661,
-    itemName: "GALA DOUBLE HOCKEY TOILET BRUSH",
+    itemName: 'GALA DOUBLE HOCKEY TOILET BRUSH',
     itemMRPperUnit: 165,
     itemCostPricePerUnit: 125.98,
     itemSellingPricePerUnit: 140,
@@ -1027,7 +1027,7 @@ export const data = [
   },
   {
     itemBarcode: 8901663101986,
-    itemName: "GALA DUST PAN WITH RUBBER LEVELER",
+    itemName: 'GALA DUST PAN WITH RUBBER LEVELER',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 1,
     itemSellingPricePerUnit: 40,
@@ -1036,7 +1036,7 @@ export const data = [
   },
   {
     itemBarcode: 8901663204328,
-    itemName: "GALA EZEE SQUEEGEE KITCHEN WIPER",
+    itemName: 'GALA EZEE SQUEEGEE KITCHEN WIPER',
     itemMRPperUnit: 165,
     itemCostPricePerUnit: 121.59,
     itemSellingPricePerUnit: 135,
@@ -1045,7 +1045,7 @@ export const data = [
   },
   {
     itemBarcode: 8901663103256,
-    itemName: "GALA LEADER PLUS WIPER",
+    itemName: 'GALA LEADER PLUS WIPER',
     itemMRPperUnit: 240,
     itemCostPricePerUnit: 166.25,
     itemSellingPricePerUnit: 196,
@@ -1054,7 +1054,7 @@ export const data = [
   },
   {
     itemBarcode: 8901663204007,
-    itemName: "GALA NO DUST BROOM 2 IN 1",
+    itemName: 'GALA NO DUST BROOM 2 IN 1',
     itemMRPperUnit: 300,
     itemCostPricePerUnit: 202.02,
     itemSellingPricePerUnit: 220,
@@ -1063,7 +1063,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176094193,
-    itemName: "GILLETTE MACH 3 CARTRIDGE 8 U",
+    itemName: 'GILLETTE MACH 3 CARTRIDGE 8 U',
     itemMRPperUnit: 899,
     itemCostPricePerUnit: 737.01,
     itemSellingPricePerUnit: 799,
@@ -1072,7 +1072,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176023018,
-    itemName: "GILLETTE PRESTO RAZOR 5 U",
+    itemName: 'GILLETTE PRESTO RAZOR 5 U',
     itemMRPperUnit: 88,
     itemCostPricePerUnit: 68.14,
     itemSellingPricePerUnit: 80,
@@ -1081,7 +1081,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176029980,
-    itemName: "GILLETTE SHAVING CREAM REGULAR 93.1g",
+    itemName: 'GILLETTE SHAVING CREAM REGULAR 93.1g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 61.6,
     itemSellingPricePerUnit: 70,
@@ -1090,7 +1090,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192040620,
-    itemName: "GREAT VALUE COTTON BALLS POUCH 50U",
+    itemName: 'GREAT VALUE COTTON BALLS POUCH 50U',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 51.64,
     itemSellingPricePerUnit: 57,
@@ -1099,7 +1099,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192039143,
-    itemName: "GREAT VALUE GHEE BATTI 20U",
+    itemName: 'GREAT VALUE GHEE BATTI 20U',
     itemMRPperUnit: 61,
     itemCostPricePerUnit: 42,
     itemSellingPricePerUnit: 50,
@@ -1108,7 +1108,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719404115,
-    itemName: "HAPPY HAPPY BISCUIT",
+    itemName: 'HAPPY HAPPY BISCUIT',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.464166667,
     itemSellingPricePerUnit: 5,
@@ -1117,7 +1117,7 @@ export const data = [
   },
   {
     itemBarcode: 8901393019469,
-    itemName: "HAPPYDENT WAVE XYLITOL FRUITS",
+    itemName: 'HAPPYDENT WAVE XYLITOL FRUITS',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 43.75,
     itemSellingPricePerUnit: 47,
@@ -1126,7 +1126,7 @@ export const data = [
   },
   {
     itemBarcode: 8901393024197,
-    itemName: "HAPPYDENT WHITE SPEARMINT 8U",
+    itemName: 'HAPPYDENT WHITE SPEARMINT 8U',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 43.75,
     itemSellingPricePerUnit: 47,
@@ -1135,7 +1135,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719105913,
-    itemName: "HIDE & SEEK",
+    itemName: 'HIDE & SEEK',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 26.785,
     itemSellingPricePerUnit: 30,
@@ -1144,7 +1144,7 @@ export const data = [
   },
   {
     itemBarcode: 8903664042510,
-    itemName: "IRIS FRAGRANT SACHET ROSE",
+    itemName: 'IRIS FRAGRANT SACHET ROSE',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 31.02,
     itemSellingPricePerUnit: 45,
@@ -1153,7 +1153,7 @@ export const data = [
   },
   {
     itemBarcode: 8903664046716,
-    itemName: "IRIS FRAGRANT SACHET BLUEBERRY",
+    itemName: 'IRIS FRAGRANT SACHET BLUEBERRY',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 31.02,
     itemSellingPricePerUnit: 45,
@@ -1162,7 +1162,7 @@ export const data = [
   },
   {
     itemBarcode: 8903664042497,
-    itemName: "IRIS FRAGRANT SACHET LAVENDER",
+    itemName: 'IRIS FRAGRANT SACHET LAVENDER',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 31.02,
     itemSellingPricePerUnit: 45,
@@ -1171,7 +1171,7 @@ export const data = [
   },
   {
     itemBarcode: 8903664046709,
-    itemName: "IRIS FRAGRANT SACHET LEMON GRASS",
+    itemName: 'IRIS FRAGRANT SACHET LEMON GRASS',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 31.02,
     itemSellingPricePerUnit: 45,
@@ -1180,7 +1180,7 @@ export const data = [
   },
   {
     itemBarcode: 8903664042527,
-    itemName: "IRIS FRAGRANT SACHET JASMINE",
+    itemName: 'IRIS FRAGRANT SACHET JASMINE',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 31.02,
     itemSellingPricePerUnit: 45,
@@ -1189,7 +1189,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719107542,
-    itemName: "JAM IN BISCUIT",
+    itemName: 'JAM IN BISCUIT',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.926666667,
     itemSellingPricePerUnit: 10,
@@ -1252,7 +1252,7 @@ export const data = [
   },
   {
     itemBarcode: 80824107,
-    itemName: "KINDER CREAMY 24 U",
+    itemName: 'KINDER CREAMY 24 U',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.78,
     itemSellingPricePerUnit: 19.5,
@@ -1261,7 +1261,7 @@ export const data = [
   },
   {
     itemBarcode: 80135890,
-    itemName: "KINDER JOY BOYS 8 U X MRP 40",
+    itemName: 'KINDER JOY BOYS 8 U X MRP 40',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 40,
     itemSellingPricePerUnit: 44,
@@ -1270,7 +1270,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719123443,
-    itemName: "KISMIBAR RS 2",
+    itemName: 'KISMIBAR RS 2',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.739166667,
     itemSellingPricePerUnit: 2,
@@ -1279,7 +1279,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030897689,
-    itemName: "KISSAN JAM MIX FRUIT 100 g",
+    itemName: 'KISSAN JAM MIX FRUIT 100 g',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.91,
     itemSellingPricePerUnit: 19,
@@ -1288,7 +1288,7 @@ export const data = [
   },
   {
     itemBarcode: 8906062310427,
-    itemName: "KITCHEN KING MOONG DAL 1 kg",
+    itemName: 'KITCHEN KING MOONG DAL 1 kg',
     itemMRPperUnit: 160,
     itemCostPricePerUnit: 129,
     itemSellingPricePerUnit: 135,
@@ -1297,7 +1297,7 @@ export const data = [
   },
   {
     itemBarcode: 8906062310441,
-    itemName: "KITCHEN KING URAD DAL 1 kg",
+    itemName: 'KITCHEN KING URAD DAL 1 kg',
     itemMRPperUnit: 160,
     itemCostPricePerUnit: 136,
     itemSellingPricePerUnit: 145,
@@ -1306,7 +1306,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030559266,
-    itemName: "KNORR SOUP MEXICAN 52g",
+    itemName: 'KNORR SOUP MEXICAN 52g',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 57.1,
     itemSellingPricePerUnit: 62,
@@ -1315,7 +1315,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030824739,
-    itemName: "KNORR SOUP MIXED VEG 45g",
+    itemName: 'KNORR SOUP MIXED VEG 45g',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 48.3,
     itemSellingPricePerUnit: 53,
@@ -1324,7 +1324,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030824746,
-    itemName: "KNORR SOUP SWEET CORN CHICKEN 42 g",
+    itemName: 'KNORR SOUP SWEET CORN CHICKEN 42 g',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 48.3,
     itemSellingPricePerUnit: 53,
@@ -1333,7 +1333,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030824753,
-    itemName: "KNORR SOUP TOMATO 53 g",
+    itemName: 'KNORR SOUP TOMATO 53 g',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 48.3,
     itemSellingPricePerUnit: 53,
@@ -1342,7 +1342,7 @@ export const data = [
   },
   {
     itemBarcode: 8901425000311,
-    itemName: "KOKUYO CAMLIN PLASTIC CRAYON 12 SHADES",
+    itemName: 'KOKUYO CAMLIN PLASTIC CRAYON 12 SHADES',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 35.09,
     itemSellingPricePerUnit: 45,
@@ -1351,7 +1351,7 @@ export const data = [
   },
   {
     itemBarcode: 8902635467895,
-    itemName: "KORES CLASSIC PENCILS 10PCS",
+    itemName: 'KORES CLASSIC PENCILS 10PCS',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 39.96,
     itemSellingPricePerUnit: 50,
@@ -1360,7 +1360,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719122187,
-    itemName: "KRACK JACK BISCUIT",
+    itemName: 'KRACK JACK BISCUIT',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.46,
     itemSellingPricePerUnit: 5,
@@ -1369,7 +1369,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719122217,
-    itemName: "KRACK JACK BISCUIT56.7G",
+    itemName: 'KRACK JACK BISCUIT56.7G',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.928333333,
     itemSellingPricePerUnit: 10,
@@ -1378,7 +1378,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491503044,
-    itemName: "LAYS CHIPS SPANISH TOMATO",
+    itemName: 'LAYS CHIPS SPANISH TOMATO',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.05,
     itemSellingPricePerUnit: 10,
@@ -1387,7 +1387,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030779312,
-    itemName: "LIPTON GREEN TEA BAG TULSI NATURAL 25 U",
+    itemName: 'LIPTON GREEN TEA BAG TULSI NATURAL 25 U',
     itemMRPperUnit: 165,
     itemCostPricePerUnit: 148.77,
     itemSellingPricePerUnit: 155,
@@ -1396,7 +1396,7 @@ export const data = [
   },
   {
     itemBarcode: 8901123001214,
-    itemName: "LOTTE CHOCO PIE 18 U",
+    itemName: 'LOTTE CHOCO PIE 18 U',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 7.93,
     itemSellingPricePerUnit: 10,
@@ -1405,7 +1405,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719124365,
-    itemName: "MAGIX CHOCOLATE 29G",
+    itemName: 'MAGIX CHOCOLATE 29G',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.545833333,
     itemSellingPricePerUnit: 5,
@@ -1414,7 +1414,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719103674,
-    itemName: "MAGIX CHOCOLATE BISCUIT",
+    itemName: 'MAGIX CHOCOLATE BISCUIT',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 4.545833333,
     itemSellingPricePerUnit: 10,
@@ -1423,7 +1423,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719103650,
-    itemName: "MAGIX ORANGE",
+    itemName: 'MAGIX ORANGE',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 4.545833333,
     itemSellingPricePerUnit: 10,
@@ -1432,7 +1432,7 @@ export const data = [
   },
   {
     itemBarcode: 8903622001894,
-    itemName: "MAMY POKO PANTS LARGE 10 U",
+    itemName: 'MAMY POKO PANTS LARGE 10 U',
     itemMRPperUnit: 195,
     itemCostPricePerUnit: 161.21,
     itemSellingPricePerUnit: 179,
@@ -1441,7 +1441,7 @@ export const data = [
   },
   {
     itemBarcode: 8903622037336,
-    itemName: "MAMY POKO PANTS MEDIUM 12 U",
+    itemName: 'MAMY POKO PANTS MEDIUM 12 U',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 174.56,
     itemSellingPricePerUnit: 185,
@@ -1450,7 +1450,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207033377,
-    itemName: "MESWAK TOOTHPASTE 200 g",
+    itemName: 'MESWAK TOOTHPASTE 200 g',
     itemMRPperUnit: 105,
     itemCostPricePerUnit: 89.12,
     itemSellingPricePerUnit: 100,
@@ -1459,7 +1459,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719120879,
-    itemName: "MONACO 25G",
+    itemName: 'MONACO 25G',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.464,
     itemSellingPricePerUnit: 10,
@@ -1468,7 +1468,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719121432,
-    itemName: "MONACO 52.2G",
+    itemName: 'MONACO 52.2G',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.928333333,
     itemSellingPricePerUnit: 10,
@@ -1477,7 +1477,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058900118,
-    itemName: "NESCAFE SUNRISE COFFEE 50 g",
+    itemName: 'NESCAFE SUNRISE COFFEE 50 g',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 80.34,
     itemSellingPricePerUnit: 85,
@@ -1486,7 +1486,7 @@ export const data = [
   },
   {
     itemBarcode: 8901560170511,
-    itemName: "NILONS PICKLE MANGO PARAMPARA 500 g",
+    itemName: 'NILONS PICKLE MANGO PARAMPARA 500 g',
     itemMRPperUnit: 125,
     itemCostPricePerUnit: 111.61,
     itemSellingPricePerUnit: 117,
@@ -1495,7 +1495,7 @@ export const data = [
   },
   {
     itemBarcode: 8901560170542,
-    itemName: "NILONS PICKLE MIXED PARAMPARA 500 g",
+    itemName: 'NILONS PICKLE MIXED PARAMPARA 500 g',
     itemMRPperUnit: 125,
     itemCostPricePerUnit: 107.75,
     itemSellingPricePerUnit: 115,
@@ -1504,7 +1504,7 @@ export const data = [
   },
   {
     itemBarcode: 8906019776603,
-    itemName: "NUTRAJ CLASSIC DATES 500g",
+    itemName: 'NUTRAJ CLASSIC DATES 500g',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 89.53,
     itemSellingPricePerUnit: 110,
@@ -1513,7 +1513,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207500053,
-    itemName: "ODOMOS MOSQUITO REPELLENT CREAM 100 g",
+    itemName: 'ODOMOS MOSQUITO REPELLENT CREAM 100 g',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 81,
     itemSellingPricePerUnit: 90,
@@ -1522,7 +1522,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207042454,
-    itemName: "ODONIL AIR FRESHNER BLOCKS 72g X 4U",
+    itemName: 'ODONIL AIR FRESHNER BLOCKS 72g X 4U',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 65.53,
     itemSellingPricePerUnit: 75,
@@ -1531,7 +1531,7 @@ export const data = [
   },
   {
     itemBarcode: 89007587,
-    itemName: "ORBIT FRUIT RS 5",
+    itemName: 'ORBIT FRUIT RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.05,
     itemSellingPricePerUnit: 4.5,
@@ -1540,7 +1540,7 @@ export const data = [
   },
   {
     itemBarcode: 8902433003165,
-    itemName: "ORBIT RAW MANGO RS 5",
+    itemName: 'ORBIT RAW MANGO RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4,
     itemSellingPricePerUnit: 5,
@@ -1549,7 +1549,7 @@ export const data = [
   },
   {
     itemBarcode: 8906130900031,
-    itemName: "ORION CHOCO PIE 28g",
+    itemName: 'ORION CHOCO PIE 28g',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 67,
     itemSellingPricePerUnit: 75,
@@ -1567,7 +1567,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719122019,
-    itemName: "PARLE COCONUT",
+    itemName: 'PARLE COCONUT',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.928333333,
     itemSellingPricePerUnit: 10,
@@ -1576,7 +1576,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719119118,
-    itemName: "PARLE G BISCUIT",
+    itemName: 'PARLE G BISCUIT',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.7,
     itemSellingPricePerUnit: 5,
@@ -1585,7 +1585,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719124143,
-    itemName: "PARLE G GOLD",
+    itemName: 'PARLE G GOLD',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.928333333,
     itemSellingPricePerUnit: 10,
@@ -1594,7 +1594,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719121241,
-    itemName: "PARLE G ROYALE",
+    itemName: 'PARLE G ROYALE',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.090833333,
     itemSellingPricePerUnit: 10,
@@ -1603,7 +1603,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719100369,
-    itemName: "PARLE HIDE & SEEK CHOCOLATE CHIP 33 g",
+    itemName: 'PARLE HIDE & SEEK CHOCOLATE CHIP 33 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.49,
     itemSellingPricePerUnit: 10,
@@ -1612,7 +1612,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719115639,
-    itemName: "PARLE HIDE & SEEK CREAM CHOCOLATE 100 g",
+    itemName: 'PARLE HIDE & SEEK CREAM CHOCOLATE 100 g',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 26.86,
     itemSellingPricePerUnit: 29,
@@ -1621,7 +1621,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719115622,
-    itemName: "PARLE HIDE & SEEK CREAM VANILLA 100 g",
+    itemName: 'PARLE HIDE & SEEK CREAM VANILLA 100 g',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 26.86,
     itemSellingPricePerUnit: 29,
@@ -1630,7 +1630,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719220173,
-    itemName: "PARLE MELODY 100 U X MRP 1",
+    itemName: 'PARLE MELODY 100 U X MRP 1',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 83.92,
     itemSellingPricePerUnit: 91,
@@ -1639,7 +1639,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719120770,
-    itemName: "PARLE MONACO BISCUIT 400g",
+    itemName: 'PARLE MONACO BISCUIT 400g',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 57.27,
     itemSellingPricePerUnit: 65,
@@ -1648,7 +1648,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719119132,
-    itemName: "PARLE-G BISCUIT 120 g",
+    itemName: 'PARLE-G BISCUIT 120 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.99,
     itemSellingPricePerUnit: 10,
@@ -1657,7 +1657,7 @@ export const data = [
   },
   {
     itemBarcode: 8906032019671,
-    itemName: "PATANJALI NARIYAL BISCUIT",
+    itemName: 'PATANJALI NARIYAL BISCUIT',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.4,
     itemSellingPricePerUnit: 10,
@@ -1666,7 +1666,7 @@ export const data = [
   },
   {
     itemBarcode: 8908010245133,
-    itemName: "PEE SAFE NATURAL INTIMATE WASH",
+    itemName: 'PEE SAFE NATURAL INTIMATE WASH',
     itemMRPperUnit: 180,
     itemCostPricePerUnit: 125.34,
     itemSellingPricePerUnit: 150,
@@ -1675,7 +1675,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030869037,
-    itemName: "PONDS DREAM FLR TALC 20 U X 25g",
+    itemName: 'PONDS DREAM FLR TALC 20 U X 25g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.09,
     itemSellingPricePerUnit: 10,
@@ -1684,7 +1684,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030868986,
-    itemName: "PONDS MAGIC TALC 20g",
+    itemName: 'PONDS MAGIC TALC 20g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.09,
     itemSellingPricePerUnit: 9.5,
@@ -1693,7 +1693,7 @@ export const data = [
   },
   {
     itemBarcode: 8886467122439,
-    itemName: "PRINGLES CHIPS DESI MASALA TADKA",
+    itemName: 'PRINGLES CHIPS DESI MASALA TADKA',
     itemMRPperUnit: 115,
     itemCostPricePerUnit: 104.54,
     itemSellingPricePerUnit: 110,
@@ -1702,7 +1702,7 @@ export const data = [
   },
   {
     itemBarcode: 8886467122392,
-    itemName: "PRINGLES CHIPS ORIGINAL",
+    itemName: 'PRINGLES CHIPS ORIGINAL',
     itemMRPperUnit: 109,
     itemCostPricePerUnit: 92.27,
     itemSellingPricePerUnit: 100,
@@ -1711,7 +1711,7 @@ export const data = [
   },
   {
     itemBarcode: 8886467122408,
-    itemName: "PRINGLES CHIPS SOUR CREAM N ONION 110 g",
+    itemName: 'PRINGLES CHIPS SOUR CREAM N ONION 110 g',
     itemMRPperUnit: 109,
     itemCostPricePerUnit: 91.85,
     itemSellingPricePerUnit: 100,
@@ -1720,7 +1720,7 @@ export const data = [
   },
   {
     itemBarcode: 90162602,
-    itemName: "RED BULL ENERGY CAN SINGLE 250 ml",
+    itemName: 'RED BULL ENERGY CAN SINGLE 250 ml',
     itemMRPperUnit: 115,
     itemCostPricePerUnit: 89,
     itemSellingPricePerUnit: 105,
@@ -1729,7 +1729,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030877513,
-    itemName: "RED LABEL TEA 30 g",
+    itemName: 'RED LABEL TEA 30 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.2,
     itemSellingPricePerUnit: 10,
@@ -1738,7 +1738,7 @@ export const data = [
   },
   {
     itemBarcode: 8906059160509,
-    itemName: "REGENCY CASHEW W320 500g",
+    itemName: 'REGENCY CASHEW W320 500g',
     itemMRPperUnit: 775,
     itemCostPricePerUnit: 451.68,
     itemSellingPricePerUnit: 475,
@@ -1747,7 +1747,7 @@ export const data = [
   },
   {
     itemBarcode: 8904275300129,
-    itemName: "REYNOLDS 045 BALL PEN BLUE 10U",
+    itemName: 'REYNOLDS 045 BALL PEN BLUE 10U',
     itemMRPperUnit: 7,
     itemCostPricePerUnit: 5.34,
     itemSellingPricePerUnit: 6.5,
@@ -1756,7 +1756,7 @@ export const data = [
   },
   {
     itemBarcode: 8904275306831,
-    itemName: "REYNOLDS PARMANENT HD MARKER BLUE",
+    itemName: 'REYNOLDS PARMANENT HD MARKER BLUE',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 9.77,
     itemSellingPricePerUnit: 17,
@@ -1765,7 +1765,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192030461,
-    itemName: "RIGHT BUY L-FOLER A4",
+    itemName: 'RIGHT BUY L-FOLER A4',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 4.76,
     itemSellingPricePerUnit: 8,
@@ -1774,7 +1774,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088017381,
-    itemName: "SAFFOLA GOLD OIL POUCH 1 L",
+    itemName: 'SAFFOLA GOLD OIL POUCH 1 L',
     itemMRPperUnit: 230,
     itemCostPricePerUnit: 213,
     itemSellingPricePerUnit: 220,
@@ -1783,7 +1783,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088068734,
-    itemName: "SAFFOLA OATS CLASSIC MASALA 40 g",
+    itemName: 'SAFFOLA OATS CLASSIC MASALA 40 g',
     itemMRPperUnit: 16,
     itemCostPricePerUnit: 12.2,
     itemSellingPricePerUnit: 14,
@@ -1792,7 +1792,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088068758,
-    itemName: "SAFFOLA OATS VEGGIE TWIST 39 g",
+    itemName: 'SAFFOLA OATS VEGGIE TWIST 39 g',
     itemMRPperUnit: 16,
     itemCostPricePerUnit: 13.08,
     itemSellingPricePerUnit: 15,
@@ -1801,7 +1801,7 @@ export const data = [
   },
   {
     itemBarcode: 8901361402835,
-    itemName: "SCOTCH BRITE FIBRE BROOM",
+    itemName: 'SCOTCH BRITE FIBRE BROOM',
     itemMRPperUnit: 325,
     itemCostPricePerUnit: 244.99,
     itemSellingPricePerUnit: 275,
@@ -1810,7 +1810,7 @@ export const data = [
   },
   {
     itemBarcode: 8902433000416,
-    itemName: "SNICKERS ALMOND BAR 22g",
+    itemName: 'SNICKERS ALMOND BAR 22g',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 21.93,
     itemSellingPricePerUnit: 24,
@@ -1819,7 +1819,7 @@ export const data = [
   },
   {
     itemBarcode: 8906002484003,
-    itemName: "SNICKERS BAR MRP 10",
+    itemName: 'SNICKERS BAR MRP 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.59,
     itemSellingPricePerUnit: 10,
@@ -1828,7 +1828,7 @@ export const data = [
   },
   {
     itemBarcode: 8902433003967,
-    itemName: "SNICKERS KESARPISTA STICK 24g",
+    itemName: 'SNICKERS KESARPISTA STICK 24g',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 24.52,
     itemSellingPricePerUnit: 28,
@@ -1837,7 +1837,7 @@ export const data = [
   },
   {
     itemBarcode: 8906002482450,
-    itemName: "SNICKERS SNICKER BAR",
+    itemName: 'SNICKERS SNICKER BAR',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 35.09,
     itemSellingPricePerUnit: 5,
@@ -1855,7 +1855,7 @@ export const data = [
   },
   {
     itemBarcode: 8903622071125,
-    itemName: "SOFY BODYFIT OVERNIGHT XXL 10P",
+    itemName: 'SOFY BODYFIT OVERNIGHT XXL 10P',
     itemMRPperUnit: 155,
     itemCostPricePerUnit: 110.47,
     itemSellingPricePerUnit: 135,
@@ -1873,7 +1873,7 @@ export const data = [
   },
   {
     itemBarcode: 8901548145326,
-    itemName: "SUGARLITE POUCH 500 g",
+    itemName: 'SUGARLITE POUCH 500 g',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 68.6,
     itemSellingPricePerUnit: 74,
@@ -1882,7 +1882,7 @@ export const data = [
   },
   {
     itemBarcode: 8901512881205,
-    itemName: "SUNDROP PEANUT BUTTER CRUNCHY 462g",
+    itemName: 'SUNDROP PEANUT BUTTER CRUNCHY 462g',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 155.9,
     itemSellingPricePerUnit: 169,
@@ -1891,7 +1891,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725133979,
-    itemName: "SUNFEAST DARK FANTASY BOURBON",
+    itemName: 'SUNFEAST DARK FANTASY BOURBON',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.5275,
     itemSellingPricePerUnit: 10,
@@ -1900,7 +1900,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725113490,
-    itemName: "SUNFEAST GLUCOSE MRP 5",
+    itemName: 'SUNFEAST GLUCOSE MRP 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.55,
     itemSellingPricePerUnit: 5,
@@ -1909,7 +1909,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725114848,
-    itemName: "SUNFEAST MARIELITE MRP5",
+    itemName: 'SUNFEAST MARIELITE MRP5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.545833333,
     itemSellingPricePerUnit: 5,
@@ -1918,7 +1918,7 @@ export const data = [
   },
   {
     itemBarcode: 8904055105913,
-    itemName: "SUPERMAX S BLADE STAINLESS SALON PACK",
+    itemName: 'SUPERMAX S BLADE STAINLESS SALON PACK',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 105,
     itemSellingPricePerUnit: 115,
@@ -1927,7 +1927,7 @@ export const data = [
   },
   {
     itemBarcode: 8904169629077,
-    itemName: "SWACH MOONG CHILKA 1 kg",
+    itemName: 'SWACH MOONG CHILKA 1 kg',
     itemMRPperUnit: 169,
     itemCostPricePerUnit: 115,
     itemSellingPricePerUnit: 130,
@@ -1936,7 +1936,7 @@ export const data = [
   },
   {
     itemBarcode: 8904169629091,
-    itemName: "SWACH MOONG SABUT 1 kg",
+    itemName: 'SWACH MOONG SABUT 1 kg',
     itemMRPperUnit: 149,
     itemCostPricePerUnit: 125,
     itemSellingPricePerUnit: 135,
@@ -1945,7 +1945,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030831102,
-    itemName: "TAAZA LEAF TEA 40 g",
+    itemName: 'TAAZA LEAF TEA 40 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.2,
     itemSellingPricePerUnit: 9.7,
@@ -1954,7 +1954,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030658778,
-    itemName: "TAJ MAHAL TEA 1 kg",
+    itemName: 'TAJ MAHAL TEA 1 kg',
     itemMRPperUnit: 800,
     itemCostPricePerUnit: 550.03,
     itemSellingPricePerUnit: 605,
@@ -1963,7 +1963,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030658754,
-    itemName: "TAJ MAHAL TEA 250 g",
+    itemName: 'TAJ MAHAL TEA 250 g',
     itemMRPperUnit: 165,
     itemCostPricePerUnit: 148.77,
     itemSellingPricePerUnit: 155,
@@ -1972,7 +1972,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030681547,
-    itemName: "TAJ MAHAL TEA BAG 100 U",
+    itemName: 'TAJ MAHAL TEA BAG 100 U',
     itemMRPperUnit: 210,
     itemCostPricePerUnit: 181.83,
     itemSellingPricePerUnit: 190,
@@ -1981,7 +1981,7 @@ export const data = [
   },
   {
     itemBarcode: 8904043926605,
-    itemName: "TATA SALT ROCK SALT 500 g",
+    itemName: 'TATA SALT ROCK SALT 500 g',
     itemMRPperUnit: 160,
     itemCostPricePerUnit: 49.02,
     itemSellingPricePerUnit: 60,
@@ -1990,7 +1990,7 @@ export const data = [
   },
   {
     itemBarcode: 8901052005161,
-    itemName: "TATA TEA GOLD CARE 500 g",
+    itemName: 'TATA TEA GOLD CARE 500 g',
     itemMRPperUnit: 315,
     itemCostPricePerUnit: 238.65,
     itemSellingPricePerUnit: 255,
@@ -1999,7 +1999,7 @@ export const data = [
   },
   {
     itemBarcode: 8000500366783,
-    itemName: "TIC TAC APPLE TREAT",
+    itemName: 'TIC TAC APPLE TREAT',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.57,
     itemSellingPricePerUnit: 9.5,
@@ -2008,7 +2008,7 @@ export const data = [
   },
   {
     itemBarcode: 8000500366769,
-    itemName: "TIC TAC BREATH MINT 7.7g",
+    itemName: 'TIC TAC BREATH MINT 7.7g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.57,
     itemSellingPricePerUnit: 9.5,
@@ -2017,7 +2017,7 @@ export const data = [
   },
   {
     itemBarcode: 8000500366776,
-    itemName: "TIC TAC ORANGE 7.7 g",
+    itemName: 'TIC TAC ORANGE 7.7 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.57,
     itemSellingPricePerUnit: 9.5,
@@ -2026,7 +2026,7 @@ export const data = [
   },
   {
     itemBarcode: 8000500366790,
-    itemName: "TIC TAC SAUNF FLAVOUR",
+    itemName: 'TIC TAC SAUNF FLAVOUR',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.57,
     itemSellingPricePerUnit: 9.5,
@@ -2035,7 +2035,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176117694,
-    itemName: "TIDE NATURAL DETERGENT POWDER 800 g",
+    itemName: 'TIDE NATURAL DETERGENT POWDER 800 g',
     itemMRPperUnit: 69,
     itemCostPricePerUnit: 63.69,
     itemSellingPricePerUnit: 67,
@@ -2044,7 +2044,7 @@ export const data = [
   },
   {
     itemBarcode: 8906016011813,
-    itemName: "TULSI KISMIS 500 g",
+    itemName: 'TULSI KISMIS 500 g',
     itemMRPperUnit: 270,
     itemCostPricePerUnit: 152.64,
     itemSellingPricePerUnit: 170,
@@ -2053,7 +2053,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491400107,
-    itemName: "UNCLE CHIPPS SPICY TREAT MRP 5",
+    itemName: 'UNCLE CHIPPS SPICY TREAT MRP 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.268333333,
     itemSellingPricePerUnit: 5,
@@ -2062,7 +2062,7 @@ export const data = [
   },
   {
     itemBarcode: 906009071961,
-    itemName: "UNIBIC CASHEW ALMOND COOKIES 12UX35 g",
+    itemName: 'UNIBIC CASHEW ALMOND COOKIES 12UX35 g',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.416666667,
     itemSellingPricePerUnit: 5,
@@ -2071,7 +2071,7 @@ export const data = [
   },
   {
     itemBarcode: 8906009079363,
-    itemName: "UNIBIC FRUIT & NUT COOKIES 37.5g",
+    itemName: 'UNIBIC FRUIT & NUT COOKIES 37.5g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.333333333,
     itemSellingPricePerUnit: 10,
@@ -2080,7 +2080,7 @@ export const data = [
   },
   {
     itemBarcode: 8906009070940,
-    itemName: "UNIBIC WAFERS CHOCOLATE MRP10",
+    itemName: 'UNIBIC WAFERS CHOCOLATE MRP10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.69,
     itemSellingPricePerUnit: 10,
@@ -2089,7 +2089,7 @@ export const data = [
   },
   {
     itemBarcode: 8906009070964,
-    itemName: "UNIBIC WAFERS STRAWBERRY XMRP10",
+    itemName: 'UNIBIC WAFERS STRAWBERRY XMRP10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.69,
     itemSellingPricePerUnit: 10,
@@ -2098,7 +2098,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396341406,
-    itemName: "VEET WAX STRIPS FULLBODY NORMAL 8S",
+    itemName: 'VEET WAX STRIPS FULLBODY NORMAL 8S',
     itemMRPperUnit: 235,
     itemCostPricePerUnit: 205.15,
     itemSellingPricePerUnit: 220,
@@ -2107,7 +2107,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396342106,
-    itemName: "VEET WAXSTRIP HALF BODY 8S",
+    itemName: 'VEET WAXSTRIP HALF BODY 8S',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 86.42,
     itemSellingPricePerUnit: 95,
@@ -2116,7 +2116,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176077356,
-    itemName: "VICKS INHALER 2 U X 0.5 ml",
+    itemName: 'VICKS INHALER 2 U X 0.5 ml',
     itemMRPperUnit: 105,
     itemCostPricePerUnit: 82.25,
     itemSellingPricePerUnit: 95,
@@ -2125,7 +2125,7 @@ export const data = [
   },
   {
     itemBarcode: 8907122002993,
-    itemName: "VLCC FACIAL KIT SKIN GLOW MINI 25g",
+    itemName: 'VLCC FACIAL KIT SKIN GLOW MINI 25g',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 89,
     itemSellingPricePerUnit: 95,
@@ -2134,7 +2134,7 @@ export const data = [
   },
   {
     itemBarcode: 8901747001539,
-    itemName: "WAGH BAKRI PREMIUM LEAF TEA 250 g",
+    itemName: 'WAGH BAKRI PREMIUM LEAF TEA 250 g',
     itemMRPperUnit: 135,
     itemCostPricePerUnit: 116.4,
     itemSellingPricePerUnit: 125,
@@ -2143,7 +2143,7 @@ export const data = [
   },
   {
     itemBarcode: 8901747001522,
-    itemName: "WAGH BAKRI PREMIUM LEAF TEA 500 g",
+    itemName: 'WAGH BAKRI PREMIUM LEAF TEA 500 g',
     itemMRPperUnit: 260,
     itemCostPricePerUnit: 232.3,
     itemSellingPricePerUnit: 245,
@@ -2152,7 +2152,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176087584,
-    itemName: "WHISPER ULTRA CLEAN XL+ 15",
+    itemName: 'WHISPER ULTRA CLEAN XL+ 15',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 164.16,
     itemSellingPricePerUnit: 170,
@@ -2161,7 +2161,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176094735,
-    itemName: "WHISPER ULTRA NIGHT XL+ 15",
+    itemName: 'WHISPER ULTRA NIGHT XL+ 15',
     itemMRPperUnit: 190,
     itemCostPricePerUnit: 164.16,
     itemSellingPricePerUnit: 180,
@@ -2170,7 +2170,7 @@ export const data = [
   },
   {
     itemBarcode: 8908004114445,
-    itemName: "WONDERLAND RAISIN 500 g",
+    itemName: 'WONDERLAND RAISIN 500 g',
     itemMRPperUnit: 290,
     itemCostPricePerUnit: 171.67,
     itemSellingPricePerUnit: 190,
@@ -2179,7 +2179,7 @@ export const data = [
   },
   {
     itemBarcode: 8904140115582,
-    itemName: "WORLDONE PORTFOLIO PU WITH ZIPPER 1U",
+    itemName: 'WORLDONE PORTFOLIO PU WITH ZIPPER 1U',
     itemMRPperUnit: 350,
     itemCostPricePerUnit: 295.06,
     itemSellingPricePerUnit: 320,
@@ -2188,7 +2188,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725116972,
-    itemName: "YIPPEE MAGIC MASALA NOODLES 31g",
+    itemName: 'YIPPEE MAGIC MASALA NOODLES 31g',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.82,
     itemSellingPricePerUnit: 5,
@@ -2197,7 +2197,7 @@ export const data = [
   },
   {
     itemBarcode: 8906010221461,
-    itemName: "ZED BLACK DHOOP ZIPPERMANTHAN SANDAL165g",
+    itemName: 'ZED BLACK DHOOP ZIPPERMANTHAN SANDAL165g',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 20,
     itemSellingPricePerUnit: 25,
@@ -2205,8 +2205,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "ARIEL COMPLETE 200G",
+    itemBarcode: '',
+    itemName: 'ARIEL COMPLETE 200G',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 41.67,
     itemSellingPricePerUnit: 45,
@@ -2215,7 +2215,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725198336,
-    itemName: "Bingo Mad Angles Large, Achari Masti, 1 N",
+    itemName: 'Bingo Mad Angles Large, Achari Masti, 1 N',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 15.59,
     itemSellingPricePerUnit: 20,
@@ -2224,7 +2224,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725118938,
-    itemName: "BINGO Tedhe Medhe Bridges 12 N (Rs.5 Each)",
+    itemName: 'BINGO Tedhe Medhe Bridges 12 N (Rs.5 Each)',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.179166667,
     itemSellingPricePerUnit: 5,
@@ -2233,7 +2233,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063363977,
-    itemName: "BRITANNIA FRUIT CAKE 120 g",
+    itemName: 'BRITANNIA FRUIT CAKE 120 g',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 25.97,
     itemSellingPricePerUnit: 29,
@@ -2242,7 +2242,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063363779,
-    itemName: "BRITANNIA FRUIT CAKE 55 g",
+    itemName: 'BRITANNIA FRUIT CAKE 55 g',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 13.36,
     itemSellingPricePerUnit: 15,
@@ -2251,7 +2251,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063363793,
-    itemName: "BRITANNIA PINEAPCAKE 55 g",
+    itemName: 'BRITANNIA PINEAPCAKE 55 g',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 12.89,
     itemSellingPricePerUnit: 15,
@@ -2260,7 +2260,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063325609,
-    itemName: "BRITANNIA RUSK 200 g",
+    itemName: 'BRITANNIA RUSK 200 g',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31.82,
     itemSellingPricePerUnit: 35,
@@ -2269,7 +2269,7 @@ export const data = [
   },
   {
     itemBarcode: 8901063325463,
-    itemName: "BRITANNIA RUSK 400 g",
+    itemName: 'BRITANNIA RUSK 400 g',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 59.09,
     itemSellingPricePerUnit: 64,
@@ -2277,8 +2277,8 @@ export const data = [
     minimumStockQuantity: 2,
   },
   {
-    itemBarcode: "",
-    itemName: "Brown Tan Tape",
+    itemBarcode: '',
+    itemName: 'Brown Tan Tape',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 41.64333333,
     itemSellingPricePerUnit: 55,
@@ -2287,7 +2287,7 @@ export const data = [
   },
   {
     itemBarcode: 8906042950001,
-    itemName: "BULBUL MAIDA 500G",
+    itemName: 'BULBUL MAIDA 500G',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 14,
     itemSellingPricePerUnit: 20,
@@ -2296,7 +2296,7 @@ export const data = [
   },
   {
     itemBarcode: 8906042950018,
-    itemName: "BULBUL SUJI 500G",
+    itemName: 'BULBUL SUJI 500G',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 15.33333333,
     itemSellingPricePerUnit: 25,
@@ -2305,7 +2305,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201423117,
-    itemName: "CADBURY BOURNVITA 200 g",
+    itemName: 'CADBURY BOURNVITA 200 g',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 95.37,
     itemSellingPricePerUnit: 105,
@@ -2314,7 +2314,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201423230,
-    itemName: "CADBURY BOURNVITA FSM REF 500 g",
+    itemName: 'CADBURY BOURNVITA FSM REF 500 g',
     itemMRPperUnit: 222,
     itemCostPricePerUnit: 195,
     itemSellingPricePerUnit: 210,
@@ -2323,7 +2323,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201423131,
-    itemName: "CADBURY BOURNVITA REF 500 g",
+    itemName: 'CADBURY BOURNVITA REF 500 g',
     itemMRPperUnit: 209,
     itemCostPricePerUnit: 192.28,
     itemSellingPricePerUnit: 200,
@@ -2332,7 +2332,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201442071,
-    itemName: "CADBURY CHOCOBAKES CAKES 21g 15U OUTER",
+    itemName: 'CADBURY CHOCOBAKES CAKES 21g 15U OUTER',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.090666667,
     itemSellingPricePerUnit: 10,
@@ -2341,7 +2341,7 @@ export const data = [
   },
   {
     itemBarcode: 8901233029856,
-    itemName: "CADBURY DAIRY MILK FAMILY PACK 126 g",
+    itemName: 'CADBURY DAIRY MILK FAMILY PACK 126 g',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 86,
     itemSellingPricePerUnit: 95,
@@ -2350,7 +2350,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201452858,
-    itemName: "CADBURY DAIRY MILK SILK BUBBLY 120g",
+    itemName: 'CADBURY DAIRY MILK SILK BUBBLY 120g',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 155.56,
     itemSellingPricePerUnit: 170,
@@ -2359,7 +2359,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201114909,
-    itemName: "CADBURY DAIRY MILK SILK MOUSSE 137g",
+    itemName: 'CADBURY DAIRY MILK SILK MOUSSE 137g',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 153.91,
     itemSellingPricePerUnit: 170,
@@ -2368,7 +2368,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201452889,
-    itemName: "CADBURY DAIRY MILK SILK OREO 130g",
+    itemName: 'CADBURY DAIRY MILK SILK OREO 130g',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 149.51,
     itemSellingPricePerUnit: 170,
@@ -2377,7 +2377,7 @@ export const data = [
   },
   {
     itemBarcode: 8901233033525,
-    itemName: "CADBURY DAIRY MILK SILK OREO 60g",
+    itemName: 'CADBURY DAIRY MILK SILK OREO 60g',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 65.96,
     itemSellingPricePerUnit: 75,
@@ -2386,7 +2386,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201410964,
-    itemName: "CADBURY FIVE STAR 3D MRP 30",
+    itemName: 'CADBURY FIVE STAR 3D MRP 30',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 26.78583333,
     itemSellingPricePerUnit: 29,
@@ -2395,7 +2395,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201150419,
-    itemName: "CADBURY FIVE STAR MRP 20",
+    itemName: 'CADBURY FIVE STAR MRP 20',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.85714286,
     itemSellingPricePerUnit: 20,
@@ -2404,7 +2404,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201712563,
-    itemName: "CADBURY GEMS 64U X MRP 10",
+    itemName: 'CADBURY GEMS 64U X MRP 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.0909375,
     itemSellingPricePerUnit: 10,
@@ -2413,7 +2413,7 @@ export const data = [
   },
   {
     itemBarcode: 7622201150440,
-    itemName: "CADBURY PERK 28 U X MRP 10",
+    itemName: 'CADBURY PERK 28 U X MRP 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.091071429,
     itemSellingPricePerUnit: 10,
@@ -2422,7 +2422,7 @@ export const data = [
   },
   {
     itemBarcode: 8901425077764,
-    itemName: "CAMLIN SKETCH PEN SET OF 24 COLORS",
+    itemName: 'CAMLIN SKETCH PEN SET OF 24 COLORS',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 60.48,
     itemSellingPricePerUnit: 69,
@@ -2431,7 +2431,7 @@ export const data = [
   },
   {
     itemBarcode: 8904091121441,
-    itemName: "CANDID TALCUM 100 g",
+    itemName: 'CANDID TALCUM 100 g',
     itemMRPperUnit: 149,
     itemCostPricePerUnit: 74.5,
     itemSellingPricePerUnit: 99,
@@ -2440,7 +2440,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192001207,
-    itemName: "CATCH BLACK SALT SPRINKLER 200 g",
+    itemName: 'CATCH BLACK SALT SPRINKLER 200 g',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 36.82,
     itemSellingPricePerUnit: 41,
@@ -2449,7 +2449,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192207111,
-    itemName: "CATCH CHANA MASALA 100 g",
+    itemName: 'CATCH CHANA MASALA 100 g',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 43.55,
     itemSellingPricePerUnit: 50,
@@ -2458,7 +2458,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192214119,
-    itemName: "CATCH CHICKEN MASALA 100 g",
+    itemName: 'CATCH CHICKEN MASALA 100 g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 50.25,
     itemSellingPricePerUnit: 60,
@@ -2467,7 +2467,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192106223,
-    itemName: "CATCH CHILLI POWDER 200 g",
+    itemName: 'CATCH CHILLI POWDER 200 g',
     itemMRPperUnit: 102,
     itemCostPricePerUnit: 68.34,
     itemSellingPricePerUnit: 75,
@@ -2476,7 +2476,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192104229,
-    itemName: "CATCH CORIANDER POWDER 200 g",
+    itemName: 'CATCH CORIANDER POWDER 200 g',
     itemMRPperUnit: 72,
     itemCostPricePerUnit: 48.24,
     itemSellingPricePerUnit: 55,
@@ -2485,7 +2485,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192216113,
-    itemName: "CATCH GARAM MASALA POWDER 100 g",
+    itemName: 'CATCH GARAM MASALA POWDER 100 g',
     itemMRPperUnit: 85,
     itemCostPricePerUnit: 56.95,
     itemSellingPricePerUnit: 65,
@@ -2494,7 +2494,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192226150,
-    itemName: "CATCH HING 100 g",
+    itemName: 'CATCH HING 100 g',
     itemMRPperUnit: 250,
     itemCostPricePerUnit: 167.5,
     itemSellingPricePerUnit: 190,
@@ -2503,7 +2503,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192208118,
-    itemName: "CATCH KITCHEN KING MASALA 100 g",
+    itemName: 'CATCH KITCHEN KING MASALA 100 g',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 46.9,
     itemSellingPricePerUnit: 55,
@@ -2512,7 +2512,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192213112,
-    itemName: "CATCH MEAT MASALA 100 g",
+    itemName: 'CATCH MEAT MASALA 100 g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 50.25,
     itemSellingPricePerUnit: 60,
@@ -2521,7 +2521,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192215116,
-    itemName: "CATCH SABJI MASALA 100 g",
+    itemName: 'CATCH SABJI MASALA 100 g',
     itemMRPperUnit: 56,
     itemCostPricePerUnit: 37.52,
     itemSellingPricePerUnit: 45,
@@ -2530,7 +2530,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192114105,
-    itemName: "CATCH SPRINKLER BLACK PEPPER POWDER 100g",
+    itemName: 'CATCH SPRINKLER BLACK PEPPER POWDER 100g',
     itemMRPperUnit: 195,
     itemCostPricePerUnit: 169.15,
     itemSellingPricePerUnit: 190,
@@ -2539,7 +2539,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192215017,
-    itemName: "CATCH SUBJI MASALA",
+    itemName: 'CATCH SUBJI MASALA',
     itemMRPperUnit: 32,
     itemCostPricePerUnit: 21.44,
     itemSellingPricePerUnit: 28,
@@ -2548,7 +2548,7 @@ export const data = [
   },
   {
     itemBarcode: 8901192107220,
-    itemName: "CATCH TURMERIC POWDER 200 g",
+    itemName: 'CATCH TURMERIC POWDER 200 g',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 43.55,
     itemSellingPricePerUnit: 52,
@@ -2557,7 +2557,7 @@ export const data = [
   },
   {
     itemBarcode: 8907234014259,
-    itemName: "CELLO TECHNO TIP PEN",
+    itemName: 'CELLO TECHNO TIP PEN',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 7.45,
     itemSellingPricePerUnit: 9,
@@ -2566,7 +2566,7 @@ export const data = [
   },
   {
     itemBarcode: 8907234007831,
-    itemName: "CELLO FINE GRIP PEN",
+    itemName: 'CELLO FINE GRIP PEN',
     itemMRPperUnit: 7,
     itemCostPricePerUnit: 5.16,
     itemSellingPricePerUnit: 6,
@@ -2575,7 +2575,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058867589,
-    itemName: "CERELAC BABY FOOD DAL STAGE 4 VEG 300g",
+    itemName: 'CERELAC BABY FOOD DAL STAGE 4 VEG 300g',
     itemMRPperUnit: 289,
     itemCostPricePerUnit: 255.96,
     itemSellingPricePerUnit: 269,
@@ -2584,7 +2584,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058897234,
-    itemName: "CERELAC STAGE1 WHEAT APPLE 300g",
+    itemName: 'CERELAC STAGE1 WHEAT APPLE 300g',
     itemMRPperUnit: 223,
     itemCostPricePerUnit: 198.93,
     itemSellingPricePerUnit: 210,
@@ -2593,7 +2593,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786060504,
-    itemName: "EVEREST CHAAT MASALA",
+    itemName: 'EVEREST CHAAT MASALA',
     itemMRPperUnit: 39,
     itemCostPricePerUnit: 32.80166667,
     itemSellingPricePerUnit: 37,
@@ -2601,8 +2601,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST CHAAT MASALA RS 5",
+    itemBarcode: '',
+    itemName: 'EVEREST CHAAT MASALA RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -2610,8 +2610,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST CHAAT MASALA RS 10",
+    itemBarcode: '',
+    itemName: 'EVEREST CHAAT MASALA RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -2620,7 +2620,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786090501,
-    itemName: "CHHOLE MASALA",
+    itemName: 'CHHOLE MASALA',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 33.6,
     itemSellingPricePerUnit: 38,
@@ -2629,7 +2629,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786160501,
-    itemName: "EVEREST CHICKEN MASALA",
+    itemName: 'EVEREST CHICKEN MASALA',
     itemMRPperUnit: 43,
     itemCostPricePerUnit: 36.099,
     itemSellingPricePerUnit: 40,
@@ -2637,8 +2637,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST CHICKEN MASALA RS 5",
+    itemBarcode: '',
+    itemName: 'EVEREST CHICKEN MASALA RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 1.05,
     itemSellingPricePerUnit: 5,
@@ -2646,8 +2646,8 @@ export const data = [
     minimumStockQuantity: 10,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST CHICKEN MASALA RS 10",
+    itemBarcode: '',
+    itemName: 'EVEREST CHICKEN MASALA RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -2656,7 +2656,7 @@ export const data = [
   },
   {
     itemBarcode: 8902979025836,
-    itemName: "Chik Hair Wash Shampoo Hairfall Prevent, 5.4 ml",
+    itemName: 'Chik Hair Wash Shampoo Hairfall Prevent, 5.4 ml',
     itemMRPperUnit: 1,
     itemCostPricePerUnit: 0.8955,
     itemSellingPricePerUnit: 1,
@@ -2665,7 +2665,7 @@ export const data = [
   },
   {
     itemBarcode: 8904137450535,
-    itemName: "CHUKDE BLACK SALT 200 g",
+    itemName: 'CHUKDE BLACK SALT 200 g',
     itemMRPperUnit: 24,
     itemCostPricePerUnit: 15.88,
     itemSellingPricePerUnit: 21,
@@ -2674,7 +2674,7 @@ export const data = [
   },
   {
     itemBarcode: 8901012189474,
-    itemName: "CLEAN & CLEAR PIMPLE CLEAR FACEWASH 40g",
+    itemName: 'CLEAN & CLEAR PIMPLE CLEAR FACEWASH 40g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 66.29,
     itemSellingPricePerUnit: 70,
@@ -2683,7 +2683,7 @@ export const data = [
   },
   {
     itemBarcode: 8901012189481,
-    itemName: "CLEAN & CLEAR PIMPLE CLEAR FACEWASH 80g",
+    itemName: 'CLEAN & CLEAR PIMPLE CLEAR FACEWASH 80g',
     itemMRPperUnit: 140,
     itemCostPricePerUnit: 123.75,
     itemSellingPricePerUnit: 130,
@@ -2692,7 +2692,7 @@ export const data = [
   },
   {
     itemBarcode: 8903363006295,
-    itemName: "CLEAN PLUS TISSUE",
+    itemName: 'CLEAN PLUS TISSUE',
     itemMRPperUnit: 48,
     itemCostPricePerUnit: 24,
     itemSellingPricePerUnit: 28,
@@ -2700,8 +2700,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "CLEAR TAPE12mmX50m",
+    itemBarcode: '',
+    itemName: 'CLEAR TAPE12mmX50m',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 10.62,
     itemSellingPricePerUnit: 17,
@@ -2710,7 +2710,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030766381,
-    itemName: "Clinic Plus Strong & Long Shampoo 3.5 ml",
+    itemName: 'Clinic Plus Strong & Long Shampoo 3.5 ml',
     itemMRPperUnit: 0.5,
     itemCostPricePerUnit: 0.373333333,
     itemSellingPricePerUnit: 0.5,
@@ -2719,7 +2719,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030894855,
-    itemName: "CLOSEUP 21 G",
+    itemName: 'CLOSEUP 21 G',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.474444444,
     itemSellingPricePerUnit: 9.5,
@@ -2728,7 +2728,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030894190,
-    itemName: "CLOSEUP 80 GM",
+    itemName: 'CLOSEUP 80 GM',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 48.5,
     itemSellingPricePerUnit: 53,
@@ -2737,7 +2737,7 @@ export const data = [
   },
   {
     itemBarcode: 8901764012914,
-    itemName: "Coca Cola 250 ml",
+    itemName: 'Coca Cola 250 ml',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 18.14,
     itemSellingPricePerUnit: 20,
@@ -2746,7 +2746,7 @@ export const data = [
   },
   {
     itemBarcode: 8901764012273,
-    itemName: "Coca Cola Mobile Pet, 750 ml",
+    itemName: 'Coca Cola Mobile Pet, 750 ml',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 36.5,
     itemSellingPricePerUnit: 40,
@@ -2755,7 +2755,7 @@ export const data = [
   },
   {
     itemBarcode: 8901314088024,
-    itemName: "COLGATE CIBACA TOP TOOTHBRUSH 12U",
+    itemName: 'COLGATE CIBACA TOP TOOTHBRUSH 12U',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 9.35,
     itemSellingPricePerUnit: 12,
@@ -2764,7 +2764,7 @@ export const data = [
   },
   {
     itemBarcode: 8901314525055,
-    itemName: "COLGATE ZIG ZAG BLACK/CHARCOAL TB 4U",
+    itemName: 'COLGATE ZIG ZAG BLACK/CHARCOAL TB 4U',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 68.96,
     itemSellingPricePerUnit: 79,
@@ -2773,7 +2773,7 @@ export const data = [
   },
   {
     itemBarcode: 8901314524997,
-    itemName: "COLGATE ZIG ZAG BLACK/CHARCOAL TB 6 U",
+    itemName: 'COLGATE ZIG ZAG BLACK/CHARCOAL TB 6 U',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 20.32,
     itemSellingPricePerUnit: 25,
@@ -2782,7 +2782,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396465003,
-    itemName: "COLIN GLASS CLEANER 250 ml",
+    itemName: 'COLIN GLASS CLEANER 250 ml',
     itemMRPperUnit: 62,
     itemCostPricePerUnit: 53.72,
     itemSellingPricePerUnit: 60,
@@ -2791,7 +2791,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396476009,
-    itemName: "COLIN GLASS CLEANER ULTRA TRIGGER 500 ml",
+    itemName: 'COLIN GLASS CLEANER ULTRA TRIGGER 500 ml',
     itemMRPperUnit: 96,
     itemCostPricePerUnit: 84.57,
     itemSellingPricePerUnit: 92,
@@ -2800,7 +2800,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030803642,
-    itemName: "COMFORT FABRIC CONDITIONER BLUE 860 ml",
+    itemName: 'COMFORT FABRIC CONDITIONER BLUE 860 ml',
     itemMRPperUnit: 235,
     itemCostPricePerUnit: 210.98,
     itemSellingPricePerUnit: 225,
@@ -2809,7 +2809,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030865909,
-    itemName: "COMFORT FABRIC SOFTNER BLUE 18ml",
+    itemName: 'COMFORT FABRIC SOFTNER BLUE 18ml',
     itemMRPperUnit: 4,
     itemCostPricePerUnit: 2.963,
     itemSellingPricePerUnit: 4,
@@ -2817,8 +2817,8 @@ export const data = [
     minimumStockQuantity: 10,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST CORIANDER POWDER POUCH",
+    itemBarcode: '',
+    itemName: 'EVEREST CORIANDER POWDER POUCH',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -2827,7 +2827,7 @@ export const data = [
   },
   {
     itemBarcode: 8906023416663,
-    itemName: "CREAMBELL ELAICHI 200 ML",
+    itemName: 'CREAMBELL ELAICHI 200 ML',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 1,
     itemSellingPricePerUnit: 20,
@@ -2836,7 +2836,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786240500,
-    itemName: "EVEREST CUMIN POWDER 50 GM",
+    itemName: 'EVEREST CUMIN POWDER 50 GM',
     itemMRPperUnit: 37,
     itemCostPricePerUnit: 31.10166667,
     itemSellingPricePerUnit: 35,
@@ -2845,7 +2845,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751010527,
-    itemName: "CYCLE 3 IN 1",
+    itemName: 'CYCLE 3 IN 1',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8,
     itemSellingPricePerUnit: 10,
@@ -2854,7 +2854,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751006278,
-    itemName: "CYCLE DURGESHWARI DHOOP",
+    itemName: 'CYCLE DURGESHWARI DHOOP',
     itemMRPperUnit: 24,
     itemCostPricePerUnit: 20,
     itemSellingPricePerUnit: 24,
@@ -2863,7 +2863,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751012583,
-    itemName: "CYCLE LOBAN DHOOP",
+    itemName: 'CYCLE LOBAN DHOOP',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4,
     itemSellingPricePerUnit: 5,
@@ -2872,7 +2872,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751005998,
-    itemName: "CYCLE MORNING GLORY",
+    itemName: 'CYCLE MORNING GLORY',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 50,
     itemSellingPricePerUnit: 55,
@@ -2881,7 +2881,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751002560,
-    itemName: "CYCLE PARAMPARA",
+    itemName: 'CYCLE PARAMPARA',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 35,
     itemSellingPricePerUnit: 40,
@@ -2890,7 +2890,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751010695,
-    itemName: "CYCLE RYTHM AMBER",
+    itemName: 'CYCLE RYTHM AMBER',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8,
     itemSellingPricePerUnit: 10,
@@ -2899,7 +2899,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751009927,
-    itemName: "CYCLE SANDALUM",
+    itemName: 'CYCLE SANDALUM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8,
     itemSellingPricePerUnit: 10,
@@ -2908,7 +2908,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751012569,
-    itemName: "CYCLE SURPRISE",
+    itemName: 'CYCLE SURPRISE',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 16,
     itemSellingPricePerUnit: 20,
@@ -2917,7 +2917,7 @@ export const data = [
   },
   {
     itemBarcode: 8901751006858,
-    itemName: "CYCLE WOODS AGARBATTI",
+    itemName: 'CYCLE WOODS AGARBATTI',
     itemMRPperUnit: 125,
     itemCostPricePerUnit: 105,
     itemSellingPricePerUnit: 120,
@@ -2926,7 +2926,7 @@ export const data = [
   },
   {
     itemBarcode: 8901537007123,
-    itemName: "DAAWAT BASMATI ROZANA 1 KG",
+    itemName: 'DAAWAT BASMATI ROZANA 1 KG',
     itemMRPperUnit: 98,
     itemCostPricePerUnit: 74,
     itemSellingPricePerUnit: 80,
@@ -2935,7 +2935,7 @@ export const data = [
   },
   {
     itemBarcode: 8901537074248,
-    itemName: "DAAWAT PULAV BASMATI RICE 5kg",
+    itemName: 'DAAWAT PULAV BASMATI RICE 5kg',
     itemMRPperUnit: 675,
     itemCostPricePerUnit: 548.8,
     itemSellingPricePerUnit: 599,
@@ -2944,7 +2944,7 @@ export const data = [
   },
   {
     itemBarcode: 8901537074934,
-    itemName: "DAAWAT PULAV RICE 500 GM",
+    itemName: 'DAAWAT PULAV RICE 500 GM',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 54,
     itemSellingPricePerUnit: 60,
@@ -2953,7 +2953,7 @@ export const data = [
   },
   {
     itemBarcode: 8901537006027,
-    itemName: "DAAWAT ROZANA GOLD BASMATI RICE 5 kg",
+    itemName: 'DAAWAT ROZANA GOLD BASMATI RICE 5 kg',
     itemMRPperUnit: 495,
     itemCostPricePerUnit: 408.66,
     itemSellingPricePerUnit: 448,
@@ -2962,7 +2962,7 @@ export const data = [
   },
   {
     itemBarcode: 89009550,
-    itemName: "DABUR AMLA HAIR OIL 90 ml",
+    itemName: 'DABUR AMLA HAIR OIL 90 ml',
     itemMRPperUnit: 47,
     itemCostPricePerUnit: 40.81,
     itemSellingPricePerUnit: 45,
@@ -2971,7 +2971,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207006241,
-    itemName: "DABUR CHYAWANPRASH 250 GM",
+    itemName: 'DABUR CHYAWANPRASH 250 GM',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 93.06,
     itemSellingPricePerUnit: 96,
@@ -2980,7 +2980,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207018770,
-    itemName: "DABUR GLUCO PLUS C REFILL 200 g",
+    itemName: 'DABUR GLUCO PLUS C REFILL 200 g',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 58.58,
     itemSellingPricePerUnit: 65,
@@ -2989,7 +2989,7 @@ export const data = [
   },
   {
     itemBarcode: 89009611,
-    itemName: "DABUR GULABARI 59 ml",
+    itemName: 'DABUR GULABARI 59 ml',
     itemMRPperUnit: 28,
     itemCostPricePerUnit: 1,
     itemSellingPricePerUnit: 25,
@@ -2998,7 +2998,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207004094,
-    itemName: "DABUR GULABARI SPRAY GULAB FRESHNER100ml",
+    itemName: 'DABUR GULABARI SPRAY GULAB FRESHNER100ml',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 68.18,
     itemSellingPricePerUnit: 73,
@@ -3007,7 +3007,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207035852,
-    itemName: "DABUR HOMMADE MANGO PICKLE BOTTLE 400g",
+    itemName: 'DABUR HOMMADE MANGO PICKLE BOTTLE 400g',
     itemMRPperUnit: 125,
     itemCostPricePerUnit: 111.55,
     itemSellingPricePerUnit: 120,
@@ -3016,7 +3016,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207035845,
-    itemName: "DABUR HOMMADE MIXED PICKLE BOTTLE 400g",
+    itemName: 'DABUR HOMMADE MIXED PICKLE BOTTLE 400g',
     itemMRPperUnit: 125,
     itemCostPricePerUnit: 102.46,
     itemSellingPricePerUnit: 120,
@@ -3025,7 +3025,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207025389,
-    itemName: "DABUR HONEY 1 kg",
+    itemName: 'DABUR HONEY 1 kg',
     itemMRPperUnit: 475,
     itemCostPricePerUnit: 400.7,
     itemSellingPricePerUnit: 445,
@@ -3034,7 +3034,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207025365,
-    itemName: "DABUR HONEY 250 GM",
+    itemName: 'DABUR HONEY 250 GM',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 110,
     itemSellingPricePerUnit: 115,
@@ -3043,7 +3043,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207043291,
-    itemName: "DABUR HONEY 500 g",
+    itemName: 'DABUR HONEY 500 g',
     itemMRPperUnit: 230,
     itemCostPricePerUnit: 195.22,
     itemSellingPricePerUnit: 215,
@@ -3052,7 +3052,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207001888,
-    itemName: "DABUR HONITUS SYRUP 100 ml",
+    itemName: 'DABUR HONITUS SYRUP 100 ml',
     itemMRPperUnit: 105,
     itemCostPricePerUnit: 71.4,
     itemSellingPricePerUnit: 80,
@@ -3061,7 +3061,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207006845,
-    itemName: "DABUR PUDIN HARA ACTIVE 30 ml",
+    itemName: 'DABUR PUDIN HARA ACTIVE 30 ml',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 40.33,
     itemSellingPricePerUnit: 46,
@@ -3070,7 +3070,7 @@ export const data = [
   },
   {
     itemBarcode: 8906014640190,
-    itemName: "DALDA KACHI GHANI MUSTARD BOTTLE 1 L",
+    itemName: 'DALDA KACHI GHANI MUSTARD BOTTLE 1 L',
     itemMRPperUnit: 226,
     itemCostPricePerUnit: 160,
     itemSellingPricePerUnit: 176,
@@ -3079,7 +3079,7 @@ export const data = [
   },
   {
     itemBarcode: 8901177001840,
-    itemName: "DERMICOOL PRKLY HEATREGULAR 150g",
+    itemName: 'DERMICOOL PRKLY HEATREGULAR 150g',
     itemMRPperUnit: 125,
     itemCostPricePerUnit: 101.65,
     itemSellingPricePerUnit: 65,
@@ -3088,7 +3088,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396389101,
-    itemName: "DETTOL FOAMING ALOE HW PROMO 250ml",
+    itemName: 'DETTOL FOAMING ALOE HW PROMO 250ml',
     itemMRPperUnit: 149,
     itemCostPricePerUnit: 131.41,
     itemSellingPricePerUnit: 141,
@@ -3097,7 +3097,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396313106,
-    itemName: "DETTOL HANDWASH ORIGINAL 175 ml",
+    itemName: 'DETTOL HANDWASH ORIGINAL 175 ml',
     itemMRPperUnit: 42,
     itemCostPricePerUnit: 36.28,
     itemSellingPricePerUnit: 40,
@@ -3106,7 +3106,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396332114,
-    itemName: "DETTOL SHAVING CREAM 60 g",
+    itemName: 'DETTOL SHAVING CREAM 60 g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 62.09,
     itemSellingPricePerUnit: 70,
@@ -3115,7 +3115,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396388593,
-    itemName: "DETTOL SOAP 125 g",
+    itemName: 'DETTOL SOAP 125 g',
     itemMRPperUnit: 56.2,
     itemCostPricePerUnit: 1,
     itemSellingPricePerUnit: 50,
@@ -3124,7 +3124,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396393634,
-    itemName: "DETTOL SOAP ORIGINAL 4 U X 74 g",
+    itemName: 'DETTOL SOAP ORIGINAL 4 U X 74 g',
     itemMRPperUnit: 44.75,
     itemCostPricePerUnit: 38.425,
     itemSellingPricePerUnit: 42,
@@ -3133,7 +3133,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396398509,
-    itemName: "DETTOL SOAP SKINCARE 4 U X125 g",
+    itemName: 'DETTOL SOAP SKINCARE 4 U X125 g',
     itemMRPperUnit: 56.2,
     itemCostPricePerUnit: 52,
     itemSellingPricePerUnit: 55,
@@ -3142,7 +3142,7 @@ export const data = [
   },
   {
     itemBarcode: 8906004620454,
-    itemName: "DHARA SUNFLOWER OIL POUCH 1 L",
+    itemName: 'DHARA SUNFLOWER OIL POUCH 1 L',
     itemMRPperUnit: 235,
     itemCostPricePerUnit: 186.76,
     itemSellingPricePerUnit: 199,
@@ -3151,7 +3151,7 @@ export const data = [
   },
   {
     itemBarcode: 8904098995175,
-    itemName: "DOLPHIN MUG",
+    itemName: 'DOLPHIN MUG',
     itemMRPperUnit: 82,
     itemCostPricePerUnit: 38.41,
     itemSellingPricePerUnit: 50,
@@ -3159,8 +3159,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "Double Sided Tape",
+    itemBarcode: '',
+    itemName: 'Double Sided Tape',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 32.35333333,
     itemSellingPricePerUnit: 45,
@@ -3169,7 +3169,7 @@ export const data = [
   },
   {
     itemBarcode: 8906103061974,
-    itemName: "Double Trishool Atta 10 Kg",
+    itemName: 'Double Trishool Atta 10 Kg',
     itemMRPperUnit: 425,
     itemCostPricePerUnit: 250,
     itemSellingPricePerUnit: 270,
@@ -3178,7 +3178,7 @@ export const data = [
   },
   {
     itemBarcode: 8906103061981,
-    itemName: "Double Trishool Atta 5 Kg",
+    itemName: 'Double Trishool Atta 5 Kg',
     itemMRPperUnit: 235,
     itemCostPricePerUnit: 126,
     itemSellingPricePerUnit: 140,
@@ -3187,7 +3187,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030899720,
-    itemName: "DOVE Healthy Ritual SHAMPOO 4.5ml",
+    itemName: 'DOVE Healthy Ritual SHAMPOO 4.5ml',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.94,
     itemSellingPricePerUnit: 2,
@@ -3196,7 +3196,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030899751,
-    itemName: "Dove Daily Shine Hair Shampoo 5.5 ml",
+    itemName: 'Dove Daily Shine Hair Shampoo 5.5 ml',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.579375,
     itemSellingPricePerUnit: 2,
@@ -3205,7 +3205,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030764356,
-    itemName: "DOVE DANDRUF CARE SHAMPOO 180 ml",
+    itemName: 'DOVE DANDRUF CARE SHAMPOO 180 ml',
     itemMRPperUnit: 170,
     itemCostPricePerUnit: 145.26,
     itemSellingPricePerUnit: 159,
@@ -3214,7 +3214,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030899768,
-    itemName: "Dove Dandruff Care Hair Shampoo 5.5 ml",
+    itemName: 'Dove Dandruff Care Hair Shampoo 5.5 ml',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.466875,
     itemSellingPricePerUnit: 2,
@@ -3223,7 +3223,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030899775,
-    itemName: "Dove Dandruff Clean Shampoo Sachet 5 ml",
+    itemName: 'Dove Dandruff Clean Shampoo Sachet 5 ml',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.39625,
     itemSellingPricePerUnit: 2,
@@ -3232,7 +3232,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030838217,
-    itemName: "DOVE FRESH MOISTURE SOAP 75g",
+    itemName: 'DOVE FRESH MOISTURE SOAP 75g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 68.4,
     itemSellingPricePerUnit: 73,
@@ -3241,7 +3241,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030861338,
-    itemName: "DOVE HAIRFALL RESCUE CONDITIONER 180 ml",
+    itemName: 'DOVE HAIRFALL RESCUE CONDITIONER 180 ml',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 173.72,
     itemSellingPricePerUnit: 189,
@@ -3250,7 +3250,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030865527,
-    itemName: "Dove Hairfall Shampoo & Conditioner 12 ml",
+    itemName: 'Dove Hairfall Shampoo & Conditioner 12 ml',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 3.37875,
     itemSellingPricePerUnit: 5,
@@ -3259,7 +3259,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786340507,
-    itemName: "DRY GINGER POWD",
+    itemName: 'DRY GINGER POWD',
     itemMRPperUnit: 42,
     itemCostPricePerUnit: 35.30166667,
     itemSellingPricePerUnit: 40,
@@ -3268,7 +3268,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396704300,
-    itemName: "DUREX AIR CONDOMS 10U",
+    itemName: 'DUREX AIR CONDOMS 10U',
     itemMRPperUnit: 228,
     itemCostPricePerUnit: 152,
     itemSellingPricePerUnit: 178,
@@ -3277,7 +3277,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396704409,
-    itemName: "DUREX EXTRA TIME CONDOMS 10U",
+    itemName: 'DUREX EXTRA TIME CONDOMS 10U',
     itemMRPperUnit: 228,
     itemCostPricePerUnit: 152,
     itemSellingPricePerUnit: 178,
@@ -3285,8 +3285,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "EGG CURRY MASALA",
+    itemBarcode: '',
+    itemName: 'EGG CURRY MASALA',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -3295,7 +3295,7 @@ export const data = [
   },
   {
     itemBarcode: 8901571011032,
-    itemName: "ENO LEMON BOTTLE 100 g",
+    itemName: 'ENO LEMON BOTTLE 100 g',
     itemMRPperUnit: 150,
     itemCostPricePerUnit: 124.38,
     itemSellingPricePerUnit: 140,
@@ -3304,7 +3304,7 @@ export const data = [
   },
   {
     itemBarcode: 8901691016979,
-    itemName: "EVEREADY 14W LED BULB",
+    itemName: 'EVEREADY 14W LED BULB',
     itemMRPperUnit: 280,
     itemCostPricePerUnit: 139,
     itemSellingPricePerUnit: 150,
@@ -3313,7 +3313,7 @@ export const data = [
   },
   {
     itemBarcode: 8901691020655,
-    itemName: "EVEREADY 9W LED BULB",
+    itemName: 'EVEREADY 9W LED BULB',
     itemMRPperUnit: 150,
     itemCostPricePerUnit: 89,
     itemSellingPricePerUnit: 95,
@@ -3322,7 +3322,7 @@ export const data = [
   },
   {
     itemBarcode: 8901691009353,
-    itemName: "EVEREADY GOLD 1005 AA CELL 10 U",
+    itemName: 'EVEREADY GOLD 1005 AA CELL 10 U',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 8.484,
     itemSellingPricePerUnit: 12,
@@ -3331,7 +3331,7 @@ export const data = [
   },
   {
     itemBarcode: 8901691011998,
-    itemName: "EVEREADY ULTIMA 2115 AA 6 U",
+    itemName: 'EVEREADY ULTIMA 2115 AA 6 U',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 28.16666667,
     itemSellingPricePerUnit: 35,
@@ -3340,7 +3340,7 @@ export const data = [
   },
   {
     itemBarcode: 8901691012001,
-    itemName: "EVEREADY ULTIMA AAA 6 U 2112",
+    itemName: 'EVEREADY ULTIMA AAA 6 U 2112',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 31.5,
     itemSellingPricePerUnit: 35,
@@ -3349,7 +3349,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786261000,
-    itemName: "EVEREST BLACK PEPPER POWDER 100 g",
+    itemName: 'EVEREST BLACK PEPPER POWDER 100 g',
     itemMRPperUnit: 135,
     itemCostPricePerUnit: 111.05,
     itemSellingPricePerUnit: 125,
@@ -3358,7 +3358,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786091003,
-    itemName: "EVEREST CHANA MASALA 100 g",
+    itemName: 'EVEREST CHANA MASALA 100 g',
     itemMRPperUnit: 71,
     itemCostPricePerUnit: 58.52,
     itemSellingPricePerUnit: 65,
@@ -3367,7 +3367,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786061006,
-    itemName: "EVEREST CHAT MASALA 100 g",
+    itemName: 'EVEREST CHAT MASALA 100 g',
     itemMRPperUnit: 69,
     itemCostPricePerUnit: 56.87,
     itemSellingPricePerUnit: 65,
@@ -3376,7 +3376,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786161003,
-    itemName: "EVEREST CHICKEN MASALA 100 g",
+    itemName: 'EVEREST CHICKEN MASALA 100 g',
     itemMRPperUnit: 78,
     itemCostPricePerUnit: 64.27,
     itemSellingPricePerUnit: 72,
@@ -3385,7 +3385,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786411009,
-    itemName: "EVEREST CHILLI KASHMIRI 100 g",
+    itemName: 'EVEREST CHILLI KASHMIRI 100 g',
     itemMRPperUnit: 85,
     itemCostPricePerUnit: 70.08,
     itemSellingPricePerUnit: 80,
@@ -3394,7 +3394,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786405015,
-    itemName: "EVEREST CHILLI KUTI 500 g",
+    itemName: 'EVEREST CHILLI KUTI 500 g',
     itemMRPperUnit: 240,
     itemCostPricePerUnit: 204.54,
     itemSellingPricePerUnit: 225,
@@ -3403,7 +3403,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786435012,
-    itemName: "EVEREST CORIANDER POWDER 500 g",
+    itemName: 'EVEREST CORIANDER POWDER 500 g',
     itemMRPperUnit: 155,
     itemCostPricePerUnit: 141.35,
     itemSellingPricePerUnit: 150,
@@ -3412,7 +3412,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786101009,
-    itemName: "EVEREST GARAM MASALA POWDER 100 g",
+    itemName: 'EVEREST GARAM MASALA POWDER 100 g',
     itemMRPperUnit: 84,
     itemCostPricePerUnit: 69.11,
     itemSellingPricePerUnit: 80,
@@ -3421,7 +3421,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786550258,
-    itemName: "EVEREST HING 25 g",
+    itemName: 'EVEREST HING 25 g',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 53.58,
     itemSellingPricePerUnit: 60,
@@ -3430,7 +3430,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786121007,
-    itemName: "EVEREST KITCHEN KING MASALA 100 g",
+    itemName: 'EVEREST KITCHEN KING MASALA 100 g',
     itemMRPperUnit: 74,
     itemCostPricePerUnit: 61,
     itemSellingPricePerUnit: 70,
@@ -3439,7 +3439,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786131006,
-    itemName: "EVEREST SABJI MASALA 100 g",
+    itemName: 'EVEREST SABJI MASALA 100 g',
     itemMRPperUnit: 56,
     itemCostPricePerUnit: 46.16,
     itemSellingPricePerUnit: 51,
@@ -3448,7 +3448,7 @@ export const data = [
   },
   {
     itemBarcode: 8902102199427,
-    itemName: "EXO DISHWASH TUB 500 g",
+    itemName: 'EXO DISHWASH TUB 500 g',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 46.22,
     itemSellingPricePerUnit: 51,
@@ -3457,7 +3457,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248253161,
-    itemName: "FAIR & HANDSOME 12 U X 15g",
+    itemName: 'FAIR & HANDSOME 12 U X 15g',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31.82,
     itemSellingPricePerUnit: 34,
@@ -3466,7 +3466,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030821523,
-    itemName: "FAIR & LOVELY MULTI VITAMIN 50 g",
+    itemName: 'FAIR & LOVELY MULTI VITAMIN 50 g',
     itemMRPperUnit: 118,
     itemCostPricePerUnit: 106.19,
     itemSellingPricePerUnit: 115,
@@ -3475,7 +3475,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030822155,
-    itemName: "FAIR & LOVELYMAX FAIRNES MEN 25 g",
+    itemName: 'FAIR & LOVELYMAX FAIRNES MEN 25 g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 67.49,
     itemSellingPricePerUnit: 72,
@@ -3484,7 +3484,7 @@ export const data = [
   },
   {
     itemBarcode: 8901764022272,
-    itemName: "Fanta 750 ml",
+    itemName: 'Fanta 750 ml',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 36.5,
     itemSellingPricePerUnit: 40,
@@ -3493,7 +3493,7 @@ export const data = [
   },
   {
     itemBarcode: 8901860512110,
-    itemName: "FEVICRYL ACRYLIC COLOR 10 X 15ml",
+    itemName: 'FEVICRYL ACRYLIC COLOR 10 X 15ml',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 193.7,
     itemSellingPricePerUnit: 215,
@@ -3502,7 +3502,7 @@ export const data = [
   },
   {
     itemBarcode: 8901860633037,
-    itemName: "FEVIGUM 20 ML",
+    itemName: 'FEVIGUM 20 ML',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4,
     itemSellingPricePerUnit: 5,
@@ -3511,7 +3511,7 @@ export const data = [
   },
   {
     itemBarcode: 8901860010005,
-    itemName: "FEVIKWIK 0.45 GM",
+    itemName: 'FEVIKWIK 0.45 GM',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.082716049,
     itemSellingPricePerUnit: 5,
@@ -3520,7 +3520,7 @@ export const data = [
   },
   {
     itemBarcode: 8901860010012,
-    itemName: "FEVIKWIK 1 GM",
+    itemName: 'FEVIKWIK 1 GM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.471666667,
     itemSellingPricePerUnit: 10,
@@ -3529,7 +3529,7 @@ export const data = [
   },
   {
     itemBarcode: 8901860633501,
-    itemName: "FEVISTIK 5 GM",
+    itemName: 'FEVISTIK 5 GM',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 12,
     itemSellingPricePerUnit: 14,
@@ -3538,7 +3538,7 @@ export const data = [
   },
   {
     itemBarcode: 8901860633532,
-    itemName: "FEVISTIK 8 GM",
+    itemName: 'FEVISTIK 8 GM',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 18.75,
     itemSellingPricePerUnit: 22,
@@ -3547,7 +3547,7 @@ export const data = [
   },
   {
     itemBarcode: 8905110001720,
-    itemName: "FIAMA CELEBRATION SOAP PACK 4 U X 75g",
+    itemName: 'FIAMA CELEBRATION SOAP PACK 4 U X 75g',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 33.86,
     itemSellingPricePerUnit: 39,
@@ -3555,8 +3555,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "FISH CURRY MASALAPOUCH 15",
+    itemBarcode: '',
+    itemName: 'FISH CURRY MASALAPOUCH 15',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -3565,7 +3565,7 @@ export const data = [
   },
   {
     itemBarcode: 8901765119025,
-    itemName: "FLAIR CARBONICS PEN",
+    itemName: 'FLAIR CARBONICS PEN',
     itemMRPperUnit: 11,
     itemCostPricePerUnit: 7.16,
     itemSellingPricePerUnit: 10,
@@ -3574,7 +3574,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192055532,
-    itemName: "FLIPKART GREAT BUY STICK FILE A4 10U",
+    itemName: 'FLIPKART GREAT BUY STICK FILE A4 10U',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 7.979,
     itemSellingPricePerUnit: 13,
@@ -3583,7 +3583,7 @@ export const data = [
   },
   {
     itemBarcode: 8906007285025,
-    itemName: "FORTUNE BESAN 1 kg",
+    itemName: 'FORTUNE BESAN 1 kg',
     itemMRPperUnit: 140,
     itemCostPricePerUnit: 81.73,
     itemSellingPricePerUnit: 90,
@@ -3592,7 +3592,7 @@ export const data = [
   },
   {
     itemBarcode: 8902587721113,
-    itemName: "FRESHWRAPP ALUMINIUM FOIL 72 m",
+    itemName: 'FRESHWRAPP ALUMINIUM FOIL 72 m',
     itemMRPperUnit: 650,
     itemCostPricePerUnit: 515,
     itemSellingPricePerUnit: 569,
@@ -3601,7 +3601,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192053491,
-    itemName: "FROSTY MUG",
+    itemName: 'FROSTY MUG',
     itemMRPperUnit: 82,
     itemCostPricePerUnit: 41.5,
     itemSellingPricePerUnit: 50,
@@ -3610,7 +3610,7 @@ export const data = [
   },
   {
     itemBarcode: 8906002006601,
-    itemName: "FUN FOOD VEG MAYO 120 GM",
+    itemName: 'FUN FOOD VEG MAYO 120 GM',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 45,
     itemSellingPricePerUnit: 48,
@@ -3619,7 +3619,7 @@ export const data = [
   },
   {
     itemBarcode: 8906028791123,
-    itemName: "FUNTOP KETCHUP 5 LTR",
+    itemName: 'FUNTOP KETCHUP 5 LTR',
     itemMRPperUnit: 285,
     itemCostPricePerUnit: 215,
     itemSellingPricePerUnit: 240,
@@ -3628,7 +3628,7 @@ export const data = [
   },
   {
     itemBarcode: 8901663004010,
-    itemName: "GALA MOP",
+    itemName: 'GALA MOP',
     itemMRPperUnit: 1799,
     itemCostPricePerUnit: 984.93,
     itemSellingPricePerUnit: 1250,
@@ -3637,7 +3637,7 @@ export const data = [
   },
   {
     itemBarcode: 8901663252312,
-    itemName: "GALA SPONGE WIPE 5 U",
+    itemName: 'GALA SPONGE WIPE 5 U',
     itemMRPperUnit: 260,
     itemCostPricePerUnit: 165,
     itemSellingPricePerUnit: 189,
@@ -3646,7 +3646,7 @@ export const data = [
   },
   {
     itemBarcode: 8901663102655,
-    itemName: "GALA SWASH CARD STEEL SCRUBBER 1N",
+    itemName: 'GALA SWASH CARD STEEL SCRUBBER 1N',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 16,
     itemSellingPricePerUnit: 20,
@@ -3655,7 +3655,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786100507,
-    itemName: "EVEREST GARAM MASALA",
+    itemName: 'EVEREST GARAM MASALA',
     itemMRPperUnit: 46,
     itemCostPricePerUnit: 38.598,
     itemSellingPricePerUnit: 42,
@@ -3663,8 +3663,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST GARAM MASALA RS 5",
+    itemBarcode: '',
+    itemName: 'EVEREST GARAM MASALA RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -3672,8 +3672,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST GARAM MASALA RS 10",
+    itemBarcode: '',
+    itemName: 'EVEREST GARAM MASALA RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -3682,7 +3682,7 @@ export const data = [
   },
   {
     itemBarcode: 8901526005178,
-    itemName: "GARNIER LIGHT COMPLETE FAIRNESS CREAM 45 g",
+    itemName: 'GARNIER LIGHT COMPLETE FAIRNESS CREAM 45 g',
     itemMRPperUnit: 159,
     itemCostPricePerUnit: 139.12,
     itemSellingPricePerUnit: 150,
@@ -3691,7 +3691,7 @@ export const data = [
   },
   {
     itemBarcode: 8901526006335,
-    itemName: "GARNIER MEN DUO FACEWASH 100 ml",
+    itemName: 'GARNIER MEN DUO FACEWASH 100 ml',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 165.33,
     itemSellingPricePerUnit: 179,
@@ -3700,7 +3700,7 @@ export const data = [
   },
   {
     itemBarcode: 8901526205578,
-    itemName: "GARNIER MEN OILCLEAR FACEWASH 50g",
+    itemName: 'GARNIER MEN OILCLEAR FACEWASH 50g',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 81.76,
     itemSellingPricePerUnit: 90,
@@ -3709,7 +3709,7 @@ export const data = [
   },
   {
     itemBarcode: 1002598809,
-    itemName: "GENERAL PURPOSE SCISSOR",
+    itemName: 'GENERAL PURPOSE SCISSOR',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 49,
     itemSellingPricePerUnit: 54,
@@ -3718,7 +3718,7 @@ export const data = [
   },
   {
     itemBarcode: 8901331004403,
-    itemName: "GHADI DETERGENT POWDER 500 g",
+    itemName: 'GHADI DETERGENT POWDER 500 g',
     itemMRPperUnit: 34,
     itemCostPricePerUnit: 30.99,
     itemSellingPricePerUnit: 34,
@@ -3727,7 +3727,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176030108,
-    itemName: "GILLETE FOAM REGULAR 196G",
+    itemName: 'GILLETE FOAM REGULAR 196G',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 177.68,
     itemSellingPricePerUnit: 195,
@@ -3736,7 +3736,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176030047,
-    itemName: "GILLETE FOAM REGULAR 418G",
+    itemName: 'GILLETE FOAM REGULAR 418G',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 200.89,
     itemSellingPricePerUnit: 220,
@@ -3745,7 +3745,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430722193,
-    itemName: "GILLETE FOAM REGULAR 50G",
+    itemName: 'GILLETE FOAM REGULAR 50G',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 80.36,
     itemSellingPricePerUnit: 87,
@@ -3754,7 +3754,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176079299,
-    itemName: "GILLETE GUARD SHAVING FOAM WITH NEEM 190G",
+    itemName: 'GILLETE GUARD SHAVING FOAM WITH NEEM 190G',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 107.14,
     itemSellingPricePerUnit: 115,
@@ -3763,7 +3763,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176102263,
-    itemName: "GILLETE SHAVING BRUSH",
+    itemName: 'GILLETE SHAVING BRUSH',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 54.6875,
     itemSellingPricePerUnit: 60,
@@ -3772,7 +3772,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176030023,
-    itemName: "GILLETE SHAVING GEL 25G",
+    itemName: 'GILLETE SHAVING GEL 25G',
     itemMRPperUnit: 49,
     itemCostPricePerUnit: 43.75,
     itemSellingPricePerUnit: 47,
@@ -3781,7 +3781,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176093738,
-    itemName: "GILLETE SHAVING GEL 60G",
+    itemName: 'GILLETE SHAVING GEL 60G',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 80.36,
     itemSellingPricePerUnit: 85,
@@ -3790,7 +3790,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176093714,
-    itemName: "GILLETE SHAVING GEL MOISTURISING 60G",
+    itemName: 'GILLETE SHAVING GEL MOISTURISING 60G',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 80.36,
     itemSellingPricePerUnit: 85,
@@ -3799,7 +3799,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176101983,
-    itemName: "GILLETTE 7 O CLOCK RAZOR SS",
+    itemName: 'GILLETTE 7 O CLOCK RAZOR SS',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 30.7,
     itemSellingPricePerUnit: 33,
@@ -3808,7 +3808,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176093875,
-    itemName: "GILLETTE 7 O CLOCK RAZOR STERLING",
+    itemName: 'GILLETTE 7 O CLOCK RAZOR STERLING',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 87.72,
     itemSellingPricePerUnit: 95,
@@ -3817,7 +3817,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430774727,
-    itemName: "GILLETTE 7 O CLOCK RAZOR SUPER PLAT",
+    itemName: 'GILLETTE 7 O CLOCK RAZOR SUPER PLAT',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 66.97,
     itemSellingPricePerUnit: 72,
@@ -3826,7 +3826,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430922449,
-    itemName: "GILLETTE FUSION CART 4S",
+    itemName: 'GILLETTE FUSION CART 4S',
     itemMRPperUnit: 1000,
     itemCostPricePerUnit: 892.86,
     itemSellingPricePerUnit: 960,
@@ -3835,7 +3835,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176090850,
-    itemName: "GILLETTE FUSION RAZOR",
+    itemName: 'GILLETTE FUSION RAZOR',
     itemMRPperUnit: 375,
     itemCostPricePerUnit: 334.83,
     itemSellingPricePerUnit: 365,
@@ -3844,7 +3844,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176094056,
-    itemName: "GILLETTE GUARD 3 CART",
+    itemName: 'GILLETTE GUARD 3 CART',
     itemMRPperUnit: 28,
     itemCostPricePerUnit: 22.81,
     itemSellingPricePerUnit: 25,
@@ -3853,7 +3853,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430914710,
-    itemName: "GILLETTE GUARD 3 CART 1S",
+    itemName: 'GILLETTE GUARD 3 CART 1S',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31,
     itemSellingPricePerUnit: 34,
@@ -3862,7 +3862,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430914734,
-    itemName: "GILLETTE GUARD 3 CART 3S",
+    itemName: 'GILLETTE GUARD 3 CART 3S',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 78.59666667,
     itemSellingPricePerUnit: 85,
@@ -3871,7 +3871,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430818834,
-    itemName: "GILLETTE GUARD 3 CART 6S",
+    itemName: 'GILLETTE GUARD 3 CART 6S',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 41.005,
     itemSellingPricePerUnit: 46,
@@ -3880,7 +3880,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176102904,
-    itemName: "GILLETTE GUARD 3 RAZOR",
+    itemName: 'GILLETTE GUARD 3 RAZOR',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 60.68,
     itemSellingPricePerUnit: 65,
@@ -3889,7 +3889,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176041081,
-    itemName: "GILLETTE GUARD RAZOR 1U",
+    itemName: 'GILLETTE GUARD RAZOR 1U',
     itemMRPperUnit: 24,
     itemCostPricePerUnit: 16.88,
     itemSellingPricePerUnit: 20,
@@ -3898,7 +3898,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430921817,
-    itemName: "GILLETTE MACH3 CART 2S",
+    itemName: 'GILLETTE MACH3 CART 2S',
     itemMRPperUnit: 260,
     itemCostPricePerUnit: 234.25,
     itemSellingPricePerUnit: 255,
@@ -3907,7 +3907,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430921831,
-    itemName: "GILLETTE MACH3 CART 4S",
+    itemName: 'GILLETTE MACH3 CART 4S',
     itemMRPperUnit: 499,
     itemCostPricePerUnit: 449.55,
     itemSellingPricePerUnit: 490,
@@ -3916,7 +3916,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176077776,
-    itemName: "GILLETTE MACH3 RAZOR",
+    itemName: 'GILLETTE MACH3 RAZOR',
     itemMRPperUnit: 250,
     itemCostPricePerUnit: 223.23,
     itemSellingPricePerUnit: 245,
@@ -3925,7 +3925,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176094070,
-    itemName: "GILLETTE MACH3 START CART 2",
+    itemName: 'GILLETTE MACH3 START CART 2',
     itemMRPperUnit: 249,
     itemCostPricePerUnit: 224.32,
     itemSellingPricePerUnit: 245,
@@ -3934,7 +3934,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176094094,
-    itemName: "GILLETTE MACH3 START CART 4",
+    itemName: 'GILLETTE MACH3 START CART 4',
     itemMRPperUnit: 449,
     itemCostPricePerUnit: 404.5,
     itemSellingPricePerUnit: 440,
@@ -3943,7 +3943,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176101891,
-    itemName: "GILLETTE MACH3 START RAZOR",
+    itemName: 'GILLETTE MACH3 START RAZOR',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 177.68,
     itemSellingPricePerUnit: 190,
@@ -3952,7 +3952,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176094209,
-    itemName: "GILLETTE MACH3 TURBO CART 2",
+    itemName: 'GILLETTE MACH3 TURBO CART 2',
     itemMRPperUnit: 349,
     itemCostPricePerUnit: 314.42,
     itemSellingPricePerUnit: 340,
@@ -3961,7 +3961,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176094216,
-    itemName: "GILLETTE MACH3 TURBO CART 4",
+    itemName: 'GILLETTE MACH3 TURBO CART 4',
     itemMRPperUnit: 649,
     itemCostPricePerUnit: 584.7,
     itemSellingPricePerUnit: 630,
@@ -3970,7 +3970,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176077790,
-    itemName: "GILLETTE MACH3 TURBO FLEX RAZOR",
+    itemName: 'GILLETTE MACH3 TURBO FLEX RAZOR',
     itemMRPperUnit: 349,
     itemCostPricePerUnit: 311.61,
     itemSellingPricePerUnit: 340,
@@ -3979,7 +3979,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430839754,
-    itemName: "GILLETTE PRESTO",
+    itemName: 'GILLETTE PRESTO',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 13.15666667,
     itemSellingPricePerUnit: 15,
@@ -3988,7 +3988,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176037268,
-    itemName: "GILLETTE SIMPLY VENUS 5S",
+    itemName: 'GILLETTE SIMPLY VENUS 5S',
     itemMRPperUnit: 280,
     itemCostPricePerUnit: 245.6,
     itemSellingPricePerUnit: 270,
@@ -3997,7 +3997,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176102034,
-    itemName: "GILLETTE VECTOR CART 2S",
+    itemName: 'GILLETTE VECTOR CART 2S',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 62.5,
     itemSellingPricePerUnit: 68,
@@ -4006,7 +4006,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176102003,
-    itemName: "GILLETTE VECTOR CART 4S",
+    itemName: 'GILLETTE VECTOR CART 4S',
     itemMRPperUnit: 130,
     itemCostPricePerUnit: 116.08,
     itemSellingPricePerUnit: 126,
@@ -4015,7 +4015,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176101990,
-    itemName: "GILLETTE VECTOR CART 6S",
+    itemName: 'GILLETTE VECTOR CART 6S',
     itemMRPperUnit: 180,
     itemCostPricePerUnit: 160.7,
     itemSellingPricePerUnit: 175,
@@ -4024,7 +4024,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176101976,
-    itemName: "GILLETTE VECTOR RAZOR",
+    itemName: 'GILLETTE VECTOR RAZOR',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 66.97,
     itemSellingPricePerUnit: 73,
@@ -4033,7 +4033,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176029768,
-    itemName: "GILLETTE VENUS DISPOSABLE RAZOR 1U",
+    itemName: 'GILLETTE VENUS DISPOSABLE RAZOR 1U',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 54.64,
     itemSellingPricePerUnit: 60,
@@ -4042,7 +4042,7 @@ export const data = [
   },
   {
     itemBarcode: 8901542008931,
-    itemName: "GLUCON D NIMBU PAANI REFILL 200 g",
+    itemName: 'GLUCON D NIMBU PAANI REFILL 200 g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 54,
     itemSellingPricePerUnit: 60,
@@ -4051,7 +4051,7 @@ export const data = [
   },
   {
     itemBarcode: 8901542016226,
-    itemName: "GLUCON D REGULAR REFILL 75 g",
+    itemName: 'GLUCON D REGULAR REFILL 75 g',
     itemMRPperUnit: 31,
     itemCostPricePerUnit: 22.32,
     itemSellingPricePerUnit: 26,
@@ -4060,7 +4060,7 @@ export const data = [
   },
   {
     itemBarcode: 8901157001143,
-    itemName: "GOOD KNIGHT ACTIVE + REFILL 45N",
+    itemName: 'GOOD KNIGHT ACTIVE + REFILL 45N',
     itemMRPperUnit: 77,
     itemCostPricePerUnit: 67.83,
     itemSellingPricePerUnit: 73,
@@ -4069,7 +4069,7 @@ export const data = [
   },
   {
     itemBarcode: 8901023026508,
-    itemName: "GOOD KNIGHT FLASH LEVENDER REFILL 45 ml",
+    itemName: 'GOOD KNIGHT FLASH LEVENDER REFILL 45 ml',
     itemMRPperUnit: 77,
     itemCostPricePerUnit: 66.85,
     itemSellingPricePerUnit: 73,
@@ -4078,7 +4078,7 @@ export const data = [
   },
   {
     itemBarcode: 8901023018299,
-    itemName: "GOOD KNIGHT NATURALS AGARBATTI X 10 N",
+    itemName: 'GOOD KNIGHT NATURALS AGARBATTI X 10 N',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 10.91,
     itemSellingPricePerUnit: 14,
@@ -4087,7 +4087,7 @@ export const data = [
   },
   {
     itemBarcode: 8906016014722,
-    itemName: "GOURMIA ROSTD ALMOND SMOKED JALAPENO200g",
+    itemName: 'GOURMIA ROSTD ALMOND SMOKED JALAPENO200g',
     itemMRPperUnit: 345,
     itemCostPricePerUnit: 244.02,
     itemSellingPricePerUnit: 275,
@@ -4096,7 +4096,7 @@ export const data = [
   },
   {
     itemBarcode: 8906001023036,
-    itemName: "GOWARDHAN COW GHEE JAR 1 L",
+    itemName: 'GOWARDHAN COW GHEE JAR 1 L',
     itemMRPperUnit: 629,
     itemCostPricePerUnit: 575.48,
     itemSellingPricePerUnit: 599,
@@ -4105,7 +4105,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192040637,
-    itemName: "GREAT VALUE COTTON PADS 50U",
+    itemName: 'GREAT VALUE COTTON PADS 50U',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 68.87,
     itemSellingPricePerUnit: 75,
@@ -4114,7 +4114,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192045700,
-    itemName: "Great Value Kara Boondi 200 g",
+    itemName: 'Great Value Kara Boondi 200 g',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 36,
     itemSellingPricePerUnit: 45,
@@ -4123,7 +4123,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192039174,
-    itemName: "GREAT VALUE PUJA CAMPHOR 50 TABLETS",
+    itemName: 'GREAT VALUE PUJA CAMPHOR 50 TABLETS',
     itemMRPperUnit: 29,
     itemCostPricePerUnit: 21,
     itemSellingPricePerUnit: 25,
@@ -4132,7 +4132,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207040795,
-    itemName: "GULABBARI 120 ML",
+    itemName: 'GULABBARI 120 ML',
     itemMRPperUnit: 49,
     itemCostPricePerUnit: 43,
     itemSellingPricePerUnit: 47,
@@ -4141,7 +4141,7 @@ export const data = [
   },
   {
     itemBarcode: 8904004400045,
-    itemName: "HALDIRAM BHUJIA SEV 200 GM",
+    itemName: 'HALDIRAM BHUJIA SEV 200 GM',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 49,
     itemSellingPricePerUnit: 52,
@@ -4150,7 +4150,7 @@ export const data = [
   },
   {
     itemBarcode: 8904004400618,
-    itemName: "HALDIRAM LEMON BHEL 150 GM",
+    itemName: 'HALDIRAM LEMON BHEL 150 GM',
     itemMRPperUnit: 32,
     itemCostPricePerUnit: 28.8,
     itemSellingPricePerUnit: 31,
@@ -4159,7 +4159,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396183501,
-    itemName: "HARPIC TOILET CLEANER 250 ml",
+    itemName: 'HARPIC TOILET CLEANER 250 ml',
     itemMRPperUnit: 52,
     itemCostPricePerUnit: 44,
     itemSellingPricePerUnit: 49,
@@ -4168,7 +4168,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396158752,
-    itemName: "HARPIC TOILET CLEANER 600 ml",
+    itemName: 'HARPIC TOILET CLEANER 600 ml',
     itemMRPperUnit: 116,
     itemCostPricePerUnit: 98.86,
     itemSellingPricePerUnit: 109,
@@ -4177,7 +4177,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430729291,
-    itemName: "Head & Shoulders Basic Clean Shampoo 5 ml",
+    itemName: 'Head & Shoulders Basic Clean Shampoo 5 ml',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.421875,
     itemSellingPricePerUnit: 2,
@@ -4186,7 +4186,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430829847,
-    itemName: "Head & Shoulders Basic Smooth Hair Shampoo 5 ml",
+    itemName: 'Head & Shoulders Basic Smooth Hair Shampoo 5 ml',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.263888889,
     itemSellingPricePerUnit: 2,
@@ -4195,7 +4195,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176072962,
-    itemName: "HEAD N SHOULDER 2 IN 1 ACTIVE PROTECTIVE180ML",
+    itemName: 'HEAD N SHOULDER 2 IN 1 ACTIVE PROTECTIVE180ML',
     itemMRPperUnit: 220,
     itemCostPricePerUnit: 200,
     itemSellingPricePerUnit: 210,
@@ -4204,7 +4204,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176112446,
-    itemName: "HEAD N SHOULDER 2 IN 1 ANTI HAIRFALL180ML",
+    itemName: 'HEAD N SHOULDER 2 IN 1 ANTI HAIRFALL180ML',
     itemMRPperUnit: 200,
     itemCostPricePerUnit: 181.82,
     itemSellingPricePerUnit: 190,
@@ -4213,7 +4213,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176072986,
-    itemName: "HEAD N SHOULDER 2 IN 1 COOL MENTHOL 180ML",
+    itemName: 'HEAD N SHOULDER 2 IN 1 COOL MENTHOL 180ML',
     itemMRPperUnit: 220,
     itemCostPricePerUnit: 177,
     itemSellingPricePerUnit: 200,
@@ -4222,7 +4222,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073457,
-    itemName: "HEAD N SHOULDER 2 IN 1 COOL MENTHOL 72ML",
+    itemName: 'HEAD N SHOULDER 2 IN 1 COOL MENTHOL 72ML',
     itemMRPperUnit: 85,
     itemCostPricePerUnit: 77.27,
     itemSellingPricePerUnit: 82,
@@ -4231,7 +4231,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176072979,
-    itemName: "HEAD N SHOULDER 2 IN 1 SMOOTH N SILKY 180ML",
+    itemName: 'HEAD N SHOULDER 2 IN 1 SMOOTH N SILKY 180ML',
     itemMRPperUnit: 220,
     itemCostPricePerUnit: 181.82,
     itemSellingPricePerUnit: 200,
@@ -4240,7 +4240,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430871457,
-    itemName: "HEAD N SHOULDER 2 IN 1 SMOOTH N SILKY 340ML",
+    itemName: 'HEAD N SHOULDER 2 IN 1 SMOOTH N SILKY 340ML',
     itemMRPperUnit: 365,
     itemCostPricePerUnit: 331.82,
     itemSellingPricePerUnit: 349,
@@ -4249,7 +4249,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073464,
-    itemName: "HEAD N SHOULDER 2 IN 1 SMOOTH N SILKY 72ML",
+    itemName: 'HEAD N SHOULDER 2 IN 1 SMOOTH N SILKY 72ML',
     itemMRPperUnit: 89,
     itemCostPricePerUnit: 77.27,
     itemSellingPricePerUnit: 85,
@@ -4258,7 +4258,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073006,
-    itemName: "HEAD N SHOULDER AHF 180ML",
+    itemName: 'HEAD N SHOULDER AHF 180ML',
     itemMRPperUnit: 180,
     itemCostPricePerUnit: 163.64,
     itemSellingPricePerUnit: 175,
@@ -4267,7 +4267,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073112,
-    itemName: "HEAD N SHOULDER AHF 340ML",
+    itemName: 'HEAD N SHOULDER AHF 340ML',
     itemMRPperUnit: 345,
     itemCostPricePerUnit: 286.36,
     itemSellingPricePerUnit: 300,
@@ -4276,7 +4276,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176074171,
-    itemName: "HEAD N SHOULDER AHF 72ML",
+    itemName: 'HEAD N SHOULDER AHF 72ML',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 68.18,
     itemSellingPricePerUnit: 73,
@@ -4285,7 +4285,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073020,
-    itemName: "HEAD N SHOULDER CM 180ML",
+    itemName: 'HEAD N SHOULDER CM 180ML',
     itemMRPperUnit: 180,
     itemCostPricePerUnit: 163.64,
     itemSellingPricePerUnit: 175,
@@ -4294,7 +4294,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073099,
-    itemName: "HEAD N SHOULDER CM 340ML",
+    itemName: 'HEAD N SHOULDER CM 340ML',
     itemMRPperUnit: 315,
     itemCostPricePerUnit: 286.36,
     itemSellingPricePerUnit: 305,
@@ -4303,7 +4303,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073433,
-    itemName: "HEAD N SHOULDER CM 72ML",
+    itemName: 'HEAD N SHOULDER CM 72ML',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 61.82,
     itemSellingPricePerUnit: 70,
@@ -4312,7 +4312,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073440,
-    itemName: "HEAD N SHOULDER LEMON FRESH 72ML",
+    itemName: 'HEAD N SHOULDER LEMON FRESH 72ML',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 68.18,
     itemSellingPricePerUnit: 72,
@@ -4321,7 +4321,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176072948,
-    itemName: "HEAD N SHOULDER NEEM 180ML",
+    itemName: 'HEAD N SHOULDER NEEM 180ML',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 204.55,
     itemSellingPricePerUnit: 220,
@@ -4330,7 +4330,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073044,
-    itemName: "HEAD N SHOULDER NEEM 340ML",
+    itemName: 'HEAD N SHOULDER NEEM 340ML',
     itemMRPperUnit: 425,
     itemCostPricePerUnit: 331.82,
     itemSellingPricePerUnit: 360,
@@ -4339,7 +4339,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073471,
-    itemName: "HEAD N SHOULDER NEEM 72ML",
+    itemName: 'HEAD N SHOULDER NEEM 72ML',
     itemMRPperUnit: 89,
     itemCostPricePerUnit: 80.91,
     itemSellingPricePerUnit: 86,
@@ -4348,7 +4348,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073013,
-    itemName: "HEAD N SHOULDER SILKY BLACK 180ML",
+    itemName: 'HEAD N SHOULDER SILKY BLACK 180ML',
     itemMRPperUnit: 180,
     itemCostPricePerUnit: 163.64,
     itemSellingPricePerUnit: 175,
@@ -4357,7 +4357,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073129,
-    itemName: "HEAD N SHOULDER SILKY BLACK 340ML",
+    itemName: 'HEAD N SHOULDER SILKY BLACK 340ML',
     itemMRPperUnit: 345,
     itemCostPricePerUnit: 313.64,
     itemSellingPricePerUnit: 335,
@@ -4366,7 +4366,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176074188,
-    itemName: "HEAD N SHOULDER SILKY BLACK 72ML",
+    itemName: 'HEAD N SHOULDER SILKY BLACK 72ML',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 68.18,
     itemSellingPricePerUnit: 73,
@@ -4375,7 +4375,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073037,
-    itemName: "HEAD N SHOULDER SMOOTH N SILKY 180ML",
+    itemName: 'HEAD N SHOULDER SMOOTH N SILKY 180ML',
     itemMRPperUnit: 180,
     itemCostPricePerUnit: 163.64,
     itemSellingPricePerUnit: 175,
@@ -4384,7 +4384,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176073105,
-    itemName: "HEAD N SHOULDER SMOOTH N SILKY 340ML",
+    itemName: 'HEAD N SHOULDER SMOOTH N SILKY 340ML',
     itemMRPperUnit: 315,
     itemCostPricePerUnit: 286.36,
     itemSellingPricePerUnit: 305,
@@ -4393,7 +4393,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176074195,
-    itemName: "HEAD N SHOULDER SMOOTH N SILKY 72ML",
+    itemName: 'HEAD N SHOULDER SMOOTH N SILKY 72ML',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 68.18,
     itemSellingPricePerUnit: 73,
@@ -4402,7 +4402,7 @@ export const data = [
   },
   {
     itemBarcode: 8906018050056,
-    itemName: "HEALTHY CHOICE MURMURA 250 g",
+    itemName: 'HEALTHY CHOICE MURMURA 250 g',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 26.44,
     itemSellingPricePerUnit: 30,
@@ -4438,7 +4438,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138848385,
-    itemName: "HIMALAYA AD COOL MINT SHAMPOO 200 ml",
+    itemName: 'HIMALAYA AD COOL MINT SHAMPOO 200 ml',
     itemMRPperUnit: 165,
     itemCostPricePerUnit: 118.5,
     itemSellingPricePerUnit: 140,
@@ -4447,7 +4447,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138505929,
-    itemName: "HIMALAYA ANTI DANDRUFF SHAMPOO 400 ml",
+    itemName: 'HIMALAYA ANTI DANDRUFF SHAMPOO 400 ml',
     itemMRPperUnit: 260,
     itemCostPricePerUnit: 206.95,
     itemSellingPricePerUnit: 230,
@@ -4456,7 +4456,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138815943,
-    itemName: "HIMALAYA ANTI HAIRFALL SHAMPOO 400 ml",
+    itemName: 'HIMALAYA ANTI HAIRFALL SHAMPOO 400 ml',
     itemMRPperUnit: 255,
     itemCostPricePerUnit: 203.99,
     itemSellingPricePerUnit: 225,
@@ -4465,7 +4465,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138849436,
-    itemName: "Himalaya Anti-Dandruff Shampoo Sachet 7.8 ml",
+    itemName: 'Himalaya Anti-Dandruff Shampoo Sachet 7.8 ml',
     itemMRPperUnit: 4,
     itemCostPricePerUnit: 2.72,
     itemSellingPricePerUnit: 4,
@@ -4474,7 +4474,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138845483,
-    itemName: "HIMALAYA BABY HAIR OIL 200ml",
+    itemName: 'HIMALAYA BABY HAIR OIL 200ml',
     itemMRPperUnit: 220,
     itemCostPricePerUnit: 176,
     itemSellingPricePerUnit: 195,
@@ -4483,7 +4483,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138836108,
-    itemName: "HIMALAYA COMPLETE CARE TOOTHPASTE 150 g",
+    itemName: 'HIMALAYA COMPLETE CARE TOOTHPASTE 150 g',
     itemMRPperUnit: 85,
     itemCostPricePerUnit: 67.99,
     itemSellingPricePerUnit: 75,
@@ -4492,7 +4492,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138711962,
-    itemName: "Himalaya Neem & Turmeric Soap 4N (75 g Each)",
+    itemName: 'Himalaya Neem & Turmeric Soap 4N (75 g Each)',
     itemMRPperUnit: 33,
     itemCostPricePerUnit: 25.405,
     itemSellingPricePerUnit: 30,
@@ -4501,7 +4501,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138512460,
-    itemName: "Himalaya Purifying Neem Face Wash 100 ml",
+    itemName: 'Himalaya Purifying Neem Face Wash 100 ml',
     itemMRPperUnit: 130,
     itemCostPricePerUnit: 115.82,
     itemSellingPricePerUnit: 122,
@@ -4510,7 +4510,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138815431,
-    itemName: "Himalaya Purifying Neem Face Wash 150 ml",
+    itemName: 'Himalaya Purifying Neem Face Wash 150 ml',
     itemMRPperUnit: 170,
     itemCostPricePerUnit: 151.46,
     itemSellingPricePerUnit: 160,
@@ -4519,7 +4519,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138512187,
-    itemName: "Himalaya Purifying Neem Face Wash 50 ml",
+    itemName: 'Himalaya Purifying Neem Face Wash 50 ml',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 62.37,
     itemSellingPricePerUnit: 68,
@@ -4528,7 +4528,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138836122,
-    itemName: "HIMALAYA SPARKLING WHITE TOOTHPATSE 150g",
+    itemName: 'HIMALAYA SPARKLING WHITE TOOTHPATSE 150g',
     itemMRPperUnit: 95,
     itemCostPricePerUnit: 75.99,
     itemSellingPricePerUnit: 85,
@@ -4537,7 +4537,7 @@ export const data = [
   },
   {
     itemBarcode: 8901138837044,
-    itemName: "Himalaya Tan Removal Face Wash 100 ml",
+    itemName: 'Himalaya Tan Removal Face Wash 100 ml',
     itemMRPperUnit: 140,
     itemCostPricePerUnit: 115.33,
     itemSellingPricePerUnit: 130,
@@ -4546,7 +4546,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248114240,
-    itemName: "HIMANI FAST RELIEF 23 ml",
+    itemName: 'HIMANI FAST RELIEF 23 ml',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 75.91,
     itemSellingPricePerUnit: 85,
@@ -4554,8 +4554,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "HINGRAJ",
+    itemBarcode: '',
+    itemName: 'HINGRAJ',
     itemMRPperUnit: 28,
     itemCostPricePerUnit: 22.39666667,
     itemSellingPricePerUnit: 26,
@@ -4564,7 +4564,7 @@ export const data = [
   },
   {
     itemBarcode: 8901157025217,
-    itemName: "HIT FIK 400 ml",
+    itemName: 'HIT FIK 400 ml',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 199.43,
     itemSellingPricePerUnit: 215,
@@ -4573,7 +4573,7 @@ export const data = [
   },
   {
     itemBarcode: 8906016579993,
-    itemName: "HOMELITES MATCHBOX 5U X MRP 2",
+    itemName: 'HOMELITES MATCHBOX 5U X MRP 2',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.5,
     itemSellingPricePerUnit: 10,
@@ -4582,7 +4582,7 @@ export const data = [
   },
   {
     itemBarcode: 8906016579986,
-    itemName: "HOMELITES MATCHBOX LARGE PACK MRP 10",
+    itemName: 'HOMELITES MATCHBOX LARGE PACK MRP 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.5,
     itemSellingPricePerUnit: 10,
@@ -4591,7 +4591,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030811661,
-    itemName: "HORLICKS 15 GM POUCH",
+    itemName: 'HORLICKS 15 GM POUCH',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.245,
     itemSellingPricePerUnit: 5,
@@ -4600,7 +4600,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030846458,
-    itemName: "Indulekha Hair Shampoo 16 N (5.5 ml Each)",
+    itemName: 'Indulekha Hair Shampoo 16 N (5.5 ml Each)',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.573125,
     itemSellingPricePerUnit: 32,
@@ -4609,7 +4609,7 @@ export const data = [
   },
   {
     itemBarcode: 89000014,
-    itemName: "IODEX PAIN BALM 16 g",
+    itemName: 'IODEX PAIN BALM 16 g',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 66.78,
     itemSellingPricePerUnit: 75,
@@ -4618,7 +4618,7 @@ export const data = [
   },
   {
     itemBarcode: 8904027303149,
-    itemName: "JO SOAP LIME GLYCERINE 4Ux150g",
+    itemName: 'JO SOAP LIME GLYCERINE 4Ux150g',
     itemMRPperUnit: 43,
     itemCostPricePerUnit: 33.75,
     itemSellingPricePerUnit: 38,
@@ -4672,7 +4672,7 @@ export const data = [
   },
   {
     itemBarcode: 8904035418583,
-    itemName: "JOY SKIN CREAM JARPURE ALOE MB 24 U X 15",
+    itemName: 'JOY SKIN CREAM JARPURE ALOE MB 24 U X 15',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8,
     itemSellingPricePerUnit: 1,
@@ -4680,8 +4680,8 @@ export const data = [
     minimumStockQuantity: 6,
   },
   {
-    itemBarcode: "",
-    itemName: "K. KING MASALA POUCH",
+    itemBarcode: '',
+    itemName: 'K. KING MASALA POUCH',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -4690,7 +4690,7 @@ export const data = [
   },
   {
     itemBarcode: 8906046640359,
-    itemName: "KALBAVI CASHEW WHOLE W240 500 g",
+    itemName: 'KALBAVI CASHEW WHOLE W240 500 g',
     itemMRPperUnit: 705,
     itemCostPricePerUnit: 430.59,
     itemSellingPricePerUnit: 455,
@@ -4699,7 +4699,7 @@ export const data = [
   },
   {
     itemBarcode: 8901060000000,
-    itemName: "KANGARO STAPLER NO. 10 1U",
+    itemName: 'KANGARO STAPLER NO. 10 1U',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 57.64,
     itemSellingPricePerUnit: 65,
@@ -4708,7 +4708,7 @@ export const data = [
   },
   {
     itemBarcode: 8901057309028,
-    itemName: "KANGARO STAPLER NO. HD10D 1U",
+    itemName: 'KANGARO STAPLER NO. HD10D 1U',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 99.11,
     itemSellingPricePerUnit: 105,
@@ -4717,7 +4717,7 @@ export const data = [
   },
   {
     itemBarcode: 8901057510028,
-    itemName: "KANGARO STAPLER PIN NO. 10",
+    itemName: 'KANGARO STAPLER PIN NO. 10',
     itemMRPperUnit: 12,
     itemCostPricePerUnit: 7.31,
     itemSellingPricePerUnit: 10,
@@ -4726,7 +4726,7 @@ export const data = [
   },
   {
     itemBarcode: 8906140820060,
-    itemName: "KANY MUG 1 LTR",
+    itemName: 'KANY MUG 1 LTR',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 20.26,
     itemSellingPricePerUnit: 25,
@@ -4735,7 +4735,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786410507,
-    itemName: "KASHMIRILAL CHILL",
+    itemName: 'KASHMIRILAL CHILL',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 42,
     itemSellingPricePerUnit: 48,
@@ -4744,7 +4744,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786280254,
-    itemName: "KASURI METHI",
+    itemName: 'KASURI METHI',
     itemMRPperUnit: 27,
     itemCostPricePerUnit: 22.70166667,
     itemSellingPricePerUnit: 26,
@@ -4753,7 +4753,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248297110,
-    itemName: "KESH KING HAIR OIL 100 ml",
+    itemName: 'KESH KING HAIR OIL 100 ml',
     itemMRPperUnit: 170,
     itemCostPricePerUnit: 143.43,
     itemSellingPricePerUnit: 159,
@@ -4762,7 +4762,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719109393,
-    itemName: "KISMIBAR RS 5",
+    itemName: 'KISMIBAR RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.207419355,
     itemSellingPricePerUnit: 5,
@@ -4771,7 +4771,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030831706,
-    itemName: "KISSAN JAM MIX FRUIT 500 g",
+    itemName: 'KISSAN JAM MIX FRUIT 500 g',
     itemMRPperUnit: 160,
     itemCostPricePerUnit: 145.6,
     itemSellingPricePerUnit: 152,
@@ -4780,7 +4780,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030831737,
-    itemName: "KISSAN JAM POUCH",
+    itemName: 'KISSAN JAM POUCH',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.8345,
     itemSellingPricePerUnit: 2,
@@ -4789,7 +4789,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030699085,
-    itemName: "KISSAN KETCHUP TOMATO KETCHEP 1 kg",
+    itemName: 'KISSAN KETCHUP TOMATO KETCHEP 1 kg',
     itemMRPperUnit: 147,
     itemCostPricePerUnit: 134.86,
     itemSellingPricePerUnit: 142,
@@ -4798,7 +4798,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030532719,
-    itemName: "KISSAN KETCHUP TOMATO KETCHEP 500 g",
+    itemName: 'KISSAN KETCHUP TOMATO KETCHEP 500 g',
     itemMRPperUnit: 105,
     itemCostPricePerUnit: 95.05,
     itemSellingPricePerUnit: 102,
@@ -4806,8 +4806,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "SellingPrice",
-    itemName: "KISSAN PICHKU",
+    itemBarcode: 'SellingPrice',
+    itemName: 'KISSAN PICHKU',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 13.21166667,
     itemSellingPricePerUnit: 14.5,
@@ -4816,7 +4816,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786120505,
-    itemName: "KITCHEN KING",
+    itemName: 'KITCHEN KING',
     itemMRPperUnit: 42,
     itemCostPricePerUnit: 35.30166667,
     itemSellingPricePerUnit: 40,
@@ -4825,7 +4825,7 @@ export const data = [
   },
   {
     itemBarcode: 8906062311080,
-    itemName: "KITCHEN KING MAKHANA 200 g",
+    itemName: 'KITCHEN KING MAKHANA 200 g',
     itemMRPperUnit: 290,
     itemCostPricePerUnit: 189.55,
     itemSellingPricePerUnit: 209,
@@ -4834,7 +4834,7 @@ export const data = [
   },
   {
     itemBarcode: 8906062311714,
-    itemName: "KITCHEN KING TAMARIND SEEDLESS 500 g",
+    itemName: 'KITCHEN KING TAMARIND SEEDLESS 500 g',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 67.68,
     itemSellingPricePerUnit: 75,
@@ -4843,7 +4843,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058896411,
-    itemName: "KITKAT 4F 18 U X 38.5g",
+    itemName: 'KITKAT 4F 18 U X 38.5g',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 22.72714286,
     itemSellingPricePerUnit: 25,
@@ -4852,7 +4852,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030555442,
-    itemName: "KNORR SOUP HOT SOUR",
+    itemName: 'KNORR SOUP HOT SOUR',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.531666667,
     itemSellingPricePerUnit: 9.5,
@@ -4861,7 +4861,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030530333,
-    itemName: "KNORR SOUP MANCHOW",
+    itemName: 'KNORR SOUP MANCHOW',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.531666667,
     itemSellingPricePerUnit: 9.5,
@@ -4870,7 +4870,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030743139,
-    itemName: "KNORR SOUP MIX VEG",
+    itemName: 'KNORR SOUP MIX VEG',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.531666667,
     itemSellingPricePerUnit: 9.5,
@@ -4879,7 +4879,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030757501,
-    itemName: "KNORR SOUP TOMATO",
+    itemName: 'KNORR SOUP TOMATO',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.531666667,
     itemSellingPricePerUnit: 9.5,
@@ -4888,7 +4888,7 @@ export const data = [
   },
   {
     itemBarcode: 8902635573572,
-    itemName: "KORES SHADES LONG WAX CRAYONS 12PCS",
+    itemName: 'KORES SHADES LONG WAX CRAYONS 12PCS',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 13.28,
     itemSellingPricePerUnit: 17,
@@ -4897,7 +4897,7 @@ export const data = [
   },
   {
     itemBarcode: 8902635203011,
-    itemName: "KORES SKETCH PEN, REGULAR 12 SHADES",
+    itemName: 'KORES SKETCH PEN, REGULAR 12 SHADES',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 19.98,
     itemSellingPricePerUnit: 25,
@@ -4906,7 +4906,7 @@ export const data = [
   },
   {
     itemBarcode: 8902635461145,
-    itemName: "KORES SMOOTHLINE HIGHLIGHTER",
+    itemName: 'KORES SMOOTHLINE HIGHLIGHTER',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 16.66,
     itemSellingPricePerUnit: 20,
@@ -4915,7 +4915,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192053422,
-    itemName: "KRYSTAL BUCKET 20 L WHITE",
+    itemName: 'KRYSTAL BUCKET 20 L WHITE',
     itemMRPperUnit: 430,
     itemCostPricePerUnit: 219.09,
     itemSellingPricePerUnit: 300,
@@ -4924,7 +4924,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491100519,
-    itemName: "Kurkure Masala Munch Bridges 100 g",
+    itemName: 'Kurkure Masala Munch Bridges 100 g',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 16.66,
     itemSellingPricePerUnit: 20,
@@ -4933,7 +4933,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491367219,
-    itemName: "Kurkure Masala Munch Bridges Rs. 5",
+    itemName: 'Kurkure Masala Munch Bridges Rs. 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.333333333,
     itemSellingPricePerUnit: 5,
@@ -4942,7 +4942,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491361026,
-    itemName: "Kurkure Masala Munch Bridges 55 g",
+    itemName: 'Kurkure Masala Munch Bridges 55 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -4978,7 +4978,7 @@ export const data = [
   },
   {
     itemBarcode: 8904026636927,
-    itemName: "LACTO CALAMINE LOTION OIL BAL120ml GREEN",
+    itemName: 'LACTO CALAMINE LOTION OIL BAL120ml GREEN',
     itemMRPperUnit: 220,
     itemCostPricePerUnit: 198,
     itemSellingPricePerUnit: 210,
@@ -4987,7 +4987,7 @@ export const data = [
   },
   {
     itemBarcode: 8904026636934,
-    itemName: "LACTO CALAMINE OIL CONTROL 120 ml BLUE",
+    itemName: 'LACTO CALAMINE OIL CONTROL 120 ml BLUE',
     itemMRPperUnit: 220,
     itemCostPricePerUnit: 198,
     itemSellingPricePerUnit: 210,
@@ -4996,7 +4996,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058865318,
-    itemName: "LACTOGEN BABY MILK STAGE 1 400 g",
+    itemName: 'LACTOGEN BABY MILK STAGE 1 400 g',
     itemMRPperUnit: 375,
     itemCostPricePerUnit: 344.03,
     itemSellingPricePerUnit: 360,
@@ -5005,7 +5005,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030732874,
-    itemName: "LAKME B&G STRABERRY BLAST FACEWASH 50g",
+    itemName: 'LAKME B&G STRABERRY BLAST FACEWASH 50g',
     itemMRPperUnit: 115,
     itemCostPricePerUnit: 87.21,
     itemSellingPricePerUnit: 100,
@@ -5014,7 +5014,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030648465,
-    itemName: "LAKME PEACH & PLUM MOISTURISER 60ml",
+    itemName: 'LAKME PEACH & PLUM MOISTURISER 60ml',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 85.97,
     itemSellingPricePerUnit: 95,
@@ -5023,7 +5023,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030864568,
-    itemName: "LAKME SHEET MASK LEMON 25ml",
+    itemName: 'LAKME SHEET MASK LEMON 25ml',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 58.18,
     itemSellingPricePerUnit: 70,
@@ -5032,7 +5032,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030864599,
-    itemName: "LAKME SHEET MASK POMEGRANATE 25ml",
+    itemName: 'LAKME SHEET MASK POMEGRANATE 25ml',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 58.18,
     itemSellingPricePerUnit: 70,
@@ -5041,7 +5041,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030864582,
-    itemName: "LAKME SHEET MASK STRAWBERRY 25ml",
+    itemName: 'LAKME SHEET MASK STRAWBERRY 25ml',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 58.18,
     itemSellingPricePerUnit: 70,
@@ -5050,7 +5050,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030866159,
-    itemName: "LAKME SUN EXPERT SPF24 - 120 ml",
+    itemName: 'LAKME SUN EXPERT SPF24 - 120 ml',
     itemMRPperUnit: 375,
     itemCostPricePerUnit: 325.66,
     itemSellingPricePerUnit: 350,
@@ -5059,7 +5059,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491503013,
-    itemName: "LAYS CHIPS CLASSIC SALTED 10",
+    itemName: 'LAYS CHIPS CLASSIC SALTED 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.05,
     itemSellingPricePerUnit: 10,
@@ -5068,7 +5068,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491101813,
-    itemName: "Lays Cream & Onion Chips 52 g",
+    itemName: 'Lays Cream & Onion Chips 52 g',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.48,
     itemSellingPricePerUnit: 20,
@@ -5077,7 +5077,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491502023,
-    itemName: "Lays Magic Masala Chips 15 N (Rs. 5 Each)",
+    itemName: 'Lays Magic Masala Chips 15 N (Rs. 5 Each)',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.4,
     itemSellingPricePerUnit: 5,
@@ -5086,7 +5086,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491101844,
-    itemName: "Lays Magic Masala Chips 52 g",
+    itemName: 'Lays Magic Masala Chips 52 g',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.5,
     itemSellingPricePerUnit: 20,
@@ -5095,7 +5095,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491502047,
-    itemName: "Lays Tango Tomato Chips 15 N (Rs.5 Each)",
+    itemName: 'Lays Tango Tomato Chips 15 N (Rs.5 Each)',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.4,
     itemSellingPricePerUnit: 5,
@@ -5104,7 +5104,7 @@ export const data = [
   },
   {
     itemBarcode: 8904106800484,
-    itemName: "LAZOR LINER",
+    itemName: 'LAZOR LINER',
     itemMRPperUnit: 6,
     itemCostPricePerUnit: 4.76,
     itemSellingPricePerUnit: 6,
@@ -5113,7 +5113,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030844959,
-    itemName: "LIFEBUOY 49 GM",
+    itemName: 'LIFEBUOY 49 GM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.216666667,
     itemSellingPricePerUnit: 10,
@@ -5122,7 +5122,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030818950,
-    itemName: "LIFEBUOY TOTAL SOAP 4Ux75g",
+    itemName: 'LIFEBUOY TOTAL SOAP 4Ux75g',
     itemMRPperUnit: 16,
     itemCostPricePerUnit: 13.49,
     itemSellingPricePerUnit: 15,
@@ -5131,7 +5131,7 @@ export const data = [
   },
   {
     itemBarcode: 8901441012015,
-    itemName: "LIJJAT PAPAD GARLIC",
+    itemName: 'LIJJAT PAPAD GARLIC',
     itemMRPperUnit: 68,
     itemCostPricePerUnit: 61.2,
     itemSellingPricePerUnit: 65,
@@ -5140,7 +5140,7 @@ export const data = [
   },
   {
     itemBarcode: 8901441014019,
-    itemName: "LIJJAT PAPAD MOONG",
+    itemName: 'LIJJAT PAPAD MOONG',
     itemMRPperUnit: 68,
     itemCostPricePerUnit: 61.2,
     itemSellingPricePerUnit: 65,
@@ -5149,7 +5149,7 @@ export const data = [
   },
   {
     itemBarcode: 8901441017010,
-    itemName: "LIJJAT PAPAD PUNJABI",
+    itemName: 'LIJJAT PAPAD PUNJABI',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 72,
     itemSellingPricePerUnit: 75,
@@ -5158,7 +5158,7 @@ export const data = [
   },
   {
     itemBarcode: 8901441011018,
-    itemName: "LIJJAT PAPAD URAD",
+    itemName: 'LIJJAT PAPAD URAD',
     itemMRPperUnit: 68,
     itemCostPricePerUnit: 61.2,
     itemSellingPricePerUnit: 65,
@@ -5167,7 +5167,7 @@ export const data = [
   },
   {
     itemBarcode: 8901764052910,
-    itemName: "Limca Pet Bottle 250 ml",
+    itemName: 'Limca Pet Bottle 250 ml',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 18.6,
     itemSellingPricePerUnit: 20,
@@ -5176,7 +5176,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088200073,
-    itemName: "LIVON ANTI-FRIZZ SERUM 50ML",
+    itemName: 'LIVON ANTI-FRIZZ SERUM 50ML',
     itemMRPperUnit: 170,
     itemCostPricePerUnit: 159.8,
     itemSellingPricePerUnit: 164,
@@ -5185,7 +5185,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396146902,
-    itemName: "LIZOL SURFACE CLEANER CITRUS 625 ml",
+    itemName: 'LIZOL SURFACE CLEANER CITRUS 625 ml',
     itemMRPperUnit: 131,
     itemCostPricePerUnit: 116.71,
     itemSellingPricePerUnit: 125,
@@ -5193,8 +5193,8 @@ export const data = [
     minimumStockQuantity: 2,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE AJWAIN 200G",
+    itemBarcode: '',
+    itemName: 'LOOSE AJWAIN 200G',
     itemMRPperUnit: 98,
     itemCostPricePerUnit: 57.77,
     itemSellingPricePerUnit: 65,
@@ -5202,8 +5202,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE BADA KOLAM RICE",
+    itemBarcode: '',
+    itemName: 'LOOSE BADA KOLAM RICE',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 53.5,
     itemSellingPricePerUnit: 58,
@@ -5211,8 +5211,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE BASMATI PREMIUM",
+    itemBarcode: '',
+    itemName: 'LOOSE BASMATI PREMIUM',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 99,
     itemSellingPricePerUnit: 106,
@@ -5220,8 +5220,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE BASMATI PULAV",
+    itemBarcode: '',
+    itemName: 'LOOSE BASMATI PULAV',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 71.5,
     itemSellingPricePerUnit: 74,
@@ -5229,8 +5229,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE BOONDI",
+    itemBarcode: '',
+    itemName: 'LOOSE BOONDI',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 10,
     itemSellingPricePerUnit: 12,
@@ -5238,8 +5238,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE CHANA DAAL",
+    itemBarcode: '',
+    itemName: 'LOOSE CHANA DAAL',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 56,
     itemSellingPricePerUnit: 60,
@@ -5247,8 +5247,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE CHOWLI (KIDNEY BEANS)",
+    itemBarcode: '',
+    itemName: 'LOOSE CHOWLI (KIDNEY BEANS)',
     itemMRPperUnit: 150,
     itemCostPricePerUnit: 137,
     itemSellingPricePerUnit: 140,
@@ -5256,8 +5256,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE GOLDEN BIRD PLATINUM RICE",
+    itemBarcode: '',
+    itemName: 'LOOSE GOLDEN BIRD PLATINUM RICE',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 74,
     itemSellingPricePerUnit: 80,
@@ -5265,8 +5265,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE GREEN MATAR",
+    itemBarcode: '',
+    itemName: 'LOOSE GREEN MATAR',
     itemMRPperUnit: 160,
     itemCostPricePerUnit: 143,
     itemSellingPricePerUnit: 150,
@@ -5274,8 +5274,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE JEERA",
+    itemBarcode: '',
+    itemName: 'LOOSE JEERA',
     itemMRPperUnit: 420,
     itemCostPricePerUnit: 280,
     itemSellingPricePerUnit: 380,
@@ -5283,8 +5283,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE KAAJU",
+    itemBarcode: '',
+    itemName: 'LOOSE KAAJU',
     itemMRPperUnit: 1476,
     itemCostPricePerUnit: 1128,
     itemSellingPricePerUnit: 1300,
@@ -5292,8 +5292,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE KABULI CHANA",
+    itemBarcode: '',
+    itemName: 'LOOSE KABULI CHANA',
     itemMRPperUnit: 92,
     itemCostPricePerUnit: 85,
     itemSellingPricePerUnit: 92,
@@ -5301,8 +5301,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE KHAJURAHO RICE CHAWAL",
+    itemBarcode: '',
+    itemName: 'LOOSE KHAJURAHO RICE CHAWAL',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 36,
     itemSellingPricePerUnit: 40,
@@ -5310,8 +5310,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE KISMIS",
+    itemBarcode: '',
+    itemName: 'LOOSE KISMIS',
     itemMRPperUnit: 372,
     itemCostPricePerUnit: 292,
     itemSellingPricePerUnit: 350,
@@ -5319,8 +5319,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE LAAL MIRCH KHADA",
+    itemBarcode: '',
+    itemName: 'LOOSE LAAL MIRCH KHADA',
     itemMRPperUnit: 280,
     itemCostPricePerUnit: 208,
     itemSellingPricePerUnit: 240,
@@ -5328,8 +5328,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE MACRONI",
+    itemBarcode: '',
+    itemName: 'LOOSE MACRONI',
     itemMRPperUnit: 200,
     itemCostPricePerUnit: 96,
     itemSellingPricePerUnit: 120,
@@ -5337,8 +5337,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE MAKHANA",
+    itemBarcode: '',
+    itemName: 'LOOSE MAKHANA',
     itemMRPperUnit: 700,
     itemCostPricePerUnit: 590.5,
     itemSellingPricePerUnit: 650,
@@ -5346,8 +5346,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE MASOOR DAAL",
+    itemBarcode: '',
+    itemName: 'LOOSE MASOOR DAAL',
     itemMRPperUnit: 92,
     itemCostPricePerUnit: 83,
     itemSellingPricePerUnit: 92,
@@ -5355,8 +5355,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE MASOORI",
+    itemBarcode: '',
+    itemName: 'LOOSE MASOORI',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 24.8,
     itemSellingPricePerUnit: 29,
@@ -5364,8 +5364,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE POHA",
+    itemBarcode: '',
+    itemName: 'LOOSE POHA',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 44.5,
     itemSellingPricePerUnit: 48,
@@ -5373,8 +5373,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE RAJMA RED",
+    itemBarcode: '',
+    itemName: 'LOOSE RAJMA RED',
     itemMRPperUnit: 118,
     itemCostPricePerUnit: 104,
     itemSellingPricePerUnit: 118,
@@ -5382,8 +5382,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE RAJMA WHITE",
+    itemBarcode: '',
+    itemName: 'LOOSE RAJMA WHITE',
     itemMRPperUnit: 200,
     itemCostPricePerUnit: 186,
     itemSellingPricePerUnit: 190,
@@ -5391,8 +5391,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE SABUDANA",
+    itemBarcode: '',
+    itemName: 'LOOSE SABUDANA',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 55.5,
     itemSellingPricePerUnit: 60,
@@ -5400,8 +5400,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE SUGAR BIG",
+    itemBarcode: '',
+    itemName: 'LOOSE SUGAR BIG',
     itemMRPperUnit: 53,
     itemCostPricePerUnit: 44.5,
     itemSellingPricePerUnit: 47,
@@ -5409,8 +5409,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE SUGAR SMALL",
+    itemBarcode: '',
+    itemName: 'LOOSE SUGAR SMALL',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 36.9,
     itemSellingPricePerUnit: 39,
@@ -5418,8 +5418,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE TOOR DAAL",
+    itemBarcode: '',
+    itemName: 'LOOSE TOOR DAAL',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 88,
     itemSellingPricePerUnit: 100,
@@ -5427,8 +5427,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE URAD KALI BLACK",
+    itemBarcode: '',
+    itemName: 'LOOSE URAD KALI BLACK',
     itemMRPperUnit: 68,
     itemCostPricePerUnit: 56.5,
     itemSellingPricePerUnit: 60,
@@ -5436,8 +5436,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "LOOSE WHITE MATAR",
+    itemBarcode: '',
+    itemName: 'LOOSE WHITE MATAR',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 103,
     itemSellingPricePerUnit: 110,
@@ -5446,7 +5446,7 @@ export const data = [
   },
   {
     itemBarcode: 806360681008,
-    itemName: "LOTUS 3IN1 SUN BLOCK SPF 40 100 g",
+    itemName: 'LOTUS 3IN1 SUN BLOCK SPF 40 100 g',
     itemMRPperUnit: 465,
     itemCostPricePerUnit: 344.1,
     itemSellingPricePerUnit: 385,
@@ -5455,7 +5455,7 @@ export const data = [
   },
   {
     itemBarcode: 806360320600,
-    itemName: "LOTUS FAIRNESS CREAM SPF25, 60 g",
+    itemName: 'LOTUS FAIRNESS CREAM SPF25, 60 g',
     itemMRPperUnit: 415,
     itemCostPricePerUnit: 305.67,
     itemSellingPricePerUnit: 345,
@@ -5464,7 +5464,7 @@ export const data = [
   },
   {
     itemBarcode: 806360330500,
-    itemName: "LOTUS SUN BLOCK SPF 20 50g",
+    itemName: 'LOTUS SUN BLOCK SPF 20 50g',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 146.46,
     itemSellingPricePerUnit: 165,
@@ -5473,7 +5473,7 @@ export const data = [
   },
   {
     itemBarcode: 806360340509,
-    itemName: "LOTUS SUN BLOCK SPF 30/ 50 g",
+    itemName: 'LOTUS SUN BLOCK SPF 30/ 50 g',
     itemMRPperUnit: 265,
     itemCostPricePerUnit: 196.1,
     itemSellingPricePerUnit: 220,
@@ -5482,7 +5482,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030852121,
-    itemName: "LUX FRESH SPLASH SOAP 150g",
+    itemName: 'LUX FRESH SPLASH SOAP 150g',
     itemMRPperUnit: 66,
     itemCostPricePerUnit: 58.68666667,
     itemSellingPricePerUnit: 63,
@@ -5491,7 +5491,7 @@ export const data = [
   },
   {
     itemBarcode: 8901764092206,
-    itemName: "Maaza Mango Drink 600 ml",
+    itemName: 'Maaza Mango Drink 600 ml',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 33.2,
     itemSellingPricePerUnit: 40,
@@ -5500,7 +5500,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058895858,
-    itemName: "MAGGI KETCHUP NO ONION NO GARLIC 500 g",
+    itemName: 'MAGGI KETCHUP NO ONION NO GARLIC 500 g',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 96.9,
     itemSellingPricePerUnit: 105,
@@ -5508,8 +5508,8 @@ export const data = [
     minimumStockQuantity: 2,
   },
   {
-    itemBarcode: "",
-    itemName: "MAGGI MASALA AE MAGIC SACHET 6g",
+    itemBarcode: '',
+    itemName: 'MAGGI MASALA AE MAGIC SACHET 6g',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.5,
     itemSellingPricePerUnit: 5,
@@ -5518,7 +5518,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058891416,
-    itemName: "Maggi Masala Noodles 70 g",
+    itemName: 'Maggi Masala Noodles 70 g',
     itemMRPperUnit: 14,
     itemCostPricePerUnit: 12.85,
     itemSellingPricePerUnit: 14,
@@ -5527,7 +5527,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058892765,
-    itemName: "MAGGI NOODLES MASALA 140 g",
+    itemName: 'MAGGI NOODLES MASALA 140 g',
     itemMRPperUnit: 27,
     itemCostPricePerUnit: 24.31,
     itemSellingPricePerUnit: 26,
@@ -5536,7 +5536,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058891430,
-    itemName: "MAGGI NOODLES MASALA 280 g",
+    itemName: 'MAGGI NOODLES MASALA 280 g',
     itemMRPperUnit: 53,
     itemCostPricePerUnit: 48.45,
     itemSellingPricePerUnit: 51,
@@ -5545,7 +5545,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058898422,
-    itemName: "MAGGI NOODLES SPECIAL MASALA 70 g",
+    itemName: 'MAGGI NOODLES SPECIAL MASALA 70 g',
     itemMRPperUnit: 18,
     itemCostPricePerUnit: 13.35,
     itemSellingPricePerUnit: 16,
@@ -5554,7 +5554,7 @@ export const data = [
   },
   {
     itemBarcode: 8906032014843,
-    itemName: "MAHAKOSH MUSTRD OIL",
+    itemName: 'MAHAKOSH MUSTRD OIL',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 165,
     itemSellingPricePerUnit: 170,
@@ -5563,7 +5563,7 @@ export const data = [
   },
   {
     itemBarcode: 8906087770657,
-    itemName: "MAMAEARTH CHARCOAL FW OIL CONTROL, 100ml",
+    itemName: 'MAMAEARTH CHARCOAL FW OIL CONTROL, 100ml',
     itemMRPperUnit: 249,
     itemCostPricePerUnit: 164.34,
     itemSellingPricePerUnit: 189,
@@ -5572,7 +5572,7 @@ export const data = [
   },
   {
     itemBarcode: 8906087770664,
-    itemName: "MAMAEARTH TEA TREE FW ACNE&PIMPLES100ml",
+    itemName: 'MAMAEARTH TEA TREE FW ACNE&PIMPLES100ml',
     itemMRPperUnit: 249,
     itemCostPricePerUnit: 164.34,
     itemSellingPricePerUnit: 189,
@@ -5581,7 +5581,7 @@ export const data = [
   },
   {
     itemBarcode: 8906087772859,
-    itemName: "MAMAEARTH VITAMIN C FACE WASH 100ml",
+    itemName: 'MAMAEARTH VITAMIN C FACE WASH 100ml',
     itemMRPperUnit: 249,
     itemCostPricePerUnit: 164.34,
     itemSellingPricePerUnit: 189,
@@ -5590,7 +5590,7 @@ export const data = [
   },
   {
     itemBarcode: 8906087770671,
-    itemName: "MAMAEARTHUBTANFACEWASH TAN REMOVAL 100ml",
+    itemName: 'MAMAEARTHUBTANFACEWASH TAN REMOVAL 100ml',
     itemMRPperUnit: 249,
     itemCostPricePerUnit: 164.34,
     itemSellingPricePerUnit: 189,
@@ -5599,7 +5599,7 @@ export const data = [
   },
   {
     itemBarcode: 8904103306989,
-    itemName: "MANFORCE EXOTIC STRAWBERRY CONDOMS 10U",
+    itemName: 'MANFORCE EXOTIC STRAWBERRY CONDOMS 10U',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 42.4,
     itemSellingPricePerUnit: 60,
@@ -5608,7 +5608,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725711986,
-    itemName: "MANGALDEEP 4 IN 1",
+    itemName: 'MANGALDEEP 4 IN 1',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 32,
     itemSellingPricePerUnit: 45,
@@ -5617,7 +5617,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725710743,
-    itemName: "MANGALDEEP AGARBATTI ROSE 12 U X MRP 10",
+    itemName: 'MANGALDEEP AGARBATTI ROSE 12 U X MRP 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.695833333,
     itemSellingPricePerUnit: 10,
@@ -5626,7 +5626,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725710699,
-    itemName: "MANGALDEEP AGARBATTI SANDAL 12U X MRP 10",
+    itemName: 'MANGALDEEP AGARBATTI SANDAL 12U X MRP 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.695833333,
     itemSellingPricePerUnit: 10,
@@ -5635,7 +5635,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725712990,
-    itemName: "MANGALDEEP FROOTY",
+    itemName: 'MANGALDEEP FROOTY',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 35,
     itemSellingPricePerUnit: 50,
@@ -5644,7 +5644,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725712983,
-    itemName: "MANGALDEEP LAVENDER",
+    itemName: 'MANGALDEEP LAVENDER',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 35,
     itemSellingPricePerUnit: 50,
@@ -5653,7 +5653,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725714482,
-    itemName: "MANGALDEEP ROSE",
+    itemName: 'MANGALDEEP ROSE',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 32,
     itemSellingPricePerUnit: 45,
@@ -5661,8 +5661,8 @@ export const data = [
     minimumStockQuantity: 1,
   },
   {
-    itemBarcode: "",
-    itemName: "MARGO SOAP 100 G",
+    itemBarcode: '',
+    itemName: 'MARGO SOAP 100 G',
     itemMRPperUnit: 32,
     itemCostPricePerUnit: 28.82,
     itemSellingPricePerUnit: 31,
@@ -5671,7 +5671,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786150502,
-    itemName: "EVEREST MEAT MASALA",
+    itemName: 'EVEREST MEAT MASALA',
     itemMRPperUnit: 43,
     itemCostPricePerUnit: 36.09833333,
     itemSellingPricePerUnit: 40,
@@ -5679,8 +5679,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST MEAT MASALA RS 5",
+    itemBarcode: '',
+    itemName: 'EVEREST MEAT MASALA RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -5688,8 +5688,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST MEAT MASALA RS 10",
+    itemBarcode: '',
+    itemName: 'EVEREST MEAT MASALA RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -5698,7 +5698,7 @@ export const data = [
   },
   {
     itemBarcode: 8904018300737,
-    itemName: "MEDIMIX AYURVEDIC 18 HERBS SOAP 45g",
+    itemName: 'MEDIMIX AYURVEDIC 18 HERBS SOAP 45g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.56,
     itemSellingPricePerUnit: 10,
@@ -5707,7 +5707,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192043492,
-    itemName: "MINI STORAGE BASKET",
+    itemName: 'MINI STORAGE BASKET',
     itemMRPperUnit: 74.5,
     itemCostPricePerUnit: 37.93,
     itemSellingPricePerUnit: 50,
@@ -5716,7 +5716,7 @@ export const data = [
   },
   {
     itemBarcode: 8902080204021,
-    itemName: "MIRINDA 250 ML",
+    itemName: 'MIRINDA 250 ML',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.5,
     itemSellingPricePerUnit: 20,
@@ -5725,7 +5725,7 @@ export const data = [
   },
   {
     itemBarcode: 8902080204052,
-    itemName: "MIRINDA 750 ML",
+    itemName: 'MIRINDA 750 ML',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 38.33333333,
     itemSellingPricePerUnit: 40,
@@ -5734,7 +5734,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192053842,
-    itemName: "MISTY BUCKET 25L ORANGE",
+    itemName: 'MISTY BUCKET 25L ORANGE',
     itemMRPperUnit: 499,
     itemCostPricePerUnit: 313.62,
     itemSellingPricePerUnit: 400,
@@ -5743,7 +5743,7 @@ export const data = [
   },
   {
     itemBarcode: 8906108260020,
-    itemName: "MITHILA MAKHANA CLASSIC 250 g",
+    itemName: 'MITHILA MAKHANA CLASSIC 250 g',
     itemMRPperUnit: 375,
     itemCostPricePerUnit: 221.23,
     itemSellingPricePerUnit: 245,
@@ -5752,7 +5752,7 @@ export const data = [
   },
   {
     itemBarcode: 8906140820091,
-    itemName: "MODWARE BUCKET",
+    itemName: 'MODWARE BUCKET',
     itemMRPperUnit: 200,
     itemCostPricePerUnit: 132.285,
     itemSellingPricePerUnit: 180,
@@ -5761,7 +5761,7 @@ export const data = [
   },
   {
     itemBarcode: 8904024502446,
-    itemName: "MOKSH SWARNA CHAMPA POUCH 22g",
+    itemName: 'MOKSH SWARNA CHAMPA POUCH 22g',
     itemMRPperUnit: 12,
     itemCostPricePerUnit: 10.5,
     itemSellingPricePerUnit: 12,
@@ -5770,7 +5770,7 @@ export const data = [
   },
   {
     itemBarcode: 8904024500275,
-    itemName: "MOKSH SWARNA CHANDAN POUCH 20g",
+    itemName: 'MOKSH SWARNA CHANDAN POUCH 20g',
     itemMRPperUnit: 12,
     itemCostPricePerUnit: 10.43,
     itemSellingPricePerUnit: 12,
@@ -5779,7 +5779,7 @@ export const data = [
   },
   {
     itemBarcode: 8901177100857,
-    itemName: "MOOV OINTMENT 15 g",
+    itemName: 'MOOV OINTMENT 15 g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 58.5,
     itemSellingPricePerUnit: 65,
@@ -5788,7 +5788,7 @@ export const data = [
   },
   {
     itemBarcode: 8901177100505,
-    itemName: "MOOV OINTMENT 50 g",
+    itemName: 'MOOV OINTMENT 50 g',
     itemMRPperUnit: 189,
     itemCostPricePerUnit: 149.63,
     itemSellingPricePerUnit: 170,
@@ -5797,7 +5797,7 @@ export const data = [
   },
   {
     itemBarcode: 8901177100352,
-    itemName: "MOOV SPRAY 35 g",
+    itemName: 'MOOV SPRAY 35 g',
     itemMRPperUnit: 149,
     itemCostPricePerUnit: 124.38,
     itemSellingPricePerUnit: 140,
@@ -5806,7 +5806,7 @@ export const data = [
   },
   {
     itemBarcode: 8906099050136,
-    itemName: "MOTILAL BOONDI 400 GM",
+    itemName: 'MOTILAL BOONDI 400 GM',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 65,
     itemSellingPricePerUnit: 70,
@@ -5815,7 +5815,7 @@ export const data = [
   },
   {
     itemBarcode: 8902080364053,
-    itemName: "MOUNTAIN DEW 750 ML",
+    itemName: 'MOUNTAIN DEW 750 ML',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 38.33333333,
     itemSellingPricePerUnit: 40,
@@ -5824,7 +5824,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248104128,
-    itemName: "NAVRATNA COOL HAIR OIL 200 ml",
+    itemName: 'NAVRATNA COOL HAIR OIL 200 ml',
     itemMRPperUnit: 145,
     itemCostPricePerUnit: 130.96,
     itemSellingPricePerUnit: 140,
@@ -5833,7 +5833,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248155045,
-    itemName: "NAVRATNA GOLD AYURVEDIC OIL 200ml",
+    itemName: 'NAVRATNA GOLD AYURVEDIC OIL 200ml',
     itemMRPperUnit: 155,
     itemCostPricePerUnit: 111.6,
     itemSellingPricePerUnit: 125,
@@ -5842,7 +5842,7 @@ export const data = [
   },
   {
     itemBarcode: 8906092496467,
-    itemName: "NEEM TULSI SOAP",
+    itemName: 'NEEM TULSI SOAP',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 40,
     itemSellingPricePerUnit: 60,
@@ -5851,7 +5851,7 @@ export const data = [
   },
   {
     itemBarcode: 8906077740523,
-    itemName: "NEERAJ GARLIC PICKLE",
+    itemName: 'NEERAJ GARLIC PICKLE',
     itemMRPperUnit: 58,
     itemCostPricePerUnit: 33,
     itemSellingPricePerUnit: 40,
@@ -5860,7 +5860,7 @@ export const data = [
   },
   {
     itemBarcode: 8906077740073,
-    itemName: "NEERAJ MANGO PICKLE",
+    itemName: 'NEERAJ MANGO PICKLE',
     itemMRPperUnit: 49,
     itemCostPricePerUnit: 29,
     itemSellingPricePerUnit: 35,
@@ -5869,7 +5869,7 @@ export const data = [
   },
   {
     itemBarcode: 8906077740165,
-    itemName: "NEERAJ MIX PICKLE",
+    itemName: 'NEERAJ MIX PICKLE',
     itemMRPperUnit: 49,
     itemCostPricePerUnit: 29,
     itemSellingPricePerUnit: 35,
@@ -5878,7 +5878,7 @@ export const data = [
   },
   {
     itemBarcode: 89006733,
-    itemName: "NESCAFE CLASSIC COFFEE JAR 25 g",
+    itemName: 'NESCAFE CLASSIC COFFEE JAR 25 g',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 70.85,
     itemSellingPricePerUnit: 77,
@@ -5887,7 +5887,7 @@ export const data = [
   },
   {
     itemBarcode: 89006740,
-    itemName: "NESCAFE CLASSIC COFFEE JAR 50 g",
+    itemName: 'NESCAFE CLASSIC COFFEE JAR 50 g',
     itemMRPperUnit: 170,
     itemCostPricePerUnit: 151.8,
     itemSellingPricePerUnit: 164,
@@ -5896,7 +5896,7 @@ export const data = [
   },
   {
     itemBarcode: 8901058867015,
-    itemName: "NESCAFE GOLD JAR 50 g",
+    itemName: 'NESCAFE GOLD JAR 50 g',
     itemMRPperUnit: 295,
     itemCostPricePerUnit: 239.8,
     itemSellingPricePerUnit: 265,
@@ -5905,7 +5905,7 @@ export const data = [
   },
   {
     itemBarcode: 89008546,
-    itemName: "NESCAFE SUNRISE COFFEE 2 g",
+    itemName: 'NESCAFE SUNRISE COFFEE 2 g',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.83,
     itemSellingPricePerUnit: 2,
@@ -5914,7 +5914,7 @@ export const data = [
   },
   {
     itemBarcode: 89008294,
-    itemName: "NESTLE MUNCH CHOCOLATE MRP5/PKOF5",
+    itemName: 'NESTLE MUNCH CHOCOLATE MRP5/PKOF5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.4844,
     itemSellingPricePerUnit: 5,
@@ -5923,7 +5923,7 @@ export const data = [
   },
   {
     itemBarcode: 8901560273144,
-    itemName: "NILONS PASTE GINGER GARLIC 25 g",
+    itemName: 'NILONS PASTE GINGER GARLIC 25 g',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.32,
     itemSellingPricePerUnit: 5,
@@ -5932,7 +5932,7 @@ export const data = [
   },
   {
     itemBarcode: 8905110003205,
-    itemName: "NIMYLE FLOOR CLEANER 975 ml",
+    itemName: 'NIMYLE FLOOR CLEANER 975 ml',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 156.7,
     itemSellingPricePerUnit: 169,
@@ -5941,7 +5941,7 @@ export const data = [
   },
   {
     itemBarcode: 8905110003632,
-    itemName: "NIMYLE LEMONGRASS FLOOR CLEANER 975ml",
+    itemName: 'NIMYLE LEMONGRASS FLOOR CLEANER 975ml',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 155.91,
     itemSellingPricePerUnit: 169,
@@ -5950,7 +5950,7 @@ export const data = [
   },
   {
     itemBarcode: 8904250307938,
-    itemName: "NIRMAL CHAMPA AGARBATTI",
+    itemName: 'NIRMAL CHAMPA AGARBATTI',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 55,
     itemSellingPricePerUnit: 70,
@@ -5959,7 +5959,7 @@ export const data = [
   },
   {
     itemBarcode: 8904250307914,
-    itemName: "NIRMAL CHANDAN AGARBATTI",
+    itemName: 'NIRMAL CHANDAN AGARBATTI',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 55,
     itemSellingPricePerUnit: 70,
@@ -5968,7 +5968,7 @@ export const data = [
   },
   {
     itemBarcode: 8904250307921,
-    itemName: "NIRMAL MOGRA AGARBATTI",
+    itemName: 'NIRMAL MOGRA AGARBATTI',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 55,
     itemSellingPricePerUnit: 70,
@@ -5977,7 +5977,7 @@ export const data = [
   },
   {
     itemBarcode: 4005808427048,
-    itemName: "NIVEA BODY LOTION EXTRA WHITENNG 200ml",
+    itemName: 'NIVEA BODY LOTION EXTRA WHITENNG 200ml',
     itemMRPperUnit: 299,
     itemCostPricePerUnit: 254.09,
     itemSellingPricePerUnit: 279,
@@ -5986,7 +5986,7 @@ export const data = [
   },
   {
     itemBarcode: 4005808725298,
-    itemName: "NIVEA BODY MILK 400 ml",
+    itemName: 'NIVEA BODY MILK 400 ml',
     itemMRPperUnit: 399,
     itemCostPricePerUnit: 335.69,
     itemSellingPricePerUnit: 369,
@@ -5995,7 +5995,7 @@ export const data = [
   },
   {
     itemBarcode: 42204244,
-    itemName: "NIVEA CREAM 60 ml",
+    itemName: 'NIVEA CREAM 60 ml',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 101.97,
     itemSellingPricePerUnit: 111,
@@ -6004,7 +6004,7 @@ export const data = [
   },
   {
     itemBarcode: 4005900294548,
-    itemName: "NIVEA ROLL ON DEO WHITENING 50 ml",
+    itemName: 'NIVEA ROLL ON DEO WHITENING 50 ml',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 167.42,
     itemSellingPricePerUnit: 179,
@@ -6013,7 +6013,7 @@ export const data = [
   },
   {
     itemBarcode: 42204091,
-    itemName: "NIVEA SOFT LIGHT MOISTURISER CREAM 100ml",
+    itemName: 'NIVEA SOFT LIGHT MOISTURISER CREAM 100ml',
     itemMRPperUnit: 185,
     itemCostPricePerUnit: 158.8,
     itemSellingPricePerUnit: 175,
@@ -6022,7 +6022,7 @@ export const data = [
   },
   {
     itemBarcode: 8906019772728,
-    itemName: "NUTRAJ CALIFORNIA WALNUT INSHELL 1 kg",
+    itemName: 'NUTRAJ CALIFORNIA WALNUT INSHELL 1 kg',
     itemMRPperUnit: 999,
     itemCostPricePerUnit: 513.66,
     itemSellingPricePerUnit: 569,
@@ -6031,7 +6031,7 @@ export const data = [
   },
   {
     itemBarcode: 8903363005342,
-    itemName: "NUTRI DELITE CHOCO",
+    itemName: 'NUTRI DELITE CHOCO',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 5,
     itemSellingPricePerUnit: 8,
@@ -6040,7 +6040,7 @@ export const data = [
   },
   {
     itemBarcode: 8902979053945,
-    itemName: "NYLE AH DAMAGE REPAIR SHAMPOO 180ml",
+    itemName: 'NYLE AH DAMAGE REPAIR SHAMPOO 180ml',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 86.38,
     itemSellingPricePerUnit: 95,
@@ -6049,7 +6049,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430982313,
-    itemName: "OLAY ANTI AGING CREAM 18G",
+    itemName: 'OLAY ANTI AGING CREAM 18G',
     itemMRPperUnit: 199,
     itemCostPricePerUnit: 147.08,
     itemSellingPricePerUnit: 160,
@@ -6058,7 +6058,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176077721,
-    itemName: "OLAY NATURAL AURA 20G",
+    itemName: 'OLAY NATURAL AURA 20G',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 86.09,
     itemSellingPricePerUnit: 92,
@@ -6067,7 +6067,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176050625,
-    itemName: "OLAY NATURAL AURA 40G",
+    itemName: 'OLAY NATURAL AURA 40G',
     itemMRPperUnit: 189,
     itemCostPricePerUnit: 164,
     itemSellingPricePerUnit: 175,
@@ -6076,7 +6076,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430987400,
-    itemName: "OLAY TOTAL EFFECT NORMAL 50GM",
+    itemName: 'OLAY TOTAL EFFECT NORMAL 50GM',
     itemMRPperUnit: 899,
     itemCostPricePerUnit: 664.48,
     itemSellingPricePerUnit: 700,
@@ -6085,7 +6085,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430987035,
-    itemName: "OLAY TOTAL EFFECT SPF15 7 IN 1 20GM",
+    itemName: 'OLAY TOTAL EFFECT SPF15 7 IN 1 20GM',
     itemMRPperUnit: 399,
     itemCostPricePerUnit: 294.91,
     itemSellingPricePerUnit: 330,
@@ -6094,7 +6094,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430296038,
-    itemName: "OLD SPICE DEO 115G",
+    itemName: 'OLD SPICE DEO 115G',
     itemMRPperUnit: 249,
     itemCostPricePerUnit: 173.21,
     itemSellingPricePerUnit: 200,
@@ -6103,7 +6103,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176029928,
-    itemName: "OLD SPICE LATHER SHAVING CREAM MUSK 30G",
+    itemName: 'OLD SPICE LATHER SHAVING CREAM MUSK 30G',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31.25,
     itemSellingPricePerUnit: 34,
@@ -6112,7 +6112,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176029942,
-    itemName: "OLD SPICE LATHER SHAVING CREAM MUSK 70G",
+    itemName: 'OLD SPICE LATHER SHAVING CREAM MUSK 70G',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 66.97,
     itemSellingPricePerUnit: 72,
@@ -6121,7 +6121,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176029966,
-    itemName: "OLD SPICE LATHER SHAVING CREAM ORIGINAL 70G",
+    itemName: 'OLD SPICE LATHER SHAVING CREAM ORIGINAL 70G',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 66.97,
     itemSellingPricePerUnit: 72,
@@ -6130,7 +6130,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430297967,
-    itemName: "OLD SPICE POCKET PERFUME",
+    itemName: 'OLD SPICE POCKET PERFUME',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 48.9125,
     itemSellingPricePerUnit: 60,
@@ -6139,7 +6139,7 @@ export const data = [
   },
   {
     itemBarcode: 8908000863385,
-    itemName: "OLEEV ACTIVE OIL POUCH 1 L",
+    itemName: 'OLEEV ACTIVE OIL POUCH 1 L',
     itemMRPperUnit: 265,
     itemCostPricePerUnit: 255.73,
     itemSellingPricePerUnit: 260,
@@ -6148,7 +6148,7 @@ export const data = [
   },
   {
     itemBarcode: 8908000863484,
-    itemName: "OLEEV SMART OIL 1 L",
+    itemName: 'OLEEV SMART OIL 1 L',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 211,
     itemSellingPricePerUnit: 220,
@@ -6157,7 +6157,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430345019,
-    itemName: "ORAL B BACTERIA FIGHTER",
+    itemName: 'ORAL B BACTERIA FIGHTER',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 24,
     itemSellingPricePerUnit: 27,
@@ -6166,7 +6166,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430879385,
-    itemName: "ORAL B BRUSH SENSITIVE",
+    itemName: 'ORAL B BRUSH SENSITIVE',
     itemMRPperUnit: 49,
     itemCostPricePerUnit: 30,
     itemSellingPricePerUnit: 35,
@@ -6175,7 +6175,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176037121,
-    itemName: "ORAL B CHARCOAL",
+    itemName: 'ORAL B CHARCOAL',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 17,
     itemSellingPricePerUnit: 23,
@@ -6184,7 +6184,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430150941,
-    itemName: "ORAL B CLOVE",
+    itemName: 'ORAL B CLOVE',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 17,
     itemSellingPricePerUnit: 23,
@@ -6193,7 +6193,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430783217,
-    itemName: "ORAL B CRISS CROSS",
+    itemName: 'ORAL B CRISS CROSS',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 20,
     itemSellingPricePerUnit: 45,
@@ -6202,7 +6202,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176134080,
-    itemName: "ORAL B CRISS CROSS ANTI PLAQUE INDICATOR",
+    itemName: 'ORAL B CRISS CROSS ANTI PLAQUE INDICATOR',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 51.42857143,
     itemSellingPricePerUnit: 65,
@@ -6211,7 +6211,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176086518,
-    itemName: "ORAL B CRISS CROSS MEDIUM",
+    itemName: 'ORAL B CRISS CROSS MEDIUM',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 67.33333333,
     itemSellingPricePerUnit: 75,
@@ -6220,7 +6220,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176130099,
-    itemName: "ORAL B DEEP CLEAN CHARCOAL",
+    itemName: 'ORAL B DEEP CLEAN CHARCOAL',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 80,
     itemSellingPricePerUnit: 100,
@@ -6229,7 +6229,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176101471,
-    itemName: "ORAL B EXTRA SOFT BRISTLES",
+    itemName: 'ORAL B EXTRA SOFT BRISTLES',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 80,
     itemSellingPricePerUnit: 100,
@@ -6238,7 +6238,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176086556,
-    itemName: "ORAL B GUM CARE INDICATOR(PACK OF 4)",
+    itemName: 'ORAL B GUM CARE INDICATOR(PACK OF 4)',
     itemMRPperUnit: 190,
     itemCostPricePerUnit: 126.84,
     itemSellingPricePerUnit: 140,
@@ -6247,7 +6247,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430664721,
-    itemName: "ORAL B KIDS",
+    itemName: 'ORAL B KIDS',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 37.5,
     itemSellingPricePerUnit: 42,
@@ -6256,7 +6256,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430853002,
-    itemName: "ORAL B NEEM",
+    itemName: 'ORAL B NEEM',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 17,
     itemSellingPricePerUnit: 23,
@@ -6265,7 +6265,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430804592,
-    itemName: "ORAL B NEEM EXTRACT",
+    itemName: 'ORAL B NEEM EXTRACT',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 28,
     itemSellingPricePerUnit: 32,
@@ -6274,7 +6274,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430888325,
-    itemName: "ORAL B SENSITIVE CARE",
+    itemName: 'ORAL B SENSITIVE CARE',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 15,
     itemSellingPricePerUnit: 20,
@@ -6283,7 +6283,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176128164,
-    itemName: "ORAL B SENSITIVE CARE 5S PACK",
+    itemName: 'ORAL B SENSITIVE CARE 5S PACK',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 80,
     itemSellingPricePerUnit: 100,
@@ -6292,7 +6292,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176134066,
-    itemName: "ORAL B SENSITIVE ULTRA THIN",
+    itemName: 'ORAL B SENSITIVE ULTRA THIN',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 48.21428571,
     itemSellingPricePerUnit: 60,
@@ -6301,7 +6301,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176130020,
-    itemName: "ORAL B SENSITIVE ULTRA THIN(PACK OF 4)",
+    itemName: 'ORAL B SENSITIVE ULTRA THIN(PACK OF 4)',
     itemMRPperUnit: 150,
     itemCostPricePerUnit: 100.3333333,
     itemSellingPricePerUnit: 125,
@@ -6310,7 +6310,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430874717,
-    itemName: "ORAL B SHINY CLEAN",
+    itemName: 'ORAL B SHINY CLEAN',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 15,
     itemSellingPricePerUnit: 18,
@@ -6319,7 +6319,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176130044,
-    itemName: "ORAL B ULTRA THIN GREEN",
+    itemName: 'ORAL B ULTRA THIN GREEN',
     itemMRPperUnit: 85,
     itemCostPricePerUnit: 63.75333333,
     itemSellingPricePerUnit: 72,
@@ -6328,7 +6328,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176128188,
-    itemName: "ORAL BACTERIA FIGHTER PACK OF 6",
+    itemName: 'ORAL BACTERIA FIGHTER PACK OF 6',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 80,
     itemSellingPricePerUnit: 100,
@@ -6337,7 +6337,7 @@ export const data = [
   },
   {
     itemBarcode: 8906004862038,
-    itemName: "ORIGAMI TISSUE",
+    itemName: 'ORIGAMI TISSUE',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 45,
     itemSellingPricePerUnit: 50,
@@ -6346,7 +6346,7 @@ export const data = [
   },
   {
     itemBarcode: 8906015964073,
-    itemName: "OS BLACK PEPPER WHOLE 100 g",
+    itemName: 'OS BLACK PEPPER WHOLE 100 g',
     itemMRPperUnit: 130,
     itemCostPricePerUnit: 74.08,
     itemSellingPricePerUnit: 85,
@@ -6355,7 +6355,7 @@ export const data = [
   },
   {
     itemBarcode: 8906015964202,
-    itemName: "OS JEERA WHOLE 200 g",
+    itemName: 'OS JEERA WHOLE 200 g',
     itemMRPperUnit: 108,
     itemCostPricePerUnit: 56.26,
     itemSellingPricePerUnit: 65,
@@ -6364,7 +6364,7 @@ export const data = [
   },
   {
     itemBarcode: 8906015964257,
-    itemName: "OS LAUNG 50 g",
+    itemName: 'OS LAUNG 50 g',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 46.92,
     itemSellingPricePerUnit: 60,
@@ -6373,7 +6373,7 @@ export const data = [
   },
   {
     itemBarcode: 8901103171326,
-    itemName: "OXY LIFE CRM BLEACH 27g",
+    itemName: 'OXY LIFE CRM BLEACH 27g',
     itemMRPperUnit: 85,
     itemCostPricePerUnit: 75.13,
     itemSellingPricePerUnit: 55,
@@ -6381,8 +6381,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "P.CHHOLE MASALA",
+    itemBarcode: '',
+    itemName: 'P.CHHOLE MASALA',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -6391,7 +6391,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786030507,
-    itemName: "PANI PURI MASAL",
+    itemName: 'PANI PURI MASAL',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 29.4,
     itemSellingPricePerUnit: 34,
@@ -6399,8 +6399,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "PANIPURI MASALA POUCH",
+    itemBarcode: '',
+    itemName: 'PANIPURI MASALA POUCH',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -6409,7 +6409,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430538794,
-    itemName: "PANTENE 2 IN 1 HAIRFALL CONTROL 180ML",
+    itemName: 'PANTENE 2 IN 1 HAIRFALL CONTROL 180ML',
     itemMRPperUnit: 165,
     itemCostPricePerUnit: 150,
     itemSellingPricePerUnit: 160,
@@ -6418,7 +6418,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430538817,
-    itemName: "PANTENE 2 IN 1 SILKY SMOOTH 180ML",
+    itemName: 'PANTENE 2 IN 1 SILKY SMOOTH 180ML',
     itemMRPperUnit: 150,
     itemCostPricePerUnit: 136.36,
     itemSellingPricePerUnit: 145,
@@ -6427,7 +6427,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899260,
-    itemName: "PANTENE ANTI DANDRUF 180 ML",
+    itemName: 'PANTENE ANTI DANDRUF 180 ML',
     itemMRPperUnit: 132,
     itemCostPricePerUnit: 120,
     itemSellingPricePerUnit: 130,
@@ -6436,7 +6436,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899413,
-    itemName: "PANTENE HAIR FALL CTRL CONDITIONER 175ml",
+    itemName: 'PANTENE HAIR FALL CTRL CONDITIONER 175ml',
     itemMRPperUnit: 190,
     itemCostPricePerUnit: 162.74,
     itemSellingPricePerUnit: 179,
@@ -6445,7 +6445,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899192,
-    itemName: "PANTENE HFC 180 ML",
+    itemName: 'PANTENE HFC 180 ML',
     itemMRPperUnit: 145,
     itemCostPricePerUnit: 131.82,
     itemSellingPricePerUnit: 140,
@@ -6454,7 +6454,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899130,
-    itemName: "PANTENE HFC 340 ML",
+    itemName: 'PANTENE HFC 340 ML',
     itemMRPperUnit: 305,
     itemCostPricePerUnit: 277.27,
     itemSellingPricePerUnit: 300,
@@ -6463,7 +6463,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899345,
-    itemName: "PANTENE HFC 75ML",
+    itemName: 'PANTENE HFC 75ML',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 54.55,
     itemSellingPricePerUnit: 63,
@@ -6472,7 +6472,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899253,
-    itemName: "PANTENE LIVELY CLEAN 200 ML",
+    itemName: 'PANTENE LIVELY CLEAN 200 ML',
     itemMRPperUnit: 145,
     itemCostPricePerUnit: 109.09,
     itemSellingPricePerUnit: 120,
@@ -6481,7 +6481,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899383,
-    itemName: "PANTENE LIVELY CLEAN 90 ML",
+    itemName: 'PANTENE LIVELY CLEAN 90 ML',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 59,
     itemSellingPricePerUnit: 63,
@@ -6490,7 +6490,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899208,
-    itemName: "PANTENE LONG BLACK 180 ML",
+    itemName: 'PANTENE LONG BLACK 180 ML',
     itemMRPperUnit: 145,
     itemCostPricePerUnit: 131.82,
     itemSellingPricePerUnit: 140,
@@ -6499,7 +6499,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899147,
-    itemName: "PANTENE LONG BLACK 340 ML",
+    itemName: 'PANTENE LONG BLACK 340 ML',
     itemMRPperUnit: 280,
     itemCostPricePerUnit: 254.55,
     itemSellingPricePerUnit: 270,
@@ -6508,7 +6508,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899352,
-    itemName: "PANTENE LONG BLACK 75 ML",
+    itemName: 'PANTENE LONG BLACK 75 ML',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 59.1,
     itemSellingPricePerUnit: 63,
@@ -6517,7 +6517,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899215,
-    itemName: "PANTENE SILKY SMOOTH 180ML",
+    itemName: 'PANTENE SILKY SMOOTH 180ML',
     itemMRPperUnit: 145,
     itemCostPricePerUnit: 131.82,
     itemSellingPricePerUnit: 140,
@@ -6526,7 +6526,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899154,
-    itemName: "PANTENE SILKY SMOOTH 340ML",
+    itemName: 'PANTENE SILKY SMOOTH 340ML',
     itemMRPperUnit: 305,
     itemCostPricePerUnit: 277.27,
     itemSellingPricePerUnit: 300,
@@ -6535,7 +6535,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899369,
-    itemName: "PANTENE SILKY SMOOTH 75ML",
+    itemName: 'PANTENE SILKY SMOOTH 75ML',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 59.1,
     itemSellingPricePerUnit: 63,
@@ -6544,7 +6544,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430899222,
-    itemName: "PANTENE TOTAL DAMAGE CARE 180 ML",
+    itemName: 'PANTENE TOTAL DAMAGE CARE 180 ML',
     itemMRPperUnit: 145,
     itemCostPricePerUnit: 120,
     itemSellingPricePerUnit: 140,
@@ -6553,7 +6553,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088080279,
-    itemName: "PARACHUTE ADV ALOE VERA HAIR OIL 150 ml",
+    itemName: 'PARACHUTE ADV ALOE VERA HAIR OIL 150 ml',
     itemMRPperUnit: 74,
     itemCostPricePerUnit: 66.09,
     itemSellingPricePerUnit: 72,
@@ -6562,7 +6562,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088000345,
-    itemName: "PARACHUTE COCONUT OIL FT 200 ml",
+    itemName: 'PARACHUTE COCONUT OIL FT 200 ml',
     itemMRPperUnit: 87,
     itemCostPricePerUnit: 79,
     itemSellingPricePerUnit: 85,
@@ -6571,7 +6571,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088102872,
-    itemName: "PARACHUTE COCONUT OIL FT 600 ml",
+    itemName: 'PARACHUTE COCONUT OIL FT 600 ml',
     itemMRPperUnit: 261,
     itemCostPricePerUnit: 233,
     itemSellingPricePerUnit: 255,
@@ -6580,7 +6580,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719124464,
-    itemName: "PARLE CHATKEENS ALOO BHUJIA",
+    itemName: 'PARLE CHATKEENS ALOO BHUJIA',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.19,
     itemSellingPricePerUnit: 10,
@@ -6589,7 +6589,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719117800,
-    itemName: "PARLE CHATKEENS FARALI CHEWDA RS 10",
+    itemName: 'PARLE CHATKEENS FARALI CHEWDA RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.19,
     itemSellingPricePerUnit: 10,
@@ -6598,7 +6598,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719117572,
-    itemName: "PARLE CHATKEENS FARALI CHEWDA RS 5",
+    itemName: 'PARLE CHATKEENS FARALI CHEWDA RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.098333333,
     itemSellingPricePerUnit: 5,
@@ -6607,7 +6607,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719124655,
-    itemName: "PARLE CHATKEENS HOT N SPICY MIXTURE RS 10",
+    itemName: 'PARLE CHATKEENS HOT N SPICY MIXTURE RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.196666667,
     itemSellingPricePerUnit: 10,
@@ -6616,7 +6616,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719124471,
-    itemName: "PARLE CHATKEENS HOT N SPICY MIXTURE RS 5",
+    itemName: 'PARLE CHATKEENS HOT N SPICY MIXTURE RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.098333333,
     itemSellingPricePerUnit: 5,
@@ -6625,7 +6625,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719124686,
-    itemName: "PARLE CHATKEENS MOONG DAAL RS 10",
+    itemName: 'PARLE CHATKEENS MOONG DAAL RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.19,
     itemSellingPricePerUnit: 10,
@@ -6634,7 +6634,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719124525,
-    itemName: "PARLE CHATKEENS MOONG DAAL RS 5",
+    itemName: 'PARLE CHATKEENS MOONG DAAL RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.098333333,
     itemSellingPricePerUnit: 5,
@@ -6643,7 +6643,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719124495,
-    itemName: "PARLE CHATKEENS PEANUTS",
+    itemName: 'PARLE CHATKEENS PEANUTS',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.098333333,
     itemSellingPricePerUnit: 5,
@@ -6652,7 +6652,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719120824,
-    itemName: "PARLE ELAICHI RUSK 273 g",
+    itemName: 'PARLE ELAICHI RUSK 273 g',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 45.45,
     itemSellingPricePerUnit: 49,
@@ -6661,7 +6661,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719122873,
-    itemName: "Parle Tangy Tomoto Wafers 70 g",
+    itemName: 'Parle Tangy Tomoto Wafers 70 g',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 25.95,
     itemSellingPricePerUnit: 30,
@@ -6669,8 +6669,8 @@ export const data = [
     minimumStockQuantity: 6,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST PASTA MASALA POUCH",
+    itemBarcode: '',
+    itemName: 'EVEREST PASTA MASALA POUCH',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -6679,7 +6679,7 @@ export const data = [
   },
   {
     itemBarcode: 8904109450112,
-    itemName: "PATANJALI DANTKANTI REG TOOTHPASTE 100 g",
+    itemName: 'PATANJALI DANTKANTI REG TOOTHPASTE 100 g',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 47.47,
     itemSellingPricePerUnit: 49,
@@ -6688,7 +6688,7 @@ export const data = [
   },
   {
     itemBarcode: 8904109449215,
-    itemName: "PATANJALI HONEY 250 GM",
+    itemName: 'PATANJALI HONEY 250 GM',
     itemMRPperUnit: 95,
     itemCostPricePerUnit: 85,
     itemSellingPricePerUnit: 90,
@@ -6697,7 +6697,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786070503,
-    itemName: "EVEREST PAV BHAJI MASALA",
+    itemName: 'EVEREST PAV BHAJI MASALA',
     itemMRPperUnit: 41,
     itemCostPricePerUnit: 34.39833333,
     itemSellingPricePerUnit: 40,
@@ -6705,8 +6705,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST PAV BHAJI MASALA RS 5",
+    itemBarcode: '',
+    itemName: 'EVEREST PAV BHAJI MASALA RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -6714,8 +6714,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST PAV BHAJI POUCH RS 10",
+    itemBarcode: '',
+    itemName: 'EVEREST PAV BHAJI POUCH RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -6724,7 +6724,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030871030,
-    itemName: "PEARS SOAP OIL CONTROL 75 g",
+    itemName: 'PEARS SOAP OIL CONTROL 75 g',
     itemMRPperUnit: 58,
     itemCostPricePerUnit: 51.56,
     itemSellingPricePerUnit: 56,
@@ -6733,7 +6733,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030835025,
-    itemName: "PEARS SOAP PURE & GENTLE 125 g",
+    itemName: 'PEARS SOAP PURE & GENTLE 125 g',
     itemMRPperUnit: 100,
     itemCostPricePerUnit: 89.83,
     itemSellingPricePerUnit: 95,
@@ -6742,7 +6742,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030871016,
-    itemName: "PEARS SOFT AND FRESH 75 g",
+    itemName: 'PEARS SOFT AND FRESH 75 g',
     itemMRPperUnit: 58,
     itemCostPricePerUnit: 51.56,
     itemSellingPricePerUnit: 56,
@@ -6751,7 +6751,7 @@ export const data = [
   },
   {
     itemBarcode: 8902080104055,
-    itemName: "PEPSI 750 ML",
+    itemName: 'PEPSI 750 ML',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 38.33333333,
     itemSellingPricePerUnit: 40,
@@ -6760,7 +6760,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030837968,
-    itemName: "PEPSODENT GERMICHECK TOOTHPASTE 100 g",
+    itemName: 'PEPSODENT GERMICHECK TOOTHPASTE 100 g',
     itemMRPperUnit: 52,
     itemCostPricePerUnit: 46.32,
     itemSellingPricePerUnit: 50,
@@ -6769,7 +6769,7 @@ export const data = [
   },
   {
     itemBarcode: 8908001753968,
-    itemName: "PET SAFFA TABLET 30tabs",
+    itemName: 'PET SAFFA TABLET 30tabs',
     itemMRPperUnit: 98,
     itemCostPricePerUnit: 67.48,
     itemSellingPricePerUnit: 75,
@@ -6778,7 +6778,7 @@ export const data = [
   },
   {
     itemBarcode: 8904098910086,
-    itemName: "PLASTIC HANDY BASKET",
+    itemName: 'PLASTIC HANDY BASKET',
     itemMRPperUnit: 101,
     itemCostPricePerUnit: 44.32,
     itemSellingPricePerUnit: 60,
@@ -6787,7 +6787,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030838057,
-    itemName: "PONDS CHARCOAL SHEET MASK 25ml",
+    itemName: 'PONDS CHARCOAL SHEET MASK 25ml',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 51.06,
     itemSellingPricePerUnit: 62,
@@ -6796,7 +6796,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030838040,
-    itemName: "PONDS COCONUT SHEET MASK 25ml",
+    itemName: 'PONDS COCONUT SHEET MASK 25ml',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 51.06,
     itemSellingPricePerUnit: 62,
@@ -6805,7 +6805,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030869013,
-    itemName: "PONDS DREAM FLOWER TALC 100g",
+    itemName: 'PONDS DREAM FLOWER TALC 100g',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 99,
     itemSellingPricePerUnit: 105,
@@ -6814,7 +6814,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030828577,
-    itemName: "PONDS FACE WASH PURE WHITE 100g",
+    itemName: 'PONDS FACE WASH PURE WHITE 100g',
     itemMRPperUnit: 205,
     itemCostPricePerUnit: 161.83,
     itemSellingPricePerUnit: 179,
@@ -6823,7 +6823,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030868962,
-    itemName: "PONDS MAGIC TALC 100g",
+    itemName: 'PONDS MAGIC TALC 100g',
     itemMRPperUnit: 135,
     itemCostPricePerUnit: 114.21,
     itemSellingPricePerUnit: 130,
@@ -6832,7 +6832,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030838019,
-    itemName: "PONDS PINEAPPLE SHEET MASK 25ml",
+    itemName: 'PONDS PINEAPPLE SHEET MASK 25ml',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 51.06,
     itemSellingPricePerUnit: 62,
@@ -6841,7 +6841,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030877056,
-    itemName: "PONDS WHITE BEAUTY 23 g",
+    itemName: 'PONDS WHITE BEAUTY 23 g',
     itemMRPperUnit: 78,
     itemCostPricePerUnit: 66.38,
     itemSellingPricePerUnit: 74,
@@ -6850,7 +6850,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030826887,
-    itemName: "PONDS WHITE BEAUTY BB CREAM 18g",
+    itemName: 'PONDS WHITE BEAUTY BB CREAM 18g',
     itemMRPperUnit: 129,
     itemCostPricePerUnit: 111.48,
     itemSellingPricePerUnit: 121,
@@ -6859,7 +6859,7 @@ export const data = [
   },
   {
     itemBarcode: 8901719117688,
-    itemName: "PARLE POPPINS RS 2",
+    itemName: 'PARLE POPPINS RS 2',
     itemMRPperUnit: 2,
     itemCostPricePerUnit: 1.7392,
     itemSellingPricePerUnit: 2,
@@ -6868,7 +6868,7 @@ export const data = [
   },
   {
     itemBarcode: 8902102160687,
-    itemName: "PRIL LIQUID GREEN 225ml",
+    itemName: 'PRIL LIQUID GREEN 225ml',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 44.91,
     itemSellingPricePerUnit: 48,
@@ -6877,7 +6877,7 @@ export const data = [
   },
   {
     itemBarcode: 808349104607,
-    itemName: "PRINCEWARE FROSTY TRANS BUCKET",
+    itemName: 'PRINCEWARE FROSTY TRANS BUCKET',
     itemMRPperUnit: 380,
     itemCostPricePerUnit: 120.635,
     itemSellingPricePerUnit: 200,
@@ -6886,7 +6886,7 @@ export const data = [
   },
   {
     itemBarcode: 808349441207,
-    itemName: "PRINCEWARE GARBAGEBUCKET",
+    itemName: 'PRINCEWARE GARBAGEBUCKET',
     itemMRPperUnit: 540,
     itemCostPricePerUnit: 221,
     itemSellingPricePerUnit: 300,
@@ -6895,7 +6895,7 @@ export const data = [
   },
   {
     itemBarcode: 808349106618,
-    itemName: "PRINCEWARE PRINTED BUCKET",
+    itemName: 'PRINCEWARE PRINTED BUCKET',
     itemMRPperUnit: 403,
     itemCostPricePerUnit: 201.695,
     itemSellingPricePerUnit: 300,
@@ -6904,7 +6904,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192053415,
-    itemName: "PRINTED BUCKET 18L PINK PRINT",
+    itemName: 'PRINTED BUCKET 18L PINK PRINT',
     itemMRPperUnit: 439,
     itemCostPricePerUnit: 243.215,
     itemSellingPricePerUnit: 310,
@@ -6913,7 +6913,7 @@ export const data = [
   },
   {
     itemBarcode: 8903192053453,
-    itemName: "PRINTED PLASTIC MUG",
+    itemName: 'PRINTED PLASTIC MUG',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 34.745,
     itemSellingPricePerUnit: 40,
@@ -6922,7 +6922,7 @@ export const data = [
   },
   {
     itemBarcode: 8904117901002,
-    itemName: "PRO NATURE BLACK PEPPER WHOLE 100 g",
+    itemName: 'PRO NATURE BLACK PEPPER WHOLE 100 g',
     itemMRPperUnit: 210,
     itemCostPricePerUnit: 105,
     itemSellingPricePerUnit: 115,
@@ -6931,7 +6931,7 @@ export const data = [
   },
   {
     itemBarcode: 8904117901101,
-    itemName: "PRO NATURE CINNAMON BARK 50 g",
+    itemName: 'PRO NATURE CINNAMON BARK 50 g',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 32.5,
     itemSellingPricePerUnit: 38,
@@ -6940,7 +6940,7 @@ export const data = [
   },
   {
     itemBarcode: 8904117901057,
-    itemName: "PRO NATURE JEERA WHOLE 100 g",
+    itemName: 'PRO NATURE JEERA WHOLE 100 g',
     itemMRPperUnit: 76,
     itemCostPricePerUnit: 56,
     itemSellingPricePerUnit: 65,
@@ -6949,7 +6949,7 @@ export const data = [
   },
   {
     itemBarcode: 8904117901125,
-    itemName: "PRO NATURE LAUNG 50 g",
+    itemName: 'PRO NATURE LAUNG 50 g',
     itemMRPperUnit: 205,
     itemCostPricePerUnit: 102.5,
     itemSellingPricePerUnit: 115,
@@ -6958,7 +6958,7 @@ export const data = [
   },
   {
     itemBarcode: 8904117901088,
-    itemName: "PRO NATURE METHI 200 g",
+    itemName: 'PRO NATURE METHI 200 g',
     itemMRPperUnit: 74,
     itemCostPricePerUnit: 37,
     itemSellingPricePerUnit: 44,
@@ -6967,7 +6967,7 @@ export const data = [
   },
   {
     itemBarcode: 8904117901071,
-    itemName: "PRO NATURE MUSTARD SMALL 200 g",
+    itemName: 'PRO NATURE MUSTARD SMALL 200 g',
     itemMRPperUnit: 66,
     itemCostPricePerUnit: 38,
     itemSellingPricePerUnit: 45,
@@ -6975,8 +6975,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "Punjab King Basmati Rice 10 kg",
+    itemBarcode: '',
+    itemName: 'Punjab King Basmati Rice 10 kg',
     itemMRPperUnit: 900,
     itemCostPricePerUnit: 650,
     itemSellingPricePerUnit: 700,
@@ -6985,7 +6985,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786540501,
-    itemName: "RAJMA MASALA",
+    itemName: 'RAJMA MASALA',
     itemMRPperUnit: 38,
     itemCostPricePerUnit: 31.89833333,
     itemSellingPricePerUnit: 35,
@@ -6994,7 +6994,7 @@ export const data = [
   },
   {
     itemBarcode: 1002492718,
-    itemName: "RATAN DUSTBIN",
+    itemName: 'RATAN DUSTBIN',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 79,
     itemSellingPricePerUnit: 85,
@@ -7003,7 +7003,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030876974,
-    itemName: "RED LABEL LEAF TEA 500 g",
+    itemName: 'RED LABEL LEAF TEA 500 g',
     itemMRPperUnit: 255,
     itemCostPricePerUnit: 229.93,
     itemSellingPricePerUnit: 245,
@@ -7012,7 +7012,7 @@ export const data = [
   },
   {
     itemBarcode: 8906059160745,
-    itemName: "REGENCY ALMOND ROSTED & SALTED 200g",
+    itemName: 'REGENCY ALMOND ROSTED & SALTED 200g',
     itemMRPperUnit: 360,
     itemCostPricePerUnit: 225.8,
     itemSellingPricePerUnit: 260,
@@ -7021,7 +7021,7 @@ export const data = [
   },
   {
     itemBarcode: 8906059160738,
-    itemName: "REGENCY CASHEW ROSTED & SALTED 200g",
+    itemName: 'REGENCY CASHEW ROSTED & SALTED 200g',
     itemMRPperUnit: 360,
     itemCostPricePerUnit: 244.7,
     itemSellingPricePerUnit: 275,
@@ -7030,7 +7030,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088206280,
-    itemName: "REVIVE LIQUID STIFFENER 200 g",
+    itemName: 'REVIVE LIQUID STIFFENER 200 g',
     itemMRPperUnit: 77,
     itemCostPricePerUnit: 69.84,
     itemSellingPricePerUnit: 75,
@@ -7039,7 +7039,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030888151,
-    itemName: "RIN BAR 130 GM",
+    itemName: 'RIN BAR 130 GM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.2,
     itemSellingPricePerUnit: 10,
@@ -7048,7 +7048,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030891892,
-    itemName: "RIN BAR 75 GM",
+    itemName: 'RIN BAR 75 GM',
     itemMRPperUnit: 6,
     itemCostPricePerUnit: 5.503333333,
     itemSellingPricePerUnit: 6,
@@ -7057,7 +7057,7 @@ export const data = [
   },
   {
     itemBarcode: 8901453000024,
-    itemName: "ROOHAFZA SQUASH 750 ml",
+    itemName: 'ROOHAFZA SQUASH 750 ml',
     itemMRPperUnit: 160,
     itemCostPricePerUnit: 140,
     itemSellingPricePerUnit: 152,
@@ -7066,7 +7066,7 @@ export const data = [
   },
   {
     itemBarcode: 8906032011347,
-    itemName: "RUCHI REFINED OIL 1 LTR",
+    itemName: 'RUCHI REFINED OIL 1 LTR',
     itemMRPperUnit: 155,
     itemCostPricePerUnit: 144,
     itemSellingPricePerUnit: 150,
@@ -7074,8 +7074,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "SABJI MASALA",
+    itemBarcode: '',
+    itemName: 'SABJI MASALA',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -7084,7 +7084,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088034593,
-    itemName: "SAFFOLA ACTIVE OIL POUCH 1 L",
+    itemName: 'SAFFOLA ACTIVE OIL POUCH 1 L',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 205,
     itemSellingPricePerUnit: 215,
@@ -7093,7 +7093,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088069083,
-    itemName: "SAFFOLA HONEY 1 kg",
+    itemName: 'SAFFOLA HONEY 1 kg',
     itemMRPperUnit: 475,
     itemCostPricePerUnit: 320.05,
     itemSellingPricePerUnit: 355,
@@ -7102,7 +7102,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088076050,
-    itemName: "SAFFOLA IMMUNIVEDA CHYAWANPRASH 1250g",
+    itemName: 'SAFFOLA IMMUNIVEDA CHYAWANPRASH 1250g',
     itemMRPperUnit: 525,
     itemCostPricePerUnit: 236.25,
     itemSellingPricePerUnit: 275,
@@ -7111,7 +7111,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088072267,
-    itemName: "SAFFOLA MEALMAKER SOYA CHUNKS 1kg",
+    itemName: 'SAFFOLA MEALMAKER SOYA CHUNKS 1kg',
     itemMRPperUnit: 210,
     itemCostPricePerUnit: 167.38,
     itemSellingPricePerUnit: 185,
@@ -7120,7 +7120,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088129824,
-    itemName: "SAFFOLA OATS CLASSIC MASALA 500 g",
+    itemName: 'SAFFOLA OATS CLASSIC MASALA 500 g',
     itemMRPperUnit: 202,
     itemCostPricePerUnit: 158.6,
     itemSellingPricePerUnit: 175,
@@ -7129,7 +7129,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088068741,
-    itemName: "SAFFOLA OATS PEPPY TOMATO 40 g",
+    itemName: 'SAFFOLA OATS PEPPY TOMATO 40 g',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 12.7,
     itemSellingPricePerUnit: 14,
@@ -7138,7 +7138,7 @@ export const data = [
   },
   {
     itemBarcode: 8901088129800,
-    itemName: "SAFFOLA OATS VEGGIE TWIST 500 g",
+    itemName: 'SAFFOLA OATS VEGGIE TWIST 500 g',
     itemMRPperUnit: 202,
     itemCostPricePerUnit: 171.05,
     itemSellingPricePerUnit: 189,
@@ -7147,7 +7147,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786080502,
-    itemName: "EVEREST SAMBHAR MASALA 50 GM",
+    itemName: 'EVEREST SAMBHAR MASALA 50 GM',
     itemMRPperUnit: 37,
     itemCostPricePerUnit: 31.10166667,
     itemSellingPricePerUnit: 36,
@@ -7155,8 +7155,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST SAMBHAR MASALA RS 5",
+    itemBarcode: '',
+    itemName: 'EVEREST SAMBHAR MASALA RS 5',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.2,
     itemSellingPricePerUnit: 5,
@@ -7164,8 +7164,8 @@ export const data = [
     minimumStockQuantity: 5,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST SAMBHAR POUCH RS 10",
+    itemBarcode: '',
+    itemName: 'EVEREST SAMBHAR POUCH RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -7174,7 +7174,7 @@ export const data = [
   },
   {
     itemBarcode: 8901399012013,
-    itemName: "SANTOOR SOAP WHITE 150 g",
+    itemName: 'SANTOOR SOAP WHITE 150 g',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 37.95,
     itemSellingPricePerUnit: 42,
@@ -7183,7 +7183,7 @@ export const data = [
   },
   {
     itemBarcode: 8905110003427,
-    itemName: "SAVLON DISINFECTANT CLEANER 1 L",
+    itemName: 'SAVLON DISINFECTANT CLEANER 1 L',
     itemMRPperUnit: 380,
     itemCostPricePerUnit: 199,
     itemSellingPricePerUnit: 249,
@@ -7192,7 +7192,7 @@ export const data = [
   },
   {
     itemBarcode: 1002488162,
-    itemName: "SCISSOR BEAUTY",
+    itemName: 'SCISSOR BEAUTY',
     itemMRPperUnit: 44,
     itemCostPricePerUnit: 39,
     itemSellingPricePerUnit: 44,
@@ -7201,7 +7201,7 @@ export const data = [
   },
   {
     itemBarcode: 8901057003988,
-    itemName: "SCISSOR MUNIX",
+    itemName: 'SCISSOR MUNIX',
     itemMRPperUnit: 38,
     itemCostPricePerUnit: 32,
     itemSellingPricePerUnit: 35,
@@ -7210,7 +7210,7 @@ export const data = [
   },
   {
     itemBarcode: 8901361304269,
-    itemName: "SCOTCH BRITE JET SCRUBBER",
+    itemName: 'SCOTCH BRITE JET SCRUBBER',
     itemMRPperUnit: 150,
     itemCostPricePerUnit: 129.61,
     itemSellingPricePerUnit: 142,
@@ -7219,7 +7219,7 @@ export const data = [
   },
   {
     itemBarcode: 8901361372565,
-    itemName: "SCOTCH BRITE SCRUB PAD (7.5cmX10cm) 12N",
+    itemName: 'SCOTCH BRITE SCRUB PAD (7.5cmX10cm) 12N',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 13.03,
     itemSellingPricePerUnit: 15,
@@ -7228,7 +7228,7 @@ export const data = [
   },
   {
     itemBarcode: 8901571005666,
-    itemName: "SENSODYNE FRESHGEL TOOTHPASTE 150 g",
+    itemName: 'SENSODYNE FRESHGEL TOOTHPASTE 150 g',
     itemMRPperUnit: 210,
     itemCostPricePerUnit: 177.18,
     itemSellingPricePerUnit: 200,
@@ -7237,7 +7237,7 @@ export const data = [
   },
   {
     itemBarcode: 8901571004096,
-    itemName: "SENSODYNE FRESHMINT TOOTHPASTE 75 g",
+    itemName: 'SENSODYNE FRESHMINT TOOTHPASTE 75 g',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 101.25,
     itemSellingPricePerUnit: 111,
@@ -7246,7 +7246,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786140503,
-    itemName: "EVEREST SHAHI BIRYANI MASALA",
+    itemName: 'EVEREST SHAHI BIRYANI MASALA',
     itemMRPperUnit: 74,
     itemCostPricePerUnit: 62.20166667,
     itemSellingPricePerUnit: 70,
@@ -7254,8 +7254,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST SHAHI BIRYANI RS 10",
+    itemBarcode: '',
+    itemName: 'EVEREST SHAHI BIRYANI RS 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -7264,7 +7264,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786530502,
-    itemName: "EVEREST SHAHI PANEER",
+    itemName: 'EVEREST SHAHI PANEER',
     itemMRPperUnit: 46,
     itemCostPricePerUnit: 38.59833333,
     itemSellingPricePerUnit: 44,
@@ -7273,7 +7273,7 @@ export const data = [
   },
   {
     itemBarcode: 8901755277018,
-    itemName: "SHUBHALAXMI SABUDANA 1 kg",
+    itemName: 'SHUBHALAXMI SABUDANA 1 kg',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 72.86,
     itemSellingPricePerUnit: 80,
@@ -7282,7 +7282,7 @@ export const data = [
   },
   {
     itemBarcode: 8906009820040,
-    itemName: "SILVER COIN CHAKKI ATTA 5 kg",
+    itemName: 'SILVER COIN CHAKKI ATTA 5 kg',
     itemMRPperUnit: 255,
     itemCostPricePerUnit: 160.36,
     itemSellingPricePerUnit: 175,
@@ -7291,7 +7291,7 @@ export const data = [
   },
   {
     itemBarcode: 8906009820323,
-    itemName: "SILVER COIN SUJI 1 kg",
+    itemName: 'SILVER COIN SUJI 1 kg',
     itemMRPperUnit: 63,
     itemCostPricePerUnit: 37.81,
     itemSellingPricePerUnit: 45,
@@ -7300,7 +7300,7 @@ export const data = [
   },
   {
     itemBarcode: 8906103792076,
-    itemName: "SIRONA REUSABLE HAIR REMOVAL RAZOR 1U",
+    itemName: 'SIRONA REUSABLE HAIR REMOVAL RAZOR 1U',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 134.32,
     itemSellingPricePerUnit: 150,
@@ -7309,7 +7309,7 @@ export const data = [
   },
   {
     itemBarcode: 8901595863600,
-    itemName: "SMITH & JONES GINGER GARLIC PASTE 475g",
+    itemName: 'SMITH & JONES GINGER GARLIC PASTE 475g',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 108,
     itemSellingPricePerUnit: 116,
@@ -7318,7 +7318,7 @@ export const data = [
   },
   {
     itemBarcode: 8901595863020,
-    itemName: "SMITH & JONES TOMATO KETCHUP 90g",
+    itemName: 'SMITH & JONES TOMATO KETCHUP 90g',
     itemMRPperUnit: 15,
     itemCostPricePerUnit: 13.95,
     itemSellingPricePerUnit: 15,
@@ -7327,7 +7327,7 @@ export const data = [
   },
   {
     itemBarcode: 8903622001566,
-    itemName: "SOFY ANTI BACTERIA XL 14P",
+    itemName: 'SOFY ANTI BACTERIA XL 14P',
     itemMRPperUnit: 125,
     itemCostPricePerUnit: 85.44,
     itemSellingPricePerUnit: 95,
@@ -7336,7 +7336,7 @@ export const data = [
   },
   {
     itemBarcode: 8902979026888,
-    itemName: "SPINZ BB Talc 80 g",
+    itemName: 'SPINZ BB Talc 80 g',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 89,
     itemSellingPricePerUnit: 100,
@@ -7345,7 +7345,7 @@ export const data = [
   },
   {
     itemBarcode: 8901764032271,
-    itemName: "Sprite 750 ml",
+    itemName: 'Sprite 750 ml',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 36.5,
     itemSellingPricePerUnit: 40,
@@ -7354,7 +7354,7 @@ export const data = [
   },
   {
     itemBarcode: 8901012165768,
-    itemName: "STAYFREE SANITARY SECURE NIGHTS 6S",
+    itemName: 'STAYFREE SANITARY SECURE NIGHTS 6S',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 35.8,
     itemSellingPricePerUnit: 40,
@@ -7372,7 +7372,7 @@ export const data = [
   },
   {
     itemBarcode: 8902080000227,
-    itemName: "STING ENERGY DRINK",
+    itemName: 'STING ENERGY DRINK',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.5,
     itemSellingPricePerUnit: 20,
@@ -7381,7 +7381,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786130504,
-    itemName: "SUBJI MASALA",
+    itemName: 'SUBJI MASALA',
     itemMRPperUnit: 34,
     itemCostPricePerUnit: 28.60166667,
     itemSellingPricePerUnit: 32,
@@ -7390,7 +7390,7 @@ export const data = [
   },
   {
     itemBarcode: 8901512917102,
-    itemName: "SUNDROP DUO COCONUT BAR 23.5g",
+    itemName: 'SUNDROP DUO COCONUT BAR 23.5g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.84,
     itemSellingPricePerUnit: 10,
@@ -7399,7 +7399,7 @@ export const data = [
   },
   {
     itemBarcode: 8901512144805,
-    itemName: "SUNDROP PEANUT BUTTER CRUNCHY 924 g",
+    itemName: 'SUNDROP PEANUT BUTTER CRUNCHY 924 g',
     itemMRPperUnit: 240,
     itemCostPricePerUnit: 210.82,
     itemSellingPricePerUnit: 229,
@@ -7408,7 +7408,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030898464,
-    itemName: "Sunsilk Shampoo Sachet (5.5 ml Each)",
+    itemName: 'Sunsilk Shampoo Sachet (5.5 ml Each)',
     itemMRPperUnit: 1,
     itemCostPricePerUnit: 0.74625,
     itemSellingPricePerUnit: 1,
@@ -7417,7 +7417,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030876691,
-    itemName: "SURF EXCEL DETERGENT 80 GM",
+    itemName: 'SURF EXCEL DETERGENT 80 GM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.2,
     itemSellingPricePerUnit: 10,
@@ -7426,7 +7426,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248701112,
-    itemName: "SURF EXCEL DETERGENT BAR 150 g",
+    itemName: 'SURF EXCEL DETERGENT BAR 150 g',
     itemMRPperUnit: 22,
     itemCostPricePerUnit: 19.22,
     itemSellingPricePerUnit: 22,
@@ -7435,7 +7435,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030865169,
-    itemName: "SURF EXCEL DETERGENT BAR 250 g",
+    itemName: 'SURF EXCEL DETERGENT BAR 250 g',
     itemMRPperUnit: 35,
     itemCostPricePerUnit: 31.85,
     itemSellingPricePerUnit: 35,
@@ -7444,7 +7444,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030859991,
-    itemName: "SURF EXCEL DETERGENT LIQUID 1.02 L TL",
+    itemName: 'SURF EXCEL DETERGENT LIQUID 1.02 L TL',
     itemMRPperUnit: 210,
     itemCostPricePerUnit: 180.46,
     itemSellingPricePerUnit: 200,
@@ -7453,7 +7453,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030814150,
-    itemName: "SURF EXCEL DETERGENT Q/WASH POWDER 500 g",
+    itemName: 'SURF EXCEL DETERGENT Q/WASH POWDER 500 g',
     itemMRPperUnit: 117,
     itemCostPricePerUnit: 108.33,
     itemSellingPricePerUnit: 115,
@@ -7462,7 +7462,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030850479,
-    itemName: "SURF EXCEL EASY WASH 500G",
+    itemName: 'SURF EXCEL EASY WASH 500G',
     itemMRPperUnit: 63,
     itemCostPricePerUnit: 57.5,
     itemSellingPricePerUnit: 60,
@@ -7471,7 +7471,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030816604,
-    itemName: "SURF EXCEL MATIC DETERGENT POWDER 1kg FL",
+    itemName: 'SURF EXCEL MATIC DETERGENT POWDER 1kg FL',
     itemMRPperUnit: 280,
     itemCostPricePerUnit: 248.99,
     itemSellingPricePerUnit: 270,
@@ -7480,7 +7480,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030875908,
-    itemName: "SURF EXCEL SOAP 84 GM",
+    itemName: 'SURF EXCEL SOAP 84 GM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.204166667,
     itemSellingPricePerUnit: 10,
@@ -7489,7 +7489,7 @@ export const data = [
   },
   {
     itemBarcode: 8904169620494,
-    itemName: "SWACH BHUNA CHANA 500 g",
+    itemName: 'SWACH BHUNA CHANA 500 g',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 53.26,
     itemSellingPricePerUnit: 60,
@@ -7498,7 +7498,7 @@ export const data = [
   },
   {
     itemBarcode: 8904169620593,
-    itemName: "SWACH PEANUT 500 g",
+    itemName: 'SWACH PEANUT 500 g',
     itemMRPperUnit: 105,
     itemCostPricePerUnit: 70.41,
     itemSellingPricePerUnit: 80,
@@ -7507,7 +7507,7 @@ export const data = [
   },
   {
     itemBarcode: 8904169620746,
-    itemName: "SWACH POHA VALUE 1 kg",
+    itemName: 'SWACH POHA VALUE 1 kg',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 46,
     itemSellingPricePerUnit: 50,
@@ -7516,7 +7516,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786170500,
-    itemName: "TANDOORI CHICKEN MASALA",
+    itemName: 'TANDOORI CHICKEN MASALA',
     itemMRPperUnit: 41,
     itemCostPricePerUnit: 34.3975,
     itemSellingPricePerUnit: 38,
@@ -7525,7 +7525,7 @@ export const data = [
   },
   {
     itemBarcode: 8901052005109,
-    itemName: "TATA AGNI TEA 250 g",
+    itemName: 'TATA AGNI TEA 250 g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 64.15,
     itemSellingPricePerUnit: 70,
@@ -7534,7 +7534,7 @@ export const data = [
   },
   {
     itemBarcode: 8904043922027,
-    itemName: "TATA COOKING SODA 100 GM",
+    itemName: 'TATA COOKING SODA 100 GM',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 18,
     itemSellingPricePerUnit: 20,
@@ -7542,8 +7542,8 @@ export const data = [
     minimumStockQuantity: 2,
   },
   {
-    itemBarcode: "",
-    itemName: "TATA SALT 1 KG",
+    itemBarcode: '',
+    itemName: 'TATA SALT 1 KG',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 23,
     itemSellingPricePerUnit: 25,
@@ -7552,7 +7552,7 @@ export const data = [
   },
   {
     itemBarcode: 8901052010318,
-    itemName: "TATA TEA PREMIUM LEAF 250 g",
+    itemName: 'TATA TEA PREMIUM LEAF 250 g',
     itemMRPperUnit: 120,
     itemCostPricePerUnit: 109.33,
     itemSellingPricePerUnit: 116,
@@ -7561,7 +7561,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030699436,
-    itemName: "TAZZA LEAF TEA 100 g",
+    itemName: 'TAZZA LEAF TEA 100 g',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 22.54,
     itemSellingPricePerUnit: 24,
@@ -7570,7 +7570,7 @@ export const data = [
   },
   {
     itemBarcode: 8901786020508,
-    itemName: "TEA MASALA",
+    itemName: 'TEA MASALA',
     itemMRPperUnit: 62,
     itemCostPricePerUnit: 52.1,
     itemSellingPricePerUnit: 60,
@@ -7579,7 +7579,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176127792,
-    itemName: "TIDE BAR 150G LEMON BLUE BAR",
+    itemName: 'TIDE BAR 150G LEMON BLUE BAR',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.26,
     itemSellingPricePerUnit: 10,
@@ -7588,7 +7588,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176127778,
-    itemName: "TIDE DETERGENT BAR 150 g (white)",
+    itemName: 'TIDE DETERGENT BAR 150 g (white)',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.73,
     itemSellingPricePerUnit: 10,
@@ -7597,7 +7597,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176127648,
-    itemName: "TIDE DETERGENT BAR 250 g",
+    itemName: 'TIDE DETERGENT BAR 250 g',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 17.84,
     itemSellingPricePerUnit: 20,
@@ -7606,7 +7606,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176115058,
-    itemName: "TIDE DETERGENT POWDER JASMINE 1 kg",
+    itemName: 'TIDE DETERGENT POWDER JASMINE 1 kg',
     itemMRPperUnit: 124,
     itemCostPricePerUnit: 109.25,
     itemSellingPricePerUnit: 120,
@@ -7615,7 +7615,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176127129,
-    itemName: "TIDE DOUBLE POWER JASMINE N ROSE 1.5 KG",
+    itemName: 'TIDE DOUBLE POWER JASMINE N ROSE 1.5 KG',
     itemMRPperUnit: 155,
     itemCostPricePerUnit: 143.52,
     itemSellingPricePerUnit: 150,
@@ -7624,7 +7624,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176115898,
-    itemName: "TIDE FRESH CLEAN 500G",
+    itemName: 'TIDE FRESH CLEAN 500G',
     itemMRPperUnit: 38,
     itemCostPricePerUnit: 35.19,
     itemSellingPricePerUnit: 38,
@@ -7632,8 +7632,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "EVEREST TIKHALAL CHILLYPOWDER",
+    itemBarcode: '',
+    itemName: 'EVEREST TIKHALAL CHILLYPOWDER',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -7642,7 +7642,7 @@ export const data = [
   },
   {
     itemBarcode: 8907367003380,
-    itemName: "TMC AFTER SHAVE 100ml",
+    itemName: 'TMC AFTER SHAVE 100ml',
     itemMRPperUnit: 449,
     itemCostPricePerUnit: 202.05,
     itemSellingPricePerUnit: 229,
@@ -7651,7 +7651,7 @@ export const data = [
   },
   {
     itemBarcode: 8906090572743,
-    itemName: "Too Yumm Aloo Chaat Potato Stix 12 N (15 g Each)",
+    itemName: 'Too Yumm Aloo Chaat Potato Stix 12 N (15 g Each)',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.225,
     itemSellingPricePerUnit: 5,
@@ -7660,7 +7660,7 @@ export const data = [
   },
   {
     itemBarcode: 8906090572897,
-    itemName: "Too Yumm Classic Salted Chips 12 N (13 g Each)",
+    itemName: 'Too Yumm Classic Salted Chips 12 N (13 g Each)',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.225,
     itemSellingPricePerUnit: 5,
@@ -7669,7 +7669,7 @@ export const data = [
   },
   {
     itemBarcode: 8906090572989,
-    itemName: "Too Yumm Spanish Tomato Chips 12 N (13 g Each)",
+    itemName: 'Too Yumm Spanish Tomato Chips 12 N (13 g Each)',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.225,
     itemSellingPricePerUnit: 5,
@@ -7678,7 +7678,7 @@ export const data = [
   },
   {
     itemBarcode: 8906090570831,
-    itemName: "Too Yumm Veggie Stix Sour Cream & Onion 28 g",
+    itemName: 'Too Yumm Veggie Stix Sour Cream & Onion 28 g',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.29,
     itemSellingPricePerUnit: 10,
@@ -7687,7 +7687,7 @@ export const data = [
   },
   {
     itemBarcode: 8904288601367,
-    itemName: "TOPS SAUCE GREEN CHILLI 200 g",
+    itemName: 'TOPS SAUCE GREEN CHILLI 200 g',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 42.47,
     itemSellingPricePerUnit: 49,
@@ -7696,7 +7696,7 @@ export const data = [
   },
   {
     itemBarcode: 8904288601398,
-    itemName: "TOPS SAUCE RED CHILLI 200 g",
+    itemName: 'TOPS SAUCE RED CHILLI 200 g',
     itemMRPperUnit: 60,
     itemCostPricePerUnit: 42.04,
     itemSellingPricePerUnit: 49,
@@ -7705,7 +7705,7 @@ export const data = [
   },
   {
     itemBarcode: 8904288601985,
-    itemName: "TOPS SAUCE SOYA 220 g",
+    itemName: 'TOPS SAUCE SOYA 220 g',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 39.99,
     itemSellingPricePerUnit: 49,
@@ -7714,7 +7714,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030810473,
-    itemName: "Tresemme Keratin Smooth Sachet 12 N (7 ml Each)",
+    itemName: 'Tresemme Keratin Smooth Sachet 12 N (7 ml Each)',
     itemMRPperUnit: 4,
     itemCostPricePerUnit: 3.490833333,
     itemSellingPricePerUnit: 4,
@@ -7723,7 +7723,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030810497,
-    itemName: "Tresemme Shampoo Hair Fall Defense 7.5 ml",
+    itemName: 'Tresemme Shampoo Hair Fall Defense 7.5 ml',
     itemMRPperUnit: 4,
     itemCostPricePerUnit: 2.904666667,
     itemSellingPricePerUnit: 4,
@@ -7732,7 +7732,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030866128,
-    itemName: "Tresemme Smooth & Shine Conditioner Sachet 7 ml",
+    itemName: 'Tresemme Smooth & Shine Conditioner Sachet 7 ml',
     itemMRPperUnit: 4,
     itemCostPricePerUnit: 3.233333333,
     itemSellingPricePerUnit: 4,
@@ -7741,7 +7741,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030810480,
-    itemName: "Tresemme Smooth & Shine Hair Shampoo 7 ml",
+    itemName: 'Tresemme Smooth & Shine Hair Shampoo 7 ml',
     itemMRPperUnit: 4,
     itemCostPricePerUnit: 2.904666667,
     itemSellingPricePerUnit: 4,
@@ -7750,7 +7750,7 @@ export const data = [
   },
   {
     itemBarcode: 8906005181008,
-    itemName: "TRUST REFINED SUGAR 1 kg",
+    itemName: 'TRUST REFINED SUGAR 1 kg',
     itemMRPperUnit: 65,
     itemCostPricePerUnit: 47.29,
     itemSellingPricePerUnit: 51,
@@ -7758,8 +7758,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "TURMERIC POWDER POUCH",
+    itemBarcode: '',
+    itemName: 'TURMERIC POWDER POUCH',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.4,
     itemSellingPricePerUnit: 10,
@@ -7768,7 +7768,7 @@ export const data = [
   },
   {
     itemBarcode: 8901491410106,
-    itemName: "UNCLE CHIPPS SPICY TREAT MRP 10",
+    itemName: 'UNCLE CHIPPS SPICY TREAT MRP 10',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.712,
     itemSellingPricePerUnit: 10,
@@ -7777,7 +7777,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396040309,
-    itemName: "VANISH SHAKTI FABRIC STAIN REMOVER 200 g",
+    itemName: 'VANISH SHAKTI FABRIC STAIN REMOVER 200 g',
     itemMRPperUnit: 110,
     itemCostPricePerUnit: 96.53,
     itemSellingPricePerUnit: 105,
@@ -7786,7 +7786,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396044505,
-    itemName: "VANISH STAIN REMOVER SACHET 10U X 25 g",
+    itemName: 'VANISH STAIN REMOVER SACHET 10U X 25 g',
     itemMRPperUnit: 19,
     itemCostPricePerUnit: 17.273,
     itemSellingPricePerUnit: 19,
@@ -7794,8 +7794,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "VASELINE 7 GM",
+    itemBarcode: '',
+    itemName: 'VASELINE 7 GM',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.545416667,
     itemSellingPricePerUnit: 5,
@@ -7804,7 +7804,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030862694,
-    itemName: "VASELINE BODY LOTION 200ml",
+    itemName: 'VASELINE BODY LOTION 200ml',
     itemMRPperUnit: 175,
     itemCostPricePerUnit: 157.49,
     itemSellingPricePerUnit: 170,
@@ -7813,7 +7813,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030887178,
-    itemName: "VASELINE BODY LOTIONHEALTHY WHITE 200ml",
+    itemName: 'VASELINE BODY LOTIONHEALTHY WHITE 200ml',
     itemMRPperUnit: 225,
     itemCostPricePerUnit: 202.5,
     itemSellingPricePerUnit: 220,
@@ -7822,7 +7822,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030734182,
-    itemName: "VASELINE PET JELLY 42 g",
+    itemName: 'VASELINE PET JELLY 42 g',
     itemMRPperUnit: 79,
     itemCostPricePerUnit: 71.1,
     itemSellingPricePerUnit: 76,
@@ -7831,7 +7831,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207031793,
-    itemName: "Vatika Anti Dandruff Shampoo 6.5 ml",
+    itemName: 'Vatika Anti Dandruff Shampoo 6.5 ml',
     itemMRPperUnit: 1,
     itemCostPricePerUnit: 0.838571429,
     itemSellingPricePerUnit: 1,
@@ -7840,7 +7840,7 @@ export const data = [
   },
   {
     itemBarcode: 8901207031809,
-    itemName: "Vatika Long & Black Sachet 16 N (4 ml Each)",
+    itemName: 'Vatika Long & Black Sachet 16 N (4 ml Each)',
     itemMRPperUnit: 1,
     itemCostPricePerUnit: 0.9,
     itemSellingPricePerUnit: 1,
@@ -7849,7 +7849,7 @@ export const data = [
   },
   {
     itemBarcode: 8906069402705,
-    itemName: "VEEBA CLASSIC MAYONNAISE 250g",
+    itemName: 'VEEBA CLASSIC MAYONNAISE 250g',
     itemMRPperUnit: 89,
     itemCostPricePerUnit: 71.3,
     itemSellingPricePerUnit: 79,
@@ -7858,7 +7858,7 @@ export const data = [
   },
   {
     itemBarcode: 8906069401746,
-    itemName: "VEEBA EGGLESS MAYO 100 GM",
+    itemName: 'VEEBA EGGLESS MAYO 100 GM',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 38.25,
     itemSellingPricePerUnit: 42,
@@ -7867,7 +7867,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396387251,
-    itemName: "VEET DRY SKIN HAIR REMOVAL CREAM 30g",
+    itemName: 'VEET DRY SKIN HAIR REMOVAL CREAM 30g',
     itemMRPperUnit: 80,
     itemCostPricePerUnit: 69.84,
     itemSellingPricePerUnit: 76,
@@ -7876,7 +7876,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396331100,
-    itemName: "VEET MEN HAIR REMOVAL CREAM 25g",
+    itemName: 'VEET MEN HAIR REMOVAL CREAM 25g',
     itemMRPperUnit: 70,
     itemCostPricePerUnit: 57.95,
     itemSellingPricePerUnit: 64,
@@ -7885,7 +7885,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396321606,
-    itemName: "VEET NORMAL SKIN 50 g",
+    itemName: 'VEET NORMAL SKIN 50 g',
     itemMRPperUnit: 135,
     itemCostPricePerUnit: 117.24,
     itemSellingPricePerUnit: 125,
@@ -7894,7 +7894,7 @@ export const data = [
   },
   {
     itemBarcode: 8901396321804,
-    itemName: "VEET SENSITIVE SKIN 60 g",
+    itemName: 'VEET SENSITIVE SKIN 60 g',
     itemMRPperUnit: 128,
     itemCostPricePerUnit: 111.15,
     itemSellingPricePerUnit: 120,
@@ -7903,7 +7903,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176124616,
-    itemName: "VENUS CART COMFORTGLIDE 2S",
+    itemName: 'VENUS CART COMFORTGLIDE 2S',
     itemMRPperUnit: 449,
     itemCostPricePerUnit: 393.86,
     itemSellingPricePerUnit: 430,
@@ -7912,7 +7912,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176124623,
-    itemName: "VENUS CART SMOOTH 2S",
+    itemName: 'VENUS CART SMOOTH 2S',
     itemMRPperUnit: 325,
     itemCostPricePerUnit: 285.08,
     itemSellingPricePerUnit: 310,
@@ -7921,7 +7921,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176126450,
-    itemName: "VENUS RAZOR COMFORTGLIDE",
+    itemName: 'VENUS RAZOR COMFORTGLIDE',
     itemMRPperUnit: 349,
     itemCostPricePerUnit: 306.15,
     itemSellingPricePerUnit: 330,
@@ -7930,7 +7930,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176124197,
-    itemName: "VENUS RAZOR SMOOTH",
+    itemName: 'VENUS RAZOR SMOOTH',
     itemMRPperUnit: 299,
     itemCostPricePerUnit: 262.27,
     itemSellingPricePerUnit: 285,
@@ -7939,7 +7939,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176077059,
-    itemName: "VICKS BABYRUB 25 ml",
+    itemName: 'VICKS BABYRUB 25 ml',
     itemMRPperUnit: 105,
     itemCostPricePerUnit: 82.25,
     itemSellingPricePerUnit: 90,
@@ -7948,7 +7948,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176117168,
-    itemName: "VICKS COUGH DROPS",
+    itemName: 'VICKS COUGH DROPS',
     itemMRPperUnit: 1,
     itemCostPricePerUnit: 1,
     itemSellingPricePerUnit: 1,
@@ -7957,7 +7957,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176131249,
-    itemName: "VICKS VAPORUB 25 ML",
+    itemName: 'VICKS VAPORUB 25 ML',
     itemMRPperUnit: 90,
     itemCostPricePerUnit: 75.095,
     itemSellingPricePerUnit: 85,
@@ -7966,7 +7966,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176131263,
-    itemName: "VICKS VAPORUB 50 ml",
+    itemName: 'VICKS VAPORUB 50 ml',
     itemMRPperUnit: 155,
     itemCostPricePerUnit: 121.42,
     itemSellingPricePerUnit: 135,
@@ -7974,8 +7974,8 @@ export const data = [
     minimumStockQuantity: 4,
   },
   {
-    itemBarcode: "",
-    itemName: "VICKS VAPORUB 5ML",
+    itemBarcode: '',
+    itemName: 'VICKS VAPORUB 5ML',
     itemMRPperUnit: 22,
     itemCostPricePerUnit: 17.52,
     itemSellingPricePerUnit: 20,
@@ -7984,7 +7984,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176104045,
-    itemName: "VICKS VAPORUB EXTRA STRONG 25 ML",
+    itemName: 'VICKS VAPORUB EXTRA STRONG 25 ML',
     itemMRPperUnit: 99,
     itemCostPricePerUnit: 82.62,
     itemSellingPricePerUnit: 95,
@@ -7993,7 +7993,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176083906,
-    itemName: "VICKS VAPORUB MINI",
+    itemName: 'VICKS VAPORUB MINI',
     itemMRPperUnit: 40,
     itemCostPricePerUnit: 31.24333333,
     itemSellingPricePerUnit: 35,
@@ -8001,8 +8001,8 @@ export const data = [
     minimumStockQuantity: 3,
   },
   {
-    itemBarcode: "",
-    itemName: "VICKS VAPORUB XTRA STRONG 10 ML",
+    itemBarcode: '',
+    itemName: 'VICKS VAPORUB XTRA STRONG 10 ML',
     itemMRPperUnit: 49,
     itemCostPricePerUnit: 40.89,
     itemSellingPricePerUnit: 45,
@@ -8011,7 +8011,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030876608,
-    itemName: "VIM BAR 130 GM",
+    itemName: 'VIM BAR 130 GM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.2,
     itemSellingPricePerUnit: 10,
@@ -8020,7 +8020,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030862243,
-    itemName: "VIM BAR 60 GM",
+    itemName: 'VIM BAR 60 GM',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.484166667,
     itemSellingPricePerUnit: 5,
@@ -8029,7 +8029,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030743467,
-    itemName: "VIM DISHWASH BAR 300 g",
+    itemName: 'VIM DISHWASH BAR 300 g',
     itemMRPperUnit: 29,
     itemCostPricePerUnit: 25.62,
     itemSellingPricePerUnit: 28,
@@ -8038,7 +8038,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030901829,
-    itemName: "VIM DISHWASH BAR 4 U X 120g",
+    itemName: 'VIM DISHWASH BAR 4 U X 120g',
     itemMRPperUnit: 30,
     itemCostPricePerUnit: 27.64,
     itemSellingPricePerUnit: 30,
@@ -8047,7 +8047,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030889875,
-    itemName: "VIM DISHWASH GEL 155 ml",
+    itemName: 'VIM DISHWASH GEL 155 ml',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 18.24,
     itemSellingPricePerUnit: 20,
@@ -8056,7 +8056,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030760624,
-    itemName: "VIM DISHWASH GEL 250 ml",
+    itemName: 'VIM DISHWASH GEL 250 ml',
     itemMRPperUnit: 55,
     itemCostPricePerUnit: 50.93,
     itemSellingPricePerUnit: 54,
@@ -8065,7 +8065,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030768729,
-    itemName: "VIM LIQUID POUCH 1 L",
+    itemName: 'VIM LIQUID POUCH 1 L',
     itemMRPperUnit: 209,
     itemCostPricePerUnit: 197.58,
     itemSellingPricePerUnit: 205,
@@ -8074,7 +8074,7 @@ export const data = [
   },
   {
     itemBarcode: 8907122008537,
-    itemName: "VLCC DE TAN SPF 50 SUNSCREEN GEL CRÈME",
+    itemName: 'VLCC DE TAN SPF 50 SUNSCREEN GEL CRÈME',
     itemMRPperUnit: 450,
     itemCostPricePerUnit: 354.6,
     itemSellingPricePerUnit: 400,
@@ -8083,7 +8083,7 @@ export const data = [
   },
   {
     itemBarcode: 8907122015252,
-    itemName: "VLCC ETERNAL YOUTH SKN FIRMING F/W 100ml",
+    itemName: 'VLCC ETERNAL YOUTH SKN FIRMING F/W 100ml',
     itemMRPperUnit: 299,
     itemCostPricePerUnit: 210.75,
     itemSellingPricePerUnit: 225,
@@ -8092,7 +8092,7 @@ export const data = [
   },
   {
     itemBarcode: 8907122008407,
-    itemName: "VLCC SUNSCRN LOTION MATTE LK SPF30 100g",
+    itemName: 'VLCC SUNSCRN LOTION MATTE LK SPF30 100g',
     itemMRPperUnit: 345,
     itemCostPricePerUnit: 245.64,
     itemSellingPricePerUnit: 275,
@@ -8101,7 +8101,7 @@ export const data = [
   },
   {
     itemBarcode: 8901747003861,
-    itemName: "WAGH BAKRI SPICED TEA 500g",
+    itemName: 'WAGH BAKRI SPICED TEA 500g',
     itemMRPperUnit: 310,
     itemCostPricePerUnit: 260.07,
     itemSellingPricePerUnit: 279,
@@ -8110,7 +8110,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030902666,
-    itemName: "WHEEL 2 IN 1 BAR 190 GM",
+    itemName: 'WHEEL 2 IN 1 BAR 190 GM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.2,
     itemSellingPricePerUnit: 10,
@@ -8119,7 +8119,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030902178,
-    itemName: "WHEEL GREEN BAR 100 GM",
+    itemName: 'WHEEL GREEN BAR 100 GM',
     itemMRPperUnit: 6,
     itemCostPricePerUnit: 5.355,
     itemSellingPricePerUnit: 6,
@@ -8128,7 +8128,7 @@ export const data = [
   },
   {
     itemBarcode: 8901030898204,
-    itemName: "WHEEL LEMON ORANGE POWDER 110 GM",
+    itemName: 'WHEEL LEMON ORANGE POWDER 110 GM',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.96,
     itemSellingPricePerUnit: 10,
@@ -8137,7 +8137,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430420402,
-    itemName: "WHISPER CHOICE COTTONY SOFT",
+    itemName: 'WHISPER CHOICE COTTONY SOFT',
     itemMRPperUnit: 25,
     itemCostPricePerUnit: 22.52,
     itemSellingPricePerUnit: 25,
@@ -8146,7 +8146,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176119698,
-    itemName: "WHISPER CHOICE REGULAR 7S",
+    itemName: 'WHISPER CHOICE REGULAR 7S',
     itemMRPperUnit: 32,
     itemCostPricePerUnit: 25.94,
     itemSellingPricePerUnit: 30,
@@ -8164,7 +8164,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176126504,
-    itemName: "WHISPER CHOICE ULTRA XL 280MM",
+    itemName: 'WHISPER CHOICE ULTRA XL 280MM',
     itemMRPperUnit: 45,
     itemCostPricePerUnit: 36.49,
     itemSellingPricePerUnit: 42,
@@ -8173,7 +8173,7 @@ export const data = [
   },
   {
     itemBarcode: 4987176112194,
-    itemName: "WHISPER CHOICE XL 280MM",
+    itemName: 'WHISPER CHOICE XL 280MM',
     itemMRPperUnit: 34,
     itemCostPricePerUnit: 27.56,
     itemSellingPricePerUnit: 32,
@@ -8182,7 +8182,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430872867,
-    itemName: "WHISPER ULTRA NIGHT XXXL WINGS 10 U",
+    itemName: 'WHISPER ULTRA NIGHT XXXL WINGS 10 U',
     itemMRPperUnit: 275,
     itemCostPricePerUnit: 220.74,
     itemSellingPricePerUnit: 245,
@@ -8200,7 +8200,7 @@ export const data = [
   },
   {
     itemBarcode: 4902430853446,
-    itemName: "WILLS SALON 50 BLADES",
+    itemName: 'WILLS SALON 50 BLADES',
     itemMRPperUnit: 123,
     itemCostPricePerUnit: 93.92,
     itemSellingPricePerUnit: 105,
@@ -8209,7 +8209,7 @@ export const data = [
   },
   {
     itemBarcode: 8906024370155,
-    itemName: "Xotik Jeeru Masala Drink 300 ml",
+    itemName: 'Xotik Jeeru Masala Drink 300 ml',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 16.09,
     itemSellingPricePerUnit: 20,
@@ -8218,7 +8218,7 @@ export const data = [
   },
   {
     itemBarcode: 8903105031578,
-    itemName: "YARDLEY GENTLEMAN CHARCOAL SOAP 4UX100g",
+    itemName: 'YARDLEY GENTLEMAN CHARCOAL SOAP 4UX100g',
     itemMRPperUnit: 75,
     itemCostPricePerUnit: 48.1475,
     itemSellingPricePerUnit: 55,
@@ -8227,7 +8227,7 @@ export const data = [
   },
   {
     itemBarcode: 8903105010818,
-    itemName: "YARDLEY TALCUM MORNING DEW 100g",
+    itemName: 'YARDLEY TALCUM MORNING DEW 100g',
     itemMRPperUnit: 132,
     itemCostPricePerUnit: 104.54,
     itemSellingPricePerUnit: 115,
@@ -8236,7 +8236,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248703239,
-    itemName: "ZANDU CHYAVANPRASH AVALEHA 900 g",
+    itemName: 'ZANDU CHYAVANPRASH AVALEHA 900 g',
     itemMRPperUnit: 335,
     itemCostPricePerUnit: 267.41,
     itemSellingPricePerUnit: 299,
@@ -8245,7 +8245,7 @@ export const data = [
   },
   {
     itemBarcode: 8901248703079,
-    itemName: "ZANDU KESARI JIVAN SUGARFREE 450 g",
+    itemName: 'ZANDU KESARI JIVAN SUGARFREE 450 g',
     itemMRPperUnit: 430,
     itemCostPricePerUnit: 343.25,
     itemSellingPricePerUnit: 380,
@@ -8254,7 +8254,7 @@ export const data = [
   },
   {
     itemBarcode: 8902579000912,
-    itemName: "PARLE SMOODH CHOCOLATE MILK",
+    itemName: 'PARLE SMOODH CHOCOLATE MILK',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.604651163,
     itemSellingPricePerUnit: 10,
@@ -8263,7 +8263,7 @@ export const data = [
   },
   {
     itemBarcode: 8902579001445,
-    itemName: "PARLE SMOODH HAZELNUT CHOCOLATE MILK",
+    itemName: 'PARLE SMOODH HAZELNUT CHOCOLATE MILK',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.604651163,
     itemSellingPricePerUnit: 10,
@@ -8272,7 +8272,7 @@ export const data = [
   },
   {
     itemBarcode: 8902579000929,
-    itemName: "PARLE SMOODH TOFFEE CARAMEL MILK",
+    itemName: 'PARLE SMOODH TOFFEE CARAMEL MILK',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.604651163,
     itemSellingPricePerUnit: 10,
@@ -8281,7 +8281,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725133979,
-    itemName: "DARK FANTASY BOURBON",
+    itemName: 'DARK FANTASY BOURBON',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 9.089166667,
     itemSellingPricePerUnit: 10,
@@ -8290,7 +8290,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725110772,
-    itemName: "BOUNCE CHOCLATE BISCUIT STRAWBERRY VANILLA",
+    itemName: 'BOUNCE CHOCLATE BISCUIT STRAWBERRY VANILLA',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.305,
     itemSellingPricePerUnit: 5,
@@ -8299,7 +8299,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725110727,
-    itemName: "BOUNCE DOUBLE CHOCLATE BISCUIT",
+    itemName: 'BOUNCE DOUBLE CHOCLATE BISCUIT',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.305,
     itemSellingPricePerUnit: 5,
@@ -8308,7 +8308,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725114862,
-    itemName: "SUNFEAST MARIE LIGHT",
+    itemName: 'SUNFEAST MARIE LIGHT',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.854166667,
     itemSellingPricePerUnit: 10,
@@ -8317,7 +8317,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725118716,
-    itemName: "BOUNCE CREAM ELAICHI DELIGHT",
+    itemName: 'BOUNCE CREAM ELAICHI DELIGHT',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.455,
     itemSellingPricePerUnit: 5,
@@ -8326,7 +8326,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725118730,
-    itemName: "BOUNCE CREAM TANGY ORANGE",
+    itemName: 'BOUNCE CREAM TANGY ORANGE',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.455,
     itemSellingPricePerUnit: 5,
@@ -8335,7 +8335,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725000622,
-    itemName: "SUNFEAST MOMS MAGIC CASHEW AND ALMOND",
+    itemName: 'SUNFEAST MOMS MAGIC CASHEW AND ALMOND',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.47,
     itemSellingPricePerUnit: 5,
@@ -8344,7 +8344,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725113384,
-    itemName: "SUNFEAST MOMS MAGIC CASHEW AND ALMOND",
+    itemName: 'SUNFEAST MOMS MAGIC CASHEW AND ALMOND',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.94,
     itemSellingPricePerUnit: 10,
@@ -8353,7 +8353,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725000646,
-    itemName: "SUNFEAST MOMS MAGIC RICH BUTTER",
+    itemName: 'SUNFEAST MOMS MAGIC RICH BUTTER',
     itemMRPperUnit: 5,
     itemCostPricePerUnit: 4.47,
     itemSellingPricePerUnit: 5,
@@ -8362,7 +8362,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725119461,
-    itemName: "SUNFEAST MOMS MAGIC RICH BUTTER",
+    itemName: 'SUNFEAST MOMS MAGIC RICH BUTTER',
     itemMRPperUnit: 10,
     itemCostPricePerUnit: 8.94,
     itemSellingPricePerUnit: 10,
@@ -8371,7 +8371,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725135430,
-    itemName: "SUNFEAST MOMS MAGIC RICH BUTTER",
+    itemName: 'SUNFEAST MOMS MAGIC RICH BUTTER',
     itemMRPperUnit: 20,
     itemCostPricePerUnit: 18.24666667,
     itemSellingPricePerUnit: 20,
@@ -8380,7 +8380,7 @@ export const data = [
   },
   {
     itemBarcode: 8901725000608,
-    itemName: "JELLYMALLS YUMMY SPACE GEL",
+    itemName: 'JELLYMALLS YUMMY SPACE GEL',
     itemMRPperUnit: 50,
     itemCostPricePerUnit: 43.62,
     itemSellingPricePerUnit: 48,
@@ -8389,7 +8389,7 @@ export const data = [
   },
   {
     itemBarcode: 8908000242012,
-    itemName: "LAL GULAB MUSTARD OIL 100 ML",
+    itemName: 'LAL GULAB MUSTARD OIL 100 ML',
     itemMRPperUnit: 26,
     itemCostPricePerUnit: 18.1,
     itemSellingPricePerUnit: 24,
@@ -8398,7 +8398,7 @@ export const data = [
   },
   {
     itemBarcode: 8908000242029,
-    itemName: "LAL GULAB MUSTARD OIL 200 ML",
+    itemName: 'LAL GULAB MUSTARD OIL 200 ML',
     itemMRPperUnit: 48,
     itemCostPricePerUnit: 33.33,
     itemSellingPricePerUnit: 45,
@@ -8407,7 +8407,7 @@ export const data = [
   },
   {
     itemBarcode: 8908000242036,
-    itemName: "LAL GULAB MUSTARD OIL 500 ML",
+    itemName: 'LAL GULAB MUSTARD OIL 500 ML',
     itemMRPperUnit: 107,
     itemCostPricePerUnit: 78.1,
     itemSellingPricePerUnit: 94,
@@ -8416,7 +8416,7 @@ export const data = [
   },
   {
     itemBarcode: 8927020000549,
-    itemName: "ASHOK PURE GHEE 200 ML",
+    itemName: 'ASHOK PURE GHEE 200 ML',
     itemMRPperUnit: 122,
     itemCostPricePerUnit: 90.178,
     itemSellingPricePerUnit: 110,
@@ -8425,7 +8425,7 @@ export const data = [
   },
   {
     itemBarcode: 8908002028027,
-    itemName: "MADHURI SOYABEAN OIL 500 ML",
+    itemName: 'MADHURI SOYABEAN OIL 500 ML',
     itemMRPperUnit: 86,
     itemCostPricePerUnit: 61.42875,
     itemSellingPricePerUnit: 80,

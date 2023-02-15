@@ -1,9 +1,12 @@
-import { Button, Table } from "@mantine/core";
-import React from "react";
+import { Button, Table } from '@mantine/core';
+import React from 'react';
 
 const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
   const rows = purchaseList.orders.map((element, index) => (
-    <tr className={element.validate ? "validate" : "not-validate"} key={index + 1}>
+    <tr
+      className={element.validate ? 'validate' : 'not-validate'}
+      key={index + 1}
+    >
       <td>{element.barcode}</td>
       <td>{element.inputName}</td>
       <td>{element.stockQuantity}</td>
@@ -29,13 +32,13 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
           );
         })}
       </td>
-      <td>{element.itemRemark || "No remarks"}</td>
+      <td>{element.itemRemark || 'No remarks'}</td>
       <td>
         <Button onClick={() => handleItemEdit(element, index)}>Edit</Button>
       </td>
       <td>
         <Button
-          style={{ backgroundColor: "#F03E3E" }}
+          style={{ backgroundColor: '#F03E3E' }}
           onClick={() => deleteOrder(element._id)}
         >
           Delete
@@ -47,7 +50,7 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
     <>
       {purchaseList.orders.length ? (
         <>
-          <h3 style={{ margin: "2vmin" }}>Order Detail List</h3>
+          <h3 style={{ margin: '2vmin' }}>Order Detail List</h3>
           <Table withColumnBorders striped withBorder>
             <thead>
               <tr>

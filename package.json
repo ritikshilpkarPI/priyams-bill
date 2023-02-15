@@ -17,7 +17,7 @@
     "debug": "netlify dev --inspect",
     "build:functions": "netlify-lambda build server",
     "test": "react-scripts test --env=jsdom",
-    "prettify": "prettier --write \"src/**/*.js\""
+    "format":"prettier --ignore-path .gitignore --write \"**/*.{ts,tsx,css,scss,jsx,js}\""
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prettify"
+      "pre-commit": "npm run format"
     }
   },
   "dependencies": {

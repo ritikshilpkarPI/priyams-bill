@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const DailyBillSchema = new mongoose.Schema(
   {
@@ -12,7 +12,7 @@ const DailyBillSchema = new mongoose.Schema(
     bills: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Bill",
+        ref: 'Bill',
       },
     ],
   },
@@ -21,5 +21,5 @@ const DailyBillSchema = new mongoose.Schema(
   }
 );
 
-const DailyBill = mongoose.model("DailyBill", DailyBillSchema);
+const DailyBill = mongoose.model('DailyBill', DailyBillSchema);
 module.exports = { DailyBill };

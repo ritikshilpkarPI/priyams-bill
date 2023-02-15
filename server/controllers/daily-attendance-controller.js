@@ -1,4 +1,4 @@
-const { DailyAttendance } = require("../db-models/staff-attendance");
+const { DailyAttendance } = require('../db-models/staff-attendance');
 
 const addDailyAttendanceArrival = async (req, res) => {
   try {
@@ -6,21 +6,21 @@ const addDailyAttendanceArrival = async (req, res) => {
       name: req.body.name,
       date: req.body.date,
     });
- 
+
     if (!checkInside.length) {
       let attendance = new DailyAttendance({
         name: req.body.name,
         arrivingTime: new Date(Date.now()),
         date: req.body.date,
         attendance: req.body.attendance,
-        todaysLeave:false
+        todaysLeave: false,
       });
       await attendance.save();
       res.status(200).json({ message: attendance });
     } else {
       res
         .status(230)
-        .json({ message: "You have already put attendance for today" });
+        .json({ message: 'You have already put attendance for today' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -34,45 +34,45 @@ const addDailyAttendanceLeaving = async (req, res) => {
       name: req.body.name,
       date: req.body.date,
     });
-    if(attendancecheck && attendancecheck.attendance){
-      if(!attendancecheck.todaysLeave){
-      let totalHours = new Date(Date.now()) - new Date(attendancecheck.arrivingTime).getTime();
-     
+    if (attendancecheck && attendancecheck.attendance) {
+      if (!attendancecheck.todaysLeave) {
+        let totalHours =
+          new Date(Date.now()) -
+          new Date(attendancecheck.arrivingTime).getTime();
 
-      let attendanceToBeUpdated = {
-        arrivingTime: attendancecheck.arrivingTime,
-        name: attendancecheck.name,
-        leavingTime: new Date(),
-        date: attendancecheck.date,
-        totalHoursOfWork: totalHours, // Saving total hours in milliseconds
-        workHoursCompleted: totalHours >= 40680000,
-        todaysLeave: true,
+        let attendanceToBeUpdated = {
+          arrivingTime: attendancecheck.arrivingTime,
+          name: attendancecheck.name,
+          leavingTime: new Date(),
+          date: attendancecheck.date,
+          totalHoursOfWork: totalHours, // Saving total hours in milliseconds
+          workHoursCompleted: totalHours >= 40680000,
+          todaysLeave: true,
+        };
+
+        try {
+          const attendance = await DailyAttendance.findByIdAndUpdate(
+            attendancecheck._id,
+            attendanceToBeUpdated,
+            {
+              new: true,
+              upsert: true,
+            }
+          );
+
+          res.status(200).json({ message: attendance });
+        } catch (error) {
+          res.status(500).json({ error: error.message });
+        }
+      } else {
+        res
+          .status(230)
+          .json({ message: 'You have already put attendance for today' });
       }
-      
-      try{
-    const attendance = await DailyAttendance.findByIdAndUpdate(
-      attendancecheck._id,
-      attendanceToBeUpdated,
-      {
-        new: true,
-        upsert: true,
-      }
-    );
-   
-    res.status(200).json({ message: attendance });
-    } catch(error){
-      res.status(500).json({ error: error.message });
+    } else {
+      res.status(230).json({ message: 'You need to add arriving Data first ' });
     }
-
-
-  } else{
-    res.status(230).json({ message: "You have already put attendance for today" });
-  }  
-} 
-  else {
-    res.status(230).json({ message: "You need to add arriving Data first " });
-  }}
-   catch (error) {
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
@@ -107,12 +107,12 @@ const getMonthlyAttendance = async (req, res) => {
       {
         $group: {
           // name: '$name',
-          _id: "$name",
-          workingDays: { $sum: { $cond: ["$attendance", 1, 0] } },
+          _id: '$name',
+          workingDays: { $sum: { $cond: ['$attendance', 1, 0] } },
           workingHours: {
-            $sum: { $cond: ["$attendance", "$totalHoursOfWork", 0] },
+            $sum: { $cond: ['$attendance', '$totalHoursOfWork', 0] },
           },
-          holidays: { $sum: { $cond: ["$attendance", 0, 1] } },
+          holidays: { $sum: { $cond: ['$attendance', 0, 1] } },
         },
       },
     ]);
@@ -125,10 +125,10 @@ const markAbsent = async (req, res) => {
   try {
     const result = new DailyAttendance({
       name: req.body.name,
-      arrivingTime: "00",
+      arrivingTime: '00',
       date: req.body.date,
       attendance: false,
-      leavingTime: "00",
+      leavingTime: '00',
       totalHoursOfWork: 0,
       workHoursCompleted: false,
     });
