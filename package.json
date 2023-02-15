@@ -16,11 +16,17 @@
     "build:app": "react-scripts build",
     "debug": "netlify dev --inspect",
     "build:functions": "netlify-lambda build server",
-    "test": "react-scripts test --env=jsdom"
+    "test": "react-scripts test --env=jsdom",
+    "prettify": "prettier --write \"src/**/*.js\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ScreenRecorderApp/screenrecorder-app.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettify"
+    }
   },
   "dependencies": {
     "@emotion/cache": "^11.10.3",
