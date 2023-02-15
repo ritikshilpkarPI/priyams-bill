@@ -5,8 +5,8 @@ import CustomerBill from "../Pages/CustomerBill";
 import ProtectedRoutes from "../components/ProtectedRoutes";
 import ProtectedComponent from "../components/ProtectedComponent";
 import access from "../access";
-import PerItemListPurchaseOrder from './PerItemListPurchaseOrder';
-import ItemListPurchaseOrderHistory from './ItemListPurchaseOrderHistory';
+import PerItemListPurchaseOrder from './IndividualItemListPurchaseOrder';
+import ItemListPurchaseOrderHistory from './ListPurchaseOrderHistory';
 
 import {
     Home,
