@@ -5,8 +5,8 @@ import CustomerBill from "../Pages/CustomerBill";
 import ProtectedRoutes from "../components/ProtectedRoutes";
 import ProtectedComponent from "../components/ProtectedComponent";
 import access from "../access";
-import perItemListPurchaseOrder from './PerItemListPurchaseOrder';
-import itemListPurchaseOrderHistory from './ItemListPurchaseOrderHistory';
+import PerItemListPurchaseOrder from './PerItemListPurchaseOrder';
+import ItemListPurchaseOrderHistory from './ItemListPurchaseOrderHistory';
 import {
     Home,
     BillFeed,
@@ -50,8 +50,8 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                     />
                     <Route path="/openClose" component={OpenClose} />
                     <Route exact path="/inventory" component={ItemsList} />
-                    <Route exact path="/inventory/:id" component={perItemListPurchaseOrder} />
-                    <Route exact path="/purchaseorder/:id" component={itemListPurchaseOrderHistory}/>
+                    <Route exact path="/inventory/:id" component={PerItemListPurchaseOrder} />
+                    <Route exact path="/purchaseorder/:id" component={ItemListPurchaseOrderHistory}/>
                     <Route exact path="/" component={Home} />
                     <ProtectedComponent role={access.DAY_BILL_ROUTE}>
                         <Route exact path="/dayBill" component={DayWiseBillFeed} />
