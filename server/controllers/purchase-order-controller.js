@@ -59,7 +59,7 @@ const getDetailsById = async (req, res) => {
   const id = req.params.id;
   try {
     const data = await PurchaseOrder.findById(id);
-    res.status(201).send({ data });
+    res.status(200).send({ data });
   } catch (err) {
     console.log({ err })
     res.status(400).send({ message: err });
@@ -249,12 +249,11 @@ const getIndividualPurchaseOrder=async(req,res)=>{
       },
     },
     {
-      $sort: { "itemDetails.expiryDates.date": 1 },
+      $sort: { "itemDetails.expiryDates.date": -1 },
     },
   ]);
 
   const result = await perItemPurchaseOrder.exec();
-  console.log(response);
   return res.status(200).json({ message: {result} });
 }
 module.exports = {

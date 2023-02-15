@@ -5,31 +5,29 @@ import { Axios } from "src/utils/axios";
 import { Table, Loader,Button } from '@mantine/core';
 import { Link } from "react-router-dom";
 const PerItemListPurchaseOrder = () => {
-    const [response, setResponse] = useState([]);
+    const [individualItemPurchaseDetail,setIndividualItemPurchaseDetail]=useState([]);
     const [loader, setLoader] = useState(false);
 
     let { id } = useParams();
 
     useEffect(() => {
-        const ItemsData = async () => {
+        const itemsData = async () => {
             setLoader(true);
             try {
-                console.log(id)
                 const data = await Axios.request({
                     url: `/api/purchaseOrder/individualPurchaseOrder/${id}`,
                     method: "GET",
                 });
-                setResponse(data.data.message.result)
+                setIndividualItemPurchaseDetail(data.data.message.result)
                 setLoader(false);
             } catch (error) {
 
             }
         };
 
-        ItemsData()
+        itemsData()
 
     }, [id])
-    console.log(response);
     return (
         <div>
             {loader ? (
@@ -66,10 +64,10 @@ const PerItemListPurchaseOrder = () => {
                             </tr>
                         </thead>
                         {
-                            response.map((ele, index) => {
+                            individualItemPurchaseDetail.map((ele, index) => {
                                 return (
                                     <tbody>
-                                        <tr>
+                                        <tr key={index}>
 
                                             {
                                                 ele.itemDetails.slice(0, 1).map((item, index) => {
@@ -164,7 +162,9 @@ const PerItemListPurchaseOrder = () => {
                                                 {ele._id}
                                             </td>
                                             <td>
-                                                <Link>
+                                                <Link to={{
+                                                    pathname: `/purchaseorder/${ele.dealerId}`
+                                                }}>
                                                     <Button> Show PR</Button>
                                                 </Link>
                                                 

@@ -973,9 +973,7 @@ const ItemsList = () => {
   };
 
   const goToPerItemListPurchaseOrder = ({index})=>{
-    console.log('checking',index);
     let itemname=items[index].itemName
-    console.log(itemname)
     history.push(`/inventory/${itemname}`);
   }
   const rows = ({ index, style }) => {
@@ -1033,7 +1031,7 @@ const ItemsList = () => {
         </td>
         {/* Button to go its purchase order */}
         <td>
-          <Button onClick={()=>goToPerItemListPurchaseOrder({index})}>Check List</Button>
+          <Button onClick={()=>goToPerItemListPurchaseOrder({index})}>Show POs</Button>
         </td>
       </tr>
     );
