@@ -51,6 +51,13 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
                     <Route exact path="/" component={Home} />
                     <ProtectedComponent role={access.DAY_BILL_ROUTE}>
                         <Route exact path="/dayBill" component={DayWiseBillFeed} />
+
+                            {console.log('running')}
+
+
+
+
+
                     </ProtectedComponent>
                     <Route exact path="/attendance" component={Attendance} />
                     <Route exact path="/stockquantity" component={StockQuantity} />
