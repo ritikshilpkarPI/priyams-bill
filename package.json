@@ -17,7 +17,7 @@
     "debug": "netlify dev --inspect",
     "build:functions": "netlify-lambda build server",
     "test": "react-scripts test --env=jsdom",
-    "format": "git diff --name-only HEAD | grep -E '\\.(js|jsx|css|scss)$' | xargs prettier --write",
+    "format": "git diff --name-only HEAD | grep '\\.jsx$' | xargs prettier --write",
     "prepare": "husky install"
   },
   "repository": {
