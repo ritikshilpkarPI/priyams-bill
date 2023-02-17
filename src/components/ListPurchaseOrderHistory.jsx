@@ -8,7 +8,7 @@ const ItemListPurchaseOrderHistory = (props) => {
     const [loader, setLoader] = useState(true);
     let { id } = useParams();
     useEffect(() => {
-        const ItemData = async () => {
+        const itemData = async () => {
             setLoader(true);
             try {
                 const data = await Axios.request({
@@ -22,7 +22,7 @@ const ItemListPurchaseOrderHistory = (props) => {
             }
         };
 
-        ItemData();
+        itemData();
     }, [id])
 
     const {dealerName,phoneNumber,payment,billAmount,totalPaidAmount,procurementSource,createdAt,remark}=purchaseOrderList
@@ -61,7 +61,7 @@ const ItemListPurchaseOrderHistory = (props) => {
                             <tbody>
                                 {
                                     purchaseOrderList ?
-                                        (<>
+                                        (
                                             <tr>
                                                 <td>{dealerName}</td>
                                                 <td>{phoneNumber}</td>
@@ -72,7 +72,7 @@ const ItemListPurchaseOrderHistory = (props) => {
                                                 <td>{new Date(createdAt).toLocaleDateString()}</td>
                                                 <td>{remark}</td>
                                             </tr>
-                                        </>)
+                                        )
                                         : ""
                                 }
                             </tbody>
