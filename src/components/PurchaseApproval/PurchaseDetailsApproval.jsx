@@ -7,18 +7,6 @@ import ShowPurchaseOrderTable from './ShowPurchaseOrderTable';
 import ShowOrderDetailTable from './ShowOrderDetailTable';
 import BillUploaderDetails from './BillUploaderDetails';
 
-// const manageList = [
-//   { value: "all", label: "All orders" },
-//   { value: "rejected", label: "Rejected orders" },
-//   { value: "saved", label: "Saved orders" },
-// ]
-// const adminList = [
-//   { value: "all", label: "All orders" },
-//   { value: "drafted", label: "Draft orders" },
-//   { value: "rejected", label: "Rejected orders" },
-//   { value: "approved", label: "Approved orders" },
-//   { value: "saved", label: "Saved orders" },
-// ]
 const PurchaseDetailsApproval = ({
   allPurchaseList,
   setAllPurchaseList,
@@ -26,7 +14,6 @@ const PurchaseDetailsApproval = ({
 }) => {
   const [indexDetail, setIndexDetail] = useState(-1);
   // const role = JSON.parse(localStorage.getItem("priyam-store")).role
-
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>

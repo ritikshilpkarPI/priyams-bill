@@ -2,7 +2,6 @@ import { Table } from '@mantine/core';
 import React from 'react';
 
 const ShowOrderDetailTable = ({ purchaseList }) => {
-  console.log(purchaseList);
   const rows = purchaseList.purchasedItems.map((element, index) => (
     <tr key={index + 1}>
       <td>{element.barcode}</td>
@@ -20,7 +19,6 @@ const ShowOrderDetailTable = ({ purchaseList }) => {
             <table key={index}>
               <tbody>
                 <tr>
-                  {console.log(element.expiryDates)}
                   <td>{`${new Date(date.date).getDate()}/${
                     new Date(date.date).getMonth() + 1
                   }/${new Date(date.date).getFullYear()}`}</td>
