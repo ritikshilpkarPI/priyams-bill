@@ -10,7 +10,8 @@ const {
     updateSavedOrders,
     deleteOrderItemById,
     updateOrderByIndex,
-    getOrdersByQuery
+    getOrdersByQuery,
+    getPurchaseOrderByItem
 } = require("../controllers/purchase-order-controller");
 
 // itemRoutes.post("/newbill", userSignupValidator, runValidation, userSignup);
@@ -24,4 +25,5 @@ orderRoutes.post('/updateSavedOrder/:id',updateSavedOrders)
 orderRoutes.post('/deleteItem/:id',deleteOrderItemById);
 orderRoutes.post('/updateOrderByIndex/:id',updateOrderByIndex)
 orderRoutes.post('/getOrdersByQuery',getOrdersByQuery);
+orderRoutes.get("/individualPurchaseOrder/:id",getPurchaseOrderByItem)
 module.exports = orderRoutes;
