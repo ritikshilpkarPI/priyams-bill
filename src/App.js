@@ -15,6 +15,7 @@ function App({ history, location }) {
     value,
     setValue,
   } = AppFunction(history, location);
+  console.log({ env: process.env });
   return (
     <div className="App">
       {staffUserName && (
@@ -32,6 +33,7 @@ function App({ history, location }) {
         loaderDisplay={loaderDisplay}
         style={{ marginLeft: "100px" }}
       />
+
       {/* <QRComp /> */}
     </div>
   );

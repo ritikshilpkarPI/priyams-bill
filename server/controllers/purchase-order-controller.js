@@ -59,7 +59,7 @@ const getDetailsById = async (req, res) => {
   const id = req.params.id;
   try {
     const data = await PurchaseOrder.findById(id);
-    res.status(201).send({ data });
+    res.status(200).send({ data });
   } catch (err) {
     console.log({ err })
     res.status(400).send({ message: err });
@@ -230,6 +230,32 @@ const getOrdersByQuery = async (req, res) => {
     res.status(400).send({ message: err });
   }
 }
+
+const getPurchaseOrderByItem=async(req,res)=>{
+  const { id } = req.params;
+  const response = await PurchaseOrder.find({}).limit(2);
+  const itemPurchaseOrder = PurchaseOrder.aggregate([
+    {
+      $unwind: "$purchasedItems",
+    },
+    {
+      $match: { "purchasedItems.inputName": id },
+    },
+    {
+      $group: {
+        _id: "$dealerName",
+        dealerId: { $first: "$_id" },
+        itemDetails: { $push: "$purchasedItems" },
+      },
+    },
+    {
+      $sort: { "itemDetails.expiryDates.date": -1 },
+    },
+  ]);
+
+  const result = await itemPurchaseOrder;
+  return res.status(200).json({ message: {result} });
+}
 module.exports = {
   addOrder,
   getOrders,
@@ -240,5 +266,6 @@ module.exports = {
   updateSavedOrders,
   deleteOrderItemById,
   updateOrderByIndex,
-  getOrdersByQuery
+  getOrdersByQuery,
+  getPurchaseOrderByItem
 };

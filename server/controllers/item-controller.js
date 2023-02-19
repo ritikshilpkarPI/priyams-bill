@@ -1,4 +1,4 @@
-const { Item } = require("../db-models/item-model");
+const { Item, inventoryItemCategory } = require("../db-models/item-model");
 
 const getItemsFeed = async (req, res) => {
   try {
@@ -302,6 +302,15 @@ const permanentlyOutOfStock = async (req, res) => {
     res.status(400).send({ message: error, success: false });
   }
 };
+
+const getItemsCategoryList = async (req, res) => {
+  try {
+    return res.status(200).json({ message: { inventoryItemCategory } });
+  } catch (error) {
+    res.status(400).send({ message: error, success: false });
+  }
+};
+
 module.exports = {
   getItemsFeed,
   addItems,
@@ -311,4 +320,5 @@ module.exports = {
   saveInventory,
   filterExpiryDates,
   permanentlyOutOfStock,
+  getItemsCategoryList,
 };

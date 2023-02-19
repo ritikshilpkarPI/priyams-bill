@@ -69,6 +69,12 @@ const mongoUriEnvMap = {
 const MONGODB_URI =
   mongoUriEnvMap[process.env.ENV_NAME] || mongoUriEnvMap[process.env.NODE_ENV];
 
+console.log({
+  MONGODB_URI,
+  env: process.env.ENV_NAME,
+  node_env: process.env.NODE_ENV,
+});
+
 async function connectDB() {
   const client = await mongoose.connect(`${MONGODB_URI}`, {
     useNewUrlParser: true,
