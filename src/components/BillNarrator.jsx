@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core";
+import { Button } from '@mantine/core';
 
 const BillNarrator = ({ billTotal }) => {
   function getVoices() {
@@ -6,7 +6,7 @@ const BillNarrator = ({ billTotal }) => {
     if (!voices.length) {
       // some time the voice will not be initialized so we can call speak with empty string
       // this will initialize the voices
-      let utterance = new SpeechSynthesisUtterance("");
+      let utterance = new SpeechSynthesisUtterance('');
       speechSynthesis.speak(utterance);
       voices = speechSynthesis.getVoices();
     }
@@ -27,14 +27,14 @@ const BillNarrator = ({ billTotal }) => {
   }
 
   function narrateOnClick() {
-    if ("speechSynthesis" in window) {
+    if ('speechSynthesis' in window) {
       const voices = getVoices();
       const pitch = 0;
       const volume = 1;
-      speak("Preyamm stores me aapka bill,", voices[1], 1, pitch, volume, "hi");
-      speak(`${billTotal} ,`, voices[1], 1, pitch, volume, "hi");
-      speak(`or, ${billTotal},`, voices[1], 1, pitch, volume, "hi");
-      speak("rupaye hai", voices[1], 1, pitch, volume, "hi");
+      speak('Preyamm stores me aapka bill,', voices[1], 1, pitch, volume, 'hi');
+      speak(`${billTotal} ,`, voices[1], 1, pitch, volume, 'hi');
+      speak(`or, ${billTotal},`, voices[1], 1, pitch, volume, 'hi');
+      speak('rupaye hai', voices[1], 1, pitch, volume, 'hi');
     }
   }
 

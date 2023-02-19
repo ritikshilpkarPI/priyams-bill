@@ -1,52 +1,52 @@
-import React from "react";
-import { Group, Title, Select, Button } from "@mantine/core";
-import { useState } from "react";
-import Axios from "axios";
-import "../CSS/employeeAttendance.css";
+import React from 'react';
+import { Group, Title, Select, Button } from '@mantine/core';
+import { useState } from 'react';
+import Axios from 'axios';
+import '../CSS/employeeAttendance.css';
 const nameOptionAndValues = [
-  { value: "anjali", label: "Anjali" },
-  { value: "shivam", label: "Shivam" },
-  { value: "shahbaz", label: "Shahbaz" },
-  { value: "mohit", label: "Mohit" },
+  { value: 'anjali', label: 'Anjali' },
+  { value: 'shivam', label: 'Shivam' },
+  { value: 'shahbaz', label: 'Shahbaz' },
+  { value: 'mohit', label: 'Mohit' },
 ];
 const attendanceOptions = [
-  { value: "arrival", label: "Arrival" },
-  { value: "leave", label: "Leaving" },
+  { value: 'arrival', label: 'Arrival' },
+  { value: 'leave', label: 'Leaving' },
 ];
 const presentAbsentOptions = [
-  { value: "present", label: "Present" },
-  { value: "absent", label: "Absent" },
+  { value: 'present', label: 'Present' },
+  { value: 'absent', label: 'Absent' },
 ];
 
 const EmployeeAttendance = () => {
-  const [name, setName] = useState("");
-  const [state, setState] = useState("arrival");
-  const [attendance, setAttendance] = useState("present");
+  const [name, setName] = useState('');
+  const [state, setState] = useState('arrival');
+  const [attendance, setAttendance] = useState('present');
 
   const handleAttendance = async () => {
     // Checks if the staff has marks the attendance for arrival and stops him
     // for doing it again.
 
     const date = new Date();
-    const dateString = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
+    const dateString = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
     });
 
     // const attendee = JSON.parse(localStorage.getItem(name));
 
     if (!name) {
-      alert("Select the name for attendance");
+      alert('Select the name for attendance');
       return;
-    } else if (state === "arrival" && attendance === "absent") {
-      alert("You cannot mark absent for arrival");
+    } else if (state === 'arrival' && attendance === 'absent') {
+      alert('You cannot mark absent for arrival');
       return;
-    } else if (attendance === "absent") {
+    } else if (attendance === 'absent') {
       try {
         await Axios.request({
           url: `/api/attendance/markAbsent`,
-          method: "post",
+          method: 'post',
           data: {
             name,
             date: dateString,
@@ -56,16 +56,16 @@ const EmployeeAttendance = () => {
       } catch (error) {
         console.error(error);
       }
-    } else if (state === "arrival") {
+    } else if (state === 'arrival') {
       try {
         const result = await Axios.request({
           url: `/api/attendance/dailyAttendanceArrival`,
-          method: "post",
+          method: 'post',
           data: {
             name,
             arrivingTime: date,
             date: dateString,
-            attendance: attendance === "present" ? true : false,
+            attendance: attendance === 'present' ? true : false,
           },
         });
         if (result.status === 200) {
@@ -78,11 +78,11 @@ const EmployeeAttendance = () => {
       } catch (error) {
         console.error(error);
       }
-    } else if (state === "leave") {
+    } else if (state === 'leave') {
       try {
         let a = await Axios.request({
           url: `/api/attendance/dailyAttendanceLeaving`,
-          method: "post",
+          method: 'post',
           data: {
             name: name,
             date: dateString,
@@ -102,7 +102,7 @@ const EmployeeAttendance = () => {
     } else {
       alert(`You need to add arriving Data first for ${name} `);
     }
-    setName("");
+    setName('');
   };
   return (
     <div className="attendance-container">

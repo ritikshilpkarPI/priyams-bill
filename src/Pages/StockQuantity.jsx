@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import Axios from "axios";
-import { Loader, Table, Text } from "@mantine/core";
+import { useEffect, useState } from 'react';
+import Axios from 'axios';
+import { Loader, Table, Text } from '@mantine/core';
 import { Button } from '@mantine/core';
 import { openConfirmModal } from '@mantine/modals';
 
 const StockQuantity = () => {
   const [minimumQuantityItem, setMinimumQuantityItem] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [Id, setId] = useState("");
+  const [Id, setId] = useState('');
   const [modalToggle, setModalToggle] = useState(false);
 
   useEffect(() => {
@@ -16,8 +16,8 @@ const StockQuantity = () => {
   const getAllItemsFeed = async () => {
     setLoader(true);
     const fetch = await Axios.request({
-      url: "/api/inventory/items",
-      method: "get",
+      url: '/api/inventory/items',
+      method: 'get',
       params: {
         filters: {
           minStockOnly: true,
@@ -25,7 +25,7 @@ const StockQuantity = () => {
         },
       },
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
     const minStockItems = fetch.data.message.items;
@@ -44,22 +44,21 @@ const StockQuantity = () => {
         ),
         labels: { confirm: 'Remove Item', cancel: "No don't remove it" },
         confirmProps: { color: 'red' },
-        onCancel: () => {
-        },
+        onCancel: () => {},
         onConfirm: () => {
-          console.log('Confirmed')
+          console.log('Confirmed');
           async function deletePost() {
-            await Axios.delete(`/api/inventory/permanentlyOutOfStock/${Id}`)
-              .then(response => {
-                getAllItemsFeed();
-              })
+            await Axios.delete(
+              `/api/inventory/permanentlyOutOfStock/${Id}`
+            ).then((response) => {
+              getAllItemsFeed();
+            });
           }
           deletePost();
-          
         },
       });
-    if (Id !== "") {
-      openDeleteModal()
+    if (Id !== '') {
+      openDeleteModal();
     }
   }, [Id, modalToggle]);
 
@@ -69,9 +68,8 @@ const StockQuantity = () => {
       setModalToggle(false);
     } else {
       setModalToggle(true);
-
     }
-  }
+  };
   console.log(minimumQuantityItem);
   const rows = minimumQuantityItem.map((item, index) => (
     <tr key={index}>
@@ -82,11 +80,12 @@ const StockQuantity = () => {
       <td>{item.itemMRPperUnit}</td>
       <td>{item.itemCostPricePerUnit}</td>
       <td>{item.itemSellingPricePerUnit}</td>
-      {item.permanentlyOutOfStock ?
-        <td>True</td> :
-        <td>False</td>
-      }
-      <td><Button color="red" onClick={() => deleteItem(index, item._id)}>Won't Order</Button></td>
+      {item.permanentlyOutOfStock ? <td>True</td> : <td>False</td>}
+      <td>
+        <Button color="red" onClick={() => deleteItem(index, item._id)}>
+          Won't Order
+        </Button>
+      </td>
     </tr>
   ));
   return (
@@ -94,22 +93,22 @@ const StockQuantity = () => {
       {loader ? (
         <div
           style={{
-            height: "95vh",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            height: '95vh',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           <Loader size="xl" />
         </div>
       ) : (
-        <div style={{ marginTop: "1rem" }}>
+        <div style={{ marginTop: '1rem' }}>
           <Text size="lg" weight="bold" align="center">
             Total Items: {minimumQuantityItem.length}
           </Text>
 
-          <Table fontSize="lg" striped={true} style={{ marginTop: "1rem" }}>
+          <Table fontSize="lg" striped={true} style={{ marginTop: '1rem' }}>
             <thead>
               <tr>
                 <th>SR.No</th>

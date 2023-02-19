@@ -1,6 +1,6 @@
 const ProtectedComponent = ({ children, role, data }) => {
-  const { role: userRole = "" } = JSON.parse(
-    localStorage.getItem("priyam-store")
+  const { role: userRole = '' } = JSON.parse(
+    localStorage.getItem('priyam-store')
   );
 
   if (role?.includes(userRole)) {

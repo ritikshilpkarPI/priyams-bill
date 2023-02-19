@@ -8,4 +8,5 @@ echo "$FILES" | xargs ./node_modules/.bin/prettier --ignore-unknown --write
 # Add back the modified/prettified files to staging
 echo "$FILES" | xargs git add
 
+
 exit 0

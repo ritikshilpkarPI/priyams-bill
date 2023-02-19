@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState, useRef } from "react";
-import { parse } from "json2csv";
-import { VariableSizeList as List } from "react-window";
-import { useHistory } from "react-router-dom";
+import { useContext, useEffect, useState, useRef } from 'react';
+import { parse } from 'json2csv';
+import { VariableSizeList as List } from 'react-window';
+import { useHistory } from 'react-router-dom';
 import {
   FileButton,
   Button,
@@ -14,49 +14,49 @@ import {
   Select,
   TextInput,
   NumberInput,
-} from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
-import { AppStateContext } from "../AppState/appState.context";
-import { Axios } from "../utils/axios";
-import Papa from "papaparse";
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
+} from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import { AppStateContext } from '../AppState/appState.context';
+import { Axios } from '../utils/axios';
+import Papa from 'papaparse';
+import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 // import ProtectedComponent from "src/components/ProtectedComponent";
 // import access from "../access.js";
 
 const ITEM_INITIAL_INPUT = {
-  itemBarcode: "",
-  itemName: "",
-  itemBrandName: "",
-  itemCategory: "",
-  itemPerUnitQuantity: "",
-  quantityUnitName: "",
-  itemMRPperUnit: "",
-  itemCostPricePerUnit: "",
-  itemSellingPricePerUnit: "",
-  itemStockQuantity: "",
-  minimumStockQuantity: "",
+  itemBarcode: '',
+  itemName: '',
+  itemBrandName: '',
+  itemCategory: '',
+  itemPerUnitQuantity: '',
+  quantityUnitName: '',
+  itemMRPperUnit: '',
+  itemCostPricePerUnit: '',
+  itemSellingPricePerUnit: '',
+  itemStockQuantity: '',
+  minimumStockQuantity: '',
   useByDate: [],
 };
 
 let itemToBeUpdated = {};
 let categoryArray = [
-  "Bakery",
-  "Beverage",
-  "Dairy and Frozen",
-  "Staple",
-  "Personal care",
-  "Packaged Food",
-  "Home and Kitchen",
-  "Stationery",
-  "Grocery",
-  "Baby and kids",
-  "Electronic",
-  "Spices and fast food",
-  "Pooja",
-  "Oil and ghee",
-  "Sweet and Chocolate",
-  "Plastic",
-  "Miscellanous",
+  'Bakery',
+  'Beverage',
+  'Dairy and Frozen',
+  'Staple',
+  'Personal care',
+  'Packaged Food',
+  'Home and Kitchen',
+  'Stationery',
+  'Grocery',
+  'Baby and kids',
+  'Electronic',
+  'Spices and fast food',
+  'Pooja',
+  'Oil and ghee',
+  'Sweet and Chocolate',
+  'Plastic',
+  'Miscellanous',
 ];
 
 const ItemsList = () => {
@@ -66,7 +66,7 @@ const ItemsList = () => {
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
   const [csvFile, setCsvFile] = useState();
-  const [filterItems, setFilterItems] = useState("");
+  const [filterItems, setFilterItems] = useState('');
   const [loaderDisplay, setloaderDisplay] = useState(true);
   const [slabArray, setSlabArray] = useState([]);
   const [stopStream] = useState(false);
@@ -124,14 +124,14 @@ const ItemsList = () => {
   const handleFilter = (name) => {
     const filteredData = itemsList.filter((item) => {
       return (
-        !item[name] || (typeof item[name] == "object" && !item[name].length)
+        !item[name] || (typeof item[name] == 'object' && !item[name].length)
       );
     });
     setItems([...filteredData]);
   };
   const resetFilter = () => {
     setItems([...itemsList]);
-    setFilterItems(" ");
+    setFilterItems(' ');
   };
 
   const addItemToDb = async () => {
@@ -145,7 +145,7 @@ const ItemsList = () => {
       !newItemInput.itemCategory ||
       !newItemInput.quantityUnitName
     ) {
-      alert("Fill all required fields!");
+      alert('Fill all required fields!');
       return;
     }
 
@@ -163,14 +163,14 @@ const ItemsList = () => {
     setApiLoading(true);
     (async () => {
       const newItem = await Axios.request({
-        url: "/api/inventory/addNewItem",
-        method: "post",
+        url: '/api/inventory/addNewItem',
+        method: 'post',
         data: { ...itemObject },
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
-      dispatch({ type: "ADD_NEW_ITEM_TO_LIST", payload: newItem.data.message });
+      dispatch({ type: 'ADD_NEW_ITEM_TO_LIST', payload: newItem.data.message });
     })();
     setApiLoading(false);
     setSlabArray([]);
@@ -185,7 +185,7 @@ const ItemsList = () => {
     };
     setItemInput({
       ...itemInput,
-      [name]: type === "number" ? Number(value) : value,
+      [name]: type === 'number' ? Number(value) : value,
     });
     itemToBeUpdated[index][name] = value;
   };
@@ -214,18 +214,18 @@ const ItemsList = () => {
       const { _id } = items[index];
       setApiLoading(true);
       const deletedItem = await Axios.request({
-        url: "/api/inventory/softDeleteItem",
-        method: "post",
+        url: '/api/inventory/softDeleteItem',
+        method: 'post',
         data: { id: _id },
         headers: {
-          Cookie: "some_cookie",
+          Cookie: 'some_cookie',
         },
       });
       if (deletedItem.status === 200) {
-        alert("Item deleted...");
+        alert('Item deleted...');
       }
       const newList = deletedItem.data.items;
-      dispatch({ type: "NEW_ITEMS_LIST", payload: [...newList] });
+      dispatch({ type: 'NEW_ITEMS_LIST', payload: [...newList] });
       setApiLoading(false);
     };
 
@@ -233,7 +233,7 @@ const ItemsList = () => {
       <Image
         src="/images/cross.svg"
         width={18}
-        style={{ marginLeft: "20px", cursor: "pointer" }}
+        style={{ marginLeft: '20px', cursor: 'pointer' }}
         loading={apiLoading}
         onClick={handleDeleteItem}
       />
@@ -241,7 +241,7 @@ const ItemsList = () => {
   };
 
   const BarcodeRow = ({ index }) => {
-    const name = "itemBarcode";
+    const name = 'itemBarcode';
     const [itemInput, setItemInput] = useState({
       itemBarcode: items[index][name],
     });
@@ -262,7 +262,7 @@ const ItemsList = () => {
   };
 
   const BrandNameRow = ({ index }) => {
-    const name = "itemBrandName";
+    const name = 'itemBrandName';
     const [itemInput, setItemInput] = useState({
       itemBrandName: items[index][name],
     });
@@ -283,7 +283,7 @@ const ItemsList = () => {
   };
 
   const ItemNameRow = ({ index }) => {
-    const name = "itemName";
+    const name = 'itemName';
     const [itemInput, setItemInput] = useState({
       itemName: items[index][name],
     });
@@ -304,7 +304,7 @@ const ItemsList = () => {
   };
 
   const ItemCategoryRow = ({ index }) => {
-    const name = "itemCategory";
+    const name = 'itemCategory';
     const [itemInput, setItemInput] = useState({
       itemCategory: items[index][name],
     });
@@ -325,7 +325,7 @@ const ItemsList = () => {
   };
 
   const ItemPerUnitQuantityRow = ({ index }) => {
-    const name = "itemPerUnitQuantity";
+    const name = 'itemPerUnitQuantity';
     const [itemInput, setItemInput] = useState({
       itemPerUnitQuantity: items[index][name],
     });
@@ -333,7 +333,7 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "100px" }}
+          style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -347,7 +347,7 @@ const ItemsList = () => {
   };
 
   const ItemQuantityUnitRow = ({ index }) => {
-    const name = "quantityUnitName";
+    const name = 'quantityUnitName';
     const [itemInput, setItemInput] = useState({
       quantityUnitName: items[index][name],
     });
@@ -355,7 +355,7 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "100px" }}
+          style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -369,12 +369,12 @@ const ItemsList = () => {
   };
 
   const ItemUseByDateRow = ({ index }) => {
-    const name = "useByDate";
+    const name = 'useByDate';
     return <ShowUseByDateElement data={items[index][name]} index={index} />;
   };
 
   const ItemMRPRow = ({ index, style }) => {
-    const name = "itemMRPperUnit";
+    const name = 'itemMRPperUnit';
     const [itemInput, setItemInput] = useState({
       itemMRPperUnit: items[index][name],
     });
@@ -383,7 +383,7 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "100px" }}
+          style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -397,7 +397,7 @@ const ItemsList = () => {
   };
 
   const ItemCostPriceRow = ({ index, style }) => {
-    const name = "itemCostPricePerUnit";
+    const name = 'itemCostPricePerUnit';
     const [itemInput, setItemInput] = useState({
       itemCostPricePerUnit: items[index][name],
     });
@@ -406,7 +406,7 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "100px" }}
+          style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -420,7 +420,7 @@ const ItemsList = () => {
   };
 
   const ItemSellingPriceRow = ({ index, style }) => {
-    const name = "itemSellingPricePerUnit";
+    const name = 'itemSellingPricePerUnit';
     const [itemInput, setItemInput] = useState({
       itemSellingPricePerUnit: items[index][name],
     });
@@ -429,7 +429,7 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "100px" }}
+          style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -453,7 +453,7 @@ const ItemsList = () => {
     const addNewSlab = () => {
       if (addOldSlab) {
         if (!slabObjectKey || !slabObjectValue) {
-          alert("Fill values...");
+          alert('Fill values...');
         } else {
           setNewArray([
             ...newArray,
@@ -468,14 +468,14 @@ const ItemsList = () => {
     };
 
     const handleNewInput = (data) => {
-      data.name === "key"
+      data.name === 'key'
         ? setSlabObjectKey(data.value)
         : setSlabObjectValue(data.value);
     };
 
     const handleOldInput = (data, index, type) => {
       let arry = newArray[index];
-      type === "key" ? (arry[1] = data.value) : (arry[2] = data.value);
+      type === 'key' ? (arry[1] = data.value) : (arry[2] = data.value);
       newArray.splice(index, 1, arry);
       setNewArray([...newArray]);
     };
@@ -513,7 +513,7 @@ const ItemsList = () => {
           },
         };
       }
-      alert("Slab Added");
+      alert('Slab Added');
     };
 
     const editSlabPrice = () => {
@@ -521,19 +521,19 @@ const ItemsList = () => {
     };
 
     return (
-      <div style={{ paddingTop: "0px", width: "155px" }}>
+      <div style={{ paddingTop: '0px', width: '155px' }}>
         <div
           style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            margin: "3px 0",
+            display: 'flex',
+            justifyContent: 'flex-end',
+            margin: '3px 0',
           }}
         >
           <Image
             onClick={addNewSlab}
             style={{
-              display: editable ? "inline-block" : "none",
-              margin: "0 2px",
+              display: editable ? 'inline-block' : 'none',
+              margin: '0 2px',
             }}
             width={16}
             height={16}
@@ -543,8 +543,8 @@ const ItemsList = () => {
           <Image
             onClick={editSlabPrice}
             style={{
-              display: editable ? "none" : "inline-block",
-              margin: "0 2px",
+              display: editable ? 'none' : 'inline-block',
+              margin: '0 2px',
             }}
             width={16}
             height={16}
@@ -554,8 +554,8 @@ const ItemsList = () => {
           <Image
             onClick={setSlabPrice}
             style={{
-              display: editable ? "inline-block" : "none",
-              margin: "0 2px",
+              display: editable ? 'inline-block' : 'none',
+              margin: '0 2px',
             }}
             width={16}
             height={16}
@@ -565,7 +565,7 @@ const ItemsList = () => {
           <Image
             width={16}
             height={16}
-            style={{ margin: "0 2px" }}
+            style={{ margin: '0 2px' }}
             src="images/up.svg"
             alt="up-icon"
           />
@@ -573,91 +573,91 @@ const ItemsList = () => {
 
         {newArray?.map((item, index) => {
           return (
-            <div key={index} style={{ display: "flex" }}>
+            <div key={index} style={{ display: 'flex' }}>
               <input
                 type="number"
                 style={{
-                  width: "40px",
-                  textAlign: "center",
-                  border: "none",
-                  outline: "none",
-                  borderBottom: editable ? "1px solid black" : "none",
+                  width: '40px',
+                  textAlign: 'center',
+                  border: 'none',
+                  outline: 'none',
+                  borderBottom: editable ? '1px solid black' : 'none',
                 }}
                 value={item[1]}
-                onChange={(e) => handleOldInput(e.target, index, "key")}
+                onChange={(e) => handleOldInput(e.target, index, 'key')}
                 disabled={!editable}
               />
               -
               <input
                 type="number"
                 style={{
-                  width: "40px",
-                  textAlign: "center",
-                  border: "none",
-                  outline: "none",
-                  padding: "7px 0px",
+                  width: '40px',
+                  textAlign: 'center',
+                  border: 'none',
+                  outline: 'none',
+                  padding: '7px 0px',
                 }}
                 disabled
                 defaultValue={
                   index !== newArray.length - 1
                     ? Number(newArray[index + 1][1]) - 1
-                    : ""
+                    : ''
                 }
-              />{" "}
+              />{' '}
               =
               <input
                 type="number"
                 style={{
-                  width: "50px",
-                  textAlign: "center",
-                  border: "none",
-                  outline: "none",
-                  padding: "7px 0",
-                  borderBottom: editable ? "1px solid black" : "none",
+                  width: '50px',
+                  textAlign: 'center',
+                  border: 'none',
+                  outline: 'none',
+                  padding: '7px 0',
+                  borderBottom: editable ? '1px solid black' : 'none',
                 }}
                 value={Number(item[2])?.toFixed(2)}
-                onChange={(e) => handleOldInput(e.target, index, "value")}
+                onChange={(e) => handleOldInput(e.target, index, 'value')}
                 disabled={!editable}
               />
             </div>
           );
         })}
         {addOldSlab ? (
-          <div style={{ display: "flex" }}>
+          <div style={{ display: 'flex' }}>
             <input
               type="number"
               style={{
-                width: "40px",
-                textAlign: "center",
-                border: "none",
-                outline: "none",
-                borderBottom: "1px solid black",
+                width: '40px',
+                textAlign: 'center',
+                border: 'none',
+                outline: 'none',
+                borderBottom: '1px solid black',
               }}
               name="key"
               onChange={(e) => handleNewInput(e.target)}
               value={Number(slabObjectKey)}
-            />{" "}
+            />{' '}
             -
             <input
               type="number"
               style={{
-                width: "40px",
-                textAlign: "center",
-                border: "none",
-                outline: "none",
+                width: '40px',
+                textAlign: 'center',
+                border: 'none',
+                outline: 'none',
               }}
               disabled
-            />{" "}
+            />{' '}
             =
             <input
               type="number"
               style={{
-                width: "50px",
-                textAlign: "center",
-                border: "none",
-                outline: "none",
-                borderBottom: "1px solid black",
-                padding: "7px 0",
+                width: '50px',
+                textAlign: 'center',
+                border: 'none',
+                outline: 'none',
+                borderBottom: '1px solid black',
+                padding: '7px 0',
               }}
               name="value"
               onChange={(e) => handleNewInput(e.target)}
@@ -665,14 +665,14 @@ const ItemsList = () => {
             />
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
     );
   };
 
   const ItemStockQuantityRow = ({ index, style }) => {
-    const name = "itemStockQuantity";
+    const name = 'itemStockQuantity';
     const [itemInput, setItemInput] = useState({
       itemStockQuantity: items[index][name],
     });
@@ -681,7 +681,7 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "100px" }}
+          style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -695,7 +695,7 @@ const ItemsList = () => {
   };
 
   const ItemMinimumStockQuantityRow = ({ index, style }) => {
-    const name = "minimumStockQuantity";
+    const name = 'minimumStockQuantity';
     const [itemInput, setItemInput] = useState({
       minimumStockQuantity: items[index][name],
     });
@@ -704,7 +704,7 @@ const ItemsList = () => {
       <>
         <TableRow
           index={index}
-          style={{ width: "100px", textAlign: "center" }}
+          style={{ width: '100px', textAlign: 'center' }}
           items={items}
           itemsList={itemsList}
           dispatch={dispatch}
@@ -734,21 +734,21 @@ const ItemsList = () => {
   };
 
   const downloadFile = async () => {
-    const fileName = "items.csv";
+    const fileName = 'items.csv';
     let newArray = [];
     let max = 0;
     const fields = [
-      "_id",
-      "itemName",
-      "itemDiscountPerUnit",
-      "itemPerUnitDiscountPercentage",
-      "itemBarcode",
-      "itemMRPperUnit",
-      "itemCostPricePerUnit",
-      "itemSellingPricePerUnit",
-      "itemStockQuantity",
-      "minimumStockQuantity",
-      "isDeleted",
+      '_id',
+      'itemName',
+      'itemDiscountPerUnit',
+      'itemPerUnitDiscountPercentage',
+      'itemBarcode',
+      'itemMRPperUnit',
+      'itemCostPricePerUnit',
+      'itemSellingPricePerUnit',
+      'itemStockQuantity',
+      'minimumStockQuantity',
+      'isDeleted',
     ];
 
     for (let i = 0; i < items.length; i++) {
@@ -772,9 +772,9 @@ const ItemsList = () => {
       fields.push(`sp${i}`);
     }
 
-    const blob = new Blob([parse(newArray, { fields })], { type: "text/csv" });
+    const blob = new Blob([parse(newArray, { fields })], { type: 'text/csv' });
     const href = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = href;
     link.download = fileName;
     document.body.appendChild(link);
@@ -791,7 +791,7 @@ const ItemsList = () => {
     const addNewSlab = () => {
       if (addSlab) {
         if (!slabObjectKey || !slabObjectValue) {
-          alert("Fill values...");
+          alert('Fill values...');
         } else {
           setSlabArray([
             ...slabArray,
@@ -806,14 +806,14 @@ const ItemsList = () => {
     };
 
     const handleNewInput = (data) => {
-      data.name === "key"
+      data.name === 'key'
         ? setSlabObjectKey(data.value)
         : setSlabObjectValue(data.value);
     };
 
     const handleOldInput = (data, index, type) => {
       let arry = slabArray[index];
-      type === "key" ? (arry[1] = data.value) : (arry[2] = data.value);
+      type === 'key' ? (arry[1] = data.value) : (arry[2] = data.value);
       slabArray.splice(index, 1, arry);
       setSlabArray([...slabArray]);
     };
@@ -842,23 +842,23 @@ const ItemsList = () => {
     };
 
     return (
-      <div style={{ paddingTop: "0px" }}>
+      <div style={{ paddingTop: '0px' }}>
         <div
           style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            margin: "3px 0",
+            display: 'flex',
+            justifyContent: 'flex-end',
+            margin: '3px 0',
           }}
         >
           <Image
             onClick={addNewSlab}
             style={{
-              width: "20px",
-              height: "20px",
-              padding: "2px",
-              margin: "0 3px",
-              cursor: "pointer",
-              display: "inline-block",
+              width: '20px',
+              height: '20px',
+              padding: '2px',
+              margin: '0 3px',
+              cursor: 'pointer',
+              display: 'inline-block',
             }}
             src="images/add.svg"
             alt="add-icon"
@@ -866,12 +866,12 @@ const ItemsList = () => {
           <Image
             onClick={setSlabPrice}
             style={{
-              width: "20px",
-              height: "20px",
-              padding: "2px",
-              margin: "0 3px",
-              cursor: "pointer",
-              display: "inline-block",
+              width: '20px',
+              height: '20px',
+              padding: '2px',
+              margin: '0 3px',
+              cursor: 'pointer',
+              display: 'inline-block',
             }}
             src="images/check.svg"
             alt="check-icon"
@@ -879,74 +879,74 @@ const ItemsList = () => {
         </div>
         {slabArray.map((item, index) => {
           return (
-            <div key={index} style={{ display: "flex" }}>
+            <div key={index} style={{ display: 'flex' }}>
               <input
                 type="number"
                 style={{
-                  width: "40px",
-                  textAlign: "center",
-                  border: "none",
-                  outline: "none",
-                  borderBottom: "1px solid black",
+                  width: '40px',
+                  textAlign: 'center',
+                  border: 'none',
+                  outline: 'none',
+                  borderBottom: '1px solid black',
                 }}
                 value={item[1]}
-                onChange={(e) => handleOldInput(e.target, index, "key")}
-              />{" "}
+                onChange={(e) => handleOldInput(e.target, index, 'key')}
+              />{' '}
               -
               <input
                 type="number"
                 style={{
-                  width: "40px",
-                  textAlign: "center",
-                  border: "none",
-                  outline: "none",
+                  width: '40px',
+                  textAlign: 'center',
+                  border: 'none',
+                  outline: 'none',
                 }}
                 disabled
                 defaultValue={
                   index !== slabArray.length - 1
                     ? Number(slabArray[index + 1][1]) - 1
-                    : ""
+                    : ''
                 }
-              />{" "}
+              />{' '}
               =
               <input
                 type="number"
                 style={{
-                  width: "40px",
-                  textAlign: "center",
-                  border: "none",
-                  outline: "none",
-                  borderBottom: "1px solid black",
+                  width: '40px',
+                  textAlign: 'center',
+                  border: 'none',
+                  outline: 'none',
+                  borderBottom: '1px solid black',
                 }}
                 value={item[2]}
-                onChange={(e) => handleOldInput(e.target, index, "value")}
+                onChange={(e) => handleOldInput(e.target, index, 'value')}
               />
             </div>
           );
         })}
         {addSlab ? (
-          <div style={{ display: "flex" }}>
+          <div style={{ display: 'flex' }}>
             <input
               type="number"
               style={{
-                width: "40px",
-                textAlign: "center",
-                border: "none",
-                outline: "none",
-                borderBottom: "1px solid black",
+                width: '40px',
+                textAlign: 'center',
+                border: 'none',
+                outline: 'none',
+                borderBottom: '1px solid black',
               }}
               name="key"
               onChange={(e) => handleNewInput(e.target)}
               value={Number(slabObjectKey)}
-            />{" "}
+            />{' '}
             -
             <input
               type="number"
               style={{
-                width: "40px",
-                textAlign: "center",
-                border: "none",
-                outline: "none",
+                width: '40px',
+                textAlign: 'center',
+                border: 'none',
+                outline: 'none',
               }}
               disabled
             />
@@ -954,11 +954,11 @@ const ItemsList = () => {
             <input
               type="number"
               style={{
-                width: "40px",
-                textAlign: "center",
-                border: "none",
-                outline: "none",
-                borderBottom: "1px solid black",
+                width: '40px',
+                textAlign: 'center',
+                border: 'none',
+                outline: 'none',
+                borderBottom: '1px solid black',
               }}
               name="value"
               onChange={(e) => handleNewInput(e.target)}
@@ -966,22 +966,22 @@ const ItemsList = () => {
             />
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
     );
   };
 
-  const goToPerItemListPurchaseOrder = ({index})=>{
-    let itemname=items[index].itemName
+  const goToPerItemListPurchaseOrder = ({ index }) => {
+    let itemname = items[index].itemName;
     history.push(`/inventory/${itemname}`);
-  }
+  };
   const rows = ({ index, style }) => {
     return (
       <tr
         style={{
           ...style,
-          display: "flex",
+          display: 'flex',
         }}
         className="table-row"
       >
@@ -993,7 +993,6 @@ const ItemsList = () => {
         </td>
         <td>
           <ItemNameRow style={style} index={index} />
-          
         </td>
         <td>
           <ItemCategoryRow style={style} index={index} />
@@ -1025,13 +1024,15 @@ const ItemsList = () => {
         <td>
           <ItemMinimumStockQuantityRow style={style} index={index} />
         </td>
-        <td style={{ display: "flex" }}>
+        <td style={{ display: 'flex' }}>
           <ItemUpdateButtonRow index={index} />
           <ItemSoftDeleteButtonRow index={index} />
         </td>
         {/* Button to go its purchase order */}
         <td>
-          <Button onClick={()=>goToPerItemListPurchaseOrder({index})}>Show POs</Button>
+          <Button onClick={() => goToPerItemListPurchaseOrder({ index })}>
+            Show POs
+          </Button>
         </td>
       </tr>
     );
@@ -1039,9 +1040,9 @@ const ItemsList = () => {
 
   // To update item data through uploading CSV file
   useEffect(() => {
-    if (typeof window != "undefined") {
+    if (typeof window != 'undefined') {
       setTableWidth(
-        window.getComputedStyle(inputTable.current).getPropertyValue("width")
+        window.getComputedStyle(inputTable.current).getPropertyValue('width')
       );
     }
 
@@ -1049,8 +1050,8 @@ const ItemsList = () => {
       Papa.parse(csvFile, {
         complete: async function (results) {
           await Axios.request({
-            url: "/api/inventory/addbulkitems",
-            method: "post",
+            url: '/api/inventory/addbulkitems',
+            method: 'post',
             data: results.data,
           });
         },
@@ -1087,15 +1088,15 @@ const ItemsList = () => {
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
     const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
     }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
     }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
-      if (selectedDate.slice(0, 3) === "NaN") {
-        alert("Select a date first!");
+      if (selectedDate.slice(0, 3) === 'NaN') {
+        alert('Select a date first!');
         return;
       }
 
@@ -1104,7 +1105,7 @@ const ItemsList = () => {
       );
 
       if (dateSelected !== -1) {
-        alert("date already selected!");
+        alert('date already selected!');
         return;
       }
 
@@ -1140,7 +1141,7 @@ const ItemsList = () => {
             onChange={(day) => {
               setNewUseByDateVal(day);
             }}
-            style={{ width: "140px" }}
+            style={{ width: '140px' }}
           />
           <Image
             className="add-icon"
@@ -1158,7 +1159,7 @@ const ItemsList = () => {
                 <NumberInput
                   className="per-date-quantity"
                   value={item.value}
-                  style={{ padding: "7px 7px" }}
+                  style={{ padding: '7px 7px' }}
                   onChange={(e) => handleAddDateInputChange(e, index)}
                   hideControls
                 ></NumberInput>
@@ -1181,15 +1182,15 @@ const ItemsList = () => {
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
     const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
+      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
     }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
+      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
     }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
-      if (selectedDate.slice(0, 3) === "NaN") {
-        alert("Select a date first!");
+      if (selectedDate.slice(0, 3) === 'NaN') {
+        alert('Select a date first!');
         return;
       }
 
@@ -1198,7 +1199,7 @@ const ItemsList = () => {
       );
 
       if (dateSelected !== -1) {
-        alert("date already selected!");
+        alert('date already selected!');
         return;
       }
 
@@ -1255,7 +1256,7 @@ const ItemsList = () => {
             onChange={(day) => {
               setNewUseByDateVal(day);
             }}
-            style={{ width: "140px" }}
+            style={{ width: '140px' }}
           />
           <Image
             className="add-icon"
@@ -1321,7 +1322,7 @@ const ItemsList = () => {
           onUpdate={(err, result) => {
             if (result) {
               handleNewItemInput({
-                target: { name: "itemBarcode", value: result.text },
+                target: { name: 'itemBarcode', value: result.text },
               });
             }
           }}
@@ -1341,101 +1342,101 @@ const ItemsList = () => {
                 <Text>Bar Code</Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "itemBarcode"}
+                  checked={filterItems === 'itemBarcode'}
                   label="Filter Barcode"
                   value="Filter Barcode"
-                  onChange={() => handleCheckboxFilter("itemBarcode")}
+                  onChange={() => handleCheckboxFilter('itemBarcode')}
                 />
               </th>
               <th>
                 <Text>Brand Name</Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "itemBrandName"}
+                  checked={filterItems === 'itemBrandName'}
                   label="Filter Brand Name"
                   value="Filter Brand Name"
-                  onChange={() => handleCheckboxFilter("itemBrandName")}
+                  onChange={() => handleCheckboxFilter('itemBrandName')}
                 />
               </th>
               <th>
                 <Text>
                   Item Name
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "itemName"}
+                  checked={filterItems === 'itemName'}
                   label="Filter Name"
                   value="Filter Name"
-                  onChange={() => handleCheckboxFilter("itemName")}
+                  onChange={() => handleCheckboxFilter('itemName')}
                 />
               </th>
               <th>
                 <Text>
                   Category
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "itemCategory"}
+                  checked={filterItems === 'itemCategory'}
                   label="Filter Item Category"
                   value="Filter Item Category"
-                  onChange={() => handleCheckboxFilter("itemCategory")}
+                  onChange={() => handleCheckboxFilter('itemCategory')}
                 />
               </th>
               <th>
                 <Text>
                   Item Quantity
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "itemPerUnitQuantity"}
+                  checked={filterItems === 'itemPerUnitQuantity'}
                   label="Filter Item Quantity"
                   value="Filter Item Quantity"
-                  onChange={() => handleCheckboxFilter("itemPerUnitQuantity")}
+                  onChange={() => handleCheckboxFilter('itemPerUnitQuantity')}
                 />
               </th>
               <th>
                 <Text>
                   Unit
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "quantityUnitName"}
+                  checked={filterItems === 'quantityUnitName'}
                   label="Filter Item Unit"
                   value="Filter Item Unit"
-                  onChange={() => handleCheckboxFilter("quantityUnitName")}
+                  onChange={() => handleCheckboxFilter('quantityUnitName')}
                 />
               </th>
               <th>
                 <Text>
                   Use by date
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "useByDate"}
+                  checked={filterItems === 'useByDate'}
                   label="Filter Item Unit"
                   value="Filter Item Unit"
-                  onChange={() => handleCheckboxFilter("useByDate")}
+                  onChange={() => handleCheckboxFilter('useByDate')}
                 />
               </th>
               <th>
                 <Text>
                   MRP/Unit
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
@@ -1443,14 +1444,14 @@ const ItemsList = () => {
                   type="checkbox"
                   label="Filter MRP/Unit"
                   value="Filter  MRP/Unit"
-                  checked={filterItems === "itemMRPperUnit"}
-                  onChange={() => handleCheckboxFilter("itemMRPperUnit")}
+                  checked={filterItems === 'itemMRPperUnit'}
+                  onChange={() => handleCheckboxFilter('itemMRPperUnit')}
                 />
               </th>
               <th>
                 <Text>
                   Cost/Unit
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
@@ -1458,14 +1459,14 @@ const ItemsList = () => {
                   type="checkbox"
                   label="Filter With Cost Price"
                   value="Filter With Cost Price"
-                  checked={filterItems === "itemCostPricePerUnit"}
-                  onChange={() => handleCheckboxFilter("itemCostPricePerUnit")}
+                  checked={filterItems === 'itemCostPricePerUnit'}
+                  onChange={() => handleCheckboxFilter('itemCostPricePerUnit')}
                 />
               </th>
               <th>
                 <Text>
                   SP/Unit
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
@@ -1473,16 +1474,16 @@ const ItemsList = () => {
                   type="checkbox"
                   label="Filter With Selling Price"
                   value="Filter With Selling Price"
-                  checked={filterItems === "itemSellingPricePerUnit"}
+                  checked={filterItems === 'itemSellingPricePerUnit'}
                   onChange={() =>
-                    handleCheckboxFilter("itemSellingPricePerUnit")
+                    handleCheckboxFilter('itemSellingPricePerUnit')
                   }
                 />
               </th>
               <th>
                 <Text>
                   Slabs
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
@@ -1490,14 +1491,14 @@ const ItemsList = () => {
                   type="checkbox"
                   label="Filter Slabs"
                   value="Filter Slabs"
-                  checked={filterItems === "slabPricing"}
-                  onChange={() => handleCheckboxFilter("slabPricing")}
+                  checked={filterItems === 'slabPricing'}
+                  onChange={() => handleCheckboxFilter('slabPricing')}
                 />
               </th>
               <th>
                 <Text>
                   Total Stock
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
@@ -1505,23 +1506,23 @@ const ItemsList = () => {
                   type="checkbox"
                   label="Filter With Total Stock"
                   value="Filter With Total Stock"
-                  checked={filterItems === "itemStockQuantity"}
-                  onChange={() => handleCheckboxFilter("itemStockQuantity")}
+                  checked={filterItems === 'itemStockQuantity'}
+                  onChange={() => handleCheckboxFilter('itemStockQuantity')}
                 />
               </th>
               <th>
                 <Text>
                   Min Stock
-                  <span style={{ color: "red", display: "inline-block" }}>
+                  <span style={{ color: 'red', display: 'inline-block' }}>
                     *
                   </span>
                 </Text>
                 <input
                   type="checkbox"
-                  checked={filterItems === "minimumStockQuantity"}
+                  checked={filterItems === 'minimumStockQuantity'}
                   label="Filter With Minimum Stock"
                   value="Filter With Minimum Stock"
-                  onChange={() => handleCheckboxFilter("minimumStockQuantity")}
+                  onChange={() => handleCheckboxFilter('minimumStockQuantity')}
                 />
               </th>
               <th>
@@ -1533,13 +1534,13 @@ const ItemsList = () => {
             </tr>
           </thead>
           <tbody
-            style={{ display: loaderDisplay ? "none" : "" }}
+            style={{ display: loaderDisplay ? 'none' : '' }}
             className="add-item-row-body"
           >
             <tr className="bill-row">
               <td>
                 <Input
-                  value={newItemInput["itemBarcode"]}
+                  value={newItemInput['itemBarcode']}
                   onChange={handleNewItemInput}
                   name="itemBarcode"
                   type="number"
@@ -1548,7 +1549,7 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  value={newItemInput["itemBrandName"]}
+                  value={newItemInput['itemBrandName']}
                   onChange={handleNewItemInput}
                   name="itemBrandName"
                   type="text"
@@ -1558,7 +1559,7 @@ const ItemsList = () => {
               <td>
                 <Input
                   type="text"
-                  value={newItemInput["itemName"]}
+                  value={newItemInput['itemName']}
                   onChange={handleNewItemInput}
                   name="itemName"
                   autoComplete="off"
@@ -1571,13 +1572,13 @@ const ItemsList = () => {
                   nothingFound="No options"
                   maxDropdownHeight={280}
                   data={categoryArray}
-                  value={newItemInput["itemCategory"]}
-                  onChange={(val) => handleSelectChange(val, "itemCategory")}
+                  value={newItemInput['itemCategory']}
+                  onChange={(val) => handleSelectChange(val, 'itemCategory')}
                 />
               </td>
               <td>
                 <Input
-                  value={newItemInput["itemPerUnitQuantity"]}
+                  value={newItemInput['itemPerUnitQuantity']}
                   onChange={handleNewItemInput}
                   name="itemPerUnitQuantity"
                   type="number"
@@ -1588,15 +1589,15 @@ const ItemsList = () => {
                 <Select
                   placeholder="Pick one"
                   data={[
-                    { value: "kg", label: "kg" },
-                    { value: "grams", label: "grams" },
-                    { value: "liter", label: "liter" },
-                    { value: "ml", label: "ml" },
-                    { value: "Piece", label: "Piece" },
+                    { value: 'kg', label: 'kg' },
+                    { value: 'grams', label: 'grams' },
+                    { value: 'liter', label: 'liter' },
+                    { value: 'ml', label: 'ml' },
+                    { value: 'Piece', label: 'Piece' },
                   ]}
-                  value={newItemInput["quantityUnitName"]}
+                  value={newItemInput['quantityUnitName']}
                   onChange={(val) =>
-                    handleSelectChange(val, "quantityUnitName")
+                    handleSelectChange(val, 'quantityUnitName')
                   }
                 />
               </td>
@@ -1605,7 +1606,7 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  value={newItemInput["itemMRPperUnit"]}
+                  value={newItemInput['itemMRPperUnit']}
                   onChange={handleNewItemInput}
                   name="itemMRPperUnit"
                   type="number"
@@ -1614,7 +1615,7 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  value={newItemInput["itemCostPricePerUnit"]}
+                  value={newItemInput['itemCostPricePerUnit']}
                   onChange={handleNewItemInput}
                   name="itemCostPricePerUnit"
                   type="number"
@@ -1623,7 +1624,7 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  value={newItemInput["itemSellingPricePerUnit"]}
+                  value={newItemInput['itemSellingPricePerUnit']}
                   onChange={handleNewItemInput}
                   name="itemSellingPricePerUnit"
                   type="number"
@@ -1635,7 +1636,7 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  value={newItemInput["itemStockQuantity"]}
+                  value={newItemInput['itemStockQuantity']}
                   onChange={handleNewItemInput}
                   name="itemStockQuantity"
                   type="number"
@@ -1644,7 +1645,7 @@ const ItemsList = () => {
               </td>
               <td>
                 <Input
-                  value={newItemInput["minimumStockQuantity"]}
+                  value={newItemInput['minimumStockQuantity']}
                   onChange={handleNewItemInput}
                   name="minimumStockQuantity"
                   type="number"
@@ -1661,9 +1662,9 @@ const ItemsList = () => {
         </Table>
         <div
           style={{
-            padding: "30px 0",
-            display: loaderDisplay ? "flex" : "none",
-            justifyContent: "center",
+            padding: '30px 0',
+            display: loaderDisplay ? 'flex' : 'none',
+            justifyContent: 'center',
           }}
         >
           <Loader />
@@ -1686,15 +1687,15 @@ const TableRow = ({
   name,
   index,
 }) => {
-  if (name === "quantityUnitName" || name === "itemCategory") {
+  if (name === 'quantityUnitName' || name === 'itemCategory') {
     const data =
-      name === "quantityUnitName"
+      name === 'quantityUnitName'
         ? [
-            { value: "kg", label: "kg" },
-            { value: "grams", label: "grams" },
-            { value: "liter", label: "liter" },
-            { value: "ml", label: "ml" },
-            { value: "Piece", label: "Piece" },
+            { value: 'kg', label: 'kg' },
+            { value: 'grams', label: 'grams' },
+            { value: 'liter', label: 'liter' },
+            { value: 'ml', label: 'ml' },
+            { value: 'Piece', label: 'Piece' },
           ]
         : categoryArray;
 
@@ -1711,7 +1712,7 @@ const TableRow = ({
       />
     );
   } else {
-    const Component = name === "itemName" ? Textarea : Input;
+    const Component = name === 'itemName' ? Textarea : Input;
     return (
       <Component
         variant="unstyled"
@@ -1740,15 +1741,15 @@ const UpdateItemButton = ({
     const { _id } = itemToBeUpdated[index];
     setApiLoading(true);
     const updatedItem = await Axios.request({
-      url: "/api/inventory/editItemById",
-      method: "put",
+      url: '/api/inventory/editItemById',
+      method: 'put',
       data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
       headers: {
-        Cookie: "some_cookie",
+        Cookie: 'some_cookie',
       },
     });
     if (updatedItem.status === 200) {
-      alert("Item updated...");
+      alert('Item updated...');
     }
     itemToBeUpdated = {};
     let newItemsList = [...itemsList];
@@ -1758,7 +1759,7 @@ const UpdateItemButton = ({
     );
     newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
     dispatch({
-      type: "UPDATE_ITEMS_LIST",
+      type: 'UPDATE_ITEMS_LIST',
       payload: newItemsList,
     });
     setApiLoading(false);
@@ -1770,7 +1771,7 @@ const UpdateItemButton = ({
       loading={apiLoading}
       onClick={handleAddItem}
       width={22}
-      style={{ marginLeft: "15px", cursor: "pointer" }}
+      style={{ marginLeft: '15px', cursor: 'pointer' }}
     />
   );
 };

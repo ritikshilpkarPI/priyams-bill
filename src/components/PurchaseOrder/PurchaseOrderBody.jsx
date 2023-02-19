@@ -1,39 +1,40 @@
-import { useState, useContext } from "react";
-import { Select, TextInput, NumberInput, Image } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
-import { addItemRow, itemInitialObj } from "./constant";
-import { AppStateContext } from "src/AppState/appState.context";
+import { useState, useContext } from 'react';
+import { Select, TextInput, NumberInput, Image } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import { addItemRow, itemInitialObj } from './constant';
+import { AppStateContext } from 'src/AppState/appState.context';
 
 // To set use by date on item while adding
 const UseByDateElement = ({ itemObjState = [] }) => {
   const [newUseByDateVal, setNewUseByDateVal] = useState();
   const { purchaseInputItemStateAndDispatch } = useContext(AppStateContext);
   const { 1: purchaseItemInputDispatch } = purchaseInputItemStateAndDispatch;
-  const [useByDateData = {}, setuseByDateData = () => { }] = itemObjState;
+  const [useByDateData = {}, setuseByDateData = () => {}] = itemObjState;
 
-  const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ""
-    }${new Date(newUseByDateVal).getDate()}`;
+  const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
+    new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
+  }${new Date(newUseByDateVal).getMonth() + 1}-${
+    new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
+  }${new Date(newUseByDateVal).getDate()}`;
 
   // To add new date
   const addNewDate = (selectedDate) => {
-
     if (!newUseByDateVal) {
-      alert("Select a date first!");
+      alert('Select a date first!');
       return;
     }
 
-    const dateSelected = useByDateData["itemUseByDate"].findIndex(
+    const dateSelected = useByDateData['itemUseByDate'].findIndex(
       (item) => item.date === selectedDate
     );
 
     if (dateSelected !== -1) {
-      alert("date already selected!");
+      alert('date already selected!');
       return;
     }
 
     let dateArray = [
-      ...useByDateData["itemUseByDate"],
+      ...useByDateData['itemUseByDate'],
       { date: selectedDate, value: 0 },
     ];
     dateArray.sort((a, b) => {
@@ -42,7 +43,7 @@ const UseByDateElement = ({ itemObjState = [] }) => {
 
     setuseByDateData({ ...useByDateData, itemUseByDate: dateArray });
     purchaseItemInputDispatch({
-      type: "UPDATE_PURCHASE_INPUT_ITEM",
+      type: 'UPDATE_PURCHASE_INPUT_ITEM',
       payload: { ...useByDateData, itemUseByDate: dateArray },
     });
   };
@@ -50,22 +51,22 @@ const UseByDateElement = ({ itemObjState = [] }) => {
   // To change any date item quantity
   const handleAddDateInputChange = (e, index) => {
     let newDateObj = {
-      date: useByDateData["itemUseByDate"][index].date,
+      date: useByDateData['itemUseByDate'][index].date,
       value: e,
     };
-    useByDateData["itemUseByDate"].splice(index, 1, newDateObj);
+    useByDateData['itemUseByDate'].splice(index, 1, newDateObj);
     setuseByDateData({
       ...useByDateData,
-      itemUseByDate: useByDateData["itemUseByDate"],
+      itemUseByDate: useByDateData['itemUseByDate'],
     });
   };
 
   // To remove any date
   const deleteDate = (e, index) => {
-    useByDateData["itemUseByDate"].splice(index, 1);
+    useByDateData['itemUseByDate'].splice(index, 1);
     setuseByDateData({
       ...useByDateData,
-      itemUseByDate: useByDateData["itemUseByDate"],
+      itemUseByDate: useByDateData['itemUseByDate'],
     });
   };
 
@@ -78,7 +79,7 @@ const UseByDateElement = ({ itemObjState = [] }) => {
           inputFormat="DD/MM/YYYY"
           value={newUseByDateVal}
           onChange={(day) => setNewUseByDateVal(day)}
-          style={{ width: "140px" }}
+          style={{ width: '140px' }}
         />
         <Image
           className="add-icon"
@@ -97,7 +98,7 @@ const UseByDateElement = ({ itemObjState = [] }) => {
                 <NumberInput
                   className="per-date-quantity"
                   value={item.value}
-                  style={{ padding: "7px 7px" }}
+                  style={{ padding: '7px 7px' }}
                   onChange={(e) => handleAddDateInputChange(e, index)}
                   hideControls
                 ></NumberInput>
@@ -127,28 +128,28 @@ const RowItem = ({ item, itemObjState }) => {
   // To add item in list
   const addItemToList = () => {
     dispatch({
-      type: "UPDATE_PURCHASE_ITEMS_LIST",
+      type: 'UPDATE_PURCHASE_ITEMS_LIST',
       payload: [...purchaseItems, purchaseItemInput],
     });
     // setItemObj(itemInitialObj);
     purchaseItemInputDispatch({
-      type: "UPDATE_PURCHASE_INPUT_ITEM",
+      type: 'UPDATE_PURCHASE_INPUT_ITEM',
       payload: itemInitialObj,
     });
   };
 
   // Handle input change on different input fields
   const handleItemInputChange = (e, type, name) => {
-    if (type === "text") {
+    if (type === 'text') {
       //   setItemObj({ ...itemObj, [e.target.name]: e.target.value });
       purchaseItemInputDispatch({
-        type: "UPDATE_PURCHASE_INPUT_ITEM",
+        type: 'UPDATE_PURCHASE_INPUT_ITEM',
         payload: { ...purchaseItemInput, [e.target.name]: e.target.value },
       });
-    } else if (type === "number" || type === "select") {
+    } else if (type === 'number' || type === 'select') {
       //   setItemObj({ ...itemObj, [name]: e });
       purchaseItemInputDispatch({
-        type: "UPDATE_PURCHASE_INPUT_ITEM",
+        type: 'UPDATE_PURCHASE_INPUT_ITEM',
         payload: { ...purchaseItemInput, [name]: e },
       });
     }
@@ -160,14 +161,14 @@ const RowItem = ({ item, itemObjState }) => {
         className="text-input"
         value={item.type}
         name={item.name}
-        onChange={(e) => handleItemInputChange(e, "text")}
+        onChange={(e) => handleItemInputChange(e, 'text')}
       ></TextInput>
     ),
     NumberInput: (item) => (
       <NumberInput
         className="number-input"
         value={Number(item.type)}
-        onChange={(e) => handleItemInputChange(e, "number", item.name)}
+        onChange={(e) => handleItemInputChange(e, 'number', item.name)}
         hideControls
       />
     ),
@@ -176,7 +177,7 @@ const RowItem = ({ item, itemObjState }) => {
         name={item.name}
         className="select-input"
         data={item.data}
-        onChange={(e) => handleItemInputChange(e, "select", item.name)}
+        onChange={(e) => handleItemInputChange(e, 'select', item.name)}
       />
     ),
     Custom: () => (
@@ -213,7 +214,6 @@ const AddItemRow = () => {
 const ShowTableItems = () => {
   const { purchaseItemsStateAndDispatch } = useContext(AppStateContext);
   const [purchaseItems] = purchaseItemsStateAndDispatch;
-
 
   return (
     <>

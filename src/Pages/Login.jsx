@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { Axios } from "../utils/axios";
+import { useState, useEffect } from 'react';
+import { Axios } from '../utils/axios';
 // import axios from "axios";
 // axios.defaults.withCredentials = true;
 
 const Login = ({ history }) => {
-  const [username, setusername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [username, setusername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -18,25 +18,25 @@ const Login = ({ history }) => {
 
     const payload = { username: username.toLowerCase(), password };
     const response = await Axios.request({
-      url: "/api/auth/login",
-      method: "post",
+      url: '/api/auth/login',
+      method: 'post',
       data: { ...payload },
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
     // await axios.post("/api/auth/login", payload);
     const status = response.data.status;
     const message = response.data.message;
 
-    if (status === false && message === "invalid username") {
-      setErrorMsg("Invalid username");
-    } else if (status === false && message === "wrong password") {
-      setErrorMsg("wrong password");
-    } else if (status === true && message === "login successfull") {
-      setErrorMsg("login successfull");
+    if (status === false && message === 'invalid username') {
+      setErrorMsg('Invalid username');
+    } else if (status === false && message === 'wrong password') {
+      setErrorMsg('wrong password');
+    } else if (status === true && message === 'login successfull') {
+      setErrorMsg('login successfull');
       localStorage.setItem(
-        "priyam-store",
+        'priyam-store',
         JSON.stringify({
           name: response.data.name,
           username: username.toLowerCase(),
@@ -44,14 +44,14 @@ const Login = ({ history }) => {
           authtoken: response.data.authtoken,
         })
       );
-      history.push("/billing");
+      history.push('/billing');
       // loaderDisplay(false);
     }
   };
 
   useEffect(() => {
-    if (localStorage.getItem("priyam-store")) {
-      history.push("/billing");
+    if (localStorage.getItem('priyam-store')) {
+      history.push('/billing');
     }
     // eslint-disable-next-line
   }, []);
@@ -75,7 +75,7 @@ const Login = ({ history }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <p id="error-msg" style={{ textAlign: "left" }}>
+        <p id="error-msg" style={{ textAlign: 'left' }}>
           {errorMsg}
         </p>
         <button type="submit">Login</button>

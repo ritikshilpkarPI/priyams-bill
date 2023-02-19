@@ -1,5 +1,5 @@
-const PurchaseOrder = require("../db-models/purchase-order-model");
-const cloudinary = require("cloudinary");
+const PurchaseOrder = require('../db-models/purchase-order-model');
+const cloudinary = require('cloudinary');
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -38,19 +38,19 @@ const addOrder = async (req, res) => {
       procurementSource,
       dealerName,
       phoneNumber,
-      minimumQuantity
+      minimumQuantity,
     };
     const order = await PurchaseOrder.create(purchaseOrder);
     res.status(201).send({ message: order, success: true });
   } catch (error) {
-    console.log({ error })
+    console.log({ error });
     res.status(400).send({ message: error.message, success: false });
   }
 };
 const getOrders = async (req, res) => {
   try {
     const orders = await PurchaseOrder.find({});
-    res.status(201).send({ message: "got the orders", orders });
+    res.status(201).send({ message: 'got the orders', orders });
   } catch (error) {
     res.status(400).send({ message: error.message });
   }
@@ -61,7 +61,7 @@ const getDetailsById = async (req, res) => {
     const data = await PurchaseOrder.findById(id);
     res.status(200).send({ data });
   } catch (err) {
-    console.log({ err })
+    console.log({ err });
     res.status(400).send({ message: err });
   }
 };
@@ -112,24 +112,29 @@ const updateDetailsById = async (req, res) => {
 
     res.status(201).send({ message: order, success: true });
   } catch (error) {
-    console.log({ error })
+    console.log({ error });
     res.status(400).send({ error, success: false });
   }
 };
 const draftOrder = async (req, res) => {
-
   try {
     const { id } = req.body;
-    const order = await PurchaseOrder.findByIdAndUpdate(id, {
-      isDraft: true,
-      isRejected: false
-    }, { new: true });
-    res.status(200).send({ message: "order drafted successfully", success: true, order });
+    const order = await PurchaseOrder.findByIdAndUpdate(
+      id,
+      {
+        isDraft: true,
+        isRejected: false,
+      },
+      { new: true }
+    );
+    res
+      .status(200)
+      .send({ message: 'order drafted successfully', success: true, order });
   } catch (err) {
-    console.log({ err })
-    res.status(400).send({ message: err.message, success: false })
+    console.log({ err });
+    res.status(400).send({ message: err.message, success: false });
   }
-}
+};
 const uploadImages = (images) => {
   return new Promise((resolve, reject) => {
     var billPhotos = [];
@@ -141,7 +146,7 @@ const uploadImages = (images) => {
         const { public_id, secure_url } = await cloudinary.v2.uploader.upload(
           image,
           {
-            folder: "pstores",
+            folder: 'pstores',
           }
         );
         billPhotos.push({ public_id, secure_url });
@@ -149,7 +154,7 @@ const uploadImages = (images) => {
           resolve(billPhotos);
         }
       } catch (err) {
-        console.log({ err })
+        console.log({ err });
         reject(err);
       }
     });
@@ -167,7 +172,7 @@ const deleteImages = (images) => {
           resolve();
         }
       } catch (err) {
-        console.log({ err })
+        console.log({ err });
         reject(err);
       }
     });
@@ -175,87 +180,111 @@ const deleteImages = (images) => {
 };
 const saveOrder = async (req, res) => {
   try {
-    const { new_order } = req.body
+    const { new_order } = req.body;
     const purchaseOrder = await PurchaseOrder.create({
-      purchasedItems: [new_order]
+      purchasedItems: [new_order],
     });
-    res.status(201).send({ message: "order added successfully", success: true, order: purchaseOrder });
+    res.status(201).send({
+      message: 'order added successfully',
+      success: true,
+      order: purchaseOrder,
+    });
   } catch (err) {
-    console.log({ err })
+    console.log({ err });
     res.status(400).send({ message: err, success: false });
   }
-}
+};
 const updateSavedOrders = async (req, res) => {
   try {
     const id = req.params.id;
     const { new_order } = req.body;
     const purchaseOrder = await PurchaseOrder.findById(id);
-    const updatedOrder = await purchaseOrder.updateOne({ purchasedItems: [...purchaseOrder.purchasedItems, new_order] });
-    res.status(200).send({ message: "order added successfully", success: true, order: updatedOrder })
+    const updatedOrder = await purchaseOrder.updateOne({
+      purchasedItems: [...purchaseOrder.purchasedItems, new_order],
+    });
+    res.status(200).send({
+      message: 'order added successfully',
+      success: true,
+      order: updatedOrder,
+    });
   } catch (err) {
-    res.status(400).send({ message: err, success: false })
+    res.status(400).send({ message: err, success: false });
   }
-}
+};
 const deleteOrderItemById = async (req, res) => {
   try {
     const purchase_id = req.params.id;
     const { itemId } = req.body;
     const purchaseOrder = await PurchaseOrder.findById(purchase_id);
-    const purchasedItems = purchaseOrder.purchasedItems.filter((order) => order._id != itemId);
+    const purchasedItems = purchaseOrder.purchasedItems.filter(
+      (order) => order._id != itemId
+    );
     const updatedOrder = await purchaseOrder.updateOne({ purchasedItems });
-    res.status(200).send({ message: 'order deleted successfully', success: true, order: purchaseOrder, updatedOrder })
-
+    res.status(200).send({
+      message: 'order deleted successfully',
+      success: true,
+      order: purchaseOrder,
+      updatedOrder,
+    });
   } catch (err) {
-    res.status(400).send({ message: err, success: false })
+    res.status(400).send({ message: err, success: false });
   }
-}
+};
 const updateOrderByIndex = async (req, res) => {
   try {
     const purchase_id = req.params.id;
     const { index, new_order } = req.body;
     const purchaseOrder = await PurchaseOrder.findById(purchase_id);
-    const purchasedItems = [...purchaseOrder.purchasedItems.filter((order, i) => i != index), new_order];
+    const purchasedItems = [
+      ...purchaseOrder.purchasedItems.filter((order, i) => i != index),
+      new_order,
+    ];
     const updatedOrder = await purchaseOrder.updateOne({ purchasedItems });
-    res.status(200).send({ message: 'order updated successfully', success: true, order: purchaseOrder, updatedOrder })
+    res.status(200).send({
+      message: 'order updated successfully',
+      success: true,
+      order: purchaseOrder,
+      updatedOrder,
+    });
   } catch (err) {
-    res.status(400).send({ message: err, success: false })
+    res.status(400).send({ message: err, success: false });
   }
-}
+};
 const getOrdersByQuery = async (req, res) => {
   try {
-    const {query} = req.body;
-    const orders = await PurchaseOrder.find( query );
-    res.status(200).send({ message: 'orders found', orders })
+    const { query } = req.body;
+    const orders = await PurchaseOrder.find(query);
+    res.status(200).send({ message: 'orders found', orders });
   } catch (err) {
     res.status(400).send({ message: err });
   }
-}
+};
 
-const getPurchaseOrderByItem=async(req,res)=>{
+const getPurchaseOrderByItem = async (req, res) => {
   const { id } = req.params;
   const response = await PurchaseOrder.find({}).limit(2);
   const itemPurchaseOrder = PurchaseOrder.aggregate([
     {
-      $unwind: "$purchasedItems",
+      $unwind: '$purchasedItems',
     },
     {
-      $match: { "purchasedItems.inputName": id },
+      $match: { 'purchasedItems.inputName': id },
     },
     {
       $group: {
-        _id: "$dealerName",
-        dealerId: { $first: "$_id" },
-        itemDetails: { $push: "$purchasedItems" },
+        _id: '$dealerName',
+        dealerId: { $first: '$_id' },
+        itemDetails: { $push: '$purchasedItems' },
       },
     },
     {
-      $sort: { "itemDetails.expiryDates.date": -1 },
+      $sort: { 'itemDetails.expiryDates.date': -1 },
     },
   ]);
 
   const result = await itemPurchaseOrder;
-  return res.status(200).json({ message: {result} });
-}
+  return res.status(200).json({ message: { result } });
+};
 module.exports = {
   addOrder,
   getOrders,
@@ -267,5 +296,5 @@ module.exports = {
   deleteOrderItemById,
   updateOrderByIndex,
   getOrdersByQuery,
-  getPurchaseOrderByItem
+  getPurchaseOrderByItem,
 };

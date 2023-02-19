@@ -1,4 +1,4 @@
-const { Bill } = require("../db-models/bill-model");
+const { Bill } = require('../db-models/bill-model');
 
 const getTotalAmountReport = async (startDate, lastDate) => {
   const totalAmountReport = await Bill.aggregate([
@@ -11,7 +11,7 @@ const getTotalAmountReport = async (startDate, lastDate) => {
       $group: {
         _id: null,
         totalAmountSum: {
-          $sum: "$billAmountTotal",
+          $sum: '$billAmountTotal',
         },
       },
     },
@@ -30,7 +30,7 @@ const getTotalProfitReport = async (startDate, lastDate) => {
       $group: {
         _id: null,
         totalProfitSum: {
-          $sum: "$totalBillProfit",
+          $sum: '$totalBillProfit',
         },
       },
     },
@@ -49,7 +49,7 @@ const getTotalDiscountReport = async (startDate, lastDate) => {
       $group: {
         _id: null,
         totalDiscountSum: {
-          $sum: "$billDiscountTotal",
+          $sum: '$billDiscountTotal',
         },
       },
     },
@@ -68,7 +68,7 @@ const getTotalMRPReport = async (startDate, lastDate) => {
       $group: {
         _id: null,
         totalMRPSum: {
-          $sum: "$billMRPTotal",
+          $sum: '$billMRPTotal',
         },
       },
     },
@@ -84,14 +84,14 @@ const getItemTrendReport = async (startDate, lastDate, itemName) => {
       },
     },
     {
-      $unwind: "$items",
+      $unwind: '$items',
     },
   ]);
   const populatedBills = await Bill.populate(unwindedItemBills, {
-    path: "items",
+    path: 'items',
     populate: {
-      path: "itemDetail",
-      model: "Item",
+      path: 'itemDetail',
+      model: 'Item',
       match: { itemName: { $eq: itemName } },
     },
   });
@@ -109,33 +109,33 @@ const getAllItemsTrendReport = async (startDate, lastDate) => {
       },
     },
     {
-      $unwind: "$items",
+      $unwind: '$items',
     },
     {
       $group: {
-        _id: "$items.itemDetail",
-        createdAtDates: { $push: "$createdAt" },
-        items: { $push: "$items" },
+        _id: '$items.itemDetail',
+        createdAtDates: { $push: '$createdAt' },
+        items: { $push: '$items' },
         totalDiscountSum: {
-          $sum: "$items.itemDiscountTotal",
+          $sum: '$items.itemDiscountTotal',
         },
         totalAmountSum: {
-          $sum: "$items.itemSellingPriceTotal",
+          $sum: '$items.itemSellingPriceTotal',
         },
         totalMRPsum: {
-          $sum: "$items.itemMRPtotal",
+          $sum: '$items.itemMRPtotal',
         },
         totalQuantitysum: {
-          $sum: "$items.itemQuantityInBill",
+          $sum: '$items.itemQuantityInBill',
         },
       },
     },
   ]);
   const allItemsBillingTrend = await Bill.populate(unwindedItemDetails, {
-    path: "items",
+    path: 'items',
     populate: {
-      path: "itemDetail",
-      model: "Item",
+      path: 'itemDetail',
+      model: 'Item',
     },
   });
   return allItemsBillingTrend;

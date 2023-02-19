@@ -1,17 +1,29 @@
 import { Button, Table } from '@mantine/core';
-import React from 'react'
-const ShowSlabPricing = ({slabs,deleteSlab}) => {
-    const rows = slabs.map((element, index) => (
-        <tr key={index + 1}>
-            <td>{element["1"]}</td>
-            <td>{element["2"]}</td>
-            <td><Button style={{backgroundColor:'#F03E3E'}} onClick={() => deleteSlab(index)}>Delete</Button></td>
-        </tr>
-      ));
+import React from 'react';
+const ShowSlabPricing = ({ slabs, deleteSlab }) => {
+  const rows = slabs.map((element, index) => (
+    <tr key={index + 1}>
+      <td>{element['1']}</td>
+      <td>{element['2']}</td>
+      <td>
+        <Button
+          style={{ backgroundColor: '#F03E3E' }}
+          onClick={() => deleteSlab(index)}
+        >
+          Delete
+        </Button>
+      </td>
+    </tr>
+  ));
   return (
     <div>
       {slabs.length ? (
-        <Table style={{marginTop:'2vmin'}} withColumnBorders striped withBorder>
+        <Table
+          style={{ marginTop: '2vmin' }}
+          withColumnBorders
+          striped
+          withBorder
+        >
           <thead>
             <tr>
               <th>Start Value</th>
@@ -24,7 +36,7 @@ const ShowSlabPricing = ({slabs,deleteSlab}) => {
         <></>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ShowSlabPricing
+export default ShowSlabPricing;

@@ -1,16 +1,16 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Input, Loader, Table, Text, TextInput } from "@mantine/core";
-import { AppStateContext } from "../AppState/appState.context";
-import { Axios } from "../utils/axios";
-import BillNarrator from "../components/BillNarrator";
-import axios from "axios";
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
+import { AppStateContext } from '../AppState/appState.context';
+import { Axios } from '../utils/axios';
+import BillNarrator from '../components/BillNarrator';
+import axios from 'axios';
 
 const itemsByBarcode = {};
 const itemsByName = {};
 const BILL_INITIAL_STATE = {
   billItems: [],
-  customerName: "",
-  customerPhone: "",
+  customerName: '',
+  customerPhone: '',
   billMRPTotal: 0,
   billAmountTotal: 0,
   billDiscountTotal: 0,
@@ -23,15 +23,15 @@ const BILL_INITIAL_STATE = {
 };
 
 const INPUT_INITIAL_STATE = {
-  itemBarcode: "",
-  itemName: "",
-  itemMRPperUnit: "",
+  itemBarcode: '',
+  itemName: '',
+  itemMRPperUnit: '',
   itemQuantityInBill: 1,
-  itemSellingPricePerUnit: "",
+  itemSellingPricePerUnit: '',
 };
 
 const refreshPage = (setBill, BILL_INITIAL_STATE) => {
-  let answer = window.confirm("Do you want to refresh page?");
+  let answer = window.confirm('Do you want to refresh page?');
   if (answer) {
     setBill(BILL_INITIAL_STATE);
   }
@@ -48,9 +48,9 @@ const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
 const initializeBillForEdit = async (setBill, billID) => {
   const editBill = await Axios.request({
     url: `/api/billing/getEditBill/${billID}`,
-    method: "get",
+    method: 'get',
     headers: {
-      Cookie: "",
+      Cookie: '',
     },
   });
 
@@ -66,14 +66,14 @@ const createInitialObjectsForBilling = (
   itemsByName
 ) => {
   itemsList.forEach((obj) => {
-    obj["itemDiscountPerUnit"] =
-      obj["itemMRPperUnit"] - obj["itemSellingPricePerUnit"];
-    obj["itemQuantityInBill"] = 1;
-    if (obj["itemBarcode"]) {
-      itemsByBarcode[obj["itemBarcode"]] = { ...obj };
+    obj['itemDiscountPerUnit'] =
+      obj['itemMRPperUnit'] - obj['itemSellingPricePerUnit'];
+    obj['itemQuantityInBill'] = 1;
+    if (obj['itemBarcode']) {
+      itemsByBarcode[obj['itemBarcode']] = { ...obj };
     }
-    if (obj["itemName"]) {
-      itemsByName[obj["itemName"]] = { ...obj };
+    if (obj['itemName']) {
+      itemsByName[obj['itemName']] = { ...obj };
     }
   });
 };
@@ -158,15 +158,15 @@ const updateBillValuesOnItemChange = (bill, setBill) => {
   let numOfItems = 0;
   bill.billItems.forEach((item) => {
     totalSum += Math.ceil(
-      item.itemDetail["itemSellingPricePerUnit"] * item["itemQuantityInBill"]
+      item.itemDetail['itemSellingPricePerUnit'] * item['itemQuantityInBill']
     );
-    mrpTotal += item.itemDetail["itemMRPperUnit"] * item["itemQuantityInBill"];
+    mrpTotal += item.itemDetail['itemMRPperUnit'] * item['itemQuantityInBill'];
     savedAmount = mrpTotal - totalSum;
-    numOfItems += item["itemQuantityInBill"];
+    numOfItems += item['itemQuantityInBill'];
     profitAmount +=
-      (item.itemDetail["itemSellingPricePerUnit"] -
-        item.itemDetail["itemCostPricePerUnit"]) *
-      item["itemQuantityInBill"];
+      (item.itemDetail['itemSellingPricePerUnit'] -
+        item.itemDetail['itemCostPricePerUnit']) *
+      item['itemQuantityInBill'];
   });
 
   setBill((prev) => ({
@@ -203,13 +203,13 @@ async function addNewBill(
   };
   setBill(updateBill);
   const editApi = {
-    url: "/api/billing/editBill",
-    method: "put",
+    url: '/api/billing/editBill',
+    method: 'put',
     data: { id: billID, itemWithChanges: { ...bill } },
   };
   const createApi = {
-    url: "/api/billing/newBill",
-    method: "post",
+    url: '/api/billing/newBill',
+    method: 'post',
     data: { ...bill },
   };
   const objectOfInterest = billID ? editApi : createApi;
@@ -217,13 +217,13 @@ async function addNewBill(
   await Axios.request({
     ...objectOfInterest,
     headers: {
-      Cookie: "",
+      Cookie: '',
     },
   });
   window.print();
   setApiLoading(false);
   setBill(BILL_INITIAL_STATE);
-  itemsReducer({ type: "UPDATE_ITEMS_LIST", payload: [...initialItemList] });
+  itemsReducer({ type: 'UPDATE_ITEMS_LIST', payload: [...initialItemList] });
 }
 
 function handleItemInputChange(event, setInputValue) {
@@ -286,25 +286,25 @@ function findNameOrNumber(string, value) {
   return true;
 }
 
-const Billing = ({ billID = "", loaderDisplay }) => {
+const Billing = ({ billID = '', loaderDisplay }) => {
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
-  const barRef = useRef("");
+  const barRef = useRef('');
   const { itemsStateAndDispatch, billItemsStateAndDispatch } =
     useContext(AppStateContext);
   const [itemsList, itemsReducer] = itemsStateAndDispatch;
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const initialItemList = [...itemsList];
-  const [phoneError, setPhoneError] = useState("");
+  const [phoneError, setPhoneError] = useState('');
   const [userProfileData, setUserDataProfile] = useState([]);
   const [filterUserProfile, setFilterUserProfile] = useState([]);
   const [showProfileData, setShowProfileData] = useState(false);
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
   const getUserData = async () => {
     try {
-      const response = await axios.get("/api/billing/userDetails");
+      const response = await axios.get('/api/billing/userDetails');
       setUserDataProfile(response.data.message);
     } catch (error) {
       console.error(error.message);
@@ -316,7 +316,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
     setShowProfileData(true);
     const users = userProfileData.filter((data) => {
       const str =
-        e.target.dataset.name === "name" ? data.customerName : data._id;
+        e.target.dataset.name === 'name' ? data.customerName : data._id;
       return findNameOrNumber(str, e.target.value);
     });
     setFilterUserProfile(users);
@@ -325,7 +325,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
 
   // To save bill items in billItem Reducer
   useEffect(() => {
-    dispatch({ type: "BILL_ITEMS_LIST", payload: bill });
+    dispatch({ type: 'BILL_ITEMS_LIST', payload: bill });
     // eslint-disable-next-line
   }, [bill]);
 
@@ -373,8 +373,8 @@ const Billing = ({ billID = "", loaderDisplay }) => {
 
   // To show prices according to slabs if exists
   const ItemPrice = ({ item, index }) => {
-    let quantity = item["itemQuantityInBill"];
-    let slabs = item["slabPricing"];
+    let quantity = item['itemQuantityInBill'];
+    let slabs = item['slabPricing'];
 
     // if slabs exists
     if (slabs.length !== 0) {
@@ -406,14 +406,14 @@ const Billing = ({ billID = "", loaderDisplay }) => {
       }
     } else {
       // if slabs does not exist
-      return item["itemSellingPricePerUnit"];
+      return item['itemSellingPricePerUnit'];
     }
   };
 
   return (
     <>
       <div className="billing-container">
-        <h4 style={{ marginBottom: "20px" }}>
+        <h4 style={{ marginBottom: '20px' }}>
           Total Items : {itemsList.length}
         </h4>
         <div className="header">
@@ -423,11 +423,11 @@ const Billing = ({ billID = "", loaderDisplay }) => {
           <h3>Time: {new Date().toLocaleTimeString()}</h3>
         </div>
         <div className="bill-btns">
-          <div style={{ display: "flex", gap: "30px" }}>
+          <div style={{ display: 'flex', gap: '30px' }}>
             <TextInput
               label="Customer Name"
               data-name="name"
-              style={{ width: "180px" }}
+              style={{ width: '180px' }}
               value={bill.customerName}
               onBlur={(e) => {
                 e.preventDefault();
@@ -441,7 +441,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 handleUserSearch(e);
               }}
             />
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <TextInput
                 type="number"
                 label="Customer Phone No."
@@ -450,11 +450,11 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   e.preventDefault();
                   setShowProfileData(false);
                 }}
-                style={{ width: "180px", paddingBottom: "4px" }}
+                style={{ width: '180px', paddingBottom: '4px' }}
                 onChange={(e) => {
                   e.target.value.length !== 10
-                    ? setPhoneError("Phone number is Invalid!")
-                    : setPhoneError("");
+                    ? setPhoneError('Phone number is Invalid!')
+                    : setPhoneError('');
                   setBill((prevBill) => ({
                     ...prevBill,
                     customerPhone: e.target.value,
@@ -462,7 +462,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   handleUserSearch(e);
                 }}
               />
-              <div style={{ height: "10px", color: "red" }}>{phoneError}</div>
+              <div style={{ height: '10px', color: 'red' }}>{phoneError}</div>
             </div>
 
             {showProfileData && Boolean(filterUserProfile.length) ? (
@@ -472,7 +472,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                   withColumnBorders
                   striped
                   highlightOnHover
-                  style={{ backgroundColor: "white" }}
+                  style={{ backgroundColor: 'white' }}
                 >
                   <thead>
                     <tr>
@@ -491,14 +491,14 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               customerName: value.customerName,
                             }));
                             setShowProfileData(false);
-                            setPhoneError("");
+                            setPhoneError('');
                           }}
                           key={key}
                           style={{
-                            padding: "5px",
-                            fontSize: "16px",
-                            fontStyle: "bold",
-                            cursor: "pointer",
+                            padding: '5px',
+                            fontSize: '16px',
+                            fontStyle: 'bold',
+                            cursor: 'pointer',
                           }}
                           className="show-data"
                         >
@@ -511,18 +511,18 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 </Table>
               </div>
             ) : (
-              ""
+              ''
             )}
           </div>
 
           <Button
-            sx={{ background: "black", marginRight: "1rem" }}
+            sx={{ background: 'black', marginRight: '1rem' }}
             onClick={() => refreshPage(setBill, BILL_INITIAL_STATE)}
           >
             Refresh
           </Button>
           <Button
-            sx={{ marginRight: "1rem" }}
+            sx={{ marginRight: '1rem' }}
             disabled={!bill.billItems.length || bill.amountReturn < 0}
             className="print-btn"
             onClick={() =>
@@ -544,7 +544,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
         </div>
         <div
           style={{
-            display: "flex",
+            display: 'flex',
           }}
         >
           <Table
@@ -577,7 +577,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 </th>
                 <th>
                   <Text
-                    style={{ width: "100px" }}
+                    style={{ width: '100px' }}
                     weight={700}
                     color="black"
                     size="lg"
@@ -588,7 +588,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 </th>
                 <th className="header-slab-price">
                   <Text
-                    style={{ width: "100px" }}
+                    style={{ width: '100px' }}
                     weight={700}
                     color="black"
                     size="lg"
@@ -598,7 +598,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 </th>
                 <th>
                   <Text
-                    style={{ width: "100px" }}
+                    style={{ width: '100px' }}
                     weight={700}
                     color="black"
                     size="lg"
@@ -609,7 +609,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 </th>
                 <th>
                   <Text
-                    style={{ width: "100px" }}
+                    style={{ width: '100px' }}
                     weight={700}
                     color="black"
                     size="lg"
@@ -621,7 +621,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
 
                 <th>
                   <Text
-                    style={{ width: "100px" }}
+                    style={{ width: '100px' }}
                     weight={700}
                     color="black"
                     size="lg"
@@ -633,7 +633,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
               </tr>
             </thead>
             <tbody
-              style={{ display: loaderDisplay ? "none" : "" }}
+              style={{ display: loaderDisplay ? 'none' : '' }}
               className="body"
             >
               <tr>
@@ -760,9 +760,9 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                         }
                       }}
                       className="data-result"
-                      style={{ minWidth: "fit-content" }}
+                      style={{ minWidth: 'fit-content' }}
                     >
-                      <Table style={{ backgroundColor: "white" }}>
+                      <Table style={{ backgroundColor: 'white' }}>
                         <thead>
                           <td>Barcode</td>
                           <td>Name</td>
@@ -774,10 +774,10 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                               <tr
                                 key={key}
                                 style={{
-                                  padding: "5px",
-                                  fontSize: "16px",
-                                  fontStyle: "bold",
-                                  cursor: "pointer",
+                                  padding: '5px',
+                                  fontSize: '16px',
+                                  fontStyle: 'bold',
+                                  cursor: 'pointer',
                                 }}
                                 className="show-data"
                               >
@@ -802,7 +802,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                 return (
                   <tr
                     className="bill-item-row"
-                    key={`${idx}${itemObj["itemName"]}`}
+                    key={`${idx}${itemObj['itemName']}`}
                   >
                     <td className="idx">
                       <Text color="black" weight={700} size="lg">
@@ -810,9 +810,9 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                       </Text>
                     </td>
                     <td className="itemBarcode">
-                      {itemObj["itemBarcode"] && (
+                      {itemObj['itemBarcode'] && (
                         <Text color="black" weight={700} size="lg">
-                          {itemObj["itemBarcode"]}
+                          {itemObj['itemBarcode']}
                         </Text>
                       )}
                     </td>
@@ -823,7 +823,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                         weight={700}
                         size="xl"
                       >
-                        {itemObj["itemName"]}
+                        {itemObj['itemName']}
                       </Text>
                     </td>
                     <td className="itemQuantityInBill">
@@ -838,26 +838,26 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                       <div>
                         {itemObj.slabPricing?.map((item, index) => {
                           return (
-                            <div key={index} style={{ display: "flex" }}>
+                            <div key={index} style={{ display: 'flex' }}>
                               <input
                                 type="number"
                                 style={{
-                                  width: "40px",
-                                  textAlign: "center",
-                                  border: "none",
-                                  outline: "none",
+                                  width: '40px',
+                                  textAlign: 'center',
+                                  border: 'none',
+                                  outline: 'none',
                                 }}
                                 value={item[1]}
                                 disabled
-                              />{" "}
+                              />{' '}
                               -
                               <input
                                 type="number"
                                 style={{
-                                  width: "40px",
-                                  textAlign: "center",
-                                  border: "none",
-                                  outline: "none",
+                                  width: '40px',
+                                  textAlign: 'center',
+                                  border: 'none',
+                                  outline: 'none',
                                 }}
                                 disabled
                                 defaultValue={
@@ -865,17 +865,17 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                                     ? Number(
                                         itemObj.slabPricing[index + 1][1]
                                       ) - 1
-                                    : ""
+                                    : ''
                                 }
-                              />{" "}
+                              />{' '}
                               =
                               <input
                                 type="number"
                                 style={{
-                                  width: "40px",
-                                  textAlign: "center",
-                                  border: "none",
-                                  outline: "none",
+                                  width: '40px',
+                                  textAlign: 'center',
+                                  border: 'none',
+                                  outline: 'none',
                                 }}
                                 value={item[2]}
                                 disabled
@@ -892,7 +892,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                         weight={700}
                         size="xl"
                       >
-                        {itemObj["itemMRPperUnit"]}
+                        {itemObj['itemMRPperUnit']}
                       </Text>
                     </td>
                     <td className="itemSellingPricePerUnit">
@@ -913,8 +913,8 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                         weight={700}
                         size="xl"
                       >
-                        {itemObj["itemSellingPricePerUnit"] *
-                          itemObj["itemQuantityInBill"]}
+                        {itemObj['itemSellingPricePerUnit'] *
+                          itemObj['itemQuantityInBill']}
                       </Text>
                     </td>
                     <td className="last-clmn">
@@ -936,8 +936,8 @@ const Billing = ({ billID = "", loaderDisplay }) => {
           </Table>
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <Text
@@ -1010,7 +1010,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                       Cash Paid: {bill.cashPay}
                     </Text>
                     <Input
-                      style={{ width: "90px" }}
+                      style={{ width: '90px' }}
                       type="number"
                       invalid={bill.amountReturn < 0}
                       value={bill.cashPay}
@@ -1034,7 +1034,7 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                       Upi Paid: {bill.upiPay}
                     </Text>
                     <Input
-                      style={{ width: "90px" }}
+                      style={{ width: '90px' }}
                       type="number"
                       invalid={bill.amountReturn < 0}
                       value={bill.upiPay}
@@ -1078,15 +1078,15 @@ const Billing = ({ billID = "", loaderDisplay }) => {
         </div> */}
         <div
           style={{
-            display: loaderDisplay ? "flex" : "none",
-            justifyContent: "center",
-            width: "100%",
-            padding: "30px",
+            display: loaderDisplay ? 'flex' : 'none',
+            justifyContent: 'center',
+            width: '100%',
+            padding: '30px',
           }}
         >
           <Loader />
           {billID && (
-            <div style={{ width: "50%" }}>
+            <div style={{ width: '50%' }}>
               <Table>
                 <thead>
                   <th>
@@ -1106,9 +1106,9 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                       <tr
                         key={key}
                         style={{
-                          padding: "5px",
-                          fontSize: "16px",
-                          fontStyle: "bold",
+                          padding: '5px',
+                          fontSize: '16px',
+                          fontStyle: 'bold',
                         }}
                         className="show-data"
                       >
@@ -1119,14 +1119,14 @@ const Billing = ({ billID = "", loaderDisplay }) => {
                         </td>
                         <td>
                           <Text weight={500} color="black" size="md">
-                            {new Date(value).toLocaleDateString("en-US", {
-                              weekday: "long",
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
+                            {new Date(value).toLocaleDateString('en-US', {
+                              weekday: 'long',
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              second: '2-digit',
                             })}
                           </Text>
                         </td>
@@ -1158,14 +1158,14 @@ const Billing = ({ billID = "", loaderDisplay }) => {
             const itemObj = { ...item, ...item.itemDetail };
             return (
               <div key={index} className="print-table-row">
-                <p>{itemObj["itemName"]}</p>
-                <p className="bold-text">{itemObj["itemQuantityInBill"]}</p>
-                <p>{itemObj["itemMRPperUnit"]}</p>
-                <p>{itemObj["itemSellingPricePerUnit"].toFixed(2) || 0}</p>
+                <p>{itemObj['itemName']}</p>
+                <p className="bold-text">{itemObj['itemQuantityInBill']}</p>
+                <p>{itemObj['itemMRPperUnit']}</p>
+                <p>{itemObj['itemSellingPricePerUnit'].toFixed(2) || 0}</p>
                 <p className="bold-text">
                   {(
-                    itemObj["itemSellingPricePerUnit"] *
-                    itemObj["itemQuantityInBill"]
+                    itemObj['itemSellingPricePerUnit'] *
+                    itemObj['itemQuantityInBill']
                   ).toFixed(2) || 0}
                 </p>
               </div>
@@ -1205,10 +1205,10 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
     if (e.target.value < 0) return;
     const billItemsCopy = [...bill.billItems];
-    billItemsCopy[idx].itemDetail["itemQuantityInBill"] = Number(
+    billItemsCopy[idx].itemDetail['itemQuantityInBill'] = Number(
       e.target.value
     );
-    billItemsCopy[idx]["itemQuantityInBill"] = Number(e.target.value);
+    billItemsCopy[idx]['itemQuantityInBill'] = Number(e.target.value);
     setBill((prev) => ({ ...prev, billItems: [...billItemsCopy] }));
   };
   return (
@@ -1219,13 +1219,13 @@ const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
         weight={800}
         className="quantity-text print-text"
       >
-        {itemObj["itemQuantityInBill"] || 0}
+        {itemObj['itemQuantityInBill'] || 0}
       </Text>
       <Input
-        style={{ width: "90px" }}
+        style={{ width: '90px' }}
         className="quantity-input"
         type="number"
-        value={itemObj["itemQuantityInBill"]}
+        value={itemObj['itemQuantityInBill']}
         onChange={handleQuantityChange}
         onWheel={(e) => e.target.blur()}
       />

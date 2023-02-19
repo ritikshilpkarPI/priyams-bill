@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import { sidebarListData } from "../constants/HeaderTypes";
-import { Link, useHistory } from "react-router-dom";
-import "../CSS/_header.scss";
+import React, { useState, useEffect, useRef } from 'react';
+import { sidebarListData } from '../constants/HeaderTypes';
+import { Link, useHistory } from 'react-router-dom';
+import '../CSS/_header.scss';
 
 const handleToggle = (id) => {
   let toggledElement = document.getElementById(`linkContainer${id}`);
   // Closing and opening links on title click
   toggledElement.style.display =
-    toggledElement.style.display === "none" ? "block" : "none";
+    toggledElement.style.display === 'none' ? 'block' : 'none';
 };
 
 function searchSidebarListData(searchTerm) {
@@ -36,7 +36,7 @@ const Header = ({
   value,
   logoutUser,
 }) => {
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState('');
   const [listItemsData, setListItemsData] = useState(sidebarListData);
 
   const history = useHistory();
@@ -46,10 +46,10 @@ const Header = ({
   // let path = location.pathname.split("/")[1];
 
   //useref hooks for sidebar toggles
-  const inputElem = useRef("");
+  const inputElem = useRef('');
   const liItem = useRef([]);
-  const profile = useRef("");
-  const mainContainer = useRef("");
+  const profile = useRef('');
+  const mainContainer = useRef('');
 
   const setInputValue = (e) => {
     setInputText(e.target.value);
@@ -60,36 +60,36 @@ const Header = ({
   }, [inputText]);
 
   const goToBilling = () => {
-    history.push("/billing");
+    history.push('/billing');
   };
 
   const handleToggleOuterView = () => {
-    if (inputElem.current.style.display === "none") {
-      inputElem.current.style.display = "block";
-      profile.current.children[1].style.display = "block";
-      profile.current.children[2].style.display = "none";
-      mainContainer.current.style.width = "300px";
-      mainContainer.current.children[2].innerText = "Billing";
-      mainContainer.current.children[4].innerText = "Logout";
+    if (inputElem.current.style.display === 'none') {
+      inputElem.current.style.display = 'block';
+      profile.current.children[1].style.display = 'block';
+      profile.current.children[2].style.display = 'none';
+      mainContainer.current.style.width = '300px';
+      mainContainer.current.children[2].innerText = 'Billing';
+      mainContainer.current.children[4].innerText = 'Logout';
 
       liItem.current.forEach((ele) => {
-        ele.children[0].style.display = "block";
+        ele.children[0].style.display = 'block';
         ele.children[1].childNodes.forEach((element) => {
-          element.children[0].children[1].style.display = "block";
+          element.children[0].children[1].style.display = 'block';
         });
       });
     } else {
-      inputElem.current.style.display = "none";
-      profile.current.children[1].style.display = "none";
-      profile.current.children[2].style.display = "block";
-      mainContainer.current.style.width = "100px";
-      mainContainer.current.children[2].innerText = "B";
-      mainContainer.current.children[4].innerText = "L";
+      inputElem.current.style.display = 'none';
+      profile.current.children[1].style.display = 'none';
+      profile.current.children[2].style.display = 'block';
+      mainContainer.current.style.width = '100px';
+      mainContainer.current.children[2].innerText = 'B';
+      mainContainer.current.children[4].innerText = 'L';
 
       liItem.current.forEach((ele) => {
-        ele.children[0].style.display = "none";
+        ele.children[0].style.display = 'none';
         ele.children[1].childNodes.forEach((element) => {
-          element.children[0].children[1].style.display = "none";
+          element.children[0].children[1].style.display = 'none';
         });
       });
     }
@@ -155,9 +155,9 @@ const Header = ({
                         to={{
                           pathname: `${subItem.url}`,
                           search:
-                            `${subItem.url}`.split("/")[1] === "approval"
+                            `${subItem.url}`.split('/')[1] === 'approval'
                               ? `?option=${subItem.name}`
-                              : "",
+                              : '',
                         }}
                       >
                         <img

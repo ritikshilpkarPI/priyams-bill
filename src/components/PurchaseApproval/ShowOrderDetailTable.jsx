@@ -1,7 +1,7 @@
-import { Table } from "@mantine/core";
-import React from "react";
+import { Table } from '@mantine/core';
+import React from 'react';
 
-const ShowOrderDetailTable = ({ purchaseList}) => {
+const ShowOrderDetailTable = ({ purchaseList }) => {
   const rows = purchaseList.purchasedItems.map((element, index) => (
     <tr key={index + 1}>
       <td>{element.barcode}</td>
@@ -19,7 +19,9 @@ const ShowOrderDetailTable = ({ purchaseList}) => {
             <table key={index}>
               <tbody>
                 <tr>
-                  <td>{`${new Date(date.date).getDate()}/${new Date(date.date).getMonth()+1}/${new Date(date.date).getFullYear()}`}</td>
+                  <td>{`${new Date(date.date).getDate()}/${
+                    new Date(date.date).getMonth() + 1
+                  }/${new Date(date.date).getFullYear()}`}</td>
                   <td>{date.value}</td>
                 </tr>
               </tbody>
@@ -27,14 +29,14 @@ const ShowOrderDetailTable = ({ purchaseList}) => {
           );
         })}
       </td>
-      <td>{element.itemRemark || "No remarks"}</td>
+      <td>{element.itemRemark || 'No remarks'}</td>
     </tr>
   ));
   return (
     <>
       {purchaseList.purchasedItems.length ? (
         <>
-          <h3 style={{ margin: "2vmin" }}>Order Detail List</h3>
+          <h3 style={{ margin: '2vmin' }}>Order Detail List</h3>
           <Table withColumnBorders striped withBorder>
             <thead>
               <tr>
