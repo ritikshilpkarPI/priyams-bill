@@ -1,14 +1,14 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer } from 'react';
 
-import { itemsList, itemsReducer } from "./reducers/items.reducer";
-import { billItems, billItemReducer } from "./reducers/billItem.reducer";
-import { expenseList, expenseReducer } from "./reducers/expense.reducer";
+import { itemsList, itemsReducer } from './reducers/items.reducer';
+import { billItems, billItemReducer } from './reducers/billItem.reducer';
+import { expenseList, expenseReducer } from './reducers/expense.reducer';
 import {
   purchaseItems,
   purchaseItemReducer,
   purchaseNewItemInput,
   purchaseNewItemInputReducer,
-} from "./reducers/purchaseItem.reducer";
+} from './reducers/purchaseItem.reducer';
 
 export const AppStateContext = createContext();
 

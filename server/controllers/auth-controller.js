@@ -1,6 +1,5 @@
-// const user = require('../data/user');
-const Staff = require("../db-models/staff-model");
-const jwt = require("jsonwebtoken");
+const Staff = require('../db-models/staff-model');
+const jwt = require('jsonwebtoken');
 
 const loginUser = async (request, response) => {
   const { username, password } = request.body;
@@ -16,12 +15,12 @@ const loginUser = async (request, response) => {
     // If email not registered
     return response
       .status(200)
-      .json({ status: false, message: "invalid username" });
+      .json({ status: false, message: 'invalid username' });
   } else if (userData[0].password != password) {
     // If password don't match
     return response
       .status(200)
-      .json({ status: false, message: "wrong password" });
+      .json({ status: false, message: 'wrong password' });
   } else if (
     userData[0].username === username &&
     userData[0].password === password
@@ -34,7 +33,7 @@ const loginUser = async (request, response) => {
 
     return response.status(200).json({
       status: true,
-      message: "login successfull",
+      message: 'login successfull',
       authtoken: token,
       role: userData[0].role,
       name: userData[0].name,
@@ -44,7 +43,7 @@ const loginUser = async (request, response) => {
 
 const logoutUser = async (request, response) => {
   try {
-    response.status(200).json({ status: true, message: "logout user" });
+    response.status(200).json({ status: true, message: 'logout user' });
   } catch (error) {
     response.status(500).json(error);
   }

@@ -1,17 +1,17 @@
-.bill-uploader-section{
-    width: 80%;
-    margin: auto;
-    margin-top: 5vmin;
+.bill-uploader-section {
+  width: 80%;
+  margin: auto;
+  margin-top: 5vmin;
 }
-.bill-carousel{
-    margin-top: 5vmin; 
+.bill-carousel {
+  margin-top: 5vmin;
 }
-.bill-image{
-    height: 100%;
+.bill-image {
+  height: 100%;
 }
-.bill-image-point{
-        cursor: pointer;
-        position: absolute;
-        top: 0%;
-        left: 90%;
+.bill-image-point {
+  cursor: pointer;
+  position: absolute;
+  top: 0%;
+  left: 90%;
 }

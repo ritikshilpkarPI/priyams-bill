@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Image,
@@ -7,9 +7,9 @@ import {
   Table,
   Text,
   TextInput,
-} from "@mantine/core";
-import { Axios } from "../utils/axios";
-import { AppStateContext } from "../AppState/appState.context";
+} from '@mantine/core';
+import { Axios } from '../utils/axios';
+import { AppStateContext } from '../AppState/appState.context';
 
 const AddExpense = ({ date }) => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
@@ -17,18 +17,18 @@ const AddExpense = ({ date }) => {
 
   const newDate = new Date();
   const todayDate = `${newDate.getFullYear()}-${(
-    "0" +
+    '0' +
     (newDate.getMonth() + 1)
-  ).slice(-2)}-${("0" + newDate.getDate()).slice(-2)}`;
-  const todayTime = `${("0" + newDate.getHours()).slice(-2)}:${(
-    "0" + newDate.getMinutes()
-  ).slice(-2)}:${("0" + newDate.getSeconds()).slice(-2)}`;
+  ).slice(-2)}-${('0' + newDate.getDate()).slice(-2)}`;
+  const todayTime = `${('0' + newDate.getHours()).slice(-2)}:${(
+    '0' + newDate.getMinutes()
+  ).slice(-2)}:${('0' + newDate.getSeconds()).slice(-2)}`;
 
   // All States
   const [name, setName] = useState(
-    JSON.parse(localStorage.getItem("priyam-store"))?.name || ""
+    JSON.parse(localStorage.getItem('priyam-store'))?.name || ''
   );
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState('');
   const [amount, setAmount] = useState();
   const [dataDate, setDataDate] = useState(date);
   const [todayData, setTodayData] = useState();
@@ -46,10 +46,10 @@ const AddExpense = ({ date }) => {
       .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
     if (time.length > 1) {
       time = time.slice(1);
-      time[5] = +time[0] < 12 ? " AM" : " PM";
+      time[5] = +time[0] < 12 ? ' AM' : ' PM';
       time[0] = +time[0] % 12 || 12;
     }
-    return time.join("");
+    return time.join('');
   }
 
   // To add new expense
@@ -63,31 +63,31 @@ const AddExpense = ({ date }) => {
       time: timeConvert(todayTime),
     };
     if (!obj.user || !obj.description || !obj.amount) {
-      alert("Please enter all fields!");
+      alert('Please enter all fields!');
     } else {
       setButtonLoad(true);
       const response = await Axios.request({
-        url: "/api/expense",
-        method: "post",
+        url: '/api/expense',
+        method: 'post',
         data: { ...obj },
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       if (
         response.data.status === true &&
-        response.data.message === "expense added"
+        response.data.message === 'expense added'
       ) {
-        setDescription("");
+        setDescription('');
         setAmount();
         setButtonLoad(false);
         setDataDate(todayDate);
         expenseReducer[1]({
-          type: "UPDATE_EXPENSE_LIST",
+          type: 'UPDATE_EXPENSE_LIST',
           payload: response.data.data,
         });
       } else {
-        alert("Failed to save date!");
+        alert('Failed to save date!');
       }
     }
   };
@@ -97,9 +97,9 @@ const AddExpense = ({ date }) => {
     const getTodayData = async () => {
       const todayExpense = await Axios.request({
         url: `/api/expense/${dataDate}`,
-        method: "get",
+        method: 'get',
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       setTodayData(todayExpense.data.data);
@@ -109,26 +109,26 @@ const AddExpense = ({ date }) => {
 
   // To delete expense item
   const deleteExpense = async (id) => {
-    const userResponse = window.confirm("Do you want to delete this item?");
+    const userResponse = window.confirm('Do you want to delete this item?');
     if (userResponse) {
       const response = await Axios.request({
         url: `/api/expense/${id}`,
-        method: "delete",
+        method: 'delete',
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       if (
         response.data.status === true &&
-        response.data.message === "expense deleted"
+        response.data.message === 'expense deleted'
       ) {
         setReload(!reload);
         expenseReducer[1]({
-          type: "UPDATE_EXPENSE_LIST",
+          type: 'UPDATE_EXPENSE_LIST',
           payload: response.data.data,
         });
       } else {
-        alert("Failed to delete expense!");
+        alert('Failed to delete expense!');
       }
     }
   };
@@ -145,40 +145,40 @@ const AddExpense = ({ date }) => {
     const itemToUpdate = todayData[index];
     const response = await Axios.request({
       url: `/api/expense/${itemToUpdate._id}`,
-      method: "put",
+      method: 'put',
       data: { ...itemToUpdate },
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
     if (
       response.data.status === true &&
-      response.data.message === "expense updated"
+      response.data.message === 'expense updated'
     ) {
-      alert("Expense updated!");
+      alert('Expense updated!');
       expenseReducer[1]({
-        type: "UPDATE_EXPENSE_LIST",
+        type: 'UPDATE_EXPENSE_LIST',
         payload: response.data.data,
       });
     } else {
-      alert("Failed to update expense item!");
+      alert('Failed to update expense item!');
     }
   };
 
   return (
     <div
       style={{
-        boxShadow: "0px 0px 15px -1px rgba(0,0,0,0.12)",
-        borderRadius: "8px",
+        boxShadow: '0px 0px 15px -1px rgba(0,0,0,0.12)',
+        borderRadius: '8px',
       }}
       className="add-expense-container"
     >
       <div
         className="input-section"
         style={{
-          width: "900px",
-          textAlign: "left",
-          padding: "15px 28px 20px",
+          width: '900px',
+          textAlign: 'left',
+          padding: '15px 28px 20px',
         }}
       >
         <div>
@@ -186,7 +186,7 @@ const AddExpense = ({ date }) => {
             type="date"
             name="date"
             id="date"
-            style={{ fontSize: "18px", padding: "4px" }}
+            style={{ fontSize: '18px', padding: '4px' }}
             value={dataDate}
             onChange={(e) => setDataDate(e.target.value)}
           />
@@ -196,7 +196,7 @@ const AddExpense = ({ date }) => {
             label="Your name"
             placeholder="Your name"
             value={name}
-            disabled={Boolean(JSON.parse(localStorage.getItem("priyam-store")))}
+            disabled={Boolean(JSON.parse(localStorage.getItem('priyam-store')))}
             onChange={(e) => setName(e.target.value)}
           />
           <NumberInput
@@ -219,12 +219,12 @@ const AddExpense = ({ date }) => {
       </div>
       <div
         style={{
-          borderRadius: "8px",
-          padding: "0 20px 5px",
-          marginTop: "0px",
+          borderRadius: '8px',
+          padding: '0 20px 5px',
+          marginTop: '0px',
         }}
       >
-        <Table sx={{ marginTop: "10px" }} id="expenseTable">
+        <Table sx={{ marginTop: '10px' }} id="expenseTable">
           <thead>
             <tr>
               <th>Time</th>
@@ -239,13 +239,13 @@ const AddExpense = ({ date }) => {
                 <td>{element.time}</td>
                 <td>
                   <TextInput
-                    style={{ border: "0px solid red", outline: "none" }}
+                    style={{ border: '0px solid red', outline: 'none' }}
                     variant="unstyled"
                     value={element.description}
                     onChange={(e) =>
                       handleInputChange(
                         element,
-                        "description",
+                        'description',
                         e.target.value,
                         index
                       )
@@ -257,30 +257,30 @@ const AddExpense = ({ date }) => {
                     variant="unstyled"
                     value={element.user}
                     onChange={(e) =>
-                      handleInputChange(element, "user", e.target.value, index)
+                      handleInputChange(element, 'user', e.target.value, index)
                     }
                   />
                 </td>
                 <td>
                   <NumberInput
-                    style={{ textAlign: "center" }}
+                    style={{ textAlign: 'center' }}
                     variant="unstyled"
                     value={element.amount}
                     onChange={(value) =>
-                      handleInputChange(element, "amount", value, index)
+                      handleInputChange(element, 'amount', value, index)
                     }
                   />
                 </td>
-                <td style={{ display: dataDate === todayDate ? "" : "none" }}>
+                <td style={{ display: dataDate === todayDate ? '' : 'none' }}>
                   <Image
-                    style={{ padding: "7px", width: "26px", cursor: "pointer" }}
+                    style={{ padding: '7px', width: '26px', cursor: 'pointer' }}
                     onClick={() => deleteExpense(element._id)}
                     src="images/cross.svg"
                   />
                 </td>
-                <td style={{ display: dataDate === todayDate ? "" : "none" }}>
+                <td style={{ display: dataDate === todayDate ? '' : 'none' }}>
                   <Image
-                    style={{ padding: "6px", width: "27px", cursor: "pointer" }}
+                    style={{ padding: '6px', width: '27px', cursor: 'pointer' }}
                     onClick={() => updateExpense(index)}
                     src="images/check.svg"
                   />
@@ -291,13 +291,13 @@ const AddExpense = ({ date }) => {
         </Table>
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "10px",
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '10px',
           }}
         >
-          {todayData?.length === 0 ? <Text>No data...</Text> : ""}
-          {!todayData ? <Loader size="sm" /> : ""}
+          {todayData?.length === 0 ? <Text>No data...</Text> : ''}
+          {!todayData ? <Loader size="sm" /> : ''}
         </div>
       </div>
     </div>

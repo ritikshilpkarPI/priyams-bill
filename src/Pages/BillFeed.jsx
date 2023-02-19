@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Button, Loader, Table, Text, Collapse } from "@mantine/core";
-import { Axios } from "../utils/axios";
-import { useHistory } from "react-router-dom";
-import ProtectedComponent from "src/components/ProtectedComponent";
-import access from "../access";
+import { useEffect, useState } from 'react';
+import { Button, Loader, Table, Text, Collapse } from '@mantine/core';
+import { Axios } from '../utils/axios';
+import { useHistory } from 'react-router-dom';
+import ProtectedComponent from 'src/components/ProtectedComponent';
+import access from '../access';
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
@@ -12,14 +12,14 @@ const BillFeed = ({ bills = [] }) => {
     setLoader(true);
     const getBillFeed = async () => {
       const fetch = await Axios.request({
-        url: "/api/billing/getBillFeed",
-        method: "get",
+        url: '/api/billing/getBillFeed',
+        method: 'get',
         params: {
           page: 1,
           size: 100,
         },
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       setAllBills(fetch.data.message.allBill);
@@ -39,11 +39,11 @@ const BillFeed = ({ bills = [] }) => {
       {loader ? (
         <div
           style={{
-            height: "95vh",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            height: '95vh',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           <Loader color="blue" size="xl" />
@@ -126,25 +126,25 @@ const TableRow = ({ bill, idx }) => {
 
   async function handleDeleteBill(id) {
     await Axios.request({
-      url: "/api/billing/deleteBill",
-      method: "delete",
+      url: '/api/billing/deleteBill',
+      method: 'delete',
       data: {
         id: id,
       },
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
   }
   const sendCustomerMessage = async (id) => {
     await Axios.request({
-      url: "/api/billing/sendMessage",
-      method: "post",
+      url: '/api/billing/sendMessage',
+      method: 'post',
       data: {
         id: id,
       },
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
   };
@@ -174,7 +174,7 @@ const TableRow = ({ bill, idx }) => {
       <tr
         onClick={() => setOpen(!open)}
         className="bill-row"
-        style={{ cursor: "pointer" }}
+        style={{ cursor: 'pointer' }}
       >
         <td>
           <Text color="black" weight={500}>
@@ -183,69 +183,69 @@ const TableRow = ({ bill, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["customerName"]}
+            {bill['customerName']}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["customerPhone"]}
+            {bill['customerPhone']}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["billAmountTotal"].toFixed(2)}
+            {bill['billAmountTotal'].toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["billMRPTotal"].toFixed(2)}
+            {bill['billMRPTotal'].toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["cashPay"]?.toFixed(2)}
+            {bill['cashPay']?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["upiPay"]?.toFixed(2)}
+            {bill['upiPay']?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["amountReturn"]?.toFixed(2)}
+            {bill['amountReturn']?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["totalNumberOfItems"]}
+            {bill['totalNumberOfItems']}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["totalNumberOfUniqueItems"]}
+            {bill['totalNumberOfUniqueItems']}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill["billDiscountTotal"].toFixed(2)}
+            {bill['billDiscountTotal'].toFixed(2)}
           </Text>
         </td>
         <ProtectedComponent role={access.BILL_PROFIT_ROW}>
           <td>
             <Text color="black" weight={500}>
-              {bill["totalBillProfit"].toFixed(2)}
+              {bill['totalBillProfit'].toFixed(2)}
             </Text>
           </td>
         </ProtectedComponent>
         <td>
           <Text color="black" weight={500}>
-            {new Date(bill["createdAt"]).toLocaleString()}
+            {new Date(bill['createdAt']).toLocaleString()}
           </Text>
         </td>
         <td>
           <Button
-            color={bill.messageSend ? "blue" : "green"}
+            color={bill.messageSend ? 'blue' : 'green'}
             disabled={bill.customerPhone && bill.customerName ? false : true}
             onClick={() => sendBill(bill)}
           >
@@ -253,11 +253,11 @@ const TableRow = ({ bill, idx }) => {
           </Button>
         </td>
         <td>
-          <Button onClick={() => handleClick(bill["_id"])}>Edit Bill</Button>
+          <Button onClick={() => handleClick(bill['_id'])}>Edit Bill</Button>
         </td>
         <ProtectedComponent role={access.DELETE_BILL_ROW}>
           <td>
-            <Button onClick={() => handleDeleteBill(bill["_id"])}>
+            <Button onClick={() => handleDeleteBill(bill['_id'])}>
               Delete Bill
             </Button>
           </td>
@@ -303,7 +303,7 @@ const TableRow = ({ bill, idx }) => {
                     <td>
                       <Text color="black" weight={500}>
                         {billItemObj?.itemDetail?.itemName ||
-                          "Item name not found"}
+                          'Item name not found'}
                       </Text>
                     </td>
                     <td>

@@ -1,96 +1,100 @@
-import React, {
-  useEffect,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-import {
-  Button,
-  Group,
-  Table,
-  Text,
-  Title,
-} from '@mantine/core';
+import { Button, Group, Table, Text, Title } from '@mantine/core';
 
-const options = { weekday:"long", year:"numeric", month:"short", day:"numeric"}
+const options = {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+};
 
 const CustomerBill = () => {
   const params = useParams();
   const id = params.customerBillId;
   const [bill, setBill] = useState({});
-  const columnName = ["Sr. No.","Item Name","Oty.", "MRP", "Discount","Value"]
+  const columnName = [
+    'Sr. No.',
+    'Item Name',
+    'Oty.',
+    'MRP',
+    'Discount',
+    'Value',
+  ];
 
   const fetchBill = async () => {
     const customerBill = await axios.request({
       url: `/api/billing/getEditBill/${id}`,
-      method: "get",
+      method: 'get',
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
     setBill(customerBill.data.message);
   };
   useEffect(() => {
     fetchBill();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const printBill = () => {
-    window.print()
-  }
+    window.print();
+  };
   return (
-    <div className='customer-container'>
-      <Button className="print-btn" onClick={printBill}>Print Bill</Button>
-      <Title order={1} className="bill-header">Priyam Store Invoice Bill</Title>
-        <Group mt="md" mb="xs" position="center">
-          <Group position="left" mt="md" mb="xs">
-            <Title order={4}>Customer Name:</Title>
-            <Text>{bill.customerName}</Text>
-          </Group>
-          <Group position="left" mt="md" mb="xs">
-            <Title order={4}>Customer Phone Number:</Title>
-            <Text>{bill.customerPhone}</Text>
-          </Group>
-          <Group position="left" mt="md" mb="xs">
-            <Title order={4}>Date Of Purchase:</Title>
-            <Text>{new Date(bill?.createdAt).toLocaleDateString('en-us', options)}</Text>
-          </Group>
+    <div className="customer-container">
+      <Button className="print-btn" onClick={printBill}>
+        Print Bill
+      </Button>
+      <Title order={1} className="bill-header">
+        Priyam Store Invoice Bill
+      </Title>
+      <Group mt="md" mb="xs" position="center">
+        <Group position="left" mt="md" mb="xs">
+          <Title order={4}>Customer Name:</Title>
+          <Text>{bill.customerName}</Text>
         </Group>
-        <Title order={3}>Purchased Items</Title>
-        <div className="table-container">
-        <Table sx={{ marginTop: "10px" }}>
+        <Group position="left" mt="md" mb="xs">
+          <Title order={4}>Customer Phone Number:</Title>
+          <Text>{bill.customerPhone}</Text>
+        </Group>
+        <Group position="left" mt="md" mb="xs">
+          <Title order={4}>Date Of Purchase:</Title>
+          <Text>
+            {new Date(bill?.createdAt).toLocaleDateString('en-us', options)}
+          </Text>
+        </Group>
+      </Group>
+      <Title order={3}>Purchased Items</Title>
+      <div className="table-container">
+        <Table sx={{ marginTop: '10px' }}>
           <thead>
             <tr>
-            {
-              columnName.map((column,index) => {
-                return (
-                   <th key={index}>{column}</th>
-
-                )
-              })
-            }
+              {columnName.map((column, index) => {
+                return <th key={index}>{column}</th>;
+              })}
             </tr>
           </thead>
           <tbody>
             {bill?.items?.map((item, index) => (
               <tr key={index}>
-                <td className='data-cell'>
-                  <Text style={{ padding: "0 6px" }}>{index + 1}</Text>
+                <td className="data-cell">
+                  <Text style={{ padding: '0 6px' }}>{index + 1}</Text>
                 </td>
-                <td className='data-cell'>
-                  <Text >{item?.itemDetail.itemName}</Text>
+                <td className="data-cell">
+                  <Text>{item?.itemDetail.itemName}</Text>
                 </td>
-                <td className='data-cell' >
-                  <Text >{item.itemQuantityInBill}</Text>
+                <td className="data-cell">
+                  <Text>{item.itemQuantityInBill}</Text>
                 </td>
-                <td className='data-cell' >
+                <td className="data-cell">
                   <Text>{item.itemMRPtotal}</Text>
                 </td>
-                <td className='data-cell' >
-                  <Text >{item.itemDiscountTotal}</Text>
+                <td className="data-cell">
+                  <Text>{item.itemDiscountTotal}</Text>
                 </td>
-                <td className='data-cell' >
+                <td className="data-cell">
                   <Text>{item.itemSellingPriceTotal}</Text>
                 </td>
               </tr>
@@ -98,7 +102,7 @@ const CustomerBill = () => {
             <tr className="final-bill">
               <td className="empty-slots"></td>
               <td className="empty-slots"></td>
-              <td >
+              <td>
                 <Text
                   color="black"
                   size="xl"
@@ -132,50 +136,50 @@ const CustomerBill = () => {
             </tr>
           </tbody>
           <tbody>
-          <tr className="final-bill">
-            <td className="empty-slots"></td>
-            <td className="empty-slots"></td>
-            <td>
-              <Text
-                color="black"
-                size="xl"
-                weight={800}
-                className="final-bill-text print-text"
-              >
-                Cash Paid: {bill.cashPay}
-              </Text>
-              
-            </td>
-            <td>
-              <Text
-                color="black"
-                size="xl"
-                weight={800}
-                className="final-bill-text print-text"
-              >
-                Upi Paid: {bill.upiPay}
-              </Text>
-             
-            </td>
-            <td className="empty-slots"></td>
-            <td>
-              <Text
-                color="black"
-                size="xl"
-                weight={800}
-                className="final-bill-text print-text"
-              >
-                Amount Return: {Number(bill.amountReturn || 0)}
-              </Text>
-            </td>
-          </tr>
+            <tr className="final-bill">
+              <td className="empty-slots"></td>
+              <td className="empty-slots"></td>
+              <td>
+                <Text
+                  color="black"
+                  size="xl"
+                  weight={800}
+                  className="final-bill-text print-text"
+                >
+                  Cash Paid: {bill.cashPay}
+                </Text>
+              </td>
+              <td>
+                <Text
+                  color="black"
+                  size="xl"
+                  weight={800}
+                  className="final-bill-text print-text"
+                >
+                  Upi Paid: {bill.upiPay}
+                </Text>
+              </td>
+              <td className="empty-slots"></td>
+              <td>
+                <Text
+                  color="black"
+                  size="xl"
+                  weight={800}
+                  className="final-bill-text print-text"
+                >
+                  Amount Return: {Number(bill.amountReturn || 0)}
+                </Text>
+              </td>
+            </tr>
           </tbody>
-
         </Table>
-        </div>
+      </div>
       <footer className="footer">
         <Title>ThankYou for purchasing from priyam stores. </Title>
-        <Text>Priyam Stores, Shop No-9, Building Name, Indrapuri Bhopal-462021 | Contact No - 0000-000-000 </Text>
+        <Text>
+          Priyam Stores, Shop No-9, Building Name, Indrapuri Bhopal-462021 |
+          Contact No - 0000-000-000{' '}
+        </Text>
       </footer>
     </div>
   );

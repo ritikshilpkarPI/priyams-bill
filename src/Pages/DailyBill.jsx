@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Table,
   Text,
   // Collapse
-} from "@mantine/core";
-import { Axios } from "../utils/axios";
+} from '@mantine/core';
+import { Axios } from '../utils/axios';
 // import { BillFeed } from "./BillFeed";
 
 const DayWiseBillFeed = () => {
@@ -13,10 +13,10 @@ const DayWiseBillFeed = () => {
   useEffect(() => {
     (async () => {
       const dayBill = await Axios.request({
-        url: "/api/billing/allDailyBills",
-        method: "get",
+        url: '/api/billing/allDailyBills',
+        method: 'get',
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       setAllBills(dayBill.data.message.allDailyBills);
@@ -87,14 +87,14 @@ const TableRow = ({ item, idx }) => {
     totalDailyProfit,
     totalCashPay,
     totalUpiPay,
-    totalAmountReturn
+    totalAmountReturn,
   } = item;
   const [rowOpen, setRowOpen] = useState(false);
   return (
     <>
       <tr
         onClick={() => setRowOpen(!rowOpen)}
-        className={`bill-row ${rowOpen ? "rowOpen-main" : ""}`}
+        className={`bill-row ${rowOpen ? 'rowOpen-main' : ''}`}
       >
         <td>
           <Text color="black" weight={500}>

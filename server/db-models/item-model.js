@@ -1,22 +1,22 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const inventoryItemCategory = [
-  "Bakery",
-  "Beverage",
-  "Dairy and Frozen",
-  "Staple",
-  "Personal care",
-  "Packaged Food",
-  "Home and Kitchen",
-  "Stationery",
-  "Grocery",
-  "Baby and kids",
-  "Electronic",
-  "Spices and fast food",
-  "Pooja",
-  "Oil and ghee",
-  "Sweet and Chocolate",
-  "Plastic",
-  "Miscellanous",
+  'Bakery',
+  'Beverage',
+  'Dairy and Frozen',
+  'Staple',
+  'Personal care',
+  'Packaged Food',
+  'Home and Kitchen',
+  'Stationery',
+  'Grocery',
+  'Baby and kids',
+  'Electronic',
+  'Spices and fast food',
+  'Pooja',
+  'Oil and ghee',
+  'Sweet and Chocolate',
+  'Plastic',
+  'Miscellanous',
 ];
 
 const ItemSchem = new mongoose.Schema(
@@ -62,5 +62,5 @@ const ItemSchem = new mongoose.Schema(
   { strict: false, timestamps: true }
 );
 
-const Item = mongoose.model("Item", ItemSchem);
-module.exports = { Item };
+const Item = mongoose.model('Item', ItemSchem);
+module.exports = { Item, inventoryItemCategory };

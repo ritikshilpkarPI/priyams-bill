@@ -1,29 +1,19 @@
-import React, { useState } from "react";
-import PurchaseListApproval from "./PurchaseListApproval";
-import { Button, Table } from "@mantine/core";
-import '../../CSS/purchaseApproval.css'
+import React, { useState } from 'react';
+import PurchaseListApproval from './PurchaseListApproval';
+import { Button, Table } from '@mantine/core';
+import '../../CSS/purchaseApproval.css';
 
-import ShowPurchaseOrderTable from "./ShowPurchaseOrderTable";
-import ShowOrderDetailTable from "./ShowOrderDetailTable";
-import BillUploaderDetails from "./BillUploaderDetails";
+import ShowPurchaseOrderTable from './ShowPurchaseOrderTable';
+import ShowOrderDetailTable from './ShowOrderDetailTable';
+import BillUploaderDetails from './BillUploaderDetails';
 
-// const manageList = [
-//   { value: "all", label: "All orders" },
-//   { value: "rejected", label: "Rejected orders" },
-//   { value: "saved", label: "Saved orders" },
-// ]
-// const adminList = [
-//   { value: "all", label: "All orders" },
-//   { value: "drafted", label: "Draft orders" },
-//   { value: "rejected", label: "Rejected orders" },
-//   { value: "approved", label: "Approved orders" },
-//   { value: "saved", label: "Saved orders" },
-// ] 
-const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrders}) => {
+const PurchaseDetailsApproval = ({
+  allPurchaseList,
+  setAllPurchaseList,
+  getOrders,
+}) => {
   const [indexDetail, setIndexDetail] = useState(-1);
   // const role = JSON.parse(localStorage.getItem("priyam-store")).role
-  
-  
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
@@ -38,12 +28,9 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrder
         onChange={getOrders}
       />  */}
 
-      {allPurchaseList.length === 0
-        ?
-        <div className="message">
-          No Orders
-        </div>
-        :
+      {allPurchaseList.length === 0 ? (
+        <div className="message">No Orders</div>
+      ) : (
         <Table className="purchase-list" withColumnBorders striped withBorder>
           <thead>
             <tr>
@@ -60,11 +47,10 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrder
             </tr>
           </thead>
           <tbody>
-            {allPurchaseList.map((list, index) => {
-              return (
-                indexDetail >= 0 ?
-                  index === indexDetail
-                    ?
+            {allPurchaseList
+              .map((list, index) => {
+                return indexDetail >= 0 ? (
+                  index === indexDetail ? (
                     <tr key={index}>
                       <PurchaseListApproval
                         allPurchaseList={allPurchaseList}
@@ -73,11 +59,13 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrder
                         index={index}
                         setIndexDetail={setIndexDetail}
                         getOrders={getOrders}
-
                       />
                     </tr>
-                    : <div key={index}></div>
-                  : <tr key={index}>
+                  ) : (
+                    <div key={index}></div>
+                  )
+                ) : (
+                  <tr key={index}>
                     <PurchaseListApproval
                       allPurchaseList={allPurchaseList}
                       setAllPurchaseList={setAllPurchaseList}
@@ -87,20 +75,26 @@ const PurchaseDetailsApproval = ({ allPurchaseList, setAllPurchaseList, getOrder
                       getOrders={getOrders}
                     />
                   </tr>
-              );
-            }).reverse()}
+                );
+              })
+              .reverse()}
           </tbody>
         </Table>
-          }
-       {indexDetail >= 0 ?
-         <> 
-         <div className="closebtn"><Button onClick={()=> setIndexDetail(-1)}>Close</Button></div>
-         <ShowPurchaseOrderTable purchaseList={allPurchaseList[indexDetail]} />
-         <ShowOrderDetailTable purchaseList={allPurchaseList[indexDetail]} />
-         <BillUploaderDetails cloudBills={allPurchaseList[indexDetail]['billPhotos']}/>
-         </>
-          :<></>
-       }
+      )}
+      {indexDetail >= 0 ? (
+        <>
+          <div className="closebtn">
+            <Button onClick={() => setIndexDetail(-1)}>Close</Button>
+          </div>
+          <ShowPurchaseOrderTable purchaseList={allPurchaseList[indexDetail]} />
+          <ShowOrderDetailTable purchaseList={allPurchaseList[indexDetail]} />
+          <BillUploaderDetails
+            cloudBills={allPurchaseList[indexDetail]['billPhotos']}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

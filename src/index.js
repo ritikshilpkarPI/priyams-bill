@@ -1,10 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./CSS/index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { AppStateContextProvider } from "./AppState/appState.context";
-import { BrowserRouter } from "react-router-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './CSS/index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { AppStateContextProvider } from './AppState/appState.context';
+import { BrowserRouter } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 
@@ -20,7 +20,7 @@ ReactDOM.render(
       </React.StrictMode>
     </AppStateContextProvider>
   </BrowserRouter>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

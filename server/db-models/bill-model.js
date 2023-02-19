@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const BillSchema = new mongoose.Schema(
@@ -17,7 +17,7 @@ const BillSchema = new mongoose.Schema(
       {
         itemDetail: {
           type: Schema.Types.ObjectId,
-          ref: "Item",
+          ref: 'Item',
         },
         itemQuantityInBill: { type: Number },
         itemMRPtotal: { type: Number },
@@ -36,6 +36,6 @@ const BillSchema = new mongoose.Schema(
   }
 );
 
-const Bill = mongoose.model("Bill", BillSchema);
+const Bill = mongoose.model('Bill', BillSchema);
 
 module.exports = { Bill };
