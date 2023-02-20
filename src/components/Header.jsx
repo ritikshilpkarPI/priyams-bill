@@ -50,6 +50,7 @@ const Header = ({
   const liItem = useRef([]);
   const profile = useRef('');
   const mainContainer = useRef('');
+  const sidebarElem = useRef('');
 
   const setInputValue = (e) => {
     setInputText(e.target.value);
@@ -71,6 +72,7 @@ const Header = ({
       mainContainer.current.style.width = '300px';
       mainContainer.current.children[2].innerText = 'Billing';
       mainContainer.current.children[4].innerText = 'Logout';
+      sidebarElem.current.style.height = 'calc(100vh - 230px)';
 
       liItem.current.forEach((ele) => {
         ele.children[0].style.display = 'block';
@@ -85,6 +87,7 @@ const Header = ({
       mainContainer.current.style.width = '100px';
       mainContainer.current.children[2].innerText = 'B';
       mainContainer.current.children[4].innerText = 'L';
+      sidebarElem.current.style.height = 'calc(100vh - 190px)';
 
       liItem.current.forEach((ele) => {
         ele.children[0].style.display = 'none';
@@ -128,7 +131,7 @@ const Header = ({
       <button className="billing" onClick={goToBilling}>
         Billing
       </button>
-      <nav className="sidebar">
+      <nav className="sidebar" ref={sidebarElem}>
         {listItemsData.map((item, index) => {
           const [itemKey, itemValue] = Object.entries(item)[0];
           return (
