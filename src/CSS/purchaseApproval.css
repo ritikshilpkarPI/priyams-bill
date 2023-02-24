@@ -1,33 +1,33 @@
-.purchase-approval{
-    width: 100%;
-    margin-bottom: 5vmin;
+.purchase-approval {
+  width: 100%;
+  margin-bottom: 5vmin;
 }
-.purchase-list{
-    width: 100%;
-    margin: auto;
+.purchase-list {
+  width: 100%;
+  margin: auto;
 }
-.purchase-list-edit{
-    height:5vmin;
-    padding:1vmin 2vmin;
-    color:white;
-    border-radius:0.5vmin;
-    background-color:#1098AD;
-    text-decoration: none;
+.purchase-list-edit {
+  height: 5vmin;
+  padding: 1vmin 2vmin;
+  color: white;
+  border-radius: 0.5vmin;
+  background-color: #1098ad;
+  text-decoration: none;
 }
-.approve-btn{
-    background-color:#40C057;
+.approve-btn {
+  background-color: #40c057;
 }
-.reject-btn{
-    background-color:#F03E3E;
+.reject-btn {
+  background-color: #f03e3e;
 }
-.message{
-    display: flex;
-    height: 10vmin;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+.message {
+  display: flex;
+  height: 10vmin;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
-.closebtn{
-    margin-top: 2vmin;
-    margin-bottom: 2vmin;
+.closebtn {
+  margin-top: 2vmin;
+  margin-bottom: 2vmin;
 }

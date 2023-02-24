@@ -1,4 +1,4 @@
-const { Item, inventoryItemCategory } = require("../db-models/item-model");
+const { Item, inventoryItemCategory } = require('../db-models/item-model');
 
 const getItemsFeed = async (req, res) => {
   try {
@@ -54,7 +54,7 @@ const addItems = async (req, res) => {
     ) {
       return res
         .status(501)
-        .json({ status: false, message: "Fill all required fields" });
+        .json({ status: false, message: 'Fill all required fields' });
     }
 
     const newItem = await new Item({
@@ -102,7 +102,7 @@ const softDeleteItem = async (req, res) => {
     await Item.findByIdAndUpdate(id, { isDeleted: true });
     let items = await Item.find();
     items = items.filter((item) => !item.isDeleted);
-    res.status(200).json({ message: "item soft deleted!", items: items });
+    res.status(200).json({ message: 'item soft deleted!', items: items });
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -111,15 +111,15 @@ const softDeleteItem = async (req, res) => {
 const addBulkItems = async (request, response) => {
   try {
     const csvData = request.body;
-    const slabPricingStart = csvData[0].findIndex((item) => item === "tp1");
-    const mrpprice = csvData[0].findIndex((item) => item === "itemMRPperUnit");
-    const itemname = csvData[0].findIndex((item) => item === "itemName");
-    const itembarcode = csvData[0].findIndex((item) => item === "itemBarcode");
+    const slabPricingStart = csvData[0].findIndex((item) => item === 'tp1');
+    const mrpprice = csvData[0].findIndex((item) => item === 'itemMRPperUnit');
+    const itemname = csvData[0].findIndex((item) => item === 'itemName');
+    const itembarcode = csvData[0].findIndex((item) => item === 'itemBarcode');
 
     if (slabPricingStart === -1)
       return response.status(503).json({
         status: false,
-        message: "Uploaded sheet does not has tp1 column in its header",
+        message: 'Uploaded sheet does not has tp1 column in its header',
       });
     await Promise.all(
       csvData.map(async (item, index) => {
@@ -151,7 +151,7 @@ const addBulkItems = async (request, response) => {
         }
       })
     );
-    response.status(200).json({ status: true, message: "items added" });
+    response.status(200).json({ status: true, message: 'items added' });
   } catch (error) {
     response.status(500).json(error);
   }
@@ -244,7 +244,7 @@ const saveInventory = async (req, res) => {
         await Item.create({ ...itemDetails });
       }
     }
-    res.status(200).send({ message: "items updated", success: true });
+    res.status(200).send({ message: 'items updated', success: true });
   } catch (err) {
     res.status(400).send({ message: err, success: false });
   }
@@ -252,17 +252,17 @@ const saveInventory = async (req, res) => {
 
 const filterExpiryDates = async (req, res) => {
   const { startDate, endDate } = req.body;
-  const splitDateInDbFormat = (date = "dd/mm/yyyy") => {
-    const [day, month, year] = date.split("/"); // = [01, 02, 2028]
+  const splitDateInDbFormat = (date = 'dd/mm/yyyy') => {
+    const [day, month, year] = date.split('/'); // = [01, 02, 2028]
     return new Date(Number(year), Number(month), Number(day));
   };
   try {
     const expiredItems = await Item.aggregate([
       { $project: { useByDate: 1, itemName: 1, itemBarcode: 1 } },
-      { $unwind: "$useByDate" },
+      { $unwind: '$useByDate' },
       {
         $match: {
-          "useByDate.date": {
+          'useByDate.date': {
             $gte: splitDateInDbFormat(startDate),
             $lte: splitDateInDbFormat(endDate),
           },
@@ -270,7 +270,7 @@ const filterExpiryDates = async (req, res) => {
       },
       {
         $sort: {
-          "useByDate.date": 1,
+          'useByDate.date': 1,
         },
       },
     ]);
@@ -294,7 +294,7 @@ const permanentlyOutOfStock = async (req, res) => {
       }
     );
     res.status(200).send({
-      message: "Item is successfully permanently out of stock ",
+      message: 'Item is successfully permanently out of stock ',
       success: true,
       item,
     });

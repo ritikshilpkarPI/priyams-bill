@@ -6,14 +6,14 @@ import {
   Table,
   Text,
   Title,
-} from "@mantine/core";
-import { useEffect, useState, useContext } from "react";
-import { Axios } from "../utils/axios";
-import { AppStateContext } from "../AppState/appState.context";
-import AddExpense from "../components/AddExpense";
-import ProtectedComponent from "src/components/ProtectedComponent";
+} from '@mantine/core';
+import { useEffect, useState, useContext } from 'react';
+import { Axios } from '../utils/axios';
+import { AppStateContext } from '../AppState/appState.context';
+import AddExpense from '../components/AddExpense';
+import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access';
-import EmployeeAttendance from "../components/EmployeeAttendance";
+import EmployeeAttendance from '../components/EmployeeAttendance';
 const INITIAL_VALS = {
   twoThousand: 0,
   fiveHundred: 0,
@@ -26,15 +26,15 @@ const INITIAL_VALS = {
   two: 0,
   one: 0,
 };
-let createdAtDate = "";
-let id = "";
+let createdAtDate = '';
+let id = '';
 
 const OpenClose = () => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
   const [expenseList, expenseDispatch] = expenseItemsStateAndDispatch;
-  const currentDate = new Date().toJSON().split("T")[0];
+  const currentDate = new Date().toJSON().split('T')[0];
 
-  const [procedureValue, setProcedureValue] = useState("open");
+  const [procedureValue, setProcedureValue] = useState('open');
   const [procedure, setProcedure] = useState([]);
   const [dayWiseProcedures, setDayWiseProcedures] = useState([]);
   const [openingNotes, setOpeningNotes] = useState(INITIAL_VALS);
@@ -89,23 +89,23 @@ const OpenClose = () => {
 
   const finalProcedureData = {
     procedure: procedureValue,
-    notesSum: procedureValue === "open" ? openingNotesSum : closingNotesSum,
-    coinsSum: procedureValue === "open" ? openingCoinsSum : closingCoinsSum,
+    notesSum: procedureValue === 'open' ? openingNotesSum : closingNotesSum,
+    coinsSum: procedureValue === 'open' ? openingCoinsSum : closingCoinsSum,
     totalSum:
-      procedureValue === "open"
+      procedureValue === 'open'
         ? openingNotesSum + openingCoinsSum
         : closingNotesSum + closingCoinsSum,
     notes:
-      procedureValue === "open" ? { ...openingNotes } : { ...closingNotes },
-    coins: procedureValue === "open" ? { ...openingCoin } : { ...closingCoin },
+      procedureValue === 'open' ? { ...openingNotes } : { ...closingNotes },
+    coins: procedureValue === 'open' ? { ...openingCoin } : { ...closingCoin },
   };
 
   const getAllProcedure = async () => {
     const allProcedures = await Axios.request({
       url: `/api/openClose/getAllProcedure`,
-      method: "get",
+      method: 'get',
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
     const { procedures } = allProcedures.data.message;
@@ -115,9 +115,9 @@ const OpenClose = () => {
   const getDayWiseProcedure = async () => {
     const allDayWiseProcedures = await Axios.request({
       url: `/api/openClose/getDayWiseProcedure`,
-      method: "get",
+      method: 'get',
       headers: {
-        Cookie: "",
+        Cookie: '',
       },
     });
     const { dayWiseProcedures } = allDayWiseProcedures.data.message;
@@ -137,15 +137,15 @@ const OpenClose = () => {
 
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split("T")[0];
+      createdAtDate = date.split('T')[0];
 
-      if (selectedDate === createdAtDate && procedureObj.procedure === "open") {
+      if (selectedDate === createdAtDate && procedureObj.procedure === 'open') {
         setOpeningNotes(procedureObj.notes);
         setOpeningCoin(procedureObj.coins);
       }
       if (
         selectedDate === createdAtDate &&
-        procedureObj.procedure === "close"
+        procedureObj.procedure === 'close'
       ) {
         setClosingNotes(procedureObj.notes);
         setClosingCoin(procedureObj.coins);
@@ -153,15 +153,15 @@ const OpenClose = () => {
     });
   }, [procedure, currentDate, selectedDate]);
 
-  let selectedProcedureDate = "";
+  let selectedProcedureDate = '';
 
   const addNewOpenProcedure = async () => {
     setApiLoading(true);
-    id = "";
+    id = '';
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split("T")[0];
-      if (selectedDate === createdAtDate && procedureObj.procedure === "open") {
+      createdAtDate = date.split('T')[0];
+      if (selectedDate === createdAtDate && procedureObj.procedure === 'open') {
         id = procedureObj._id;
         selectedProcedureDate = createdAtDate;
       }
@@ -169,29 +169,29 @@ const OpenClose = () => {
     let procedureToEdit = procedure?.find((x) => x._id === id);
     if (
       createdAtDate !== currentDate ||
-      (id === "" && selectedDate === currentDate)
+      (id === '' && selectedDate === currentDate)
     ) {
       const newOpenProcedure = await Axios.request({
         url: `/api/openClose/newProcedure/open`,
-        method: "post",
+        method: 'post',
         data: { ...finalProcedureData },
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       let dateFromDb = newOpenProcedure.data.message.createdAt;
-      createdAtDate = dateFromDb.split("T")[0];
+      createdAtDate = dateFromDb.split('T')[0];
       id = newOpenProcedure.data.message._id;
     } else if (
       selectedDate === selectedProcedureDate &&
-      procedureToEdit.procedure === "open"
+      procedureToEdit.procedure === 'open'
     ) {
       await Axios.request({
         url: `/api/openClose/editProcedure/open`,
-        method: "put",
+        method: 'put',
         data: { id, procedureToBeUpdated: { ...finalProcedureData } },
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
     }
@@ -202,13 +202,13 @@ const OpenClose = () => {
   };
   const addNewCloseProcedure = async () => {
     setApiLoading(true);
-    id = "";
+    id = '';
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split("T")[0];
+      createdAtDate = date.split('T')[0];
       if (
         selectedDate === createdAtDate &&
-        procedureObj.procedure === "close"
+        procedureObj.procedure === 'close'
       ) {
         id = procedureObj._id;
         selectedProcedureDate = createdAtDate;
@@ -217,29 +217,29 @@ const OpenClose = () => {
     let procedureToEdit = procedure.find((x) => x._id === id);
     if (
       createdAtDate !== currentDate ||
-      (id === "" && selectedDate === currentDate)
+      (id === '' && selectedDate === currentDate)
     ) {
       const newCloseProcedure = await Axios.request({
         url: `/api/openClose/newProcedure/close`,
-        method: "post",
+        method: 'post',
         data: { ...finalProcedureData },
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       let dateFromDb = newCloseProcedure.data.message.createdAt;
-      createdAtDate = dateFromDb.split("T")[0];
+      createdAtDate = dateFromDb.split('T')[0];
       id = newCloseProcedure.data.message._id;
     } else if (
       selectedDate === selectedProcedureDate &&
-      procedureToEdit?.procedure === "close"
+      procedureToEdit?.procedure === 'close'
     ) {
       await Axios.request({
         url: `/api/openClose/editProcedure/close`,
-        method: "put",
+        method: 'put',
         data: { id, procedureToBeUpdated: { ...finalProcedureData } },
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
     }
@@ -252,14 +252,14 @@ const OpenClose = () => {
     if (!expenseList.length) {
       const getAllData = async () => {
         const allExpense = await Axios.request({
-          url: "/api/expense",
-          method: "get",
+          url: '/api/expense',
+          method: 'get',
           headers: {
-            Cookie: "",
+            Cookie: '',
           },
         });
         expenseDispatch({
-          type: "UPDATE_EXPENSE_LIST",
+          type: 'UPDATE_EXPENSE_LIST',
           payload: allExpense.data.data,
         });
       };
@@ -271,10 +271,10 @@ const OpenClose = () => {
   useEffect(() => {
     (async () => {
       const dayBill = await Axios.request({
-        url: "/api/billing/allDailyBills",
-        method: "get",
+        url: '/api/billing/allDailyBills',
+        method: 'get',
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       setAllBills(dayBill.data.message.allDailyBills);
@@ -284,21 +284,21 @@ const OpenClose = () => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
       }}
     >
       <div
         style={{
-          display: "flex",
-          width: "100%",
-          gap: "30px",
-          justifyContent: "flex-start",
-          alignItems: "center",
+          display: 'flex',
+          width: '100%',
+          gap: '30px',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
         }}
       >
-        <div style={{ marginLeft: "18px" }}>
+        <div style={{ marginLeft: '18px' }}>
           <h4>Selected date:</h4>
           <input
             onChange={(e) => setSelectedDate(e.target.value)}
@@ -309,61 +309,61 @@ const OpenClose = () => {
             min="2022-09-14"
             max={currentDate}
             style={{
-              padding: "8px",
-              border: "1px solid #d5dadf",
-              borderRadius: "4px",
+              padding: '8px',
+              border: '1px solid #d5dadf',
+              borderRadius: '4px',
             }}
           ></input>
         </div>
         <Select
           placeholder="Select Procedure"
           data={[
-            { value: "open", label: "Open" },
-            { value: "close", label: "Close" },
+            { value: 'open', label: 'Open' },
+            { value: 'close', label: 'Close' },
           ]}
           value={procedureValue}
           onChange={setProcedureValue}
-          style={{ marginTop: "18px" }}
+          style={{ marginTop: '18px' }}
         />
       </div>
 
-      <Text id="mainTitle" style={{ width: "100vw" }} size="xl" weight={700}>
-        {procedureValue === "open" ? "Opening" : "Closing"}
+      <Text id="mainTitle" style={{ width: '100vw' }} size="xl" weight={700}>
+        {procedureValue === 'open' ? 'Opening' : 'Closing'}
       </Text>
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "start",
-          gap: "20px",
-          marginTop: "20px"
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'start',
+          gap: '20px',
+          marginTop: '20px',
         }}
         className="left-side-opening-container"
       >
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            boxShadow: "0px 0px 15px -1px rgba(0,0,0,0.12)",
-            borderRadius: "8px",
-            padding: "10px 15px 15px 5px"
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            boxShadow: '0px 0px 15px -1px rgba(0,0,0,0.12)',
+            borderRadius: '8px',
+            padding: '10px 15px 15px 5px',
           }}
         >
           <div
             style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "24px",
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '24px',
             }}
           >
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                width: "70px",
-                marginTop: "40px",
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                width: '70px',
+                marginTop: '40px',
               }}
             >
               {Object.values(indexArr).map((key, index) => (
@@ -371,8 +371,8 @@ const OpenClose = () => {
                   key={index}
                   order={6}
                   style={{
-                    width: "70px",
-                    lineHeight: "26px",
+                    width: '70px',
+                    lineHeight: '26px',
                   }}
                 >
                   {key}
@@ -380,36 +380,36 @@ const OpenClose = () => {
               ))}
               <Title order={4}>Total</Title>
             </div>
-            {["notes", "coins"].map((denominationForm, index) => (
+            {['notes', 'coins'].map((denominationForm, index) => (
               <div
                 key={index}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
                 }}
               >
                 <div>
-                  <Text style={{ height: "30px" }}>
-                    {denominationForm === "notes" ? "Notes" : "Coins"}
+                  <Text style={{ height: '30px' }}>
+                    {denominationForm === 'notes' ? 'Notes' : 'Coins'}
                   </Text>
                   {Object.keys(INITIAL_VALS).map((key, index) => (
                     <div key={index}>
-                      {procedureValue === "open" ? (
+                      {procedureValue === 'open' ? (
                         <NumberInput
                           name={`${key}`}
                           size="xs"
                           style={{
-                            width: "70px",
-                            padding: "3px 0",
+                            width: '70px',
+                            padding: '3px 0',
                           }}
                           onChange={(value) =>
-                            denominationForm === "notes"
+                            denominationForm === 'notes'
                               ? handleOpeningNotesInput(value, key)
                               : handleOpeningCoinInput(value, key)
                           }
                           value={
-                            denominationForm === "notes"
+                            denominationForm === 'notes'
                               ? openingNotes[key]
                               : openingCoin[key]
                           }
@@ -419,16 +419,16 @@ const OpenClose = () => {
                           name={`${key}`}
                           size="xs"
                           style={{
-                            width: "70px",
-                            padding: "3px 0",
+                            width: '70px',
+                            padding: '3px 0',
                           }}
                           onChange={(value) =>
-                            denominationForm === "notes"
+                            denominationForm === 'notes'
                               ? handleClosingNotesInput(value, key)
                               : handleClosingCoinInput(value, key)
                           }
                           value={
-                            denominationForm === "notes"
+                            denominationForm === 'notes'
                               ? closingNotes[key]
                               : closingCoin[key]
                           }
@@ -436,24 +436,24 @@ const OpenClose = () => {
                       )}
                     </div>
                   ))}
-                  {procedureValue === "open" ? (
+                  {procedureValue === 'open' ? (
                     <Text
-                      style={{ margin: "0 4px", width: "70px" }}
+                      style={{ margin: '0 4px', width: '70px' }}
                       size="md"
                       weight={500}
                     >
-                      {denominationForm === "notes"
+                      {denominationForm === 'notes'
                         ? openingNotesSum
                         : openingCoinsSum}
                     </Text>
                   ) : (
                     <Text
-                      style={{ margin: "0 4px", width: "70px" }}
+                      style={{ margin: '0 4px', width: '70px' }}
                       size="md"
                       weight={500}
                     >
                       <span>
-                        {denominationForm === "notes"
+                        {denominationForm === 'notes'
                           ? closingNotesSum
                           : closingCoinsSum}
                       </span>
@@ -463,8 +463,8 @@ const OpenClose = () => {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: "20px" }}>
-            {procedureValue === "open" ? (
+          <div style={{ marginTop: '20px' }}>
+            {procedureValue === 'open' ? (
               <Text size="xl" weight={700}>
                 Total sum= {openingNotesSum + openingCoinsSum}
               </Text>
@@ -475,9 +475,9 @@ const OpenClose = () => {
             )}
             <Button
               loading={apiLoading}
-              style={{ width: "100px", marginTop: "5px" }}
+              style={{ width: '100px', marginTop: '5px' }}
               onClick={
-                procedureValue === "open"
+                procedureValue === 'open'
                   ? addNewOpenProcedure
                   : addNewCloseProcedure
               }
@@ -491,7 +491,7 @@ const OpenClose = () => {
           <EmployeeAttendance />
         </div>
       </div>
-      <Title style={{ margin: "44px" }} order={2}>
+      <Title style={{ margin: '44px' }} order={2}>
         All Procedures
       </Title>
 
@@ -568,10 +568,10 @@ const PopoverComponent = (sum, denominations) => {
           {sum}
         </Text>
       </Popover.Target>
-      <Popover.Dropdown style={{ padding: "0" }}>
+      <Popover.Dropdown style={{ padding: '0' }}>
         <Table>
           <thead>
-            <tr style={{ backgroundColor: "initial" }}>
+            <tr style={{ backgroundColor: 'initial' }}>
               <th>
                 <Text>Denomination</Text>
               </th>
@@ -644,7 +644,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
 
   const showExpenseOf = () => {
     expenseDate(item._id);
-  }
+  };
 
   return (
     <>
@@ -658,7 +658,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
           <Text color="black" weight={500}>
             {openingTime === 0
               ? 0
-              : new Date(openingTime).toLocaleTimeString("en-US")}
+              : new Date(openingTime).toLocaleTimeString('en-US')}
           </Text>
         </td>
         <td>
@@ -680,7 +680,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
           <Text color="black" weight={500}>
             {closingTime === 0
               ? 0
-              : new Date(closingTime).toLocaleTimeString("en-US")}
+              : new Date(closingTime).toLocaleTimeString('en-US')}
           </Text>
         </td>
         <td>
@@ -704,7 +704,13 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
           </Text>
         </td>
         <td>
-          <a href="#mainTitle" color="black" weight={500} onClick={showExpenseOf} style={{ textDecoration: "none", color: "black", fontWeight: 600 }}>
+          <a
+            href="#mainTitle"
+            color="black"
+            weight={500}
+            onClick={showExpenseOf}
+            style={{ textDecoration: 'none', color: 'black', fontWeight: 600 }}
+          >
             {filteredItem.length ? filteredItem[0].amount : 0}
           </a>
         </td>

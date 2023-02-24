@@ -1,7 +1,7 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Table, Loader, Title } from "@mantine/core";
-import { DateRangePicker } from "@mantine/dates";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Table, Loader, Title } from '@mantine/core';
+import { DateRangePicker } from '@mantine/dates';
 
 function msToTime(duration) {
   const seconds = duration / 1000;
@@ -15,16 +15,16 @@ const Attendance = () => {
   const [loader, setLoader] = useState(false);
   const [loader2, setLoader2] = useState(false);
   const [open, setOpen] = useState(false);
-  const [name, setname] = useState("");
-  const options = { year: "numeric", month: "numeric", day: "numeric" };
-  const region = "en-US";
+  const [name, setname] = useState('');
+  const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+  const region = 'en-US';
   const [value, setValue] = useState([new Date(), new Date()]);
   const getAttendance = async () => {
     setLoader(true);
     try {
       const monthlyattendance = await axios.request({
-        url: "/api/attendance/monthlyAttendance",
-        method: "get",
+        url: '/api/attendance/monthlyAttendance',
+        method: 'get',
       });
       setAttendance(monthlyattendance.data.message);
       setLoader(false);
@@ -38,7 +38,7 @@ const Attendance = () => {
     try {
       const result = await axios.request({
         url: `/api/attendance/dailyAttendance`,
-        method: "post",
+        method: 'post',
         data: {
           startDate: value[0].toLocaleDateString(region, options),
           endDate: value[1].toLocaleDateString(region, options),
@@ -58,25 +58,25 @@ const Attendance = () => {
     <tr key={index}>
       <td>{index + 1}</td>
       <td>
-        {new Date(element.date).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric",
+        {new Date(element.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
         })}
       </td>
-      <td>{element.attendance ? "Present" : "Absent"}</td>
+      <td>{element.attendance ? 'Present' : 'Absent'}</td>
       <td>{new Date(element.arrivingTime).toLocaleTimeString()}</td>
       <td>
         {element.leavingTime
           ? new Date(element.leavingTime).toLocaleTimeString()
-          : "No Data"}
+          : 'No Data'}
       </td>
       <td>
         {element.totalHoursOfWork
           ? msToTime(element.totalHoursOfWork)
-          : "No Data"}
+          : 'No Data'}
       </td>
-      <td>{element.workHoursCompleted ? "Completed" : "Not Completed"}</td>
+      <td>{element.workHoursCompleted ? 'Completed' : 'Not Completed'}</td>
     </tr>
   ));
   const rows = attendance.map((element, index) => (
@@ -119,7 +119,7 @@ const Attendance = () => {
           <tbody>{rows}</tbody>
         </Table>
       )}
-      {loader2 ? <Title order={3}>Data is fetching for {name}</Title> : ""}
+      {loader2 ? <Title order={3}>Data is fetching for {name}</Title> : ''}
       {loader2 ? (
         <Loader color="blue" size="lg" />
       ) : !dateWiseAttendance.length ? (
@@ -132,7 +132,7 @@ const Attendance = () => {
       ) : (
         <>
           <Title className="table-title" order={3}>
-            Viewing Attendance for {name}{" "}
+            Viewing Attendance for {name}{' '}
           </Title>
           <Table
             className="attendance-table"

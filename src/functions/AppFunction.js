@@ -1,23 +1,23 @@
 // import React, { useState, useEffect, useContext } from 'react';
-import { useContext, useEffect, useState } from "react";
-import { Axios } from "../utils/axios";
-import { AppStateContext } from "../AppState/appState.context";
-import { PAGES } from "../constants/HeaderTypes";
+import { useContext, useEffect, useState } from 'react';
+import { Axios } from '../utils/axios';
+import { AppStateContext } from '../AppState/appState.context';
+import { PAGES } from '../constants/HeaderTypes';
 
 const AppFunction = (history, location) => {
-  const showBill = location.pathname.includes("showbill");
+  const showBill = location.pathname.includes('showbill');
   const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
   const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
-  const { name: staffName = "", username: staffUserName = "" } =
-    JSON.parse(localStorage.getItem("priyam-store")) || {};
+  const { name: staffName = '', username: staffUserName = '' } =
+    JSON.parse(localStorage.getItem('priyam-store')) || {};
 
   useEffect(() => {
     (async () => {
       const fetch = await Axios.request({
-        url: "/api/inventory/items",
-        method: "get",
+        url: '/api/inventory/items',
+        method: 'get',
         params: {
           filters: {
             minStockOnly: false,
@@ -25,11 +25,11 @@ const AppFunction = (history, location) => {
           },
         },
         headers: {
-          Cookie: "",
+          Cookie: '',
         },
       });
       const itemsData = fetch?.data?.message?.items;
-      dispatch({ type: "NEW_ITEMS_LIST", payload: itemsData });
+      dispatch({ type: 'NEW_ITEMS_LIST', payload: itemsData });
       setLoaderDisplay(false);
     })();
     // eslint-disable-next-line
@@ -43,8 +43,8 @@ const AppFunction = (history, location) => {
   }, [value, showBill]);
 
   const logoutUser = async () => {
-    localStorage.removeItem("priyam-store");
-    history.push("/login");
+    localStorage.removeItem('priyam-store');
+    history.push('/login');
   };
 
   return {

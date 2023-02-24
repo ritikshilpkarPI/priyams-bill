@@ -1,7 +1,7 @@
-import { Button, Loader, Table, Card, Title, Text } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
-import { Axios } from "src/utils/axios";
-import React, { useState, useEffect } from "react";
+import { Button, Loader, Table, Card, Title, Text } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import { Axios } from 'src/utils/axios';
+import React, { useState, useEffect } from 'react';
 
 const addDays = (date, days) => {
   let dayToIncr = {
@@ -21,8 +21,8 @@ const addDays = (date, days) => {
 const getExpiredItemsData = async (startDate, endDate) => {
   try {
     const { status, data } = await Axios.request({
-      url: "/api/inventory/filterExpiryDates",
-      method: "POST",
+      url: '/api/inventory/filterExpiryDates',
+      method: 'POST',
       data: {
         startDate: startDate.toLocaleDateString(),
         endDate: endDate.toLocaleDateString(),
@@ -38,7 +38,7 @@ const ExpiredItemTable = ({ day }) => {
   const [startDateValue, setStartDateValue] = useState(new Date());
   const [endDateValue, setEndDateValue] = useState(addDays(new Date(), 30));
   const [expiredItemsArr, setExpiredItemsArr] = useState([]);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState('');
   const [loader, setLoader] = useState(false);
   const { currentDate, endDate } = addDays(startDateValue, day);
 
@@ -50,7 +50,7 @@ const ExpiredItemTable = ({ day }) => {
         setExpiredItemsArr(data.message.expiredItems);
         setLoader(false);
       } else {
-        setErrorMsg("Error try again later");
+        setErrorMsg('Error try again later');
         setLoader(false);
       }
     };
@@ -69,7 +69,7 @@ const ExpiredItemTable = ({ day }) => {
       setExpiredItemsArr(data.message.expiredItems);
       setLoader(false);
     } else {
-      setErrorMsg("Error try again later");
+      setErrorMsg('Error try again later');
       setLoader(false);
     }
   };
@@ -112,11 +112,11 @@ const ExpiredItemTable = ({ day }) => {
             {loader ? (
               <div
                 style={{
-                  height: "50vh",
-                  width: "350%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  height: '50vh',
+                  width: '350%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Loader size="md" />

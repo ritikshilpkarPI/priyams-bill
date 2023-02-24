@@ -1,16 +1,15 @@
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-require("dotenv").config();
-const mongoose = require("mongoose");
-const serverless = require("serverless-http");
-const routers = require("./routes");
-const { data } = require("./data/data");
-const fileUpload = require("express-fileupload");
-require("./nodeCron");
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+require('dotenv').config();
+const mongoose = require('mongoose');
+const serverless = require('serverless-http');
+const routers = require('./routes');
+const fileUpload = require('express-fileupload');
+require('./nodeCron');
 const app = express();
 
-app.use(express.json({ limit: "500mb" }));
+app.use(express.json({ limit: '500mb' }));
 app.use(cookieParser());
 app.use(
   cors({
@@ -18,48 +17,15 @@ app.use(
   })
 );
 
-app.use(express.urlencoded({ limit: "500mb", extended: true }));
+app.use(express.urlencoded({ limit: '500mb', extended: true }));
 app.use(
   fileUpload({
     useTempFiles: true,
-    tempFileDir: "/tmp/",
+    tempFileDir: '/tmp/',
   })
 );
-app.use("/.netlify/functions/app", routers);
-let dbConnector = "";
-let arrayToInsert = [];
-async function addCsvDataToMongoAsJson(dbConnector) {
-  // return csvtojson()
-  //   .fromFile(fileName)
-  //   .then((source) => {
-  // Fetching the all data from each row
-  const source = data;
-  for (let i = 0; i < source.length; i++) {
-    if (source[i]["itemName"]) {
-      let oneRow = {
-        itemBarcode: source[i]["itemBarcode"],
-        itemName: source[i]["itemName"],
-        itemMRPperUnit: source[i]["itemMRPperUnit"],
-        itemCostPricePerUnit: source[i]["itemCostPricePerUnit"],
-        itemSellingPricePerUnit: source[i]["itemSellingPricePerUnit"],
-        itemStockQuantity: source[i]["itemStockQuantity"],
-        minimumStockQuantity: source[i]["minimumStockQuantity"],
-      };
-      arrayToInsert.push(oneRow);
-    }
-  }
-  //inserting into the table “employees”
-  let collectionName = "items";
-  let collection = dbConnector.collection(collectionName);
-  collection.insertMany(arrayToInsert, (err, result) => {
-    if (err) console.error(err);
-    if (result) {
-      console.log("Import CSV into database successfully.");
-    }
-  });
-  // });
-  return;
-}
+app.use('/.netlify/functions/app', routers);
+
 const mongoUriEnvMap = {
   staging: process.env.STAGING_DB,
   production: process.env.PROD_DB,
@@ -76,12 +42,10 @@ console.log({
 });
 
 async function connectDB() {
-  const client = await mongoose.connect(`${MONGODB_URI}`, {
+  await mongoose.connect(`${MONGODB_URI}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  // dbConnector = client.connections[0].db;
-  // await addCsvDataToMongoAsJson(dbConnector);
 }
 connectDB();
 

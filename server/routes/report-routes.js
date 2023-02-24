@@ -1,7 +1,7 @@
-const reportRoutes = require("express").Router();
+const reportRoutes = require('express').Router();
 
-const { getDateRangeReport } = require("../controllers/report-controller");
+const { getDateRangeReport } = require('../controllers/report-controller');
 
-reportRoutes.post("/getDateRangeReport/:filterName", getDateRangeReport);
+reportRoutes.post('/getDateRangeReport/:filterName', getDateRangeReport);
 
 module.exports = reportRoutes;

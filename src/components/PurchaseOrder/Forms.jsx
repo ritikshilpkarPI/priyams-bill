@@ -5,12 +5,19 @@ import {
   NumberInput,
   Select,
   TextInput,
-} from "@mantine/core";
-import React from "react";
-import BillUploader from "./BillUploader";
-import '../../CSS/orderForm.css'
+} from '@mantine/core';
+import React from 'react';
+import BillUploader from './BillUploader';
+import '../../CSS/orderForm.css';
 
-const Forms = ({ purchaseForm, addDetails, purchaseList, setPurchaseList, cloudBills, deleteCloudBills }) => {
+const Forms = ({
+  purchaseForm,
+  addDetails,
+  purchaseList,
+  setPurchaseList,
+  cloudBills,
+  deleteCloudBills,
+}) => {
   return (
     <form
       onSubmit={(e) => {
@@ -18,7 +25,7 @@ const Forms = ({ purchaseForm, addDetails, purchaseList, setPurchaseList, cloudB
         addDetails();
       }}
     >
-      <Box sx={{ maxWidth: "80%" }} mx="auto">
+      <Box sx={{ maxWidth: '80%' }} mx="auto">
         <Group className="payment-form">
           <Group className="constant-payment-options">
             <Select
@@ -26,11 +33,11 @@ const Forms = ({ purchaseForm, addDetails, purchaseList, setPurchaseList, cloudB
               className="payment-constant-input"
               placeholder="pick one payment option"
               data={[
-                { value: "fullypaid", label: "Fully Paid" },
-                { value: "partiallypaid", label: "Partially Paid" },
-                { value: "credit", label: "Credit" },
+                { value: 'fullypaid', label: 'Fully Paid' },
+                { value: 'partiallypaid', label: 'Partially Paid' },
+                { value: 'credit', label: 'Credit' },
               ]}
-              {...purchaseForm.getInputProps("payment")}
+              {...purchaseForm.getInputProps('payment')}
             />
 
             <NumberInput
@@ -39,26 +46,26 @@ const Forms = ({ purchaseForm, addDetails, purchaseList, setPurchaseList, cloudB
               className="payment-constant-input"
               placeholder="total bill amount"
               precision={2}
-              {...purchaseForm.getInputProps("billAmount")}
+              {...purchaseForm.getInputProps('billAmount')}
             />
             <Select
               label="Procurement Source"
               placeholder="pick one"
               className="payment-constant-input"
               data={[
-                { value: "walmart", label: "Walmart" },
-                { value: "dmart", label: "D Mart" },
-                { value: "city", label: "City" },
-                { value: "distributor", label: "Distributor" },
+                { value: 'walmart', label: 'Walmart' },
+                { value: 'dmart', label: 'D Mart' },
+                { value: 'city', label: 'City' },
+                { value: 'distributor', label: 'Distributor' },
               ]}
-              {...purchaseForm.getInputProps("procurementSource")}
+              {...purchaseForm.getInputProps('procurementSource')}
             />
             <TextInput
               withAsterisk
               className="payment-constant-input"
               label="Dealer Name"
               placeholder="dealer name"
-              {...purchaseForm.getInputProps("dealerName")}
+              {...purchaseForm.getInputProps('dealerName')}
             />
             <NumberInput
               withAsterisk
@@ -66,36 +73,35 @@ const Forms = ({ purchaseForm, addDetails, purchaseList, setPurchaseList, cloudB
               className="payment-constant-input"
               placeholder="mobile number"
               formatter={(value) =>
-                String(value) === "0"
-                  ? ""
+                String(value) === '0'
+                  ? ''
                   : String(value).length <= 10
-                    ? value
-                    : String(value).substring(0, 10)
+                  ? value
+                  : String(value).substring(0, 10)
               }
-              {...purchaseForm.getInputProps("phoneNumber")}
+              {...purchaseForm.getInputProps('phoneNumber')}
             />
             <TextInput
-              sx={{ width: "20%" }}
+              sx={{ width: '20%' }}
               className="payment-constant-input"
               placeholder="remarks"
               label="Your Remarks"
-              {...purchaseForm.getInputProps("remark")}
+              {...purchaseForm.getInputProps('remark')}
             />
           </Group>
           <Group className="payment-paid-option">
-
             <Select
               className="payment-paid-input"
               label="Paid by"
               placeholder="pick one"
               data={[
-                { value: "cash", label: "cash" },
-                { value: "upi", label: "UPI" },
-                { value: "cheque", label: "Cheque" },
-                { value: "prepaid", label: "Prepaid" },
-                { value: "neft", label: "NEFT" },
+                { value: 'cash', label: 'cash' },
+                { value: 'upi', label: 'UPI' },
+                { value: 'cheque', label: 'Cheque' },
+                { value: 'prepaid', label: 'Prepaid' },
+                { value: 'neft', label: 'NEFT' },
               ]}
-              {...purchaseForm.getInputProps("paidBy")}
+              {...purchaseForm.getInputProps('paidBy')}
             />
             <NumberInput
               withAsterisk
@@ -103,15 +109,15 @@ const Forms = ({ purchaseForm, addDetails, purchaseList, setPurchaseList, cloudB
               label="Paid Amount"
               placeholder="paid amount"
               precision={2}
-              {...purchaseForm.getInputProps("paidAmount")}
+              {...purchaseForm.getInputProps('paidAmount')}
             />
-            {purchaseForm.getInputProps("paidBy").value === "cheque" && (
+            {purchaseForm.getInputProps('paidBy').value === 'cheque' && (
               <NumberInput
                 withAsterisk
                 className="payment-constant-input"
                 label="Cheque number"
                 placeholder="cheque number"
-                {...purchaseForm.getInputProps("chequeNumber")}
+                {...purchaseForm.getInputProps('chequeNumber')}
               />
             )}
             <Button type="submit">Add Details</Button>
@@ -123,7 +129,12 @@ const Forms = ({ purchaseForm, addDetails, purchaseList, setPurchaseList, cloudB
           label="Your Remarks"
           {...purchaseForm.getInputProps("remark")}
         /> */}
-        <BillUploader purchaseList={purchaseList} setPurchaseList={setPurchaseList} cloudBills={cloudBills} deleteCloudBills={deleteCloudBills} />
+        <BillUploader
+          purchaseList={purchaseList}
+          setPurchaseList={setPurchaseList}
+          cloudBills={cloudBills}
+          deleteCloudBills={deleteCloudBills}
+        />
       </Box>
     </form>
   );

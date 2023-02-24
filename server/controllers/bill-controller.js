@@ -1,6 +1,6 @@
-const { Bill } = require("../db-models/bill-model");
-const { Item } = require("../db-models/item-model");
-const { DailyBill } = require("../db-models/dailybill-model");
+const { Bill } = require('../db-models/bill-model');
+const { Item } = require('../db-models/item-model');
+const { DailyBill } = require('../db-models/dailybill-model');
 
 const addNewBill = async (req, res) => {
   try {
@@ -145,10 +145,10 @@ const getEditBill = async (req, res) => {
   try {
     const id = req.params.id;
     const bill = await Bill.findById(id).populate({
-      path: "items",
+      path: 'items',
       populate: {
-        path: "itemDetail",
-        model: "Item",
+        path: 'itemDetail',
+        model: 'Item',
       },
     });
 
@@ -164,36 +164,36 @@ const getDayWiseBills = async (req, res) => {
     const allDailyBills = await Bill.aggregate([
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
           totalNumberOfBillsForToday: {
             $sum: 1,
           },
           totalBillAmount: {
-            $sum: "$billAmountTotal",
+            $sum: '$billAmountTotal',
           },
           totalMRPAmount: {
-            $sum: "$billMRPTotal",
+            $sum: '$billMRPTotal',
           },
           totalDiscountAmount: {
-            $sum: "$billDiscountTotal",
+            $sum: '$billDiscountTotal',
           },
           totalItemBilled: {
-            $sum: "$totalNumberOfUniqueItems",
+            $sum: '$totalNumberOfUniqueItems',
           },
           totalQuantityBilled: {
-            $sum: "$totalNumberOfItems",
+            $sum: '$totalNumberOfItems',
           },
           totalDailyProfit: {
-            $sum: "$totalBillProfit",
+            $sum: '$totalBillProfit',
           },
           totalCashPay: {
-            $sum: "$cashPay",
+            $sum: '$cashPay',
           },
           totalUpiPay: {
-            $sum: "$upiPay",
+            $sum: '$upiPay',
           },
           totalAmountReturn: {
-            $sum: "$amountReturn",
+            $sum: '$amountReturn',
           },
         },
       },
@@ -214,41 +214,45 @@ const editBill = async (req, res) => {
     const { _id, createdAt, updatedAt, __v, ...billWithoutDbConstants } =
       billObjectWithItems;
     const prevBill = await Bill.findById(id).populate({
-      path: "items",
+      path: 'items',
       populate: {
-        path: "itemDetail",
-        model: "Item",
+        path: 'itemDetail',
+        model: 'Item',
       },
     });
-    prevBill.items.map(async prev => {
-      const newItem = billItems.filter(item => String(item._id) === String(prev._id))
+    prevBill.items.map(async (prev) => {
+      const newItem = billItems.filter(
+        (item) => String(item._id) === String(prev._id)
+      );
       if (!newItem.length) {
-        const qnt = prev.itemQuantityInBill
+        const qnt = prev.itemQuantityInBill;
         let item = await Item.findById(prev.itemDetail._id);
-        item.itemStockQuantity += qnt
-        await item.save()
+        item.itemStockQuantity += qnt;
+        await item.save();
       } else {
-        let item = await Item.findById(prev.itemDetail._id)
+        let item = await Item.findById(prev.itemDetail._id);
         if (prev.itemQuantityInBill > newItem[0].itemQuantityInBill) {
-          const qnt = prev.itemQuantityInBill - newItem[0].itemQuantityInBill
-          item.itemStockQuantity += qnt
-          await item.save()
+          const qnt = prev.itemQuantityInBill - newItem[0].itemQuantityInBill;
+          item.itemStockQuantity += qnt;
+          await item.save();
         } else if (prev.itemQuantityInBill < newItem[0].itemQuantityInBill) {
-          const qnt = newItem[0].itemQuantityInBill - prev.itemQuantityInBill
-          item.itemStockQuantity -= qnt
-          await item.save()
+          const qnt = newItem[0].itemQuantityInBill - prev.itemQuantityInBill;
+          item.itemStockQuantity -= qnt;
+          await item.save();
         }
       }
-    })
+    });
     billItems.map(async (newItem) => {
-      const oldItem = prevBill.items.filter(item => String(item._id) === String(newItem._id))
+      const oldItem = prevBill.items.filter(
+        (item) => String(item._id) === String(newItem._id)
+      );
       if (!oldItem.length) {
-        const qnt = newItem.itemQuantityInBill
+        const qnt = newItem.itemQuantityInBill;
         const item = await Item.findById(newItem.itemDetail._id);
-        item.itemStockQuantity -= qnt
-        await item.save()
+        item.itemStockQuantity -= qnt;
+        await item.save();
       }
-    })
+    });
     const changeBill = await Bill.findByIdAndUpdate(
       id,
       billWithoutDbConstants,
@@ -256,10 +260,10 @@ const editBill = async (req, res) => {
         new: true,
       }
     ).populate({
-      path: "items",
+      path: 'items',
       populate: {
-        path: "itemDetail",
-        model: "Item",
+        path: 'itemDetail',
+        model: 'Item',
       },
     });
 
@@ -300,8 +304,8 @@ const userDetails = async (req, res) => {
       },
       {
         $group: {
-          _id: "$customerPhone",
-          customerName: { $first: "$customerName" },
+          _id: '$customerPhone',
+          customerName: { $first: '$customerName' },
         },
       },
     ]);

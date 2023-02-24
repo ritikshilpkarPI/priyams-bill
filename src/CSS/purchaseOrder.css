@@ -1,12 +1,12 @@
-.purchase-loader{
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.purchase-loader {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.back-button-purchase{
-    height: 5vmin;
-    display: flex;
-    padding-left: 15vmin;
+.back-button-purchase {
+  height: 5vmin;
+  display: flex;
+  padding-left: 15vmin;
 }

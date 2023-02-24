@@ -1,8 +1,8 @@
-import "./CSS/App.scss";
-import { withRouter } from "react-router-dom";
-import AppFunction from "./functions/AppFunction";
-import StoreRoutes from "./components/StoreRoutes";
-import Header from "./components/Header";
+import './CSS/App.scss';
+import { withRouter } from 'react-router-dom';
+import AppFunction from './functions/AppFunction';
+import StoreRoutes from './components/StoreRoutes';
+import Header from './components/Header';
 
 function App({ history, location }) {
   const {
@@ -31,7 +31,7 @@ function App({ history, location }) {
       <StoreRoutes
         setLoaderDisplay={setLoaderDisplay}
         loaderDisplay={loaderDisplay}
-        style={{ marginLeft: "100px" }}
+        style={{ marginLeft: '100px' }}
       />
 
       {/* <QRComp /> */}
