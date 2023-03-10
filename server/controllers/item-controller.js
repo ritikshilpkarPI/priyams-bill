@@ -84,11 +84,9 @@ const addItems = async (req, res) => {
 const editItemById = async (req, res) => {
   try {
     const { id, itemToBeUpdated } = req.body;
-    console.log({ itemToBeUpdated });
     const changedItem = await Item.findByIdAndUpdate(id, itemToBeUpdated, {
       new: true,
     });
-    console.log({ changedItem });
     res.status(200).json({ message: changedItem });
   } catch (error) {
     console.error(error);

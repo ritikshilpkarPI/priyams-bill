@@ -12,7 +12,6 @@ const Approval = () => {
   const query = new URLSearchParams(location.search);
   let option = query.get('option');
   option = option.split(' ')[0];
-  console.log(option);
   useEffect(() => {
     getOrders();
     // eslint-disable-next-line
@@ -37,7 +36,6 @@ const Approval = () => {
       } else if (role !== 'admin') {
         query = { isApproved: false, isDraft: false };
       }
-      console.log({ query });
       const { data } = await Axios({
         method: 'POST',
         url: `/api/purchaseOrder/getOrdersByQuery/`,
