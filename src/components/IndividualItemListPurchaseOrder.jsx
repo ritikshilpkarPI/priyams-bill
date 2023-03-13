@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import { Table, Loader, Button } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const PerItemListPurchaseOrder = () => {
   const [individualItemPurchaseDetail, setIndividualItemPurchaseDetail] =
     useState([]);
@@ -16,8 +18,9 @@ const PerItemListPurchaseOrder = () => {
       setLoader(true);
       try {
         const data = await genericAxios({
-          url: `/api/purchaseOrder/individualPurchaseOrder/${id}`,
-          method: 'GET',
+          url: `${API_PATHS.PURCHASE_ORDER.GET_INDIVIDUAL_PURCHASE_ORDER}/${id}`,
+          method: API_METHODS.GET,
+    
         });
         setIndividualItemPurchaseDetail(data.data.message.result);
         setLoader(false);

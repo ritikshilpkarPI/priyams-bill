@@ -14,6 +14,8 @@ import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access';
 import EmployeeAttendance from '../components/EmployeeAttendance';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const INITIAL_VALS = {
   twoThousand: 0,
   fiveHundred: 0,
@@ -102,8 +104,8 @@ const OpenClose = () => {
 
   const getAllProcedure = async () => {
     const allProcedures = await genericAxios({
-      url: `/api/openClose/getAllProcedure`,
-      method: 'get',
+      url: API_PATHS.OPENCLOSE.GET_ALL_PROCEDURE,
+      method: API_METHODS.GET,
       headers: {
         Cookie: '',
       },
@@ -114,8 +116,8 @@ const OpenClose = () => {
 
   const getDayWiseProcedure = async () => {
     const allDayWiseProcedures = await genericAxios({
-      url: `/api/openClose/getDayWiseProcedure`,
-      method: 'get',
+      url: API_PATHS.OPENCLOSE.GET_DAY_WISE_PROCEDURE,
+      method: API_METHODS.GET,
       headers: {
         Cookie: '',
       },
@@ -172,8 +174,8 @@ const OpenClose = () => {
       (id === '' && selectedDate === currentDate)
     ) {
       const newOpenProcedure = await genericAxios({
-        url: `/api/openClose/newProcedure/open`,
-        method: 'post',
+        url: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
+        method: API_METHODS.POST,
         data: { ...finalProcedureData },
         headers: {
           Cookie: '',
@@ -187,8 +189,8 @@ const OpenClose = () => {
       procedureToEdit.procedure === 'open'
     ) {
       await genericAxios({
-        url: `/api/openClose/editProcedure/open`,
-        method: 'put',
+        url: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN,
+        method: API_METHODS.PUT,
         data: { id, procedureToBeUpdated: { ...finalProcedureData } },
         headers: {
           Cookie: '',
@@ -220,8 +222,8 @@ const OpenClose = () => {
       (id === '' && selectedDate === currentDate)
     ) {
       const newCloseProcedure = await genericAxios({
-        url: `/api/openClose/newProcedure/close`,
-        method: 'post',
+        url: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE,
+        method: API_METHODS.POST,
         data: { ...finalProcedureData },
         headers: {
           Cookie: '',
@@ -235,8 +237,8 @@ const OpenClose = () => {
       procedureToEdit?.procedure === 'close'
     ) {
       await genericAxios({
-        url: `/api/openClose/editProcedure/close`,
-        method: 'put',
+        url: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE,
+        method: API_METHODS.PUT,
         data: { id, procedureToBeUpdated: { ...finalProcedureData } },
         headers: {
           Cookie: '',
@@ -252,8 +254,8 @@ const OpenClose = () => {
     if (!expenseList.length) {
       const getAllData = async () => {
         const allExpense = await genericAxios({
-          url: '/api/expense',
-          method: 'get',
+          url: API_PATHS.EXPENSE.GET_EXPENSE,
+          method: API_METHODS.GET,
           headers: {
             Cookie: '',
           },
@@ -271,8 +273,8 @@ const OpenClose = () => {
   useEffect(() => {
     (async () => {
       const dayBill = await genericAxios({
-        url: '/api/billing/allDailyBills',
-        method: 'get',
+        url: API_PATHS.BILLING.GET_ALL_DAILY_BILLS,
+        method: API_METHODS.GET,
         headers: {
           Cookie: '',
         },

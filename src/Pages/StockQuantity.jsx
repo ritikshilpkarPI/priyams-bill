@@ -3,6 +3,8 @@ import { Loader, Table, Text } from '@mantine/core';
 import { Button } from '@mantine/core';
 import { openConfirmModal } from '@mantine/modals';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 const StockQuantity = () => {
   const [minimumQuantityItem, setMinimumQuantityItem] = useState([]);
@@ -16,8 +18,8 @@ const StockQuantity = () => {
   const getAllItemsFeed = async () => {
     setLoader(true);
     const fetch = await genericAxios({
-      url: '/api/inventory/items',
-      method: 'get',
+      url: API_PATHS.INVENTORY.GET_ITEMS,
+      method: API_METHODS.GET,
       params: {
         filters: {
           minStockOnly: true,
@@ -48,7 +50,7 @@ const StockQuantity = () => {
         onConfirm: () => {
           async function deletePost() {
             await genericAxios(
-              `/api/inventory/permanentlyOutOfStock/${Id}`
+              `${API_PATHS.INVENTORY.GET_PERMANENTLY_OUT_OF_STOCK}/${Id}`
             ).then((response) => {
               getAllItemsFeed();
             });

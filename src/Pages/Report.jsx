@@ -10,6 +10,8 @@ import {
   Title,
 } from '@mantine/core';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 const Report = () => {
   const [dateRange, setDateRange] = useState();
@@ -30,8 +32,8 @@ const Report = () => {
 
   const findResult = async () => {
     const result = await genericAxios({
-      url: `/api/report/getDateRangeReport/${selectedFilter}`,
-      method: 'post',
+      url: `${API_PATHS.REPORT.POST_GET_DATE_RANGE_REPORT}/${selectedFilter}`,
+      method: API_METHODS.POST,
       data: {
         startDate: new Date(dateRange[0]),
         lastDate: new Date(dateRange[1]),

@@ -1,7 +1,8 @@
 import { LoadingOverlay } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDetailsApproval';
-import { API_PATHS, API_METHODS } from 'src/utils/constants';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { useLocation } from 'react-router-dom';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 

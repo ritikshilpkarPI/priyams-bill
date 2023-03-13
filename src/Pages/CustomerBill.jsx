@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 
 import { Button, Group, Table, Text, Title } from '@mantine/core';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 const options = {
   weekday: 'long',
@@ -26,8 +28,8 @@ const CustomerBill = () => {
 
   const fetchBill = async () => {
     const customerBill = await genericAxios({
-      url: `/api/billing/getEditBill/${id}`,
-      method: 'get',
+      url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${id}`,
+      method: API_METHODS.GET,
       headers: {
         Cookie: '',
       },

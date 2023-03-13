@@ -3,6 +3,8 @@ import { Group, Title, Select, Button } from '@mantine/core';
 import { useState } from 'react';
 import '../CSS/employeeAttendance.css';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
 const nameOptionAndValues = [
   { value: 'anjali', label: 'Anjali' },
   { value: 'shivam', label: 'Shivam' },
@@ -45,8 +47,8 @@ const EmployeeAttendance = () => {
     } else if (attendance === 'absent') {
       try {
         await genericAxios({
-          url: `/api/attendance/markAbsent`,
-          method: 'post',
+          url: API_PATHS.ATTENDANCE.POST_MARK_ABSENT,
+          method: API_METHODS.POST,
           data: {
             name,
             date: dateString,
@@ -59,8 +61,8 @@ const EmployeeAttendance = () => {
     } else if (state === 'arrival') {
       try {
         const result = await genericAxios({
-          url: `/api/attendance/dailyAttendanceArrival`,
-          method: 'post',
+          url: API_PATHS.ATTENDANCE.POST_DAILY_ATTENDANCE_ARRIVAL,
+          method: API_METHODS.POST,
           data: {
             name,
             arrivingTime: date,
@@ -81,8 +83,8 @@ const EmployeeAttendance = () => {
     } else if (state === 'leave') {
       try {
         let a = await genericAxios({
-          url: `/api/attendance/dailyAttendanceLeaving`,
-          method: 'post',
+          url: API_PATHS.ATTENDANCE.POST_DAILY_ATTENDANCE_LEAVING,
+          method: API_METHODS.POST,
           data: {
             name: name,
             date: dateString,

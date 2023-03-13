@@ -20,6 +20,8 @@ import { AppStateContext } from '../AppState/appState.context';
 import Papa from 'papaparse';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 // import ProtectedComponent from "src/components/ProtectedComponent";
 // import access from "../access.js";
 
@@ -163,8 +165,8 @@ const ItemsList = () => {
     setApiLoading(true);
     (async () => {
       const newItem = await genericAxios({
-        url: '/api/inventory/addNewItem',
-        method: 'post',
+        url: API_PATHS.INVENTORY.POST_ADD_NEW_ITEM,
+        method: API_METHODS.POST,
         data: { ...itemObject },
         headers: {
           Cookie: '',
@@ -214,8 +216,8 @@ const ItemsList = () => {
       const { _id } = items[index];
       setApiLoading(true);
       const deletedItem = await genericAxios({
-        url: '/api/inventory/softDeleteItem',
-        method: 'post',
+        url: API_PATHS.INVENTORY.POST_SOFT_DELETE_ITEM,
+        method: API_METHODS.POST,
         data: { id: _id },
         headers: {
           Cookie: 'some_cookie',
@@ -1050,8 +1052,8 @@ const ItemsList = () => {
       Papa.parse(csvFile, {
         complete: async function (results) {
           await genericAxios({
-            url: '/api/inventory/addbulkitems',
-            method: 'post',
+            url: API_PATHS.INVENTORY.POST_ADD_BULK_ITEMS,
+            method: API_METHODS.POST,
             data: results.data,
           });
         },
@@ -1741,8 +1743,8 @@ const UpdateItemButton = ({
     const { _id } = itemToBeUpdated[index];
     setApiLoading(true);
     const updatedItem = await genericAxios({
-      url: '/api/inventory/editItemById',
-      method: 'put',
+      url: API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID,
+      method: API_METHODS.PUT,
       data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
       headers: {
         Cookie: 'some_cookie',
