@@ -4,7 +4,7 @@ import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDet
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { useLocation } from 'react-router-dom';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { genericAxios } from 'src/utils/genericAxiosMethod'; 
 
 const Approval = () => {
   const [filter, setFilter] = useState([]);
