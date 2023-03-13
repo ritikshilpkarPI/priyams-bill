@@ -4,7 +4,6 @@ export const API_PATHS = {
         GET_INDIVIDUAL_PURCHASE_ORDER: "/api/purchaseOrder/individualPurchaseOrder",
         GET_ORDER_DETAILS: "/api/purchaseOrder/orderDetails",
         POST_DRAFT_ORDER: "/api/purchaseOrder/draftOrder",
-        GET_ORDER_DETAILS: "/api/purchaseOrder/orderDetails",
         POST_ADD_NEW_ORDER : "/api/purchaseOrder/addNewOrder",
         POST_UPDATE_DETAILS: "/api/purchaseOrder/updateDetails",
         POST_SAVE_ORDER: "/api/purchaseOrder/saveOrder",
@@ -27,7 +26,6 @@ export const API_PATHS = {
         PUT_EDIT_BILL: "/api/billing/editBill",
         POST_NEW_BILL: "/api/billing/newBill",
         GET_USER_DETAILES: "/api/billing/userDetails",
-        GET_EDIT_BILL: "/api/billing/getEditBill",
         GET_ALL_DAILY_BILLS: "/api/billing/allDailyBills",
     },
     INVENTORY: {
