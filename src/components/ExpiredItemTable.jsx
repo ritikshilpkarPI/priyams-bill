@@ -1,7 +1,7 @@
 import { Button, Loader, Table, Card, Title, Text } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import { Axios } from 'src/utils/axios';
 import React, { useState, useEffect } from 'react';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const addDays = (date, days) => {
   let dayToIncr = {
@@ -20,7 +20,7 @@ const addDays = (date, days) => {
 
 const getExpiredItemsData = async (startDate, endDate) => {
   try {
-    const { status, data } = await Axios.request({
+    const { status, data } = await genericAxios({
       url: '/api/inventory/filterExpiryDates',
       method: 'POST',
       data: {

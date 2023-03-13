@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Loader, Table, Text, Collapse } from '@mantine/core';
-import { Axios } from '../utils/axios';
 import { useHistory } from 'react-router-dom';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
@@ -11,7 +11,7 @@ const BillFeed = ({ bills = [] }) => {
   useEffect(() => {
     setLoader(true);
     const getBillFeed = async () => {
-      const fetch = await Axios.request({
+      const fetch = await genericAxios({
         url: '/api/billing/getBillFeed',
         method: 'get',
         params: {
@@ -125,7 +125,7 @@ const TableRow = ({ bill, idx }) => {
   }
 
   async function handleDeleteBill(id) {
-    await Axios.request({
+    await genericAxios({
       url: '/api/billing/deleteBill',
       method: 'delete',
       data: {
@@ -137,7 +137,7 @@ const TableRow = ({ bill, idx }) => {
     });
   }
   const sendCustomerMessage = async (id) => {
-    await Axios.request({
+    await genericAxios({
       url: '/api/billing/sendMessage',
       method: 'post',
       data: {

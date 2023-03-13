@@ -17,9 +17,9 @@ import {
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
 import Papa from 'papaparse';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 // import ProtectedComponent from "src/components/ProtectedComponent";
 // import access from "../access.js";
 
@@ -162,7 +162,7 @@ const ItemsList = () => {
 
     setApiLoading(true);
     (async () => {
-      const newItem = await Axios.request({
+      const newItem = await genericAxios({
         url: '/api/inventory/addNewItem',
         method: 'post',
         data: { ...itemObject },
@@ -213,7 +213,7 @@ const ItemsList = () => {
     const handleDeleteItem = async () => {
       const { _id } = items[index];
       setApiLoading(true);
-      const deletedItem = await Axios.request({
+      const deletedItem = await genericAxios({
         url: '/api/inventory/softDeleteItem',
         method: 'post',
         data: { id: _id },
@@ -1049,7 +1049,7 @@ const ItemsList = () => {
     if (csvFile) {
       Papa.parse(csvFile, {
         complete: async function (results) {
-          await Axios.request({
+          await genericAxios({
             url: '/api/inventory/addbulkitems',
             method: 'post',
             data: results.data,
@@ -1740,7 +1740,7 @@ const UpdateItemButton = ({
   const handleAddItem = async () => {
     const { _id } = itemToBeUpdated[index];
     setApiLoading(true);
-    const updatedItem = await Axios.request({
+    const updatedItem = await genericAxios({
       url: '/api/inventory/editItemById',
       method: 'put',
       data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },

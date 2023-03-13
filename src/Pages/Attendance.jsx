@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Table, Loader, Title } from '@mantine/core';
 import { DateRangePicker } from '@mantine/dates';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 function msToTime(duration) {
   const seconds = duration / 1000;
@@ -22,7 +22,7 @@ const Attendance = () => {
   const getAttendance = async () => {
     setLoader(true);
     try {
-      const monthlyattendance = await axios.request({
+        const monthlyattendance = await genericAxios({
         url: '/api/attendance/monthlyAttendance',
         method: 'get',
       });
@@ -36,7 +36,7 @@ const Attendance = () => {
     setname(name);
     setLoader2(true);
     try {
-      const result = await axios.request({
+      const result = await genericAxios({
         url: `/api/attendance/dailyAttendance`,
         method: 'post',
         data: {

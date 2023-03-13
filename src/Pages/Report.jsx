@@ -9,7 +9,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { Axios } from '../utils/axios';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const Report = () => {
   const [dateRange, setDateRange] = useState();
@@ -29,7 +29,7 @@ const Report = () => {
   };
 
   const findResult = async () => {
-    const result = await Axios.request({
+    const result = await genericAxios({
       url: `/api/report/getDateRangeReport/${selectedFilter}`,
       method: 'post',
       data: {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Axios } from 'src/utils/axios';
 import { useParams } from 'react-router-dom';
 import { Loader, Table } from '@mantine/core';
 import ShowOrderDetailTable from './PurchaseApproval/ShowOrderDetailTable';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 const ItemListPurchaseOrderHistory = (props) => {
   const [purchaseOrderList, setPurchaseOrderList] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -11,7 +11,7 @@ const ItemListPurchaseOrderHistory = (props) => {
     const itemData = async () => {
       setLoader(true);
       try {
-        const data = await Axios.request({
+        const data = await genericAxios({
           url: `/api/purchaseOrder/orderDetails/${id}`,
           method: 'GET',
         });

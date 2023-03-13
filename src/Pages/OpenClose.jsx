@@ -8,12 +8,12 @@ import {
   Title,
 } from '@mantine/core';
 import { useEffect, useState, useContext } from 'react';
-import { Axios } from '../utils/axios';
 import { AppStateContext } from '../AppState/appState.context';
 import AddExpense from '../components/AddExpense';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access';
 import EmployeeAttendance from '../components/EmployeeAttendance';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 const INITIAL_VALS = {
   twoThousand: 0,
   fiveHundred: 0,
@@ -101,7 +101,7 @@ const OpenClose = () => {
   };
 
   const getAllProcedure = async () => {
-    const allProcedures = await Axios.request({
+    const allProcedures = await genericAxios({
       url: `/api/openClose/getAllProcedure`,
       method: 'get',
       headers: {
@@ -113,7 +113,7 @@ const OpenClose = () => {
   };
 
   const getDayWiseProcedure = async () => {
-    const allDayWiseProcedures = await Axios.request({
+    const allDayWiseProcedures = await genericAxios({
       url: `/api/openClose/getDayWiseProcedure`,
       method: 'get',
       headers: {
@@ -171,7 +171,7 @@ const OpenClose = () => {
       createdAtDate !== currentDate ||
       (id === '' && selectedDate === currentDate)
     ) {
-      const newOpenProcedure = await Axios.request({
+      const newOpenProcedure = await genericAxios({
         url: `/api/openClose/newProcedure/open`,
         method: 'post',
         data: { ...finalProcedureData },
@@ -186,7 +186,7 @@ const OpenClose = () => {
       selectedDate === selectedProcedureDate &&
       procedureToEdit.procedure === 'open'
     ) {
-      await Axios.request({
+      await genericAxios({
         url: `/api/openClose/editProcedure/open`,
         method: 'put',
         data: { id, procedureToBeUpdated: { ...finalProcedureData } },
@@ -219,7 +219,7 @@ const OpenClose = () => {
       createdAtDate !== currentDate ||
       (id === '' && selectedDate === currentDate)
     ) {
-      const newCloseProcedure = await Axios.request({
+      const newCloseProcedure = await genericAxios({
         url: `/api/openClose/newProcedure/close`,
         method: 'post',
         data: { ...finalProcedureData },
@@ -234,7 +234,7 @@ const OpenClose = () => {
       selectedDate === selectedProcedureDate &&
       procedureToEdit?.procedure === 'close'
     ) {
-      await Axios.request({
+      await genericAxios({
         url: `/api/openClose/editProcedure/close`,
         method: 'put',
         data: { id, procedureToBeUpdated: { ...finalProcedureData } },
@@ -251,7 +251,7 @@ const OpenClose = () => {
   useEffect(() => {
     if (!expenseList.length) {
       const getAllData = async () => {
-        const allExpense = await Axios.request({
+        const allExpense = await genericAxios({
           url: '/api/expense',
           method: 'get',
           headers: {
@@ -270,7 +270,7 @@ const OpenClose = () => {
 
   useEffect(() => {
     (async () => {
-      const dayBill = await Axios.request({
+      const dayBill = await genericAxios({
         url: '/api/billing/allDailyBills',
         method: 'get',
         headers: {
