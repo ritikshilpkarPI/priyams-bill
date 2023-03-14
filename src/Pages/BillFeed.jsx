@@ -11,7 +11,6 @@ const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
   const [loader, setLoader] = useState(false);
   useEffect(() => {
-  try{
     setLoader(true);
     const getBillFeed = async () => {
       const fetch = await genericAxios({
@@ -33,9 +32,6 @@ const BillFeed = ({ bills = [] }) => {
       setLoader(false);
     } else {
       getBillFeed();
-    }
-  }catch(err){
-      console.log(err)
     }
   
     // eslint-disable-next-line
@@ -144,7 +140,6 @@ const TableRow = ({ bill, idx }) => {
     });
   }
   const sendCustomerMessage = async (id) => {
-   try{
     await genericAxios({
       url: API_PATHS.BILLING.POST_SEND_MESSAGE,
       method: API_METHODS.POST,
@@ -155,10 +150,7 @@ const TableRow = ({ bill, idx }) => {
         Cookie: '',
       },
     });
-   }
-   catch(err){
-    console.log(err)
-   }
+  
   };
   const sendBill = (bill) => {
     const link = `${window.location.origin}/showbill/${bill._id}`;

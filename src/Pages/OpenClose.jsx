@@ -103,7 +103,6 @@ const OpenClose = () => {
   };
 
   const getAllProcedure = async () => {
-   try{
     const allProcedures = await genericAxios({
       url: API_PATHS.OPENCLOSE.GET_ALL_PROCEDURE,
       method: API_METHODS.GET,
@@ -113,14 +112,9 @@ const OpenClose = () => {
     });
     const { procedures } = allProcedures.data.message;
     setProcedure(procedures);
-   }
-   catch(err){
-    console.log(err)
-   }
   };
 
   const getDayWiseProcedure = async () => {
-    try{
       const allDayWiseProcedures = await genericAxios({
         url: API_PATHS.OPENCLOSE.GET_DAY_WISE_PROCEDURE,
         method: API_METHODS.GET,
@@ -130,10 +124,6 @@ const OpenClose = () => {
       });
       const { dayWiseProcedures } = allDayWiseProcedures.data.message;
       setDayWiseProcedures(dayWiseProcedures);
-    }
-    catch(err){
-      console.log(err)
-    }
   };
 
   useEffect(() => {
@@ -183,7 +173,7 @@ const OpenClose = () => {
       createdAtDate !== currentDate ||
       (id === '' && selectedDate === currentDate)
     ) {
-     try{
+
       const newOpenProcedure = await genericAxios({
         url: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
         method: API_METHODS.POST,
@@ -195,15 +185,11 @@ const OpenClose = () => {
       let dateFromDb = newOpenProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split('T')[0];
       id = newOpenProcedure.data.message._id;
-     }
-     catch(err){
-      console.log(err)
-     }
+    
     } else if (
       selectedDate === selectedProcedureDate &&
       procedureToEdit.procedure === 'open'
     ) {
-     try{
       await genericAxios({
         url: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN,
         method: API_METHODS.PUT,
@@ -212,10 +198,7 @@ const OpenClose = () => {
           Cookie: '',
         },
       });
-     }
-     catch(err){
-      console.log(err)
-     }
+    
     }
 
     await getAllProcedure();
@@ -275,7 +258,6 @@ const OpenClose = () => {
   useEffect(() => {
     if (!expenseList.length) {
       const getAllData = async () => {
-       try{
         const allExpense = await genericAxios({
           url: API_PATHS.EXPENSE.GET_EXPENSE,
           method: API_METHODS.GET,
@@ -287,10 +269,6 @@ const OpenClose = () => {
           type: 'UPDATE_EXPENSE_LIST',
           payload: allExpense.data.data,
         });
-       }
-       catch(err){
-        console.log(err)
-       }
       };
       getAllData();
     }

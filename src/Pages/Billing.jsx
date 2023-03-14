@@ -47,7 +47,6 @@ const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
 };
 
 const initializeBillForEdit = async (setBill, billID) => {
- try{
     const editBill = await genericAxios({
       url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${billID}`,
       method: API_METHODS.GET,
@@ -61,9 +60,7 @@ const initializeBillForEdit = async (setBill, billID) => {
       const billObjectWithBillItems = { ...billObject, billItems: items };
       setBill(billObjectWithBillItems);
     }
- }catch(err){
-  console.log(err)
- }
+
   // setLoaderDisplay(false);
 };
 

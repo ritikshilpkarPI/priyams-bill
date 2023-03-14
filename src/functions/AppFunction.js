@@ -17,7 +17,6 @@ const AppFunction = (history, location) => {
 
   useEffect(() => {
     (async () => {
-  try{
     const fetch = await genericAxios({
       url: API_PATHS.INVENTORY.GET_ITEMS,
       method: API_METHODS.GET,
@@ -34,10 +33,7 @@ const AppFunction = (history, location) => {
     const itemsData = fetch?.data?.message?.items;
     dispatch({ type: 'NEW_ITEMS_LIST', payload: itemsData });
     setLoaderDisplay(false);
-  }
-  catch(err){
-    console.log(err)
-  }
+ 
     })();
     // eslint-disable-next-line
   }, [dispatch]);

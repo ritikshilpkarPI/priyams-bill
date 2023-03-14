@@ -16,7 +16,6 @@ const StockQuantity = () => {
     getAllItemsFeed();
   }, []);
   const getAllItemsFeed = async () => {
-   try{
     setLoader(true);
     const fetch = await genericAxios({
       url: API_PATHS.INVENTORY.GET_ITEMS,
@@ -34,10 +33,7 @@ const StockQuantity = () => {
     const minStockItems = fetch.data.message.items;
     setMinimumQuantityItem(minStockItems);
     setLoader(false);
-   }
-   catch(err){
-    console.log(err)
-   }
+  
   };
   useEffect(() => {
     const openDeleteModal = () =>

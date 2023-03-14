@@ -56,7 +56,6 @@ const AddExpense = ({ date }) => {
 
   // To add new expense
   const addExpense = async (e) => {
- try{
   e.preventDefault();
   const obj = {
     user: name,
@@ -93,16 +92,12 @@ const AddExpense = ({ date }) => {
       alert('Failed to save date!');
     }
   }
- }
- catch(err){
-  console.log(err)
- }
+ 
   };
 
   // To get today expense data
   useEffect(() => {
     const getTodayData = async () => {
-     try{
       const todayExpense = await genericAxios({
         url: `${API_PATHS.EXPENSE.GET_EXPENSE}/${dataDate}`,
         method: API_METHODS.GET,
@@ -111,17 +106,13 @@ const AddExpense = ({ date }) => {
         },
       });
       setTodayData(todayExpense.data.data);
-     }
-     catch(err){
-      console.log(err)
-     }
+  
     };
     getTodayData();
   }, [dataDate, buttonLoad, reload]);
 
   // To delete expense item
   const deleteExpense = async (id) => {
-  try{
     const userResponse = window.confirm('Do you want to delete this item?');
     if (userResponse) {
       const response = await genericAxios({
@@ -144,10 +135,7 @@ const AddExpense = ({ date }) => {
         alert('Failed to delete expense!');
       }
     }
-  }
-  catch(err){
-    console.log(err)
-  }
+ 
   };
 
   // To handle input for updating expense item
