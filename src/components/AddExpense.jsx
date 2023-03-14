@@ -56,47 +56,53 @@ const AddExpense = ({ date }) => {
 
   // To add new expense
   const addExpense = async (e) => {
-    e.preventDefault();
-    const obj = {
-      user: name,
-      description: description,
-      amount: amount,
-      date: todayDate,
-      time: timeConvert(todayTime),
-    };
-    if (!obj.user || !obj.description || !obj.amount) {
-      alert('Please enter all fields!');
-    } else {
-      setButtonLoad(true);
-      const response = await genericAxios({
-        url: API_PATHS.EXPENSE.POST_EXPENSE,
-        method: API_METHODS.POST,
-        data: { ...obj },
-        headers: {
-          Cookie: '',
-        },
+ try{
+  e.preventDefault();
+  const obj = {
+    user: name,
+    description: description,
+    amount: amount,
+    date: todayDate,
+    time: timeConvert(todayTime),
+  };
+  if (!obj.user || !obj.description || !obj.amount) {
+    alert('Please enter all fields!');
+  } else {
+    setButtonLoad(true);
+    const response = await genericAxios({
+      url: API_PATHS.EXPENSE.POST_EXPENSE,
+      method: API_METHODS.POST,
+      data: { ...obj },
+      headers: {
+        Cookie: '',
+      },
+    });
+    if (
+      response.data.status === true &&
+      response.data.message === 'expense added'
+    ) {
+      setDescription('');
+      setAmount();
+      setButtonLoad(false);
+      setDataDate(todayDate);
+      expenseReducer[1]({
+        type: 'UPDATE_EXPENSE_LIST',
+        payload: response.data.data,
       });
-      if (
-        response.data.status === true &&
-        response.data.message === 'expense added'
-      ) {
-        setDescription('');
-        setAmount();
-        setButtonLoad(false);
-        setDataDate(todayDate);
-        expenseReducer[1]({
-          type: 'UPDATE_EXPENSE_LIST',
-          payload: response.data.data,
-        });
-      } else {
-        alert('Failed to save date!');
-      }
+    } else {
+      alert('Failed to save date!');
     }
+  }
+ }
+ catch(err){
+  console.log(err)
+ }
   };
 
   // To get today expense data
   useEffect(() => {
     const getTodayData = async () => {
+     try{
       const todayExpense = await genericAxios({
         url: `${API_PATHS.EXPENSE.GET_EXPENSE}/${dataDate}`,
         method: API_METHODS.GET,
@@ -105,12 +111,17 @@ const AddExpense = ({ date }) => {
         },
       });
       setTodayData(todayExpense.data.data);
+     }
+     catch(err){
+      console.log(err)
+     }
     };
     getTodayData();
   }, [dataDate, buttonLoad, reload]);
 
   // To delete expense item
   const deleteExpense = async (id) => {
+  try{
     const userResponse = window.confirm('Do you want to delete this item?');
     if (userResponse) {
       const response = await genericAxios({
@@ -133,6 +144,10 @@ const AddExpense = ({ date }) => {
         alert('Failed to delete expense!');
       }
     }
+  }
+  catch(err){
+    console.log(err)
+  }
   };
 
   // To handle input for updating expense item

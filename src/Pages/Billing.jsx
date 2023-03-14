@@ -47,19 +47,23 @@ const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
 };
 
 const initializeBillForEdit = async (setBill, billID) => {
-  const editBill = await genericAxios({
-    url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${billID}`,
-    method: API_METHODS.GET,
-    headers: {
-      Cookie: '',
-    },
-  });
+ try{
+    const editBill = await genericAxios({
+      url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${billID}`,
+      method: API_METHODS.GET,
+      headers: {
+        Cookie: '',
+      },
+    });
 
-  if (editBill?.data?.message) {
-    const { items = [], ...billObject } = editBill?.data?.message;
-    const billObjectWithBillItems = { ...billObject, billItems: items };
-    setBill(billObjectWithBillItems);
-  }
+    if (editBill?.data?.message) {
+      const { items = [], ...billObject } = editBill?.data?.message;
+      const billObjectWithBillItems = { ...billObject, billItems: items };
+      setBill(billObjectWithBillItems);
+    }
+ }catch(err){
+  console.log(err)
+ }
   // setLoaderDisplay(false);
 };
 
