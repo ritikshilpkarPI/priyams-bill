@@ -22,6 +22,7 @@ const PerItemListPurchaseOrder = () => {
           method: API_METHODS.GET,
     
         });
+        if(data.error)return
         setIndividualItemPurchaseDetail(data.data.message.result);
         setLoader(false);
       } catch (error) {}

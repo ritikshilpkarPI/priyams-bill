@@ -70,6 +70,7 @@ const EmployeeAttendance = () => {
             attendance: attendance === 'present' ? true : false,
           },
         });
+        if(result.error)return
         if (result.status === 200) {
           alert(
             `You have successfully marked the Arrival attendance for ${name} `
@@ -90,7 +91,6 @@ const EmployeeAttendance = () => {
             date: dateString,
           },
         });
-
         if (a.status === 230) {
           alert(a.data.message);
         } else {

@@ -34,6 +34,7 @@ const CustomerBill = () => {
         Cookie: '',
       },
     });
+    if(customerBill.error)return
     setBill(customerBill.data.message);
   };
   useEffect(() => {

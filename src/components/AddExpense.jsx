@@ -76,6 +76,7 @@ const AddExpense = ({ date }) => {
         Cookie: '',
       },
     });
+    if(response.error) return
     if (
       response.data.status === true &&
       response.data.message === 'expense added'
@@ -105,8 +106,9 @@ const AddExpense = ({ date }) => {
           Cookie: '',
         },
       });
+      if(todayExpense.error) return
       setTodayData(todayExpense.data.data);
-  
+       
     };
     getTodayData();
   }, [dataDate, buttonLoad, reload]);
@@ -122,6 +124,7 @@ const AddExpense = ({ date }) => {
           Cookie: '',
         },
       });
+      if(response.error)return
       if (
         response.data.status === true &&
         response.data.message === 'expense deleted'
@@ -156,6 +159,7 @@ const AddExpense = ({ date }) => {
         Cookie: '',
       },
     });
+    if(response.error)return
     if (
       response.data.status === true &&
       response.data.message === 'expense updated'

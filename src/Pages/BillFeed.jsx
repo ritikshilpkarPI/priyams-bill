@@ -24,6 +24,7 @@ const BillFeed = ({ bills = [] }) => {
           Cookie: '',
         },
       });
+      if(fetch.error)return
       setAllBills(fetch.data.message.allBill);
       setLoader(false);
     };

@@ -45,6 +45,7 @@ const Report = () => {
         Cookie: '',
       },
     });
+    if(result.error)return
     setReportResult(result.data);
   };
 

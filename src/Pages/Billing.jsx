@@ -54,7 +54,7 @@ const initializeBillForEdit = async (setBill, billID) => {
         Cookie: '',
       },
     });
-
+    if(editBill.error)return
     if (editBill?.data?.message) {
       const { items = [], ...billObject } = editBill?.data?.message;
       const billObjectWithBillItems = { ...billObject, billItems: items };
@@ -310,6 +310,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
     try {
       const response = await genericAxios(API_PATHS.BILLING.GET_USER_DETAILES);
       setUserDataProfile(response.data.message);
+      if(response.error)return
     } catch (error) {
       console.error(error.message);
     }

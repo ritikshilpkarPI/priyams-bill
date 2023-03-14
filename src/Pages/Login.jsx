@@ -26,6 +26,7 @@ const Login = ({ history }) => {
         Cookie: '',
       },
     });
+    if(response.error)return
     // await axios.post("/api/auth/login", payload);
     const status = response.data.status;
     const message = response.data.message;

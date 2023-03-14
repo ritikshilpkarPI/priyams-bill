@@ -22,7 +22,7 @@ const addDays = (date, days) => {
 
 const getExpiredItemsData = async (startDate, endDate) => {
   try {
-    const { status, data } = await genericAxios({
+    const response = await genericAxios({
       url: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
       method: API_METHODS.POST,
       data: {
@@ -30,7 +30,8 @@ const getExpiredItemsData = async (startDate, endDate) => {
         endDate: endDate.toLocaleDateString(),
       },
     });
-    return { status, data };
+    if(response.error)return
+    return { status:response.status, data:response.data };
   } catch (error) {
     return { error };
   }

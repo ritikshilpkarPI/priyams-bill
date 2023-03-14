@@ -129,6 +129,7 @@ const usePurchaseOrder = (history) => {
         method: API_METHODS.GET,
         url: `${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/${search_id}`,
       });
+      if(res.error)return
       const data = res.data.data;
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment = data.payment;

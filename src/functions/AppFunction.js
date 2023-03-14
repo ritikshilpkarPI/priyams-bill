@@ -30,6 +30,7 @@ const AppFunction = (history, location) => {
         Cookie: '',
       },
     });
+    if(fetch.error)return
     const itemsData = fetch?.data?.message?.items;
     dispatch({ type: 'NEW_ITEMS_LIST', payload: itemsData });
     setLoaderDisplay(false);

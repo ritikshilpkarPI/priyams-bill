@@ -30,6 +30,7 @@ const StockQuantity = () => {
         Cookie: '',
       },
     });
+    if(fetch.error)return
     const minStockItems = fetch.data.message.items;
     setMinimumQuantityItem(minStockItems);
     setLoader(false);

@@ -21,6 +21,7 @@ const DayWiseBillFeed = () => {
           Cookie: '',
         },
       });
+      if(dayBill.error)return
       setAllBills(dayBill.data.message.allDailyBills);
     })();
   }, []);

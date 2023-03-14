@@ -172,6 +172,7 @@ const ItemsList = () => {
           Cookie: '',
         },
       });
+      if(newItem.error)return
       dispatch({ type: 'ADD_NEW_ITEM_TO_LIST', payload: newItem.data.message });
     })();
     setApiLoading(false);
@@ -223,6 +224,7 @@ const ItemsList = () => {
           Cookie: 'some_cookie',
         },
       });
+       if(deletedItem.error)return
       if (deletedItem.status === 200) {
         alert('Item deleted...');
       }
@@ -1750,6 +1752,7 @@ const UpdateItemButton = ({
         Cookie: 'some_cookie',
       },
     });
+    if(updatedItem.error)return
     if (updatedItem.status === 200) {
       alert('Item updated...');
     }
