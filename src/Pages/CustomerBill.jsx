@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Axios } from 'src/utils/axios';
 
 import { Button, Group, Table, Text, Title } from '@mantine/core';
 
@@ -26,7 +25,7 @@ const CustomerBill = () => {
   ];
 
   const fetchBill = async () => {
-    const customerBill = await axios.request({
+    const customerBill = await Axios.request({
       url: `/api/billing/getEditBill/${id}`,
       method: 'get',
       headers: {

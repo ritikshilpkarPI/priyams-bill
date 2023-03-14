@@ -3,7 +3,6 @@ import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
 import { AppStateContext } from '../AppState/appState.context';
 import { Axios } from '../utils/axios';
 import BillNarrator from '../components/BillNarrator';
-import axios from 'axios';
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -304,7 +303,10 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
   const getUserData = async () => {
     try {
-      const response = await axios.get('/api/billing/userDetails');
+      const response = await Axios.request({
+        url: '/api/billing/userDetails',
+        method: 'get'
+      });
       setUserDataProfile(response.data.message);
     } catch (error) {
       console.error(error.message);
