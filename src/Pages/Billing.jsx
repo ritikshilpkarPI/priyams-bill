@@ -339,7 +339,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
 
   useEffect(() => {
     if (billID) {
-      initializeBillForEdit(setBill, billID)
+      initializeBillForEdit(setBill, billID);
     }
   }, [billID]);
 

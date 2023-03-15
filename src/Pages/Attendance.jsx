@@ -22,7 +22,7 @@ const Attendance = () => {
   const getAttendance = async () => {
     setLoader(true);
     try {
-        const monthlyattendance = await genericAxios({
+      const monthlyattendance = await genericAxios({
         url: '/api/attendance/monthlyAttendance',
         method: 'get',
       });

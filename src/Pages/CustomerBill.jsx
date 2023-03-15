@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Axios } from 'src/utils/axios';
 
 import { Button, Group, Table, Text, Title } from '@mantine/core';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
