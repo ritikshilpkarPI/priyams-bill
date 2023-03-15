@@ -27,18 +27,13 @@ const CustomerBill = () => {
 
   const fetchBill = async () => {
     const customerBill = await genericAxios({
-<<<<<<< HEAD
       url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${id}`,
       method: API_METHODS.GET,
-=======
-      url: `/api/billing/getEditBill/${id}`,
-      method: 'get',
->>>>>>> 7c061f04bb4c430e94714df781cf0586b75efc3a
       headers: {
         Cookie: '',
       },
     });
-    if(customerBill.error)return
+    if (customerBill.error) return;
     setBill(customerBill.data.message);
   };
   useEffect(() => {
