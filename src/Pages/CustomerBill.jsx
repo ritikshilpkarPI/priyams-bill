@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 import { Button, Group, Table, Text, Title } from '@mantine/core';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
@@ -28,8 +27,13 @@ const CustomerBill = () => {
 
   const fetchBill = async () => {
     const customerBill = await genericAxios({
+<<<<<<< HEAD
       url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${id}`,
       method: API_METHODS.GET,
+=======
+      url: `/api/billing/getEditBill/${id}`,
+      method: 'get',
+>>>>>>> 7c061f04bb4c430e94714df781cf0586b75efc3a
       headers: {
         Cookie: '',
       },

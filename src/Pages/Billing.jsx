@@ -47,19 +47,19 @@ const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
 };
 
 const initializeBillForEdit = async (setBill, billID) => {
-    const editBill = await genericAxios({
-      url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${billID}`,
-      method: API_METHODS.GET,
-      headers: {
-        Cookie: '',
-      },
-    });
-    if(editBill.error)return
-    if (editBill?.data?.message) {
-      const { items = [], ...billObject } = editBill?.data?.message;
-      const billObjectWithBillItems = { ...billObject, billItems: items };
-      setBill(billObjectWithBillItems);
-    }
+  const editBill = await genericAxios({
+    url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${billID}`,
+    method: API_METHODS.GET,
+    headers: {
+      Cookie: '',
+    },
+  });
+  if (editBill.error) return;
+  if (editBill?.data?.message) {
+    const { items = [], ...billObject } = editBill?.data?.message;
+    const billObjectWithBillItems = { ...billObject, billItems: items };
+    setBill(billObjectWithBillItems);
+  }
 
   // setLoaderDisplay(false);
 };
@@ -310,7 +310,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
     try {
       const response = await genericAxios(API_PATHS.BILLING.GET_USER_DETAILES);
       setUserDataProfile(response.data.message);
-      if(response.error)return
+      if (response.error) return;
     } catch (error) {
       console.error(error.message);
     }
@@ -343,7 +343,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
 
   useEffect(() => {
     if (billID) {
-      initializeBillForEdit(setBill, billID)
+      initializeBillForEdit(setBill, billID);
     }
   }, [billID]);
 

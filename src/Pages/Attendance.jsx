@@ -24,11 +24,11 @@ const Attendance = () => {
   const getAttendance = async () => {
     setLoader(true);
     try {
-        const monthlyattendance = await genericAxios({
+      const monthlyattendance = await genericAxios({
         url: API_PATHS.ATTENDANCE.GET_MONTHLY_ATTENDANCE,
         method: API_METHODS.GET,
       });
-      if(monthlyattendance.error)return
+      if (monthlyattendance.error) return;
       setAttendance(monthlyattendance.data.message);
       setLoader(false);
     } catch (error) {
@@ -48,7 +48,7 @@ const Attendance = () => {
           name,
         },
       });
-      if(result.error)return
+      if (result.error) return;
       setDateWiseAttendance(result.data.message);
     } catch (error) {
       console.error(error);
