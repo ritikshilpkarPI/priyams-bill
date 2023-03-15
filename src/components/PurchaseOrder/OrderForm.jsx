@@ -249,7 +249,6 @@ const OrderForm = ({
               }}
               style={{ width: '140px' }}
             />
-            {console.log(date)}
             <NumberInput
               withAsterisk={form.values.validate}
               style={{ width: '15vmin' }}

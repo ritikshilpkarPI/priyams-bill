@@ -15,7 +15,6 @@ function App({ history, location }) {
     value,
     setValue,
   } = AppFunction(history, location);
-  console.log({ env: process.env });
   return (
     <div className="App">
       {staffUserName && (

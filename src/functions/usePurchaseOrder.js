@@ -128,7 +128,6 @@ const usePurchaseOrder = (history) => {
         url: '/api/purchaseOrder/orderDetails/' + search_id,
       });
       const data = res.data.data;
-      console.log({ data });
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment = data.payment;
       purchaseForm.values.dealerName = data.dealerName ? data.dealerName : '';
@@ -355,7 +354,6 @@ const usePurchaseOrder = (history) => {
   };
   //my function for onclick barcode
   const handleSelectOrderItems2 = (item) => {
-    console.log(item);
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
       inputName: item.itemName,
@@ -375,8 +373,6 @@ const usePurchaseOrder = (history) => {
     setOpenDrawer(false);
   };
   const handleSelectOrderItems = (item, filterItems2) => {
-    console.log(item);
-    console.log(filterItems2);
     if (filterItems2.length === 1) {
       form.setValues((prev) => ({
         barcode: item.itemBarcode,
@@ -477,7 +473,6 @@ const usePurchaseOrder = (history) => {
     });
   };
   const handleItemEdit = (item, index) => {
-    console.log('editfn', item);
     setIsEditable(false);
     if (index >= 0) {
       setEditIndex(index);
@@ -500,7 +495,6 @@ const usePurchaseOrder = (history) => {
       brand: item.brand,
       category: item.category,
     }));
-    console.log({ item });
     setSlabs([...item.slabPrice]);
     setOpened(true);
   };

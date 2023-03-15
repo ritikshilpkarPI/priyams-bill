@@ -46,7 +46,6 @@ const StockQuantity = () => {
         confirmProps: { color: 'red' },
         onCancel: () => {},
         onConfirm: () => {
-          console.log('Confirmed');
           async function deletePost() {
             await Axios.delete(
               `/api/inventory/permanentlyOutOfStock/${Id}`
@@ -70,7 +69,6 @@ const StockQuantity = () => {
       setModalToggle(true);
     }
   };
-  console.log(minimumQuantityItem);
   const rows = minimumQuantityItem.map((item, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
