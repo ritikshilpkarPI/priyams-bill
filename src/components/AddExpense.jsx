@@ -8,8 +8,8 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { Axios } from '../utils/axios';
 import { AppStateContext } from '../AppState/appState.context';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const AddExpense = ({ date }) => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
@@ -66,7 +66,7 @@ const AddExpense = ({ date }) => {
       alert('Please enter all fields!');
     } else {
       setButtonLoad(true);
-      const response = await Axios.request({
+      const response = await genericAxios({
         url: '/api/expense',
         method: 'post',
         data: { ...obj },
@@ -95,7 +95,7 @@ const AddExpense = ({ date }) => {
   // To get today expense data
   useEffect(() => {
     const getTodayData = async () => {
-      const todayExpense = await Axios.request({
+      const todayExpense = await genericAxios({
         url: `/api/expense/${dataDate}`,
         method: 'get',
         headers: {
@@ -111,7 +111,7 @@ const AddExpense = ({ date }) => {
   const deleteExpense = async (id) => {
     const userResponse = window.confirm('Do you want to delete this item?');
     if (userResponse) {
-      const response = await Axios.request({
+      const response = await genericAxios({
         url: `/api/expense/${id}`,
         method: 'delete',
         headers: {
@@ -143,7 +143,7 @@ const AddExpense = ({ date }) => {
   // To update expense item
   const updateExpense = async (index) => {
     const itemToUpdate = todayData[index];
-    const response = await Axios.request({
+    const response = await genericAxios({
       url: `/api/expense/${itemToUpdate._id}`,
       method: 'put',
       data: { ...itemToUpdate },

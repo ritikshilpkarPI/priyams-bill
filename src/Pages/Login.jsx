@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Axios } from '../utils/axios';
-// import axios from "axios";
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 // axios.defaults.withCredentials = true;
 
 const Login = ({ history }) => {
@@ -17,7 +16,7 @@ const Login = ({ history }) => {
     }
 
     const payload = { username: username.toLowerCase(), password };
-    const response = await Axios.request({
+    const response = await genericAxios({
       url: '/api/auth/login',
       method: 'post',
       data: { ...payload },

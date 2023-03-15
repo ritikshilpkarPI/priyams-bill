@@ -434,7 +434,7 @@ input[type='number'] {
 
   .footer {
     position: absolute;
-    bottom: 10px;
+    bottom: 0;
   }
 }
 
@@ -484,6 +484,7 @@ input[type='number'] {
 
     .footer {
       position: relative;
+      bottom: 0;
     }
   }
 }

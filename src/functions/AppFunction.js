@@ -1,8 +1,8 @@
 // import React, { useState, useEffect, useContext } from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { Axios } from '../utils/axios';
 import { AppStateContext } from '../AppState/appState.context';
 import { PAGES } from '../constants/HeaderTypes';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const AppFunction = (history, location) => {
   const showBill = location.pathname.includes('showbill');
@@ -15,7 +15,7 @@ const AppFunction = (history, location) => {
 
   useEffect(() => {
     (async () => {
-      const fetch = await Axios.request({
+      const fetch = await genericAxios({
         url: '/api/inventory/items',
         method: 'get',
         params: {
