@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Axios } from '../utils/axios';
-// import axios from "axios";
+import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 // axios.defaults.withCredentials = true;
 
 const Login = ({ history }) => {
@@ -17,14 +18,15 @@ const Login = ({ history }) => {
     }
 
     const payload = { username: username.toLowerCase(), password };
-    const response = await Axios.request({
-      url: '/api/auth/login',
-      method: 'post',
+    const response = await genericAxios({
+      url: API_PATHS.AUTH.POST_LOGIN,
+      method: API_METHODS.POST,
       data: { ...payload },
       headers: {
         Cookie: '',
       },
     });
+    if(response.error)return
     // await axios.post("/api/auth/login", payload);
     const status = response.data.status;
     const message = response.data.message;

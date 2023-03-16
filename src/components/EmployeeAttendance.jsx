@@ -1,8 +1,10 @@
 import React from 'react';
 import { Group, Title, Select, Button } from '@mantine/core';
 import { useState } from 'react';
-import Axios from 'axios';
 import '../CSS/employeeAttendance.css';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
 const nameOptionAndValues = [
   { value: 'anjali', label: 'Anjali' },
   { value: 'shivam', label: 'Shivam' },
@@ -44,9 +46,9 @@ const EmployeeAttendance = () => {
       return;
     } else if (attendance === 'absent') {
       try {
-        await Axios.request({
-          url: `/api/attendance/markAbsent`,
-          method: 'post',
+        await genericAxios({
+          url: API_PATHS.ATTENDANCE.POST_MARK_ABSENT,
+          method: API_METHODS.POST,
           data: {
             name,
             date: dateString,
@@ -58,9 +60,9 @@ const EmployeeAttendance = () => {
       }
     } else if (state === 'arrival') {
       try {
-        const result = await Axios.request({
-          url: `/api/attendance/dailyAttendanceArrival`,
-          method: 'post',
+        const result = await genericAxios({
+          url: API_PATHS.ATTENDANCE.POST_DAILY_ATTENDANCE_ARRIVAL,
+          method: API_METHODS.POST,
           data: {
             name,
             arrivingTime: date,
@@ -68,6 +70,7 @@ const EmployeeAttendance = () => {
             attendance: attendance === 'present' ? true : false,
           },
         });
+        if(result.error)return
         if (result.status === 200) {
           alert(
             `You have successfully marked the Arrival attendance for ${name} `
@@ -80,15 +83,14 @@ const EmployeeAttendance = () => {
       }
     } else if (state === 'leave') {
       try {
-        let a = await Axios.request({
-          url: `/api/attendance/dailyAttendanceLeaving`,
-          method: 'post',
+        let a = await genericAxios({
+          url: API_PATHS.ATTENDANCE.POST_DAILY_ATTENDANCE_LEAVING,
+          method: API_METHODS.POST,
           data: {
             name: name,
             date: dateString,
           },
         });
-
         if (a.status === 230) {
           alert(a.data.message);
         } else {

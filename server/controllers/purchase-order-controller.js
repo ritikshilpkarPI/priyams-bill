@@ -262,7 +262,6 @@ const getOrdersByQuery = async (req, res) => {
 
 const getPurchaseOrderByItem = async (req, res) => {
   const { id } = req.params;
-  const response = await PurchaseOrder.find({}).limit(2);
   const itemPurchaseOrder = PurchaseOrder.aggregate([
     {
       $unwind: '$purchasedItems',

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Axios } from 'src/utils/axios';
 import { Table, Loader, Button } from '@mantine/core';
 import { Link } from 'react-router-dom';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const PerItemListPurchaseOrder = () => {
   const [individualItemPurchaseDetail, setIndividualItemPurchaseDetail] =
     useState([]);
@@ -15,10 +17,12 @@ const PerItemListPurchaseOrder = () => {
     const itemsData = async () => {
       setLoader(true);
       try {
-        const data = await Axios.request({
-          url: `/api/purchaseOrder/individualPurchaseOrder/${id}`,
-          method: 'GET',
+        const data = await genericAxios({
+          url: `${API_PATHS.PURCHASE_ORDER.GET_INDIVIDUAL_PURCHASE_ORDER}/${id}`,
+          method: API_METHODS.GET,
+    
         });
+        if(data.error)return
         setIndividualItemPurchaseDetail(data.data.message.result);
         setLoader(false);
       } catch (error) {}
