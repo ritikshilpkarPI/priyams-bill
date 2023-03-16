@@ -2,7 +2,7 @@ import { Button } from '@mantine/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
-import '../../CSS/purchaseApproval.css';
+import '../CSS/purchaseApproval.css';
 const PurchaseListApproval = ({
   list,
   index,

@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Button, Group } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { Carousel } from '@mantine/carousel';
-import '../../CSS/billUploader.css';
+import '../CSS/billUploader.css';
 const BillUploader = ({
   purchaseList,
   setPurchaseList,

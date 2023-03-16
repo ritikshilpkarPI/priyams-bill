@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PurchaseListApproval from './PurchaseListApproval';
 import { Button, Table } from '@mantine/core';
-import '../../CSS/purchaseApproval.css';
+import '../CSS/purchaseApproval.css';
 
 import ShowPurchaseOrderTable from './ShowPurchaseOrderTable';
 import ShowOrderDetailTable from './ShowOrderDetailTable';

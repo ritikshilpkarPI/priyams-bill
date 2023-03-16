@@ -8,7 +8,7 @@ import {
 } from '@mantine/core';
 import React from 'react';
 import BillUploader from './BillUploader';
-import '../../CSS/orderForm.css';
+import '../CSS/orderForm.css';
 
 const Forms = ({
   purchaseForm,

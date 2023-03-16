@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Loader, Table } from '@mantine/core';
-import ShowOrderDetailTable from './PurchaseApproval/ShowOrderDetailTable';
+import ShowOrderDetailTable from './ShowOrderDetailTable';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 const ItemListPurchaseOrderHistory = (props) => {
   const [purchaseOrderList, setPurchaseOrderList] = useState([]);

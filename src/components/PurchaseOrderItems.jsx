@@ -10,7 +10,7 @@ import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
-import '../../CSS/purchaseOrder.css';
+import '../CSS/purchaseOrder.css';
 import { useHistory, useParams } from 'react-router-dom';
 const PurchaseOrderItems = ({ history }) => {
   const {

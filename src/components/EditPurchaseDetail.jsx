@@ -1,5 +1,5 @@
 import { Drawer, Button, Group, Box, NumberInput, Select } from '@mantine/core';
-import '../../CSS/editPurchaseDetail.css';
+import '../CSS/editPurchaseDetail.css';
 const EditPurchaseDetail = ({
   setPurchaseDrawer,
   openPurchaseDrawer,
