@@ -3,7 +3,7 @@ import React from 'react';
 // import { Table, Title } from '@mantine/core';
 // import PurchaseOrderBody from '../components/PurchaseOrder/PurchaseOrderBody';
 // import PurchaseDetail from '../components/PurchaseOrder/PurchaseDetail';
-import PurchaseOrderItems from 'src/components/PurchaseOrder/PurchaseOrderItems';
+import PurchaseOrderItems from 'src/components/PurchaseOrderItems';
 
 const PurchaseOrder = () => {
   return (

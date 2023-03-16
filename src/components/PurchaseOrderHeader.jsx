@@ -1,7 +1,7 @@
 import React from 'react';
-import { tableHead } from './constant';
+import { tableHead } from 'src/constants/purchaseOrderConstants';
 
-const Header = () => {
+const PurchaseOrderHeader = () => {
   return (
     <thead>
       <tr>
@@ -13,4 +13,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default PurchaseOrderHeader;

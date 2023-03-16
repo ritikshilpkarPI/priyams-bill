@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
-import '../../CSS/purchaseApproval.css';
+import '../CSS/purchaseApproval.css';
 const PurchaseListApproval = ({
   list,
   index,

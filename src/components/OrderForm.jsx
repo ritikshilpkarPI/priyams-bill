@@ -12,7 +12,7 @@ import {
 import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
-import '../../CSS/orderForm.css';
+import '../CSS/orderForm.css';
 import { useState } from 'react';
 const OrderForm = ({
   openDrawer,
@@ -308,7 +308,7 @@ const OrderForm = ({
             placeholder="remark"
             {...form.getInputProps('itemRemark')}
           />
-          
+
           <Group position="right" mt="md">
             <Button type="submit">Submit</Button>
           </Group>

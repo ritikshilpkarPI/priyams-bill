@@ -1,6 +1,6 @@
 import React from 'react';
 import { Carousel } from '@mantine/carousel';
-import '../../CSS/billUploader.css';
+import '../CSS/billUploader.css';
 const BillUploaderDetails = ({ cloudBills }) => {
   return (
     <section style={{ width: '100%', margin: 'auto', marginTop: '5vmin' }}>
