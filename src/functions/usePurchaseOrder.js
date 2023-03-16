@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useForm } from '@mantine/form';
 import useBarcodeSearchItems from './useBarcodeSearchItems';
-import { Axios } from 'src/utils/axios';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const usePurchaseOrder = (history) => {
   const { id } = useParams();
   const [opened, setOpened] = useState(false);
@@ -123,10 +125,11 @@ const usePurchaseOrder = (history) => {
   const getDetails = async (search_id) => {
     try {
       onLoader();
-      const res = await Axios({
-        method: 'GET',
-        url: '/api/purchaseOrder/orderDetails/' + search_id,
+      const res = await genericAxios({
+        method: API_METHODS.GET,
+        url: `${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/${search_id}`,
       });
+      if(res.error)return
       const data = res.data.data;
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment = data.payment;
@@ -201,18 +204,18 @@ const usePurchaseOrder = (history) => {
     }
   };
   const savePayment = async (payment) => {
-    return await Axios({
-      method: 'POST',
-      url: '/api/payment/savePayment',
+    return await genericAxios({
+      method: API_METHODS.POST,
+      url: API_PATHS.PAYMENT.POST_SAVE_PAYMENT,
       data: {
         payment,
       },
     });
   };
   const updateSavedPayment = async (payment) => {
-    return await Axios({
-      method: 'POST',
-      url: `/api/payment/updateSavedPayment/${id}`,
+    return await genericAxios({
+      method: API_METHODS.POST,
+      url: `${API_PATHS.PAYMENT.POST_UPDATE_SAVED_PAYMENT}/${id}`,
       data: {
         payment,
       },
@@ -235,9 +238,9 @@ const usePurchaseOrder = (history) => {
     }
   };
   const updatePaymentById = async (payment, index) => {
-    await Axios({
-      method: 'POST',
-      url: `/api/payment/updatePaymentById/${id}`,
+    await genericAxios({
+      method: API_METHODS.POST,
+      url: `${API_PATHS.PAYMENT.POST_UPDATE_PAYMENT_BY_ID}/${id}`,
       data: {
         index,
         payment,
@@ -324,9 +327,9 @@ const usePurchaseOrder = (history) => {
     }
   };
   const addOrderApi = async (isDraft, purchaseObj) => {
-    return await Axios({
-      method: 'POST',
-      url: '/api/purchaseOrder/addNewOrder',
+    return await genericAxios({
+      method: API_METHODS.POST,
+      url: API_PATHS.PURCHASE_ORDER.POST_ADD_NEW_ORDER,
       data: {
         new_order: { purchaseObj, isDraft },
         uploadedImages: cloudBills,
@@ -335,9 +338,9 @@ const usePurchaseOrder = (history) => {
   };
 
   const updateOrderApi = async (isDraft, purchaseObj) => {
-    return await Axios({
-      method: 'POST',
-      url: '/api/purchaseOrder/updateDetails',
+    return await genericAxios({
+      method: API_METHODS.POST,
+      url: API_PATHS.PURCHASE_ORDER.POST_UPDATE_DETAILS,
       data: {
         new_order: { purchaseObj, isDraft, id },
         uploadedImages: cloudBills,
@@ -445,27 +448,27 @@ const usePurchaseOrder = (history) => {
   };
 
   const saveOrder = async (new_order) => {
-    return await Axios({
-      method: 'POST',
-      url: '/api/purchaseOrder/saveOrder',
+    return await genericAxios({
+      method: API_METHODS.POST,
+      url: API_PATHS.PURCHASE_ORDER.POST_SAVE_ORDER,
       data: {
         new_order,
       },
     });
   };
   const updateSavedOrder = async (new_order) => {
-    return await Axios({
-      method: 'POST',
-      url: `/api/purchaseOrder/updateSavedOrder/${id}`,
+    return await genericAxios({
+      method: API_METHODS.POST,
+      url: `${API_PATHS.PURCHASE_ORDER.POST_UPDATE_SAVED_ORDER}/${id}`,
       data: {
         new_order,
       },
     });
   };
   const updateOrderByIndex = async (new_order, index) => {
-    return await Axios({
-      method: 'POST',
-      url: `/api/purchaseOrder/updateOrderByIndex/${id}`,
+    return await genericAxios({
+      method: API_METHODS.POST,
+      url: `${API_PATHS.PURCHASE_ORDER.POST_UPDATE_ORDER_BY_INDEX}/${id}`,
       data: {
         new_order,
         index,
@@ -501,9 +504,9 @@ const usePurchaseOrder = (history) => {
   const deleteOrder = async (order_id) => {
     try {
       onLoader();
-      await Axios({
-        method: 'POST',
-        url: `/api/purchaseOrder/deleteItem/${id}`,
+      await genericAxios({
+        method: API_METHODS.POST,
+        url: `${API_PATHS.PURCHASE_ORDER.POST_DELETE_ITEM}/${id}`,
         data: {
           itemId: order_id,
         },
@@ -526,9 +529,9 @@ const usePurchaseOrder = (history) => {
   const deletePurchaseDetail = async (index) => {
     try {
       onLoader();
-      await Axios({
-        method: 'POST',
-        url: `/api/payment/deletePaymentById/${id}`,
+      await genericAxios({
+        method: API_METHODS.POST,
+        url: `${API_PATHS.PAYMENT.POST_DELETE_PAYMENT_BY_ID}/${id}`,
         data: {
           index,
         },

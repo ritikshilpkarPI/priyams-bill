@@ -4,7 +4,9 @@ import {
   Text,
   // Collapse
 } from '@mantine/core';
-import { Axios } from '../utils/axios';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 // import { BillFeed } from "./BillFeed";
 
 const DayWiseBillFeed = () => {
@@ -12,13 +14,14 @@ const DayWiseBillFeed = () => {
 
   useEffect(() => {
     (async () => {
-      const dayBill = await Axios.request({
-        url: '/api/billing/allDailyBills',
-        method: 'get',
+      const dayBill = await genericAxios({
+        url: API_PATHS.BILLING.GET_ALL_DAILY_BILLS,
+        method: API_METHODS.GET,
         headers: {
           Cookie: '',
         },
       });
+      if(dayBill.error)return
       setAllBills(dayBill.data.message.allDailyBills);
     })();
   }, []);

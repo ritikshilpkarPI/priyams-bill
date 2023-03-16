@@ -145,6 +145,46 @@ const OrderForm = ({
               {...form.getInputProps('unit')}
             />
           </Group>
+          <div className="date-container">
+            {/* <DatePicker placeholder="Pick date" label="Event date" withAsterisk={form.values.validate}={true} value={date} onChange={(day) => setDate(day)} /> */}
+            <DatePicker
+              className="useby-date-picker"
+              placeholder="Pick date"
+              label="Expiry  date"
+              inputFormat="MM/DD/YYYY"
+              value={date}
+              onChange={(day) => {
+                let s = String(new Date(day).toLocaleDateString('en-US'));
+                setDate(s);
+              }}
+              style={{ width: '140px' }}
+            />
+            <NumberInput
+              withAsterisk={form.values.validate}
+              style={{ width: '15vmin' }}
+              label="Quantity"
+              placeholder="quantity"
+              value={expiryQuantity}
+              onChange={(qnt) => setExpiryQuantity(qnt)}
+            />
+            <Button onClick={handleExpiryDate}>Add Date</Button>
+          </div>
+          {form.values.expiryDates?.length
+            ? form.values.expiryDates.map((date, index) => {
+                return (
+                  <div className="expiry-date-showcase" key={index + 1}>
+                    <TextInput
+                      value={new Date(date.date).toLocaleDateString()}
+                      readOnly
+                    />
+                    <TextInput readOnly value={date.value} />
+                    <Button onClick={() => handleDateDelete(date)}>
+                      Delete
+                    </Button>
+                  </div>
+                );
+              })
+            : ''}
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
@@ -235,46 +275,6 @@ const OrderForm = ({
             placeholder="current stock quantity"
             {...form.getInputProps('stockQuantity')}
           />
-          <div className="date-container">
-            {/* <DatePicker placeholder="Pick date" label="Event date" withAsterisk={form.values.validate}={true} value={date} onChange={(day) => setDate(day)} /> */}
-            <DatePicker
-              className="useby-date-picker"
-              placeholder="Pick date"
-              label="Expiry  date"
-              inputFormat="MM/DD/YYYY"
-              value={date}
-              onChange={(day) => {
-                let s = String(new Date(day).toLocaleDateString('en-US'));
-                setDate(s);
-              }}
-              style={{ width: '140px' }}
-            />
-            <NumberInput
-              withAsterisk={form.values.validate}
-              style={{ width: '15vmin' }}
-              label="Quantity"
-              placeholder="quantity"
-              value={expiryQuantity}
-              onChange={(qnt) => setExpiryQuantity(qnt)}
-            />
-            <Button onClick={handleExpiryDate}>Add Date</Button>
-          </div>
-          {form.values.expiryDates?.length
-            ? form.values.expiryDates.map((date, index) => {
-                return (
-                  <div className="expiry-date-showcase" key={index + 1}>
-                    <TextInput
-                      value={new Date(date.date).toLocaleDateString()}
-                      readOnly
-                    />
-                    <TextInput readOnly value={date.value} />
-                    <Button onClick={() => handleDateDelete(date)}>
-                      Delete
-                    </Button>
-                  </div>
-                );
-              })
-            : ''}
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
@@ -308,6 +308,7 @@ const OrderForm = ({
             placeholder="remark"
             {...form.getInputProps('itemRemark')}
           />
+          
           <Group position="right" mt="md">
             <Button type="submit">Submit</Button>
           </Group>

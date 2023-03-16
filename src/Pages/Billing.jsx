@@ -1,8 +1,10 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
 import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
 import BillNarrator from '../components/BillNarrator';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -45,17 +47,20 @@ const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
 };
 
 const initializeBillForEdit = async (setBill, billID) => {
-  const editBill = await Axios.request({
-    url: `/api/billing/getEditBill/${billID}`,
-    method: 'get',
+  const editBill = await genericAxios({
+    url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${billID}`,
+    method: API_METHODS.GET,
     headers: {
       Cookie: '',
     },
   });
+  if (editBill.error) return;
+  if (editBill?.data?.message) {
+    const { items = [], ...billObject } = editBill?.data?.message;
+    const billObjectWithBillItems = { ...billObject, billItems: items };
+    setBill(billObjectWithBillItems);
+  }
 
-  const { items, ...billObject } = editBill.data.message;
-  const billObjectWithBillItems = { ...billObject, billItems: items };
-  setBill(billObjectWithBillItems);
   // setLoaderDisplay(false);
 };
 
@@ -202,18 +207,18 @@ async function addNewBill(
   };
   setBill(updateBill);
   const editApi = {
-    url: '/api/billing/editBill',
-    method: 'put',
+    url: API_PATHS.BILLING.PUT_EDIT_BILL,
+    method: API_METHODS.PUT,
     data: { id: billID, itemWithChanges: { ...bill } },
   };
   const createApi = {
-    url: '/api/billing/newBill',
-    method: 'post',
+    url: API_PATHS.BILLING.POST_NEW_BILL,
+    method: API_METHODS.POST,
     data: { ...bill },
   };
   const objectOfInterest = billID ? editApi : createApi;
 
-  await Axios.request({
+  await genericAxios({
     ...objectOfInterest,
     headers: {
       Cookie: '',
@@ -303,10 +308,11 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
   const getUserData = async () => {
     try {
-      const response = await Axios.request({
-        url: '/api/billing/userDetails',
-        method: 'get'
+      const response = await genericAxios({
+        url: API_PATHS.BILLING.GET_USER_DETAILES,
+        method: API_METHODS.GET,
       });
+      if (response.error) return;
       setUserDataProfile(response.data.message);
     } catch (error) {
       console.error(error.message);
@@ -338,7 +344,11 @@ const Billing = ({ billID = '', loaderDisplay }) => {
     []
   );
 
-  useEffect(() => initializeBillForEdit(setBill, billID), [billID]);
+  useEffect(() => {
+    if (billID) {
+      initializeBillForEdit(setBill, billID);
+    }
+  }, [billID]);
 
   useEffect(
     () =>

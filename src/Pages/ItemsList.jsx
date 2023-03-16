@@ -17,9 +17,11 @@ import {
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
 import Papa from 'papaparse';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 // import ProtectedComponent from "src/components/ProtectedComponent";
 // import access from "../access.js";
 
@@ -162,14 +164,15 @@ const ItemsList = () => {
 
     setApiLoading(true);
     (async () => {
-      const newItem = await Axios.request({
-        url: '/api/inventory/addNewItem',
-        method: 'post',
+      const newItem = await genericAxios({
+        url: API_PATHS.INVENTORY.POST_ADD_NEW_ITEM,
+        method: API_METHODS.POST,
         data: { ...itemObject },
         headers: {
           Cookie: '',
         },
       });
+      if(newItem.error)return
       dispatch({ type: 'ADD_NEW_ITEM_TO_LIST', payload: newItem.data.message });
     })();
     setApiLoading(false);
@@ -213,14 +216,15 @@ const ItemsList = () => {
     const handleDeleteItem = async () => {
       const { _id } = items[index];
       setApiLoading(true);
-      const deletedItem = await Axios.request({
-        url: '/api/inventory/softDeleteItem',
-        method: 'post',
+      const deletedItem = await genericAxios({
+        url: API_PATHS.INVENTORY.POST_SOFT_DELETE_ITEM,
+        method: API_METHODS.POST,
         data: { id: _id },
         headers: {
           Cookie: 'some_cookie',
         },
       });
+       if(deletedItem.error)return
       if (deletedItem.status === 200) {
         alert('Item deleted...');
       }
@@ -1049,9 +1053,9 @@ const ItemsList = () => {
     if (csvFile) {
       Papa.parse(csvFile, {
         complete: async function (results) {
-          await Axios.request({
-            url: '/api/inventory/addbulkitems',
-            method: 'post',
+          await genericAxios({
+            url: API_PATHS.INVENTORY.POST_ADD_BULK_ITEMS,
+            method: API_METHODS.POST,
             data: results.data,
           });
         },
@@ -1740,14 +1744,15 @@ const UpdateItemButton = ({
   const handleAddItem = async () => {
     const { _id } = itemToBeUpdated[index];
     setApiLoading(true);
-    const updatedItem = await Axios.request({
-      url: '/api/inventory/editItemById',
-      method: 'put',
+    const updatedItem = await genericAxios({
+      url: API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID,
+      method: API_METHODS.PUT,
       data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
       headers: {
         Cookie: 'some_cookie',
       },
     });
+    if(updatedItem.error)return
     if (updatedItem.status === 200) {
       alert('Item updated...');
     }

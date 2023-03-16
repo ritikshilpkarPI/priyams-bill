@@ -8,12 +8,14 @@ import {
   Title,
 } from '@mantine/core';
 import { useEffect, useState, useContext } from 'react';
-import { Axios } from '../utils/axios';
 import { AppStateContext } from '../AppState/appState.context';
 import AddExpense from '../components/AddExpense';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access';
 import EmployeeAttendance from '../components/EmployeeAttendance';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const INITIAL_VALS = {
   twoThousand: 0,
   fiveHundred: 0,
@@ -101,27 +103,29 @@ const OpenClose = () => {
   };
 
   const getAllProcedure = async () => {
-    const allProcedures = await Axios.request({
-      url: `/api/openClose/getAllProcedure`,
-      method: 'get',
+    const allProcedures = await genericAxios({
+      url: API_PATHS.OPENCLOSE.GET_ALL_PROCEDURE,
+      method: API_METHODS.GET,
       headers: {
         Cookie: '',
       },
     });
+    if(allProcedures.error)return
     const { procedures } = allProcedures.data.message;
     setProcedure(procedures);
   };
 
   const getDayWiseProcedure = async () => {
-    const allDayWiseProcedures = await Axios.request({
-      url: `/api/openClose/getDayWiseProcedure`,
-      method: 'get',
-      headers: {
-        Cookie: '',
-      },
-    });
-    const { dayWiseProcedures } = allDayWiseProcedures.data.message;
-    setDayWiseProcedures(dayWiseProcedures);
+      const allDayWiseProcedures = await genericAxios({
+        url: API_PATHS.OPENCLOSE.GET_DAY_WISE_PROCEDURE,
+        method: API_METHODS.GET,
+        headers: {
+          Cookie: '',
+        },
+      });
+      if(allDayWiseProcedures.error)return
+      const { dayWiseProcedures } = allDayWiseProcedures.data.message;
+      setDayWiseProcedures(dayWiseProcedures);
   };
 
   useEffect(() => {
@@ -171,35 +175,41 @@ const OpenClose = () => {
       createdAtDate !== currentDate ||
       (id === '' && selectedDate === currentDate)
     ) {
-      const newOpenProcedure = await Axios.request({
-        url: `/api/openClose/newProcedure/open`,
-        method: 'post',
+
+      const newOpenProcedure = await genericAxios({
+        url: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
+        method: API_METHODS.POST,
         data: { ...finalProcedureData },
         headers: {
           Cookie: '',
         },
       });
+      if(newOpenProcedure.error)return
       let dateFromDb = newOpenProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split('T')[0];
       id = newOpenProcedure.data.message._id;
+    
     } else if (
       selectedDate === selectedProcedureDate &&
       procedureToEdit.procedure === 'open'
     ) {
-      await Axios.request({
-        url: `/api/openClose/editProcedure/open`,
-        method: 'put',
+      await genericAxios({
+        url: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN,
+        method: API_METHODS.PUT,
         data: { id, procedureToBeUpdated: { ...finalProcedureData } },
         headers: {
           Cookie: '',
         },
       });
+    
     }
 
     await getAllProcedure();
     await getDayWiseProcedure();
     setApiLoading(false);
   };
+
+
   const addNewCloseProcedure = async () => {
     setApiLoading(true);
     id = '';
@@ -219,14 +229,15 @@ const OpenClose = () => {
       createdAtDate !== currentDate ||
       (id === '' && selectedDate === currentDate)
     ) {
-      const newCloseProcedure = await Axios.request({
-        url: `/api/openClose/newProcedure/close`,
-        method: 'post',
+      const newCloseProcedure = await genericAxios({
+        url: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE,
+        method: API_METHODS.POST,
         data: { ...finalProcedureData },
         headers: {
           Cookie: '',
         },
       });
+      if(newCloseProcedure.error)return
       let dateFromDb = newCloseProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split('T')[0];
       id = newCloseProcedure.data.message._id;
@@ -234,9 +245,9 @@ const OpenClose = () => {
       selectedDate === selectedProcedureDate &&
       procedureToEdit?.procedure === 'close'
     ) {
-      await Axios.request({
-        url: `/api/openClose/editProcedure/close`,
-        method: 'put',
+      await genericAxios({
+        url: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE,
+        method: API_METHODS.PUT,
         data: { id, procedureToBeUpdated: { ...finalProcedureData } },
         headers: {
           Cookie: '',
@@ -251,13 +262,14 @@ const OpenClose = () => {
   useEffect(() => {
     if (!expenseList.length) {
       const getAllData = async () => {
-        const allExpense = await Axios.request({
-          url: '/api/expense',
-          method: 'get',
+        const allExpense = await genericAxios({
+          url: API_PATHS.EXPENSE.GET_EXPENSE,
+          method: API_METHODS.GET,
           headers: {
             Cookie: '',
           },
         });
+        if(allExpense.error)return
         expenseDispatch({
           type: 'UPDATE_EXPENSE_LIST',
           payload: allExpense.data.data,
@@ -270,13 +282,14 @@ const OpenClose = () => {
 
   useEffect(() => {
     (async () => {
-      const dayBill = await Axios.request({
-        url: '/api/billing/allDailyBills',
-        method: 'get',
+      const dayBill = await genericAxios({
+        url: API_PATHS.BILLING.GET_ALL_DAILY_BILLS,
+        method: API_METHODS.GET,
         headers: {
           Cookie: '',
         },
       });
+      if(dayBill.error)return
       setAllBills(dayBill.data.message.allDailyBills);
     })();
   }, []);
