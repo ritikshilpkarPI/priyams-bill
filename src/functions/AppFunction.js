@@ -17,24 +17,23 @@ const AppFunction = (history, location) => {
 
   useEffect(() => {
     (async () => {
-    const fetch = await genericAxios({
-      url: API_PATHS.INVENTORY.GET_ITEMS,
-      method: API_METHODS.GET,
-      params: {
-        filters: {
-          minStockOnly: false,
-          isDeleted: false,
+      const fetch = await genericAxios({
+        url: API_PATHS.INVENTORY.GET_ITEMS,
+        method: API_METHODS.GET,
+        params: {
+          filters: {
+            minStockOnly: false,
+            isDeleted: false,
+          },
         },
-      },
-      headers: {
-        Cookie: '',
-      },
-    });
-    if(fetch.error)return
-    const itemsData = fetch?.data?.message?.items;
-    dispatch({ type: 'NEW_ITEMS_LIST', payload: itemsData });
-    setLoaderDisplay(false);
- 
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (fetch.error) return;
+      const itemsData = fetch?.data?.message?.items;
+      dispatch({ type: 'NEW_ITEMS_LIST', payload: itemsData });
+      setLoaderDisplay(false);
     })();
     // eslint-disable-next-line
   }, [dispatch]);

@@ -30,11 +30,10 @@ const StockQuantity = () => {
         Cookie: '',
       },
     });
-    if(fetch.error)return
+    if (fetch.error) return;
     const minStockItems = fetch.data.message.items;
     setMinimumQuantityItem(minStockItems);
     setLoader(false);
-  
   };
   useEffect(() => {
     const openDeleteModal = () =>
@@ -51,9 +50,9 @@ const StockQuantity = () => {
         onCancel: () => {},
         onConfirm: () => {
           async function deletePost() {
-            await genericAxios(
-              `${API_PATHS.INVENTORY.GET_PERMANENTLY_OUT_OF_STOCK}/${Id}`
-            ).then((response) => {
+            await genericAxios({
+              url: `${API_PATHS.INVENTORY.GET_PERMANENTLY_OUT_OF_STOCK}/${Id}`,
+            }).then((response) => {
               getAllItemsFeed();
             });
           }

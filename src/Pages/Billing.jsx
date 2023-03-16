@@ -308,9 +308,12 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
   const getUserData = async () => {
     try {
-      const response = await genericAxios(API_PATHS.BILLING.GET_USER_DETAILES);
-      setUserDataProfile(response.data.message);
+      const response = await genericAxios({
+        url: API_PATHS.BILLING.GET_USER_DETAILES,
+        method: API_METHODS.GET,
+      });
       if (response.error) return;
+      setUserDataProfile(response.data.message);
     } catch (error) {
       console.error(error.message);
     }
