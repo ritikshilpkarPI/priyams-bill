@@ -1,6 +1,8 @@
 import { Button } from '@mantine/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
 const PurchaseListApproval = ({
@@ -15,8 +17,8 @@ const PurchaseListApproval = ({
     if (!ans) return;
     try {
       await genericAxios({
-        method: 'POST',
-        url: '/api/approval/rejectOrder/' + id,
+        method: API_METHODS.POST,
+        url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
         data: {
           username: JSON.parse(localStorage.getItem('priyam-store')).username,
         },
@@ -32,15 +34,15 @@ const PurchaseListApproval = ({
     if (!ans) return;
     try {
       await genericAxios({
-        url: '/api/inventory/saveInventory',
-        method: 'POST',
+        url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
+        method: API_METHODS.POST,
         data: {
           new_items: list.purchasedItems,
         },
       });
       await genericAxios({
-        method: 'POST',
-        url: '/api/approval/approveOrder/' + id,
+        method: API_METHODS.POST,
+        url: `${API_PATHS.APPROVAL.POST_APPROVE_ORDER}/${id}`,
         data: {
           username: JSON.parse(localStorage.getItem('priyam-store')).username,
         },
@@ -84,8 +86,8 @@ const PurchaseListApproval = ({
   const saveDraft = async (id, index) => {
     try {
       await genericAxios({
-        method: 'POST',
-        url: '/api/purchaseOrder/draftOrder',
+        method: API_METHODS.POST,
+        url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
         data: { id },
       });
       alert('Order drafted successfully');

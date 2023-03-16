@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Loader, Table } from '@mantine/core';
 import ShowOrderDetailTable from './ShowOrderDetailTable';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const ItemListPurchaseOrderHistory = (props) => {
   const [purchaseOrderList, setPurchaseOrderList] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -12,9 +14,10 @@ const ItemListPurchaseOrderHistory = (props) => {
       setLoader(true);
       try {
         const data = await genericAxios({
-          url: `/api/purchaseOrder/orderDetails/${id}`,
-          method: 'GET',
+          url: `${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/${id}`,
+          method: API_METHODS.GET,
         });
+        if(data.error)return
         setPurchaseOrderList(data.data.data);
         setLoader(false);
       } catch (error) {}

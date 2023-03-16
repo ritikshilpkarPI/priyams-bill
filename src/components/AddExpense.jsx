@@ -10,6 +10,8 @@ import {
 } from '@mantine/core';
 import { AppStateContext } from '../AppState/appState.context';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 const AddExpense = ({ date }) => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
@@ -54,55 +56,59 @@ const AddExpense = ({ date }) => {
 
   // To add new expense
   const addExpense = async (e) => {
-    e.preventDefault();
-    const obj = {
-      user: name,
-      description: description,
-      amount: amount,
-      date: todayDate,
-      time: timeConvert(todayTime),
-    };
-    if (!obj.user || !obj.description || !obj.amount) {
-      alert('Please enter all fields!');
-    } else {
-      setButtonLoad(true);
-      const response = await genericAxios({
-        url: '/api/expense',
-        method: 'post',
-        data: { ...obj },
-        headers: {
-          Cookie: '',
-        },
+  e.preventDefault();
+  const obj = {
+    user: name,
+    description: description,
+    amount: amount,
+    date: todayDate,
+    time: timeConvert(todayTime),
+  };
+  if (!obj.user || !obj.description || !obj.amount) {
+    alert('Please enter all fields!');
+  } else {
+    setButtonLoad(true);
+    const response = await genericAxios({
+      url: API_PATHS.EXPENSE.POST_EXPENSE,
+      method: API_METHODS.POST,
+      data: { ...obj },
+      headers: {
+        Cookie: '',
+      },
+    });
+    if(response.error) return
+    if (
+      response.data.status === true &&
+      response.data.message === 'expense added'
+    ) {
+      setDescription('');
+      setAmount();
+      setButtonLoad(false);
+      setDataDate(todayDate);
+      expenseReducer[1]({
+        type: 'UPDATE_EXPENSE_LIST',
+        payload: response.data.data,
       });
-      if (
-        response.data.status === true &&
-        response.data.message === 'expense added'
-      ) {
-        setDescription('');
-        setAmount();
-        setButtonLoad(false);
-        setDataDate(todayDate);
-        expenseReducer[1]({
-          type: 'UPDATE_EXPENSE_LIST',
-          payload: response.data.data,
-        });
-      } else {
-        alert('Failed to save date!');
-      }
+    } else {
+      alert('Failed to save date!');
     }
+  }
+ 
   };
 
   // To get today expense data
   useEffect(() => {
     const getTodayData = async () => {
       const todayExpense = await genericAxios({
-        url: `/api/expense/${dataDate}`,
-        method: 'get',
+        url: `${API_PATHS.EXPENSE.GET_EXPENSE}/${dataDate}`,
+        method: API_METHODS.GET,
         headers: {
           Cookie: '',
         },
       });
+      if(todayExpense.error) return
       setTodayData(todayExpense.data.data);
+       
     };
     getTodayData();
   }, [dataDate, buttonLoad, reload]);
@@ -112,12 +118,13 @@ const AddExpense = ({ date }) => {
     const userResponse = window.confirm('Do you want to delete this item?');
     if (userResponse) {
       const response = await genericAxios({
-        url: `/api/expense/${id}`,
-        method: 'delete',
+        url: `${API_PATHS.EXPENSE.DELETE_EXPENSE}/${id}`,
+        method: API_METHODS.DELETE,
         headers: {
           Cookie: '',
         },
       });
+      if(response.error)return
       if (
         response.data.status === true &&
         response.data.message === 'expense deleted'
@@ -131,6 +138,7 @@ const AddExpense = ({ date }) => {
         alert('Failed to delete expense!');
       }
     }
+ 
   };
 
   // To handle input for updating expense item
@@ -144,13 +152,14 @@ const AddExpense = ({ date }) => {
   const updateExpense = async (index) => {
     const itemToUpdate = todayData[index];
     const response = await genericAxios({
-      url: `/api/expense/${itemToUpdate._id}`,
-      method: 'put',
+      url: `${API_PATHS.EXPENSE.PUT_EXPENSE}/${itemToUpdate._id}`,
+      method: API_METHODS.PUT,
       data: { ...itemToUpdate },
       headers: {
         Cookie: '',
       },
     });
+    if(response.error)return
     if (
       response.data.status === true &&
       response.data.message === 'expense updated'

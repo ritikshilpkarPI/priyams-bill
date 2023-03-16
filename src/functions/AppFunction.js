@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from 'react';
 import { AppStateContext } from '../AppState/appState.context';
 import { PAGES } from '../constants/HeaderTypes';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 const AppFunction = (history, location) => {
   const showBill = location.pathname.includes('showbill');
@@ -16,8 +18,8 @@ const AppFunction = (history, location) => {
   useEffect(() => {
     (async () => {
       const fetch = await genericAxios({
-        url: '/api/inventory/items',
-        method: 'get',
+        url: API_PATHS.INVENTORY.GET_ITEMS,
+        method: API_METHODS.GET,
         params: {
           filters: {
             minStockOnly: false,
@@ -28,6 +30,7 @@ const AppFunction = (history, location) => {
           Cookie: '',
         },
       });
+      if (fetch.error) return;
       const itemsData = fetch?.data?.message?.items;
       dispatch({ type: 'NEW_ITEMS_LIST', payload: itemsData });
       setLoaderDisplay(false);

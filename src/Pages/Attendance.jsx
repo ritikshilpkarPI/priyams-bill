@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Table, Loader, Title } from '@mantine/core';
 import { DateRangePicker } from '@mantine/dates';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 function msToTime(duration) {
   const seconds = duration / 1000;
@@ -23,9 +25,10 @@ const Attendance = () => {
     setLoader(true);
     try {
       const monthlyattendance = await genericAxios({
-        url: '/api/attendance/monthlyAttendance',
-        method: 'get',
+        url: API_PATHS.ATTENDANCE.GET_MONTHLY_ATTENDANCE,
+        method: API_METHODS.GET,
       });
+      if (monthlyattendance.error) return;
       setAttendance(monthlyattendance.data.message);
       setLoader(false);
     } catch (error) {
@@ -37,14 +40,15 @@ const Attendance = () => {
     setLoader2(true);
     try {
       const result = await genericAxios({
-        url: `/api/attendance/dailyAttendance`,
-        method: 'post',
+        url: API_PATHS.ATTENDANCE.POST_DAILY_ATTENDANCE,
+        method: API_METHODS.POST,
         data: {
           startDate: value[0].toLocaleDateString(region, options),
           endDate: value[1].toLocaleDateString(region, options),
           name,
         },
       });
+      if (result.error) return;
       setDateWiseAttendance(result.data.message);
     } catch (error) {
       console.error(error);

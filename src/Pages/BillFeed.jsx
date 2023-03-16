@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 const BillFeed = ({ bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
@@ -12,8 +14,8 @@ const BillFeed = ({ bills = [] }) => {
     setLoader(true);
     const getBillFeed = async () => {
       const fetch = await genericAxios({
-        url: '/api/billing/getBillFeed',
-        method: 'get',
+        url: API_PATHS.BILLING.GET_BILL_FEED,
+        method: API_METHODS.GET,
         params: {
           page: 1,
           size: 100,
@@ -22,6 +24,7 @@ const BillFeed = ({ bills = [] }) => {
           Cookie: '',
         },
       });
+      if(fetch.error)return
       setAllBills(fetch.data.message.allBill);
       setLoader(false);
     };
@@ -31,6 +34,7 @@ const BillFeed = ({ bills = [] }) => {
     } else {
       getBillFeed();
     }
+  
     // eslint-disable-next-line
   }, []);
 
@@ -126,8 +130,8 @@ const TableRow = ({ bill, idx }) => {
 
   async function handleDeleteBill(id) {
     await genericAxios({
-      url: '/api/billing/deleteBill',
-      method: 'delete',
+      url: API_PATHS.BILLING.DELETE_BILL,
+      method: API_METHODS.DELETE,
       data: {
         id: id,
       },
@@ -138,8 +142,8 @@ const TableRow = ({ bill, idx }) => {
   }
   const sendCustomerMessage = async (id) => {
     await genericAxios({
-      url: '/api/billing/sendMessage',
-      method: 'post',
+      url: API_PATHS.BILLING.POST_SEND_MESSAGE,
+      method: API_METHODS.POST,
       data: {
         id: id,
       },
@@ -147,6 +151,7 @@ const TableRow = ({ bill, idx }) => {
         Cookie: '',
       },
     });
+  
   };
   const sendBill = (bill) => {
     const link = `${window.location.origin}/showbill/${bill._id}`;
