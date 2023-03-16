@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Axios } from 'src/utils/axios';
 import { Table, Loader, Button } from '@mantine/core';
 import { Link } from 'react-router-dom';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 const PerItemListPurchaseOrder = () => {
   const [individualItemPurchaseDetail, setIndividualItemPurchaseDetail] =
     useState([]);
@@ -15,7 +15,7 @@ const PerItemListPurchaseOrder = () => {
     const itemsData = async () => {
       setLoader(true);
       try {
-        const data = await Axios.request({
+        const data = await genericAxios({
           url: `/api/purchaseOrder/individualPurchaseOrder/${id}`,
           method: 'GET',
         });

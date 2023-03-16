@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Axios } from 'src/utils/axios';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 import '../../CSS/purchaseApproval.css';
 const PurchaseListApproval = ({
   list,
@@ -14,7 +14,7 @@ const PurchaseListApproval = ({
     const ans = window.confirm('Are you sure you want to reject this order?');
     if (!ans) return;
     try {
-      await Axios({
+      await genericAxios({
         method: 'POST',
         url: '/api/approval/rejectOrder/' + id,
         data: {
@@ -31,14 +31,14 @@ const PurchaseListApproval = ({
     const ans = window.confirm('Are you sure you want to approve this order?');
     if (!ans) return;
     try {
-      await Axios.request({
+      await genericAxios({
         url: '/api/inventory/saveInventory',
         method: 'POST',
         data: {
           new_items: list.purchasedItems,
         },
       });
-      await Axios({
+      await genericAxios({
         method: 'POST',
         url: '/api/approval/approveOrder/' + id,
         data: {
@@ -83,7 +83,7 @@ const PurchaseListApproval = ({
   };
   const saveDraft = async (id, index) => {
     try {
-      await Axios({
+      await genericAxios({
         method: 'POST',
         url: '/api/purchaseOrder/draftOrder',
         data: { id },

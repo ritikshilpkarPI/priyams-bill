@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import Axios from 'axios';
 import { Loader, Table, Text } from '@mantine/core';
 import { Button } from '@mantine/core';
 import { openConfirmModal } from '@mantine/modals';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const StockQuantity = () => {
   const [minimumQuantityItem, setMinimumQuantityItem] = useState([]);
@@ -15,7 +15,7 @@ const StockQuantity = () => {
   }, []);
   const getAllItemsFeed = async () => {
     setLoader(true);
-    const fetch = await Axios.request({
+    const fetch = await genericAxios({
       url: '/api/inventory/items',
       method: 'get',
       params: {
@@ -47,7 +47,7 @@ const StockQuantity = () => {
         onCancel: () => {},
         onConfirm: () => {
           async function deletePost() {
-            await Axios.delete(
+            await genericAxios(
               `/api/inventory/permanentlyOutOfStock/${Id}`
             ).then((response) => {
               getAllItemsFeed();

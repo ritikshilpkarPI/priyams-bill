@@ -1,9 +1,8 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
 import { AppStateContext } from '../AppState/appState.context';
-import { Axios } from '../utils/axios';
 import BillNarrator from '../components/BillNarrator';
-import axios from 'axios';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -46,7 +45,7 @@ const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
 };
 
 const initializeBillForEdit = async (setBill, billID) => {
-  const editBill = await Axios.request({
+  const editBill = await genericAxios({
     url: `/api/billing/getEditBill/${billID}`,
     method: 'get',
     headers: {
@@ -54,9 +53,11 @@ const initializeBillForEdit = async (setBill, billID) => {
     },
   });
 
-  const { items, ...billObject } = editBill.data.message;
-  const billObjectWithBillItems = { ...billObject, billItems: items };
-  setBill(billObjectWithBillItems);
+  if (editBill?.data?.message) {
+    const { items = [], ...billObject } = editBill?.data?.message;
+    const billObjectWithBillItems = { ...billObject, billItems: items };
+    setBill(billObjectWithBillItems);
+  }
   // setLoaderDisplay(false);
 };
 
@@ -214,7 +215,7 @@ async function addNewBill(
   };
   const objectOfInterest = billID ? editApi : createApi;
 
-  await Axios.request({
+  await genericAxios({
     ...objectOfInterest,
     headers: {
       Cookie: '',
@@ -304,7 +305,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   // const [loaderDisplay, setLoaderDisplay] = loaderState;
   const getUserData = async () => {
     try {
-      const response = await axios.get('/api/billing/userDetails');
+      const response = await genericAxios('/api/billing/userDetails');
       setUserDataProfile(response.data.message);
     } catch (error) {
       console.error(error.message);
@@ -336,7 +337,11 @@ const Billing = ({ billID = '', loaderDisplay }) => {
     []
   );
 
-  useEffect(() => initializeBillForEdit(setBill, billID), [billID]);
+  useEffect(() => {
+    if (billID) {
+      initializeBillForEdit(setBill, billID);
+    }
+  }, [billID]);
 
   useEffect(
     () =>

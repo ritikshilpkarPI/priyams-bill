@@ -1,8 +1,8 @@
 import React from 'react';
 import { Group, Title, Select, Button } from '@mantine/core';
 import { useState } from 'react';
-import Axios from 'axios';
 import '../CSS/employeeAttendance.css';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 const nameOptionAndValues = [
   { value: 'anjali', label: 'Anjali' },
   { value: 'shivam', label: 'Shivam' },
@@ -44,7 +44,7 @@ const EmployeeAttendance = () => {
       return;
     } else if (attendance === 'absent') {
       try {
-        await Axios.request({
+        await genericAxios({
           url: `/api/attendance/markAbsent`,
           method: 'post',
           data: {
@@ -58,7 +58,7 @@ const EmployeeAttendance = () => {
       }
     } else if (state === 'arrival') {
       try {
-        const result = await Axios.request({
+        const result = await genericAxios({
           url: `/api/attendance/dailyAttendanceArrival`,
           method: 'post',
           data: {
@@ -80,7 +80,7 @@ const EmployeeAttendance = () => {
       }
     } else if (state === 'leave') {
       try {
-        let a = await Axios.request({
+        let a = await genericAxios({
           url: `/api/attendance/dailyAttendanceLeaving`,
           method: 'post',
           data: {

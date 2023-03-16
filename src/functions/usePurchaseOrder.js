@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useForm } from '@mantine/form';
 import useBarcodeSearchItems from './useBarcodeSearchItems';
-import { Axios } from 'src/utils/axios';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 const usePurchaseOrder = (history) => {
   const { id } = useParams();
   const [opened, setOpened] = useState(false);
@@ -123,7 +123,7 @@ const usePurchaseOrder = (history) => {
   const getDetails = async (search_id) => {
     try {
       onLoader();
-      const res = await Axios({
+      const res = await genericAxios({
         method: 'GET',
         url: '/api/purchaseOrder/orderDetails/' + search_id,
       });
@@ -201,7 +201,7 @@ const usePurchaseOrder = (history) => {
     }
   };
   const savePayment = async (payment) => {
-    return await Axios({
+    return await genericAxios({
       method: 'POST',
       url: '/api/payment/savePayment',
       data: {
@@ -210,7 +210,7 @@ const usePurchaseOrder = (history) => {
     });
   };
   const updateSavedPayment = async (payment) => {
-    return await Axios({
+    return await genericAxios({
       method: 'POST',
       url: `/api/payment/updateSavedPayment/${id}`,
       data: {
@@ -235,7 +235,7 @@ const usePurchaseOrder = (history) => {
     }
   };
   const updatePaymentById = async (payment, index) => {
-    await Axios({
+    await genericAxios({
       method: 'POST',
       url: `/api/payment/updatePaymentById/${id}`,
       data: {
@@ -324,7 +324,7 @@ const usePurchaseOrder = (history) => {
     }
   };
   const addOrderApi = async (isDraft, purchaseObj) => {
-    return await Axios({
+    return await genericAxios({
       method: 'POST',
       url: '/api/purchaseOrder/addNewOrder',
       data: {
@@ -335,7 +335,7 @@ const usePurchaseOrder = (history) => {
   };
 
   const updateOrderApi = async (isDraft, purchaseObj) => {
-    return await Axios({
+    return await genericAxios({
       method: 'POST',
       url: '/api/purchaseOrder/updateDetails',
       data: {
@@ -445,7 +445,7 @@ const usePurchaseOrder = (history) => {
   };
 
   const saveOrder = async (new_order) => {
-    return await Axios({
+    return await genericAxios({
       method: 'POST',
       url: '/api/purchaseOrder/saveOrder',
       data: {
@@ -454,7 +454,7 @@ const usePurchaseOrder = (history) => {
     });
   };
   const updateSavedOrder = async (new_order) => {
-    return await Axios({
+    return await genericAxios({
       method: 'POST',
       url: `/api/purchaseOrder/updateSavedOrder/${id}`,
       data: {
@@ -463,7 +463,7 @@ const usePurchaseOrder = (history) => {
     });
   };
   const updateOrderByIndex = async (new_order, index) => {
-    return await Axios({
+    return await genericAxios({
       method: 'POST',
       url: `/api/purchaseOrder/updateOrderByIndex/${id}`,
       data: {
@@ -501,7 +501,7 @@ const usePurchaseOrder = (history) => {
   const deleteOrder = async (order_id) => {
     try {
       onLoader();
-      await Axios({
+      await genericAxios({
         method: 'POST',
         url: `/api/purchaseOrder/deleteItem/${id}`,
         data: {
@@ -526,7 +526,7 @@ const usePurchaseOrder = (history) => {
   const deletePurchaseDetail = async (index) => {
     try {
       onLoader();
-      await Axios({
+      await genericAxios({
         method: 'POST',
         url: `/api/payment/deletePaymentById/${id}`,
         data: {

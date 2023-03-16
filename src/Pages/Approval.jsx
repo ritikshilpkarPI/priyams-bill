@@ -1,8 +1,9 @@
 import { LoadingOverlay } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDetailsApproval';
-import { Axios } from 'src/utils/axios';
+import { API_PATHS, API_METHODS } from 'src/utils/constants';
 import { useLocation } from 'react-router-dom';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const Approval = () => {
   const [filter, setFilter] = useState([]);
@@ -36,9 +37,9 @@ const Approval = () => {
       } else if (role !== 'admin') {
         query = { isApproved: false, isDraft: false };
       }
-      const { data } = await Axios({
-        method: 'POST',
-        url: `/api/purchaseOrder/getOrdersByQuery/`,
+      const  {data}  = await genericAxios({
+        method: API_METHODS.POST,
+        url: API_PATHS.PURCHASE_ORDER.GET_ORDERS_BY_QUERY,
         data: {
           query,
         },

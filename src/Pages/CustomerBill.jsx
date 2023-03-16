@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
-
 import { Button, Group, Table, Text, Title } from '@mantine/core';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const options = {
   weekday: 'long',
@@ -26,7 +24,7 @@ const CustomerBill = () => {
   ];
 
   const fetchBill = async () => {
-    const customerBill = await axios.request({
+    const customerBill = await genericAxios({
       url: `/api/billing/getEditBill/${id}`,
       method: 'get',
       headers: {
