@@ -65,13 +65,29 @@ const {
   approveOrder,
 } = require('../controllers/approve-order-controller');
 
-const authController = require('../controllers/auth-controller');
+const { 
+  loginUser,
+  logoutUser,
+} = require('../controllers/auth-controller');
 
-const { getDateRangeReport } = require('../controllers/report-controller');
+const { 
+  getDateRangeReport 
+} = require('../controllers/report-controller');
 
-const staffController = require('../controllers/staff-controller');
+const {
+    getStaff, 
+    addStaff, 
+    updateStaff, 
+    deleteStaff
+} = require('../controllers/staff-controller');
 
-const ExpenseController = require('../controllers/expense-controller');
+const {
+    addExpense,
+    deleteExpense,
+    sendAllExpense,
+    updateExpense,
+    sendDayExpenses,
+} = require('../controllers/expense-controller');
 
 router.get('/api/inventory/items', getItemsFeed);
 router.get('/api/inventory/getItemsCategoryList', getItemsCategoryList);
@@ -100,7 +116,10 @@ router.post('/api/payment/updatePaymentById/:id', updatePaymentById);
 
 router.get('/api/purchaseOrder/orders', getOrders);
 router.get('/api/purchaseOrder/orderDetails/:id', getDetailsById);
-router.get('/api/purchaseOrder/individualPurchaseOrder/:id',getPurchaseOrderByItem);
+router.get(
+  '/api/purchaseOrder/individualPurchaseOrder/:id',
+  getPurchaseOrderByItem
+);
 router.post('/api/purchaseOrder/addNewOrder', addOrder);
 router.post('/api/purchaseOrder/updateDetails', updateDetailsById);
 router.post('/api/purchaseOrder/draftOrder', draftOrder);
@@ -119,8 +138,14 @@ router.post('/api/billing/sendMessage', sendMessage);
 router.post('/api/billing/newBill', addNewBill);
 router.delete('/api/billing/deleteBill', deleteBill);
 
-router.post('/api/attendance/dailyAttendanceArrival', addDailyAttendanceArrival);
-router.post('/api/attendance/dailyAttendanceLeaving', addDailyAttendanceLeaving);
+router.post(
+  '/api/attendance/dailyAttendanceArrival',
+  addDailyAttendanceArrival
+);
+router.post(
+  '/api/attendance/dailyAttendanceLeaving',
+  addDailyAttendanceLeaving
+);
 router.post('/api/attendance/dailyAttendance', getDatesWiseAttendance);
 router.post('/api/attendance/markAbsent', markAbsent);
 router.get('/api/attendance/monthlyAttendance', getMonthlyAttendance);
@@ -128,20 +153,20 @@ router.get('/api/attendance/monthlyAttendance', getMonthlyAttendance);
 router.post('/api/approval/rejectOrder/:id', isAdmin, rejectOrder);
 router.post('/api/approval/approveOrder/:id', isAdmin, approveOrder);
 
-router.post('/api/auth/login', authController.loginUser);
-router.get('/api/auth/logout', authController.logoutUser);
+router.post('/api/auth/login', loginUser);
+router.get('/api/auth/logout', logoutUser);
 
 router.post('/api/report/getDateRangeReport/:filterName', getDateRangeReport);
 
-router.get('/api/staff', staffController.getStaff);
-router.post('/api/staff', staffController.addStaff);
-router.put('/api/staff/:username', staffController.updateStaff);
-router.delete('/api/staff/:username', staffController.deleteStaff);
+router.get('/api/staff', getStaff);
+router.post('/api/staff', addStaff);
+router.put('/api/staff/:username', updateStaff);
+router.delete('/api/staff/:username', deleteStaff);
 
-router.get('/api/expense', ExpenseController.sendAllExpense);
-router.post('/api/expense', ExpenseController.addExpense);
-router.delete('/api/expense/:id', ExpenseController.deleteExpense);
-router.put('/api/expense/:id', ExpenseController.updateExpense);
-router.get('/api/expense/:date', ExpenseController.sendDayExpenses);
+router.get('/api/expense', sendAllExpense);
+router.post('/api/expense', addExpense);
+router.delete('/api/expense/:id', deleteExpense);
+router.put('/api/expense/:id', updateExpense);
+router.get('/api/expense/:date', sendDayExpenses);
 
 module.exports = router;
