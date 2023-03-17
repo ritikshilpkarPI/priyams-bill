@@ -1,15 +1,5 @@
 const { OpenClose } = require('../db-models/open-close-model');
 
-const getAllProcedure = async (req, res) => {
-  try {
-    const procedures = await OpenClose.find({ isDeleted: false });
-    const procedureCount = await OpenClose.countDocuments();
-    res.status(200).json({ message: { procedures, procedureCount } });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-};
 
 const getDayWiseProcedures = async (req, res) => {
   try {
@@ -128,45 +118,7 @@ const getDayWiseProcedures = async (req, res) => {
   }
 };
 
-const addOpenCloseProcedure = async (req, res) => {
-  const { procedure, notesSum, coinsSum, totalSum, notes, coins } = req.body;
-
-  try {
-    const newOpenCloseProcedure = await new OpenClose({
-      procedure,
-      notesSum,
-      coinsSum,
-      totalSum,
-      notes,
-      coins,
-    }).save();
-    res.status(200).json({ message: newOpenCloseProcedure });
-  } catch (error) {
-    res.status(500).json({ error: error });
-  }
-};
-
-const editOpenCloseProcedure = async (req, res) => {
-  try {
-    const { id, procedureToBeUpdated } = req.body;
-    const changeOpenCloseProcedure = await OpenClose.findByIdAndUpdate(
-      id,
-      procedureToBeUpdated,
-      {
-        new: true,
-      }
-    );
-
-    res.status(200).json({ message: changeOpenCloseProcedure });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-};
 
 module.exports = {
-  getAllProcedure,
-  addOpenCloseProcedure,
-  editOpenCloseProcedure,
   getDayWiseProcedures,
 };

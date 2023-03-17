@@ -1,93 +1,65 @@
 const router = require('express').Router();
 const { isAdmin } = require('../middleware/isAdmin');
 
+
 const {
-  getItemsFeed,
-  addItems,
-  editItemById,
-  softDeleteItem,
+  getStaff,
   addBulkItems,
-  saveInventory,
-  permanentlyOutOfStock,
-  filterExpiryDates,
-  getItemsCategoryList,
-} = require('../controllers/item-controller');
-
-const {
-  addOpenCloseProcedure,
-  editOpenCloseProcedure,
-  getAllProcedure,
-  getDayWiseProcedures,
-} = require('../controllers/open-close-controller');
-
-const {
-  savePayment,
-  deletePaymentById,
-  updatePaymentById,
-  updateSavedPayment,
-} = require('../controllers/payment-controller');
-
-const {
-  addOrder,
-  getOrders,
-  getDetailsById,
-  updateDetailsById,
-  draftOrder,
-  saveOrder,
-  updateSavedOrders,
-  deleteOrderItemById,
-  updateOrderByIndex,
-  getOrdersByQuery,
-  getPurchaseOrderByItem,
-} = require('../controllers/purchase-order-controller');
-
-const {
-  addNewBill,
-  getAllBill,
-  getDayWiseBills,
-  getEditBill,
-  editBill,
-  sendMessage,
-  userDetails,
-  deleteBill,
-} = require('../controllers/bill-controller');
-
-const {
   addDailyAttendanceArrival,
   addDailyAttendanceLeaving,
-  getDatesWiseAttendance,
-  getMonthlyAttendance,
-  markAbsent,
-} = require('../controllers/daily-attendance-controller');
-
-const {
-  rejectOrder,
+  addItems,
+  addExpense,
+  addNewBill,
+  addOpenCloseProcedure,
+  addOrder,
+  addStaff,
   approveOrder,
-} = require('../controllers/approve-order-controller');
-
-const { 
+  deleteBill,
+  deleteExpense,
+  deleteOrderItemById,
+  deletePaymentById,
+  deleteStaff,
+  draftOrder,
+  editBill,
+  editItemById,
+  editOpenCloseProcedure,
+  filterExpiryDates,
+  getAllBill,
+  getAllProcedure,
+  getDateRangeReport,
+  getDatesWiseAttendance,
+  getDayWiseBills,
+  getDayWiseProcedures,
+  getDetailsById,
+  getEditBill,
+  getItemsCategoryList,
+  getItemsFeed,
+  getMonthlyAttendance,
+  getOrders,
+  getOrdersByQuery,
+  getPurchaseOrderByItem,
   loginUser,
   logoutUser,
-} = require('../controllers/auth-controller');
+  markAbsent,
+  permanentlyOutOfStock,
+  rejectOrder,
+  saveInventory,
+  saveOrder,
+  savePayment,
+  sendAllExpense,
+  sendDayExpenses,
+  sendMessage,
+  softDeleteItem,
+  updateDetailsById,
+  updateExpense,
+  updateOrderByIndex,
+  updatePaymentById,
+  updateSavedOrders,
+  updateSavedPayment,
+  updateStaff,
+  userDetails,
+} = require('../controllers/index');
 
-const { 
-  getDateRangeReport 
-} = require('../controllers/report-controller');
-
-const {
-    getStaff, 
-    addStaff, 
-    updateStaff, 
-    deleteStaff
-} = require('../controllers/staff-controller');
-
-const {
-    addExpense,
-    deleteExpense,
-    sendAllExpense,
-    updateExpense,
-    sendDayExpenses,
-} = require('../controllers/expense-controller');
 
 router.get('/api/inventory/items', getItemsFeed);
 router.get('/api/inventory/getItemsCategoryList', getItemsCategoryList);
