@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { isAdmin } = require('../middleware/isAdmin');
+const { API_PATHS } = require('../../src/utils/constants/apiPaths');
 
 const {
   getItemsFeed,
@@ -89,84 +90,83 @@ const {
     sendDayExpenses,
 } = require('../controllers/expense-controller');
 
-router.get('/api/inventory/items', getItemsFeed);
-router.get('/api/inventory/getItemsCategoryList', getItemsCategoryList);
-router.post('/api/inventory/addNewItem', addItems);
-router.post('/api/inventory/softDeleteItem', softDeleteItem);
-router.post('/api/inventory/addbulkitems', addBulkItems);
-router.post('/api/inventory/saveInventory', saveInventory);
-router.post('/api/inventory/filterExpiryDates', filterExpiryDates);
-router.put('/api/inventory/editItemById', editItemById);
-router.delete(
-  '/api/inventory/permanentlyOutOfStock/:id',
+router.get(API_PATHS.INVENTORY.GET_ITEMS, getItemsFeed);
+router.get(API_PATHS.INVENTORY.GET_ITEMS_CATEGORY_LIST, getItemsCategoryList);
+router.post(API_PATHS.INVENTORY.POST_ADD_NEW_ITEM, addItems);
+router.post(API_PATHS.INVENTORY.POST_SOFT_DELETE_ITEM, softDeleteItem);
+router.post(API_PATHS.INVENTORY.POST_ADD_BULK_ITEMS, addBulkItems);
+router.post(API_PATHS.INVENTORY.POST_SAVE_INVENTORY, saveInventory);
+router.post(API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES, filterExpiryDates);
+router.put(API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID, editItemById);
+router.delete(`${API_PATHS.INVENTORY.GET_PERMANENTLY_OUT_OF_STOCK}/:id`,
   permanentlyOutOfStock
 );
 
-router.get('/api/openClose/getAllProcedure', getAllProcedure);
-router.get('/api/openClose/getDayWiseProcedure', getDayWiseProcedures);
-router.post('/api/openClose/newProcedure/open', addOpenCloseProcedure);
-router.post('/api/openClose/newProcedure/close', addOpenCloseProcedure);
-router.put('/api/openClose/editProcedure/open', editOpenCloseProcedure);
-router.put('/api/openClose/editProcedure/close', editOpenCloseProcedure);
+router.get(API_PATHS.OPENCLOSE.GET_ALL_PROCEDURE, getAllProcedure);
+router.get(API_PATHS.OPENCLOSE.GET_DAY_WISE_PROCEDURE, getDayWiseProcedures);
+router.post(API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN, addOpenCloseProcedure);
+router.post(API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE, addOpenCloseProcedure);
+router.put(API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN, editOpenCloseProcedure);
+router.put(API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE, editOpenCloseProcedure);
 
-router.post('/api/payment/savePayment', savePayment);
-router.post('/api/payment/updateSavedPayment/:id', updateSavedPayment);
-router.post('/api/payment/deletePaymentById/:id', deletePaymentById);
-router.post('/api/payment/updatePaymentById/:id', updatePaymentById);
+router.post(API_PATHS.PAYMENT.POST_SAVE_PAYMENT, savePayment);
+router.post(`${API_PATHS.PAYMENT.POST_UPDATE_SAVED_PAYMENT}/:id`, updateSavedPayment);
+router.post(`${API_PATHS.PAYMENT.POST_DELETE_PAYMENT_BY_ID}/:id`, deletePaymentById);
+router.post(`${API_PATHS.PAYMENT.POST_UPDATE_PAYMENT_BY_ID}/:id`, updatePaymentById);
 
-router.get('/api/purchaseOrder/orders', getOrders);
-router.get('/api/purchaseOrder/orderDetails/:id', getDetailsById);
+router.get(API_PATHS.PURCHASE_ORDER.GET_ORDERS, getOrders);
+router.get(`${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/:id`, getDetailsById);
 router.get(
-  '/api/purchaseOrder/individualPurchaseOrder/:id',
+  `${API_PATHS.PURCHASE_ORDER.GET_INDIVIDUAL_PURCHASE_ORDER}/:id`,
   getPurchaseOrderByItem
 );
-router.post('/api/purchaseOrder/addNewOrder', addOrder);
-router.post('/api/purchaseOrder/updateDetails', updateDetailsById);
-router.post('/api/purchaseOrder/draftOrder', draftOrder);
-router.post('/api/purchaseOrder/saveOrder', saveOrder);
-router.post('/api/purchaseOrder/updateSavedOrder/:id', updateSavedOrders);
-router.post('/api/purchaseOrder/deleteItem/:id', deleteOrderItemById);
-router.post('/api/purchaseOrder/updateOrderByIndex/:id', updateOrderByIndex);
-router.post('/api/purchaseOrder/getOrdersByQuery', getOrdersByQuery);
+router.post(API_PATHS.PURCHASE_ORDER.POST_ADD_NEW_ORDER, addOrder);
+router.post(API_PATHS.PURCHASE_ORDER.POST_UPDATE_DETAILS, updateDetailsById);
+router.post(API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER, draftOrder);
+router.post(API_PATHS.PURCHASE_ORDER.POST_SAVE_ORDER, saveOrder);
+router.post(`${API_PATHS.PURCHASE_ORDER.POST_UPDATE_SAVED_ORDER}/:id`, updateSavedOrders);
+router.post(`${API_PATHS.PURCHASE_ORDER.POST_DELETE_ITEM}/:id`, deleteOrderItemById);
+router.post(`${API_PATHS.PURCHASE_ORDER.POST_UPDATE_ORDER_BY_INDEX}/:id`, updateOrderByIndex);
+router.post(API_PATHS.PURCHASE_ORDER.GET_ORDERS_BY_QUERY, getOrdersByQuery);
 
-router.get('/api/billing/getBillFeed', getAllBill);
-router.get('/api/billing/allDailyBills', getDayWiseBills);
-router.get('/api/billing/getEditBill/:id', getEditBill);
-router.get('/api/billing/userDetails', userDetails);
-router.put('/api/billing/editBill', editBill);
-router.post('/api/billing/sendMessage', sendMessage);
-router.post('/api/billing/newBill', addNewBill);
-router.delete('/api/billing/deleteBill', deleteBill);
+router.get(API_PATHS.BILLING.GET_BILL_FEED, getAllBill);
+router.get(API_PATHS.BILLING.GET_ALL_DAILY_BILLS, getDayWiseBills);
+router.get(`${API_PATHS.BILLING.GET_EDIT_BILL}/:id`, getEditBill);
+router.get(API_PATHS.BILLING.GET_USER_DETAILS, userDetails);
+router.put(API_PATHS.BILLING.PUT_EDIT_BILL, editBill);
+router.post(API_PATHS.BILLING.POST_SEND_MESSAGE, sendMessage);
+router.post(API_PATHS.BILLING.POST_NEW_BILL, addNewBill);
+router.delete(API_PATHS.BILLING.DELETE_BILL, deleteBill);
 
 router.post(
-  '/api/attendance/dailyAttendanceArrival',
+  API_PATHS.ATTENDANCE.POST_DAILY_ATTENDANCE_ARRIVAL,
   addDailyAttendanceArrival
 );
 router.post(
-  '/api/attendance/dailyAttendanceLeaving',
+  API_PATHS.ATTENDANCE.POST_DAILY_ATTENDANCE_LEAVING,
   addDailyAttendanceLeaving
 );
-router.post('/api/attendance/dailyAttendance', getDatesWiseAttendance);
-router.post('/api/attendance/markAbsent', markAbsent);
-router.get('/api/attendance/monthlyAttendance', getMonthlyAttendance);
+router.post(API_PATHS.ATTENDANCE.POST_DAILY_ATTENDANCE, getDatesWiseAttendance);
+router.post(API_PATHS.ATTENDANCE.POST_MARK_ABSENT, markAbsent);
+router.get(API_PATHS.ATTENDANCE.GET_MONTHLY_ATTENDANCE, getMonthlyAttendance);
 
-router.post('/api/approval/rejectOrder/:id', isAdmin, rejectOrder);
-router.post('/api/approval/approveOrder/:id', isAdmin, approveOrder);
+  router.post(`${API_PATHS.APPROVAL.POST_REJECT_ORDER}/:id`, isAdmin, rejectOrder);
+router.post(`${API_PATHS.APPROVAL.POST_APPROVE_ORDER}/:id`, isAdmin, approveOrder);
 
-router.post('/api/auth/login', loginUser);
-router.get('/api/auth/logout', logoutUser);
+router.post(API_PATHS.AUTH.POST_LOGIN, loginUser);
+router.get(API_PATHS.AUTH.GET_LOGOUT, logoutUser);
 
-router.post('/api/report/getDateRangeReport/:filterName', getDateRangeReport);
+router.post(`${API_PATHS.REPORT.POST_GET_DATE_RANGE_REPORT}/:filterName`, getDateRangeReport);
 
-router.get('/api/staff', getStaff);
-router.post('/api/staff', addStaff);
-router.put('/api/staff/:username', updateStaff);
-router.delete('/api/staff/:username', deleteStaff);
+router.get(API_PATHS.STAFF.GET_STAFF, getStaff);
+router.post(API_PATHS.STAFF.POST_STAFF, addStaff);
+router.put(`${API_PATHS.STAFF.PUT_STAFF}/:username`, updateStaff);
+router.delete(`${API_PATHS.STAFF.DELETE_STAFF}/:username`, deleteStaff);
 
-router.get('/api/expense', sendAllExpense);
-router.post('/api/expense', addExpense);
-router.delete('/api/expense/:id', deleteExpense);
-router.put('/api/expense/:id', updateExpense);
-router.get('/api/expense/:date', sendDayExpenses);
+router.get(API_PATHS.EXPENSE.GET_EXPENSE, sendAllExpense);
+router.post(API_PATHS.EXPENSE.POST_EXPENSE, addExpense);
+router.delete(`${API_PATHS.EXPENSE.DELETE_EXPENSE}/:id`, deleteExpense);
+router.put(`${API_PATHS.EXPENSE.PUT_EXPENSE}/:id`, updateExpense);
+router.get(`${API_PATHS.EXPENSE.GET_EXPENSE}/:date`, sendDayExpenses);
 
 module.exports = router;
