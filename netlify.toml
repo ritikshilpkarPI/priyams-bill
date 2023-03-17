@@ -5,6 +5,10 @@
   publish = "build"
   # functions build directory
   functions = "functions-build"
+[dev]
+    command = "npm run server"
+    framework = "#custom"
+    targetPort = 9000
 
 
 [context.production.environment]
