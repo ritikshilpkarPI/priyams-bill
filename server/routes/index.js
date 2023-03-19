@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isAdmin } = require('../middleware/isAdmin');
+const { isAdmin, isLoggedIn, customRole } = require('../middleware/isAdmin');
 
 const {
   getItemsFeed,
@@ -89,84 +89,84 @@ const {
     sendDayExpenses,
 } = require('../controllers/expense-controller');
 
-router.get('/api/inventory/items', getItemsFeed);
-router.get('/api/inventory/getItemsCategoryList', getItemsCategoryList);
-router.post('/api/inventory/addNewItem', addItems);
-router.post('/api/inventory/softDeleteItem', softDeleteItem);
-router.post('/api/inventory/addbulkitems', addBulkItems);
-router.post('/api/inventory/saveInventory', saveInventory);
-router.post('/api/inventory/filterExpiryDates', filterExpiryDates);
-router.put('/api/inventory/editItemById', editItemById);
+router.get('/api/inventory/items',isLoggedIn,customRole(['admin']) ,getItemsFeed);
+router.get('/api/inventory/getItemsCategoryList',isLoggedIn, getItemsCategoryList);
+router.post('/api/inventory/addNewItem', isLoggedIn, addItems);
+router.post('/api/inventory/softDeleteItem', isLoggedIn, softDeleteItem);
+router.post('/api/inventory/addbulkitems', isLoggedIn, addBulkItems);
+router.post('/api/inventory/saveInventory', isLoggedIn, saveInventory);
+router.post('/api/inventory/filterExpiryDates', isLoggedIn, filterExpiryDates);
+router.put('/api/inventory/editItemById', isLoggedIn, editItemById);
 router.delete(
   '/api/inventory/permanentlyOutOfStock/:id',
   permanentlyOutOfStock
 );
 
 router.get('/api/openClose/getAllProcedure', getAllProcedure);
-router.get('/api/openClose/getDayWiseProcedure', getDayWiseProcedures);
-router.post('/api/openClose/newProcedure/open', addOpenCloseProcedure);
-router.post('/api/openClose/newProcedure/close', addOpenCloseProcedure);
-router.put('/api/openClose/editProcedure/open', editOpenCloseProcedure);
-router.put('/api/openClose/editProcedure/close', editOpenCloseProcedure);
+router.get('/api/openClose/getDayWiseProcedure',isLoggedIn, getDayWiseProcedures);
+router.post('/api/openClose/newProcedure/open',isLoggedIn, addOpenCloseProcedure);
+router.post('/api/openClose/newProcedure/close',isLoggedIn, addOpenCloseProcedure);
+router.put('/api/openClose/editProcedure/open',isLoggedIn, editOpenCloseProcedure);
+router.put('/api/openClose/editProcedure/close',isLoggedIn, editOpenCloseProcedure);
 
-router.post('/api/payment/savePayment', savePayment);
-router.post('/api/payment/updateSavedPayment/:id', updateSavedPayment);
-router.post('/api/payment/deletePaymentById/:id', deletePaymentById);
-router.post('/api/payment/updatePaymentById/:id', updatePaymentById);
+router.post('/api/payment/savePayment',isLoggedIn, savePayment);
+router.post('/api/payment/updateSavedPayment/:id',isLoggedIn, updateSavedPayment);
+router.post('/api/payment/deletePaymentById/:id',isLoggedIn, deletePaymentById);
+router.post('/api/payment/updatePaymentById/:id',isLoggedIn, updatePaymentById);
 
-router.get('/api/purchaseOrder/orders', getOrders);
-router.get('/api/purchaseOrder/orderDetails/:id', getDetailsById);
+router.get('/api/purchaseOrder/orders',isLoggedIn, getOrders);
+router.get('/api/purchaseOrder/orderDetails/:id',isLoggedIn, getDetailsById);
 router.get(
-  '/api/purchaseOrder/individualPurchaseOrder/:id',
+  '/api/purchaseOrder/individualPurchaseOrder/:id',isLoggedIn,
   getPurchaseOrderByItem
 );
-router.post('/api/purchaseOrder/addNewOrder', addOrder);
-router.post('/api/purchaseOrder/updateDetails', updateDetailsById);
-router.post('/api/purchaseOrder/draftOrder', draftOrder);
-router.post('/api/purchaseOrder/saveOrder', saveOrder);
-router.post('/api/purchaseOrder/updateSavedOrder/:id', updateSavedOrders);
-router.post('/api/purchaseOrder/deleteItem/:id', deleteOrderItemById);
-router.post('/api/purchaseOrder/updateOrderByIndex/:id', updateOrderByIndex);
-router.post('/api/purchaseOrder/getOrdersByQuery', getOrdersByQuery);
+router.post('/api/purchaseOrder/addNewOrder', isLoggedIn, addOrder);
+router.post('/api/purchaseOrder/updateDetails', isLoggedIn, updateDetailsById);
+router.post('/api/purchaseOrder/draftOrder', isLoggedIn, draftOrder);
+router.post('/api/purchaseOrder/saveOrder', isLoggedIn, saveOrder);
+router.post('/api/purchaseOrder/updateSavedOrder/:id', isLoggedIn, updateSavedOrders);
+router.post('/api/purchaseOrder/deleteItem/:id', isLoggedIn, deleteOrderItemById);
+router.post('/api/purchaseOrder/updateOrderByIndex/:id', isLoggedIn, updateOrderByIndex);
+router.post('/api/purchaseOrder/getOrdersByQuery', isLoggedIn, getOrdersByQuery);
 
-router.get('/api/billing/getBillFeed', getAllBill);
-router.get('/api/billing/allDailyBills', getDayWiseBills);
-router.get('/api/billing/getEditBill/:id', getEditBill);
-router.get('/api/billing/userDetails', userDetails);
-router.put('/api/billing/editBill', editBill);
-router.post('/api/billing/sendMessage', sendMessage);
-router.post('/api/billing/newBill', addNewBill);
-router.delete('/api/billing/deleteBill', deleteBill);
+router.get('/api/billing/getBillFeed', isLoggedIn, getAllBill);
+router.get('/api/billing/allDailyBills', isLoggedIn, isLoggedIn , isLoggedIn,getDayWiseBills);
+router.get('/api/billing/getEditBill/:id', isLoggedIn, getEditBill);
+router.get('/api/billing/userDetails', isLoggedIn, userDetails);
+router.put('/api/billing/editBill', isLoggedIn, editBill);
+router.post('/api/billing/sendMessage', isLoggedIn, sendMessage);
+router.post('/api/billing/newBill', isLoggedIn, addNewBill);
+router.delete('/api/billing/deleteBill', isLoggedIn, deleteBill);
 
 router.post(
-  '/api/attendance/dailyAttendanceArrival',
+  '/api/attendance/dailyAttendanceArrival', isLoggedIn,
   addDailyAttendanceArrival
 );
 router.post(
-  '/api/attendance/dailyAttendanceLeaving',
+  '/api/attendance/dailyAttendanceLeaving', isLoggedIn,
   addDailyAttendanceLeaving
 );
-router.post('/api/attendance/dailyAttendance', getDatesWiseAttendance);
-router.post('/api/attendance/markAbsent', markAbsent);
-router.get('/api/attendance/monthlyAttendance', getMonthlyAttendance);
+router.post('/api/attendance/dailyAttendance', isLoggedIn, getDatesWiseAttendance);
+router.post('/api/attendance/markAbsent', isLoggedIn, markAbsent);
+router.get('/api/attendance/monthlyAttendance', isLoggedIn, getMonthlyAttendance);
 
-router.post('/api/approval/rejectOrder/:id', isAdmin, rejectOrder);
-router.post('/api/approval/approveOrder/:id', isAdmin, approveOrder);
+router.post('/api/approval/rejectOrder/:id', isLoggedIn, isAdmin, isLoggedIn, rejectOrder);
+router.post('/api/approval/approveOrder/:id', isLoggedIn, isAdmin, isLoggedIn, approveOrder);
 
-router.post('/api/auth/login', loginUser);
-router.get('/api/auth/logout', logoutUser);
+router.post('/api/auth/login', isLoggedIn, loginUser);
+router.get('/api/auth/logout', isLoggedIn, logoutUser);
 
-router.post('/api/report/getDateRangeReport/:filterName', getDateRangeReport);
+router.post('/api/report/getDateRangeReport/:filterName', isLoggedIn, getDateRangeReport);
 
-router.get('/api/staff', getStaff);
-router.post('/api/staff', addStaff);
-router.put('/api/staff/:username', updateStaff);
-router.delete('/api/staff/:username', deleteStaff);
+router.get('/api/staff', isLoggedIn, getStaff);
+router.post('/api/staff', isLoggedIn, addStaff);
+router.put('/api/staff/:username', isLoggedIn, updateStaff);
+router.delete('/api/staff/:username', isLoggedIn, deleteStaff);
 
-router.get('/api/expense', sendAllExpense);
-router.post('/api/expense', addExpense);
-router.delete('/api/expense/:id', deleteExpense);
-router.put('/api/expense/:id', updateExpense);
-router.get('/api/expense/:date', sendDayExpenses);
+router.get('/api/expense', isLoggedIn, sendAllExpense);
+router.post('/api/expense', isLoggedIn, addExpense);
+router.delete('/api/expense/:id', isLoggedIn, deleteExpense);
+router.put('/api/expense/:id', isLoggedIn, updateExpense);
+router.get('/api/expense/:date', isLoggedIn, sendDayExpenses);
 
 module.exports = router;

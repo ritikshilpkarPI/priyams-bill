@@ -1,52 +1,39 @@
 const Staff = require('../db-models/staff-model');
-const jwt = require('jsonwebtoken');
 
-const loginUser = async (request, response) => {
-  const { username, password } = request.body;
-  let userData;
-  try {
-    // Our saved database user
-    userData = await Staff.find({ username });
-  } catch (error) {
-    response.status(501).json({ error });
+
+const loginUser = async (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    res.status(400).json({ error: "Please provide email and password" });
   }
-
-  if (userData.length === 0) {
-    // If email not registered
-    return response
-      .status(200)
-      .json({ status: false, message: 'invalid username' });
-  } else if (userData[0].password != password) {
-    // If password don't match
-    return response
-      .status(200)
-      .json({ status: false, message: 'wrong password' });
-  } else if (
-    userData[0].username === username &&
-    userData[0].password === password
-  ) {
-    // JWT Token
-    const token = jwt.sign(
-      { username: userData[0].username, role: userData[0].role },
-      process.env.JSON_WEB_TOKEN_SECRET
-    );
-
-    return response.status(200).json({
-      status: true,
-      message: 'login successfull',
-      authtoken: token,
-      role: userData[0].role,
-      name: userData[0].name,
-    });
+  const user = await Staff.findOne({ username }).select("+password");
+  if (!user) {
+    res.status(400).json({ error: "Email or password doesn't exist " });
   }
+  console.log({user});
+  const isPasswordCorrect =  user.password === password;
+  if (!isPasswordCorrect) {
+    res.status(400).json({ error: "Email or password doesn't exist " });
+  }
+  const token = user.getJwtToken()
+  const options = {
+        expires: new Date(
+            Date.now() + process.env.COOKIE_TIME * 24 * 60 * 60 * 1000
+        )
+    }
+  res.status(200).cookie('token', token, options).json({
+        success: true,
+    })
 };
-
-const logoutUser = async (request, response) => {
-  try {
-    response.status(200).json({ status: true, message: 'logout user' });
-  } catch (error) {
-    response.status(500).json(error);
-  }
+const logoutUser = async (req, res, next) => {
+  console.log("logoutUser");
+  res.cookie("token", "", {
+    expires: new Date(Date.now()),
+  });
+  res.status(200).json({
+    success: true,
+    message: "Logout successfully",
+  });
 };
 
 module.exports = { loginUser, logoutUser };

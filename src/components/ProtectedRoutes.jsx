@@ -1,9 +1,10 @@
+import Cookies from 'js-cookie';
 import { useHistory } from 'react-router-dom';
 
 const ProtectedRoutes = ({ children }) => {
   const history = useHistory();
-
-  if (!localStorage.getItem('priyam-store')) {
+  const token = Cookies.get('token');
+  if (!token) {
     history.push('/login');
     return <></>;
     // return <Redirect to="/login" />;

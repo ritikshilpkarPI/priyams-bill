@@ -12,6 +12,8 @@ import { AppStateContext } from '../AppState/appState.context';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { parseJwt } from 'src/utils/cookie';
+import Cookies from 'js-cookie';
 
 const AddExpense = ({ date }) => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
@@ -28,8 +30,9 @@ const AddExpense = ({ date }) => {
 
   // All States
   const [name, setName] = useState(
-    JSON.parse(localStorage.getItem('priyam-store'))?.name || ''
+    parseJwt(Cookies.get('token')).name || ''
   );
+  console.log({name});
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState();
   const [dataDate, setDataDate] = useState(date);
@@ -205,7 +208,7 @@ const AddExpense = ({ date }) => {
             label="Your name"
             placeholder="Your name"
             value={name}
-            disabled={Boolean(JSON.parse(localStorage.getItem('priyam-store')))}
+            disabled={Boolean(parseJwt(Cookies.get('token')))}
             onChange={(e) => setName(e.target.value)}
           />
           <NumberInput

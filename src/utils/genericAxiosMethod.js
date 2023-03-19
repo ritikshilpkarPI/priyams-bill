@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { Axios } from './axios';
 export const genericAxios = async ({
   url = '',
@@ -15,6 +16,7 @@ export const genericAxios = async ({
       method,
       data,
       headers,
+      withCredentials: true,
     });
     return result;
   } catch (error) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
+import Cookies from 'js-cookie';
 // axios.defaults.withCredentials = true;
 
 const Login = ({ history }) => {
@@ -26,37 +27,15 @@ const Login = ({ history }) => {
         Cookie: '',
       },
     });
-    if(response.error)return
-    // await axios.post("/api/auth/login", payload);
-    const status = response.data.status;
-    const message = response.data.message;
 
-    if (status === false && message === 'invalid username') {
+    if(response.error){
       setErrorMsg('Invalid username');
-    } else if (status === false && message === 'wrong password') {
-      setErrorMsg('wrong password');
-    } else if (status === true && message === 'login successfull') {
-      setErrorMsg('login successfull');
-      localStorage.setItem(
-        'priyam-store',
-        JSON.stringify({
-          name: response.data.name,
-          username: username.toLowerCase(),
-          role: response.data.role,
-          authtoken: response.data.authtoken,
-        })
-      );
-      history.push('/billing');
-      // loaderDisplay(false);
+      setErrorMsg("")
+      return
     }
+    history.push('/billing');
   };
 
-  useEffect(() => {
-    if (localStorage.getItem('priyam-store')) {
-      history.push('/billing');
-    }
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <div className="login-card">

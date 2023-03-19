@@ -5,6 +5,8 @@ import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { useLocation } from 'react-router-dom';
 import { genericAxios } from 'src/utils/genericAxiosMethod'; 
+import Cookies from 'js-cookie';
+import { parseJwt } from 'src/utils/cookie';
 
 const Approval = () => {
   const [filter, setFilter] = useState([]);
@@ -23,7 +25,7 @@ const Approval = () => {
     try {
       onLoader();
       let query = {};
-      const role = JSON.parse(localStorage.getItem('priyam-store')).role;
+      const role = parseJwt(Cookies.get('token')).role;
       if ((value === 'approved' || option === 'Approved') && role === 'admin') {
         query = { isApproved: true };
       } else if (

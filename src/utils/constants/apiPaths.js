@@ -40,6 +40,7 @@ export const API_PATHS = {
   },
   AUTH: {
     POST_LOGIN: '/api/auth/login',
+    GET_LOGOUT: '/api/auth/logout'
   },
   OPENCLOSE: {
     GET_ALL_PROCEDURE: '/api/openClose/getAllProcedure',
