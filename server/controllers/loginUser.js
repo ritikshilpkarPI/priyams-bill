@@ -43,4 +43,5 @@ const loginUser = async (request, response) => {
 
 
 
-module.exports = loginUser ;
+// module.exports = loginUser ;
+export default loginUser
