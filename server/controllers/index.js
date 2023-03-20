@@ -33,7 +33,8 @@ import getMonthlyAttendance from "./getMonthlyAttendance";
 import getOrders from "./getOrders";
 import getOrdersByQuery from "./getOrdersByQuery";
 import getPurchaseOrderByItem from "./getPurchaseOrderByItem";
-import loginUser from "./loginUser";
+// import loginUser from "./loginUser";
+const loginUser = require("./loginUser")
 import logoutUser from "./logoutUser";
 import markAbsent from "./markAbsent";
 import permanentlyOutOfStock from "./permanentlyOutOfStock";
