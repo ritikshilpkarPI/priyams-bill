@@ -166,6 +166,4 @@ const getDateRangeReport = async (req, res) => {
   }
 };
 
-module.exports = {
-  getDateRangeReport,
-};
+module.exports = getDateRangeReport;
