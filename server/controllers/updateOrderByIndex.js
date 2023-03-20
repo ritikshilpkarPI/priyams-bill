@@ -21,6 +21,4 @@ const updateOrderByIndex = async (req, res) => {
     }
   };
 
-  module.exports = {
-    updateOrderByIndex,
-  };
+  module.exports = updateOrderByIndex;

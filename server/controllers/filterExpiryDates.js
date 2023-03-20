@@ -31,6 +31,4 @@ const filterExpiryDates = async (req, res) => {
     }
   };
 
-  module.exports = {
-    filterExpiryDates,
-  };
+  module.exports = filterExpiryDates;

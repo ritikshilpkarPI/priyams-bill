@@ -12,6 +12,4 @@ const softDeleteItem = async (req, res) => {
     }
   };
 
-  module.exports = {
-    softDeleteItem,
-  };
+  module.exports = softDeleteItem;

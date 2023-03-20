@@ -18,6 +18,4 @@ const markAbsent = async (req, res) => {
     }
   };
 
-  module.exports = {
-    markAbsent,
-  };
+  module.exports = markAbsent;

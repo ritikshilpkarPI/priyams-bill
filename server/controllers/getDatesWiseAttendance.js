@@ -25,6 +25,4 @@ const getDatesWiseAttendance = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getDatesWiseAttendance,
-  };
+  module.exports = getDatesWiseAttendance;

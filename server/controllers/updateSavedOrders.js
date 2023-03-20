@@ -18,6 +18,4 @@ const updateSavedOrders = async (req, res) => {
     }
   };
 
-  module.exports = {
-    updateSavedOrders,
-  };
+  module.exports = updateSavedOrders;

@@ -69,7 +69,5 @@ const editBill = async (req, res) => {
   };
 
 
-  module.exports = {
-    editBill,
-  };
+  module.exports = editBill;
   

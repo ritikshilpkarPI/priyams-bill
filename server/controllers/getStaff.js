@@ -13,6 +13,4 @@ const getStaff = async (request, response) => {
     }
   };
 
-  module.exports = { 
-    getStaff, 
-  };
+  module.exports = getStaff;

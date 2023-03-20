@@ -18,6 +18,4 @@ const editOpenCloseProcedure = async (req, res) => {
     }
   };
 
-  module.exports = {
-    editOpenCloseProcedure,
-  };
+  module.exports = editOpenCloseProcedure;

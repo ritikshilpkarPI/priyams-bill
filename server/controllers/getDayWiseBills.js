@@ -48,6 +48,4 @@ const getDayWiseBills = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getDayWiseBills,
-  };
+  module.exports = getDayWiseBills;

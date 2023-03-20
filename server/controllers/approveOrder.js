@@ -18,6 +18,4 @@ const approveOrder = async (req, res) => {
     res.status(400).send({ message: err.message, success: false });
   }
 };
-module.exports = {
-  approveOrder,
-};
+module.exports = approveOrder;

@@ -20,6 +20,4 @@ const getAllBill = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getAllBill,
-  };
+  module.exports = getAllBill;

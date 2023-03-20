@@ -24,4 +24,4 @@ const addStaff = async (request, response) => {
 
 
 
-module.exports = { addStaff };
+module.exports = addStaff;

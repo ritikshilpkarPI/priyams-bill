@@ -22,7 +22,5 @@ const getMonthlyAttendance = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getMonthlyAttendance,
-  };
+  module.exports = getMonthlyAttendance;
   

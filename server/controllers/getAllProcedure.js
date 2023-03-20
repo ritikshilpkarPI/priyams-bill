@@ -11,6 +11,4 @@ const getAllProcedure = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getAllProcedure,
-  };
+  module.exports = getAllProcedure;

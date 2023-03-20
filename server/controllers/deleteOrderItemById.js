@@ -20,6 +20,4 @@ const deleteOrderItemById = async (req, res) => {
     }
   };
 
-  module.exports = {
-    deleteOrderItemById,
-  };
+  module.exports = deleteOrderItemById;

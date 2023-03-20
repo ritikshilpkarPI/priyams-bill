@@ -36,6 +36,4 @@ const sendDayExpenses = async (request, response) => {
   }
 };
 
-module.exports = {
-  sendDayExpenses,
-};
+module.exports = sendDayExpenses;

@@ -18,6 +18,4 @@ const getEditBill = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getEditBill,
-  };
+  module.exports = getEditBill;

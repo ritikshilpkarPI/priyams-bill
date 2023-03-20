@@ -17,6 +17,4 @@ const rejectOrder = async (req, res) => {
       res.status(400).send({ message: err.message, success: false });
     }
   };
-module.exports = {
-rejectOrder,
-};
+module.exports = rejectOrder;

@@ -41,6 +41,4 @@ const addOrder = async (req, res) => {
     }
   };
 
-  module.exports = {
-    addOrder,
-  };
+  module.exports = addOrder;

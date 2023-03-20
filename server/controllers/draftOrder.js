@@ -20,6 +20,4 @@ const draftOrder = async (req, res) => {
     }
   };
 
-  module.exports = {
-    draftOrder,
-  };
+  module.exports = draftOrder;

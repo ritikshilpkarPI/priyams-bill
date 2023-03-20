@@ -17,6 +17,4 @@ const saveOrder = async (req, res) => {
     }
   };
 
-  module.exports = {
-    saveOrder,
-  };
+  module.exports = saveOrder;

@@ -51,6 +51,4 @@ const addDailyAttendanceLeaving = async (req, res) => {
   }
 };
 
-module.exports = {
-  addDailyAttendanceLeaving,
-};
+module.exports = addDailyAttendanceLeaving;

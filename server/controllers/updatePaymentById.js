@@ -29,6 +29,4 @@ const updatePaymentById = async (req, res) => {
     }
   };
 
-  module.exports = {
-    updatePaymentById,
-  };
+  module.exports = updatePaymentById;

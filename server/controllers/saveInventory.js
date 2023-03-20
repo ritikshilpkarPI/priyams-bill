@@ -93,6 +93,4 @@ const saveInventory = async (req, res) => {
     }
   };
 
-  module.exports = {
-    saveInventory,
-  };
+  module.exports = saveInventory;

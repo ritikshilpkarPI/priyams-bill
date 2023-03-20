@@ -58,6 +58,4 @@ const addItems = async (req, res) => {
   }
 };
 
-module.exports = {
-  addItems,
-};
+module.exports = addItems;

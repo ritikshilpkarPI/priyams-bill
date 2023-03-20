@@ -25,6 +25,4 @@ const addExpense = async (request, response, next) => {
     }
   };
 
-  module.exports = {
-    addExpense,
-  };
+  module.exports = addExpense;

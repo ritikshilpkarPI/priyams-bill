@@ -13,6 +13,4 @@ const editItemById = async (req, res) => {
     }
   };
 
-  module.exports = {
-    editItemById,
-  };
+  module.exports = editItemById;

@@ -6,4 +6,4 @@ const logoutUser = async (request, response) => {
     }
   };
 
-module.exports = { logoutUser };
+module.exports = logoutUser;

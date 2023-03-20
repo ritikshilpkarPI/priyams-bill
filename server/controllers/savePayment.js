@@ -18,6 +18,4 @@ const savePayment = async (req, res) => {
     }
   };
 
-  module.exports = {
-    savePayment,
-  };
+  module.exports = savePayment;

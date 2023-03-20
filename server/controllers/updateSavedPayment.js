@@ -22,6 +22,4 @@ const updateSavedPayment = async (req, res) => {
     }
   };
 
-  module.exports = {
-    updateSavedPayment,
-  };
+  module.exports = updateSavedPayment;

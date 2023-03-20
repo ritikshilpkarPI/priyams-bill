@@ -24,6 +24,4 @@ const getItemsFeed = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getItemsFeed,
-  };
+  module.exports = getItemsFeed;

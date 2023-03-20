@@ -24,6 +24,4 @@ const deleteExpense = async (request, response) => {
     }
   };
 
-  module.exports = {
-    deleteExpense,
-  };
+  module.exports = deleteExpense;

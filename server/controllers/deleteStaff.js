@@ -10,4 +10,4 @@ const deleteStaff = async (request, response) => {
     }
   };
 
-  module.exports = {  deleteStaff };
+  module.exports = deleteStaff;

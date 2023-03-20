@@ -24,6 +24,4 @@ async function sendAllExpense(request, response) {
     }
   }
 
-  module.exports = {
-    sendAllExpense,
-  };
+  module.exports = sendAllExpense;

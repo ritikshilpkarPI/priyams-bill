@@ -11,6 +11,4 @@ const deleteBill = async (req, res) => {
     }
   };
 
-  module.exports = {
-    deleteBill,
-  };
+  module.exports = deleteBill;

@@ -11,6 +11,4 @@ const getDetailsById = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getDetailsById,
-  };
+  module.exports = getDetailsById;

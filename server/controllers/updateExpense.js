@@ -25,6 +25,4 @@ const updateExpense = async (request, response) => {
     }
   };
 
-  module.exports = {
-    updateExpense,
-  };
+  module.exports = updateExpense;

@@ -105,6 +105,4 @@ const deleteImages = (images) => {
 };
 
 
-module.exports = {
-  updateDetailsById,
-};
+module.exports = updateDetailsById;

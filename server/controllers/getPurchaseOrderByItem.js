@@ -25,6 +25,4 @@ const getPurchaseOrderByItem = async (req, res) => {
     return res.status(200).json({ message: { result } });
   };
 
-  module.exports = {
-    getPurchaseOrderByItem,
-  };
+  module.exports = getPurchaseOrderByItem;

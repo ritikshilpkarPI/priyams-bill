@@ -11,6 +11,4 @@ const getOrdersByQuery = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getOrdersByQuery,
-  };
+  module.exports = getOrdersByQuery;

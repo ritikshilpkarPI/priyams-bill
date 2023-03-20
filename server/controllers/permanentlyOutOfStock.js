@@ -22,7 +22,5 @@ const permanentlyOutOfStock = async (req, res) => {
     }
   };
 
-  module.exports = {
-    permanentlyOutOfStock,
-  };
+  module.exports = permanentlyOutOfStock;
   

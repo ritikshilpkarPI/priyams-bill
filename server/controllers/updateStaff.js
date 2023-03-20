@@ -17,4 +17,4 @@ const updateStaff = async (request, response) => {
     }
   };
 
-  module.exports = {  updateStaff};
+  module.exports = updateStaff;

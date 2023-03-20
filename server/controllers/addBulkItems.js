@@ -49,6 +49,4 @@ const addBulkItems = async (request, response) => {
   }
 };
 
-module.exports = {
-  addBulkItems,
-};
+module.exports = addBulkItems;

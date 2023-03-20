@@ -119,6 +119,4 @@ const getDayWiseProcedures = async (req, res) => {
 };
 
 
-module.exports = {
-  getDayWiseProcedures,
-};
+module.exports = getDayWiseProcedures;

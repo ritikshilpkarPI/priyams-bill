@@ -8,6 +8,4 @@ const getItemsCategoryList = async (req, res) => {
     }
   };
 
-  module.exports = {
-    getItemsCategoryList,
-  };
+  module.exports = getItemsCategoryList;

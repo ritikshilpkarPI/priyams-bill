@@ -122,6 +122,4 @@ const addNewBill = async (req, res) => {
 };
 
 
-module.exports = {
-  addNewBill,
-};
+module.exports = addNewBill;

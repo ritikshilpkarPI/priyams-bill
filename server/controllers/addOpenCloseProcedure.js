@@ -18,6 +18,4 @@ const addOpenCloseProcedure = async (req, res) => {
     }
   };
 
-  module.exports = {
-    addOpenCloseProcedure,
-  };
+  module.exports = addOpenCloseProcedure;
