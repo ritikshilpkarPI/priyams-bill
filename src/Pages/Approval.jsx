@@ -1,10 +1,10 @@
 import { LoadingOverlay } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
-import PurchaseDetailsApproval from 'src/components/PurchaseApproval/PurchaseDetailsApproval';
+import PurchaseDetailsApproval from 'src/components/PurchaseDetailsApproval';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { useLocation } from 'react-router-dom';
-import { genericAxios } from 'src/utils/genericAxiosMethod'; 
+import { genericAxios } from 'src/utils/genericAxiosMethod';
 
 const Approval = () => {
   const [filter, setFilter] = useState([]);
@@ -38,7 +38,7 @@ const Approval = () => {
       } else if (role !== 'admin') {
         query = { isApproved: false, isDraft: false };
       }
-      const  response  = await genericAxios({
+      const response = await genericAxios({
         method: API_METHODS.POST,
         url: API_PATHS.PURCHASE_ORDER.GET_ORDERS_BY_QUERY,
         data: {
@@ -46,7 +46,7 @@ const Approval = () => {
         },
       });
       offLoader();
-      if(response.error) return
+      if (response.error) return;
       const { orders } = response.data;
       setFilter([...orders]);
     } catch (err) {
