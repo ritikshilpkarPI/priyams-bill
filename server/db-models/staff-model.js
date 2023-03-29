@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const ROLES = {
   ADMIN: 'admin',
   MANAGER: 'manager',
@@ -22,9 +22,13 @@ const staffSchema = new mongoose.Schema({
   },
 });
 staffSchema.methods.getJwtToken = function () {
-  return jwt.sign({ id: this._id, name: this.name, role: this.role, username: this.username,  }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRY,
-  });
+  return jwt.sign(
+    { id: this._id, name: this.name, role: this.role, username: this.username },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: `${process.env.JWT_EXPIRY}`,
+    }
+  );
 };
 
 const Staff = new mongoose.model('staff', staffSchema);
