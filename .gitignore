@@ -12,6 +12,8 @@ package-lock.json
 # testing
 /coverage
 dump
+.netlify
+.netlify/*
 
 # production
 /build

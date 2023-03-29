@@ -10,6 +10,7 @@ export const API_PATHS = {
     POST_UPDATE_SAVED_ORDER: '/api/purchaseOrder/updateSavedOrder',
     POST_UPDATE_ORDER_BY_INDEX: '/api/purchaseOrder/updateOrderByIndex',
     POST_DELETE_ITEM: '/api/purchaseOrder/deleteItem',
+    GET_ORDERS: '/api/purchaseOrder/orders',
   },
   ATTENDANCE: {
     GET_MONTHLY_ATTENDANCE: '/api/attendance/monthlyAttendance',
@@ -37,10 +38,11 @@ export const API_PATHS = {
     POST_ADD_BULK_ITEMS: '/api/inventory/addbulkitems',
     PUT_EDIT_ITEM_BY_ID: '/api/inventory/editItemById',
     GET_PERMANENTLY_OUT_OF_STOCK: '/api/inventory/permanentlyOutOfStock',
+    GET_ITEMS_CATEGORY_LIST: '/api/inventory/getItemsCategoryList',
   },
   AUTH: {
     POST_LOGIN: '/api/auth/login',
-    GET_LOGOUT: '/api/auth/logout'
+    GET_LOGOUT: '/api/auth/logout',
   },
   OPENCLOSE: {
     GET_ALL_PROCEDURE: '/api/openClose/getAllProcedure',
@@ -68,5 +70,11 @@ export const API_PATHS = {
     POST_UPDATE_SAVED_PAYMENT: '/api/payment/updateSavedPayment',
     POST_UPDATE_PAYMENT_BY_ID: '/api/payment/updatePaymentById',
     POST_DELETE_PAYMENT_BY_ID: '/api/payment/deletePaymentById',
+  },
+  STAFF: {
+    GET_STAFF: '/api/staff',
+    POST_STAFF: '/api/staff',
+    PUT_STAFF: '/api/staff',
+    DELETE_STAFF: '/api/staff',
   },
 };
