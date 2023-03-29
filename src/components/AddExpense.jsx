@@ -29,10 +29,7 @@ const AddExpense = ({ date }) => {
   ).slice(-2)}:${('0' + newDate.getSeconds()).slice(-2)}`;
 
   // All States
-  const [name, setName] = useState(
-    parseJwt(Cookies.get('token')).name || ''
-  );
-  console.log({name});
+  const [name, setName] = useState(parseJwt(Cookies.get('token')).name || '');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState();
   const [dataDate, setDataDate] = useState(date);
@@ -59,44 +56,43 @@ const AddExpense = ({ date }) => {
 
   // To add new expense
   const addExpense = async (e) => {
-  e.preventDefault();
-  const obj = {
-    user: name,
-    description: description,
-    amount: amount,
-    date: todayDate,
-    time: timeConvert(todayTime),
-  };
-  if (!obj.user || !obj.description || !obj.amount) {
-    alert('Please enter all fields!');
-  } else {
-    setButtonLoad(true);
-    const response = await genericAxios({
-      url: API_PATHS.EXPENSE.POST_EXPENSE,
-      method: API_METHODS.POST,
-      data: { ...obj },
-      headers: {
-        Cookie: '',
-      },
-    });
-    if(response.error) return
-    if (
-      response.data.status === true &&
-      response.data.message === 'expense added'
-    ) {
-      setDescription('');
-      setAmount();
-      setButtonLoad(false);
-      setDataDate(todayDate);
-      expenseReducer[1]({
-        type: 'UPDATE_EXPENSE_LIST',
-        payload: response.data.data,
-      });
+    e.preventDefault();
+    const obj = {
+      user: name,
+      description: description,
+      amount: amount,
+      date: todayDate,
+      time: timeConvert(todayTime),
+    };
+    if (!obj.user || !obj.description || !obj.amount) {
+      alert('Please enter all fields!');
     } else {
-      alert('Failed to save date!');
+      setButtonLoad(true);
+      const response = await genericAxios({
+        url: API_PATHS.EXPENSE.POST_EXPENSE,
+        method: API_METHODS.POST,
+        data: { ...obj },
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (response.error) return;
+      if (
+        response.data.status === true &&
+        response.data.message === 'expense added'
+      ) {
+        setDescription('');
+        setAmount();
+        setButtonLoad(false);
+        setDataDate(todayDate);
+        expenseReducer[1]({
+          type: 'UPDATE_EXPENSE_LIST',
+          payload: response.data.data,
+        });
+      } else {
+        alert('Failed to save date!');
+      }
     }
-  }
- 
   };
 
   // To get today expense data
@@ -109,9 +105,8 @@ const AddExpense = ({ date }) => {
           Cookie: '',
         },
       });
-      if(todayExpense.error) return
+      if (todayExpense.error) return;
       setTodayData(todayExpense.data.data);
-       
     };
     getTodayData();
   }, [dataDate, buttonLoad, reload]);
@@ -127,7 +122,7 @@ const AddExpense = ({ date }) => {
           Cookie: '',
         },
       });
-      if(response.error)return
+      if (response.error) return;
       if (
         response.data.status === true &&
         response.data.message === 'expense deleted'
@@ -141,7 +136,6 @@ const AddExpense = ({ date }) => {
         alert('Failed to delete expense!');
       }
     }
- 
   };
 
   // To handle input for updating expense item
@@ -162,7 +156,7 @@ const AddExpense = ({ date }) => {
         Cookie: '',
       },
     });
-    if(response.error)return
+    if (response.error) return;
     if (
       response.data.status === true &&
       response.data.message === 'expense updated'

@@ -1,6 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
  .env.local 
+ .env
 # dependencies
+.env
 /node_modules
 /react-client/node_modules
 /dist
@@ -10,6 +12,7 @@
 /.eslintcache
 package-lock.json
 # testing
+.env
 /coverage
 dump
 .netlify
@@ -17,10 +20,10 @@ dump
 
 # production
 /build
+.env
 
 # misc
 .env
-/.env
 .DS_Store
 .env.local
 .env.development.local

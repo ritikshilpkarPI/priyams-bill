@@ -9,7 +9,6 @@ const loginUser = async (req, res, next) => {
   if (!user) {
     res.status(400).json({ error: "Email or password doesn't exist " });
   }
-  console.log({ user });
   const isPasswordCorrect = user.password === password;
   if (!isPasswordCorrect) {
     res.status(400).json({ error: "Email or password doesn't exist " });
