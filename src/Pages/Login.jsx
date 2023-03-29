@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
-import Cookies from 'js-cookie';
 // axios.defaults.withCredentials = true;
 
 const Login = ({ history }) => {
@@ -28,14 +27,13 @@ const Login = ({ history }) => {
       },
     });
 
-    if(response.error){
+    if (response.error) {
       setErrorMsg('Invalid username');
-      setErrorMsg("")
-      return
+      setErrorMsg('');
+      return;
     }
     history.push('/billing');
   };
-
 
   return (
     <div className="login-card">
