@@ -1,4 +1,5 @@
 const Staff = require('../db-models/staff-model');
+const jwt = require('jsonwebtoken');
 
 const isAdmin = async (req, res, next) => {
   try {
@@ -15,6 +16,32 @@ const isAdmin = async (req, res, next) => {
     res.status(400).send({ message: err.message, success: false });
   }
 };
+const isLoggedIn = async (req,res,next) => {
+  console.log({req});
+  const token = req.cookies.token
+  console.log({token});
+  if(!token){
+    res.status(401).send({ message: "Login first to access this page", success: false });
+    return
+  }
+  const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+  req.user = await Staff.findById(decoded.id)
+  next()
+
+}
+const customRole = (roles) => {
+  return (req, res, next) => {
+      if(!roles.includes(req.user.role)){
+          res.status(403).json({ error: "You are not allowed for this resource" });
+          return
+      }
+      next()
+  }
+}
+
 module.exports = {
   isAdmin,
+  isLoggedIn,
+  customRole
 };

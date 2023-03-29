@@ -75,6 +75,6 @@ export const API_PATHS = {
     GET_STAFF: '/api/staff',
     POST_STAFF: '/api/staff',
     PUT_STAFF: '/api/staff',
-    DELETE_STAFF: '/api/staff'
-  }
+    DELETE_STAFF: '/api/staff',
+  },
 };

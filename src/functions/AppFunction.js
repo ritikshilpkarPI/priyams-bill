@@ -5,6 +5,8 @@ import { PAGES } from '../constants/HeaderTypes';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { parseJwt } from 'src/utils/cookie';
+import Cookies from 'js-cookie';
 
 const AppFunction = (history, location) => {
   const showBill = location.pathname.includes('showbill');
@@ -12,8 +14,7 @@ const AppFunction = (history, location) => {
   const [itemsList, dispatch] = itemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(true);
   const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
-  const { name: staffName = '', username: staffUserName = '' } =
-    JSON.parse(localStorage.getItem('priyam-store')) || {};
+  const { name: staffName = '', username: staffUserName = '' } = parseJwt(Cookies.get('token')) || {};
 
   useEffect(() => {
     (async () => {
@@ -46,7 +47,12 @@ const AppFunction = (history, location) => {
   }, [value, showBill]);
 
   const logoutUser = async () => {
-    localStorage.removeItem('priyam-store');
+    const response = await genericAxios({
+      url: API_PATHS.AUTH.GET_LOGOUT,
+      method: API_METHODS.GET,
+    });
+    console.log({response});
+    Cookies.remove('token');
     history.push('/login');
   };
 

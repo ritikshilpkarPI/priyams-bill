@@ -15,9 +15,10 @@ export const genericAxios = async ({
       method,
       data,
       headers,
+      withCredentials: true,
     });
     return result;
   } catch (error) {
-    return {error};
+    return { error };
   }
 };

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isAdmin } = require('../middleware/isAdmin');
+const { isAdmin, isLoggedIn, customRole } = require('../middleware/isAdmin');
 const { API_PATHS } = require('../../src/utils/constants/apiPaths');
 
 const {
