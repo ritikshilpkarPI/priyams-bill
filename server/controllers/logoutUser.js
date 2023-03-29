@@ -1,4 +1,4 @@
-const logoutUser = async (req, res, next) => {
+const logoutUser = async (req, res) => {
   res.cookie('token', '', {
     expires: new Date(Date.now()),
   });
