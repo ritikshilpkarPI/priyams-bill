@@ -1,6 +1,15 @@
+const { uploadImages } = require('../util/image');
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const cloudinary = require('cloudinary');
 
-const addOrder = async (req, res) => {
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+
+
+const addOrder = async (req, res,next) => {
     try {
       const {
         details,
@@ -17,7 +26,7 @@ const addOrder = async (req, res) => {
       } = req.body.new_order.purchaseObj;
       const isDraft = req.body.new_order.isDraft;
   
-      let billPhotos = await uploadImages(bills);
+      let billPhotos = await uploadImages(bills,cloudinary);
   
       const purchaseOrder = {
         purchasedItems: [...orders],
@@ -36,8 +45,7 @@ const addOrder = async (req, res) => {
       const order = await PurchaseOrder.create(purchaseOrder);
       res.status(201).send({ message: order, success: true });
     } catch (error) {
-      console.log({ error });
-      res.status(400).send({ message: error.message, success: false });
+      next(error)
     }
   };
 

@@ -1,6 +1,6 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 
-const updateSavedOrders = async (req, res) => {
+const updateSavedOrders = async (req, res,next) => {
     try {
       const id = req.params.id;
       const { new_order } = req.body;
@@ -13,8 +13,8 @@ const updateSavedOrders = async (req, res) => {
         success: true,
         order: updatedOrder,
       });
-    } catch (err) {
-      res.status(400).send({ message: err, success: false });
+    } catch (error) {
+      next(error)
     }
   };
 

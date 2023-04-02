@@ -150,9 +150,9 @@ const filterFunctionsObj = {
   allItemsBillingTrend: getAllItemsTrendReport,
 };
 
-const getDateRangeReport = async (req, res) => {
+const getDateRangeReport = async (req, res,next) => {
   const filterType = req.params.filterName;
-  const { startDate, lastDate, startTime, lastTime, itemName } = req.body;
+  const { startDate, lastDate, itemName } = req.body;
 
   try {
     const report = await filterFunctionsObj[filterType](
@@ -162,7 +162,7 @@ const getDateRangeReport = async (req, res) => {
     );
     res.status(200).json({ report, startDate, lastDate, filterType });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error)
   }
 };
 

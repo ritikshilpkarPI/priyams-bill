@@ -1,5 +1,5 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
-const rejectOrder = async (req, res) => {
+const rejectOrder = async (req, res,next) => {
     try {
       const id = req.params.id;
       const order = await PurchaseOrder.findByIdAndUpdate(
@@ -13,8 +13,8 @@ const rejectOrder = async (req, res) => {
       res
         .status(200)
         .send({ message: 'order rejected successfully', order, success: true });
-    } catch (err) {
-      res.status(400).send({ message: err.message, success: false });
+    } catch (error) {
+      next(error)
     }
   };
 module.exports = rejectOrder;

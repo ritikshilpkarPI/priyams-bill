@@ -1,6 +1,6 @@
 const { Item } = require('../db-models/item-model');
 
-const getItemsFeed = async (req, res) => {
+const getItemsFeed = async (req, res,next) => {
     try {
       const { minStockOnly = false, isDeleted = false } = JSON.parse(
         req.query.filters
@@ -19,8 +19,7 @@ const getItemsFeed = async (req, res) => {
       const itemCount = items.length;
       res.status(200).json({ message: { items, itemCount } });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

@@ -1,13 +1,12 @@
 const { Bill } = require('../db-models/bill-model');
 
-const deleteBill = async (req, res) => {
+const deleteBill = async (req, res,next) => {
     try {
       const id = req.body.id;
       const bill = await Bill.findByIdAndRemove(id);
       res.status(200).json({ message: bill });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

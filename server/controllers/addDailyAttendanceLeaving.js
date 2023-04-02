@@ -1,6 +1,6 @@
 const { DailyAttendance } = require('../db-models/staff-attendance');
 
-const addDailyAttendanceLeaving = async (req, res) => {
+const addDailyAttendanceLeaving = async (req, res,next) => {
   const { name, date } = req.body;
 
   try {
@@ -36,7 +36,7 @@ const addDailyAttendanceLeaving = async (req, res) => {
 
           res.status(200).json({ message: attendance });
         } catch (error) {
-          res.status(500).json({ error: error.message });
+          next(error)
         }
       } else {
         res
@@ -47,7 +47,7 @@ const addDailyAttendanceLeaving = async (req, res) => {
       res.status(230).json({ message: 'You need to add arriving Data first ' });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+   next(error)
   }
 };
 

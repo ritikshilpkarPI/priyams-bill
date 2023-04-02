@@ -1,7 +1,7 @@
 const { OpenClose } = require('../db-models/open-close-model');
 
 
-const getDayWiseProcedures = async (req, res) => {
+const getDayWiseProcedures = async (req, res,next) => {
   try {
     const dayWiseProcedures = await OpenClose.aggregate([
       {
@@ -113,8 +113,7 @@ const getDayWiseProcedures = async (req, res) => {
     ]).sort({ _id: -1 });
     res.status(200).json({ message: { dayWiseProcedures } });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    next(error)
   }
 };
 

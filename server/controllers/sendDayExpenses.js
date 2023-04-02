@@ -1,7 +1,7 @@
 const Expense = require('../db-models/expense-model');
 
 
-const sendDayExpenses = async (request, response) => {
+const sendDayExpenses = async (request, response, next) => {
   try {
     const date = request.params.date;
     const allExpense = await Expense.find({ date: date });
@@ -32,7 +32,7 @@ const sendDayExpenses = async (request, response) => {
       dayTotal: dayTotal,
     });
   } catch (error) {
-    response.status(500).json({ error });
+    next(error)
   }
 };
 
