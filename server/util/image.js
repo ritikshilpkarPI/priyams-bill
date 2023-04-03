@@ -1,5 +1,11 @@
+const cloudinary = require('cloudinary');
 
-const uploadImages = (images,cloudinary) => {
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+const uploadImages = (images) => {
     return new Promise((resolve, reject) => {
       var billPhotos = [];
       if (images.length === 0) {
@@ -24,7 +30,7 @@ const uploadImages = (images,cloudinary) => {
       });
     });
   };
-  const deleteImages = (images,cloudinary) => {
+  const deleteImages = (images) => {
     return new Promise((resolve, reject) => {
       if (images.length === 0) {
         resolve();

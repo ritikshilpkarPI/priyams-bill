@@ -1,13 +1,5 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
-const cloudinary = require('cloudinary');
 const { uploadImages, deleteImages } = require('../util/image');
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
-});
-
 
 const updateDetailsById = async (req, res,next) => {
   try {
@@ -31,10 +23,10 @@ const updateDetailsById = async (req, res,next) => {
     const delImages = req.body.deleteBills;
 
     //DELETING IMAGES FROM CLOUDINARY
-    await deleteImages(delImages,cloudinary);
+    await deleteImages(delImages);
 
     let billPhotos = [];
-    billPhotos = await uploadImages(bills,cloudinary);
+    billPhotos = await uploadImages(bills);
     billPhotos = [...billPhotos, ...uploadedImages];
 
     const purchaseOrder = {
