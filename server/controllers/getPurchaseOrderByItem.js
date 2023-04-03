@@ -1,6 +1,7 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 
-const getPurchaseOrderByItem = async (req, res) => {
+const getPurchaseOrderByItem = async (req, res,next) => {
+  try {
     const { id } = req.params;
     const itemPurchaseOrder = PurchaseOrder.aggregate([
       {
@@ -22,7 +23,11 @@ const getPurchaseOrderByItem = async (req, res) => {
     ]);
   
     const result = await itemPurchaseOrder;
-    return res.status(200).json({ message: { result } });
+    res.status(200).json({ message: { result } });
+  } catch (error) {
+    next(error)
+  }
+    
   };
 
   module.exports = getPurchaseOrderByItem;

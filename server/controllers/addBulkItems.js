@@ -1,6 +1,7 @@
+const { NotFound } = require('../util/errors');
 const { Item } = require('../db-models/item-model');
 
-const addBulkItems = async (request, response) => {
+const addBulkItems = async (request, response, next) => {
   try {
     const csvData = request.body;
     const slabPricingStart = csvData[0].findIndex((item) => item === 'tp1');
@@ -9,10 +10,8 @@ const addBulkItems = async (request, response) => {
     const itembarcode = csvData[0].findIndex((item) => item === 'itemBarcode');
 
     if (slabPricingStart === -1)
-      return response.status(503).json({
-        status: false,
-        message: 'Uploaded sheet does not has tp1 column in its header',
-      });
+      throw new NotFound('Uploaded sheet does not has tp1 column in its header')
+    
     await Promise.all(
       csvData.map(async (item, index) => {
         if (index !== 0) {
@@ -45,7 +44,7 @@ const addBulkItems = async (request, response) => {
     );
     response.status(200).json({ status: true, message: 'items added' });
   } catch (error) {
-    response.status(500).json(error);
+    next(error)
   }
 };
 

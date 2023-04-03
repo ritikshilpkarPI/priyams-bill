@@ -1,6 +1,6 @@
 const { DailyAttendance } = require('../db-models/staff-attendance');
 
-const markAbsent = async (req, res) => {
+const markAbsent = async (req, res, next) => {
     try {
       const result = new DailyAttendance({
         name: req.body.name,
@@ -14,7 +14,7 @@ const markAbsent = async (req, res) => {
       await result.save();
       res.status(200).json({ message: result });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

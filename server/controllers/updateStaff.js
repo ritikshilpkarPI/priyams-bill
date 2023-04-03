@@ -1,6 +1,6 @@
 const Staff = require('../db-models/staff-model');
 
-const updateStaff = async (request, response) => {
+const updateStaff = async (request, response,next) => {
     try {
       const username = request.params.username;
       const staffUpdate = await Staff.findOneAndUpdate(
@@ -13,7 +13,7 @@ const updateStaff = async (request, response) => {
         updatedItem: staffUpdate,
       });
     } catch (error) {
-      response.status(500).json(error);
+      next(error)
     }
   };
 

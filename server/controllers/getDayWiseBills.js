@@ -1,7 +1,7 @@
 const { Bill } = require('../db-models/bill-model');
 const { DailyBill } = require('../db-models/dailybill-model');
 
-const getDayWiseBills = async (req, res) => {
+const getDayWiseBills = async (req, res,next) => {
     try {
       const allDailyBills = await Bill.aggregate([
         {
@@ -43,8 +43,7 @@ const getDayWiseBills = async (req, res) => {
       const dailyBillCount = await DailyBill.countDocuments();
       res.status(200).json({ message: { allDailyBills, dailyBillCount } });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

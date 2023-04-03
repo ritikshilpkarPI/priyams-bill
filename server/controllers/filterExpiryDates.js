@@ -1,6 +1,6 @@
 const { Item } = require('../db-models/item-model');
 
-const filterExpiryDates = async (req, res) => {
+const filterExpiryDates = async (req, res,next) => {
     const { startDate, endDate } = req.body;
     const splitDateInDbFormat = (date = 'dd/mm/yyyy') => {
       const [day, month, year] = date.split('/'); // = [01, 02, 2028]
@@ -26,8 +26,7 @@ const filterExpiryDates = async (req, res) => {
       ]);
       return res.status(200).json({ message: { expiredItems } });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

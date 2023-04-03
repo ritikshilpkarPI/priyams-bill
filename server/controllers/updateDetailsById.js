@@ -1,14 +1,7 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
-const cloudinary = require('cloudinary');
+const { uploadImages, deleteImages } = require('../util/image');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
-});
-
-
-const updateDetailsById = async (req, res) => {
+const updateDetailsById = async (req, res,next) => {
   try {
     const {
       details,
@@ -55,53 +48,8 @@ const updateDetailsById = async (req, res) => {
 
     res.status(201).send({ message: order, success: true });
   } catch (error) {
-    console.log({ error });
-    res.status(400).send({ error, success: false });
+    next(error)
   }
-};
-
-const uploadImages = (images) => {
-  return new Promise((resolve, reject) => {
-    var billPhotos = [];
-    if (images.length == 0) {
-      resolve([]);
-    }
-    images.forEach(async (image, index) => {
-      try {
-        const { public_id, secure_url } = await cloudinary.v2.uploader.upload(
-          image,
-          {
-            folder: 'pstores',
-          }
-        );
-        billPhotos.push({ public_id, secure_url });
-        if (billPhotos.length === index + 1) {
-          resolve(billPhotos);
-        }
-      } catch (err) {
-        console.log({ err });
-        reject(err);
-      }
-    });
-  });
-};
-const deleteImages = (images) => {
-  return new Promise((resolve, reject) => {
-    if (images.length == 0) {
-      resolve();
-    }
-    images.forEach(async (image, index) => {
-      try {
-        await cloudinary.uploader.destroy(image.public_id);
-        if (index == images.length - 1) {
-          resolve();
-        }
-      } catch (err) {
-        console.log({ err });
-        reject(err);
-      }
-    });
-  });
 };
 
 

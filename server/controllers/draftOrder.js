@@ -1,6 +1,6 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 
-const draftOrder = async (req, res) => {
+const draftOrder = async (req, res,next) => {
     try {
       const { id } = req.body;
       const order = await PurchaseOrder.findByIdAndUpdate(
@@ -14,9 +14,8 @@ const draftOrder = async (req, res) => {
       res
         .status(200)
         .send({ message: 'order drafted successfully', success: true, order });
-    } catch (err) {
-      console.log({ err });
-      res.status(400).send({ message: err.message, success: false });
+    } catch (error) {
+      next(error)
     }
   };
 

@@ -1,7 +1,7 @@
 const { Bill } = require('../db-models/bill-model');
 const { Item } = require('../db-models/item-model');
 
-const editBill = async (req, res) => {
+const editBill = async (req, res,next) => {
     try {
       const { id, itemWithChanges } = req.body;
       const { billItems, ...billObject } = itemWithChanges;
@@ -64,7 +64,7 @@ const editBill = async (req, res) => {
   
       res.status(200).json({ message: changeBill });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+     next(error)
     }
   };
 

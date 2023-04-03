@@ -1,6 +1,6 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 
-const deletePaymentById = async (req, res) => {
+const deletePaymentById = async (req, res,next) => {
   try {
     const purchase_id = req.params.id;
     const { index } = req.body;
@@ -25,8 +25,8 @@ const deletePaymentById = async (req, res) => {
       order: purchaseOrder,
       updatedOrder,
     });
-  } catch (err) {
-    res.status(400).send({ message: err, success: false });
+  } catch (error) {
+    next(error)
   }
 };
 

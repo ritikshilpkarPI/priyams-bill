@@ -1,6 +1,6 @@
 const { Bill } = require('../db-models/bill-model');
 
-const getAllBill = async (req, res) => {
+const getAllBill = async (req, res,next) => {
     try {
       const allBill = await Bill.find()
         // .populate({
@@ -15,8 +15,7 @@ const getAllBill = async (req, res) => {
       const billCount = await Bill.countDocuments();
       res.status(200).json({ message: { allBill, billCount } });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

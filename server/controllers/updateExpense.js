@@ -12,7 +12,7 @@ const allExpense = async () =>
     },
   ]).sort({ _id: -1 });
 
-const updateExpense = async (request, response) => {
+const updateExpense = async (request, response,next) => {
     try {
       const id = request.params.id;
       await Expense.findByIdAndUpdate(id, request.body);
@@ -21,7 +21,7 @@ const updateExpense = async (request, response) => {
         .status(200)
         .json({ status: true, message: 'expense updated', data: allExpenses });
     } catch (error) {
-      response.status(500).json({ error });
+      next(error)
     }
   };
 

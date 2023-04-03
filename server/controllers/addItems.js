@@ -1,7 +1,8 @@
+const { NotFound } = require('../util/errors');
 const { Item } = require('../db-models/item-model');
 
 
-const addItems = async (req, res) => {
+const addItems = async (req, res,next) => {
   const {
     itemBarcode,
     itemName,
@@ -29,9 +30,7 @@ const addItems = async (req, res) => {
       !itemCategory ||
       !quantityUnitName
     ) {
-      return res
-        .status(501)
-        .json({ status: false, message: 'Fill all required fields' });
+      throw new NotFound('Fill all required fields')
     }
 
     const newItem = await new Item({
@@ -54,7 +53,7 @@ const addItems = async (req, res) => {
     }).save();
     res.status(200).json({ status: true, message: newItem });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error)
   }
 };
 

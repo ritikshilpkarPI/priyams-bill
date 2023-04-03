@@ -1,6 +1,6 @@
 const { DailyAttendance } = require('../db-models/staff-attendance');
 
-const getMonthlyAttendance = async (req, res) => {
+const getMonthlyAttendance = async (req, res,next) => {
     try {
       const monthlyAttendance = await DailyAttendance.aggregate([
         // { $match: { date: { $lt: new Date("3,11,2022") } } },
@@ -18,7 +18,7 @@ const getMonthlyAttendance = async (req, res) => {
       ]);
       res.status(200).json({ message: monthlyAttendance });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

@@ -1,6 +1,6 @@
 const { Item } = require('../db-models/item-model');
 
-const permanentlyOutOfStock = async (req, res) => {
+const permanentlyOutOfStock = async (req, res,next) => {
     const { id } = req.params;
     try {
       const item = await Item.findByIdAndUpdate(
@@ -18,7 +18,7 @@ const permanentlyOutOfStock = async (req, res) => {
         item,
       });
     } catch (error) {
-      res.status(400).send({ message: error, success: false });
+      next(error)
     }
   };
 

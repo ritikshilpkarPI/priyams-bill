@@ -1,6 +1,6 @@
 const { DailyAttendance } = require('../db-models/staff-attendance');
 
-const addDailyAttendanceArrival = async (req, res) => {
+const addDailyAttendanceArrival = async (req, res, next) => {
   try {
     let checkInside = await DailyAttendance.find({
       name: req.body.name,
@@ -23,7 +23,7 @@ const addDailyAttendanceArrival = async (req, res) => {
         .json({ message: 'You have already put attendance for today' });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+   next(error)
   }
 };
 module.exports = addDailyAttendanceArrival;
