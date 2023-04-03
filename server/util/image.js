@@ -7,11 +7,11 @@ cloudinary.config({
 });
 const uploadImages = (images) => {
     return new Promise((resolve, reject) => {
-      var billPhotos = [];
+      const billPhotos = [];
       if (images.length === 0) {
         resolve([]);
       }
-      images.forEach(async (image, index) => {
+      images.map(async (image, index) => {
         try {
           const { public_id, secure_url } = await cloudinary.v2.uploader.upload(
             image,
@@ -24,7 +24,6 @@ const uploadImages = (images) => {
             resolve(billPhotos);
           }
         } catch (err) {
-          console.log({ err });
           reject(err);
         }
       });
@@ -42,7 +41,6 @@ const uploadImages = (images) => {
             resolve();
           }
         } catch (err) {
-          console.log({ err });
           reject(err);
         }
       });

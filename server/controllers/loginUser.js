@@ -6,12 +6,10 @@ const loginUser = async (req, res, next) => {
     const { username, password } = req.body;
     if (!username || !password) {
       throw new NotFound('Please provide email and password');
-      // res.status(400).json({ error: 'Please provide email and password' });
     }
     const user = await Staff.findOne({ username }).select('+password');
     if (!user) {
       throw new NotFound("Email or password doesn't exist");
-      // res.status(400).json({ error: "Email or password doesn't exist " });
     }
     const isPasswordCorrect = user.password === password;
     if (!isPasswordCorrect) {
