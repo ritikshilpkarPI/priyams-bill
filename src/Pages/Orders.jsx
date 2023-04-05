@@ -6,7 +6,7 @@ import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { orderMapper } from 'src/utils/orderMapper';
 import '../CSS/_orders.scss';
-import { Table, Loader, Title } from '@mantine/core';
+import { Loader } from '@mantine/core';
 
 function Orders() {
   const [orders, setOrders] = useState({});
@@ -27,67 +27,75 @@ function Orders() {
     callAPi();
   }, []);
   console.log({ orders });
-  
+
   return (
-   <div className='order-card-page-container'>
-    {loader ?  (<Loader color="blue" size="lg" />) : (
+    <div className="order-card-page-container">
+      {loader ? (
+        <Loader color="blue" size="lg" />
+      ) : (
         <div className="orders-container">
-        <div className='order-status-conatiner'>
-        <OrderStatus title={"Pending Confirmation Orders"} 
-         children={
-           orders?.pending_confirmation &&
-           orders?.pending_confirmation.orders.map((ele) => {
-             return <div><OrderCard order={ele} /></div>;
-           })
-         } 
-         />
-        </div>
-         <div className='order-status-conatiner'>
-         <OrderStatus title={"Pending Packaging Orders"} 
-         children={
-           orders?.pending_packaging &&
-           orders?.pending_packaging.orders.map((ele) => {
-             return <OrderCard order={ele} />;
-           })
-         }
-         />
-         </div>
-         <div className='order-status-conatiner'>
-         <OrderStatus title={"Pending dispatch Orders"} 
-         children={
-           orders?.pending_dispatch &&
-           orders?.pending_dispatch.orders.map((ele) => {
-             return <OrderCard order={ele} />;
-           })
-         }
-         />
-         </div>
-          <div className='order-status-conatiner'>
-          <OrderStatus
-             title={'Pending delivery dispatch Orders'}
-             children={
-               orders?.pending_delivery_dispatch &&
-               orders?.pending_delivery_dispatch.orders.map((ele) => {
-                 return <OrderCard order={ele} />;
-               })
-             }
-           />
+          <div className="order-status-conatiner">
+            <OrderStatus
+              title={'Pending Confirmation Orders'}
+              children={
+                orders?.pending_confirmation &&
+                orders?.pending_confirmation.orders.map((ele) => {
+                  return (
+                    <div>
+                      <OrderCard order={ele} />
+                    </div>
+                  );
+                })
+              }
+            />
           </div>
-         <div className='order-status-conatiner'>
-         <OrderStatus title={"Delivered Successfully Orders"} 
-          
-          children={
-            orders?.delivered_successfully &&
-            orders?.delivered_successfully.orders.map((ele) => {
-              return <OrderCard order={ele} />;
-            })
-          }
-          />
-         </div>
-         </div>
-    )}
-       
-   </div>
+          <div className="order-status-conatiner">
+            <OrderStatus
+              title={'Pending Packaging Orders'}
+              children={
+                orders?.pending_packaging &&
+                orders?.pending_packaging.orders.map((ele) => {
+                  return <OrderCard order={ele} />;
+                })
+              }
+            />
+          </div>
+          <div className="order-status-conatiner">
+            <OrderStatus
+              title={'Pending dispatch Orders'}
+              children={
+                orders?.pending_dispatch &&
+                orders?.pending_dispatch.orders.map((ele) => {
+                  return <OrderCard order={ele} />;
+                })
+              }
+            />
+          </div>
+          <div className="order-status-conatiner">
+            <OrderStatus
+              title={'Pending delivery dispatch Orders'}
+              children={
+                orders?.pending_delivery_dispatch &&
+                orders?.pending_delivery_dispatch.orders.map((ele) => {
+                  return <OrderCard order={ele} />;
+                })
+              }
+            />
+          </div>
+          <div className="order-status-conatiner">
+            <OrderStatus
+              title={'Delivered Successfully Orders'}
+              children={
+                orders?.delivered_successfully &&
+                orders?.delivered_successfully.orders.map((ele) => {
+                  return <OrderCard order={ele} />;
+                })
+              }
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
