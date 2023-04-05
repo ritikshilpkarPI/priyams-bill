@@ -10,7 +10,9 @@ function OrderStatus({ title, children, orderStatus }) {
     <div className="orders-wrapper">
       <header className="header">
         <p className="orders-title">{title}</p>
-        <Button onClick={() => history.push(`/orders/${orderStatus}`)}>View Status</Button>
+        <Button onClick={() => history.push(`/orders/${orderStatus}`)}>
+          View Status
+        </Button>
       </header>
       {children}
     </div>
