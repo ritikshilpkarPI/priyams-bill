@@ -1,9 +1,12 @@
 import { Button } from '@mantine/core';
 import React from 'react';
+import { useDisclosure } from '@mantine/hooks';
 import '../CSS/_orders.scss';
+import OrderDetail from './OrderDetail';
 function OrderCard({ order }) {
+    const [opened, { open, close }] = useDisclosure(false);
   return (
-    <div className="order-card-container">
+    <div className="order-card-container" onClick={open} >
       <header>
         <p>New Order</p>
         <p>Slot - {order.timeSlot}</p>
@@ -22,6 +25,7 @@ function OrderCard({ order }) {
         <Button>View Order</Button>
         <Button>Confirm Order</Button>
       </div>
+        <OrderDetail opened={opened} close={close}  order={order}/>
     </div>
   );
 }
