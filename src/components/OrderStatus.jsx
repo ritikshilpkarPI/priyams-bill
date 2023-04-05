@@ -14,7 +14,9 @@ function OrderStatus({ title, children, orderStatus }) {
           View Status
         </Button>
       </header>
-      {children}
+     <div>
+     {children}
+     </div>
     </div>
   );
 }

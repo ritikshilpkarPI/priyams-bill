@@ -1,44 +1,84 @@
-.orders-container{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    gap: 1rem;
-    .orders-wrapper{
-        text-align: initial;
-        display: block;
-        width: 100%;
-        height: 600px;
-        background: #dfd8d8;
-        min-width: 300px;
-        border-radius: 9px;
-        border: 1px solid #cacaca;
-        .header{
+.orders-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 10px;
+    background-color: white;
+    .order-status-conatiner {
+        .orders-wrapper {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            .orders-title{
-                font-size: 16px;
-                font-style: normal;
-                font-weight: bold;
-            }
-        }
-        .order-card-container{
-            padding: 1rem;
-            background: white;
-            border: 1px solid #cacaca;
-            border-radius: 8px;
-            header{
+            flex-direction: column;
+            padding: 15px;
+            width: 400px;
+            background-color: #dfd8d8;
+            margin-left: 10px;
+            margin-top: 10px;
+            min-width: 250px;
+            .header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding-bottom: 1rem;
-                p{
+                margin-bottom: 10px;
+                padding: 10px;
+                .orders-title {
+                    font-size: 16px;
+                    font-style: normal;
                     font-weight: bold;
-
                 }
-                border-bottom: 1px solid #cacaca;
+            }
+
+            .order-card-container {
+                height: 18vh;
+                width: 345px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                background-color: white;
+                .order-card-info-container {
+                    height: 14vh;
+                    width: 345px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 20px;
+                    .slot-method-container {
+                        height: 5vh;
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 10px;
+                        .payment-method {
+                            width: 100px;
+                            border: 1px solid black;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .delivery-slot {
+                            width: 100px;
+                            background-color: rgb(8, 154, 56);
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            color: white;
+                        }
+                    }
+                    .address-container {
+                        height: 7vh;
+                        display: flex;
+                        justify-content: space-between;
+                        flex-direction: column;
+                    }
+                }
+                .confirm-order-btn-container {
+                    width: 345px;
+                    height: 4vh;
+                    .confirm-order-btn {
+                        width: 345px;
+                        height: 4vh;
+                    }
+                }
             }
         }
     }
 }
+
