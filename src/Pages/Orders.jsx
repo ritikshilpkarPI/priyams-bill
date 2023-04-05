@@ -26,33 +26,30 @@ function Orders() {
 
   return (
     <div className="orders-container">
-      {/* <OrderStatus title={"Placed Orders"} 
-     children={
-      orders?.pending_confirmation && orders?.pending_confirmation.orders.map(ele => {
-        return <Card title={ele.contactNumber}>
-          <h1>Status {JSON.stringify(ele.shippingAddress)}</h1>
-        </Card>
+      <OrderStatus title={"Pending Confirmation Orders"} 
+    children={
+      orders?.pending_confirmation &&
+      orders?.pending_confirmation.orders.map((ele) => {
+        return <OrderCard order={ele} />;
       })
     } 
     />
-     <OrderStatus title={"Placed Orders"} 
-     children={
-      orders?.pending_packaging && orders?.pending_packaging.orders.map(ele => {
-        return <Card title={ele.contactNumber}>
-          <h1>Status {JSON.stringify(ele.shippingAddress)}</h1>
-        </Card>
+     <OrderStatus title={"Pending Packaging Orders"} 
+    children={
+      orders?.pending_packaging &&
+      orders?.pending_packaging.orders.map((ele) => {
+        return <OrderCard order={ele} />;
       })
-    } 
+    }
     />
-     <OrderStatus title={"Placed Orders"} 
-     children={
-      orders?.pending_dispatch && orders?.pending_dispatch.orders.map(ele => {
-        return <Card title={ele.contactNumber}>
-          <h1>Status {JSON.stringify(ele.shippingAddress)}</h1>
-        </Card>
+     <OrderStatus title={"Pending dispatch Orders"} 
+    children={
+      orders?.pending_dispatch &&
+      orders?.pending_dispatch.orders.map((ele) => {
+        return <OrderCard order={ele} />;
       })
-    } 
-    /> */}
+    }
+    />
       <OrderStatus
         title={'Pending delivery dispatch Orders'}
         children={
@@ -61,17 +58,16 @@ function Orders() {
             return <OrderCard order={ele} />;
           })
         }
-        orderStatus="pending_delivery_dispatch"
       />
-      {/* <OrderStatus title={"Placed Orders"} 
-     children={
-      orders?.delivered_successfully && orders?.delivered_successfully.orders.map(ele => {
-        return <Card title={ele.contactNumber}>
-          <h1>Status {JSON.stringify(ele.shippingAddress)}</h1>
-        </Card>
+      <OrderStatus title={"Delivered Successfully Orders"} 
+     
+    children={
+      orders?.delivered_successfully &&
+      orders?.delivered_successfully.orders.map((ele) => {
+        return <OrderCard order={ele} />;
       })
-    } 
-    /> */}
+    }
+    />
     </div>
   );
 }
