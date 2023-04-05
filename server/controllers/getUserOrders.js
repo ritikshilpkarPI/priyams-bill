@@ -6,15 +6,8 @@ const orderStatus =  ['pending_confirmation','pending_packaging', 'pending_dispa
 
 
 const getUserOrders = async (req, res,next) => {
-    const {orderStatus} = req.query
-    console.log({orderStatus});
     try {
       const orders = await Order.aggregate([
-        {
-          $match: {
-            orderStatus
-          }
-        },
         {$group: {
           _id: "$orderStatus",
           orders: {

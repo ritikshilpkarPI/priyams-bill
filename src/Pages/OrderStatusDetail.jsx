@@ -9,7 +9,7 @@ function OrderStatusDetail() {
   const [orders, setOrders] = useState({});
   const callAPi = async () => {
     const response = await genericAxios({
-      url: `${API_PATHS.ORDERS.GET_USER_ORDERS}?orderStatus=${orderStatus}`,
+      url: `${API_PATHS.ORDERS.FILTER_USER_ORDER_BY_STATUS}?orderStatus=${orderStatus}`,
       method: API_METHODS.GET,
     });
     console.log({ response });
