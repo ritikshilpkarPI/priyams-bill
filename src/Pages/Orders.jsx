@@ -37,6 +37,7 @@ function Orders() {
           <div className="order-status-conatiner">
             <OrderStatus
               title={'Pending Confirmation Orders'}
+              orderStatus={'pending_confirmation'}
               children={
                 orders?.pending_confirmation &&
                 orders?.pending_confirmation.orders.map((ele) => {
@@ -52,6 +53,7 @@ function Orders() {
           <div className="order-status-conatiner">
             <OrderStatus
               title={'Pending Packaging Orders'}
+              orderStatus={'pending_packaging'}
               children={
                 orders?.pending_packaging &&
                 orders?.pending_packaging.orders.map((ele) => {
@@ -63,6 +65,7 @@ function Orders() {
           <div className="order-status-conatiner">
             <OrderStatus
               title={'Pending dispatch Orders'}
+              orderStatus={'pending_dispatch'}
               children={
                 orders?.pending_dispatch &&
                 orders?.pending_dispatch.orders.map((ele) => {
@@ -74,6 +77,7 @@ function Orders() {
           <div className="order-status-conatiner">
             <OrderStatus
               title={'Pending delivery dispatch Orders'}
+              orderStatus={'pending_delivery_dispatch'}
               children={
                 orders?.pending_delivery_dispatch &&
                 orders?.pending_delivery_dispatch.orders.map((ele) => {
@@ -85,6 +89,7 @@ function Orders() {
           <div className="order-status-conatiner">
             <OrderStatus
               title={'Delivered Successfully Orders'}
+              orderStatus={'delivered_successfully'}
               children={
                 orders?.delivered_successfully &&
                 orders?.delivered_successfully.orders.map((ele) => {

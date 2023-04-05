@@ -7,7 +7,7 @@ function OrderCard({ order }) {
     const [opened, { open, close }] = useDisclosure(false);
   return (
     <div className="order-card-container">
-      <div className="order-card-info-container">
+      <div className="order-card-info-container" onClick={open}>
         <div className="slot-method-container">
           <p className="delivery-slot">Slot - {order.timeSlot}</p>
           <p className="payment-method">Method: {order.paymentMethod}</p>
