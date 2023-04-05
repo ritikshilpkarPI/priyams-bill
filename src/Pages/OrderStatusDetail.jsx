@@ -13,7 +13,7 @@ function OrderStatusDetail() {
       url: `${API_PATHS.ORDERS.GET_USER_ORDERS}?orderStatus=${orderStatus}`,
       method: API_METHODS.GET,
     });
-    setOrders( orderMapper(response.data.orders)[`${orderStatus}`].orders);
+    setOrders(orderMapper(response.data.orders)[`${orderStatus}`].orders);
   };
   useEffect(() => {
     callAPi();

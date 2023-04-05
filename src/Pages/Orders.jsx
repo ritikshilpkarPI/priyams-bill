@@ -34,7 +34,7 @@ function Orders() {
             return <OrderCard order={ele} />;
           })
         }
-        orderStatus='pending_confirmation'
+        orderStatus="pending_confirmation"
       />
       <OrderStatus
         title={'Pending Packaging Orders'}
@@ -44,7 +44,7 @@ function Orders() {
             return <OrderCard order={ele} />;
           })
         }
-        orderStatus='pending_packaging'
+        orderStatus="pending_packaging"
       />
       <OrderStatus
         title={'Pending dispatch Orders'}
@@ -54,7 +54,7 @@ function Orders() {
             return <OrderCard order={ele} />;
           })
         }
-        orderStatus='pending_dispatch'
+        orderStatus="pending_dispatch"
       />
       <OrderStatus
         title={'Pending delivery dispatch Orders'}
@@ -64,7 +64,7 @@ function Orders() {
             return <OrderCard order={ele} />;
           })
         }
-        orderStatus='pending_delivery_dispatch'
+        orderStatus="pending_delivery_dispatch"
       />
       <OrderStatus
         title={'Delivered Successfully Orders'}
@@ -74,7 +74,7 @@ function Orders() {
             return <OrderCard order={ele} />;
           })
         }
-        orderStatus='delivered_successfully'
+        orderStatus="delivered_successfully"
       />
     </div>
   );
