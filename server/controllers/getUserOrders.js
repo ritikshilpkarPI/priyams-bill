@@ -6,14 +6,20 @@ const orderStatus =  ['pending_confirmation','pending_packaging', 'pending_dispa
 
 
 const getUserOrders = async (req, res,next) => {
+  const {orderStatus} = req.query
     try {
       const orders = await Order.aggregate([
+        {
+          $match: orderStatus ? {
+            orderStatus
+          } : {}
+        },
         {$group: {
           _id: "$orderStatus",
           orders: {
             $push: "$$ROOT"
           }
-        }},
+        }}
       ]);
       res.status(201).send({ message: 'got the orders', orders });  
     } catch (error) {

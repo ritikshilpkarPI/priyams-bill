@@ -80,6 +80,6 @@ export const API_PATHS = {
   ORDERS: {
     GET_USER_ORDERS: "/api/getUserOrders",
     UPDATE_USER_ORDERS: "/api/updateOrderStatus",
-    FILTER_USER_ORDER_BY_STATUS: '/api/filterUserOrderByStatus'
+    GET_USER_ORDER_BY_ID: '/api/getUserOrderById'
   }
 };

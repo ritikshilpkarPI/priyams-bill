@@ -5,14 +5,15 @@ const orderStatus =  ['pending_confirmation','pending_packaging', 'pending_dispa
 
 
 
-const filterUserOrders = async (req, res,next) => {
+const getUserOrderById = async (req, res,next) => {
+  const {id} = req.params
     try {
-      const orders = await Order.find(req.query);
-      console.log({orders});
-      res.status(201).send({ message: 'got the orders', orders });  
+      const order = await Order.findById(id);
+      console.log({order});
+      res.status(201).send({ message: 'got the order', order });  
     } catch (error) {
       next(error)
     }
   };
 
-  module.exports = filterUserOrders;
+  module.exports = getUserOrderById;

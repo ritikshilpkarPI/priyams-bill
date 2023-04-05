@@ -26,30 +26,36 @@ function Orders() {
 
   return (
     <div className="orders-container">
-      <OrderStatus title={"Pending Confirmation Orders"} 
-    children={
-      orders?.pending_confirmation &&
-      orders?.pending_confirmation.orders.map((ele) => {
-        return <OrderCard order={ele} />;
-      })
-    } 
-    />
-     <OrderStatus title={"Pending Packaging Orders"} 
-    children={
-      orders?.pending_packaging &&
-      orders?.pending_packaging.orders.map((ele) => {
-        return <OrderCard order={ele} />;
-      })
-    }
-    />
-     <OrderStatus title={"Pending dispatch Orders"} 
-    children={
-      orders?.pending_dispatch &&
-      orders?.pending_dispatch.orders.map((ele) => {
-        return <OrderCard order={ele} />;
-      })
-    }
-    />
+      <OrderStatus
+        title={'Pending Confirmation Orders'}
+        children={
+          orders?.pending_confirmation &&
+          orders?.pending_confirmation.orders.map((ele) => {
+            return <OrderCard order={ele} />;
+          })
+        }
+        orderStatus='pending_confirmation'
+      />
+      <OrderStatus
+        title={'Pending Packaging Orders'}
+        children={
+          orders?.pending_packaging &&
+          orders?.pending_packaging.orders.map((ele) => {
+            return <OrderCard order={ele} />;
+          })
+        }
+        orderStatus='pending_packaging'
+      />
+      <OrderStatus
+        title={'Pending dispatch Orders'}
+        children={
+          orders?.pending_dispatch &&
+          orders?.pending_dispatch.orders.map((ele) => {
+            return <OrderCard order={ele} />;
+          })
+        }
+        orderStatus='pending_dispatch'
+      />
       <OrderStatus
         title={'Pending delivery dispatch Orders'}
         children={
@@ -58,16 +64,18 @@ function Orders() {
             return <OrderCard order={ele} />;
           })
         }
+        orderStatus='pending_delivery_dispatch'
       />
-      <OrderStatus title={"Delivered Successfully Orders"} 
-     
-    children={
-      orders?.delivered_successfully &&
-      orders?.delivered_successfully.orders.map((ele) => {
-        return <OrderCard order={ele} />;
-      })
-    }
-    />
+      <OrderStatus
+        title={'Delivered Successfully Orders'}
+        children={
+          orders?.delivered_successfully &&
+          orders?.delivered_successfully.orders.map((ele) => {
+            return <OrderCard order={ele} />;
+          })
+        }
+        orderStatus='delivered_successfully'
+      />
     </div>
   );
 }
