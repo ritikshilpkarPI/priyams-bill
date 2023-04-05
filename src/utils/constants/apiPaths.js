@@ -77,4 +77,9 @@ export const API_PATHS = {
     PUT_STAFF: '/api/staff',
     DELETE_STAFF: '/api/staff',
   },
+  ORDERS: {
+    GET_USER_ORDERS: "/api/getUserOrders",
+    UPDATE_USER_ORDERS: "/api/updateOrderStatus",
+    FILTER_USER_ORDER_BY_STATUS: '/api/filterUserOrderByStatus'
+  }
 };

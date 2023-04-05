@@ -58,7 +58,15 @@ const {
   updateSavedPayment,
   updateStaff,
   userDetails,
+  getUserOrders,
+  updateOrderStatus,
+  filterUserOrders
 } = require('../controllers/index');
+
+router.get(API_PATHS.ORDERS.GET_USER_ORDERS, isLoggedIn, getUserOrders);
+router.post(API_PATHS.ORDERS.UPDATE_USER_ORDERS, isLoggedIn, updateOrderStatus);
+router.get(API_PATHS.ORDERS.FILTER_USER_ORDER_BY_STATUS, isLoggedIn, filterUserOrders);
+
 
 router.get(API_PATHS.INVENTORY.GET_ITEMS,isLoggedIn, getItemsFeed);
 router.get(API_PATHS.INVENTORY.GET_ITEMS_CATEGORY_LIST,isLoggedIn,getItemsCategoryList);

@@ -23,6 +23,8 @@ import {
   Attendance,
   Approval,
   ExpiredItems,
+  Orders,
+  OrderStatusDetail
 } from '../Pages';
 import Label from 'src/Pages/Label';
 
@@ -77,6 +79,8 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
             <Route exact path="/approval" component={Approval} />
             <Route exact path="/expiredItems" component={ExpiredItems} />
             <Route exact path="/label" component={Label} />
+            <Route exact path="/orders" component={Orders} />
+            <Route exact path="/orders/:orderStatus" component={OrderStatusDetail} />
           </ProtectedRoutes>
         </div>
       </Switch>

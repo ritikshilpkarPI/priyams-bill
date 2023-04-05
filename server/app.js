@@ -7,8 +7,10 @@ const serverless = require('serverless-http');
 const routers = require('./routes');
 const fileUpload = require('express-fileupload');
 const handleErrors = require('./middleware/handleError');
+const { orderSchema, Order } = require('./db-models/orderSchema');
 require('./nodeCron');
 const app = express();
+
 
 app.use(express.json({ limit: '500mb' }));
 app.use(cookieParser());
@@ -27,6 +29,7 @@ app.use(
 );
 app.use('/.netlify/functions/app', routers);
 
+
 const mongoUriEnvMap = {
   staging: process.env.STAGING_DB,
   production: process.env.PROD_DB,
@@ -42,8 +45,29 @@ async function connectDB() {
     useUnifiedTopology: true,
   });
 }
+const dbConnection2 = () => {
+  try {
+    const conn = mongoose.createConnection(process.env.APP_MONGODB_URI, { useNewUrlParser: true });
+    console.log("App Database Connected Successfully!");
+    conn.model("Orders", orderSchema);
+    const pipeline =  [
+        { $match : {"operationType" : "update" } }
+     ]
+    const changeStream = Order.watch(pipeline, { fullDocument: "updateLookup" });
+    changeStream.on("change", (data) => {
+      const dummyData = data.fullDocument;
+      // Create Order in Bill Database
+      conn.models.Orders.create(dummyData);      
+    });
+  } catch (error) {
+    console.error({ error });
+  }
+};
+
+dbConnection2();
 connectDB();
 
 app.use(handleErrors)
+
 
 module.exports.handler = serverless(app);
