@@ -178,8 +178,7 @@ const CustomerBill = () => {
       <footer className="footer">
         <Title>ThankYou for purchasing from priyam stores. </Title>
         <Text>
-          Priyam Stores, Shop No-9, Building Name, Indrapuri Bhopal-462021 |
-          Contact No - 0000-000-000{' '}
+          Priyam Stores, Indrapuri, Bhopal-462021 | Contact No - 0755-350-9312{' '}
         </Text>
       </footer>
     </div>
