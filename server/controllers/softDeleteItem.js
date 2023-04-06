@@ -1,6 +1,6 @@
 const { Item } = require('../db-models/item-model');
 
-const softDeleteItem = async (req, res) => {
+const softDeleteItem = async (req, res,next) => {
     try {
       const { id } = req.body;
       await Item.findByIdAndUpdate(id, { isDeleted: true });
@@ -8,7 +8,7 @@ const softDeleteItem = async (req, res) => {
       items = items.filter((item) => !item.isDeleted);
       res.status(200).json({ message: 'item soft deleted!', items: items });
     } catch (error) {
-      res.status(500).json({ error: error });
+      next(error)
     }
   };
 

@@ -1,6 +1,6 @@
 const { Bill } = require('../db-models/bill-model');
 
-const sendMessage = async (req, res) => {
+const sendMessage = async (req, res,next) => {
     const billId = req.body.id;
     try {
       const bill = await Bill.findByIdAndUpdate(
@@ -16,7 +16,7 @@ const sendMessage = async (req, res) => {
       );
       res.status(200).json({ message: bill });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

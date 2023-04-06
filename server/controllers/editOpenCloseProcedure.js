@@ -1,6 +1,6 @@
 const { OpenClose } = require('../db-models/open-close-model');
 
-const editOpenCloseProcedure = async (req, res) => {
+const editOpenCloseProcedure = async (req, res,next) => {
     try {
       const { id, procedureToBeUpdated } = req.body;
       const changeOpenCloseProcedure = await OpenClose.findByIdAndUpdate(
@@ -10,11 +10,10 @@ const editOpenCloseProcedure = async (req, res) => {
           new: true,
         }
       );
-  
+      
       res.status(200).json({ message: changeOpenCloseProcedure });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

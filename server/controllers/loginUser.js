@@ -1,46 +1,32 @@
+const { NotFound } = require('../util/errors');
 const Staff = require('../db-models/staff-model');
-const jwt = require('jsonwebtoken');
 
-const loginUser = async (request, response) => {
-  const { username, password } = request.body;
-  let userData;
+const loginUser = async (req, res, next) => {
   try {
-    // Our saved database user
-    userData = await Staff.find({ username });
-  } catch (error) {
-    response.status(501).json({ error });
-  }
-
-  if (userData.length === 0) {
-    // If email not registered
-    return response
-      .status(200)
-      .json({ status: false, message: 'invalid username' });
-  } else if (userData[0].password != password) {
-    // If password don't match
-    return response
-      .status(200)
-      .json({ status: false, message: 'wrong password' });
-  } else if (
-    userData[0].username === username &&
-    userData[0].password === password
-  ) {
-    // JWT Token
-    const token = jwt.sign(
-      { username: userData[0].username, role: userData[0].role },
-      process.env.JSON_WEB_TOKEN_SECRET
-    );
-
-    return response.status(200).json({
-      status: true,
-      message: 'login successfull',
-      authtoken: token,
-      role: userData[0].role,
-      name: userData[0].name,
+    const { username, password } = req.body;
+    if (!username || !password) {
+      throw new NotFound('Please provide email and password');
+    }
+    const user = await Staff.findOne({ username }).select('+password');
+    if (!user) {
+      throw new NotFound("Email or password doesn't exist");
+    }
+    const isPasswordCorrect = user.password === password;
+    if (!isPasswordCorrect) {
+      throw new NotFound("Email or password doesn't exist");
+    }
+    const token = user.getJwtToken();
+    const options = {
+      expires: new Date(
+        Date.now() + process.env.COOKIE_TIME * 24 * 60 * 60 * 1000
+      ),
+    };
+    res.status(200).cookie('token', token, options).json({
+      success: true,
     });
+  } catch (error) {
+    next(error);
   }
 };
 
-
-
-module.exports = loginUser ;
+module.exports = loginUser;

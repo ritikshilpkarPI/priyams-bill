@@ -1,6 +1,6 @@
 const { Item} = require('../db-models/item-model');
 
-const saveInventory = async (req, res) => {
+const saveInventory = async (req, res,next) => {
     try {
       const { new_items } = req.body;
       for (const item of new_items) {
@@ -88,8 +88,8 @@ const saveInventory = async (req, res) => {
         }
       }
       res.status(200).send({ message: 'items updated', success: true });
-    } catch (err) {
-      res.status(400).send({ message: err, success: false });
+    } catch (error) {
+      next(error)
     }
   };
 

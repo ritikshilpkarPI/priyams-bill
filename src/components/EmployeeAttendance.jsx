@@ -36,8 +36,6 @@ const EmployeeAttendance = () => {
       day: 'numeric',
     });
 
-    // const attendee = JSON.parse(localStorage.getItem(name));
-
     if (!name) {
       alert('Select the name for attendance');
       return;

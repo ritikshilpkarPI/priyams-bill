@@ -1,8 +1,10 @@
 import { Button } from '@mantine/core';
+import Cookies from 'js-cookie';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { parseJwt } from 'src/utils/cookie';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
 const PurchaseListApproval = ({
@@ -20,7 +22,7 @@ const PurchaseListApproval = ({
         method: API_METHODS.POST,
         url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
         data: {
-          username: JSON.parse(localStorage.getItem('priyam-store')).username,
+          username: parseJwt(Cookies.get('token')).username,
         },
       });
       window.alert('Order rejected successfully');
@@ -44,7 +46,7 @@ const PurchaseListApproval = ({
         method: API_METHODS.POST,
         url: `${API_PATHS.APPROVAL.POST_APPROVE_ORDER}/${id}`,
         data: {
-          username: JSON.parse(localStorage.getItem('priyam-store')).username,
+          username: parseJwt(Cookies.get('token')).username,
         },
       });
       window.alert('Order approved successfully');
@@ -124,7 +126,7 @@ const PurchaseListApproval = ({
               ? 'Rejected'
               : 'Saved'}
           </td>
-          {JSON.parse(localStorage.getItem('priyam-store')).role === 'admin' ? (
+          {parseJwt(Cookies.get('token')).role === 'admin' ? (
             <>
               {list.isApproved ? (
                 <td>

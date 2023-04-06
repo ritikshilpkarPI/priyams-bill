@@ -1,6 +1,6 @@
 const Staff = require('../db-models/staff-model');
 
-const getStaff = async (request, response) => {
+const getStaff = async (request, response,next) => {
     try {
       const allStaffDetails = await Staff.find();
       response.status(200).json({
@@ -9,7 +9,7 @@ const getStaff = async (request, response) => {
         details: allStaffDetails,
       });
     } catch (error) {
-      response.status(500).json(error);
+      next(error)
     }
   };
 

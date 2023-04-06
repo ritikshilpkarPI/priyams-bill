@@ -11,7 +11,7 @@ const allExpense = async () =>
       },
     },
   ]).sort({ _id: -1 });
-const deleteExpense = async (request, response) => {
+const deleteExpense = async (request, response,next) => {
     try {
       const id = request.params.id;
       await Expense.findByIdAndDelete(id);
@@ -20,7 +20,7 @@ const deleteExpense = async (request, response) => {
         .status(200)
         .json({ status: true, message: 'expense deleted', data: allExpenses });
     } catch (error) {
-      response.status(500).json({ error });
+      next(error)
     }
   };
 

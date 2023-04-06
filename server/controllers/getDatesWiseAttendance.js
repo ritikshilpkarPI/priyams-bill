@@ -1,6 +1,6 @@
 const { DailyAttendance } = require('../db-models/staff-attendance');
 
-const getDatesWiseAttendance = async (req, res) => {
+const getDatesWiseAttendance = async (req, res,next) => {
     const { startDate, endDate, name } = req.body;
     try {
       const allAttendance = await DailyAttendance.aggregate([
@@ -21,7 +21,7 @@ const getDatesWiseAttendance = async (req, res) => {
       ]);
       res.status(200).json({ message: allAttendance });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error)
     }
   };
 

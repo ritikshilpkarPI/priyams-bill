@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const serverless = require('serverless-http');
 const routers = require('./routes');
 const fileUpload = require('express-fileupload');
+const handleErrors = require('./middleware/handleError');
 require('./nodeCron');
 const app = express();
 
@@ -42,5 +43,7 @@ async function connectDB() {
   });
 }
 connectDB();
+
+app.use(handleErrors)
 
 module.exports.handler = serverless(app);

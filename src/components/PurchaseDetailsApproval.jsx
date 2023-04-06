@@ -13,7 +13,6 @@ const PurchaseDetailsApproval = ({
   getOrders,
 }) => {
   const [indexDetail, setIndexDetail] = useState(-1);
-  // const role = JSON.parse(localStorage.getItem("priyam-store")).role
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>

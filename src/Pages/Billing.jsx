@@ -309,7 +309,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   const getUserData = async () => {
     try {
       const response = await genericAxios({
-        url: API_PATHS.BILLING.GET_USER_DETAILES,
+        url: API_PATHS.BILLING.GET_USER_DETAILS,
         method: API_METHODS.GET,
       });
       if (response.error) return;

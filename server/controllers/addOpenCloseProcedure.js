@@ -1,6 +1,6 @@
 const { OpenClose } = require('../db-models/open-close-model');
 
-const addOpenCloseProcedure = async (req, res) => {
+const addOpenCloseProcedure = async (req, res,next) => {
     const { procedure, notesSum, coinsSum, totalSum, notes, coins } = req.body;
   
     try {
@@ -14,7 +14,7 @@ const addOpenCloseProcedure = async (req, res) => {
       }).save();
       res.status(200).json({ message: newOpenCloseProcedure });
     } catch (error) {
-      res.status(500).json({ error: error });
+      next(error)
     }
   };
 

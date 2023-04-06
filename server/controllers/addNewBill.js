@@ -1,7 +1,7 @@
 const { Bill } = require('../db-models/bill-model');
 const { Item } = require('../db-models/item-model');
 
-const addNewBill = async (req, res) => {
+const addNewBill = async (req, res,next) => {
   try {
     const {
       customerName,
@@ -116,8 +116,7 @@ const addNewBill = async (req, res) => {
     await newBill.save();
     res.status(200).json({ message: newBill });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    next(error)
   }
 };
 

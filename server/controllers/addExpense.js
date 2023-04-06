@@ -21,7 +21,7 @@ const addExpense = async (request, response, next) => {
         .status(200)
         .json({ status: true, message: 'expense added', data: allExpenses });
     } catch (error) {
-      response.status(500).json({ error });
+      next(error)
     }
   };
 
