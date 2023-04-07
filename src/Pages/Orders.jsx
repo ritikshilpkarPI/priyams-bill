@@ -7,11 +7,12 @@ import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { orderMapper } from 'src/utils/orderMapper';
 import '../CSS/_orders.scss';
 import { Loader } from '@mantine/core';
+import { ORDER_CARDS } from '../utils/constants/orders';
 
 function Orders() {
-  const [orders, setOrders] = useState({});
+  const [purchaseOrder, setPurchaseOrder] = useState([]);
   const [loader, setLoader] = useState(false);
-  const callAPi = async () => {
+  const getOnlineOrders = async () => {
     setLoader(true);
     const response = await genericAxios({
       url: API_PATHS.ORDERS.GET_USER_ORDERS,
@@ -20,85 +21,65 @@ function Orders() {
         Cookie: '',
       },
     });
-    setOrders(orderMapper(response.data.orders));
+    setPurchaseOrder(orderMapper(response.data.orders));
     setLoader(false);
   };
-  useEffect(() => {
-    callAPi();
-  }, []);
-  console.log({ orders });
 
+  const updateOrderStatus = async (orderStatusStep, id, buttonStatus) => {
+    if (window.confirm(`Do you want to ${buttonStatus}`)) {
+      setLoader(true);
+      await genericAxios({
+        url: API_PATHS.ORDERS.UPDATE_USER_ORDERS,
+        method: API_METHODS.POST,
+        data: {
+          step: ++orderStatusStep,
+          id,
+        },
+        headers: {
+          Cookie: '',
+        },
+      });
+      setLoader(false);
+      getOnlineOrders();
+    }
+  };
+  useEffect(() => {
+    getOnlineOrders();
+  }, []);
   return (
     <div className="order-card-page-container">
       {loader ? (
-        <Loader color="blue" size="lg" />
-      ) : (
-        <div className="orders-container">
-          <div className="order-status-conatiner">
-            <OrderStatus
-              title={'Pending Confirmation Orders'}
-              orderStatus={'pending_confirmation'}
-              children={
-                orders?.pending_confirmation &&
-                orders?.pending_confirmation.orders.map((ele) => {
-                  return (
-                    <div>
-                      <OrderCard order={ele} />
-                    </div>
-                  );
-                })
-              }
-            />
-          </div>
-          <div className="order-status-conatiner">
-            <OrderStatus
-              title={'Pending Packaging Orders'}
-              orderStatus={'pending_packaging'}
-              children={
-                orders?.pending_packaging &&
-                orders?.pending_packaging.orders.map((ele) => {
-                  return <OrderCard order={ele} />;
-                })
-              }
-            />
-          </div>
-          <div className="order-status-conatiner">
-            <OrderStatus
-              title={'Pending dispatch Orders'}
-              orderStatus={'pending_dispatch'}
-              children={
-                orders?.pending_dispatch &&
-                orders?.pending_dispatch.orders.map((ele) => {
-                  return <OrderCard order={ele} />;
-                })
-              }
-            />
-          </div>
-          <div className="order-status-conatiner">
-            <OrderStatus
-              title={'Pending delivery dispatch Orders'}
-              orderStatus={'pending_delivery_dispatch'}
-              children={
-                orders?.pending_delivery_dispatch &&
-                orders?.pending_delivery_dispatch.orders.map((ele) => {
-                  return <OrderCard order={ele} />;
-                })
-              }
-            />
-          </div>
-          <div className="order-status-conatiner">
-            <OrderStatus
-              title={'Delivered Successfully Orders'}
-              orderStatus={'delivered_successfully'}
-              children={
-                orders?.delivered_successfully &&
-                orders?.delivered_successfully.orders.map((ele) => {
-                  return <OrderCard order={ele} />;
-                })
-              }
-            />
-          </div>
+        <div className="order-loader-container">
+          <Loader color="blue" size="xl" />
         </div>
+      ) : (
+        <>
+          <h1>Orders Page</h1>
+          <div className="orders-container">
+            {ORDER_CARDS.map((card, index) => {
+              const { orders = [] } = purchaseOrder[`${card.title}`] || {};
+              return (
+                <div className="order-status-conatiner">
+                  <OrderStatus
+                    title={card.title}
+                    orderStatus={card.title}
+                    number={index}
+                    children={orders.map(order => {
+                      console.log({ order });
+                      return (
+                        <OrderCard
+                          order={order}
+                          buttonStatus={card.button}
+                          updateOrderStatus={updateOrderStatus}
+                        />
+                      );
+                    })}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );

@@ -10,7 +10,7 @@ function OrderDetail({order, opened, close}) {
         <p>Contact Number - {order.contactNumber}</p>
         <p>Order Date - {order.orderDate}</p>
         <p>Order Number - {order.orderNumber}</p>
-        <p>orderStatus - {order.orderStatus}</p>
+        <p>orderStatus - {order.orderStatus?.value}</p>
         <p>Payment Id - {order.paymentId}</p>
         <p>paymentMethod - {order.paymentMethod}</p>
         <p>totalPayableAmount - {order.totalPayableAmount}</p>

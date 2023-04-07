@@ -45,6 +45,7 @@ async function connectDB() {
     useUnifiedTopology: true,
   });
 }
+// connect PStore Database
 const dbConnection2 = () => {
   try {
     const conn = mongoose.createConnection(process.env.APP_MONGODB_URI, { useNewUrlParser: true });
@@ -54,10 +55,12 @@ const dbConnection2 = () => {
         { $match : {"operationType" : "update" } }
      ]
     const changeStream = Order.watch(pipeline, { fullDocument: "updateLookup" });
-    changeStream.on("change", (data) => {
-      const dummyData = data.fullDocument;
-      // Create Order in Bill Database
-      conn.models.Orders.create(dummyData);      
+    changeStream.on("change", async(data) => {
+      const order = data.fullDocument;
+      const {orderNumber,orderStatus} = order
+      delete order._id
+      // Update Order in App Database
+      await conn.models.Orders.findOneAndUpdate({orderNumber},{orderStatus}, {new: true});   
     });
   } catch (error) {
     console.error({ error });

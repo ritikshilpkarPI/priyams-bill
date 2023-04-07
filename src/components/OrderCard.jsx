@@ -3,8 +3,8 @@ import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import '../CSS/_orders.scss';
 import OrderDetail from './OrderDetail';
-function OrderCard({ order }) {
-    const [opened, { open, close }] = useDisclosure(false);
+function OrderCard({ order, buttonStatus, updateOrderStatus }) {
+  const [opened, { open, close }] = useDisclosure(false);
   return (
     <div className="order-card-container">
       <div className="order-card-info-container" onClick={open}>
@@ -14,16 +14,27 @@ function OrderCard({ order }) {
         </div>
         <div className="address-container">
           <p>
-            Address: Ward number 15, 143-C asmaan apartment, indrapuri sector-c,
-            bhopal {order.shippingAddress.address}
+            <span>Address:</span> Ward number 15, 143-C asmaan apartment,
+            indrapuri sector-c, bhopal {order.shippingAddress.address}
           </p>
-          <p className='address-contact'>Contact: 9777564545</p>
+          <p className="address-contact">
+            {' '}
+            <span>Contact:</span> {order.contactNumber}
+          </p>
         </div>
       </div>
       <div className="confirm-order-btn-container">
-        <Button className="confirm-order-btn">Confirm Order</Button>
+        <Button
+          onClick={() =>
+            updateOrderStatus(order.orderStatus.step, order._id, buttonStatus)
+          }
+          color="teal"
+          className="confirm-order-btn"
+        >
+          {buttonStatus}
+        </Button>
       </div>
-        <OrderDetail opened={opened} close={close}  order={order}/>
+      <OrderDetail opened={opened} close={close} order={order} />
     </div>
   );
 }
