@@ -8,13 +8,13 @@ function OrderStatus({ title, children, number }) {
   return (
     <>
       <div className="order-number-container">{number}</div>
-        <div className="orders-wrapper">
-          <header className="header">
-            <p className="orders-title">{title.split('_').join(' ')} Orders</p>
-            <Button onClick={() => history.push(`/orders/${title}`)}>
-              View Status
-            </Button>
-          </header>
+      <div className="orders-wrapper">
+        <header className="header">
+          <p className="orders-title">{title.split('_').join(' ')} Orders</p>
+          <Button onClick={() => history.push(`/orders/${title}`)}>
+            View Status
+          </Button>
+        </header>
         <div className="order-children-container">{children}</div>
       </div>
     </>

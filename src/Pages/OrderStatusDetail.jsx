@@ -7,7 +7,7 @@ import { orderMapper } from 'src/utils/orderMapper';
 import { Loader, Table, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import OrderDetail from 'src/components/OrderDetail';
-import '../CSS/orderStatusDetail.scss'
+import '../CSS/orderStatusDetail.scss';
 
 function OrderStatusDetail() {
   const { orderStatus } = useParams();
@@ -17,21 +17,26 @@ function OrderStatusDetail() {
   const [opened, { open, close }] = useDisclosure(false);
 
   const callAPi = async () => {
-    setLoader(true)
+    setLoader(true);
     const response = await genericAxios({
       url: `${API_PATHS.ORDERS.GET_USER_ORDERS}?orderStatus=${orderStatus}`,
       method: API_METHODS.GET,
     });
-    setPurchasedOrders(orderMapper(response?.data?.orders)[`${orderStatus}`].orders);
-    setLoader(false)
+    setPurchasedOrders(
+      orderMapper(response?.data?.orders)[`${orderStatus}`].orders
+    );
+    setLoader(false);
   };
 
   const rows = purchasedOrders?.map((order, index) => {
     return (
-      <tr key={index} onClick={() => {
-        setOrder(order)
-        open()
-      }}>
+      <tr
+        key={index}
+        onClick={() => {
+          setOrder(order);
+          open();
+        }}
+      >
         <td>{order?.orderNumber}</td>
         <td>{new Date(order?.orderDate).toLocaleDateString()}</td>
         <td>{order?.contactNumber}</td>
@@ -43,8 +48,8 @@ function OrderStatusDetail() {
         <td>{order?.totalQuantity}</td>
       </tr>
     );
-  })
-  
+  });
+
   useEffect(() => {
     callAPi();
   }, []);
@@ -52,13 +57,21 @@ function OrderStatusDetail() {
   return (
     <div>
       {loader ? (
-        <div className='order-loader-container'>
+        <div className="order-loader-container">
           <Loader color="blue" size="xl" />
         </div>
       ) : (
         <>
-          <h3 className='order-status-title'>{orderStatus.split('_').join(" ")}</h3>
-          <Table captionSide='top' withBorder={true} highlightOnHover verticalSpacing="xl" fontSize="md">
+          <h3 className="order-status-title">
+            {orderStatus.split('_').join(' ')}
+          </h3>
+          <Table
+            captionSide="top"
+            withBorder={true}
+            highlightOnHover
+            verticalSpacing="xl"
+            fontSize="md"
+          >
             <thead className="heading">
               <tr>
                 <th>
@@ -90,9 +103,7 @@ function OrderStatusDetail() {
                 </th>
               </tr>
             </thead>
-            <tbody className="body">
-              {rows}
-            </tbody>
+            <tbody className="body">{rows}</tbody>
           </Table>
         </>
       )}

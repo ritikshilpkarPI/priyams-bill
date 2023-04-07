@@ -34,7 +34,7 @@ function OrderCard({ order, buttonStatus, updateOrderStatus }) {
           {buttonStatus}
         </Button>
       </div>
-      <OrderDetail opened={opened} close={close} order={order} />
+      <OrderDetail opened={opened} close={close} order={order} buttonStatus={buttonStatus} />
     </div>
   );
 }
