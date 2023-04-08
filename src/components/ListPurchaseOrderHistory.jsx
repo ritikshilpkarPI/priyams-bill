@@ -17,7 +17,7 @@ const ItemListPurchaseOrderHistory = (props) => {
           url: `${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/${id}`,
           method: API_METHODS.GET,
         });
-        if(data.error)return
+        if (data.error) return;
         setPurchaseOrderList(data.data.data);
         setLoader(false);
       } catch (error) {}

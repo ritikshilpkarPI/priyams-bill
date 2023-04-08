@@ -5,7 +5,6 @@ import '../CSS/_orderDetail.scss';
 function OrderDetail({ order, opened, close, buttonStatus }) {
   const rows = order.orderItems?.map((item, index) => (
     <tr key={index}>
-      {console.log({ item })}
       <td>{item.product}</td>
       <td>{item.quantity}</td>
       <td>{item.price}</td>
@@ -32,7 +31,7 @@ function OrderDetail({ order, opened, close, buttonStatus }) {
         </Group>
         <Group>
           <Title order={5}>Address:</Title>
-          <Text>{order.shippingAddress.address}</Text>
+          <Text>{order.shippingAddress?.address}</Text>
         </Group>
       </Card>
       <Card>
@@ -60,7 +59,7 @@ function OrderDetail({ order, opened, close, buttonStatus }) {
         </Table>
         <Group className="order-detail">
           <Title order={5}>Order Status:</Title>
-          <Text>{order.orderStatus.value}</Text>
+          <Text>{order.orderStatus?.value}</Text>
         </Group>
         <Group className="order-detail">
           <Title order={5}>Order Date:</Title>

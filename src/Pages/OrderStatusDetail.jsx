@@ -8,6 +8,7 @@ import { Loader, Table, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import OrderDetail from 'src/components/OrderDetail';
 import '../CSS/orderStatusDetail.scss';
+import { ORDER_CARDS } from 'src/utils/constants/orders';
 
 function OrderStatusDetail() {
   const { orderStatus } = useParams();
@@ -15,6 +16,7 @@ function OrderStatusDetail() {
   const [order, setOrder] = useState({});
   const [loader, setLoader] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
+  const buttonStatus = ORDER_CARDS.find(card => card.title === orderStatus).button
 
   const callAPi = async () => {
     setLoader(true);
@@ -107,7 +109,7 @@ function OrderStatusDetail() {
           </Table>
         </>
       )}
-      <OrderDetail opened={opened} close={close} order={order} />
+      <OrderDetail opened={opened} close={close} order={order} buttonStatus={buttonStatus} />
     </div>
   );
 }

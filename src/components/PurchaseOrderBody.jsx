@@ -1,7 +1,10 @@
 import { useState, useContext } from 'react';
 import { Select, TextInput, NumberInput, Image } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import { addItemRow, itemInitialObj } from 'src/constants/purchaseOrderConstants';
+import {
+  addItemRow,
+  itemInitialObj,
+} from 'src/constants/purchaseOrderConstants';
 import { AppStateContext } from 'src/AppState/appState.context';
 
 // To set use by date on item while adding
