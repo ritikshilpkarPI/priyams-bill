@@ -23,18 +23,27 @@ function OrderCard({ order, buttonStatus, updateOrderStatus }) {
           </p>
         </div>
       </div>
-      <div className="confirm-order-btn-container">
-        <Button
-          onClick={() =>
-            updateOrderStatus(order.orderStatus.step, order._id, buttonStatus)
-          }
-          color="teal"
-          className="confirm-order-btn"
-        >
-          {buttonStatus}
-        </Button>
-      </div>
-      <OrderDetail opened={opened} close={close} order={order} buttonStatus={buttonStatus} />
+      {buttonStatus && (
+        <div className="confirm-order-btn-container">
+          <Button
+            onClick={() =>
+              updateOrderStatus(order.orderStatus.step, order._id, buttonStatus)
+            }
+            color="teal"
+            className="confirm-order-btn"
+          >
+            {buttonStatus}
+          </Button>
+        </div>
+      )}
+
+      <OrderDetail
+        opened={opened}
+        close={close}
+        order={order}
+        buttonStatus={buttonStatus}
+        updateOrderStatus={updateOrderStatus}
+      />
     </div>
   );
 }

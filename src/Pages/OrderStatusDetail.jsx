@@ -4,7 +4,7 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { orderMapper } from 'src/utils/orderMapper';
-import { Loader, Table, Text } from '@mantine/core';
+import { Button, Loader, Table, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import OrderDetail from 'src/components/OrderDetail';
 import '../CSS/orderStatusDetail.scss';
@@ -16,20 +16,46 @@ function OrderStatusDetail() {
   const [order, setOrder] = useState({});
   const [loader, setLoader] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
-  const buttonStatus = ORDER_CARDS.find(card => card.title === orderStatus).button
+  const buttonStatus = ORDER_CARDS.find(card => card.title === orderStatus)
+    .button;
 
-  const callAPi = async () => {
+  const getOnlineOrders = async () => {
     setLoader(true);
-    const response = await genericAxios({
-      url: `${API_PATHS.ORDERS.GET_USER_ORDERS}?orderStatus=${orderStatus}`,
-      method: API_METHODS.GET,
-    });
-    setPurchasedOrders(
-      orderMapper(response?.data?.orders)[`${orderStatus}`].orders
-    );
+    try {
+      const response = await genericAxios({
+        url: `${API_PATHS.ORDERS.GET_USER_ORDERS}?orderStatus=${orderStatus}`,
+        method: API_METHODS.GET,
+      });
+      const { orders } = response?.data;
+      setPurchasedOrders(orderMapper(orders)[`${orderStatus}`]?.orders || []);
+    } catch (error) {
+      console.error(error);
+    }
     setLoader(false);
   };
-
+  const updateOrderStatus = async (orderStatusStep, id, buttonStatus) => {
+    try {
+      if (window.confirm(`Do you want to ${buttonStatus}`)) {
+        close();
+        setLoader(true);
+        await genericAxios({
+          url: API_PATHS.ORDERS.UPDATE_USER_ORDERS,
+          method: API_METHODS.POST,
+          data: {
+            step: ++orderStatusStep,
+            id,
+          },
+          headers: {
+            Cookie: '',
+          },
+        });
+        setLoader(false);
+        getOnlineOrders();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const rows = purchasedOrders?.map((order, index) => {
     return (
       <tr
@@ -48,12 +74,29 @@ function OrderStatusDetail() {
         <td>{order?.timeSlot}</td>
         <td>{order?.totalPayableAmount}</td>
         <td>{order?.totalQuantity}</td>
+        <td>
+          {buttonStatus && (
+            <Button
+              color="teal"
+              onMouseDown={() =>
+                updateOrderStatus(
+                  order.orderStatus.step,
+                  order._id,
+                  buttonStatus
+                )
+              }
+            >
+              {buttonStatus}
+            </Button>
+          )}
+        </td>
       </tr>
     );
   });
 
   useEffect(() => {
-    callAPi();
+    getOnlineOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -109,7 +152,13 @@ function OrderStatusDetail() {
           </Table>
         </>
       )}
-      <OrderDetail opened={opened} close={close} order={order} buttonStatus={buttonStatus} />
+      <OrderDetail
+        opened={opened}
+        close={close}
+        order={order}
+        buttonStatus={buttonStatus}
+        updateOrderStatus={updateOrderStatus}
+      />
     </div>
   );
 }

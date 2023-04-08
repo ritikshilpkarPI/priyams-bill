@@ -14,33 +14,42 @@ function Orders() {
   const [loader, setLoader] = useState(false);
   const getOnlineOrders = async () => {
     setLoader(true);
-    const response = await genericAxios({
-      url: API_PATHS.ORDERS.GET_USER_ORDERS,
-      method: API_METHODS.GET,
-      headers: {
-        Cookie: '',
-      },
-    });
-    setPurchaseOrder(orderMapper(response.data.orders));
-    setLoader(false);
-  };
-
-  const updateOrderStatus = async (orderStatusStep, id, buttonStatus) => {
-    if (window.confirm(`Do you want to ${buttonStatus}`)) {
-      setLoader(true);
-      await genericAxios({
-        url: API_PATHS.ORDERS.UPDATE_USER_ORDERS,
-        method: API_METHODS.POST,
-        data: {
-          step: ++orderStatusStep,
-          id,
-        },
+    try {
+      const response = await genericAxios({
+        url: API_PATHS.ORDERS.GET_USER_ORDERS,
+        method: API_METHODS.GET,
         headers: {
           Cookie: '',
         },
       });
-      setLoader(false);
-      getOnlineOrders();
+      setPurchaseOrder(orderMapper(response.data.orders));
+      
+    } catch (error) {
+      console.error(error);
+    }
+    setLoader(false);
+  };
+
+  const updateOrderStatus = async (orderStatusStep, id, buttonStatus) => {
+    try {
+      if (window.confirm(`Do you want to ${buttonStatus}`)) {
+        setLoader(true);
+        await genericAxios({
+          url: API_PATHS.ORDERS.UPDATE_USER_ORDERS,
+          method: API_METHODS.POST,
+          data: {
+            step: ++orderStatusStep,
+            id,
+          },
+          headers: {
+            Cookie: '',
+          },
+        });
+        setLoader(false);
+        getOnlineOrders();
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
   useEffect(() => {

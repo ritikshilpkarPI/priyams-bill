@@ -2,7 +2,13 @@ import { Button, Card, Drawer, Group, Table, Text, Title } from '@mantine/core';
 import React from 'react';
 import '../CSS/_orderDetail.scss';
 
-function OrderDetail({ order, opened, close, buttonStatus }) {
+function OrderDetail({
+  order,
+  opened,
+  close,
+  buttonStatus,
+  updateOrderStatus,
+}) {
   const rows = order.orderItems?.map((item, index) => (
     <tr key={index}>
       <td>{item.product}</td>
@@ -92,7 +98,16 @@ function OrderDetail({ order, opened, close, buttonStatus }) {
         </Group>
       </Card>
       <Card>
-        <Button color="teal">{buttonStatus}</Button>
+        {buttonStatus && (
+          <Button
+            color="teal"
+            onClick={() =>
+              updateOrderStatus(order.orderStatus.step, order._id, buttonStatus)
+            }
+          >
+            {buttonStatus}
+          </Button>
+        )}
       </Card>
     </Drawer>
   );
