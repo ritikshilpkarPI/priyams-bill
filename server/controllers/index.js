@@ -55,7 +55,6 @@ const updateStaff = require("./updateStaff");
 const userDetails = require("./userDetails");
 const getUserOrders = require('./getUserOrders')
 const updateOrderStatus = require('./updateOrderStatus')
-const getUserOrderById = require('./getUserOrderById')
 
 module.exports = {
     getStaff,
@@ -114,6 +113,5 @@ module.exports = {
     updateStaff,
     userDetails,
     getUserOrders,
-    updateOrderStatus,
-    getUserOrderById
+    updateOrderStatus
 }
