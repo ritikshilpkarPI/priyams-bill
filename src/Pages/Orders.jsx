@@ -74,7 +74,6 @@ function Orders() {
                     orderStatus={card.title}
                     number={index}
                     children={orders.map(order => {
-                      console.log({ order });
                       return (
                         <OrderCard
                           order={order}

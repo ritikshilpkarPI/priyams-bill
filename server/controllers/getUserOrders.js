@@ -21,7 +21,6 @@ const getUserOrders = async (req, res, next) => {
         },
       },
     ]);
-    console.log({orders});
     res.status(201).send({ message: 'got the orders', orders });
   } catch (error) {
     next(error);
