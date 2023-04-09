@@ -27,7 +27,7 @@ const CustomerBill = () => {
 
   const fetchBill = async () => {
     const customerBill = await genericAxios({
-      url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${id}`,
+      url: `${API_PATHS.BILLING.GET_CUSTOMER_BILL}/${id}`,
       method: API_METHODS.GET,
       headers: {
         Cookie: '',

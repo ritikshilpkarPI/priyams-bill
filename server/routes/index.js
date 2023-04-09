@@ -32,6 +32,7 @@ const {
   getDayWiseProcedures,
   getDetailsById,
   getEditBill,
+  getCustomerBill,
   getItemsCategoryList,
   getItemsFeed,
   getMonthlyAttendance,
@@ -171,7 +172,8 @@ router.post(
 
 router.get(API_PATHS.BILLING.GET_BILL_FEED, isLoggedIn, getAllBill);
 router.get(API_PATHS.BILLING.GET_ALL_DAILY_BILLS, isLoggedIn, getDayWiseBills);
-router.get(`${API_PATHS.BILLING.GET_EDIT_BILL}/:id`, getEditBill);
+router.get(`${API_PATHS.BILLING.GET_EDIT_BILL}/:id`, isLoggedIn, getEditBill);
+router.get(`${API_PATHS.BILLING.GET_CUSTOMER_BILL}/:id`, getCustomerBill);
 router.get(API_PATHS.BILLING.GET_USER_DETAILS, isLoggedIn, userDetails);
 router.put(API_PATHS.BILLING.PUT_EDIT_BILL, isLoggedIn, editBill);
 router.post(API_PATHS.BILLING.POST_SEND_MESSAGE, isLoggedIn, sendMessage);

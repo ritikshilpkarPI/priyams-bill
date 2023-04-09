@@ -1,6 +1,6 @@
 const { Bill } = require('../db-models/bill-model');
 
-const getEditBill = async (req, res, next) => {
+const getCustomerBill = async (req, res, next) => {
   try {
     const id = req.params.id;
     const bill = await Bill.findById(id).populate({
@@ -8,6 +8,7 @@ const getEditBill = async (req, res, next) => {
       populate: {
         path: 'itemDetail',
         model: 'Item',
+        select: 'itemBrandName itemCategory itemName',
       },
     });
 
@@ -17,4 +18,4 @@ const getEditBill = async (req, res, next) => {
   }
 };
 
-module.exports = getEditBill;
+module.exports = getCustomerBill;
