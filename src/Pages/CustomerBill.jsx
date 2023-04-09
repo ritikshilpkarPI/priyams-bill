@@ -27,7 +27,7 @@ const CustomerBill = () => {
 
   const fetchBill = async () => {
     const customerBill = await genericAxios({
-      url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${id}`,
+      url: `${API_PATHS.BILLING.GET_CUSTOMER_BILL}/${id}`,
       method: API_METHODS.GET,
       headers: {
         Cookie: '',
@@ -178,8 +178,7 @@ const CustomerBill = () => {
       <footer className="footer">
         <Title>ThankYou for purchasing from priyam stores. </Title>
         <Text>
-          Priyam Stores, Shop No-9, Building Name, Indrapuri Bhopal-462021 |
-          Contact No - 0000-000-000{' '}
+          Priyam Stores, Indrapuri, Bhopal-462021 | Contact No - 0755-350-9312{' '}
         </Text>
       </footer>
     </div>

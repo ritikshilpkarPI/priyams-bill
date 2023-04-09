@@ -53,8 +53,10 @@ const updateSavedOrders = require("./updateSavedOrders");
 const updateSavedPayment = require("./updateSavedPayment");
 const updateStaff = require("./updateStaff");
 const userDetails = require("./userDetails");
+const getCustomerBill = require('./getCustomerBill');
 const getUserOrders = require('./getUserOrders')
 const updateOrderStatus = require('./updateOrderStatus')
+
 
 module.exports = {
     getStaff,
@@ -112,6 +114,7 @@ module.exports = {
     updateSavedPayment,
     updateStaff,
     userDetails,
+    getCustomerBill,
     getUserOrders,
     updateOrderStatus
 }

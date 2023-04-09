@@ -20,9 +20,8 @@ const PerItemListPurchaseOrder = () => {
         const data = await genericAxios({
           url: `${API_PATHS.PURCHASE_ORDER.GET_INDIVIDUAL_PURCHASE_ORDER}/${id}`,
           method: API_METHODS.GET,
-    
         });
-        if(data.error)return
+        if (data.error) return;
         setIndividualItemPurchaseDetail(data.data.message.result);
         setLoader(false);
       } catch (error) {}
@@ -75,7 +74,7 @@ const PerItemListPurchaseOrder = () => {
               return (
                 <tbody>
                   <tr key={index}>
-                    {ele.itemDetails.slice(0, 1).map((item, index) => {
+                    {ele.itemDetails.slice(0, 1).map((item) => {
                       return (
                         <>
                           <td>{item.category}</td>
@@ -88,9 +87,10 @@ const PerItemListPurchaseOrder = () => {
                           <td>{Number(item.costPrice).toFixed(2)}</td>
                           <td>{item.sellingPrice}</td>
                           <td>
-                            {new Date(
-                              item.expiryDates[0].date
-                            ).toLocaleDateString()}
+                            {item?.expiryDates?.length &&
+                              new Date(
+                                item?.expiryDates[0]?.date
+                              ).toLocaleDateString()}
                           </td>
                           <td>
                             <div>

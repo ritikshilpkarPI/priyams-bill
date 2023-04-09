@@ -28,6 +28,7 @@ export const API_PATHS = {
     POST_NEW_BILL: '/api/billing/newBill',
     GET_USER_DETAILS: '/api/billing/userDetails',
     GET_ALL_DAILY_BILLS: '/api/billing/allDailyBills',
+    GET_CUSTOMER_BILL: '/api/billing/getCustomerBill',
   },
   INVENTORY: {
     POST_ADD_NEW_ITEM: '/api/inventory/addNewItem',
