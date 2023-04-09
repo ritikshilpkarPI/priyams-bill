@@ -8,7 +8,8 @@ const getEditBill = async (req, res, next) => {
       populate: {
         path: 'itemDetail',
         model: 'Item',
-        select: 'itemBrandName itemCategory itemName',
+        select:
+          'itemBrandName itemCategory itemName itemSellingPricePerUnit itemMRPperUnit',
       },
     });
 
