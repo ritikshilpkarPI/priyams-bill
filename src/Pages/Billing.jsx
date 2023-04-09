@@ -1173,12 +1173,12 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                 <p>{itemObj['itemName']}</p>
                 <p className="bold-text">{itemObj['itemQuantityInBill']}</p>
                 <p>{itemObj['itemMRPperUnit']}</p>
-                <p>{itemObj['itemSellingPricePerUnit'].toFixed(2) || 0}</p>
+                <p>{itemObj['itemSellingPricePerUnit']?.toFixed(2) || 0}</p>
                 <p className="bold-text">
                   {(
                     itemObj['itemSellingPricePerUnit'] *
                     itemObj['itemQuantityInBill']
-                  ).toFixed(2) || 0}
+                  )?.toFixed(2) || 0}
                 </p>
               </div>
             );
