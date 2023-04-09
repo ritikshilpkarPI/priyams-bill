@@ -425,9 +425,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   return (
     <>
       <div className="billing-container">
-        <h4 style={{ marginBottom: '20px' }}>
-          Total Items : {itemsList.length}
-        </h4>
+        <p style={{ marginBottom: '20px' }}>Total Items : {itemsList.length}</p>
         <div className="header">
           <h1>PRIYAM STORES</h1>
           <h3>112-C, Indrapuri, Bhopal - 462022</h3>
@@ -952,15 +950,26 @@ const Billing = ({ billID = '', loaderDisplay }) => {
               flexDirection: 'column',
             }}
           >
-            <Text
-              color="blue"
-              size="xl"
-              weight={800}
-              className="final-bill-text print-text"
-              td="underline"
+            <div
+              className="bill-total"
+              style={{
+                backgroundColor: 'black',
+                width: 'fit-content',
+                padding: '10px',
+                borderRadius: '10px',
+              }}
             >
-              Bill Total: {bill?.billAmountTotal?.toFixed(2)}
-            </Text>
+              <Text
+                color="red"
+                size="xl"
+                weight={800}
+                className="final-bill-text print-text"
+                td="underline"
+              >
+                Bill Total:
+                <h2>{bill?.billAmountTotal?.toFixed(2)}</h2>
+              </Text>
+            </div>
             <div className="discount-line">
               <Text
                 className="discount-text"
