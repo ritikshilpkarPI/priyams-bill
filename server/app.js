@@ -7,8 +7,10 @@ const serverless = require('serverless-http');
 const routers = require('./routes');
 const fileUpload = require('express-fileupload');
 const handleErrors = require('./middleware/handleError');
+const dbAppConnection = require('./db/conn');
 require('./nodeCron');
 const app = express();
+
 
 app.use(express.json({ limit: '500mb' }));
 app.use(cookieParser());
@@ -27,6 +29,7 @@ app.use(
 );
 app.use('/.netlify/functions/app', routers);
 
+
 const mongoUriEnvMap = {
   staging: process.env.STAGING_DB,
   production: process.env.PROD_DB,
@@ -42,8 +45,12 @@ async function connectDB() {
     useUnifiedTopology: true,
   });
 }
+
 connectDB();
+// connect PStore Database
+dbAppConnection();
 
 app.use(handleErrors)
+
 
 module.exports.handler = serverless(app);

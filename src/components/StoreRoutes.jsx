@@ -23,8 +23,11 @@ import {
   Attendance,
   Approval,
   ExpiredItems,
+  Orders,
+  OrderStatusDetail,
 } from '../Pages';
 import Label from 'src/Pages/Label';
+import { Fragment } from 'react';
 
 const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
   return (
@@ -36,7 +39,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
           path="/showBill/:customerBillId"
           component={CustomerBill}
         />
-        <div style={{ marginLeft: '100px' }}>
+        <Fragment>
           <ProtectedRoutes>
             <Route
               path="/billing"
@@ -77,8 +80,14 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
             <Route exact path="/approval" component={Approval} />
             <Route exact path="/expiredItems" component={ExpiredItems} />
             <Route exact path="/label" component={Label} />
+            <Route exact path="/orders" component={Orders} />
+            <Route
+              exact
+              path="/orders/:orderStatus"
+              component={OrderStatusDetail}
+            />
           </ProtectedRoutes>
-        </div>
+        </Fragment>
       </Switch>
     </Suspense>
   );

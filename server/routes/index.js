@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isAdmin, isLoggedIn, customRole } = require('../middleware/isAdmin');
+const { isAdmin, isLoggedIn } = require('../middleware/isAdmin');
 const { API_PATHS } = require('../../src/utils/constants/apiPaths');
 
 const {
@@ -59,7 +59,13 @@ const {
   updateSavedPayment,
   updateStaff,
   userDetails,
+  getUserOrders,
+  updateOrderStatus,
 } = require('../controllers/index');
+
+// online order apis
+router.get(API_PATHS.ORDERS.GET_USER_ORDERS, isLoggedIn, getUserOrders)
+router.post(API_PATHS.ORDERS.UPDATE_USER_ORDERS, isLoggedIn, updateOrderStatus)
 
 router.get(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsFeed);
 router.get(

@@ -13,4 +13,6 @@ export const routes = {
   editBill: '/edit/:billingID',
   approval: '/approval',
   editPurchaseOrder: '/',
+  orders:'/orders',
+  orderStatusDetail: '/orders/:orderStatus'
 };

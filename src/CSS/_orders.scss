@@ -1,0 +1,143 @@
+.order-card-page-container {
+    .order-loader-container {
+        height: 95vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    h1 {
+        margin: 2rem 0rem;
+    }
+
+    .orders-container {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: 10px;
+        background-color: white;
+        gap: 1rem;
+
+        .order-status-conatiner {
+            .order-number-container {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #19a7ce;
+                color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: bold;
+                margin: auto;
+            }
+
+            .orders-wrapper {
+                display: flex;
+                flex-direction: column;
+                padding: 15px;
+                width: 400px;
+                background-color: #f6f1f1;
+                margin-left: 10px;
+                margin-top: 10px;
+                min-width: 250px;
+                border-radius: 8px;
+                max-height: 80vh;
+                overflow-y: scroll;
+
+                .header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                    padding: 10px;
+                    position: sticky;
+                    top: 0px;
+                    background: #f6f1f1;
+
+                    .orders-title {
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: bold;
+                        text-transform: capitalize;
+                    }
+                }
+
+                .order-children-container {
+                    margin: auto;
+                }
+
+                .order-card-container {
+                    width: 345px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    background-color: white;
+                    margin-bottom: 1rem;
+
+                    .order-card-info-container {
+                        width: 345px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        padding: 5px 20px;
+                        border-radius: 8px;
+
+                        .slot-method-container {
+                            height: 5vh;
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 10px;
+                            align-items: center;
+
+                            .payment-method {
+
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                color: #000;
+                                font-weight: 600;
+                                padding: 8px;
+                            }
+
+                            .delivery-slot {
+                                width: max-content;
+                                background-color: #1faa59;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                color: white;
+                                height: 30px;
+                                border-radius: 4px;
+                                font-weight: 700;
+                                padding: 8px;
+                            }
+                        }
+
+                        .address-container {
+                            text-align: left;
+
+                            p {
+                                margin-bottom: 10px;
+
+                                span {
+                                    font-weight: bold;
+                                }
+                            }
+                        }
+                    }
+
+                    .confirm-order-btn-container {
+                        width: 345px;
+                        height: 4vh;
+
+                        .confirm-order-btn {
+                            width: 345px;
+                            height: 4vh;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

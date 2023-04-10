@@ -12,6 +12,7 @@ export const PAGES = {
   approval: 'Approval',
   expiredItems: 'Expired Items',
   label: 'Label',
+  orders: 'User Orders'
 };
 
 export const sidebarListData = [
@@ -74,4 +75,9 @@ export const sidebarListData = [
       },
     ],
   },
+  {
+    ORDERS: [
+      {name: 'User Orders', url: '/orders', icon: 'images/purchaseorder.svg'}
+    ]
+  }
 ];

@@ -81,10 +81,11 @@ input[type='number'] {
 .rowOpen {
   background-color: rgb(219, 233, 205);
 }
-
+.App > div:nth-child(2), .App > .mantine-Table-root, .App > .attendance-wrapper{
+  margin-left: 100px;
+}
 .billing-container {
   margin-top: 0;
-
   .header {
     display: none;
   }
