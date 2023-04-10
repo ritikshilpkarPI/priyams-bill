@@ -27,6 +27,7 @@ import {
   OrderStatusDetail,
 } from '../Pages';
 import Label from 'src/Pages/Label';
+import { Fragment } from 'react';
 
 const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
   return (
@@ -38,7 +39,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
           path="/showBill/:customerBillId"
           component={CustomerBill}
         />
-        <div style={{ marginLeft: '100px' }}>
+        <Fragment>
           <ProtectedRoutes>
             <Route
               path="/billing"
@@ -86,7 +87,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
               component={OrderStatusDetail}
             />
           </ProtectedRoutes>
-        </div>
+        </Fragment>
       </Switch>
     </Suspense>
   );

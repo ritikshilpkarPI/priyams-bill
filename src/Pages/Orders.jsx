@@ -68,18 +68,20 @@ function Orders() {
             {ORDER_CARDS.map((card, index) => {
               const { orders = [] } = purchaseOrder[`${card.title}`] || {};
               return (
-                <div className="order-status-conatiner">
+                <div className="order-status-conatiner" key={index}>
                   <OrderStatus
                     title={card.title}
                     orderStatus={card.title}
                     number={index}
-                    children={orders.map(order => {
+                    children={orders.map((order,index) => {
                       return (
-                        <OrderCard
-                          order={order}
-                          buttonStatus={card.button}
-                          updateOrderStatus={updateOrderStatus}
-                        />
+                        <div key={index}>
+                            <OrderCard
+                              order={order}
+                              buttonStatus={card.button}
+                              updateOrderStatus={updateOrderStatus}
+                            />
+                        </div>
                       );
                     })}
                   />
