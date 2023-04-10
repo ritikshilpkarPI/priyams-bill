@@ -14,8 +14,7 @@ function OrderCard({ order, buttonStatus, updateOrderStatus }) {
         </div>
         <div className="address-container">
           <p>
-            <span>Address:</span> Ward number 15, 143-C asmaan apartment,
-            indrapuri sector-c, bhopal {order?.shippingAddress?.address || "-"}
+            <span>Address:</span> {order?.shippingAddress?.address || "-"}
           </p>
           <p className="address-contact">
             {' '}

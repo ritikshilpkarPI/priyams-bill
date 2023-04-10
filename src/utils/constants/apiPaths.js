@@ -79,7 +79,7 @@ export const API_PATHS = {
     DELETE_STAFF: '/api/staff',
   },
   ORDERS: {
-    GET_USER_ORDERS: "/api/getUserOrders",
-    UPDATE_USER_ORDERS: "/api/updateOrderStatus",
+    GET_USER_ORDERS: "/api/online/orders",
+    UPDATE_USER_ORDERS: "/api/online/updateOrderStatus",
   }
 };

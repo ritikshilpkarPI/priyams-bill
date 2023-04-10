@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ORDER_STATUS } from "server/util/order";
+import { ORDER_STATUS } from "../util/order";
 
 export const orderSchema = new mongoose.Schema({
   
@@ -23,7 +23,7 @@ export const orderSchema = new mongoose.Schema({
        value: {
         type: String,
         default: ORDER_STATUS.step1,
-        enum: ['pending_confirmation','pending_packaging', 'pending_dispatch','pending_delivery_dispatch','delivered_successfully']
+        enum: Object.values(ORDER_STATUS)
        }
     },
     orderItems: [

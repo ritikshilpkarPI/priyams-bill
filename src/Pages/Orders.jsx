@@ -10,9 +10,9 @@ import { Loader } from '@mantine/core';
 import { ORDER_CARDS } from '../utils/constants/orders';
 
 function Orders() {
-  const [purchaseOrder, setPurchaseOrder] = useState([]);
+  const [userOrders, setUserOrders] = useState([]);
   const [loader, setLoader] = useState(false);
-  const getOnlineOrders = async () => {
+  const getUserOrders = async () => {
     setLoader(true);
     try {
       const response = await genericAxios({
@@ -22,7 +22,7 @@ function Orders() {
           Cookie: '',
         },
       });
-      setPurchaseOrder(orderMapper(response.data.orders));
+      setUserOrders(orderMapper(response.data.orders));
       
     } catch (error) {
       console.error(error);
@@ -46,14 +46,14 @@ function Orders() {
           },
         });
         setLoader(false);
-        getOnlineOrders();
+        getUserOrders();
       }
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
-    getOnlineOrders();
+    getUserOrders();
   }, []);
   return (
     <div className="order-card-page-container">
@@ -66,13 +66,13 @@ function Orders() {
           <h1>Orders Page</h1>
           <div className="orders-container">
             {ORDER_CARDS.map((card, index) => {
-              const { orders = [] } = purchaseOrder[`${card.title}`] || {};
+              const { orders = [] } = userOrders[`${card.title}`] || {};
               return (
                 <div className="order-status-conatiner" key={index}>
                   <OrderStatus
                     title={card.title}
                     orderStatus={card.title}
-                    number={index}
+                    number={index+1}
                     children={orders.map((order,index) => {
                       return (
                         <div key={index}>

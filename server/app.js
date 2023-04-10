@@ -7,7 +7,7 @@ const serverless = require('serverless-http');
 const routers = require('./routes');
 const fileUpload = require('express-fileupload');
 const handleErrors = require('./middleware/handleError');
-const { orderSchema, Order } = require('./db-models/orderSchema');
+const dbAppConnection = require('./db/conn');
 require('./nodeCron');
 const app = express();
 
@@ -45,30 +45,10 @@ async function connectDB() {
     useUnifiedTopology: true,
   });
 }
-// connect PStore Database
-const dbConnection2 = () => {
-  try {
-    const conn = mongoose.createConnection(process.env.APP_MONGODB_URI, { useNewUrlParser: true });
-    console.log("App Database Connected Successfully!");
-    conn.model("Orders", orderSchema);
-    const pipeline =  [
-        { $match : {"operationType" : "update" } }
-     ]
-    const changeStream = Order.watch(pipeline, { fullDocument: "updateLookup" });
-    changeStream.on("change", async(data) => {
-      const order = data.fullDocument;
-      const {orderNumber,orderStatus} = order
-      delete order._id
-      // Update Order in App Database
-      await conn.models.Orders.findOneAndUpdate({orderNumber},{orderStatus}, {new: true});   
-    });
-  } catch (error) {
-    console.error({ error });
-  }
-};
 
-dbConnection2();
 connectDB();
+// connect PStore Database
+dbAppConnection();
 
 app.use(handleErrors)
 

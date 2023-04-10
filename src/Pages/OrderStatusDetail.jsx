@@ -12,14 +12,14 @@ import { ORDER_CARDS } from 'src/utils/constants/orders';
 
 function OrderStatusDetail() {
   const { orderStatus } = useParams();
-  const [purchasedOrders, setPurchasedOrders] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [order, setOrder] = useState({});
   const [loader, setLoader] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
   const buttonStatus = ORDER_CARDS.find(card => card.title === orderStatus)
     .button;
 
-  const getOnlineOrders = async () => {
+  const getOrdersByStatus = async () => {
     setLoader(true);
     try {
       const response = await genericAxios({
@@ -27,7 +27,7 @@ function OrderStatusDetail() {
         method: API_METHODS.GET,
       });
       const { orders } = response?.data;
-      setPurchasedOrders(orderMapper(orders)[`${orderStatus}`]?.orders || []);
+      setOrders(orderMapper(orders)[`${orderStatus}`]?.orders || []);
     } catch (error) {
       console.error(error);
     }
@@ -50,13 +50,13 @@ function OrderStatusDetail() {
           },
         });
         setLoader(false);
-        getOnlineOrders();
+        getOrdersByStatus();
       }
     } catch (error) {
       console.error(error);
     }
   };
-  const rows = purchasedOrders?.map((order, index) => {
+  const rows = orders?.map((order, index) => {
     return (
       <tr
         key={index}
@@ -95,7 +95,7 @@ function OrderStatusDetail() {
   });
 
   useEffect(() => {
-    getOnlineOrders();
+    getOrdersByStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
