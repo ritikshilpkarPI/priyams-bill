@@ -17,17 +17,20 @@ const isAdmin = async (req, res, next) => {
   }
 };
 const isLoggedIn = async (req, res, next) => {
-  const token = req.cookies.token || '';
-  if (!token) {
-    res
-      .status(401)
-      .send({ message: 'Login first to access this page', success: false });
-    return;
+  try {
+    const token = req.cookies.token || '';
+    if (!token) {
+      res
+        .status(401)
+        .send({ message: 'Login first to access this page', success: false });
+      return;
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await Staff.findById(decoded.id);
+    next();
+  } catch (error) {
+    next(error);
   }
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  req.user = await Staff.findById(decoded.id);
-  next();
 };
 const customRole = (roles) => {
   return (req, res, next) => {
