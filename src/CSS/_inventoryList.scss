@@ -229,3 +229,32 @@ $fourteenColWidth: 140px;
     }
   }
 }
+.item-images-container{
+  text-align: center;
+  .item-image-container{
+    margin-bottom: 16px;
+    button{
+    background: gray;
+    border: none;
+    font-size: 22px;
+    font-weight: bold;
+    width: 30px;
+    position: absolute;
+    height: 30px;
+    border-radius: 50%;
+    color: #fff;
+    right: 5%;
+    }
+    .item-image{
+      width: 100%;
+      border-radius: 16px;
+    }
+  }
+  div{
+    p{
+      font-weight: bold;
+      font-size: 22px;
+      margin: 0 1rem;
+    }
+  }
+}
