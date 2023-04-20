@@ -9,7 +9,7 @@ const editItemById = async (req, res, next) => {
     if (images.length) {
       const imagesToUpload = images.filter(image => !image.public_id).map(image => image.secure_url)
       const filterUploadedImages = images.filter(image => image.public_id)
-      let uploadedImages = await uploadImages(imagesToUpload);
+      const uploadedImages = await uploadImages(imagesToUpload);
       images = [...uploadedImages, ...filterUploadedImages]
     }
 
