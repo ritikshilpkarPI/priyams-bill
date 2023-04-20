@@ -14,6 +14,8 @@ import {
   Select,
   TextInput,
   NumberInput,
+  Group,
+  Modal,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { AppStateContext } from '../AppState/appState.context';
@@ -22,6 +24,9 @@ import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { Dropzone } from '@mantine/dropzone';
+import { useDisclosure } from '@mantine/hooks';
+
 // import ProtectedComponent from "src/components/ProtectedComponent";
 // import access from "../access.js";
 
@@ -38,6 +43,8 @@ const ITEM_INITIAL_INPUT = {
   itemStockQuantity: '',
   minimumStockQuantity: '',
   useByDate: [],
+  images: [],
+  deletedImages: []
 };
 
 let itemToBeUpdated = {};
@@ -76,6 +83,9 @@ const ItemsList = () => {
   const inputTable = useRef();
   const [tableWidth, setTableWidth] = useState();
   const [useByDateData, setuseByDateData] = useState([]);
+  const openRef = useRef(null);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [index, setIndex] = useState(0);
 
   const history = useHistory();
 
@@ -87,11 +97,11 @@ const ItemsList = () => {
       setloaderDisplay(false);
     }
   }, [items]);
-  const handleNewItemInput = (e) => {
+  const handleNewItemInput = e => {
     const { name, value } = e.target;
     setNewItemInput({ ...newItemInput, [name]: value });
     const filteredItems = itemsList.filter(
-      (itemObj) =>
+      itemObj =>
         itemObj[name] &&
         itemObj[name]
           .toString()
@@ -172,7 +182,7 @@ const ItemsList = () => {
           Cookie: '',
         },
       });
-      if(newItem.error)return
+      if (newItem.error) return;
       dispatch({ type: 'ADD_NEW_ITEM_TO_LIST', payload: newItem.data.message });
     })();
     setApiLoading(false);
@@ -208,6 +218,33 @@ const ItemsList = () => {
       [name]: value,
     });
     itemToBeUpdated[index][name] = value;
+  };
+
+  const onSelectFile = (files, index) => {
+    let itemsCopy = [...items];
+    itemToBeUpdated = {
+      [index]: { ...items[index], ...itemToBeUpdated[index] },
+    };
+
+    const reader = (file) => {
+      return new Promise((resolve, reject) => {
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+          fileReader.onload = () => resolve(fileReader.result);
+      });
+    }
+    if (!itemToBeUpdated[index].images?.length)
+      itemToBeUpdated[index].images = [];
+
+    files.forEach(file => {
+      reader(file).then(result => itemToBeUpdated[index].images = [
+        ...itemToBeUpdated[index].images,
+        { public_id: "", secure_url: result },
+      ]);
+    });
+
+    itemsCopy[index].images = itemToBeUpdated[index].images;
+    setItems([...itemsCopy]);
   };
 
   const SoftDeleteButton = ({ items, index, style }) => {
@@ -369,6 +406,51 @@ const ItemsList = () => {
           name={name}
         />
       </>
+    );
+  };
+  const ShowImage = () => {
+    const [images, setImages] = useState(
+      itemToBeUpdated[index]
+        ? itemToBeUpdated[index].images
+        : items[index].images
+    );
+
+    if (!items[index]?.deletedImages?.length)
+      items[index].deletedImages = [];
+
+    if (itemToBeUpdated[index] && !itemToBeUpdated[index]?.deletedImages?.length)
+      itemToBeUpdated[index].deletedImages = [];
+
+    const deleteImage = idx => {
+      const deletedImage = images[idx];
+      const filterImage = [...images.slice(0, idx), ...images.slice(idx + 1)];
+      setImages(filterImage);
+      
+      items[index]['images'] = [...filterImage];
+      if(itemToBeUpdated[index]){
+        itemToBeUpdated[index].images = [...filterImage]
+      }else{
+        itemToBeUpdated[index] = items[index]
+      }
+      itemToBeUpdated[index].deletedImages = [...itemToBeUpdated[index].deletedImages, deletedImage]
+    };
+    return (
+      <div className='item-images-container'>
+        {images.length ? images.map((image, index) => (
+          <div className='item-image-container'>
+            <button onClick={() => deleteImage(index)}>x</button>
+            <img
+              src={image.secure_url}
+              alt={image.secure_url}
+              className="item-image"
+            />
+          </div>
+        )) : 
+        <div>
+          <p>No Images Available!!</p>
+        </div> 
+      }
+      </div>
     );
   };
 
@@ -1038,6 +1120,36 @@ const ItemsList = () => {
             Show POs
           </Button>
         </td>
+        <td>
+          <Dropzone
+            openRef={openRef}
+            activateOnClick={false}
+            styles={{ inner: { pointerEvents: 'all' } }}
+            onDrop={files => onSelectFile(files, index)}
+          >
+            <Group position="center">
+              <Button
+                onClick={() => {
+                  openRef.current();
+                }}
+              >
+                Select Image
+              </Button>
+            </Group>
+          </Dropzone>
+        </td>
+        <td>
+          <Group position="center">
+            <Button
+              onClick={() => {
+                setIndex(index);
+                open();
+              }}
+            >
+              Item Images
+            </Button>
+          </Group>
+        </td>
       </tr>
     );
   };
@@ -1533,7 +1645,13 @@ const ItemsList = () => {
                 <Text>Update Button</Text>
               </th>
               <th>
-                <Text>Go to its Purchase Order</Text>
+                <Text>Item P.O</Text>
+              </th>
+              <th>
+                <Text>Add Item images</Text>
+              </th>
+              <th>
+                <Text>View Item Images</Text>
               </th>
             </tr>
           </thead>
@@ -1600,9 +1718,7 @@ const ItemsList = () => {
                     { value: 'Piece', label: 'Piece' },
                   ]}
                   value={newItemInput['quantityUnitName']}
-                  onChange={(val) =>
-                    handleSelectChange(val, 'quantityUnitName')
-                  }
+                  onChange={val => handleSelectChange(val, 'quantityUnitName')}
                 />
               </td>
               <td>
@@ -1679,6 +1795,14 @@ const ItemsList = () => {
           </tbody>
         </Table>
       </div>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={`${items[index]?.itemName} Images`}
+        size={"xs"}
+      >
+        <ShowImage />
+      </Modal>
     </div>
   );
 };
@@ -1710,7 +1834,7 @@ const TableRow = ({
         searchable
         nothingFound="No options"
         value={itemInput[name]}
-        onChange={(val) =>
+        onChange={val =>
           handleItemInputChange(val, name, index, itemInput, setItemInput)
         }
       />
@@ -1721,9 +1845,7 @@ const TableRow = ({
       <Component
         variant="unstyled"
         value={itemInput[name]}
-        onChange={(e) =>
-          handleItemInputChange(e, itemInput, setItemInput, index)
-        }
+        onChange={e => handleItemInputChange(e, itemInput, setItemInput, index)}
         name={name}
         type="search"
         autoComplete="off"
@@ -1752,14 +1874,14 @@ const UpdateItemButton = ({
         Cookie: 'some_cookie',
       },
     });
-    if(updatedItem.error)return
+    if (updatedItem.error) return;
     if (updatedItem.status === 200) {
       alert('Item updated...');
     }
     itemToBeUpdated = {};
     let newItemsList = [...itemsList];
     newItemsList.splice(
-      itemsList.findIndex((item) => item._id === _id),
+      itemsList.findIndex(item => item._id === _id),
       1
     );
     newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];

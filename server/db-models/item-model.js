@@ -58,6 +58,12 @@ const ItemSchem = new mongoose.Schema(
     quantityUnitName: { type: String },
     gstPercentage: { type: Number },
     itemPerUnitQuantity: { type: Number, default: 0 },
+    images: [
+      {
+        public_id: { type: String, required: true, unique: true },
+        secure_url: { type: String, required: true, unique: true }
+      },
+    ]
   },
   { strict: false, timestamps: true }
 );
