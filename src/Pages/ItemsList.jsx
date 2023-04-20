@@ -44,6 +44,7 @@ const ITEM_INITIAL_INPUT = {
   minimumStockQuantity: '',
   useByDate: [],
   images: [],
+  deletedImages: []
 };
 
 let itemToBeUpdated = {};
@@ -218,27 +219,31 @@ const ItemsList = () => {
     });
     itemToBeUpdated[index][name] = value;
   };
+
   const onSelectFile = (files, index) => {
     let itemsCopy = [...items];
     itemToBeUpdated = {
       [index]: { ...items[index], ...itemToBeUpdated[index] },
     };
 
+    const reader = (file) => {
+      return new Promise((resolve, reject) => {
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+          fileReader.onload = () => resolve(fileReader.result);
+      });
+    }
     if (!itemToBeUpdated[index].images?.length)
       itemToBeUpdated[index].images = [];
 
     files.forEach(file => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        itemToBeUpdated[index].images = [
-          ...itemToBeUpdated[index]['images'],
-          { public_id: "", secure_url: reader.result },
-        ];
-      };
+      reader(file).then(result => itemToBeUpdated[index].images = [
+        ...itemToBeUpdated[index].images,
+        { public_id: "", secure_url: result },
+      ]);
     });
 
-    itemsCopy[index].images = [...itemToBeUpdated[index].images];
+    itemsCopy[index].images = itemToBeUpdated[index].images;
     setItems([...itemsCopy]);
   };
 
@@ -409,13 +414,25 @@ const ItemsList = () => {
         ? itemToBeUpdated[index].images
         : items[index].images
     );
+
+    if (!items[index]?.deletedImages?.length)
+      items[index].deletedImages = [];
+
+    if (itemToBeUpdated[index] && !itemToBeUpdated[index]?.deletedImages?.length)
+      itemToBeUpdated[index].deletedImages = [];
+
     const deleteImage = idx => {
+      const deletedImage = images[idx];
       const filterImage = [...images.slice(0, idx), ...images.slice(idx + 1)];
       setImages(filterImage);
+      
       items[index]['images'] = [...filterImage];
-      itemToBeUpdated[index]
-        ? (itemToBeUpdated[index].images = [...filterImage])
-        : (itemToBeUpdated[index] = items[index]);
+      if(itemToBeUpdated[index]){
+        itemToBeUpdated[index].images = [...filterImage]
+      }else{
+        itemToBeUpdated[index] = items[index]
+      }
+      itemToBeUpdated[index].deletedImages = [...itemToBeUpdated[index].deletedImages, deletedImage]
     };
     return (
       <div className='item-images-container'>
@@ -430,7 +447,7 @@ const ItemsList = () => {
           </div>
         )) : 
         <div>
-          <p>No Images Are there!!</p>
+          <p>No Images Available!!</p>
         </div> 
       }
       </div>
@@ -1776,6 +1793,7 @@ const ItemsList = () => {
         opened={opened}
         onClose={close}
         title={`${items[index]?.itemName} Images`}
+        size={"xs"}
       >
         <ShowImage />
       </Modal>

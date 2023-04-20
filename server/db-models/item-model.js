@@ -61,7 +61,7 @@ const ItemSchem = new mongoose.Schema(
     images: [
       {
         public_id: { type: String, required: true, unique: true },
-        image_url: { type: String, required: true, unique: true }
+        secure_url: { type: String, required: true, unique: true }
       },
     ]
   },
