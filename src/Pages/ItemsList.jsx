@@ -410,7 +410,6 @@ const ItemsList = () => {
       itemToBeUpdated[index].deletedImages = [...itemToBeUpdated[index].deletedImages, deletedImage]
     };
     const onSelectFile = (files, index) => {
-      let itemsCopy = [...items];
       itemToBeUpdated = {
         [index]: { ...items[index], ...itemToBeUpdated[index] },
       };
