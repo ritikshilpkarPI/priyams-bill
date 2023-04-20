@@ -220,32 +220,7 @@ const ItemsList = () => {
     itemToBeUpdated[index][name] = value;
   };
 
-  const onSelectFile = (files, index) => {
-    let itemsCopy = [...items];
-    itemToBeUpdated = {
-      [index]: { ...items[index], ...itemToBeUpdated[index] },
-    };
 
-    const reader = (file) => {
-      return new Promise((resolve, reject) => {
-          const fileReader = new FileReader();
-          fileReader.readAsDataURL(file);
-          fileReader.onload = () => resolve(fileReader.result);
-      });
-    }
-    if (!itemToBeUpdated[index].images?.length)
-      itemToBeUpdated[index].images = [];
-
-    files.forEach(file => {
-      reader(file).then(result => itemToBeUpdated[index].images = [
-        ...itemToBeUpdated[index].images,
-        { public_id: "", secure_url: result },
-      ]);
-    });
-
-    itemsCopy[index].images = itemToBeUpdated[index].images;
-    setItems([...itemsCopy]);
-  };
 
   const SoftDeleteButton = ({ items, index, style }) => {
     const [apiLoading, setApiLoading] = useState(false);
@@ -434,6 +409,33 @@ const ItemsList = () => {
       }
       itemToBeUpdated[index].deletedImages = [...itemToBeUpdated[index].deletedImages, deletedImage]
     };
+    const onSelectFile = (files, index) => {
+      let itemsCopy = [...items];
+      itemToBeUpdated = {
+        [index]: { ...items[index], ...itemToBeUpdated[index] },
+      };
+  
+      const reader = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => resolve(fileReader.result);
+        });
+      }
+      if (!itemToBeUpdated[index].images?.length)
+        itemToBeUpdated[index].images = [];
+  
+      files.forEach(file => {
+        reader(file).then(result => {
+          itemToBeUpdated[index].images = [
+            ...itemToBeUpdated[index].images,
+            { public_id: "", secure_url: result },
+          ]
+          setImages(prev => [...prev,  { public_id: "", secure_url: result }])
+        });
+      });
+      items[index].images = itemToBeUpdated[index].images;
+    };
     return (
       <div className='item-images-container'>
         {images.length ? images.map((image, index) => (
@@ -450,6 +452,22 @@ const ItemsList = () => {
           <p>No Images Available!!</p>
         </div> 
       }
+      <Dropzone
+            openRef={openRef}
+            activateOnClick={false}
+            styles={{ inner: { pointerEvents: 'all' } }}
+            onDrop={files => onSelectFile(files, index)}
+          >
+            <Group position="center">
+              <Button
+                onClick={() => {
+                  openRef.current();
+                }}
+              >
+                Select Image
+              </Button>
+            </Group>
+          </Dropzone>
       </div>
     );
   };
@@ -1121,24 +1139,6 @@ const ItemsList = () => {
           </Button>
         </td>
         <td>
-          <Dropzone
-            openRef={openRef}
-            activateOnClick={false}
-            styles={{ inner: { pointerEvents: 'all' } }}
-            onDrop={files => onSelectFile(files, index)}
-          >
-            <Group position="center">
-              <Button
-                onClick={() => {
-                  openRef.current();
-                }}
-              >
-                Select Image
-              </Button>
-            </Group>
-          </Dropzone>
-        </td>
-        <td>
           <Group position="center">
             <Button
               onClick={() => {
@@ -1648,9 +1648,6 @@ const ItemsList = () => {
                 <Text>Item P.O</Text>
               </th>
               <th>
-                <Text>Add Item images</Text>
-              </th>
-              <th>
                 <Text>View Item Images</Text>
               </th>
             </tr>
@@ -1687,6 +1684,11 @@ const ItemsList = () => {
                   autoComplete="off"
                 />
               </td>
+              <td></td>
+              <td></td>
+              <td></td>
+
+
               <td>
                 <Select
                   placeholder="Pick one"
