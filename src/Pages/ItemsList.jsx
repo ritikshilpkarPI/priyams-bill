@@ -1645,7 +1645,13 @@ const ItemsList = () => {
                 <Text>Update Button</Text>
               </th>
               <th>
-                <Text>Go to its Purchase Order</Text>
+                <Text>Item P.O</Text>
+              </th>
+              <th>
+                <Text>Add Item images</Text>
+              </th>
+              <th>
+                <Text>View Item Images</Text>
               </th>
             </tr>
           </thead>
