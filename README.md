@@ -1,5 +1,9 @@
 # Priyam Innovations Store Bill
+
 ---
+
+Create function in local and send to prod::
+`netlify dev`
 
 ## Repo Clone
 
@@ -8,11 +12,9 @@
 
 ## Run Repo Locally
 
-- For client  -> npm run client
+- For client -> npm run client
 
-- For server -> netlify dev 
-> Note -> Install netlify CLI , npm install netlify-cli -g 
-
- 
+- For server -> netlify dev
+  > Note -> Install netlify CLI , npm install netlify-cli -g
 
 > Imp note -> use node 16

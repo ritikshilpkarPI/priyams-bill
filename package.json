@@ -9,7 +9,7 @@
     "local-dev": "nodemon server/app.js",
     "dev": "nodemon --exec npm run restart",
     "restart": "rimraf dist && npm run build && npm run start",
-    "start": "cross-env ENV_NAME=dev npm-run-all --parallel start:server start:app",
+    "start": "cross-env ENV_NAME=dev npm-run-all --parallel server client",
     "client": "react-scripts start ",
     "server": "netlify-lambda serve server -t 900",
     "build": "npm run build:functions && npm run build:app",
