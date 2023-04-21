@@ -1089,6 +1089,7 @@ const ItemsList = () => {
     history.push(`/inventory/${itemname}`);
   };
   const rows = ({ index, style }) => {
+    const {images} = items[index]
     return (
       <tr
         style={{
@@ -1154,7 +1155,7 @@ const ItemsList = () => {
                 open();
               }}
             >
-              Item Images
+              Item Images {images.length ? `- (${images.length})` : ""}
             </Button>
           </Group>
         </td>
