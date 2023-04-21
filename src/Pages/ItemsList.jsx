@@ -383,7 +383,7 @@ const ItemsList = () => {
       </>
     );
   };
-  const ShowImage = () => {
+  const ShowImage = ({close}) => {
     const [images, setImages] = useState(
       itemToBeUpdated[index]
         ? itemToBeUpdated[index].images
@@ -436,22 +436,25 @@ const ItemsList = () => {
       items[index].images = itemToBeUpdated[index].images;
     };
     return (
-      <div className='item-images-container'>
-        {images.length ? images.map((image, index) => (
-          <div className='item-image-container'>
-            <button onClick={() => deleteImage(index)}>x</button>
-            <img
-              src={image.secure_url}
-              alt={image.secure_url}
-              className="item-image"
-            />
-          </div>
-        )) : 
-        <div>
-          <p>No Images Available!!</p>
-        </div> 
-      }
-      <Dropzone
+      <div className='images-container'>
+        <div className='item-images-container'>
+          {images.length ? images.map((image, index) => (
+            <div className='item-image-container'>
+              <button onClick={() => deleteImage(index)}>x</button>
+              <img
+                src={image.secure_url}
+                alt={image.secure_url}
+                className="item-image"
+              />
+            </div>
+          )) : 
+          <div>
+            <p>No Images Available!!</p>
+          </div> 
+        }
+        </div>
+      <div className='item-images-button-container'>
+        <Dropzone
             openRef={openRef}
             activateOnClick={false}
             styles={{ inner: { pointerEvents: 'all' } }}
@@ -467,6 +470,11 @@ const ItemsList = () => {
               </Button>
             </Group>
           </Dropzone>
+          <div className='save-btn'>
+            <Button onClick={close} color='red'>Cancel</Button>
+            <ItemUpdateButtonRow index={index} saveButton={true} />
+          </div>
+        </div>
       </div>
     );
   };
@@ -820,7 +828,7 @@ const ItemsList = () => {
     );
   };
 
-  const ItemUpdateButtonRow = ({ index, style }) => {
+  const ItemUpdateButtonRow = ({ index, style, saveButton }) => {
     return (
       <UpdateItemButton
         style={style}
@@ -829,6 +837,7 @@ const ItemsList = () => {
         items={items}
         itemsList={itemsList}
         setItems={setItems}
+        saveButton={saveButton}
       />
     );
   };
@@ -1794,16 +1803,18 @@ const ItemsList = () => {
           <tbody className="add-item-row-body">
             <ListComponents />
           </tbody>
-        </Table>
+      </Table>
       </div>
-      <Modal
-        opened={opened}
-        onClose={close}
-        title={`${items[index]?.itemName} Images`}
-        size={"xs"}
-      >
-        <ShowImage />
-      </Modal>
+          <Modal
+            opened={opened}
+            onClose={close}
+            title={`${items[index]?.itemName} Images`}
+            size={"sm"}
+            className='modal-container'
+          >
+            <ShowImage close={close} />
+          </Modal>
+      {/* </div> */}
     </div>
   );
 };
@@ -1862,6 +1873,7 @@ const UpdateItemButton = ({
   style,
   setItems,
   itemsList,
+  saveButton
 }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
@@ -1892,6 +1904,11 @@ const UpdateItemButton = ({
     });
     setApiLoading(false);
   };
+  if(saveButton){
+    return (
+      <Button color='teal' onClick={handleAddItem}>Save Image</Button>
+    )
+  }
 
   return (
     <Image
