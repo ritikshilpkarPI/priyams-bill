@@ -44,7 +44,7 @@ const ITEM_INITIAL_INPUT = {
   minimumStockQuantity: '',
   useByDate: [],
   images: [],
-  deletedImages: []
+  deletedImages: [],
 };
 
 let itemToBeUpdated = {};
@@ -97,11 +97,11 @@ const ItemsList = () => {
       setloaderDisplay(false);
     }
   }, [items]);
-  const handleNewItemInput = e => {
+  const handleNewItemInput = (e) => {
     const { name, value } = e.target;
     setNewItemInput({ ...newItemInput, [name]: value });
     const filteredItems = itemsList.filter(
-      itemObj =>
+      (itemObj) =>
         itemObj[name] &&
         itemObj[name]
           .toString()
@@ -220,8 +220,6 @@ const ItemsList = () => {
     itemToBeUpdated[index][name] = value;
   };
 
-
-
   const SoftDeleteButton = ({ items, index, style }) => {
     const [apiLoading, setApiLoading] = useState(false);
 
@@ -236,7 +234,7 @@ const ItemsList = () => {
           Cookie: 'some_cookie',
         },
       });
-       if(deletedItem.error)return
+      if (deletedItem.error) return;
       if (deletedItem.status === 200) {
         alert('Item deleted...');
       }
@@ -383,82 +381,90 @@ const ItemsList = () => {
       </>
     );
   };
-  const ShowImage = ({close}) => {
+  const ShowImage = ({ close }) => {
     const [images, setImages] = useState(
       itemToBeUpdated[index]
         ? itemToBeUpdated[index].images
         : items[index].images
     );
+    const [loader, setLoader] = useState(false);
 
-    if (!items[index]?.deletedImages?.length)
-      items[index].deletedImages = [];
+    if (!items[index]?.deletedImages?.length) items[index].deletedImages = [];
 
-    if (itemToBeUpdated[index] && !itemToBeUpdated[index]?.deletedImages?.length)
+    if (
+      itemToBeUpdated[index] &&
+      !itemToBeUpdated[index]?.deletedImages?.length
+    )
       itemToBeUpdated[index].deletedImages = [];
 
-    const deleteImage = idx => {
+    const deleteImage = (idx) => {
       const deletedImage = images[idx];
       const filterImage = [...images.slice(0, idx), ...images.slice(idx + 1)];
       setImages(filterImage);
-      
+
       items[index]['images'] = [...filterImage];
-      if(itemToBeUpdated[index]){
-        itemToBeUpdated[index].images = [...filterImage]
-      }else{
-        itemToBeUpdated[index] = items[index]
+      if (itemToBeUpdated[index]) {
+        itemToBeUpdated[index].images = [...filterImage];
+      } else {
+        itemToBeUpdated[index] = items[index];
       }
-      itemToBeUpdated[index].deletedImages = [...itemToBeUpdated[index].deletedImages, deletedImage]
+      itemToBeUpdated[index].deletedImages = [
+        ...itemToBeUpdated[index].deletedImages,
+        deletedImage,
+      ];
     };
     const onSelectFile = (files, index) => {
       itemToBeUpdated = {
         [index]: { ...items[index], ...itemToBeUpdated[index] },
       };
-  
+
       const reader = (file) => {
         return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = () => resolve(fileReader.result);
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+          fileReader.onload = () => resolve(fileReader.result);
         });
-      }
+      };
       if (!itemToBeUpdated[index].images?.length)
         itemToBeUpdated[index].images = [];
-  
-      files.forEach(file => {
-        reader(file).then(result => {
+
+      files.forEach((file) => {
+        reader(file).then((result) => {
           itemToBeUpdated[index].images = [
             ...itemToBeUpdated[index].images,
-            { public_id: "", secure_url: result },
-          ]
-          setImages(prev => [...prev,  { public_id: "", secure_url: result }])
+            { public_id: '', secure_url: result },
+          ];
+          setImages((prev) => [{ public_id: '', secure_url: result },...prev]);
         });
       });
       items[index].images = itemToBeUpdated[index].images;
     };
     return (
-      <div className='images-container'>
-        <div className='item-images-container'>
-          {images.length ? images.map((image, index) => (
-            <div className='item-image-container'>
-              <button onClick={() => deleteImage(index)}>x</button>
-              <img
-                src={image.secure_url}
-                alt={image.secure_url}
-                className="item-image"
-              />
+      <div className="images-container">
+        <div className="item-images-container">
+          {images.length ? (
+            images.map((image, index) => (
+              <div className="item-image-container">
+                <button onClick={() => deleteImage(index)}>x</button>
+                <img
+                  src={image.secure_url}
+                  alt={image.secure_url}
+                  className="item-image"
+                />
+              </div>
+            ))
+          ) : (
+            <div>
+              <p>No Images Available!!</p>
             </div>
-          )) : 
-          <div>
-            <p>No Images Available!!</p>
-          </div> 
-        }
+          )}
         </div>
-      <div className='item-images-button-container'>
-        <Dropzone
+        <div className="item-images-button-container">
+          <Dropzone
             openRef={openRef}
             activateOnClick={false}
             styles={{ inner: { pointerEvents: 'all' } }}
-            onDrop={files => onSelectFile(files, index)}
+            onDrop={(files) => onSelectFile(files, index)}
           >
             <Group position="center">
               <Button
@@ -470,8 +476,10 @@ const ItemsList = () => {
               </Button>
             </Group>
           </Dropzone>
-          <div className='save-btn'>
-            <Button onClick={close} color='red'>Cancel</Button>
+          <div className="save-btn">
+            <Button onClick={close} color="red">
+              Cancel
+            </Button>
             <ItemUpdateButtonRow index={index} saveButton={true} />
           </div>
         </div>
@@ -1089,7 +1097,7 @@ const ItemsList = () => {
     history.push(`/inventory/${itemname}`);
   };
   const rows = ({ index, style }) => {
-    const {images} = items[index]
+    const { images } = items[index];
     return (
       <tr
         style={{
@@ -1155,7 +1163,7 @@ const ItemsList = () => {
                 open();
               }}
             >
-              Item Images {images.length ? `- (${images.length})` : ""}
+              Item Images {images.length ? `- (${images.length})` : ''}
             </Button>
           </Group>
         </td>
@@ -1697,7 +1705,6 @@ const ItemsList = () => {
               <td></td>
               <td></td>
 
-
               <td>
                 <Select
                   placeholder="Pick one"
@@ -1729,7 +1736,9 @@ const ItemsList = () => {
                     { value: 'Piece', label: 'Piece' },
                   ]}
                   value={newItemInput['quantityUnitName']}
-                  onChange={val => handleSelectChange(val, 'quantityUnitName')}
+                  onChange={(val) =>
+                    handleSelectChange(val, 'quantityUnitName')
+                  }
                 />
               </td>
               <td>
@@ -1804,17 +1813,17 @@ const ItemsList = () => {
           <tbody className="add-item-row-body">
             <ListComponents />
           </tbody>
-      </Table>
+        </Table>
       </div>
-          <Modal
-            opened={opened}
-            onClose={close}
-            title={`${items[index]?.itemName} Images`}
-            size={"sm"}
-            className='modal-container'
-          >
-            <ShowImage close={close} />
-          </Modal>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={`${items[index]?.itemName} Images`}
+        size={'sm'}
+        className="modal-container"
+      >
+        <ShowImage close={close} />
+      </Modal>
       {/* </div> */}
     </div>
   );
@@ -1847,7 +1856,7 @@ const TableRow = ({
         searchable
         nothingFound="No options"
         value={itemInput[name]}
-        onChange={val =>
+        onChange={(val) =>
           handleItemInputChange(val, name, index, itemInput, setItemInput)
         }
       />
@@ -1858,7 +1867,9 @@ const TableRow = ({
       <Component
         variant="unstyled"
         value={itemInput[name]}
-        onChange={e => handleItemInputChange(e, itemInput, setItemInput, index)}
+        onChange={(e) =>
+          handleItemInputChange(e, itemInput, setItemInput, index)
+        }
         name={name}
         type="search"
         autoComplete="off"
@@ -1874,7 +1885,7 @@ const UpdateItemButton = ({
   style,
   setItems,
   itemsList,
-  saveButton
+  saveButton,
 }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
@@ -1895,7 +1906,7 @@ const UpdateItemButton = ({
     itemToBeUpdated = {};
     let newItemsList = [...itemsList];
     newItemsList.splice(
-      itemsList.findIndex(item => item._id === _id),
+      itemsList.findIndex((item) => item._id === _id),
       1
     );
     newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
@@ -1905,20 +1916,25 @@ const UpdateItemButton = ({
     });
     setApiLoading(false);
   };
-  if(saveButton){
-    return (
-      <Button color='teal' onClick={handleAddItem}>Save Image</Button>
-    )
-  }
 
   return (
-    <Image
-      src="images/check.svg"
-      loading={apiLoading}
-      onClick={handleAddItem}
-      width={22}
-      style={{ marginLeft: '15px', cursor: 'pointer' }}
-    />
+    <>
+      {apiLoading ? (
+        <Loader />
+      ) : saveButton ? (
+        <Button color="teal" onClick={handleAddItem}>
+          Save Image
+        </Button>
+      ) : (
+        <Image
+          src="images/check.svg"
+          loading={apiLoading}
+          onClick={handleAddItem}
+          width={22}
+          style={{ marginLeft: '15px', cursor: 'pointer' }}
+        />
+      )}
+    </>
   );
 };
 
