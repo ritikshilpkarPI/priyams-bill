@@ -387,7 +387,6 @@ const ItemsList = () => {
         ? itemToBeUpdated[index].images
         : items[index].images
     );
-    const [loader, setLoader] = useState(false);
 
     if (!items[index]?.deletedImages?.length) items[index].deletedImages = [];
 
