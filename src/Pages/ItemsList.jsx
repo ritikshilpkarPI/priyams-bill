@@ -433,7 +433,7 @@ const ItemsList = () => {
             ...itemToBeUpdated[index].images,
             { public_id: '', secure_url: result },
           ];
-          setImages((prev) => [{ public_id: '', secure_url: result },...prev]);
+          setImages((prev) => [{ public_id: '', secure_url: result }, ...prev]);
         });
       });
       items[index].images = itemToBeUpdated[index].images;
@@ -1665,6 +1665,14 @@ const ItemsList = () => {
               </th>
               <th>
                 <Text>View Item Images</Text>
+                <input
+                  type="checkbox"
+                  checked={filterItems === 'images'}
+                  label="Filter With Images"
+                  value="Filter With Images"
+                  onChange={() => handleCheckboxFilter('images')}
+                />
+                images
               </th>
             </tr>
           </thead>
