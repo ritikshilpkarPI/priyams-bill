@@ -4,9 +4,7 @@ const getUserOrders = async (req, res, next) => {
   const { orderStatus } = req.query;
   const query = orderStatus
     ? {
-        $in: {
-          orderStatus: { status: orderStatus },
-        },
+        'orderStatus.status': orderStatus,
       }
     : {};
   try {
