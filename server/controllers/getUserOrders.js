@@ -4,17 +4,21 @@ const getUserOrders = async (req, res, next) => {
   const { orderStatus } = req.query;
   const query = orderStatus
     ? {
-      'orderStatus.value': orderStatus,
+        $in: {
+          orderStatus: { status: orderStatus },
+        },
       }
-    : {}
+    : {};
   try {
     const orders = await Order.aggregate([
       {
-        $match: query
+        $match: query,
       },
       {
         $group: {
-          _id: '$orderStatus.value',
+          _id: {
+            $last: '$orderStatus.status',
+          },
           orders: {
             $push: '$$ROOT',
           },

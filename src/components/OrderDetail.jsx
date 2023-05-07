@@ -65,7 +65,9 @@ function OrderDetail({
         </Table>
         <Group className="order-detail">
           <Title order={5}>Order Status:</Title>
-          <Text>{order.orderStatus?.value}</Text>
+          <Text>
+            {order?.orderStatus?.[order?.orderStatus?.length - 1]?.status}
+          </Text>
         </Group>
         <Group className="order-detail">
           <Title order={5}>Order Date:</Title>
@@ -102,7 +104,11 @@ function OrderDetail({
           <Button
             color="teal"
             onClick={() =>
-              updateOrderStatus(order.orderStatus.step, order._id, buttonStatus)
+              updateOrderStatus(
+                order?.orderStatus?.[order?.orderStatus?.length - 1]?.step,
+                order._id,
+                buttonStatus
+              )
             }
           >
             {buttonStatus}
