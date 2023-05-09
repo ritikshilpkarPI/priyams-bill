@@ -9,7 +9,21 @@ function OrderDetail({
   buttonStatus,
   updateOrderStatus,
 }) {
-  const rows = order.orderItems?.map((item, index) => (
+  const {
+    contactNumber,
+    shippingAddress,
+    orderNumber,
+    orderStatus,
+    orderDate,
+    paymentMethod,
+    discountAmount,
+    totalQuantity,
+    totalPayableAmount,
+    orderItems,
+    timeSlot,
+    _id,
+  } = order || {};
+  const rows = orderItems?.map((item, index) => (
     <tr key={index}>
       <td>{item.product}</td>
       <td>{item.quantity}</td>
@@ -33,11 +47,11 @@ function OrderDetail({
         </Title>
         <Group>
           <Title order={5}>Contact Number:</Title>
-          <Text>{order.contactNumber}</Text>
+          <Text>{contactNumber}</Text>
         </Group>
         <Group>
           <Title order={5}>Address:</Title>
-          <Text>{order.shippingAddress?.address}</Text>
+          <Text>{shippingAddress?.address}</Text>
         </Group>
       </Card>
       <Card>
@@ -46,7 +60,7 @@ function OrderDetail({
         </Title>
         <Group className="order-detail">
           <Title order={5}>Order Number:</Title>
-          <Text>{order.orderNumber}</Text>
+          <Text>{orderNumber}</Text>
         </Group>
         <Table
           className="order-detail"
@@ -65,19 +79,21 @@ function OrderDetail({
         </Table>
         <Group className="order-detail">
           <Title order={5}>Order Status:</Title>
-          <Text>{order.orderStatus?.value}</Text>
+          <Text>
+            {order?.orderStatus?.[order?.orderStatus?.length - 1]?.status}
+          </Text>
         </Group>
         <Group className="order-detail">
           <Title order={5}>Order Date:</Title>
-          <Text>{new Date(order.orderDate).toLocaleDateString()}</Text>
+          <Text>{new Date(orderDate).toLocaleDateString()}</Text>
         </Group>
         <Group className="order-detail">
           <Title order={5}>Time Slot:</Title>
-          <Text>{order.timeSlot}</Text>
+          <Text>{timeSlot}</Text>
         </Group>
         <Group className="order-detail">
           <Title order={5}>Order Quantity:</Title>
-          <Text>{order.totalQuantity}</Text>
+          <Text>{totalQuantity}</Text>
         </Group>
       </Card>
       <Card>
@@ -86,15 +102,15 @@ function OrderDetail({
         </Title>
         <Group>
           <Title order={5}>Method:</Title>
-          <Text>{order.paymentMethod}</Text>
+          <Text>{paymentMethod}</Text>
         </Group>
         <Group>
           <Title order={5}>Discount:</Title>
-          <Text>{order.discountAmount}</Text>
+          <Text>{discountAmount}</Text>
         </Group>
         <Group>
           <Title order={5}>Amount:</Title>
-          <Text>{order.totalPayableAmount}</Text>
+          <Text>{totalPayableAmount}</Text>
         </Group>
       </Card>
       <Card>
@@ -102,7 +118,11 @@ function OrderDetail({
           <Button
             color="teal"
             onClick={() =>
-              updateOrderStatus(order.orderStatus.step, order._id, buttonStatus)
+              updateOrderStatus(
+                orderStatus?.[orderStatus?.length - 1]?.step,
+                _id,
+                buttonStatus
+              )
             }
           >
             {buttonStatus}

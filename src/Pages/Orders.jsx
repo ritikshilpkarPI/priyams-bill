@@ -23,7 +23,6 @@ function Orders() {
         },
       });
       setUserOrders(orderMapper(response.data.orders));
-      
     } catch (error) {
       console.error(error);
     }
@@ -72,15 +71,15 @@ function Orders() {
                   <OrderStatus
                     title={card.title}
                     orderStatus={card.title}
-                    number={index+1}
-                    children={orders.map((order,index) => {
+                    number={index + 1}
+                    children={orders.map((order, index) => {
                       return (
                         <div key={index}>
-                            <OrderCard
-                              order={order}
-                              buttonStatus={card.button}
-                              updateOrderStatus={updateOrderStatus}
-                            />
+                          <OrderCard
+                            order={order}
+                            buttonStatus={card.button}
+                            updateOrderStatus={updateOrderStatus}
+                          />
                         </div>
                       );
                     })}
