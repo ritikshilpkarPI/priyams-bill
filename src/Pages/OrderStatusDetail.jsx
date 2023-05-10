@@ -16,8 +16,9 @@ function OrderStatusDetail() {
   const [order, setOrder] = useState({});
   const [loader, setLoader] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
-  const buttonStatus = ORDER_CARDS.find(card => card.title === orderStatus)
-    .button;
+  const buttonStatus = ORDER_CARDS.find(
+    (card) => card.title === orderStatus
+  ).button;
 
   const getOrdersByStatus = async () => {
     setLoader(true);
@@ -57,6 +58,19 @@ function OrderStatusDetail() {
     }
   };
   const rows = orders?.map((order, index) => {
+    const {
+      orderNumber,
+      orderDate,
+      contactNumber,
+      paymentId,
+      paymentMethod,
+      shippingAddress,
+      timeSlot,
+      totalPayableAmount,
+      totalQuantity,
+      orderStatus,
+      _id,
+    } = order || {};
     return (
       <tr
         key={index}
@@ -65,23 +79,23 @@ function OrderStatusDetail() {
           open();
         }}
       >
-        <td>{order?.orderNumber}</td>
-        <td>{new Date(order?.orderDate).toLocaleDateString()}</td>
-        <td>{order?.contactNumber}</td>
-        <td>{order?.paymentId}</td>
-        <td>{order?.paymentMethod}</td>
-        <td>{order?.shippingAddress.address}</td>
-        <td>{order?.timeSlot}</td>
-        <td>{order?.totalPayableAmount}</td>
-        <td>{order?.totalQuantity}</td>
+        <td>{orderNumber}</td>
+        <td>{new Date(orderDate).toLocaleDateString()}</td>
+        <td>{contactNumber}</td>
+        <td>{paymentId}</td>
+        <td>{paymentMethod}</td>
+        <td>{shippingAddress.address}</td>
+        <td>{timeSlot}</td>
+        <td>{totalPayableAmount}</td>
+        <td>{totalQuantity}</td>
         <td>
           {buttonStatus && (
             <Button
               color="teal"
               onMouseDown={() =>
                 updateOrderStatus(
-                  order.orderStatus.step,
-                  order._id,
+                  orderStatus[orderStatus?.length - 1]?.step,
+                  _id,
                   buttonStatus
                 )
               }
