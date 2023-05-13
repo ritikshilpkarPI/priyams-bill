@@ -7,7 +7,7 @@ import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 
-const BillFeed = ({ bills = [] }) => {
+const BillFeed = ({ fromDayWise = false, bills = [] }) => {
   const [allBills, setAllBills] = useState([]);
   const [loader, setLoader] = useState(false);
   useEffect(() => {
@@ -24,7 +24,7 @@ const BillFeed = ({ bills = [] }) => {
           Cookie: '',
         },
       });
-      if(fetch.error)return
+      if (fetch.error) return;
       setAllBills(fetch.data.message.allBill);
       setLoader(false);
     };
@@ -34,7 +34,6 @@ const BillFeed = ({ bills = [] }) => {
     } else {
       getBillFeed();
     }
-  
     // eslint-disable-next-line
   }, []);
 
@@ -112,7 +111,14 @@ const BillFeed = ({ bills = [] }) => {
           </thead>
           <tbody className="body">
             {allBills.map((bill, idx) => {
-              return <TableRow key={`${bill}$${idx}`} bill={bill} idx={idx} />;
+              return (
+                <TableRow
+                  isFromDayWiseBills={fromDayWise}
+                  key={`${bill}$${idx}`}
+                  bill={bill}
+                  idx={idx}
+                />
+              );
             })}
           </tbody>
         </Table>
@@ -121,7 +127,7 @@ const BillFeed = ({ bills = [] }) => {
   );
 };
 
-const TableRow = ({ bill, idx }) => {
+const TableRow = ({ bill, idx, isFromDayWiseBills }) => {
   const [open, setOpen] = useState(false);
   let history = useHistory();
   function handleClick(id) {
@@ -151,7 +157,6 @@ const TableRow = ({ bill, idx }) => {
         Cookie: '',
       },
     });
-  
   };
   const sendBill = (bill) => {
     const link = `${window.location.origin}/showbill/${bill._id}`;
@@ -188,22 +193,22 @@ const TableRow = ({ bill, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill['customerName']}
+            {bill['customerName'] || 'customerName'}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill['customerPhone']}
+            {bill['customerPhone'] || 'customerPhone'}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill['billAmountTotal'].toFixed(2)}
+            {bill['billAmountTotal']?.toFixed(2)}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill['billMRPTotal'].toFixed(2)}
+            {bill['billMRPTotal']?.toFixed(2)}
           </Text>
         </td>
         <td>
@@ -223,23 +228,23 @@ const TableRow = ({ bill, idx }) => {
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill['totalNumberOfItems']}
+            {bill['totalNumberOfItems'] || 0}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill['totalNumberOfUniqueItems']}
+            {bill['totalNumberOfUniqueItems'] || 0}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {bill['billDiscountTotal'].toFixed(2)}
+            {bill['billDiscountTotal']?.toFixed(2)}
           </Text>
         </td>
         <ProtectedComponent role={access.BILL_PROFIT_ROW}>
           <td>
             <Text color="black" weight={500}>
-              {bill['totalBillProfit'].toFixed(2)}
+              {bill['totalBillProfit']?.toFixed(2)}
             </Text>
           </td>
         </ProtectedComponent>
@@ -268,71 +273,68 @@ const TableRow = ({ bill, idx }) => {
           </td>
         </ProtectedComponent>
       </tr>
-      <tr>
-        <Collapse in={open}>
-          <Table striped highlightOnHover>
-            <thead className="heading">
-              <tr>
-                <th>
-                  <Text>Sl. No.</Text>
-                </th>
-                <th>
-                  <Text>Name</Text>
-                </th>
-                <th>
-                  <Text>Quantity</Text>
-                </th>
-                <th>
-                  <Text>MRP</Text>
-                </th>
-                <th>
-                  <Text>Total Amount</Text>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="body">
-              {bill.items.map((billItemObj, idx) => {
-                // const itemDetail = (billItemObj && billItemObj.itemDetail) || {};
-                // const {
-                //   itemDetail,
-                //   itemQuantityInBill,
-                //   itemSellingPriceTotal,
-                // } = billItemObj;
-                return (
-                  <tr key={idx}>
-                    <td>
-                      <Text color="black" weight={500}>
-                        {idx + 1}
-                      </Text>
-                    </td>
-                    <td>
-                      <Text color="black" weight={500}>
-                        {billItemObj?.itemDetail?.itemName ||
-                          'Item name not found'}
-                      </Text>
-                    </td>
-                    <td>
-                      <Text color="black" weight={500}>
-                        {billItemObj?.itemQuantityInBill}
-                      </Text>
-                    </td>
-                    <td>
-                      <Text color="black" weight={500}>
-                        {billItemObj?.itemMRPtotal}
-                      </Text>
-                    </td>
-                    <td>
-                      <Text color="black" weight={500}>
-                        {billItemObj?.itemSellingPriceTotal}
-                      </Text>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </Collapse>
-      </tr>
+      {!isFromDayWiseBills && (
+        <tr>
+          <Collapse in={open}>
+            <Table striped highlightOnHover>
+              <thead className="heading">
+                <tr>
+                  <th>
+                    <Text>Sl. No.</Text>
+                  </th>
+                  <th>
+                    <Text>Name</Text>
+                  </th>
+                  <th>
+                    <Text>Quantity</Text>
+                  </th>
+                  <th>
+                    <Text>MRP</Text>
+                  </th>
+                  <th>
+                    <Text>Total Amount</Text>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="body">
+                {bill?.items?.length &&
+                  bill?.items.map((billItemObj, idx) => {
+                    return (
+                      <tr key={idx}>
+                        <td>
+                          <Text color="black" weight={500}>
+                            {idx + 1}
+                          </Text>
+                        </td>
+                        <td>
+                          <Text color="black" weight={500}>
+                            {billItemObj?.itemDetail?.itemName ||
+                              'Item name not found'}
+                          </Text>
+                        </td>
+                        <td>
+                          <Text color="black" weight={500}>
+                            {billItemObj?.itemQuantityInBill}
+                          </Text>
+                        </td>
+                        <td>
+                          <Text color="black" weight={500}>
+                            {billItemObj?.itemMRPtotal}
+                          </Text>
+                        </td>
+                        <td>
+                          <Text color="black" weight={500}>
+                            {billItemObj?.itemSellingPriceTotal}
+                          </Text>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </Table>
+          </Collapse>
+        </tr>
+      )}
     </>
   );
 };
