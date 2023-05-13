@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react';
-import {
-  Table,
-  Text,
-  // Collapse
-} from '@mantine/core';
+import { Table, Text, Collapse } from '@mantine/core';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
-// import { BillFeed } from "./BillFeed";
+import BillFeed from './BillFeed';
 
 const DayWiseBillFeed = () => {
   const [allBills, setAllBills] = useState([]);
@@ -21,7 +17,7 @@ const DayWiseBillFeed = () => {
           Cookie: '',
         },
       });
-      if(dayBill.error)return
+      if (dayBill.error) return;
       setAllBills(dayBill.data.message.allDailyBills);
     })();
   }, []);
@@ -63,9 +59,9 @@ const DayWiseBillFeed = () => {
           <th>
             <Text>Amount Returned</Text>
           </th>
-          {/* <th>
+          <th>
             <Text>Bills</Text>
-          </th> */}
+          </th>
         </tr>
       </thead>
       <tbody className="body">
@@ -81,7 +77,7 @@ const TableRow = ({ item, idx }) => {
   const {
     _id,
     // createdAt,
-    // bills,
+    dayBills,
     totalBillAmount,
     totalItemBilled,
     totalMRPAmount,
@@ -155,16 +151,21 @@ const TableRow = ({ item, idx }) => {
           </Text>
         </td>
       </tr>
-      {/* <tr>
-        <Collapse
-          in={rowOpen}
-          transitionDuration={500}
-          className={rowOpen ? "rowOpen" : ""}
-          transitionTimingFunction="linear"
-        >
-          <BillFeed bills={bills} />
-        </Collapse>
-      </tr> */}
+      /** `rowOpen` shows all the day bills only when the row is clicked.
+      Becasue of this the bill feed data is only added to the page when the row
+      is clicked. This keeps the UI lightweight otherwise. */
+      {rowOpen && (
+        <tr>
+          <Collapse
+            in={rowOpen}
+            transitionDuration={500}
+            className={rowOpen ? 'rowOpen' : ''}
+            transitionTimingFunction="linear"
+          >
+            <BillFeed fromDayWise={true} bills={dayBills} />
+          </Collapse>
+        </tr>
+      )}
     </>
   );
 };
