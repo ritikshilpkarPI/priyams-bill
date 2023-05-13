@@ -151,9 +151,9 @@ const TableRow = ({ item, idx }) => {
           </Text>
         </td>
       </tr>
-      /** `rowOpen` shows all the day bills only when the row is clicked.
+      {/* `rowOpen` shows all the day bills only when the row is clicked.
       Becasue of this the bill feed data is only added to the page when the row
-      is clicked. This keeps the UI lightweight otherwise. */
+      is clicked. This keeps the UI lightweight otherwise. */}
       {rowOpen && (
         <tr>
           <Collapse
