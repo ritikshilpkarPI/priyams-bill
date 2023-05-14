@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Loader, Button, Input, Checkbox } from '@mantine/core';
 import { CloseButton } from '@mantine/core';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 
 const Label = () => {
   const [value, setValue] = useState('');
@@ -10,15 +13,26 @@ const Label = () => {
   const [display, setDisplay] = useState(true);
   const [newData, setNewData] = useState([]);
   const [checked, setChecked] = useState(false);
-  const getData = () => {
+  const getData = async () => {
     setLoader(true);
-    fetch(`${process.env.REACT_APP_LABEL_API}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data.message.items);
-        setDisplay(true);
-        setLoader(false);
-      });
+    const fetch = await genericAxios({
+      url: API_PATHS.INVENTORY.GET_ITEMS,
+      method: API_METHODS.GET,
+      params: {
+        filters: {
+          minStockOnly: false,
+          isDeleted: false,
+        },
+      },
+      headers: {
+        Cookie: '',
+      },
+    });
+    if (fetch.error) return;
+    const itemsData = fetch?.data?.message?.items;
+    setData(itemsData);
+    setDisplay(true);
+    setLoader(false);
   };
   useEffect(() => {
     getData();
