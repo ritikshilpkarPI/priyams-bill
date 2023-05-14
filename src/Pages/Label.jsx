@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Loader, Button, Input, Checkbox } from '@mantine/core';
 import { CloseButton } from '@mantine/core';
+import { AppStateContext } from 'src/AppState/appState.context';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
@@ -13,6 +14,8 @@ const Label = () => {
   const [display, setDisplay] = useState(true);
   const [newData, setNewData] = useState([]);
   const [checked, setChecked] = useState(false);
+  const { itemsStateAndDispatch } = useContext(AppStateContext);
+  const [itemsList] = itemsStateAndDispatch;
   const getData = async () => {
     setLoader(true);
     const fetch = await genericAxios({
@@ -35,7 +38,11 @@ const Label = () => {
     setLoader(false);
   };
   useEffect(() => {
-    getData();
+    if (itemsList.length) {
+      setData(itemsList);
+    } else {
+      getData();
+    }
     // eslint-disable-next-line
   }, []);
   useEffect(() => {
