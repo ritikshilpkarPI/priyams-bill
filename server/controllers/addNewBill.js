@@ -1,8 +1,11 @@
 const { Bill } = require('../db-models/bill-model');
 const { Item } = require('../db-models/item-model');
 
-const addNewBill = async (req, res,next) => {
-  try {
+const addNewBill = async (req, res, next) => {
+  let attemptCount = 0;
+  let newBill;
+  const addBillFunction = async () => {
+    // try {
     const {
       customerName,
       customerPhone,
@@ -26,35 +29,14 @@ const addNewBill = async (req, res,next) => {
       billItems.map(async (itemObj) => {
         const {
           _id,
-          itemName,
-          itemBarcode,
-          itemStockQuantity,
-          minimumStockQuantity,
-          itemMRPperUnit,
-          itemCostPricePerUnit = 0,
-          itemDiscountPerUnit,
-          itemPerUnitDiscountPercentage,
-          itemSellingPricePerUnit,
-          createdAt,
           itemQuantityInBill,
+          itemSellingPricePerUnit,
+          itemCostPricePerUnit = 0,
+          itemMRPperUnit,
+          itemStockQuantity,
+          itemDiscountPerUnit,
+          ...restItemDetails
         } = itemObj.itemDetail;
-        let item = undefined;
-        if (!_id) {
-          const newItem = new Item({
-            itemName,
-            itemBarcode,
-            itemStockQuantity,
-            minimumStockQuantity,
-            itemMRPperUnit,
-            itemCostPricePerUnit,
-            itemDiscountPerUnit,
-            itemPerUnitDiscountPercentage,
-            itemSellingPricePerUnit,
-            createdAt,
-          });
-          const newItemSaved = await newItem.save();
-          item = newItemSaved;
-        }
 
         const orderQuantityInNumber = Number(itemQuantityInBill);
         totalNumberOfItems += orderQuantityInNumber;
@@ -77,17 +59,13 @@ const addNewBill = async (req, res,next) => {
 
         return {
           itemDetail: {
-            _id: _id || item._id,
-            itemName,
-            itemBarcode,
+            _id,
             itemStockQuantity,
-            minimumStockQuantity,
-            itemMRPperUnit,
             itemCostPricePerUnit,
-            itemDiscountPerUnit,
-            itemPerUnitDiscountPercentage,
             itemSellingPricePerUnit,
-            createdAt,
+            itemMRPperUnit,
+            itemDiscountPerUnit,
+            ...restItemDetails,
           },
           itemNetProfit,
           itemQuantityInBill: orderQuantityInNumber,
@@ -98,7 +76,7 @@ const addNewBill = async (req, res,next) => {
         };
       })
     );
-    const newBill = new Bill({
+    newBill = new Bill({
       customerName,
       customerPhone,
       items: allItems,
@@ -114,11 +92,21 @@ const addNewBill = async (req, res,next) => {
       amountReturn,
     });
     await newBill.save();
-    res.status(200).json({ message: newBill });
-  } catch (error) {
-    next(error)
+    // res.status(200).json({ message: newBill });
+  };
+  while (attemptCount <= 4) {
+    try {
+      ++attemptCount;
+      await addBillFunction();
+      return res.status(200).json({ message: newBill, attemptCount });
+    } catch (error) {
+      console.log({ error });
+      if (attemptCount > 3) return next({ error, attemptCount });
+    }
   }
+  // catch (error) {
+  //   next(error)
+  // }
 };
-
 
 module.exports = addNewBill;

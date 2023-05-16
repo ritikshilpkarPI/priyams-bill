@@ -5,6 +5,7 @@ import BillNarrator from '../components/BillNarrator';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { v4 as uuidv4 } from 'uuid';
 
 const itemsByBarcode = {};
 const itemsByName = {};
@@ -191,6 +192,29 @@ const updateReturnAmount = (setBill, bill) => {
   }));
 };
 
+function createBill(newBillId, setApiLoading) {
+  const { newBillId: billUuid, ...billObject } = JSON.parse(
+    localStorage.getItem(`newBill-${newBillId}`)
+  );
+  (async function () {
+    try {
+      const addBillResponse = await genericAxios({
+        ...billObject,
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (addBillResponse.error) {
+        setApiLoading(false);
+        throw Error();
+      }
+      localStorage.removeItem(`newBill-${newBillId}`);
+    } catch (error) {
+      throw console.error({ error });
+    }
+  })();
+}
+
 async function addNewBill(
   setApiLoading,
   bill,
@@ -218,12 +242,18 @@ async function addNewBill(
   };
   const objectOfInterest = billID ? editApi : createApi;
 
-  await genericAxios({
-    ...objectOfInterest,
-    headers: {
-      Cookie: '',
-    },
-  });
+  const newBillId = uuidv4();
+
+  localStorage.setItem(
+    `newBill-${newBillId}`,
+    JSON.stringify({
+      newBillId,
+      createdAt: new Date().toLocaleString(),
+      ...objectOfInterest,
+    })
+  );
+  createBill(newBillId, setApiLoading);
+
   window.print();
   setApiLoading(false);
   setBill(BILL_INITIAL_STATE);
