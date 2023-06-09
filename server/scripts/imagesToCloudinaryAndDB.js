@@ -32,7 +32,7 @@ const MONGODB_URI = mongoUriEnvMap[ENV_NAME] || mongoUriEnvMap[NODE_ENV];
 async function uploadImageToCloudinary(imagePath) {
   try {
     const result = await cloudinary.uploader.upload(imagePath, {
-      folder: 'pstores-test',
+      folder: 'pstores',
     });
     console.log(`CLOUD SUCCESS : ${imagePath} is uploaded to cloudinary`);
     return result;
