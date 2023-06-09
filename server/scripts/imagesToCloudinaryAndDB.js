@@ -85,12 +85,12 @@ async function main() {
         }
       );
       if (!item) {
-         console.log(`Cannot find any item in DB for ${imageName}`);
-          fs.copyFileSync(
-            `${imageDirectory}/${imageNameWithExtension}`,
-            `${copyDirectory}/${imageNameWithExtension}`
-          );
-          console.log(`copy created for ${imageNameWithExtension}`);
+        console.log(`Cannot find any item in DB for ${imageName}`);
+        fs.copyFileSync(
+          `${imageDirectory}/${imageNameWithExtension}`,
+          `${copyDirectory}/${imageNameWithExtension}`
+        );
+        console.log(`copy created for ${imageNameWithExtension}`);
       } else {
         console.log(
           `DB SUCCESS: ${imageName} image is successfully updated in DB`
