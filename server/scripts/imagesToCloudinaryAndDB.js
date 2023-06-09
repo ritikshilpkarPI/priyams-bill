@@ -126,5 +126,5 @@ async function main() {
 main();
 
 //TO RUN THIS SCRIPT USE BELOW CMD
-// node scripts/imagesToCloudinaryAndDB.js directoryPath
-// e.g. node scripts/imagesToCloudinaryAndDB.js '/downloads/images'
+// npm run imagesToCloudinary directoryPath
+// e.g. npm run imagesToCloudinary '/downloads/images'
