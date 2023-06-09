@@ -71,34 +71,26 @@ async function main() {
       );
       const { public_id, secure_url } = cloudData;
       const imageName = imageNameWithExtension.split('.')[0].toUpperCase();
-      try {
-        const item = await Item.findOneAndUpdate(
-          { itemName: imageName },
-          {
-            $push: {
-              images: {
-                public_id,
-                secure_url,
-              },
+      const item = await Item.findOneAndUpdate(
+        { itemName: imageName },
+        {
+          $push: {
+            images: {
+              public_id,
+              secure_url,
             },
-          }
-        );
-        if (!item) {
-          console.log(`Cannot find any item in DB for ${imageName}`);
-          copyImages.push(imageNameWithExtension);
-        } else {
-          console.log(
-            `DB SUCCESS: ${imageName} image is successfully updated in DB`
-          );
+          },
         }
-      } catch (err) {
+      );
+      if (!item) {
+        console.log(`Cannot find any item in DB for ${imageName}`);
+        copyImages.push(imageNameWithExtension);
+      } else {
         console.log(
-          `DB ERROR: ${imageName} image could not updated in DB ${err}`
+          `DB SUCCESS: ${imageName} image is successfully updated in DB`
         );
       }
     }
-
-    console.log('Image upload and item update completed!');
   } catch (error) {
     console.error('Error:', error);
   } finally {
