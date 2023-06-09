@@ -65,6 +65,9 @@ async function main() {
     fs.mkdirSync(copyDirectory, { recursive: true });
   }
   try {
+    let totalImagesUploaded = 0;
+    let totalImagesFailedToUpload = 0;
+
     const imageNamesList = fs.readdirSync(imageDirectory);
     for (let i = 0; i < imageNamesList.length; i++) {
       const imageNameWithExtension = imageNamesList[i];
@@ -90,12 +93,19 @@ async function main() {
           `${imageDirectory}/${imageNameWithExtension}`,
           `${copyDirectory}/${imageNameWithExtension}`
         );
+        totalImagesFailedToUpload += 1;
         console.log(`copy created for ${imageNameWithExtension}`);
       } else {
         console.log(
           `DB SUCCESS: ${imageName} image is successfully updated in DB`
         );
+        totalImagesUploaded += 1;
       }
+      console.log(
+        `STATUS: totalImages:${imageNamesList.length} currentImageNo:${
+          i + 1
+        } imagesUploaded:${totalImagesUploaded}, imagesFailed:${totalImagesFailedToUpload}`
+      );
     }
   } catch (error) {
     console.error('Error:', error);
