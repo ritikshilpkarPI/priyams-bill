@@ -61,7 +61,9 @@ async function main() {
   const db = mongoose.connection;
 
   const copyDirectory = `${imageDirectory}/../COPY-Change-Product-Image-Names`;
-  const copyImages = [];
+  if (!fs.existsSync(copyDirectory)) {
+    fs.mkdirSync(copyDirectory, { recursive: true });
+  }
   try {
     const imageNamesList = fs.readdirSync(imageDirectory);
     for (let i = 0; i < imageNamesList.length; i++) {
@@ -83,8 +85,12 @@ async function main() {
         }
       );
       if (!item) {
-        console.log(`Cannot find any item in DB for ${imageName}`);
-        copyImages.push(imageNameWithExtension);
+         console.log(`Cannot find any item in DB for ${imageName}`);
+          fs.copyFileSync(
+            `${imageDirectory}/${imageNameWithExtension}`,
+            `${copyDirectory}/${imageNameWithExtension}`
+          );
+          console.log(`copy created for ${imageNameWithExtension}`);
       } else {
         console.log(
           `DB SUCCESS: ${imageName} image is successfully updated in DB`
@@ -96,21 +102,6 @@ async function main() {
   } finally {
     await db.close();
     console.log('mongodb connection closed');
-    if (!fs.existsSync(copyDirectory)) {
-      fs.mkdirSync(copyDirectory, { recursive: true });
-    }
-    for (let i = 0; i < copyImages.length; i++) {
-      const copyImage = copyImages[i];
-      try {
-        fs.copyFileSync(
-          `${imageDirectory}/${copyImage}`,
-          `${copyDirectory}/${copyImage}`
-        );
-        console.log(`copy created for ${copyImage}`);
-      } catch (err) {
-        console.log(`Cannot create copy of ${copyImage}`, err);
-      }
-    }
     console.log('script completed');
   }
 }
