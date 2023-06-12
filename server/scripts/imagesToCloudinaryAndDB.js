@@ -80,6 +80,10 @@ async function main() {
     for (let i = 0; i < imageNamesList.length; i++) {
       const imageNameWithExtension = imageNamesList[i];
       const imageName = imageNameWithExtension.split('.')[0].toUpperCase();
+
+      const sourcePath = `${imageDirectory}/${imageNameWithExtension}`;
+      const copyPath = `${copyDirectory}/${imageNameWithExtension}`;
+
       const billItem = await billDB.models.Item.findOne({
         itemName: imageName,
       });
@@ -97,20 +101,21 @@ async function main() {
           await billItem.save();
           status.imagesUploadedOnBill += 1;
           console.log(`BILL SUCCESS: ${imageName} is updatd in DB`);
+        } else {
+          fs.copyFileSync(sourcePath, `${copyPath}- BILL`);
         }
         if (appProduct) {
           appProduct.images = [...appProduct.images, { public_id, secure_url }];
           await appProduct.save();
           status.imagesUploadedOnApp += 1;
           console.log(`APP SUCCESS : ${imageName} is updatd in app`);
+        } else {
+          fs.copyFileSync(sourcePath, `${copyPath} - APP`);
         }
         status.totalImagesUploaded += 1;
       } else {
         console.log(`${imageName} - Cannot find in both bill and app`);
-        fs.copyFileSync(
-          `${imageDirectory}/${imageNameWithExtension}`,
-          `${copyDirectory}/${imageNameWithExtension}`
-        );
+        fs.copyFileSync(sourcePath, copyPath);
         status.totalImagesFailedToUpload += 1;
         console.log(`copy created for ${imageNameWithExtension}`);
       }
