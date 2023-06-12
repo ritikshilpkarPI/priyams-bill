@@ -29,6 +29,7 @@ const getDetailsById = require("./getDetailsById");
 const getEditBill = require("./getEditBill");
 const getItemsCategoryList = require("./getItemsCategoryList");
 const getItemsFeed = require("./getItemsFeed");
+const getItemsWithNoImages =  require("./getItemsWithNoImages")
 const getMonthlyAttendance = require("./getMonthlyAttendance");
 const getOrders = require("./getOrders");
 const getOrdersByQuery = require("./getOrdersByQuery");
@@ -90,6 +91,7 @@ module.exports = {
     getEditBill,
     getItemsCategoryList,
     getItemsFeed,
+    getItemsWithNoImages,
     getMonthlyAttendance,
     getOrders,
     getOrdersByQuery,
@@ -116,5 +118,5 @@ module.exports = {
     userDetails,
     getCustomerBill,
     getUserOrders,
-    updateOrderStatus
+    updateOrderStatus,
 }

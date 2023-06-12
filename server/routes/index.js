@@ -61,6 +61,7 @@ const {
   userDetails,
   getUserOrders,
   updateOrderStatus,
+  getItemsWithNoImages
 } = require('../controllers/index');
 
 // online order apis
@@ -73,6 +74,7 @@ router.get(
   isLoggedIn,
   getItemsCategoryList
 );
+router.get(API_PATHS.INVENTORY.GET_ITEMS_WITH_NO_IMAGES, getItemsWithNoImages)
 router.post(API_PATHS.INVENTORY.POST_ADD_NEW_ITEM, isLoggedIn, addItems);
 router.post(
   API_PATHS.INVENTORY.POST_SOFT_DELETE_ITEM,
