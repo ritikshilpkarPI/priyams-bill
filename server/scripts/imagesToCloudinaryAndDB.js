@@ -77,7 +77,7 @@ async function main() {
     fs.mkdirSync(copyAppDirectory, { recursive: true });
 
   try {
-    const imageNamesList = fs.readdirSync(imageDirectory).slice(0, 100);
+    const imageNamesList = fs.readdirSync(imageDirectory);
     const status = {
       totalImagesUploaded: 0,
       totalImagesFailedToUpload: 0,
