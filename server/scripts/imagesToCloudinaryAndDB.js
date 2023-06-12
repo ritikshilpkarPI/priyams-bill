@@ -79,7 +79,10 @@ async function main() {
     };
     for (let i = 0; i < imageNamesList.length; i++) {
       const imageNameWithExtension = imageNamesList[i];
-      const imageName = imageNameWithExtension.split('.')[0].toUpperCase();
+      const lastDotIndex = imageNameWithExtension.lastIndexOf('.');
+      const imageName = imageNameWithExtension
+        .slice(0, lastDotIndex)
+        .toUpperCase();
 
       const sourcePath = `${imageDirectory}/${imageNameWithExtension}`;
       const copyPath = `${copyDirectory}/${imageNameWithExtension}`;
