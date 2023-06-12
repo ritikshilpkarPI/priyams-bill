@@ -88,7 +88,7 @@ router.post(
   isLoggedIn,
   filterExpiryDates
 );
-router.put(API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID, isLoggedIn, editItemById);
+router.put(API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID, editItemById);
 router.delete(
   `${API_PATHS.INVENTORY.GET_PERMANENTLY_OUT_OF_STOCK}/:id`,
   permanentlyOutOfStock
