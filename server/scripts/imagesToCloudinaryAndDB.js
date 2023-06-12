@@ -54,16 +54,16 @@ async function main() {
     return;
   }
 
-  const bill = mongoose.createConnection(MONGODB_URI, {
+  const billDB = mongoose.createConnection(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  const app = mongoose.createConnection(APP_MONGODB_URI, {
+  const appDB = mongoose.createConnection(APP_MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  bill.model('Item', ItemSchema);
-  app.model('Product', ItemSchema);
+  billDB.model('Item', ItemSchema);
+  appDB.model('Product', ItemSchema);
   const copyDirectory = `${imageDirectory}/../COPY-Change-Product-Image-Names`;
   if (!fs.existsSync(copyDirectory)) {
     fs.mkdirSync(copyDirectory, { recursive: true });
@@ -80,9 +80,13 @@ async function main() {
     for (let i = 0; i < imageNamesList.length; i++) {
       const imageNameWithExtension = imageNamesList[i];
       const imageName = imageNameWithExtension.split('.')[0].toUpperCase();
-      const billItem = await bill.models.Item.findOne({ itemName: imageName });
-      const appItem = await app.models.Product.findOne({ itemName: imageName });
-      if (billItem || appItem) {
+      const billItem = await billDB.models.Item.findOne({
+        itemName: imageName,
+      });
+      const appProduct = await appDB.models.Product.findOne({
+        itemName: imageName,
+      });
+      if (billItem || appProduct) {
         const cloudData = await uploadImageToCloudinary(
           `${imageDirectory}/${imageNameWithExtension}`
         );
@@ -92,11 +96,11 @@ async function main() {
           billItem.images = [...billItem.images, { public_id, secure_url }];
           await billItem.save();
           status.imagesUploadedOnBill += 1;
-          console.log(`BILL SUCCESS: ${imageName} is updatd in bill`);
+          console.log(`BILL SUCCESS: ${imageName} is updatd in DB`);
         }
-        if (appItem) {
-          appItem.images = [...appItem.images, { public_id, secure_url }];
-          await appItem.save();
+        if (appProduct) {
+          appProduct.images = [...appProduct.images, { public_id, secure_url }];
+          await appProduct.save();
           status.imagesUploadedOnApp += 1;
           console.log(`APP SUCCESS : ${imageName} is updatd in app`);
         }
@@ -115,8 +119,8 @@ async function main() {
   } catch (error) {
     console.error('Error:', error);
   } finally {
-    await bill.close();
-    await app.close();
+    await billDB.close();
+    await appDB.close();
     console.log('mongodb connection closed');
     console.log('script completed');
   }
