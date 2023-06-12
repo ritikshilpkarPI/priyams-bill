@@ -66,11 +66,18 @@ async function main() {
   billDB.model('Item', ItemSchema);
   appDB.model('Product', ItemSchema);
   const copyDirectory = `${imageDirectory}/../COPY-Change-Product-Image-Names`;
-  if (!fs.existsSync(copyDirectory)) {
+  const copyBillDirectory = `${imageDirectory}/../COPY-BILL FAILED IMAGES`;
+  const copyAppDirectory = `${imageDirectory}/../COPY-APP FAILED IMAGES`;
+
+  !fs.existsSync(copyDirectory) &&
     fs.mkdirSync(copyDirectory, { recursive: true });
-  }
+  !fs.existsSync(copyBillDirectory) &&
+    fs.mkdirSync(copyBillDirectory, { recursive: true });
+  !fs.existsSync(copyAppDirectory) &&
+    fs.mkdirSync(copyAppDirectory, { recursive: true });
+
   try {
-    const imageNamesList = fs.readdirSync(imageDirectory);
+    const imageNamesList = fs.readdirSync(imageDirectory).slice(0, 100);
     const status = {
       totalImagesUploaded: 0,
       totalImagesFailedToUpload: 0,
@@ -87,8 +94,6 @@ async function main() {
           .toUpperCase();
 
         const sourcePath = `${imageDirectory}/${imageNameWithExtension}`;
-        const copyPath = `${copyDirectory}/${imageNameWithExtension}`;
-
         const billItem = await billDB.models.Item.findOne({
           itemName: imageName,
         });
@@ -106,7 +111,11 @@ async function main() {
               status.imagesUploadedOnBill += 1;
               console.log(`BILL SUCCESS: ${imageName} is updated in DB`);
             } else {
-              fs.copyFileSync(sourcePath, `${copyPath}- BILL`);
+              fs.copyFileSync(
+                sourcePath,
+                `${copyBillDirectory}/${imageNameWithExtension}`
+              );
+              console.log('BILL FAIL: COPY CREATED');
             }
             if (appProduct) {
               appProduct.images.push({ public_id, secure_url });
@@ -114,7 +123,11 @@ async function main() {
               status.imagesUploadedOnApp += 1;
               console.log(`APP SUCCESS : ${imageName} is updated in app`);
             } else {
-              fs.copyFileSync(sourcePath, `${copyPath} - APP`);
+              fs.copyFileSync(
+                sourcePath,
+                `${copyAppDirectory}/${imageNameWithExtension}`
+              );
+              console.log('APP FAIL: COPY CREATED');
             }
             status.totalImagesUploaded += 1;
           } catch (error) {
@@ -122,20 +135,33 @@ async function main() {
               `Error processing image ${imageNameWithExtension}:`,
               error
             );
-            fs.copyFileSync(sourcePath, copyPath);
+            fs.copyFileSync(
+              sourcePath,
+              `${copyDirectory}/${imageNameWithExtension}`
+            );
             status.totalImagesFailedToUpload += 1;
             status.failedImages.push(imageNameWithExtension);
-            console.log(`Copy created for ${imageNameWithExtension}`);
+            console.log(
+              `CLOUDINARY FAIL : Copy created for ${imageNameWithExtension}`
+            );
           }
         } else {
-          console.log(`${imageName} - Cannot find in both bill and app`);
-          fs.copyFileSync(sourcePath, copyPath);
+          console.log(
+            `APP & BILL FAIL : ${imageName} - Cannot find in both bill and app`
+          );
+          fs.copyFileSync(
+            sourcePath,
+            `${copyDirectory}/${imageNameWithExtension}`
+          );
           status.totalImagesFailedToUpload += 1;
           status.failedImages.push(imageNameWithExtension);
           console.log(`Copy created for ${imageNameWithExtension}`);
         }
         console.log(
-          `STATUS: ${JSON.stringify(status)}, currentImage:${index + 1}`
+          `STATUS: ${JSON.stringify({
+            ...status,
+            failedImages: null,
+          })}, currentImage:${index + 1}`
         );
       }
     );
