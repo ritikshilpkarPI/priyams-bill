@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 require('dotenv').config();
 
-const { Item } = require('../db-models/item-model');
+const { ItemSchema } = require('../db-models/item-model');
 
 const {
   CLOUD_NAME,
@@ -13,6 +13,7 @@ const {
   NODE_ENV,
   STAGING_DB,
   PROD_DB,
+  APP_MONGODB_URI,
   DEV_DB,
 } = process.env;
 
@@ -53,64 +54,69 @@ async function main() {
     return;
   }
 
-  mongoose.connect(MONGODB_URI, {
+  const bill = mongoose.createConnection(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-
-  const db = mongoose.connection;
-
+  const app = mongoose.createConnection(APP_MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  bill.model('Item', ItemSchema);
+  app.model('Product', ItemSchema);
   const copyDirectory = `${imageDirectory}/../COPY-Change-Product-Image-Names`;
   if (!fs.existsSync(copyDirectory)) {
     fs.mkdirSync(copyDirectory, { recursive: true });
   }
   try {
-    let totalImagesUploaded = 0;
-    let totalImagesFailedToUpload = 0;
-
     const imageNamesList = fs.readdirSync(imageDirectory);
+    const status = {
+      totalImagesUploaded: 0,
+      totalImagesFailedToUpload: 0,
+      imagesUploadedOnApp: 0,
+      imagesUploadedOnBill: 0,
+      totalImages: imageNamesList.length,
+    };
     for (let i = 0; i < imageNamesList.length; i++) {
       const imageNameWithExtension = imageNamesList[i];
-      const cloudData = await uploadImageToCloudinary(
-        `${imageDirectory}/${imageNameWithExtension}`
-      );
-      const { public_id, secure_url } = cloudData;
       const imageName = imageNameWithExtension.split('.')[0].toUpperCase();
-      const item = await Item.findOneAndUpdate(
-        { itemName: imageName },
-        {
-          $push: {
-            images: {
-              public_id,
-              secure_url,
-            },
-          },
+      const billItem = await bill.models.Item.findOne({ itemName: imageName });
+      const appItem = await app.models.Product.findOne({ itemName: imageName });
+      if (billItem || appItem) {
+        const cloudData = await uploadImageToCloudinary(
+          `${imageDirectory}/${imageNameWithExtension}`
+        );
+        const { public_id, secure_url } = cloudData;
+
+        if (billItem) {
+          billItem.images = [...billItem.images, { public_id, secure_url }];
+          await billItem.save();
+          status.imagesUploadedOnBill += 1;
+          console.log(`BILL SUCCESS: ${imageName} is updatd in bill`);
         }
-      );
-      if (!item) {
-        console.log(`Cannot find any item in DB for ${imageName}`);
+        if (appItem) {
+          appItem.images = [...appItem.images, { public_id, secure_url }];
+          await appItem.save();
+          status.imagesUploadedOnApp += 1;
+          console.log(`APP SUCCESS : ${imageName} is updatd in app`);
+        }
+        status.totalImagesUploaded += 1;
+      } else {
+        console.log(`${imageName} - Cannot find in both bill and app`);
         fs.copyFileSync(
           `${imageDirectory}/${imageNameWithExtension}`,
           `${copyDirectory}/${imageNameWithExtension}`
         );
-        totalImagesFailedToUpload += 1;
+        status.totalImagesFailedToUpload += 1;
         console.log(`copy created for ${imageNameWithExtension}`);
-      } else {
-        console.log(
-          `DB SUCCESS: ${imageName} image is successfully updated in DB`
-        );
-        totalImagesUploaded += 1;
       }
-      console.log(
-        `STATUS: totalImages:${imageNamesList.length} currentImageNo:${
-          i + 1
-        } imagesUploaded:${totalImagesUploaded}, imagesFailed:${totalImagesFailedToUpload}`
-      );
+      console.log(`STATUS: ${JSON.stringify(status)}, currentImage:${i + 1}`);
     }
   } catch (error) {
     console.error('Error:', error);
   } finally {
-    await db.close();
+    await bill.close();
+    await app.close();
     console.log('mongodb connection closed');
     console.log('script completed');
   }
