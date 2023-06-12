@@ -39,8 +39,9 @@ async function uploadImageToCloudinary(imagePath) {
     return result;
   } catch (error) {
     console.log(
-      `CLOUD ERROR : ${imagePath} is could not upload to cloudinary, ${error}`
+      `CLOUD ERROR : ${imagePath} could not be uploaded to cloudinary, ${error}`
     );
+    throw error;
   }
 }
 
@@ -76,53 +77,76 @@ async function main() {
       imagesUploadedOnApp: 0,
       imagesUploadedOnBill: 0,
       totalImages: imageNamesList.length,
+      failedImages: [],
     };
-    for (let i = 0; i < imageNamesList.length; i++) {
-      const imageNameWithExtension = imageNamesList[i];
-      const lastDotIndex = imageNameWithExtension.lastIndexOf('.');
-      const imageName = imageNameWithExtension
-        .slice(0, lastDotIndex)
-        .toUpperCase();
 
-      const sourcePath = `${imageDirectory}/${imageNameWithExtension}`;
-      const copyPath = `${copyDirectory}/${imageNameWithExtension}`;
+    const promises = imageNamesList.map(
+      async (imageNameWithExtension, index) => {
+        const imageName = imageNameWithExtension
+          .slice(0, imageNameWithExtension.lastIndexOf('.'))
+          .toUpperCase();
 
-      const billItem = await billDB.models.Item.findOne({
-        itemName: imageName,
-      });
-      const appProduct = await appDB.models.Product.findOne({
-        itemName: imageName,
-      });
-      if (billItem || appProduct) {
-        const cloudData = await uploadImageToCloudinary(
-          `${imageDirectory}/${imageNameWithExtension}`
+        const sourcePath = `${imageDirectory}/${imageNameWithExtension}`;
+        const copyPath = `${copyDirectory}/${imageNameWithExtension}`;
+
+        const billItem = await billDB.models.Item.findOne({
+          itemName: imageName,
+        });
+        const appProduct = await appDB.models.Product.findOne({
+          itemName: imageName,
+        });
+        if (billItem || appProduct) {
+          try {
+            const cloudData = await uploadImageToCloudinary(sourcePath);
+            const { public_id, secure_url } = cloudData;
+
+            if (billItem) {
+              billItem.images.push({ public_id, secure_url });
+              await billItem.save();
+              status.imagesUploadedOnBill += 1;
+              console.log(`BILL SUCCESS: ${imageName} is updated in DB`);
+            } else {
+              fs.copyFileSync(sourcePath, `${copyPath}- BILL`);
+            }
+            if (appProduct) {
+              appProduct.images.push({ public_id, secure_url });
+              await appProduct.save();
+              status.imagesUploadedOnApp += 1;
+              console.log(`APP SUCCESS : ${imageName} is updated in app`);
+            } else {
+              fs.copyFileSync(sourcePath, `${copyPath} - APP`);
+            }
+            status.totalImagesUploaded += 1;
+          } catch (error) {
+            console.error(
+              `Error processing image ${imageNameWithExtension}:`,
+              error
+            );
+            fs.copyFileSync(sourcePath, copyPath);
+            status.totalImagesFailedToUpload += 1;
+            status.failedImages.push(imageNameWithExtension);
+            console.log(`Copy created for ${imageNameWithExtension}`);
+          }
+        } else {
+          console.log(`${imageName} - Cannot find in both bill and app`);
+          fs.copyFileSync(sourcePath, copyPath);
+          status.totalImagesFailedToUpload += 1;
+          status.failedImages.push(imageNameWithExtension);
+          console.log(`Copy created for ${imageNameWithExtension}`);
+        }
+        console.log(
+          `STATUS: ${JSON.stringify(status)}, currentImage:${index + 1}`
         );
-        const { public_id, secure_url } = cloudData;
-
-        if (billItem) {
-          billItem.images = [...billItem.images, { public_id, secure_url }];
-          await billItem.save();
-          status.imagesUploadedOnBill += 1;
-          console.log(`BILL SUCCESS: ${imageName} is updatd in DB`);
-        } else {
-          fs.copyFileSync(sourcePath, `${copyPath}- BILL`);
-        }
-        if (appProduct) {
-          appProduct.images = [...appProduct.images, { public_id, secure_url }];
-          await appProduct.save();
-          status.imagesUploadedOnApp += 1;
-          console.log(`APP SUCCESS : ${imageName} is updatd in app`);
-        } else {
-          fs.copyFileSync(sourcePath, `${copyPath} - APP`);
-        }
-        status.totalImagesUploaded += 1;
-      } else {
-        console.log(`${imageName} - Cannot find in both bill and app`);
-        fs.copyFileSync(sourcePath, copyPath);
-        status.totalImagesFailedToUpload += 1;
-        console.log(`copy created for ${imageNameWithExtension}`);
       }
-      console.log(`STATUS: ${JSON.stringify(status)}, currentImage:${i + 1}`);
+    );
+
+    await Promise.all(promises);
+
+    if (status.failedImages.length > 0) {
+      console.log(
+        `Failed to upload ${status.failedImages.length} images:`,
+        status.failedImages
+      );
     }
   } catch (error) {
     console.error('Error:', error);
@@ -136,6 +160,6 @@ async function main() {
 
 main();
 
-//TO RUN THIS SCRIPT USE BELOW CMD
+// TO RUN THIS SCRIPT USE THE FOLLOWING COMMAND:
 // npm run imagesToCloudinary directoryPath
-// e.g. npm run imagesToCloudinary '/downloads/images'
+// e.g., npm run imagesToCloudinary '/downloads/images'
