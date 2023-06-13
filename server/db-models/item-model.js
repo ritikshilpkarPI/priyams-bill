@@ -19,7 +19,7 @@ const inventoryItemCategory = [
   'Miscellanous',
 ];
 
-const ItemSchem = new mongoose.Schema(
+const ItemSchema = new mongoose.Schema(
   {
     itemName: { type: String, required: true, trim: true },
     itemBarcode: { type: Number },
@@ -68,5 +68,5 @@ const ItemSchem = new mongoose.Schema(
   { strict: false, timestamps: true }
 );
 
-const Item = mongoose.model('Item', ItemSchem);
-module.exports = { Item, inventoryItemCategory };
+const Item = mongoose.model('Item', ItemSchema);
+module.exports = { Item, inventoryItemCategory, ItemSchema };

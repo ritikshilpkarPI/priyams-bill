@@ -18,7 +18,8 @@
     "build:functions": "netlify-lambda build server",
     "test": "react-scripts test --env=jsdom",
     "format": "git diff --name-only HEAD | grep '\\.jsx$, \\.js$' | xargs prettier --write",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "imagesToCloudinary": "node server/scripts/imagesToCloudinaryAndDB.js"
   },
   "repository": {
     "type": "git",
