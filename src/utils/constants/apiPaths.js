@@ -40,6 +40,7 @@ export const API_PATHS = {
     PUT_EDIT_ITEM_BY_ID: '/api/inventory/editItemById',
     GET_PERMANENTLY_OUT_OF_STOCK: '/api/inventory/permanentlyOutOfStock',
     GET_ITEMS_CATEGORY_LIST: '/api/inventory/getItemsCategoryList',
+    GET_ITEMS_WITH_NO_IMAGES: '/api/inventory/getItemsWithNoImages',
   },
   AUTH: {
     POST_LOGIN: '/api/auth/login',
@@ -81,5 +82,5 @@ export const API_PATHS = {
   ORDERS: {
     GET_USER_ORDERS: "/api/online/orders",
     UPDATE_USER_ORDERS: "/api/online/updateOrderStatus",
-  }
+  },
 };
