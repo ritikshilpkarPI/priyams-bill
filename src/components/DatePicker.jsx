@@ -1,9 +1,12 @@
 import React from 'react';
 
 const MyDatePicker = ({ setDate, date }) => {
+
+ const [selectedDate, setSelectedDate] = React.useState(new Date());
   const handleDateChange = (event) => {
     let s = String(new Date(event.target.value).toLocaleDateString('en-US'));
     setDate(s);
+    setSelectedDate(event.target.value);
   };
 
   return (
@@ -27,7 +30,7 @@ const MyDatePicker = ({ setDate, date }) => {
         type="date"
         className="useby-date-picker"
         placeholder="Pick date"
-        value={date}
+        value={selectedDate}
         onChange={handleDateChange}
         style={{
           width: '100px',
