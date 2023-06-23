@@ -9,11 +9,12 @@ import {
   Switch,
   Select,
 } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+// import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import MyDatePicker from './DatePicker';
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -50,6 +51,7 @@ const OrderForm = ({
     setToggle1(true);
     setToggle(false);
   };
+
   return (
     <Drawer
       opened={opened}
@@ -146,8 +148,7 @@ const OrderForm = ({
             />
           </Group>
           <div className="date-container">
-            {/* <DatePicker placeholder="Pick date" label="Event date" withAsterisk={form.values.validate}={true} value={date} onChange={(day) => setDate(day)} /> */}
-            <DatePicker
+            {/* <DatePicker
               className="useby-date-picker"
               placeholder="Pick date"
               label="Expiry  date"
@@ -155,9 +156,24 @@ const OrderForm = ({
               value={date}
               onChange={(day) => {
                 let s = String(new Date(day).toLocaleDateString('en-US'));
+                console.log({s});
                 setDate(s);
               }}
               style={{ width: '140px' }}
+            /> */}
+            <MyDatePicker
+            className="useby-date-picker"
+            placeholder="Pick date"
+            label="Expiry  date"
+            inputFormat="MM/DD/YYYY"
+            value={date}
+            onChange={(day) => {
+              let s = String(new Date(day).toLocaleDateString('en-US'));
+              setDate(s);
+            }}
+            style={{ width: '140px' }}
+            setDate={setDate}
+            date={date}
             />
             <NumberInput
               withAsterisk={form.values.validate}
