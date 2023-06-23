@@ -13,7 +13,7 @@ import {
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MyDatePicker from './DatePicker';
 const OrderForm = ({
   openDrawer,
