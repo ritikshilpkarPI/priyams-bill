@@ -15,8 +15,10 @@ function App({ history, location }) {
     value,
     setValue,
   } = AppFunction(history, location);
+
+  const devBg = process.env.NODE_ENV !== 'production' ? 'indianred' : 'none';
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundColor: devBg }}>
       {staffUserName && (
         <Header
           staffName={staffName}
