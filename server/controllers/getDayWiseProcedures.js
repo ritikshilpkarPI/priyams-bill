@@ -1,7 +1,6 @@
 const { OpenClose } = require('../db-models/open-close-model');
 
-
-const getDayWiseProcedures = async (req, res,next) => {
+const getDayWiseProcedures = async (req, res, next) => {
   try {
     const dayWiseProcedures = await OpenClose.aggregate([
       {
@@ -110,12 +109,13 @@ const getDayWiseProcedures = async (req, res,next) => {
           closingSum: { $max: '$closingSum' },
         },
       },
-    ]).sort({ _id: -1 });
+    ])
+      .sort({ _id: -1 })
+      .limit(20);
     res.status(200).json({ message: { dayWiseProcedures } });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
 
 module.exports = getDayWiseProcedures;
