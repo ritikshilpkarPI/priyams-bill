@@ -417,35 +417,20 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   const ItemPrice = ({ item, index }) => {
     let quantity = item['itemQuantityInBill'];
     let slabs = item['slabPricing'];
+    let price = item['itemSellingPricePerUnit'];
 
     // if slabs exists
-    if (slabs.length !== 0) {
-      let validSlab = 0;
-      if (quantity > slabs[slabs.length - 1][1]) {
-        validSlab = slabs.length - 1;
-      } else if (quantity < 1 && quantity > 0) {
-        validSlab = 0;
-      } else {
-        for (let i = 0; i < slabs.length; i++) {
-          if (Number(slabs[i][1]) === quantity) {
-            validSlab = i;
-            break;
-          } else if (Number(slabs[i][1]) > quantity) {
-            validSlab = i - 1;
-            break;
-          }
+    if (slabs.length && quantity) {
+      for (let idx = slabs.length - 1; idx === 0; idx--) {
+        const { 1: slabStartQuantity, 2: slabStartQuantityPrice } = slabs[idx];
+        if (quantity >= slabStartQuantity) {
+          price = slabStartQuantityPrice;
+          break;
         }
       }
-
-      if (!quantity) {
-        return 0;
-      } else {
-        bill.billItems[index].itemDetail.itemSellingPricePerUnit = Number(
-          slabs[validSlab][2]
-        );
-        setBill(bill);
-        return slabs[validSlab][2];
-      }
+      bill.billItems[index].itemDetail.itemSellingPricePerUnit = Number(price);
+      setBill(bill);
+      return price;
     } else {
       // if slabs does not exist
       return item['itemSellingPricePerUnit'];

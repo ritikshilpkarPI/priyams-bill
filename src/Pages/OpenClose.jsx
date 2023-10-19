@@ -12,7 +12,7 @@ import { AppStateContext } from '../AppState/appState.context';
 import AddExpense from '../components/AddExpense';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access';
-import EmployeeAttendance from '../components/EmployeeAttendance';
+// import EmployeeAttendance from '../components/EmployeeAttendance';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
@@ -110,22 +110,22 @@ const OpenClose = () => {
         Cookie: '',
       },
     });
-    if(allProcedures.error)return
+    if (allProcedures.error) return;
     const { procedures } = allProcedures.data.message;
     setProcedure(procedures);
   };
 
   const getDayWiseProcedure = async () => {
-      const allDayWiseProcedures = await genericAxios({
-        url: API_PATHS.OPENCLOSE.GET_DAY_WISE_PROCEDURE,
-        method: API_METHODS.GET,
-        headers: {
-          Cookie: '',
-        },
-      });
-      if(allDayWiseProcedures.error)return
-      const { dayWiseProcedures } = allDayWiseProcedures.data.message;
-      setDayWiseProcedures(dayWiseProcedures);
+    const allDayWiseProcedures = await genericAxios({
+      url: API_PATHS.OPENCLOSE.GET_DAY_WISE_PROCEDURE,
+      method: API_METHODS.GET,
+      headers: {
+        Cookie: '',
+      },
+    });
+    if (allDayWiseProcedures.error) return;
+    const { dayWiseProcedures } = allDayWiseProcedures.data.message;
+    setDayWiseProcedures(dayWiseProcedures);
   };
 
   useEffect(() => {
@@ -175,7 +175,6 @@ const OpenClose = () => {
       createdAtDate !== currentDate ||
       (id === '' && selectedDate === currentDate)
     ) {
-
       const newOpenProcedure = await genericAxios({
         url: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
         method: API_METHODS.POST,
@@ -184,11 +183,10 @@ const OpenClose = () => {
           Cookie: '',
         },
       });
-      if(newOpenProcedure.error)return
+      if (newOpenProcedure.error) return;
       let dateFromDb = newOpenProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split('T')[0];
       id = newOpenProcedure.data.message._id;
-    
     } else if (
       selectedDate === selectedProcedureDate &&
       procedureToEdit.procedure === 'open'
@@ -201,14 +199,12 @@ const OpenClose = () => {
           Cookie: '',
         },
       });
-    
     }
 
     await getAllProcedure();
     await getDayWiseProcedure();
     setApiLoading(false);
   };
-
 
   const addNewCloseProcedure = async () => {
     setApiLoading(true);
@@ -237,7 +233,7 @@ const OpenClose = () => {
           Cookie: '',
         },
       });
-      if(newCloseProcedure.error)return
+      if (newCloseProcedure.error) return;
       let dateFromDb = newCloseProcedure.data.message.createdAt;
       createdAtDate = dateFromDb.split('T')[0];
       id = newCloseProcedure.data.message._id;
@@ -269,7 +265,7 @@ const OpenClose = () => {
             Cookie: '',
           },
         });
-        if(allExpense.error)return
+        if (allExpense.error) return;
         expenseDispatch({
           type: 'UPDATE_EXPENSE_LIST',
           payload: allExpense.data.data,
@@ -289,7 +285,7 @@ const OpenClose = () => {
           Cookie: '',
         },
       });
-      if(dayBill.error)return
+      if (dayBill.error) return;
       setAllBills(dayBill.data.message.allDailyBills);
     })();
   }, []);
@@ -501,7 +497,7 @@ const OpenClose = () => {
         </div>
         <div className="right-side-opening-container">
           <AddExpense date={expenseDataDate} />
-          <EmployeeAttendance />
+          {/* <EmployeeAttendance /> */}
         </div>
       </div>
       <Title style={{ margin: '44px' }} order={2}>
