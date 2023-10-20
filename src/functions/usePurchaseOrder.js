@@ -129,7 +129,7 @@ const usePurchaseOrder = (history) => {
         method: API_METHODS.GET,
         url: `${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/${search_id}`,
       });
-      if(res.error)return
+      if (res.error) return;
       const data = res.data.data;
       purchaseForm.values.remark = data.remark;
       purchaseForm.values.payment = data.payment;
@@ -543,14 +543,23 @@ const usePurchaseOrder = (history) => {
     }
   };
   const addSlabPrice = () => {
+    // slabs format = [[0, 3, 20], [1, 5, 18]]
     slabForm.validate();
     if (slabForm.isValid()) {
-      setSlabs([...slabs, { ...slabForm.values }]);
+      // slabform.values = {1: startQty, 2: price} -->
+      // Object.values(slabForm.values) = [slabs.length, startQty, price] = [0, 3, 20]
+      setSlabs([...slabs, [slabs.length, ...Object.values(slabForm.values)]]);
       slabForm.reset();
     }
   };
   const deleteSlab = (index) => {
-    setSlabs([...slabs.filter((slab, i) => i !== index)]);
+    // slabs = [[idx, startQty, price], [1, 5, 40], [2, 7, 36]]
+    const slabsArrayCopy = [...slabs];
+    //remove the slab
+    slabsArrayCopy.splice(index, 1);
+    // correct the idx in the remaining slabs,
+    // and set in slab state
+    setSlabs(slabsArrayCopy.map((slab, idx) => [idx, slab[1], slab[2]]));
   };
   const handleExpiryDate = () => {
     if (!date && expiryQuantity === 0) {
