@@ -50,7 +50,7 @@ const PurchaseListApproval = ({
         },
       });
       window.alert('Order approved successfully');
-      getOrders('approved');
+      // getOrders('approved');
     } catch (err) {
       console.log(err);
       window.alert('Something went wrong,unable to approve order');
