@@ -551,18 +551,20 @@ const OpenClose = () => {
           </tr>
         </thead>
         <tbody className="body">
-          {dayWiseProcedures.map((item, idx) => {
-            return (
-              <TableRow
-                key={idx}
-                item={item}
-                idx={idx}
-                expense={expenseList}
-                bill={allBills}
-                expenseDate={setexpenseDataDate}
-              />
-            );
-          })}
+          <ProtectedComponent role={access.OPEN_CLOSE_TABLE}>
+            {dayWiseProcedures.map((item, idx) => {
+              return (
+                <TableRow
+                  key={idx}
+                  item={item}
+                  idx={idx}
+                  expense={expenseList}
+                  bill={allBills}
+                  expenseDate={setexpenseDataDate}
+                />
+              );
+            })}
+          </ProtectedComponent>
         </tbody>
       </Table>
     </div>
