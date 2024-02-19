@@ -27,7 +27,7 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { Dropzone } from '@mantine/dropzone';
 import { useDisclosure } from '@mantine/hooks';
 import ProtectedComponent from 'src/components/ProtectedComponent';
-// import access from "../access.js";
+import access from '../access.js';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: '',
