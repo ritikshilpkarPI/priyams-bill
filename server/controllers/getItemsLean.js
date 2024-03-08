@@ -4,6 +4,7 @@ const getItemsLean = async (req, res, next) => {
   try {
     const itemsBarCodeMap = {};
     const itemNamesList = [];
+    const allItemsMappedToName = {};
     const allItemsList = await Item.find(
       {
         permanentlyOutOfStock: false,
@@ -22,6 +23,7 @@ const getItemsLean = async (req, res, next) => {
 
     allItemsList.forEach((item) => {
       itemNamesList.push(item.itemName);
+      allItemsMappedToName[item.itemName] = item;
       if (item.itemBarcode) {
         if (itemsBarCodeMap[item.itemBarcode]) {
           itemsBarCodeMap[item.itemBarcode].push(item);
@@ -34,7 +36,7 @@ const getItemsLean = async (req, res, next) => {
     const totalItemsCount = allItemsList.length;
     res.status(200).json({
       message: {
-        allItemsList,
+        allItemsMappedToName,
         itemsBarCodeMap,
         itemNamesList,
         totalItemsCount,
