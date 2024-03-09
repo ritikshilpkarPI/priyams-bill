@@ -36,8 +36,17 @@ const deleteBillFromBillCacheById = (uniqueId) => {
   }
 };
 
+const getAllCachedBills = () => {
+  const billCacheList = [];
+  billsCache.forEach((value, key) => {
+    billCacheList.push({ cacheId: key, value });
+  });
+  return billCacheList;
+};
+
 module.exports = {
   setToBillsCache,
   getFromBillsCacheById,
   deleteBillFromBillCacheById,
+  getAllCachedBills,
 };
