@@ -38,6 +38,7 @@ const saveOrCacheBill = async (req, res) => {
     setToBillsCache(billId, newBillData);
     isBillSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
   } catch (error) {
+    console.log(error);
   } finally {
     if (isBillSaved) {
       deleteBillFromBillCacheById(billId);
@@ -47,10 +48,13 @@ const saveOrCacheBill = async (req, res) => {
         billId,
         isBillSaved,
         isUnsavedBillCreated: false,
-        isCached: false
+        isCached: false,
       });
     } else {
-      const isUnsavedBillCreated = await saveBillToUnsavedBills(newBillData);
+      const isUnsavedBillCreated = await saveBillToUnsavedBills({
+        billData: newBillData,
+        billId,
+      });
       res.status(200).json({
         success: false,
         message: 'Unable to save bill',
@@ -91,16 +95,17 @@ const saveBill = async (
         billItems.map(async (itemObj) => {
           const {
             _id,
-            itemQuantityInBill,
             itemSellingPricePerUnit,
             itemCostPricePerUnit = 0,
             itemMRPperUnit,
             itemStockQuantity,
-            itemDiscountPerUnit,
+            itemDiscountPerUnit = 0,
             ...restItemDetails
           } = itemObj.itemDetail;
 
-          const orderQuantityInNumber = Number(itemQuantityInBill);
+          const orderQuantityInNumber = Number(
+            itemObj ? itemObj.itemQuantityInBill : 0
+          );
           totalNumberOfItems += orderQuantityInNumber;
 
           const itemNetProfit =
@@ -160,6 +165,7 @@ const saveBill = async (
       await newBill.save();
       return true;
     } catch (error) {
+      // console.log(error)
       return await saveBill(
         newBillData,
         billId,
