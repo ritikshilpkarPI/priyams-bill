@@ -26,9 +26,8 @@ import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { Dropzone } from '@mantine/dropzone';
 import { useDisclosure } from '@mantine/hooks';
-
-// import ProtectedComponent from "src/components/ProtectedComponent";
-// import access from "../access.js";
+import ProtectedComponent from 'src/components/ProtectedComponent';
+import access from '../access.js';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: '',
@@ -1144,10 +1143,12 @@ const ItemsList = () => {
         <td>
           <ItemMinimumStockQuantityRow style={style} index={index} />
         </td>
-        <td style={{ display: 'flex' }}>
-          <ItemUpdateButtonRow index={index} />
-          <ItemSoftDeleteButtonRow index={index} />
-        </td>
+        <ProtectedComponent role={access.UPDATE_ITEM_BUTTON_ITEM_ROW}>
+          <td style={{ display: 'flex' }}>
+            <ItemUpdateButtonRow index={index} />
+            <ItemSoftDeleteButtonRow index={index} />
+          </td>
+        </ProtectedComponent>
         {/* Button to go its purchase order */}
         <td>
           <Button onClick={() => goToPerItemListPurchaseOrder({ index })}>
@@ -1657,9 +1658,11 @@ const ItemsList = () => {
                   onChange={() => handleCheckboxFilter('minimumStockQuantity')}
                 />
               </th>
-              <th>
-                <Text>Update Button</Text>
-              </th>
+              <ProtectedComponent role={access.UPDATE_ITEM_BUTTON_ITEM_ROW}>
+                <th>
+                  <Text>Update Button</Text>
+                </th>
+              </ProtectedComponent>
               <th>
                 <Text>Item P.O</Text>
               </th>
