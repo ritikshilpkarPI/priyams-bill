@@ -165,7 +165,6 @@ const saveBill = async (
       await newBill.save();
       return true;
     } catch (error) {
-      // console.log(error)
       return await saveBill(
         newBillData,
         billId,
