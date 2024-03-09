@@ -63,6 +63,7 @@ const {
   updateOrderStatus,
   getItemsWithNoImages,
   getItemsLean,
+  saveOrCacheBill,
 } = require('../controllers/index');
 
 // online order apis
@@ -189,6 +190,7 @@ router.put(API_PATHS.BILLING.PUT_EDIT_BILL, isLoggedIn, editBill);
 router.post(API_PATHS.BILLING.POST_SEND_MESSAGE, isLoggedIn, sendMessage);
 router.post(API_PATHS.BILLING.POST_NEW_BILL, isLoggedIn, addNewBill);
 router.delete(API_PATHS.BILLING.DELETE_BILL, isLoggedIn, deleteBill);
+router.post(API_PATHS.BILLING.SAVE_OR_CACHE_BILL, isLoggedIn, saveOrCacheBill);
 
 //attendance APIs
 router.post(
