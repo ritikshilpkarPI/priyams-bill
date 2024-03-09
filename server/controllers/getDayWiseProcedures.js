@@ -86,7 +86,7 @@ const getDayWiseProcedures = async (req, res, next) => {
             $cond: {
               if: { $eq: ['$procedure', 'open'] },
               then: 0,
-              else: '$createdAt',
+              else: '$updatedAt',
             },
           },
           date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
