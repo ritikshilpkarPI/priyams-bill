@@ -19,7 +19,7 @@ const saveOrCacheBill = async (req, res) => {
     cashPay,
     upiPay,
     amountReturn,
-    billId = uuidv4(),
+    billId = uuidv4() + '/' + Date.now(),
   } = req.body;
   const newBillData = {
     customerName,
