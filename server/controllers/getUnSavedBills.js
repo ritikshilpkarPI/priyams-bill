@@ -8,19 +8,20 @@ const getUnSavedBills = async (req, res) => {
     const cachedBillMapByCacheId = allCachedBills.reduce(
       (billMap, cachedBill) => {
         const cacheId = cachedBill && cachedBill.cacheId;
-        ({
+        return {
           ...billMap,
           [cacheId]: {
             billId: cacheId,
             billData: cachedBill,
           },
-        })
+        };
       },
       {}
     );
     const unsavedUniqueBillList = [
       ...unsavedBills.map((unsavedBill) => {
-        const billId = unsavedBill && unsavedBill.data && unsavedBill.data.billId;
+        const billId =
+          unsavedBill && unsavedBill.data && unsavedBill.data.billId;
         if (cachedBillMapByCacheId[billId]) {
           cachedBillMapByCacheId[billId] = null;
         }
@@ -35,7 +36,7 @@ const getUnSavedBills = async (req, res) => {
       unsavedBillList: unsavedUniqueBillList,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).json({
       success: false,
       message: 'Unable to retrieve unsaved bills',
