@@ -58,6 +58,7 @@ const getCustomerBill = require('./getCustomerBill');
 const getUserOrders = require('./getUserOrders');
 const updateOrderStatus = require('./updateOrderStatus');
 const getItemsLean = require('./getItemsLean');
+const saveOrCacheBill = require('./saveOrCacheBill');
 
 module.exports = {
   getStaff,
@@ -120,4 +121,5 @@ module.exports = {
   getUserOrders,
   updateOrderStatus,
   getItemsLean,
+  saveOrCacheBill
 };

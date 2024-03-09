@@ -10,7 +10,7 @@
     "dev": "nodemon --exec npm run restart",
     "restart": "rimraf dist && npm run build && npm run start",
     "start": "cross-env ENV_NAME=dev npm-run-all --parallel server client",
-    "client": "react-scripts start ",
+    "client": "react-scripts --openssl-legacy-provider start ",
     "server": "netlify-lambda serve server -t 900",
     "build": "npm run build:functions && npm run build:app",
     "build:app": "react-scripts build",
@@ -20,10 +20,6 @@
     "format": "git diff --name-only HEAD | grep '\\.jsx$, \\.js$' | xargs prettier --write",
     "prepare": "husky install",
     "imagesToCloudinary": "node server/scripts/imagesToCloudinaryAndDB.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ScreenRecorderApp/screenrecorder-app.git"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.3",
@@ -58,6 +54,7 @@
     "js-cookie": "^3.0.1",
     "json2csv": "^5.0.7",
     "jsonwebtoken": "^8.5.1",
+    "lru-cache": "^7.14.1",
     "mongodb": "^3.6.9",
     "mongoose": "^6.0.14",
     "multer": "^1.4.4",
