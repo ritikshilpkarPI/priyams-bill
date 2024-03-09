@@ -50,7 +50,7 @@ const saveOrCacheBill = async (req, res) => {
         isCached: false
       });
     } else {
-      const isUnsavedBillCreated = await saveBillToUnsavedBills(newBillData);
+      const isUnsavedBillCreated = await saveBillToUnsavedBills({ billData:newBillData, billId });
       res.status(200).json({
         success: false,
         message: 'Unable to save bill',
