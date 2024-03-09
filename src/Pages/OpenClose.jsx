@@ -645,7 +645,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
   const billBalanceCheck = (idx) => {
     const closeOpen = closingSum - openingSum;
     const expense = filteredItem.length ? filteredItem[idx].amount : 0;
-    const cashAmountReturn = filteredItem.length
+    const cashAmountReturn = filteredBill.length
       ? filteredBill[idx].totalCashPay - filteredBill[idx].totalAmountReturn
       : 0;
     return closeOpen + expense - cashAmountReturn;
