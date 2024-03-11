@@ -1,6 +1,7 @@
 export const PAGES = {
   Home: 'Home',
   billing: 'Billing',
+  newBilling: 'New Billing',
   inventory: 'Inventory',
   allBill: 'All Bills',
   dayBill: 'Day Bills',
@@ -37,6 +38,7 @@ export const sidebarListData = [
       { name: 'All Bills', url: '/allBill', icon: 'images/bill.svg' },
       { name: 'Day Bills', url: '/dayBill', icon: 'images/dailybills.svg' },
       { name: 'Reports', url: '/report', icon: 'images/report.svg' },
+      { name: 'New Billing Page', url: '/newBilling', icon: 'images/report.svg' },
     ],
   },
   {

@@ -85,4 +85,7 @@ export const API_PATHS = {
     GET_USER_ORDERS: '/api/online/orders',
     UPDATE_USER_ORDERS: '/api/online/updateOrderStatus',
   },
+  ITEMS: {
+    GET_ALL_LEAN_ITEMS: '/api/inventory/getItemsLeanForBilling'
+  }
 };

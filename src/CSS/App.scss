@@ -357,8 +357,15 @@ input[type='number'] {
 .data-result {
   position: absolute;
   min-width: fit-content;
-  z-index: 3;
   overflow-y: scroll;
+  height: 400px;
+}
+
+.data-result-barcode {
+  position: absolute;
+  min-width: 70%;
+  overflow-y: scroll;
+  // left: 20%;
   height: 400px;
 }
 
@@ -542,3 +549,4 @@ p.staffname {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+

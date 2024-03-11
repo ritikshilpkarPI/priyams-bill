@@ -25,6 +25,7 @@ import {
   ExpiredItems,
   Orders,
   OrderStatusDetail,
+  NewBillingPage,
 } from '../Pages';
 import Label from 'src/Pages/Label';
 import { Fragment } from 'react';
@@ -85,6 +86,11 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
               exact
               path="/orders/:orderStatus"
               component={OrderStatusDetail}
+            />
+            <Route
+            exact
+            path='/newBilling'
+            component={NewBillingPage}
             />
           </ProtectedRoutes>
         </Fragment>
