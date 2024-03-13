@@ -359,15 +359,9 @@ input[type='number'] {
   min-width: fit-content;
   overflow-y: scroll;
   height: 400px;
+  z-index: 1;
 }
 
-.data-result-barcode {
-  position: absolute;
-  min-width: 70%;
-  overflow-y: scroll;
-  // left: 20%;
-  height: 400px;
-}
 
 .search-container {
   position: relative;
