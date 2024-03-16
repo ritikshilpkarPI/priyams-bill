@@ -660,9 +660,10 @@ async function addNewBill(
                       value={inputValue.itemBarcode}
                       onWheel={(e) => e.target.blur()}
                       onChange={(e) => 
-                        // handleItemInputChange(e, setInputValue)
                         {
-                            //   setInputValue(value?.itemBarcode)
+                            if (itemsByBarcode[e.target.value] && itemsByBarcode[e.target.value]?.length === 1) {
+                                 onItemAddToBill({e: e, itemData: itemsByBarcode, key: e.target.value})
+                            } else {
                             handleItemNameFilter(
                                 e,
                                 setInputValue,
@@ -673,6 +674,7 @@ async function addNewBill(
                               );
                               handleItemInputChange(e, setInputValue);
                             
+                            }
                         
                     }
                 }
