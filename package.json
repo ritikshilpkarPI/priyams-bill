@@ -10,7 +10,7 @@
     "dev": "nodemon --exec npm run restart",
     "restart": "rimraf dist && npm run build && npm run start",
     "start": "cross-env ENV_NAME=dev npm-run-all --parallel server client",
-    "client": "react-scripts --openssl-legacy-provider start ",
+    "client": "react-scripts start ",
     "server": "netlify-lambda serve server -t 900",
     "build": "npm run build:functions && npm run build:app",
     "build:app": "react-scripts build",
@@ -19,7 +19,8 @@
     "test": "react-scripts test --env=jsdom",
     "format": "git diff --name-only HEAD | grep '\\.jsx$, \\.js$' | xargs prettier --write",
     "prepare": "husky install",
-    "imagesToCloudinary": "node server/scripts/imagesToCloudinaryAndDB.js"
+    "imagesToCloudinary": "node server/scripts/imagesToCloudinaryAndDB.js",
+    "generateBarcodeForItems": "node server/scripts/generateBarcodeForItems.js"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.3",
