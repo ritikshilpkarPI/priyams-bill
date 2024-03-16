@@ -40,12 +40,7 @@ const AppFunction = (history, location) => {
     // eslint-disable-next-line
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (!showBill) {
-  //     // history.push(`/${value}`);
-  //   }
-  //   // eslint-disable-next-line
-  // }, [value, showBill]);
+ 
 
   const logoutUser = async () => {
     await genericAxios({

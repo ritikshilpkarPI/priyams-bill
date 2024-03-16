@@ -9,46 +9,46 @@ import { genericAxios } from './utils/genericAxiosMethod';
 function App({ history, location }) {
   
   useEffect(() => {
-    // async function saveBills() {
-    //   // get all bill Ids from localStorage at once
-    //   const unSavedBillIds = Object.keys(localStorage);
+    async function saveBills() {
+      // get all bill Ids from localStorage at once
+      const unSavedBillIds = Object.keys(localStorage);
 
-    //   if (unSavedBillIds.length) {
-    //     const billSaves = unSavedBillIds.map(async (billId) => {
-    //       const billObject = JSON.parse(localStorage.getItem(billId));
+      if (unSavedBillIds.length) {
+        const billSaves = unSavedBillIds.map(async (billId) => {
+          const billObject = JSON.parse(localStorage.getItem(billId));
 
-    //       const { url, method, data: billData } = billObject;
+          const { url, method, data: billData } = billObject;
 
-    //       const response = await saveBill({
-    //         url,
-    //         method,
-    //         data: billData,
-    //       });
+          const response = await saveBill({
+            url,
+            method,
+            data: billData,
+          });
 
-    //       if (response.status === 200) {
-    //         localStorage.removeItem(billId);
-    //       }
-    //     });
+          if (response.status === 200) {
+            localStorage.removeItem(billId);
+          }
+        });
 
-    //     await Promise.allSettled(billSaves);
-    //   }
-    // }
+        await Promise.allSettled(billSaves);
+      }
+    }
 
-    // async function saveBill(bill) {
-    //   const requestConfig = {
-    //     ...bill,
-    //     headers: {
-    //       Cookie: '',
-    //     },
-    //   };
+    async function saveBill(bill) {
+      const requestConfig = {
+        ...bill,
+        headers: {
+          Cookie: '',
+        },
+      };
 
-    //   return genericAxios(requestConfig);
-    // }
+      return genericAxios(requestConfig);
+    }
 
-    // const intervalId = setInterval(saveBills, 36_00_000);
-    // return () => {
-    //   clearInterval(intervalId);
-    // };
+    const intervalId = setInterval(saveBills, 36_00_000);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
   const {
     logoutUser,
