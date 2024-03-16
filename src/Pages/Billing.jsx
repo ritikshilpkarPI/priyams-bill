@@ -1237,7 +1237,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   );
 };
 
-const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
+export const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
     if (e.target.value < 0) return;
     const billItemsCopy = [...bill.billItems];
