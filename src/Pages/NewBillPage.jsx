@@ -372,10 +372,25 @@ async function addNewBill(
     }));
   };
 
+
+  // updating bill amount
+  const updateReturnAmount = (setBill, bill) => {
+    setBill((prev) => ({
+      ...prev,
+      amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
+    }));
+  };
+
   useEffect(
     () => updateBillValuesOnItemChange(bill, setBill),
     // eslint-disable-next-line
     [bill.billItems]
+  );
+
+  useEffect(
+    () => updateReturnAmount(setBill, bill),
+    // eslint-disable-next-line
+    [bill.cashPay, bill.upiPay, bill.billAmountTotal]
   );
 
   
