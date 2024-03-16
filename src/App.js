@@ -9,18 +9,14 @@ import { genericAxios } from './utils/genericAxiosMethod';
 function App({ history, location }) {
   
   useEffect(() => {
-  
     async function saveBills() {
       // get all bill Ids from localStorage at once
-
-      
       const unSavedBillIds = Object.keys(localStorage);
 
       if (unSavedBillIds.length) {
         const billSaves = unSavedBillIds.map(async (billId) => {
-    
           const billObject = JSON.parse(localStorage.getItem(billId));
-         
+
           const { url, method, data: billData } = billObject;
 
           const response = await saveBill({
