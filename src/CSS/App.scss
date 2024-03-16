@@ -357,10 +357,11 @@ input[type='number'] {
 .data-result {
   position: absolute;
   min-width: fit-content;
-  z-index: 3;
   overflow-y: scroll;
   height: 400px;
+  z-index: 1;
 }
+
 
 .search-container {
   position: relative;
@@ -542,3 +543,4 @@ p.staffname {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+

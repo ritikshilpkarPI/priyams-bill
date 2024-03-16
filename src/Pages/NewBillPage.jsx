@@ -1,341 +1,93 @@
-import { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
-import { AppStateContext } from '../AppState/appState.context';
-import BillNarrator from '../components/BillNarrator';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { useContext, useEffect, useRef, useState } from 'react';
+import BillNarrator from 'src/components/BillNarrator';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { AppStateContext } from 'src/AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
+import { QuantBtn } from './Billing';
 
-const itemsByBarcode = {};
-const itemsByName = {};
+
 const BILL_INITIAL_STATE = {
-  billItems: [],
-  customerName: '',
-  customerPhone: '',
-  billMRPTotal: 0,
-  billAmountTotal: 0,
-  billDiscountTotal: 0,
-  totalNumberOfItems: 0,
-  totalNumberOfUniqueItems: 0,
-  totalBillProfit: 0,
-  cashPay: 0,
-  upiPay: 0,
-  amountReturn: 0,
-};
-
-const INPUT_INITIAL_STATE = {
-  itemBarcode: '',
-  itemName: '',
-  itemMRPperUnit: '',
-  itemQuantityInBill: 1,
-  itemSellingPricePerUnit: '',
-};
-
-const refreshPage = (setBill, BILL_INITIAL_STATE) => {
-  let answer = window.confirm('Do you want to refresh page?');
-  if (answer) {
-    setBill(BILL_INITIAL_STATE);
-  }
-};
-
-const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
-  if (billItems.length === 0) {
-    setBill(BILL_INITIAL_STATE);
-  } else {
-    setBill(billItems);
-  }
-};
-
-const initializeBillForEdit = async (setBill, billID) => {
-  const editBill = await genericAxios({
-    url: `${API_PATHS.BILLING.GET_EDIT_BILL}/${billID}`,
-    method: API_METHODS.GET,
-    headers: {
-      Cookie: '',
-    },
-  });
-  if (editBill.error) return;
-  if (editBill?.data?.message) {
-    const { items = [], ...billObject } = editBill?.data?.message;
-    const billObjectWithBillItems = { ...billObject, billItems: items };
-    setBill(billObjectWithBillItems);
-  }
-
-  // setLoaderDisplay(false);
-};
-
-const createInitialObjectsForBilling = (
-  itemsList,
-  itemsByBarcode,
-  itemsByName
-) => {
-  itemsList.forEach((obj) => {
-    obj['itemDiscountPerUnit'] =
-      obj['itemMRPperUnit'] - obj['itemSellingPricePerUnit'];
-    obj['itemQuantityInBill'] = 1;
-    if (obj['itemBarcode']) {
-      itemsByBarcode[obj['itemBarcode']] = { ...obj };
-    }
-    if (obj['itemName']) {
-      itemsByName[obj['itemName']] = { ...obj };
-    }
-  });
-};
-
-const addItemToBillByBarcode = (
-  itemsByBarcode,
-  inputValue,
-  setInputValue,
-  bill,
-  setBill,
-  INPUT_INITIAL_STATE,
-  barRef
-) => {
-  if (itemsByBarcode[inputValue.itemBarcode]) {
-    let index;
-    const itemDetail = { ...itemsByBarcode[inputValue.itemBarcode] };
-    bill.billItems.map((billItem) => {
-      index = bill.billItems.findIndex((a) => a._id === billItem._id);
-      if (
-        itemsByBarcode[inputValue.itemBarcode].itemBarcode ===
-        billItem.itemDetail.itemBarcode
-      ) {
-        const updatedItem = {
-          ...billItem,
-          itemDetail: {
-            ...billItem.itemDetail,
-            itemQuantityInBill: billItem.itemQuantityInBill + 1,
-          },
-          itemQuantityInBill: billItem.itemQuantityInBill + 1,
-        };
-        bill.billItems.splice(index, 1);
-        setBill((prev) => ({
-          totalNumberOfItems: prev.totalNumberOfItems + 1,
-          ...prev,
-          billItems: [updatedItem, ...prev.billItems],
-        }));
-      } else if (index === bill.totalNumberOfUniqueItems - 1) {
-        setBill((prev) => ({
-          ...prev,
-          billItems: [
-            {
-              itemDetail,
-              itemQuantityInBill: itemDetail.itemQuantityInBill,
-              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-              itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-              itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-              _id: itemDetail._id,
-            },
-            ...prev.billItems,
-          ],
-        }));
-      }
-      return <></>;
-    });
-    if (bill.totalNumberOfItems === 0) {
-      setBill((prev) => ({
-        ...prev,
-        billItems: [
-          {
-            itemDetail,
-            itemQuantityInBill: itemDetail.itemQuantityInBill,
-            itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-            itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-            itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-            _id: itemDetail._id,
-          },
-          ...prev.billItems,
-        ],
-      }));
-    }
-    setInputValue(INPUT_INITIAL_STATE);
-  }
-  barRef.current.focus();
-  // eslint-disable-next-line
-};
-
-const updateBillValuesOnItemChange = (bill, setBill) => {
-  let totalSum = 0;
-  let mrpTotal = 0;
-  let savedAmount = 0;
-  let profitAmount = 0;
-  let numOfItems = 0;
-  bill.billItems.forEach((item) => {
-    totalSum += Math.ceil(
-      item.itemDetail['itemSellingPricePerUnit'] * item['itemQuantityInBill']
-    );
-    mrpTotal += item.itemDetail['itemMRPperUnit'] * item['itemQuantityInBill'];
-    savedAmount = mrpTotal - totalSum;
-    numOfItems += item['itemQuantityInBill'];
-    profitAmount +=
-      (item.itemDetail['itemSellingPricePerUnit'] -
-        item.itemDetail['itemCostPricePerUnit']) *
-      item['itemQuantityInBill'];
-  });
-
-  setBill((prev) => ({
-    ...prev,
-    totalNumberOfUniqueItems: bill.billItems.length,
-    totalNumberOfItems: numOfItems,
-    billMRPTotal: mrpTotal,
-    billAmountTotal: Math.ceil(totalSum),
-    billDiscountTotal: savedAmount,
-    totalBillProfit: profitAmount,
-  }));
-};
-
-const updateReturnAmount = (setBill, bill) => {
-  setBill((prev) => ({
-    ...prev,
-    amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
-  }));
-};
-
-function createBill(newBillId, setApiLoading) {
-  const { newBillId: billUuid, ...billObject } = JSON.parse(
-    localStorage.getItem(`newBill-${newBillId}`)
-  );
-  (async function () {
-    try {
-      const addBillResponse = await genericAxios({
-        ...billObject,
-        headers: {
-          Cookie: '',
-        },
-      });
-      if (addBillResponse.error) {
-        setApiLoading(false);
-        throw Error();
-      }
-      localStorage.removeItem(`newBill-${newBillId}`);
-    } catch (error) {
-      throw console.error({ error });
-    }
-  })();
-}
-
-async function addNewBill(
-  setApiLoading,
-  bill,
-  setBill,
-  BILL_INITIAL_STATE,
-  itemsReducer,
-  initialItemList,
-  billID
-) {
-  setApiLoading(true);
-  let updateBill = {
-    ...bill,
-    [bill.updated]: bill?.updated?.push(Date.now()),
+    billItems: [],
+    customerName: '',
+    customerPhone: '',
+    billMRPTotal: 0,
+    billAmountTotal: 0,
+    billDiscountTotal: 0,
+    totalNumberOfItems: 0,
+    totalNumberOfUniqueItems: 0,
+    totalBillProfit: 0,
+    cashPay: 0,
+    upiPay: 0,
+    amountReturn: 0,
   };
-  setBill(updateBill);
-  const editApi = {
-    url: API_PATHS.BILLING.PUT_EDIT_BILL,
-    method: API_METHODS.PUT,
-    data: { id: billID, itemWithChanges: { ...bill } },
+  
+  const INPUT_INITIAL_STATE = {
+    itemBarcode: '',
+    itemName: '',
+    itemMRPperUnit: '',
+    itemQuantityInBill: 1,
+    itemSellingPricePerUnit: '',
   };
-  const createApi = {
-    url: API_PATHS.BILLING.POST_NEW_BILL,
-    method: API_METHODS.POST,
-    data: { ...bill },
-  };
-  const objectOfInterest = billID ? editApi : createApi;
 
-  const newBillId = uuidv4();
-
-  localStorage.setItem(
-    `newBill-${newBillId}`,
-    JSON.stringify({
-      newBillId,
-      createdAt: new Date().toLocaleString(),
-      ...objectOfInterest,
-    })
-  );
-  createBill(newBillId, setApiLoading);
-
-  window.print();
-  setApiLoading(false);
-  setBill(BILL_INITIAL_STATE);
-  itemsReducer({ type: 'UPDATE_ITEMS_LIST', payload: [...initialItemList] });
-}
-
-function handleItemInputChange(event, setInputValue) {
-  const { name, value } = event.target;
-  setInputValue((prevState) => ({ ...prevState, [name]: value }));
-}
-
-// function addItemToBill(
-//   event,
-//   inputValue,
-//   itemsByName,
-//   setBill,
-//   setInputValue,
-//   INPUT_INITIAL_STATE
-// ) {
-//   event.preventDefault();
-//   const itemDetail = {
-//     ...inputValue,
-//     itemDiscountPerUnit: inputValue.itemMRPperUnit
-//       ? inputValue.itemMRPperUnit - inputValue.itemSellingPricePerUnit
-//       : 0,
-//   };
-
-//   itemsByName[inputValue.itemName] = { ...itemDetail };
-//   setBill((prev) => ({
-//     ...prev,
-//     billItems: [
-//       {
-//         itemDetail,
-//         itemQuantityInBill: itemDetail.itemQuantityInBill,
-//         itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-//         itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-//         itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-//       },
-//       ...prev.billItems,
-//     ],
-//   }));
-//   setInputValue(INPUT_INITIAL_STATE);
-// }
-
-function handleItemNameFilter(
-  event,
-  setInputValue,
-  itemsList,
-  setFilteredData
-) {
-  setInputValue((prev) => ({ ...prev, itemName: event.target.value }));
-  const searchWord = event.target.value;
-  const filteredData = itemsList.filter((value) => {
-    return value.itemName.toLowerCase().includes(searchWord.toLowerCase());
-  });
-  setFilteredData(filteredData);
-}
-function findNameOrNumber(string, value) {
-  for (let i = 0; i < value.toString().length; i++) {
-    if (string.toString()[i] !== value[i]) {
-      return false;
+  const refreshPage = (setBill, BILL_INITIAL_STATE) => {
+    let answer = window.confirm('Do you want to refresh page?');
+    if (answer) {
+      setBill(BILL_INITIAL_STATE);
     }
-  }
-  return true;
-}
+  };
 
-const Billing = ({ billID = '', loaderDisplay }) => {
-  const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
-  const [filteredData, setFilteredData] = useState([]);
+const NewBillPage = ({ billID = '' }) => {
+  const [itemsByName, setItemsByName] = useState([]);
+  const [itemsByBarcode, setItemsByBarcode] = useState([]);
+  const [itemBarCodesList, setItemBarCodesList] = useState([]);
+  const [filterBarcodeData, setFilterBarcodeData] = useState([]);
+  const [itemNamesList, setItemNamesList] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [userProfileData, setUserDataProfile] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
+  const [showProfileData, setShowProfileData] = useState(false);
+  const [filterUserProfile, setFilterUserProfile] = useState([]);
+  const [phoneError, setPhoneError] = useState('');
   const [apiLoading, setApiLoading] = useState(false);
   const barRef = useRef('');
+  const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
+  const [filteredData, setFilteredData] = useState([]);
   const { itemsStateAndDispatch, billItemsStateAndDispatch } =
-    useContext(AppStateContext);
-  const [itemsList, itemsReducer] = itemsStateAndDispatch;
+  useContext(AppStateContext);
   const [billItems, dispatch] = billItemsStateAndDispatch;
-  const initialItemList = [...itemsList];
-  const [phoneError, setPhoneError] = useState('');
-  const [userProfileData, setUserDataProfile] = useState([]);
-  const [filterUserProfile, setFilterUserProfile] = useState([]);
-  const [showProfileData, setShowProfileData] = useState(false);
-  // const [loaderDisplay, setLoaderDisplay] = loaderState;
+  const [loaderDisplay, setLoaderDisplay] = useState(false)
+
+
+  function handleItemNameFilter(
+    event,
+    setInputValue,
+    itemsList,
+    setData,
+    key
+  ) {
+    setInputValue((prev) => ({ ...prev, [key]: event.target.value }));
+    const searchWord = event.target.value;
+    const filteredData = itemsList?.filter((value) => {
+        const elem = String(value)
+      return elem?.toLowerCase()?.includes(searchWord?.toLowerCase());
+    });
+    setData(filteredData);
+  }
+
+  function findNameOrNumber(string, value) {
+    for (let i = 0; i < value.toString().length; i++) {
+      if (string.toString()[i] !== value[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+  // fetching user details 
   const getUserData = async () => {
     try {
       const response = await genericAxios({
@@ -348,8 +100,34 @@ const Billing = ({ billID = '', loaderDisplay }) => {
       console.error(error.message);
     }
   };
-  useEffect(() => getUserData(), []);
 
+
+//   fetching items 
+
+  const getAllLeanItems = async () => {
+    try {
+        setLoaderDisplay(true)
+      const response = await genericAxios({
+        url: API_PATHS.ITEMS.GET_ALL_LEAN_ITEMS,
+        method: API_METHODS.GET,
+      });
+
+      if (response.error) return;
+      if (response?.data?.message) {
+        setItemBarCodesList(response?.data?.message?.itemBarCodesList);
+        setItemsByBarcode(response?.data?.message?.itemsBarCodeMap);
+        setItemsByName(response?.data?.message?.itemsNameMap);
+        setItemNamesList(response?.data?.message?.itemNamesList);
+        setTotalItems(response?.data?.message?.totalItemsCount);
+      }
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+        setLoaderDisplay(false)
+    }
+  };
+
+//  handing the user search 
   const handleUserSearch = (e) => {
     setShowProfileData(true);
     const users = userProfileData.filter((data) => {
@@ -359,59 +137,89 @@ const Billing = ({ billID = '', loaderDisplay }) => {
     });
     setFilterUserProfile(users);
   };
-  // To refresh page
 
-  // To save bill items in billItem Reducer
-  useEffect(() => {
-    dispatch({ type: 'BILL_ITEMS_LIST', payload: bill });
-    // eslint-disable-next-line
-  }, [bill]);
 
-  // To get items through billItems Reducer
-  useEffect(
-    () => initializeBillState(billItems, BILL_INITIAL_STATE, setBill),
-    // eslint-disable-next-line
-    []
-  );
 
-  useEffect(() => {
-    if (billID) {
-      initializeBillForEdit(setBill, billID);
-    }
-  }, [billID]);
+  // handling the input change
+  function handleItemInputChange(event, setInputValue) {
+    const { name, value } = event.target;
+    setInputValue((prevState) => ({ ...prevState, [name]: value }));
+  }
 
-  useEffect(
-    () =>
-      createInitialObjectsForBilling(itemsList, itemsByBarcode, itemsByName),
-    [itemsList]
-  );
+ // creating bill 
+  function createBill(newBillId, setApiLoading) {
+    const { newBillId: billUuid, ...billObject } = JSON.parse(
+      localStorage.getItem(`newBill-${newBillId}`)
+    );
+    (async function () {
+      try {
+        const addBillResponse = await genericAxios({
+          ...billObject,
+          billId: newBillId,
+          headers: {
+            Cookie: '',
+          },
+        });
+        if (addBillResponse.error) {
+          setApiLoading(false);
+          throw Error();
+        }
+        localStorage.removeItem(`newBill-${newBillId}`);
+      } catch (error) {
+        throw console.error({ error });
+      }
+    })();
+  }
 
-  useEffect(
-    () =>
-      addItemToBillByBarcode(
-        itemsByBarcode,
-        inputValue,
-        setInputValue,
-        bill,
-        setBill,
-        INPUT_INITIAL_STATE,
-        barRef
-      ),
-    // eslint-disable-next-line
-    [inputValue.itemBarcode, bill.billItems.length]
-  );
 
-  useEffect(
-    () => updateBillValuesOnItemChange(bill, setBill),
-    // eslint-disable-next-line
-    [bill.billItems]
-  );
+//    adding new bill
+async function addNewBill(
+    setApiLoading,
+    bill,
+    setBill,
+    BILL_INITIAL_STATE,
+    itemsReducer,
+    initialItemList,
+    billID
+  ) {
+  
+    const newBillId = uuidv4();
+    setApiLoading(true);
+    let updateBill = {
+      ...bill,
+      [bill.updated]: bill?.updated?.push(Date.now()),
+    };
+    setBill(updateBill);
+    const editApi = {
+      url: API_PATHS.BILLING.PUT_EDIT_BILL,
+      method: API_METHODS.PUT,
+      data: { id: billID, itemWithChanges: { ...bill } },
+    };
+    const createApi = {
+      url: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
+      method: API_METHODS.POST,
+      data: { ...bill, billId: newBillId },
+    };
+    const objectOfInterest = billID ? editApi : createApi;
+  
+  
+    localStorage.setItem(
+      `newBill-${newBillId}`,
+      JSON.stringify({
+        newBillId,
+        createdAt: new Date().toLocaleString(), 
+        ...objectOfInterest,
+      })
+    );
+    createBill(newBillId, setApiLoading);
+  
+    window.print();
+    setApiLoading(false);
+    setBill(BILL_INITIAL_STATE);
+    itemsReducer({ type: 'UPDATE_ITEMS_LIST', payload: [...initialItemList] });
+  }
 
-  useEffect(
-    () => updateReturnAmount(setBill, bill),
-    // eslint-disable-next-line
-    [bill.cashPay, bill.upiPay, bill.billAmountTotal]
-  );
+ 
 
   // To show prices according to slabs if exists
   const ItemPrice = ({ item, index }) => {
@@ -420,7 +228,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
     let price = item['itemSellingPricePerUnit'];
 
     // if slabs exists
-    if (slabs.length && quantity) {
+    if (slabs?.length && quantity) {
       for (let idx = slabs.length - 1; idx === 0; idx--) {
         const { 1: slabStartQuantity, 2: slabStartQuantityPrice } = slabs[idx];
         if (quantity >= slabStartQuantity) {
@@ -437,17 +245,189 @@ const Billing = ({ billID = '', loaderDisplay }) => {
     }
   };
 
+  const onItemAddToBill = ({e, itemData, key = ''})=> {
+    
+    if (itemData[ Boolean(key) ? key : e.target.innerText]) {
+        let index;
+        let itemDetail 
+        if (Boolean(key)) {
+            itemDetail = itemData[key]?.[0]
+        }else {
+
+            itemDetail  = itemData[e.target.innerText];
+        }
+
+
+        bill.billItems.map((billItem) => {
+          index = bill.billItems.findIndex(
+            (a) => a._id === billItem._id
+          );
+         
+          if (
+            itemDetail.itemName ===
+            billItem.itemDetail.itemName
+          ) {
+            const updatedItem = {
+              ...billItem,
+              itemDetail: {
+                ...billItem.itemDetail,
+                itemQuantityInBill:
+                  billItem.itemQuantityInBill + 1,
+              },
+              itemQuantityInBill:
+                billItem.itemQuantityInBill + 1,
+
+            };
+            bill.billItems.splice(index, 1);
+            setBill((prev) => ({
+              totalNumberOfItems: prev.totalNumberOfItems + 1,
+              ...prev,
+              billItems: [updatedItem, ...prev.billItems],
+            }));
+          } else if (
+            index ===
+            bill.totalNumberOfUniqueItems - 1
+          ) {
+            setBill((prev) => ({
+              ...prev,
+              billItems: [
+                {
+                  itemDetail,
+                  itemQuantityInBill:
+                    itemDetail.itemQuantityInBill,
+                  itemMRPtotal: Number(
+                    itemDetail.itemMRPperUnit
+                  ),
+                  itemDiscountTotal:
+                    itemDetail.itemDiscountPerUnit,
+                  itemSellingPriceTotal: Number(
+                    itemDetail.itemSellingPricePerUnit
+                  ),
+                  _id: itemDetail._id,
+                  itemQuantityInBill: 1
+                },
+                ...prev.billItems,
+              ],
+            }));
+          }
+          return <></>;
+        });
+        if (bill.totalNumberOfItems === 0) {
+          setBill((prev) => ({
+            ...prev,
+            billItems: [
+              {
+                itemDetail,
+                itemQuantityInBill:
+                  itemDetail.itemQuantityInBill,
+                itemMRPtotal: Number(
+                  itemDetail.itemMRPperUnit
+                ),
+                itemDiscountTotal:
+                  itemDetail.itemMRPperUnit - itemDetail.itemSellingPricePerUnit,
+                itemSellingPriceTotal: Number(
+                  itemDetail.itemSellingPricePerUnit
+                ),
+                _id: itemDetail._id,
+                itemQuantityInBill: 1
+              },
+              ...prev.billItems,
+            ],
+          }));
+        }
+        setInputValue(INPUT_INITIAL_STATE);
+        if (Boolean(key)) {
+              setFilterBarcodeData([])
+        }else { setFilteredData([]);}
+      }
+  }
+
+  const updateBillValuesOnItemChange = (bill, setBill) => {
+    let totalSum = 0;
+    let mrpTotal = 0;
+    let savedAmount = 0;
+    let profitAmount = 0;
+    let numOfItems = 0;
+    bill.billItems.forEach((item) => {
+      totalSum += Math.ceil(
+        item.itemDetail['itemSellingPricePerUnit'] * item['itemQuantityInBill']
+      );
+      mrpTotal += item.itemDetail['itemMRPperUnit'] * item['itemQuantityInBill'];
+      savedAmount = mrpTotal - totalSum;
+      numOfItems += item['itemQuantityInBill'];
+      profitAmount +=
+        (item.itemDetail['itemSellingPricePerUnit'] -
+          item.itemDetail['itemCostPricePerUnit']) *
+        item['itemQuantityInBill'];
+    });
+  
+    setBill((prev) => ({
+      ...prev,
+      totalNumberOfUniqueItems: bill.billItems.length,
+      totalNumberOfItems: numOfItems,
+      billMRPTotal: mrpTotal,
+      billAmountTotal: Math.ceil(totalSum),
+      billDiscountTotal: savedAmount,
+      totalBillProfit: profitAmount,
+    }));
+  };
+
+
+  // updating bill amount
+  const updateReturnAmount = (setBill, bill) => {
+    setBill((prev) => ({
+      ...prev,
+      amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
+    }));
+  };
+
+  useEffect(
+    () => updateBillValuesOnItemChange(bill, setBill),
+    // eslint-disable-next-line
+    [bill.billItems]
+  );
+
+  useEffect(
+    () => updateReturnAmount(setBill, bill),
+    // eslint-disable-next-line
+    [bill.cashPay, bill.upiPay, bill.billAmountTotal]
+  );
+
+  
+
+  useEffect(() => {
+    getAllLeanItems();
+    getUserData();
+  }, []);
+
+ // To save bill items in billItem Reducer
+ useEffect(() => {
+    dispatch({ type: 'BILL_ITEMS_LIST', payload: bill });
+    // eslint-disable-next-line
+  }, [bill]);
+
+
+
+
   return (
     <>
-      <div className="billing-container">
-        <p style={{ marginBottom: '20px' }}>Total Items : {itemsList.length}</p>
-        <div className="header">
-          <h1>PRIYAM STORES</h1>
-          <h3>112-C, Indrapuri, Bhopal - 462022</h3>
-          <h3>Date: {new Date().toDateString()}</h3>
-          <h3>Time: {new Date().toLocaleTimeString()}</h3>
-        </div>
-        <div className="bill-btns">
+      <div>
+        <h1>Billing Page</h1>
+        <div className="billing-container">
+          <p style={{ marginBottom: '20px', fontWeight: '700' }}>
+            Total Items : {totalItems}
+          </p>
+
+
+          <div className="header">
+            <h1>PRIYAM STORES</h1>
+            <h3>112-C, Indrapuri, Bhopal - 462022</h3>
+            <h3>Date: {new Date().toDateString()}</h3>
+            <h3>Time: {new Date().toLocaleTimeString()}</h3>
+          </div>
+
+          {/* Customer section */}
+
           <div style={{ display: 'flex', gap: '30px' }}>
             <TextInput
               label="Customer Name"
@@ -540,6 +520,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
             )}
           </div>
 
+
           <Button
             sx={{ background: 'black', marginRight: '1rem' }}
             onClick={() => refreshPage(setBill, BILL_INITIAL_STATE)}
@@ -556,17 +537,17 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                 bill,
                 setBill,
                 BILL_INITIAL_STATE,
-                itemsReducer,
-                initialItemList,
-                billID
+                {billID}
               )
             }
             loading={apiLoading}
           >
             Save and Print
           </Button>
-          <BillNarrator billTotal={bill.billAmountTotal} />
+       
+          <BillNarrator billTotal={bill?.billAmountTotal} />
         </div>
+
         <div
           style={{
             display: 'flex',
@@ -661,14 +642,16 @@ const Billing = ({ billID = '', loaderDisplay }) => {
               style={{ display: loaderDisplay ? 'none' : '' }}
               className="body"
             >
-              <tr>
+              <tr className="data-result-barcode">
                 <td>
                   <Text color="black" weight={700}>
                     {bill.billItems.length + 1}
                   </Text>
                 </td>
-                <td>
+                <td  
+                >
                   <Text color="black" weight={700}>
+                  <span>Search Item By BarCode</span>
                     <Input
                       className="bill-input"
                       ref={barRef}
@@ -676,13 +659,67 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                       name="itemBarcode"
                       value={inputValue.itemBarcode}
                       onWheel={(e) => e.target.blur()}
-                      onChange={(e) => handleItemInputChange(e, setInputValue)}
+                      onChange={(e) => 
+                        {
+                            if (itemsByBarcode[e.target.value] && itemsByBarcode[e.target.value]?.length === 1) {
+                                 onItemAddToBill({e: e, itemData: itemsByBarcode, key: e.target.value})
+                            } else {
+                            handleItemNameFilter(
+                                e,
+                                setInputValue,
+                                itemBarCodesList,
+                                setFilterBarcodeData,
+                                filterBarcodeData,
+                                'itemBarcode'
+                              );
+                              handleItemInputChange(e, setInputValue);
+                            
+                            }
+                        
+                    }
+                }
                       autoComplete="off"
                     />
                   </Text>
+              { Boolean(filterBarcodeData?.length) &&  <Table className='barcode-suggestion-list' style={{ backgroundColor: 'white' }}>
+                        <thead>
+                          <td>Barcode</td>
+                          <td>Name</td>
+                          <td>MRP</td>
+                        </thead>
+                        <tbody>
+                   {filterBarcodeData?.map((value, key) => {
+
+                    const data = itemsByBarcode[value]?.[0] ?? []
+                            return (
+                              <tr
+                                key={key}
+                                style={{
+                                  padding: '5px',
+                                  fontSize: '16px',
+                                  fontStyle: 'bold',
+                                  cursor: 'pointer',
+                                }}
+                                className="show-data"
+                                onClick={(e)=> {
+                                    onItemAddToBill({e: e, itemData: itemsByBarcode, key: value})
+                                    setInputValue(value)}
+                            }
+                              >
+                                 <td>{data?.itemBarcode}</td>
+                                <td>{data?.itemName}</td>
+                                <td>{data?.itemMRPperUnit}</td>
+                              </tr>
+                            );
+                          })}
+                    </tbody>
+                    </Table>}
                 </td>
+               
                 <td>
+                   
                   <Text color="black" weight={700}>
+                    <span>Search Item By Name</span>
                     <Input
                       className="bill-input"
                       type="text"
@@ -694,7 +731,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                         handleItemNameFilter(
                           e,
                           setInputValue,
-                          itemsList,
+                          itemNamesList,
                           setFilteredData
                         );
                         handleItemInputChange(e, setInputValue);
@@ -704,85 +741,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                   {inputValue.itemName && Boolean(filteredData.length) && (
                     <div
                       onClick={(e) => {
-                        if (itemsByName[e.target.innerText]) {
-                          let index;
-                          let itemDetail = itemsByName[e.target.innerText];
-                          bill.billItems.map((billItem) => {
-                            index = bill.billItems.findIndex(
-                              (a) => a._id === billItem._id
-                            );
-                            if (
-                              itemDetail.itemName ===
-                              billItem.itemDetail.itemName
-                            ) {
-                              const updatedItem = {
-                                ...billItem,
-                                itemDetail: {
-                                  ...billItem.itemDetail,
-                                  itemQuantityInBill:
-                                    billItem.itemQuantityInBill + 1,
-                                },
-                                itemQuantityInBill:
-                                  billItem.itemQuantityInBill + 1,
-                              };
-                              bill.billItems.splice(index, 1);
-                              setBill((prev) => ({
-                                totalNumberOfItems: prev.totalNumberOfItems + 1,
-                                ...prev,
-                                billItems: [updatedItem, ...prev.billItems],
-                              }));
-                            } else if (
-                              index ===
-                              bill.totalNumberOfUniqueItems - 1
-                            ) {
-                              setBill((prev) => ({
-                                ...prev,
-                                billItems: [
-                                  {
-                                    itemDetail,
-                                    itemQuantityInBill:
-                                      itemDetail.itemQuantityInBill,
-                                    itemMRPtotal: Number(
-                                      itemDetail.itemMRPperUnit
-                                    ),
-                                    itemDiscountTotal:
-                                      itemDetail.itemDiscountPerUnit,
-                                    itemSellingPriceTotal: Number(
-                                      itemDetail.itemSellingPricePerUnit
-                                    ),
-                                    _id: itemDetail._id,
-                                  },
-                                  ...prev.billItems,
-                                ],
-                              }));
-                            }
-                            return <></>;
-                          });
-                          if (bill.totalNumberOfItems === 0) {
-                            setBill((prev) => ({
-                              ...prev,
-                              billItems: [
-                                {
-                                  itemDetail,
-                                  itemQuantityInBill:
-                                    itemDetail.itemQuantityInBill,
-                                  itemMRPtotal: Number(
-                                    itemDetail.itemMRPperUnit
-                                  ),
-                                  itemDiscountTotal:
-                                    itemDetail.itemDiscountPerUnit,
-                                  itemSellingPriceTotal: Number(
-                                    itemDetail.itemSellingPricePerUnit
-                                  ),
-                                  _id: itemDetail._id,
-                                },
-                                ...prev.billItems,
-                              ],
-                            }));
-                          }
-                          setInputValue(INPUT_INITIAL_STATE);
-                          setFilteredData([]);
-                        }
+                        onItemAddToBill({e: e, itemData: itemsByName})
                       }}
                       className="data-result"
                       style={{ minWidth: 'fit-content' }}
@@ -794,7 +753,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                           <td>MRP</td>
                         </thead>
                         <tbody>
-                          {filteredData.map((value, key) => {
+                          {filteredData?.map((value, key) => {
                             return (
                               <tr
                                 key={key}
@@ -806,9 +765,9 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                                 }}
                                 className="show-data"
                               >
-                                <td>{value.itemBarcode}</td>
-                                <td>{value.itemName}</td>
-                                <td>{value.itemMRPperUnit}</td>
+                                <td>{itemsByName[value]?.itemBarcode}</td>
+                                <td>{itemsByName[value]?.itemName}</td>
+                                <td>{itemsByName[value]?.itemMRPperUnit}</td>
                               </tr>
                             );
                           })}
@@ -998,9 +957,6 @@ const Billing = ({ billID = '', loaderDisplay }) => {
             <Table>
               <tbody>
                 <tr className="final-bill">
-                  {/* <td className="empty-slots"></td>
-                <td className="empty-slots"></td>
-                <td className="empty-slots"></td> */}
                   <td>
                     <Text
                       color="black"
@@ -1021,21 +977,8 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                       MRP Total: {bill?.billMRPTotal?.toFixed(2)}
                     </Text>
                   </td>
-                  {/* <td>
-                  <Text
-                    color="black"
-                    size="xl"
-                    weight={800}
-                    className="final-bill-text print-text"
-                  >
-                    Bill Total: {bill?.billAmountTotal?.toFixed(2)}
-                  </Text>
-                </td> */}
                 </tr>
                 <tr className="final-bill">
-                  {/* <td className="empty-slots"></td>
-                <td className="empty-slots"></td>
-                <td className="empty-slots"></td> */}
                   <td>
                     <Text
                       color="black"
@@ -1084,16 +1027,6 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                       onWheel={(e) => e.target.blur()}
                     />
                   </td>
-                  {/* <td>
-                    <Text
-                      color="black"
-                      size="xl"
-                      weight={800}
-                      className="final-bill-text print-text"
-                    >
-                      Amount Return: {Number(bill.amountReturn || 0)}
-                    </Text>
-                  </td> */}
                 </tr>
               </tbody>
             </Table>
@@ -1107,11 +1040,6 @@ const Billing = ({ billID = '', loaderDisplay }) => {
             </Text>
           </div>
         </div>
-        {/* <div className="discount-line">
-          <Text className="discount-text" size="xl" color="black" weight={700}>
-            You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP
-          </Text>
-        </div> */}
         <div
           style={{
             display: loaderDisplay ? 'flex' : 'none',
@@ -1174,8 +1102,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
             </div>
           )}
         </div>
-      </div>
-      <div className="print-container">
+        <div className="print-container">
         <div className="header">
           <h1>PRIYAM STORES</h1>
           <h3>112-C, Indrapuri, Bhopal - 462022</h3>
@@ -1233,40 +1160,9 @@ const Billing = ({ billID = '', loaderDisplay }) => {
           </div>
         </div>
       </div>
+      </div>
     </>
   );
 };
 
-export const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
-  const handleQuantityChange = (e) => {
-    if (e.target.value < 0) return;
-    const billItemsCopy = [...bill.billItems];
-    billItemsCopy[idx].itemDetail['itemQuantityInBill'] = Number(
-      e.target.value
-    );
-    billItemsCopy[idx]['itemQuantityInBill'] = Number(e.target.value);
-    setBill((prev) => ({ ...prev, billItems: [...billItemsCopy] }));
-  };
-  return (
-    <>
-      <Text
-        color="black"
-        size="xl"
-        weight={800}
-        className="quantity-text print-text"
-      >
-        {itemObj['itemQuantityInBill'] || 0}
-      </Text>
-      <Input
-        style={{ width: '90px' }}
-        className="quantity-input"
-        type="number"
-        value={itemObj['itemQuantityInBill']}
-        onChange={handleQuantityChange}
-        onWheel={(e) => e.target.blur()}
-      />
-    </>
-  );
-};
-
-export default Billing;
+export default NewBillPage;
