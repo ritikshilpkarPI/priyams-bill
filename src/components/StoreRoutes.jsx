@@ -42,16 +42,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
         />
         <Fragment>
           <ProtectedRoutes>
-            <Route
-              path="/billing"
-              exact
-              render={() => (
-                <Billing
-                  loaderDisplay={loaderDisplay}
-                  setLoaderDisplay={setLoaderDisplay}
-                />
-              )}
-            />
+            <Route path="/billing" exact component={NewBillingPage} />
             <Route path="/openClose" component={OpenClose} />
             <Route exact path="/inventory" component={ItemsList} />
             <Route
@@ -87,11 +78,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
               path="/orders/:orderStatus"
               component={OrderStatusDetail}
             />
-            <Route
-            exact
-            path='/newBilling'
-            component={NewBillingPage}
-            />
+            <Route exact path="/newBilling" component={NewBillingPage} />
           </ProtectedRoutes>
         </Fragment>
       </Switch>
