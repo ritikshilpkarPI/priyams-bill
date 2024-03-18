@@ -11,7 +11,7 @@ import ItemListPurchaseOrderHistory from './ListPurchaseOrderHistory';
 import {
   Home,
   BillFeed,
-  Billing,
+  // Billing,
   DayWiseBillFeed,
   EditBill,
   ItemsList,

@@ -54,8 +54,7 @@ const NewBillPage = ({ billID = '' }) => {
   const barRef = useRef('');
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
-  const { itemsStateAndDispatch, billItemsStateAndDispatch } =
-    useContext(AppStateContext);
+  const { billItemsStateAndDispatch } = useContext(AppStateContext);
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
 
