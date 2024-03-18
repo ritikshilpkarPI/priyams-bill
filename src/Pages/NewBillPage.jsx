@@ -182,24 +182,24 @@ const NewBillPage = ({ billID = '' }) => {
       [bill.updated]: bill?.updated?.push(Date.now()),
     };
     setBill(updateBill);
-    const editApi = {
-      url: API_PATHS.BILLING.PUT_EDIT_BILL,
-      method: API_METHODS.PUT,
-      data: { id: billID, itemWithChanges: { ...bill } },
-    };
+    // const editApi = {
+    //   url: API_PATHS.BILLING.PUT_EDIT_BILL,
+    //   method: API_METHODS.PUT,
+    //   data: { id: billID, itemWithChanges: { ...bill } },
+    // };
     const createApi = {
       url: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
       method: API_METHODS.POST,
       data: { ...bill, billId: newBillId },
     };
-    const objectOfInterest = billID ? editApi : createApi;
+    // const objectOfInterest = billID ? editApi : createApi;
 
     localStorage.setItem(
       `newBill-${newBillId}`,
       JSON.stringify({
         newBillId,
         createdAt: new Date().toLocaleString(),
-        ...objectOfInterest,
+        ...createApi,
       })
     );
     createBill(newBillId, setApiLoading);
