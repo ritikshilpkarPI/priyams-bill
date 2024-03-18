@@ -134,6 +134,14 @@ const NewBillPage = ({ billID = '' }) => {
     setInputValue((prevState) => ({ ...prevState, [name]: value }));
   }
 
+  const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
+    if (billItems.length === 0) {
+      setBill(BILL_INITIAL_STATE);
+    } else {
+      setBill(billItems);
+    }
+  };
+
   // creating bill
   function createBill(newBillId, setApiLoading) {
     const { newBillId: billUuid, ...billObject } = JSON.parse(
@@ -165,8 +173,6 @@ const NewBillPage = ({ billID = '' }) => {
     bill,
     setBill,
     BILL_INITIAL_STATE,
-    itemsReducer,
-    initialItemList,
     billID
   ) {
     const newBillId = uuidv4();
@@ -201,7 +207,6 @@ const NewBillPage = ({ billID = '' }) => {
     window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
-    itemsReducer({ type: 'UPDATE_ITEMS_LIST', payload: [...initialItemList] });
   }
 
   // To show prices according to slabs if exists
@@ -342,6 +347,12 @@ const NewBillPage = ({ billID = '' }) => {
       amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
     }));
   };
+
+  useEffect(
+    () => initializeBillState(billItems, BILL_INITIAL_STATE, setBill),
+    // eslint-disable-next-line
+    []
+  );
 
   useEffect(
     () => updateBillValuesOnItemChange(bill, setBill),
