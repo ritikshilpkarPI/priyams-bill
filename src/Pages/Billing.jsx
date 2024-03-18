@@ -1249,14 +1249,6 @@ export const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   };
   return (
     <>
-      <Text
-        color="black"
-        size="xl"
-        weight={800}
-        className="quantity-text print-text"
-      >
-        {itemObj['itemQuantityInBill'] || 0}
-      </Text>
       <Input
         style={{ width: '90px' }}
         className="quantity-input"
