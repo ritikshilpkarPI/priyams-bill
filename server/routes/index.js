@@ -64,7 +64,7 @@ const {
   getItemsWithNoImages,
   getItemsLean,
   saveOrCacheBill,
-  getUnSavedBills
+  getUnSavedBills,
 } = require('../controllers/index');
 
 // online order apis
@@ -72,7 +72,11 @@ router.get(API_PATHS.ORDERS.GET_USER_ORDERS, isLoggedIn, getUserOrders);
 router.post(API_PATHS.ORDERS.UPDATE_USER_ORDERS, isLoggedIn, updateOrderStatus);
 
 router.get(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsFeed);
-router.get(API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING, getItemsLean);
+router.get(
+  API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+  isLoggedIn,
+  getItemsLean
+);
 router.get(
   API_PATHS.INVENTORY.GET_ITEMS_CATEGORY_LIST,
   isLoggedIn,

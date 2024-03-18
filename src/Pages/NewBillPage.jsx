@@ -98,7 +98,7 @@ const NewBillPage = ({ billID = '' }) => {
     try {
       setLoaderDisplay(true);
       const response = await genericAxios({
-        url: API_PATHS.ITEMS.GET_ALL_LEAN_ITEMS,
+        url: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
         method: API_METHODS.GET,
       });
 
