@@ -40,7 +40,7 @@ const refreshPage = (setBill, BILL_INITIAL_STATE) => {
 
 const NewBillPage = ({ billID = '' }) => {
   const [itemsByName, setItemsByName] = useState([]);
-  const [itemsByBarcode, setItemsByBarcode] = useState([]);
+  const [itemsByBarcode, setItemsByBarcode] = useState();
   const [itemBarCodesList, setItemBarCodesList] = useState([]);
   const [filterBarcodeData, setFilterBarcodeData] = useState([]);
   const [itemNamesList, setItemNamesList] = useState([]);
@@ -234,7 +234,7 @@ const NewBillPage = ({ billID = '' }) => {
 
   const onItemAddToBill = ({ e, itemData, key = '' }) => {
     if (itemData[Boolean(key) ? key : e.target.innerText]) {
-      let index;
+      // let index;
       let itemDetail;
       if (Boolean(key)) {
         itemDetail = itemData[key]?.[0];
@@ -242,15 +242,15 @@ const NewBillPage = ({ billID = '' }) => {
         itemDetail = itemData[e.target.innerText];
       }
 
-      bill.billItems.map((billItem) => {
-        index = bill.billItems.findIndex((a) => a._id === billItem._id);
+      bill.billItems.map((billItem, index) => {
+        // index = bill.billItems.findIndex((a) => a._id === billItem._id);
 
         if (itemDetail.itemName === billItem.itemDetail.itemName) {
           const updatedItem = {
             ...billItem,
             itemDetail: {
               ...billItem.itemDetail,
-              itemQuantityInBill: billItem.itemQuantityInBill + 1,
+              // itemQuantityInBill: billItem.itemQuantityInBill + 1,
             },
             itemQuantityInBill: billItem.itemQuantityInBill + 1,
           };
@@ -266,7 +266,7 @@ const NewBillPage = ({ billID = '' }) => {
             billItems: [
               {
                 itemDetail,
-                itemQuantityInBill: itemDetail.itemQuantityInBill,
+                // itemQuantityInBill: itemDetail.itemQuantityInBill,
                 itemMRPtotal: Number(itemDetail.itemMRPperUnit),
                 itemDiscountTotal: itemDetail.itemDiscountPerUnit,
                 itemSellingPriceTotal: Number(
@@ -287,7 +287,7 @@ const NewBillPage = ({ billID = '' }) => {
           billItems: [
             {
               itemDetail,
-              itemQuantityInBill: itemDetail.itemQuantityInBill,
+              // itemQuantityInBill: itemDetail.itemQuantityInBill,
               itemMRPtotal: Number(itemDetail.itemMRPperUnit),
               itemDiscountTotal:
                 itemDetail.itemMRPperUnit - itemDetail.itemSellingPricePerUnit,
