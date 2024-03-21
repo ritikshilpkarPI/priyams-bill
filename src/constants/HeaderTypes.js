@@ -31,6 +31,8 @@ export const sidebarListData = [
         icon: 'images/expired.svg',
       },
       { name: 'Item Labels', url: '/label', icon: 'images/label.svg' },
+      { name: 'Item Barcode ', url: '/itemsBarcode', icon: 'images/barcode.svg' },
+
     ],
   },
   {

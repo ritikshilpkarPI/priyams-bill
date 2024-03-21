@@ -14,5 +14,6 @@ export const routes = {
   approval: '/approval',
   editPurchaseOrder: '/',
   orders:'/orders',
-  orderStatusDetail: '/orders/:orderStatus'
+  orderStatusDetail: '/orders/:orderStatus',
+  itemsBarcode:"/itemsBarcode"
 };
