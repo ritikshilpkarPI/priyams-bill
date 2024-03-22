@@ -1,10 +1,10 @@
 @media print {
-  .page-header {
+  .barcode-page-header {
     display: none;
   }
 }
 .barcode-wrapper-container {
-  .page-header {
+  .barcode-page-header {
     padding: 5px;
     display: flex;
     justify-content: center;
@@ -47,16 +47,15 @@
     }
     .item-label {
       padding: 10px;
-      border: 2px solid black;
       margin: 5px;
       display: flex;
       border-radius: 10px;
       flex-direction: column;
-      gap: 10px;
+      gap: 2px;
       .price-container {
         display: flex;
         gap: 10px;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         .product-price {
           font-size: 16px;

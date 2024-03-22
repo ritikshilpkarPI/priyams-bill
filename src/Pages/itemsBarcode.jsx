@@ -58,7 +58,7 @@ export const ItemsBarCode = () => {
 
   return (
     <div className="barcode-wrapper-container">
-      <div className="page-header">
+      <div className="barcode-page-header">
         <input
           placeholder="Name Search"
           className="search-container"
@@ -91,7 +91,10 @@ export const ItemsBarCode = () => {
             return (
               <div className="item-label">
                 <div>
-                  <Barcode value={itemBarcode} />
+                  <Barcode options={{
+                    height: 35,
+                    width: 4
+                  }} value={itemBarcode} />
                 </div>
                 <div
                   style={{
