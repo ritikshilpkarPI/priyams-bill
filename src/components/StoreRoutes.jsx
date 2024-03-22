@@ -30,6 +30,7 @@ import {
 import Label from 'src/Pages/Label';
 import { Fragment } from 'react';
 import { ItemsBarCode } from 'src/Pages/itemsBarcode';
+import { ItemQuantity } from 'src/Pages/ItemQuantity';
 
 const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
   return (
@@ -81,6 +82,7 @@ const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
             />
             <Route exact path="/newBilling" component={NewBillingPage} />
             <Route exact path="/itemsBarcode" component={ ItemsBarCode} />
+            <Route exact path="/moveToCart" component={ItemQuantity} />
           </ProtectedRoutes>
         </Fragment>
       </Switch>
