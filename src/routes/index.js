@@ -15,5 +15,6 @@ export const routes = {
   editPurchaseOrder: '/',
   orders:'/orders',
   orderStatusDetail: '/orders/:orderStatus',
-  itemsBarcode:"/itemsBarcode"
+  itemsBarcode: "/itemsBarcode",
+  moveToCart:"./moveToCart"
 };

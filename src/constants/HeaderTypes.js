@@ -32,6 +32,7 @@ export const sidebarListData = [
       },
       { name: 'Item Labels', url: '/label', icon: 'images/label.svg' },
       { name: 'Item Barcode ', url: '/itemsBarcode', icon: 'images/barcode.svg' },
+      {name: 'Move Item To Cart', url: '/moveToCart', icon: 'images/purchaseorder.svg'}
 
     ],
   },
