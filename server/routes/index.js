@@ -65,6 +65,7 @@ const {
   getItemsLean,
   saveOrCacheBill,
   getUnSavedBills,
+  addItemsToCartApp,
 } = require('../controllers/index');
 
 // online order apis
@@ -267,5 +268,6 @@ router.get(
   isLoggedIn,
   sendDayExpenses
 );
+router.post(`${API_PATHS.PSTORE_CART.POST_ITEMS_DATA_TO_CART}/items`, addItemsToCartApp)
 
 module.exports = router;
