@@ -18,13 +18,11 @@ export const ItemQuantity = () => {
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
       const response = await genericAxios({
         url: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
         method: API_METHODS.GET,
       });
-      setItemApiData({ ...response.data.message });
-      setIsLoading(false);
+      setItemApiData({ ...response?.data?.message });
     })();
   }, []);
 
