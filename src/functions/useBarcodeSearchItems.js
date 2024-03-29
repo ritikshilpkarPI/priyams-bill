@@ -1,10 +1,6 @@
-import { useContext } from 'react';
-import { AppStateContext } from 'src/AppState/appState.context';
 const itemsByBarcode = {};
-const useBarcodeSearchItems = (searchValue, handleSelectOrderItems) => {
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
-  const [itemsList] = itemsStateAndDispatch;
-  const filterItems2 = itemsList.filter(
+const useBarcodeSearchItems = (searchValue, itemsList) => {
+  const filteredItemsByBarcode = itemsList.filter(
     (item) =>
       String(item.itemBarcode) &&
       String(searchValue) &&
@@ -20,7 +16,7 @@ const useBarcodeSearchItems = (searchValue, handleSelectOrderItems) => {
   const barcodeFilteredItem = { ...itemsByBarcode[searchValue] };
   return {
     barcodeFilteredItem,
-    filterItems2,
+    filteredItemsByBarcode,
   };
 };
 

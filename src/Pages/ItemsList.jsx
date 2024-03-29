@@ -70,7 +70,8 @@ let categoryArray = [
 const ItemsList = () => {
   const [items, setItems] = useState([]);
   const { itemsStateAndDispatch } = useContext(AppStateContext);
-  const [itemsList, dispatch] = itemsStateAndDispatch;
+  const [itemsList, setItemsList] = useState([]);
+  const [dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
   const [csvFile, setCsvFile] = useState();
@@ -87,6 +88,30 @@ const ItemsList = () => {
   const [index, setIndex] = useState(0);
 
   const history = useHistory();
+
+  useEffect(() => {
+    (async () => {
+      const fetch = await genericAxios({
+        url: API_PATHS.INVENTORY.GET_ITEMS,
+        method: API_METHODS.GET,
+        params: {
+          filters: {
+            minStockOnly: false,
+            isDeleted: false,
+          },
+        },
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (fetch.error) return;
+      const itemsData = fetch?.data?.message?.items;
+      setItemsList(itemsData)
+      // setLoaderDisplay(false);
+    })();
+    // eslint-disable-next-line
+  }, []);
+
 
   useEffect(() => {
     setItems([...itemsList]);
