@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Loader, Button, Input, Checkbox } from '@mantine/core';
 import { CloseButton } from '@mantine/core';
-import { AppStateContext } from 'src/AppState/appState.context';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
@@ -14,8 +13,7 @@ const Label = () => {
   const [display, setDisplay] = useState(true);
   const [newData, setNewData] = useState([]);
   const [checked, setChecked] = useState(false);
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
-  const [itemsList] = itemsStateAndDispatch;
+  const [itemsList, setItemsList] = useState([]);
   const getData = async () => {
     setLoader(true);
     const fetch = await genericAxios({
@@ -78,6 +76,32 @@ const Label = () => {
     window.print();
   };
   var regExp = /[a-zA-Z]/g;
+
+
+  useEffect(() => {
+    (async () => {
+      const fetch = await genericAxios({
+        url: API_PATHS.INVENTORY.GET_ITEMS,
+        method: API_METHODS.GET,
+        params: {
+          filters: {
+            minStockOnly: false,
+            isDeleted: false,
+          },
+        },
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (fetch.error) return;
+      const itemsData = fetch?.data?.message?.items;
+      setItemsList(itemsData)
+      // setLoaderDisplay(false);
+    })();
+    // eslint-disable-next-line
+  }, []);
+
+  
   return (
     <>
       <div className="search-container">
