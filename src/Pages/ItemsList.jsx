@@ -207,7 +207,7 @@ const ItemsList = () => {
         },
       });
       if (newItem.error) return;
-      dispatch({ type: 'ADD_NEW_ITEM_TO_LIST', payload: newItem.data.message });
+      setItemsList([...itemsList, newItem.data.message])
     })();
     setApiLoading(false);
     setSlabArray([]);
@@ -263,7 +263,7 @@ const ItemsList = () => {
         alert('Item deleted...');
       }
       const newList = deletedItem.data.items;
-      dispatch({ type: 'NEW_ITEMS_LIST', payload: [...newList] });
+      setItemsList(newList)
       setApiLoading(false);
     };
 
@@ -503,7 +503,7 @@ const ItemsList = () => {
             <Button onClick={close} color="red">
               Cancel
             </Button>
-            <ItemUpdateButtonRow index={index} saveButton={true} />
+            <ItemUpdateButtonRow index={index} saveButton={true} setItemsList={setItemsList} />
           </div>
         </div>
       </div>
@@ -859,7 +859,7 @@ const ItemsList = () => {
     );
   };
 
-  const ItemUpdateButtonRow = ({ index, style, saveButton }) => {
+  const ItemUpdateButtonRow = ({ index, style, saveButton, setItemsList }) => {
     return (
       <UpdateItemButton
         style={style}
@@ -869,6 +869,7 @@ const ItemsList = () => {
         itemsList={itemsList}
         setItems={setItems}
         saveButton={saveButton}
+        setItemsList={setItemsList}
       />
     );
   };
@@ -1170,7 +1171,7 @@ const ItemsList = () => {
         </td>
         <ProtectedComponent role={access.UPDATE_ITEM_BUTTON_ITEM_ROW}>
           <td style={{ display: 'flex' }}>
-            <ItemUpdateButtonRow index={index} />
+            <ItemUpdateButtonRow index={index} setItemsList={setItemsList} />
             <ItemSoftDeleteButtonRow index={index} />
           </td>
         </ProtectedComponent>
@@ -1921,6 +1922,7 @@ const UpdateItemButton = ({
   setItems,
   itemsList,
   saveButton,
+  setItemsList
 }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
@@ -1945,10 +1947,7 @@ const UpdateItemButton = ({
       1
     );
     newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
-    dispatch({
-      type: 'UPDATE_ITEMS_LIST',
-      payload: newItemsList,
-    });
+    setItemsList(newItemsList);
     setApiLoading(false);
   };
 
