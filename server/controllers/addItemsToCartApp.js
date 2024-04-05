@@ -7,7 +7,7 @@ const addItemsToCartApp = async (req, res) => {
 
     // Iterate over each item in the request body
     for (const itemData of items) {
-      const { id, quantity } = itemData;
+      const { _id:id, quantity } = itemData;
 
       // Find the item from the Item model by id
       const itemToMove = await Item.findById(id);

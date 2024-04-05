@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { TableComponent } from 'src/components/TableComponent';
+import { Loader } from '@mantine/core';
 export const ItemQuantity = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,13 +18,11 @@ export const ItemQuantity = () => {
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
       const response = await genericAxios({
         url: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
         method: API_METHODS.GET,
       });
-      setItemApiData({ ...response.data.message });
-      setIsLoading(false);
+      setItemApiData({ ...response?.data?.message });
     })();
   }, []);
 
@@ -66,7 +65,7 @@ export const ItemQuantity = () => {
     const updatedSelectedData = [...selectedData];
     updatedSelectedData[index] = {
       ...updatedSelectedData[index],
-      itemQuantity: Number(e.target.value),
+      quantity: Number(e.target.value),
     };
     setSelectedData(updatedSelectedData);
   };
@@ -74,7 +73,27 @@ export const ItemQuantity = () => {
     selectedData.splice(index, 1);
     setSelectedData([...selectedData]);
   };
-  const handleOnAddCartClick = () => {};
+  const handleOnAddCartClick = async () => {
+    try {
+      setIsLoading(true);
+      const response = await genericAxios({
+        url: `${API_PATHS.PSTORE_CART.POST_ITEMS_DATA_TO_CART}/items`,
+        method: API_METHODS.POST,
+        headers: {
+          Cookie: '',
+        },
+        data: {
+          items: selectedData,
+        },
+      });
+      setIsLoading(false);
+      window.alert(response?.data?.message);
+      setSelectedData([]);
+      // Handle the responseData as needed
+    } catch (error) {
+      console.error('Error adding items to cart:', error);
+    }
+  };
   return (
     <div className="item-quantity-container">
       <div className="search-container-wrapper">
@@ -138,7 +157,7 @@ export const ItemQuantity = () => {
       {Boolean(selectedData?.length) && (
         <div className="add-cart-button-container">
           <button className="add-cart-button" onClick={handleOnAddCartClick}>
-            Add Cart
+            {isLoading ? <Loader /> : 'Add Cart'}
           </button>
         </div>
       )}
