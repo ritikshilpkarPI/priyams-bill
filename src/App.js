@@ -52,8 +52,6 @@ function App({ history, location }) {
   }, []);
   const {
     logoutUser,
-    loaderDisplay,
-    setLoaderDisplay,
     staffName,
     staffUserName,
     showBill,
@@ -75,8 +73,6 @@ function App({ history, location }) {
         />
       )}
       <StoreRoutes
-        setLoaderDisplay={setLoaderDisplay}
-        loaderDisplay={loaderDisplay}
         style={{ marginLeft: '100px' }}
       />
 

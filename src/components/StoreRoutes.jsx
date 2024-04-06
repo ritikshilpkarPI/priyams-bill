@@ -32,7 +32,7 @@ import { Fragment } from 'react';
 import { ItemsBarCode } from 'src/Pages/itemsBarcode';
 import { ItemQuantity } from 'src/Pages/ItemQuantity';
 
-const StoreRoutes = ({ loaderDisplay, setLoaderDisplay }) => {
+const StoreRoutes = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Switch>

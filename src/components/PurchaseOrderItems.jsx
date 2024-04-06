@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Group, LoadingOverlay, Title } from '@mantine/core';
 import { Notification } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
@@ -12,6 +12,9 @@ import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../CSS/purchaseOrder.css';
 import { useHistory, useParams } from 'react-router-dom';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const PurchaseOrderItems = ({ history }) => {
   const {
     form,
@@ -52,11 +55,11 @@ const PurchaseOrderItems = ({ history }) => {
     deleteCloudBills,
     Loading,
     disableDraft,
+    itemsList
   } = usePurchaseOrder(history);
 
-  const { filterItems } = useNameSearchItem(form.values.inputName);
-  //my code for work-
-  const { filterItems2 } = useBarcodeSearchItems(form.values.barcode);
+  const { filteredItemsByName } = useNameSearchItem(form.values.inputName, itemsList);
+  const { filteredItemsByBarcode } = useBarcodeSearchItems(form.values.barcode, itemsList);
   const locate = useHistory();
   const { id } = useParams();
   return (
@@ -89,8 +92,8 @@ const PurchaseOrderItems = ({ history }) => {
         handleExpiryDate={handleExpiryDate}
         setDate={setDate}
         date={date}
-        filterItems={filterItems}
-        filterItems2={filterItems2}
+        filterItems={filteredItemsByName}
+        filterItems2={filteredItemsByBarcode}
         handleSelectOrderItems={handleSelectOrderItems}
         handleSelectOrderItems2={handleSelectOrderItems2}
         slabForm={slabForm}

@@ -69,8 +69,7 @@ let categoryArray = [
 
 const ItemsList = () => {
   const [items, setItems] = useState([]);
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
-  const [itemsList, dispatch] = itemsStateAndDispatch;
+  const [itemsList, setItemsList] = useState([]);
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
   const [csvFile, setCsvFile] = useState();
@@ -87,6 +86,30 @@ const ItemsList = () => {
   const [index, setIndex] = useState(0);
 
   const history = useHistory();
+
+  useEffect(() => {
+    (async () => {
+      const fetch = await genericAxios({
+        url: API_PATHS.INVENTORY.GET_ITEMS,
+        method: API_METHODS.GET,
+        params: {
+          filters: {
+            minStockOnly: false,
+            isDeleted: false,
+          },
+        },
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (fetch.error) return;
+      const itemsData = fetch?.data?.message?.items;
+      setItemsList(itemsData)
+      // setLoaderDisplay(false);
+    })();
+    // eslint-disable-next-line
+  }, []);
+
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -182,7 +205,7 @@ const ItemsList = () => {
         },
       });
       if (newItem.error) return;
-      dispatch({ type: 'ADD_NEW_ITEM_TO_LIST', payload: newItem.data.message });
+      setItemsList([...itemsList, newItem.data.message])
     })();
     setApiLoading(false);
     setSlabArray([]);
@@ -238,7 +261,7 @@ const ItemsList = () => {
         alert('Item deleted...');
       }
       const newList = deletedItem.data.items;
-      dispatch({ type: 'NEW_ITEMS_LIST', payload: [...newList] });
+      setItemsList(newList)
       setApiLoading(false);
     };
 
@@ -264,7 +287,6 @@ const ItemsList = () => {
           index={index}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -285,7 +307,6 @@ const ItemsList = () => {
           index={index}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -306,7 +327,6 @@ const ItemsList = () => {
           index={index}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -327,7 +347,6 @@ const ItemsList = () => {
           index={index}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemSelectChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -349,7 +368,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -371,7 +389,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemSelectChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -478,7 +495,7 @@ const ItemsList = () => {
             <Button onClick={close} color="red">
               Cancel
             </Button>
-            <ItemUpdateButtonRow index={index} saveButton={true} />
+            <ItemUpdateButtonRow index={index} saveButton={true} setItemsList={setItemsList} />
           </div>
         </div>
       </div>
@@ -503,7 +520,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -526,7 +542,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -549,7 +564,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -801,7 +815,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -824,7 +837,6 @@ const ItemsList = () => {
           style={{ width: '100px', textAlign: 'center' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -834,16 +846,16 @@ const ItemsList = () => {
     );
   };
 
-  const ItemUpdateButtonRow = ({ index, style, saveButton }) => {
+  const ItemUpdateButtonRow = ({ index, style, saveButton, setItemsList }) => {
     return (
       <UpdateItemButton
         style={style}
-        dispatch={dispatch}
         index={index}
         items={items}
         itemsList={itemsList}
         setItems={setItems}
         saveButton={saveButton}
+        setItemsList={setItemsList}
       />
     );
   };
@@ -1145,7 +1157,7 @@ const ItemsList = () => {
         </td>
         <ProtectedComponent role={access.UPDATE_ITEM_BUTTON_ITEM_ROW}>
           <td style={{ display: 'flex' }}>
-            <ItemUpdateButtonRow index={index} />
+            <ItemUpdateButtonRow index={index} setItemsList={setItemsList} />
             <ItemSoftDeleteButtonRow index={index} />
           </td>
         </ProtectedComponent>
@@ -1889,13 +1901,13 @@ const TableRow = ({
 };
 
 const UpdateItemButton = ({
-  dispatch,
   items,
   index,
   style,
   setItems,
   itemsList,
   saveButton,
+  setItemsList
 }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
@@ -1920,10 +1932,7 @@ const UpdateItemButton = ({
       1
     );
     newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
-    dispatch({
-      type: 'UPDATE_ITEMS_LIST',
-      payload: newItemsList,
-    });
+    setItemsList(newItemsList);
     setApiLoading(false);
   };
 
