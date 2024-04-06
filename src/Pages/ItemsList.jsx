@@ -69,9 +69,7 @@ let categoryArray = [
 
 const ItemsList = () => {
   const [items, setItems] = useState([]);
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
   const [itemsList, setItemsList] = useState([]);
-  const [dispatch] = itemsStateAndDispatch;
   const [newItemInput, setNewItemInput] = useState(ITEM_INITIAL_INPUT);
   const [apiLoading, setApiLoading] = useState(false);
   const [csvFile, setCsvFile] = useState();
@@ -289,7 +287,6 @@ const ItemsList = () => {
           index={index}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -310,7 +307,6 @@ const ItemsList = () => {
           index={index}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -331,7 +327,6 @@ const ItemsList = () => {
           index={index}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -352,7 +347,6 @@ const ItemsList = () => {
           index={index}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemSelectChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -374,7 +368,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -396,7 +389,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemSelectChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -528,7 +520,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -551,7 +542,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -574,7 +564,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -826,7 +815,6 @@ const ItemsList = () => {
           style={{ width: '100px' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -849,7 +837,6 @@ const ItemsList = () => {
           style={{ width: '100px', textAlign: 'center' }}
           items={items}
           itemsList={itemsList}
-          dispatch={dispatch}
           handleItemInputChange={handleItemInputChange}
           itemInput={itemInput}
           setItemInput={setItemInput}
@@ -863,7 +850,6 @@ const ItemsList = () => {
     return (
       <UpdateItemButton
         style={style}
-        dispatch={dispatch}
         index={index}
         items={items}
         itemsList={itemsList}
@@ -1915,7 +1901,6 @@ const TableRow = ({
 };
 
 const UpdateItemButton = ({
-  dispatch,
   items,
   index,
   style,
