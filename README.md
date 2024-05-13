@@ -15,6 +15,14 @@ Create function in local and send to prod::
 - For client -> npm run client
 
 - For server -> netlify dev
-  > Note -> Install netlify CLI , npm install netlify-cli -g
+
+## For deployment
+
+1. Delete functions-build folder
+2. Delete build folder
+3. Run `netlify build`
+4. Verify functions-build and build are recreated
+5. Run `netlify deploy --prod`
+   > Note -> Install netlify CLI , npm install netlify-cli -g
 
 > Imp note -> use node 16
