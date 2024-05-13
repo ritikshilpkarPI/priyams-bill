@@ -1,6 +1,5 @@
 // import React, { useState, useEffect, useContext } from 'react';
-import { useContext, useEffect, useState } from 'react';
-import { AppStateContext } from '../AppState/appState.context';
+import { useState } from 'react';
 import { PAGES } from '../constants/HeaderTypes';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
@@ -10,37 +9,9 @@ import Cookies from 'js-cookie';
 
 const AppFunction = (history, location) => {
   const showBill = location.pathname.includes('showbill');
-  const { itemsStateAndDispatch } = useContext(AppStateContext);
-  const [itemsList, dispatch] = itemsStateAndDispatch;
-  const [loaderDisplay, setLoaderDisplay] = useState(true);
   const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
   const { name: staffName = '', username: staffUserName = '' } =
     parseJwt(Cookies.get('token')) || {};
-
-  useEffect(() => {
-    (async () => {
-      const fetch = await genericAxios({
-        url: API_PATHS.INVENTORY.GET_ITEMS,
-        method: API_METHODS.GET,
-        params: {
-          filters: {
-            minStockOnly: false,
-            isDeleted: false,
-          },
-        },
-        headers: {
-          Cookie: '',
-        },
-      });
-      if (fetch.error) return;
-      const itemsData = fetch?.data?.message?.items;
-      dispatch({ type: 'NEW_ITEMS_LIST', payload: itemsData });
-      setLoaderDisplay(false);
-    })();
-    // eslint-disable-next-line
-  }, [dispatch]);
-
- 
 
   const logoutUser = async () => {
     await genericAxios({
@@ -54,11 +25,8 @@ const AppFunction = (history, location) => {
   return {
     logoutUser,
     setValue,
-    setLoaderDisplay,
-    loaderDisplay,
     staffName,
     staffUserName,
-    itemsList,
     showBill,
     value,
   };

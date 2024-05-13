@@ -220,7 +220,6 @@ async function addNewBill(
   bill,
   setBill,
   BILL_INITIAL_STATE,
-  itemsReducer,
   initialItemList,
   billID
 ) {
@@ -257,7 +256,6 @@ async function addNewBill(
   window.print();
   setApiLoading(false);
   setBill(BILL_INITIAL_STATE);
-  itemsReducer({ type: 'UPDATE_ITEMS_LIST', payload: [...initialItemList] });
 }
 
 function handleItemInputChange(event, setInputValue) {
@@ -326,9 +324,9 @@ const Billing = ({ billID = '', loaderDisplay }) => {
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
   const [apiLoading, setApiLoading] = useState(false);
   const barRef = useRef('');
-  const { itemsStateAndDispatch, billItemsStateAndDispatch } =
+  const { billItemsStateAndDispatch } =
     useContext(AppStateContext);
-  const [itemsList, itemsReducer] = itemsStateAndDispatch;
+  const [itemsList, setItemsList] = useState([]);
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const initialItemList = [...itemsList];
   const [phoneError, setPhoneError] = useState('');
@@ -556,7 +554,6 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                 bill,
                 setBill,
                 BILL_INITIAL_STATE,
-                itemsReducer,
                 initialItemList,
                 billID
               )

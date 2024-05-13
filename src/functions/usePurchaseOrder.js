@@ -25,6 +25,7 @@ const usePurchaseOrder = (history) => {
   const [, setPrevPaidAmount] = useState(0);
   const [, setState] = useState({});
   const [disableDraft, setDisableDraft] = useState(false);
+  const [itemsList, setItemsList] = useState([]);
   const [message, setMessage] = useState({
     success: false,
     failed: false,
@@ -375,8 +376,8 @@ const usePurchaseOrder = (history) => {
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
   };
-  const handleSelectOrderItems = (item, filterItems2) => {
-    if (filterItems2.length === 1) {
+  const handleSelectOrderItems = (item, filteredItemsByBarcode) => {
+    if (filteredItemsByBarcode.length === 1) {
       form.setValues((prev) => ({
         barcode: item.itemBarcode,
         inputName: item.itemName,
@@ -572,10 +573,31 @@ const usePurchaseOrder = (history) => {
     setDate('');
     setExpiryQuantity(0);
   };
-  const { barcodeFilteredItem, filterItems2 } = useBarcodeSearchItems(
+  const { barcodeFilteredItem, filteredItemsByBarcode } = useBarcodeSearchItems(
     form.values.barcode,
-    handleSelectOrderItems
+    itemsList
   );
+
+  useEffect(()=> {
+    (async () => {
+      const fetch = await genericAxios({
+        url: API_PATHS.INVENTORY.GET_ITEMS,
+        method: API_METHODS.GET,
+        params: {
+          filters: {
+            minStockOnly: false,
+            isDeleted: false,
+          },
+        },
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (fetch.error) return;
+      const itemsData = fetch?.data?.message?.items;
+      setItemsList(itemsData)
+    })();
+  }, [])
   //barcode changing
   useEffect(() => {
     if (id && isNotGetUpdated) {
@@ -583,7 +605,7 @@ const usePurchaseOrder = (history) => {
       setIsNotGetUpdated(false);
     }
     if (Object.keys(barcodeFilteredItem).length && isEditable) {
-      handleSelectOrderItems(barcodeFilteredItem, filterItems2);
+      handleSelectOrderItems(barcodeFilteredItem, filteredItemsByBarcode);
     }
     return () => {
       setState({}); // This worked for me
@@ -646,6 +668,7 @@ const usePurchaseOrder = (history) => {
     deleteCloudBills,
     Loading,
     disableDraft,
+    itemsList
   };
 };
 
