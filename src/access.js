@@ -10,7 +10,7 @@ const access = {
   // Inventory Page
   UPLOAD_CSV_BUTTON: ['admin'],
   DOWNLOAD_CSV_BUTTON: ['admin', 'manager'],
-  UPDATE_ITEM_BUTTON_ITEM_ROW: ['admin', 'manager'],
+  UPDATE_ITEM_BUTTON_ITEM_ROW: ['admin'],
 
   // Open-Close Page
   CHECK_AMOUNT_ROW: ['admin'],

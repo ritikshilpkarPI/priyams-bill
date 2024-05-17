@@ -18,7 +18,6 @@ import {
   Modal,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import { AppStateContext } from '../AppState/appState.context';
 import Papa from 'papaparse';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
@@ -104,21 +103,22 @@ const ItemsList = () => {
       });
       if (fetch.error) return;
       const itemsData = fetch?.data?.message?.items;
-      setItemsList(itemsData)
+      setItemsList(itemsData);
       // setLoaderDisplay(false);
     })();
     // eslint-disable-next-line
   }, []);
 
-
   useEffect(() => {
     setItems([...itemsList]);
   }, [itemsList]);
+
   useEffect(() => {
     if (items.length) {
       setloaderDisplay(false);
     }
   }, [items]);
+
   const handleNewItemInput = (e) => {
     const { name, value } = e.target;
     setNewItemInput({ ...newItemInput, [name]: value });
@@ -205,7 +205,7 @@ const ItemsList = () => {
         },
       });
       if (newItem.error) return;
-      setItemsList([...itemsList, newItem.data.message])
+      setItemsList([...itemsList, newItem.data.message]);
     })();
     setApiLoading(false);
     setSlabArray([]);
@@ -261,7 +261,7 @@ const ItemsList = () => {
         alert('Item deleted...');
       }
       const newList = deletedItem.data.items;
-      setItemsList(newList)
+      setItemsList(newList);
       setApiLoading(false);
     };
 
@@ -495,7 +495,11 @@ const ItemsList = () => {
             <Button onClick={close} color="red">
               Cancel
             </Button>
-            <ItemUpdateButtonRow index={index} saveButton={true} setItemsList={setItemsList} />
+            <ItemUpdateButtonRow
+              index={index}
+              saveButton={true}
+              setItemsList={setItemsList}
+            />
           </div>
         </div>
       </div>
@@ -1907,33 +1911,38 @@ const UpdateItemButton = ({
   setItems,
   itemsList,
   saveButton,
-  setItemsList
+  setItemsList,
 }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
+    console.log({ itemToBeUpdated, index });
     const { _id } = itemToBeUpdated[index];
-    setApiLoading(true);
-    const updatedItem = await genericAxios({
-      url: API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID,
-      method: API_METHODS.PUT,
-      data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
-      headers: {
-        Cookie: 'some_cookie',
-      },
-    });
-    if (updatedItem.error) return;
-    if (updatedItem.status === 200) {
-      alert('Item updated...');
+    try {
+      setApiLoading(true);
+      const updatedItem = await genericAxios({
+        url: API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID,
+        method: API_METHODS.PUT,
+        data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
+        headers: {
+          Cookie: 'some_cookie',
+        },
+      });
+      if (updatedItem.error) return;
+      if (updatedItem.status === 200) {
+        alert('Item updated...');
+      }
+      itemToBeUpdated = {};
+      let newItemsList = [...itemsList];
+      newItemsList.splice(
+        itemsList.findIndex((item) => item._id === _id),
+        1
+      );
+      newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
+      setItemsList(newItemsList);
+      setApiLoading(false);
+    } catch (error) {
+      setApiLoading(false);
     }
-    itemToBeUpdated = {};
-    let newItemsList = [...itemsList];
-    newItemsList.splice(
-      itemsList.findIndex((item) => item._id === _id),
-      1
-    );
-    newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
-    setItemsList(newItemsList);
-    setApiLoading(false);
   };
 
   return (

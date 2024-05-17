@@ -97,9 +97,10 @@ router.post(
   isLoggedIn,
   filterExpiryDates
 );
-router.put(API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID, editItemById);
+router.put(API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID, isLoggedIn, editItemById);
 router.delete(
   `${API_PATHS.INVENTORY.GET_PERMANENTLY_OUT_OF_STOCK}/:id`,
+  isLoggedIn,
   permanentlyOutOfStock
 );
 
@@ -268,6 +269,9 @@ router.get(
   isLoggedIn,
   sendDayExpenses
 );
-router.post(`${API_PATHS.PSTORE_CART.POST_ITEMS_DATA_TO_CART}/items`, addItemsToCartApp)
+router.post(
+  `${API_PATHS.PSTORE_CART.POST_ITEMS_DATA_TO_CART}/items`,
+  addItemsToCartApp
+);
 
 module.exports = router;
