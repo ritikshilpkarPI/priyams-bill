@@ -232,79 +232,72 @@ const NewBillPage = ({ billID = '' }) => {
     }
   };
 
-  const onItemAddToBill = ({ e, itemData, key = '' }) => {
-    if (itemData[Boolean(key) ? key : e.target.innerText]) {
-      // let index;
-      let itemDetail;
-      if (Boolean(key)) {
-        itemDetail = itemData[key]?.[0];
-      } else {
-        itemDetail = itemData[e.target.innerText];
-      }
+  const addItemToBill = ({ e, itemData, key = '' }) => {
+    const itemKey = Boolean(key) ? key : e.target.innerText;
+    const itemDetail = getItemDetail(itemData, itemKey);
 
-      bill.billItems.map((billItem, index) => {
-        // index = bill.billItems.findIndex((a) => a._id === billItem._id);
+    if (!itemDetail) return;
 
-        if (itemDetail.itemName === billItem.itemDetail.itemName) {
-          const updatedItem = {
-            ...billItem,
-            itemDetail: {
-              ...billItem.itemDetail,
-              // itemQuantityInBill: billItem.itemQuantityInBill + 1,
-            },
-            itemQuantityInBill: billItem.itemQuantityInBill + 1,
-          };
-          bill.billItems.splice(index, 1);
-          setBill((prev) => ({
-            totalNumberOfItems: prev.totalNumberOfItems + 1,
-            ...prev,
-            billItems: [updatedItem, ...prev.billItems],
-          }));
-        } else if (index === bill.totalNumberOfUniqueItems - 1) {
-          setBill((prev) => ({
-            ...prev,
-            billItems: [
-              {
-                itemDetail,
-                // itemQuantityInBill: itemDetail.itemQuantityInBill,
-                itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-                itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-                itemSellingPriceTotal: Number(
-                  itemDetail.itemSellingPricePerUnit
-                ),
-                _id: itemDetail._id,
-                itemQuantityInBill: 1,
-              },
-              ...prev.billItems,
-            ],
-          }));
-        }
-        return <></>;
-      });
-      if (bill.totalNumberOfItems === 0) {
-        setBill((prev) => ({
-          ...prev,
-          billItems: [
-            {
-              itemDetail,
-              // itemQuantityInBill: itemDetail.itemQuantityInBill,
-              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-              itemDiscountTotal:
-                itemDetail.itemMRPperUnit - itemDetail.itemSellingPricePerUnit,
-              itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-              _id: itemDetail._id,
-              itemQuantityInBill: 1,
-            },
-            ...prev.billItems,
-          ],
-        }));
-      }
-      setInputValue(INPUT_INITIAL_STATE);
-      if (Boolean(key)) {
-        setFilterBarcodeData([]);
-      } else {
-        setFilteredData([]);
-      }
+    const existingItemIndex = findExistingItemIndex(bill.billItems, itemDetail);
+
+    if (existingItemIndex !== -1) {
+      updateExistingItem(existingItemIndex, itemDetail);
+    } else {
+      addNewItemToBill(itemDetail);
+    }
+
+    resetInputState(Boolean(key));
+  };
+
+  const getItemDetail = (itemData, itemKey) => {
+    return itemData[itemKey]?.[0] || itemData[itemKey];
+  };
+
+  const findExistingItemIndex = (billItems, itemDetail) => {
+    return billItems.findIndex(
+      (billItem) => billItem.itemDetail.itemName === itemDetail.itemName
+    );
+  };
+
+  const updateExistingItem = (index, itemDetail) => {
+    const updatedItem = {
+      ...bill.billItems[index],
+      itemDetail: {
+        ...bill.billItems[index].itemDetail,
+      },
+      itemQuantityInBill: bill.billItems[index].itemQuantityInBill + 1,
+    };
+    bill.billItems.splice(index, 1);
+    setBill((prev) => ({
+      totalNumberOfItems: prev.totalNumberOfItems + 1,
+      ...prev,
+      billItems: [updatedItem, ...prev.billItems],
+    }));
+  };
+
+  const addNewItemToBill = (itemDetail) => {
+    const newItem = {
+      itemDetail,
+      itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+      itemDiscountTotal:
+        itemDetail.itemMRPperUnit - itemDetail.itemSellingPricePerUnit,
+      itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+      _id: itemDetail._id,
+      itemQuantityInBill: 1,
+    };
+
+    setBill((prev) => ({
+      ...prev,
+      billItems: [newItem, ...prev.billItems],
+    }));
+  };
+
+  const resetInputState = (isKeyPresent) => {
+    setInputValue(INPUT_INITIAL_STATE);
+    if (isKeyPresent) {
+      setFilterBarcodeData([]);
+    } else {
+      setFilteredData([]);
     }
   };
 
@@ -624,7 +617,7 @@ const NewBillPage = ({ billID = '' }) => {
                           itemsByBarcode[e.target.value] &&
                           itemsByBarcode[e.target.value]?.length === 1
                         ) {
-                          onItemAddToBill({
+                          addItemToBill({
                             e: e,
                             itemData: itemsByBarcode,
                             key: e.target.value,
@@ -668,7 +661,7 @@ const NewBillPage = ({ billID = '' }) => {
                               }}
                               className="show-data"
                               onClick={(e) => {
-                                onItemAddToBill({
+                                addItemToBill({
                                   e: e,
                                   itemData: itemsByBarcode,
                                   key: value,
@@ -711,7 +704,7 @@ const NewBillPage = ({ billID = '' }) => {
                   {inputValue.itemName && Boolean(filteredData.length) && (
                     <div
                       onClick={(e) => {
-                        onItemAddToBill({ e: e, itemData: itemsByName });
+                        addItemToBill({ e: e, itemData: itemsByName });
                       }}
                       className="data-result"
                       style={{ minWidth: 'fit-content' }}
