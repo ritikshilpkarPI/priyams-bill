@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { isAdmin, isLoggedIn } = require('../middleware/isAdmin');
 const { API_PATHS } = require('../../src/utils/constants/apiPaths');
-
 const {
   getStaff,
   addBulkItems,
@@ -66,6 +65,7 @@ const {
   saveOrCacheBill,
   getUnSavedBills,
   addItemsToCartApp,
+  getProductImageByProductName
 } = require('../controllers/index');
 
 // online order apis
@@ -273,5 +273,7 @@ router.post(
   `${API_PATHS.PSTORE_CART.POST_ITEMS_DATA_TO_CART}/items`,
   addItemsToCartApp
 );
+
+router.post("/api/purchaseOrder/getProductImage", getProductImageByProductName);
 
 module.exports = router;

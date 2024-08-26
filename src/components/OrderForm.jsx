@@ -15,6 +15,8 @@ import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
 import { useState } from 'react';
 import MyDatePicker from './DatePicker';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -51,6 +53,18 @@ const OrderForm = ({
     setToggle1(true);
     setToggle(false);
   };
+  const handleOnAddImages= async ()=>{
+    const fetch = await genericAxios({
+      method: API_METHODS.POST,
+      url: "/api/purchaseOrder/getProductImage",
+      data: {
+        query:"fruit",
+        count:10
+      },
+    });
+    console.log({fetch});
+    
+  }
 
   return (
     <Drawer
@@ -63,6 +77,7 @@ const OrderForm = ({
       padding="sm"
       size="xl"
     >
+      <button onClick={handleOnAddImages}>APi call</button>
       <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'}>
         <form
           className="order-form"
