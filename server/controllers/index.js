@@ -61,7 +61,7 @@ const getItemsLean = require('./getItemsLean');
 const saveOrCacheBill = require('./saveOrCacheBill');
 const getUnSavedBills = require('./getUnSavedBills');
 const addItemsToCartApp = require('./addItemsToCartApp');
-const getProductImageByProductName = require('./getProductImageByProdutName');
+const getProductImageByProductName = require('./getProductImageByProductName');
 
 module.exports = {
   getStaff,
