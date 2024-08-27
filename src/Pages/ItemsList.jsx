@@ -403,7 +403,8 @@ const ItemsList = () => {
         ? itemToBeUpdated[index].images
         : items[index].images
     );
-
+    console.log({images});
+    
     if (!items[index]?.deletedImages?.length) items[index].deletedImages = [];
 
     if (
@@ -454,6 +455,24 @@ const ItemsList = () => {
       });
       items[index].images = itemToBeUpdated[index].images;
     };
+
+    const handleOnAddImages= async ({itemBrandName,itemName,itemCategory})=>{
+      const response = await genericAxios({
+        method: API_METHODS.POST,
+        url: API_PATHS.GOOGLE_IMAGE.URL,
+        data: {
+          query:`title=${itemName},brand=${itemBrandName}`,
+          count: 10
+        },
+      });
+      console.log({response});
+    }
+    useEffect(()=>{
+    const {itemBrandName,itemName,itemCategory }= items[index];
+      handleOnAddImages({itemBrandName,itemName,itemCategory})
+    },[]);
+
+
     return (
       <div className="images-container">
         <div className="item-images-container">
