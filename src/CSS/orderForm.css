@@ -65,11 +65,13 @@
       font-size: 14px;
       font-weight: 500;
     }
-    .selected-image-card{
+
+    .selected-image-card {
       width: 18vh;
       height: 13vh;
       overflow: hidden;
-      .selected-image{
+
+      .selected-image {
         height: 100%;
         width: 100%;
         object-fit: cover;
@@ -77,7 +79,7 @@
     }
 
     .image-input {
-     
+
       width: 100%;
       height: 35px;
       /* border: .5px solid #bbbb; */
@@ -86,15 +88,19 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      .input{
+
+      .input {
         border-radius: 4px;
-         padding: 0 12px;
+        padding: 0 12px;
         width: inherit;
         height: 100%;
         border: none;
         border: .5px solid #ccc;
+        outline: none;
+        background-color: transparent;
       }
-      .search-image-button{
+
+      .search-image-button {
         border-radius: 4px;
         display: flex;
         align-items: center;
@@ -106,6 +112,7 @@
         padding: 0 15px;
         outline: none;
         border: none;
+        cursor: pointer;
       }
     }
 
@@ -123,15 +130,15 @@
     gap: 10px;
     max-height: 50vh;
     overflow-y: scroll;
-  
+
 
     .image-card {
       width: 100%;
       height: 13vh;
-      background-color: aquamarine;
+      background-color: rgb(233, 237, 244);
       overflow: hidden;
-      
-      .image{
+
+      .image {
         height: 100%;
         width: 100%;
         object-fit: cover;
@@ -139,21 +146,24 @@
 
     }
   }
-  .image-container::-webkit-scrollbar{
+
+  .image-container::-webkit-scrollbar {
     display: none;
   }
-  .show-more-image-container{
+
+  .show-more-image-container {
     padding-top: 10px;
     width: 100%;
     text-align: right;
-    .show-more-image-button{
+
+    .show-more-image-button {
       cursor: pointer;
       font-size: 12px;
       font-weight: 400;
     }
 
   }
-  
+
 
 
 

@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import MyDatePicker from './DatePicker';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
+import {API_PATHS} from "../utils/constants/apiPaths"
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -64,7 +65,7 @@ const OrderForm = ({
     try {
       const response = await genericAxios({
         method: API_METHODS.POST,
-        url: "/api/purchaseOrder/getProductImage",
+        url: API_PATHS.GOOGLE_IMAGE.URL,
         data: {
           query: imageSearch,
           count: 10
@@ -84,7 +85,6 @@ const OrderForm = ({
   const handleImageSearch = (e) => {
     const input = e.target.value
     setImageSearch(input)
-    setIsSelected(false)
   }
 
   const handleSelectImage = (link) => {
@@ -94,6 +94,7 @@ const OrderForm = ({
   }
   const handleKeyDown = () => {
     imageSearch && handleOnAddImages()
+      setIsSelected(false)
   };
 
 

@@ -88,5 +88,8 @@ export const API_PATHS = {
   },
   PSTORE_CART: {
     POST_ITEMS_DATA_TO_CART: '/api/cart'
+  },
+  GOOGLE_IMAGE:{
+     URL: "/api/purchaseOrder/getProductImage"
   }
 };
