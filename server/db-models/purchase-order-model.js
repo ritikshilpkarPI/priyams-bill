@@ -18,6 +18,7 @@ const purchaseOrderSchema = new mongoose.Schema({
       item_id: String,
       brand: String,
       category: String,
+      imageUrl: String,
       createdAt: { type: Date, default: Date.now },
       expiryDates: [
         {
@@ -64,7 +65,6 @@ const purchaseOrderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  imageUrl:String,
 });
 
 // pre hook to make is Approved true or false if approver is their
