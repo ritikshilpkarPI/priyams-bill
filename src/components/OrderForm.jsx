@@ -97,12 +97,6 @@ const OrderForm = ({
       setIsSelected(false)
   };
 
-
-  useEffect(() => {
-    console.log(imageList);
-
-  }, [imageList])
-
   return (
     <Drawer
       opened={opened}
