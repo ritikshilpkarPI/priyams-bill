@@ -55,7 +55,8 @@ const PurchaseOrderItems = ({ history }) => {
     deleteCloudBills,
     Loading,
     disableDraft,
-    itemsList
+    itemsList,
+    setLoading
   } = usePurchaseOrder(history);
 
   const { filteredItemsByName } = useNameSearchItem(form.values.inputName, itemsList);
@@ -101,6 +102,7 @@ const PurchaseOrderItems = ({ history }) => {
         deleteSlab={deleteSlab}
         slabs={slabs}
         setSlabs={setSlabs}
+        setLoading={setLoading}
       />
       <EditPurchaseDetail
         openPurchaseDrawer={openPurchaseDrawer}
