@@ -1,7 +1,7 @@
 const axios = require("axios")
 
-const GOOGLE_API_KEY = 'AIzaSyAqNPHG7s_Mr6ewtFxtJ5oEf2ezuyKuCo0';
-const CSE_ID = 'e551b4c3bff404a8c';
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const CSE_ID = process.env.CSE_ID;
 
 const getProductImageByProductName = async (req, res,next) => {
   try {
