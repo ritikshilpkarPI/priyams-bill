@@ -4,8 +4,6 @@ const updateSavedOrders = async (req, res, next) => {
   try {
     const id = req.params.id;
     const { new_order } = req.body;
-    console.log({ new_order });
-
     const purchaseOrder = await PurchaseOrder.findById(id);
     const updatedOrder = await purchaseOrder.updateOne({
       purchasedItems: [...purchaseOrder.purchasedItems, new_order],
