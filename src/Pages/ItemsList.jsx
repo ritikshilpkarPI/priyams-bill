@@ -405,7 +405,6 @@ const ItemsList = () => {
         : items[index].images
     );
     const [googleImages, setGoogleImages] = useState([])
-    console.log({ images });
 
     if (!items[index]?.deletedImages?.length) items[index].deletedImages = [];
 

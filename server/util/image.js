@@ -29,24 +29,6 @@ const uploadImages = (images) => {
     });
   });
 };
-const uploadImageToCloudinary = async (image) => {
-  try {
-    if (!image || !image.data || !image.mimetype) {
-      throw new Error('Invalid image data');
-    }
-
-    const base64Image = `data:${image.mimetype};base64,${Buffer.from(image.data).toString('base64')}`;
-
-    const result = await cloudinary.v2.uploader.upload(base64Image, {
-      folder: 'ITEM'
-    });
-
-    return result;
-  } catch (error) {
-    console.error('Error uploading image to Cloudinary:', error);
-    throw error;
-  }
-};
 
 const deleteImages = (images) => {
   return new Promise((resolve, reject) => {
@@ -69,6 +51,5 @@ const deleteImages = (images) => {
 
 module.exports = {
   uploadImages,
-  deleteImages,
-  uploadImageToCloudinary
+  deleteImages
 }
