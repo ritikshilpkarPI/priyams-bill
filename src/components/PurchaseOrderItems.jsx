@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Group, LoadingOverlay, Title } from '@mantine/core';
 import { Notification } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
@@ -12,9 +12,9 @@ import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../CSS/purchaseOrder.css';
 import { useHistory, useParams } from 'react-router-dom';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+// import { genericAxios } from 'src/utils/genericAxiosMethod';
+// import { API_PATHS } from 'src/utils/constants/apiPaths';
+// import { API_METHODS } from 'src/utils/constants/apiMethods';
 const PurchaseOrderItems = ({ history }) => {
   const {
     form,
