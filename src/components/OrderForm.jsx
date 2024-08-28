@@ -13,11 +13,11 @@ import {
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MyDatePicker from './DatePicker';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
-import {API_PATHS} from "../utils/constants/apiPaths"
+import { API_PATHS } from "../utils/constants/apiPaths"
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -42,13 +42,19 @@ const OrderForm = ({
   setSlabs,
   setLoading
 }) => {
-
-  const [imageSearch, setImageSearch] = useState('')
   const [imageList, setImageList] = useState([])
   const [selectedImage, setSelectedImage] = useState('')
   const [isSelected, setIsSelected] = useState(true)
   const [toggle, setToggle] = useState(true);
   const [toggle1, setToggle1] = useState(false);
+  // const [addImage, setAddImage] = useState(null)
+  const imageInputRef = useRef(null);
+
+  const [imageSearch, setImageSearch] = useState(form.values.inputName)
+  useEffect(() => {
+    setImageSearch(form.values.inputName)
+  }, [form.values.inputName])
+
   const func1 = () => {
     setOpenDrawer(true);
   };
@@ -88,13 +94,49 @@ const OrderForm = ({
   }
 
   const handleSelectImage = (link) => {
-    setSelectedImage(link)
+    setSelectedImage({
+      public_id: "",
+      secure_url: link
+    })
     setIsSelected(true)
     setImageSearch('')
   }
   const handleKeyDown = () => {
     imageSearch && handleOnAddImages()
-      setIsSelected(false)
+    setIsSelected(false)
+  };
+
+  const handleFileChange = async (file) => {
+    try {
+      setLoading(true)
+      const dataUrl = await new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = () => resolve(fileReader.result);
+        fileReader.onerror = reject;
+      });
+      const responce = await genericAxios({
+        method: API_METHODS.POST,
+        url: "/api/purchase/uploadImageCloudinary",
+        data: {
+          file: dataUrl
+        },
+      });
+
+      if (responce.status !== 200) {
+        console.log(responce);
+
+      }
+      const { secure_url, public_id } = responce.data
+      setSelectedImage({ secure_url, public_id })
+
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+
+    }
   };
 
   return (
@@ -147,7 +189,7 @@ const OrderForm = ({
               className="form-input-tops"
               required
               placeholder="item name"
-              onClick={() => {
+              onClick={(e) => {
                 func1();
                 func3();
               }}
@@ -201,34 +243,58 @@ const OrderForm = ({
               <label className='image-input-label' htmlFor="image-input">Image</label>
               {selectedImage &&
                 <div className='selected-image-card'>
-                  <img className='selected-image' src={selectedImage} alt="" />
+                  <img className='selected-image' src={selectedImage.secure_url} alt="" />
                 </div>}
               <div className='image-input'>
 
                 <input
-                  onChange={(e) => handleImageSearch(e)}
-                  value={imageSearch}
                   id='image-input'
                   className='input'
+                  value={imageSearch}
                   type="text"
-                  placeholder='Search image' />
+                  placeholder='Search image'
+                  onChange={(e) => handleImageSearch(e)}
+                />
 
-                <div className='search-image-button' onClick={handleKeyDown}>
+                <div
+                  className={`search-image-button ${!imageSearch ? 'disabled' : ''}`}
+                  onClick={imageSearch ? handleKeyDown : null}
+                >
                   Search
                 </div>
               </div>
             </div>
-
-            <div className='image-container'>
-
-              {!isSelected && imageList.map((image) => (
-                <div className='image-card'
-                  onClick={() => handleSelectImage(image?.link)}
+            {!isSelected && !imageList.length
+              ? <>
+                <p>This feature is currently unavailable</p>
+                <Button onClick={() => imageInputRef.current.click()}
+                  style={{ marginTop: '15px' }}
                 >
-                  <img className='image' src={image?.link} alt="" />
-                </div>
-              ))}
-            </div>
+                  Select Image
+                </Button>
+              </>
+              : <div className='image-container'>
+                {!isSelected && imageList.map((image) => (
+                  <div className='image-card'
+                    onClick={() => handleSelectImage(image?.link)}
+                  >
+                    <img className='image' src={image?.link} alt="" />
+                  </div>
+                ))
+                }
+              </div>
+            }
+
+
+
+            <input
+              type="file"
+              ref={imageInputRef}
+              style={{ display: 'none' }}
+              onChange={(e) => handleFileChange(e.target.files[0])}
+              accept="image/*"
+            />
+
             {/* {!isSelected &&
               <div className='show-more-image-container'>
                 <p className='show-more-image-button' 

@@ -65,7 +65,8 @@ const {
   saveOrCacheBill,
   getUnSavedBills,
   addItemsToCartApp,
-  getProductImageByProductName
+  getProductImageByProductName,
+  uploadImageCloudinary
 } = require('../controllers/index');
 
 // online order apis
@@ -275,5 +276,6 @@ router.post(
 );
 
 router.post("/api/purchaseOrder/getProductImage", getProductImageByProductName);
+router.post("/api/purchase/uploadImageCloudinary", uploadImageCloudinary);
 
 module.exports = router;

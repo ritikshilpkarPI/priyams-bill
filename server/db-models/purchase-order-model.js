@@ -18,7 +18,10 @@ const purchaseOrderSchema = new mongoose.Schema({
       item_id: String,
       brand: String,
       category: String,
-      imageUrl: String,
+      imageUrl: {
+        public_id: String,
+        secure_url: String
+      },
       createdAt: { type: Date, default: Date.now },
       expiryDates: [
         {

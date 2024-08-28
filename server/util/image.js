@@ -6,48 +6,69 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 const uploadImages = (images) => {
-    return new Promise((resolve, reject) => {
-      const billPhotos = [];
-      if (images.length === 0) {
-        resolve([]);
-      }
-      images.map(async (image, index) => {
-        try {
-          const { public_id, secure_url } = await cloudinary.v2.uploader.upload(
-            image,
-            {
-              folder: 'pstores',
-            }
-          );
-          billPhotos.push({ public_id, secure_url });
-          if (billPhotos.length === index + 1) {
-            resolve(billPhotos);
+  return new Promise((resolve, reject) => {
+    const billPhotos = [];
+    if (images.length === 0) {
+      resolve([]);
+    }
+    images.map(async (image, index) => {
+      try {
+        const { public_id, secure_url } = await cloudinary.v2.uploader.upload(
+          image,
+          {
+            folder: 'pstores',
           }
-        } catch (err) {
-          reject(err);
+        );
+        billPhotos.push({ public_id, secure_url });
+        if (billPhotos.length === index + 1) {
+          resolve(billPhotos);
         }
-      });
-    });
-  };
-  const deleteImages = (images) => {
-    return new Promise((resolve, reject) => {
-      if (images.length === 0) {
-        resolve();
+      } catch (err) {
+        reject(err);
       }
-      images.forEach(async (image, index) => {
-        try {
-          await cloudinary.uploader.destroy(image.public_id);
-          if (index === images.length - 1) {
-            resolve();
-          }
-        } catch (err) {
-          reject(err);
-        }
-      });
     });
-  };
-  
+  });
+};
+const uploadImageToCloudinary = async (image) => {
+  try {
+    if (!image || !image.data || !image.mimetype) {
+      throw new Error('Invalid image data');
+    }
+
+    const base64Image = `data:${image.mimetype};base64,${Buffer.from(image.data).toString('base64')}`;
+
+    const result = await cloudinary.v2.uploader.upload(base64Image, {
+      folder: 'ITEM'
+    });
+
+    return result;
+  } catch (error) {
+    console.error('Error uploading image to Cloudinary:', error);
+    throw error;
+  }
+};
+
+const deleteImages = (images) => {
+  return new Promise((resolve, reject) => {
+    if (images.length === 0) {
+      resolve();
+    }
+    images.forEach(async (image, index) => {
+      try {
+        await cloudinary.uploader.destroy(image.public_id);
+        if (index === images.length - 1) {
+          resolve();
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+
 module.exports = {
-    uploadImages,
-    deleteImages
+  uploadImages,
+  deleteImages,
+  uploadImageToCloudinary
 }
