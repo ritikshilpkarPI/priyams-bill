@@ -28,16 +28,6 @@ const PaidPOs = () => {
   useEffect(() => {
     getOrders()
   }, [])
-  useEffect(() => {
-    console.log(paidStatusList);    
-  }, [paidStatusList])
-
-
-
-
-
-
-
 
   return (
     <div className='paid-container'>
