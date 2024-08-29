@@ -66,6 +66,7 @@ const {
   getUnSavedBills,
   addItemsToCartApp,
   getProductImageByProductName,
+  uploadImageCloudinary,
   getPurchaseOrderByPaidStatus
 } = require('../controllers/index');
 
@@ -276,6 +277,7 @@ router.post(
 );
 
 router.post("/api/purchaseOrder/getProductImage",isLoggedIn, getProductImageByProductName);
+router.post("/api/purchase/uploadImageCloudinary", uploadImageCloudinary);
 router.post("/api/purchaseOrder/getPurchaseOrderByPaidStatus",isLoggedIn,getPurchaseOrderByPaidStatus);
 
 module.exports = router;
