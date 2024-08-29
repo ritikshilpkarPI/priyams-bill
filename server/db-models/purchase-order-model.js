@@ -68,6 +68,10 @@ const purchaseOrderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isPaid: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // pre hook to make is Approved true or false if approver is their
