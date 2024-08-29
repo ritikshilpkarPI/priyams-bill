@@ -65,7 +65,8 @@ const {
   saveOrCacheBill,
   getUnSavedBills,
   addItemsToCartApp,
-  getProductImageByProductName
+  getProductImageByProductName,
+  getPurchaseOrderByPaidStatus
 } = require('../controllers/index');
 
 // online order apis
@@ -274,6 +275,7 @@ router.post(
   addItemsToCartApp
 );
 
-router.post("/api/purchaseOrder/getProductImage", getProductImageByProductName);
+router.post("/api/purchaseOrder/getProductImage",isLoggedIn, getProductImageByProductName);
+router.post("/api/purchaseOrder/getPurchaseOrderByPaidStatus",isLoggedIn,getPurchaseOrderByPaidStatus);
 
 module.exports = router;

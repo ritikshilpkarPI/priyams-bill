@@ -62,6 +62,7 @@ const saveOrCacheBill = require('./saveOrCacheBill');
 const getUnSavedBills = require('./getUnSavedBills');
 const addItemsToCartApp = require('./addItemsToCartApp');
 const getProductImageByProductName = require('./getProductImageByProductName');
+const getPurchaseOrderByPaidStatus = require('./getPurchaseOrderByPaidStatus');
 
 module.exports = {
   getStaff,
@@ -127,5 +128,6 @@ module.exports = {
   saveOrCacheBill,
   getUnSavedBills,
   addItemsToCartApp,
-  getProductImageByProductName
+  getProductImageByProductName,
+  getPurchaseOrderByPaidStatus
 };
