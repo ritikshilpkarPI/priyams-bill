@@ -26,6 +26,8 @@ import {
   Orders,
   OrderStatusDetail,
   NewBillingPage,
+  PaidPOs,
+  UnpaidPOs
 } from '../Pages';
 import Label from 'src/Pages/Label';
 import { Fragment } from 'react';
@@ -83,6 +85,9 @@ const StoreRoutes = () => {
             <Route exact path="/newBilling" component={NewBillingPage} />
             <Route exact path="/itemsBarcode" component={ ItemsBarCode} />
             <Route exact path="/moveToCart" component={ItemQuantity} />
+            <Route exact path="/paidPOs" component={PaidPOs} />
+            <Route exact path="/unpaidPOs" component={UnpaidPOs} />
+
           </ProtectedRoutes>
         </Fragment>
       </Switch>
