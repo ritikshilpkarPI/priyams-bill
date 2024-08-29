@@ -1,4 +1,3 @@
-
 export const routes = {
   home: '/',
   login: '/login',
@@ -16,5 +15,7 @@ export const routes = {
   orders:'/orders',
   orderStatusDetail: '/orders/:orderStatus',
   itemsBarcode: "/itemsBarcode",
-  moveToCart:"./moveToCart"
+  moveToCart:"./moveToCart",
+  paidPOs:"./paidPOs",
+  unpaidPOs:"./unpaidPOs"
 };
