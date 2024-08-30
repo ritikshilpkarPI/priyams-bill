@@ -64,6 +64,8 @@ const addItemsToCartApp = require('./addItemsToCartApp');
 const getProductImageByProductName = require('./getProductImageByProductName');
 const uploadImageCloudinary = require("./uploadImageCloudinary")
 const getPurchaseOrderByPaidStatus = require('./getPurchaseOrderByPaidStatus');
+const getPurchaseOrderById = require('./getPurchaseOrderById');
+const payPurchaseOrderBill = require('./payPurchaseOrderBill');
 
 module.exports = {
   getStaff,
@@ -131,5 +133,7 @@ module.exports = {
   addItemsToCartApp,
   getProductImageByProductName,
   uploadImageCloudinary,
-  getPurchaseOrderByPaidStatus
+  getPurchaseOrderByPaidStatus,
+  getPurchaseOrderById,
+  payPurchaseOrderBill,
 };

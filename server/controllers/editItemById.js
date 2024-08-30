@@ -1,5 +1,6 @@
 const { uploadImages, deleteImages } = require('../util/image');
 const { Item } = require('../db-models/item-model');
+const { clodinaryFoldersPath } = require('../util/constant');
 
 const editItemById = async (req, res, next) => {
   try {
@@ -11,7 +12,7 @@ const editItemById = async (req, res, next) => {
         .filter((image) => !image.public_id)
         .map((image) => image.secure_url);
       const filterUploadedImages = images.filter((image) => image.public_id);
-      const uploadedImages = await uploadImages(imagesToUpload);
+      const uploadedImages = await uploadImages(imagesToUpload,clodinaryFoldersPath.itemsImages);
       images = [...uploadedImages, ...filterUploadedImages];
     }
 

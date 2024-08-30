@@ -1,22 +1,25 @@
 const cloudinary = require('cloudinary');
-
+const { clodinaryFoldersPath } = require('./constant');
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET,
 });
-const uploadImages = (images) => {
+const uploadImages = (images, type = clodinaryFoldersPath.other) => {
   return new Promise((resolve, reject) => {
     const billPhotos = [];
     if (images.length === 0) {
       resolve([]);
     }
+    const folderPath = clodinaryFoldersPath[type]
+      ? clodinaryFoldersPath[type]
+      : clodinaryFoldersPath.other;
     images.map(async (image, index) => {
       try {
         const { public_id, secure_url } = await cloudinary.v2.uploader.upload(
           image,
           {
-            folder: 'pstores',
+            folder: folderPath,
           }
         );
         billPhotos.push({ public_id, secure_url });
@@ -48,8 +51,7 @@ const deleteImages = (images) => {
   });
 };
 
-
 module.exports = {
   uploadImages,
-  deleteImages
-}
+  deleteImages,
+};
