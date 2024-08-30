@@ -67,7 +67,9 @@ const {
   addItemsToCartApp,
   getProductImageByProductName,
   uploadImageCloudinary,
-  getPurchaseOrderByPaidStatus
+  getPurchaseOrderByPaidStatus,
+  getPurchaseOrderById,
+  payPurchaseOrderBill
 } = require('../controllers/index');
 
 // online order apis
@@ -276,8 +278,23 @@ router.post(
   addItemsToCartApp
 );
 
-router.post("/api/purchaseOrder/getProductImage",isLoggedIn, getProductImageByProductName);
-router.post("/api/purchase/uploadImageCloudinary", uploadImageCloudinary);
-router.post("/api/purchaseOrder/getPurchaseOrderByPaidStatus",isLoggedIn,getPurchaseOrderByPaidStatus);
+router.post(
+  '/api/purchaseOrder/getProductImage',
+  isLoggedIn,
+  getProductImageByProductName
+);
+router.post('/api/purchase/uploadImageCloudinary', uploadImageCloudinary);
+router.post(
+  '/api/purchaseOrder/getPurchaseOrderByPaidStatus',
+  isLoggedIn,
+  getPurchaseOrderByPaidStatus
+);
+router.post('/api/purchaseOrder/getPurchaseOrderById', isLoggedIn,getPurchaseOrderById);
+router.post(
+  '/api/purchaseOrder/payPurchaseOrderBill',
+  isLoggedIn,
+  isAdmin,
+  isLoggedIn,payPurchaseOrderBill
+);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const { clodinaryFoldersPath } = require('../util/constant');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { uploadImages, deleteImages } = require('../util/image');
 
@@ -26,7 +27,7 @@ const updateDetailsById = async (req, res,next) => {
     await deleteImages(delImages);
 
     let billPhotos = [];
-    billPhotos = await uploadImages(bills);
+    billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
     billPhotos = [...billPhotos, ...uploadedImages];
 
     const purchaseOrder = {

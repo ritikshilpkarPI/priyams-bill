@@ -72,6 +72,10 @@ const purchaseOrderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  payBillImage: {
+    public_id: String,
+    secure_url: String,
+  },
 });
 
 // pre hook to make is Approved true or false if approver is their
