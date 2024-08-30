@@ -19,3 +19,5 @@ export const OrderStatusDetail = lazy(() => import('./OrderStatusDetail'));
 export const NewBillingPage = lazy(()=>  import('./NewBillPage'));
 export const PaidPOs = lazy(()=>  import('./PaidPOs'));
 export const UnpaidPOs = lazy(()=>  import('./UnpaidPOs'));
+export const UnpaidPurchaseOrder = lazy(()=>  import('./UnpaidPurchaseOrder'));
+
