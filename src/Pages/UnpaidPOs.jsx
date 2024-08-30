@@ -62,8 +62,8 @@ const UnpaidPOs = () => {
                 className={index % 2 === 0 ? "unpaidPOs-table-tbody-tr-even" : "unpaidPOs-table-tbody-tr-odd"}
                 onClick={() => {
                   const data = { paidStatus };
-                  history.push('/unpaidPurchaseOrder', { data }); 
-                }} 
+                  history.push('/unpaidPurchaseOrder', { data });
+                }}
               >
                 <td className="unpaidPOs-table-tbody-tr-td">{index + 1}</td>
                 <td className="unpaidPOs-table-tbody-tr-td">{paidStatus?.dealerName}</td>
@@ -73,7 +73,7 @@ const UnpaidPOs = () => {
                 <td className="unpaidPOs-table-tbody-tr-td">{paidStatus?.totalPaidAmount}</td>
                 <td className="unpaidPOs-table-tbody-tr-td">{paidStatus?.procurementSource}</td>
                 <td className="unpaidPOs-table-tbody-tr-td">
-                  {new Date(paidStatus?.createdAt).toUTCString()}
+                  {new Date(paidStatus?.createdAt)?.toDateString()}
                 </td>
                 <td className="unpaidPOs-table-tbody-tr-td">
                   {paidStatus?.remark ? paidStatus?.remark : "..."}

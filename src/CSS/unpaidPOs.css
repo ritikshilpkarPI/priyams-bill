@@ -19,6 +19,9 @@
             .unpaidPOs-table-tbody-tr-even,
             .unpaidPOs-table-tbody-tr-odd {
 
+                cursor: pointer;
+
+
                 .unpaidPOs-table-tbody-tr-td {
                     font-size: small;
                     padding: 5px;
