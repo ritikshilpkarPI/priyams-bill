@@ -1,11 +1,11 @@
 .unpaidPOs-container {
-    table {
+    .unpaidPOs-table {
         width: 100%;
         border-collapse: collapse;
 
-        thead {
-            tr {
-                th {
+        .unpaidPOs-table-thead {
+            .unpaidPOs-table-thead-tr {
+                .unpaidPOs-table-thead-tr-th {
                     font-size: small;
                     padding: 5px;
                     text-align: left;
@@ -15,21 +15,25 @@
             }
         }
 
-        tbody {
-            tr {
-                td {
+        .unpaidPOs-table-tbody {
+            .unpaidPOs-table-tbody-tr-even,
+            .unpaidPOs-table-tbody-tr-odd {
+
+                .unpaidPOs-table-tbody-tr-td {
                     font-size: small;
                     padding: 5px;
                     text-align: left;
-                    border: 1px solid #ddd;                  
+                    border: 1px solid #ddd;
                 }
-                .td-button{
-                    div{
+
+                #td-button {
+                    .unpaidPOs-table-tbody-tr-td-div {
                         display: flex;
                         align-items: center;
                         justify-content: left;
                         gap: 10px;
-                        button{                        
+
+                        .unpaidPOs-table-tbody-tr-td-cover-button {
                             cursor: pointer;
                             color: #fff;
                             border: none;
@@ -39,12 +43,13 @@
                             align-items: center;
                             justify-content: center;
                             gap: 5px;
-                            background:transparent;
+                            background: transparent;
                         }
                     }
                 }
             }
-            tr:nth-child(odd) {
+
+            .unpaidPOs-table-tbody-tr-even {
                 background-color: aliceblue;
             }
         }

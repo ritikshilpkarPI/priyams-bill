@@ -1,0 +1,87 @@
+.unpaidPurchaseOrder-container {
+padding: 10px 0;
+    .unpaidPurchaseOrder-title {
+        font-size: large;
+    }
+
+    .unpaidPurchaseOrder-details {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 100px;
+        
+        .unpaidPurchaseOrder-bill-container {
+
+        }
+
+        .unpaidPurchaseOrder-table {
+            margin-top: 10px;
+            border-collapse: collapse;
+
+            .unpaidPurchaseOrder-table-thead {
+                .unpaidPurchaseOrder-table-thead-tr {
+                    .unpaidPurchaseOrder-table-thead-tr-th {
+                        font-size: medium;
+                        padding: 7px;
+                        text-align: left;
+                        border: 1px solid #ddd;
+                    }
+                }
+                .unpaidPurchaseOrder-table-thead-tr:nth-child(even){
+                    background-color: aliceblue;
+                }
+            }
+
+            .unpaidPurchaseOrder-table-tbody {
+                .unpaidPurchaseOrder-table-tbody-tr {
+                    .unpaidPurchaseOrder-table-tbody-tr-td {
+                        font-size: medium;
+                        padding: 7px;
+                        text-align: left;
+                        border: 1px solid #ddd;
+                    }
+                }
+               
+            }
+
+        }
+    }
+
+
+    .unpaidPurchaseOrder-text {
+        margin-top: 10px;
+        font-size: medium;
+    }
+
+    .unpaidPurchaseOrder-items-table {
+        margin-top: 10px;
+        width: 100%;
+        border-collapse: collapse;
+
+        .unpaidPurchaseOrder-items-table-thead {
+            .unpaidPurchaseOrder-items-table-thead-tr {
+                .unpaidPurchaseOrder-items-table-thead-tr-th {
+                    font-size: small;
+                    padding: 7px;
+                    text-align: left;
+                    border: 1px solid #ddd;
+                }
+            }
+        }
+
+        .unpaidPurchaseOrder-items-table-tbody {
+            .unpaidPurchaseOrder-items-table-tbody-tr {
+                .unpaidPurchaseOrder-items-table-tbody-tr-td {
+                    font-size: small;
+                    padding: 7px;
+                    text-align: left;
+                    border: 1px solid #ddd;
+                }
+            }
+            .unpaidPurchaseOrder-items-table-tbody-tr:nth-child(odd){
+                background-color: aliceblue;
+            }
+        }
+
+    }
+}
