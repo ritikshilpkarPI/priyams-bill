@@ -16,26 +16,32 @@ const UnpaidPOs = () => {
     try {
       const response = await genericAxios({
         method: API_METHODS.POST,
-        url: "/api/purchaseOrder/getPurchaseOrderByPaidStatus",
+        url: '/api/purchaseOrder/getPurchaseOrderByPaidStatus',
         data: {
-          isPaid: false
+          isPaid: false,
         },
-      })
+      });
 
       const result = response.data;
       setUnpaidStatusList(result);
-
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getOrders()
-  }, [])
-
+    getOrders();
+  }, []);
+  const handleOnClickOfSharePurchaseOrder = async ({ paidStatus }) => {
+    const senderMobile = 7258072625;
+    console.log({ paidStatus });
+    const payPruchaseUrl = `http://localhost:3000/payPurchaseOrderBill?poId=${paidStatus?._id}`;
+    const message = `Pay purchase Order Bill:- \n${payPruchaseUrl}\nBill:- ${paidStatus.billPhotos[0].secure_url}`;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${senderMobile}?text=${encodedMessage}`);
+  };
   return (
-    <div className='unpaidPOs-container'>
+    <div className="unpaidPOs-container">
       <h1>Unpaid POs</h1>
       <table className='unpaidPOs-table'>
         <thead className='unpaidPOs-table-thead'>
@@ -55,7 +61,7 @@ const UnpaidPOs = () => {
         <tbody>
           {unpaidStatusList?.map((paidStatus, index) => (
             <tr key={index}>
-              <td>{index+1}</td>
+              <td>{index + 1}</td>
               <td>{paidStatus?.dealerName}</td>
               <td>{paidStatus?.phoneNumber}</td>
               <td>{paidStatus?.payment}</td>
@@ -63,19 +69,21 @@ const UnpaidPOs = () => {
               <td>{paidStatus?.totalPaidAmount}</td>
               <td>{paidStatus?.procurementSource}</td>
               <td> {new Date(paidStatus?.createdAt).toUTCString()}</td>
-              <td>{paidStatus?.remark ? paidStatus?.remark : "..."}</td>
-              <td className='td-button'>
+              <td>{paidStatus?.remark ? paidStatus?.remark : '...'}</td>
+              <td className="td-button">
                 <div>
-                  <p>{paidStatus?.isPaid ? "Paid" : "Unpaid"}</p>
-                  <button onClick={() => window.open(`https://wa.me/${paidStatus?.phoneNumber}?text= paid due url`)}><WhatsApp /></button>
+                  <p>{paidStatus?.isPaid ? 'Paid' : 'Unpaid'}</p>
+                  <button
+                    onClick={() =>
+                      handleOnClickOfSharePurchaseOrder({ paidStatus })
+                    }
+                  >
+                    <WhatsApp />
+                  </button>
                 </div>
-
               </td>
-
             </tr>
-          ))
-          }
-
+          ))}
         </tbody>
       </table>
     </div>
