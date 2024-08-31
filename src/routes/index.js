@@ -18,5 +18,6 @@ export const routes = {
   moveToCart:"./moveToCart",
   paidPOs:"./paidPOs",
   unpaidPOs:"./unpaidPOs",
-  unpaidPurchaseOrder:"./unpaidPurchaseOrder"
+  unpaidPurchaseOrder:"./unpaidPurchaseOrder",
+  payPurchaseOrderBill:"/payPurchaseOrderBill"
 };
