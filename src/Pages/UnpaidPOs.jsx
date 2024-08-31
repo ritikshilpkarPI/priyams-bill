@@ -30,9 +30,7 @@ const UnpaidPOs = () => {
   useEffect(() => {
     getOrders()
   }, [])
-  useEffect(() => {
-    console.log(unpaidStatusList);
-  }, [unpaidStatusList])
+
   return (
     <div className='unpaidPOs-container'>
       <h1>Unpaid POs</h1>
@@ -50,7 +48,6 @@ const UnpaidPOs = () => {
             <th>Remark</th>
             <th>Status</th>
           </tr>
-
         </thead>
         <tbody>
           {unpaidStatusList?.map((paidStatus, index) => (
@@ -69,9 +66,7 @@ const UnpaidPOs = () => {
                   <p>{paidStatus?.isPaid ? "Paid" : "Unpaid"}</p>
                   <button onClick={() => window.open(`https://wa.me/${paidStatus?.phoneNumber}?text= paid due url`)}><WhatsApp /></button>
                 </div>
-
               </td>
-
             </tr>
           ))
           }
@@ -81,5 +76,4 @@ const UnpaidPOs = () => {
     </div>
   )
 }
-
 export default UnpaidPOs

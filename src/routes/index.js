@@ -17,5 +17,6 @@ export const routes = {
   itemsBarcode: "/itemsBarcode",
   moveToCart:"./moveToCart",
   paidPOs:"./paidPOs",
-  unpaidPOs:"./unpaidPOs"
+  unpaidPOs:"./unpaidPOs",
+  payPurchaseOrderBill:"/payPurchaseOrderBill"
 };
