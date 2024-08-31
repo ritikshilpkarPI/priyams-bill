@@ -28,6 +28,7 @@ import {
   NewBillingPage,
   PaidPOs,
   UnpaidPOs,
+  UnpaidPurchaseOrder,
   PayPurchaseOrderBill
 } from '../Pages';
 import Label from 'src/Pages/Label';
@@ -88,7 +89,7 @@ const StoreRoutes = () => {
             <Route exact path="/moveToCart" component={ItemQuantity} />
             <Route exact path="/paidPOs" component={PaidPOs} />
             <Route exact path="/unpaidPOs" component={UnpaidPOs} />
-            {/* <ProtectedComponent role={access.REPORT_PAGE_ROUTE}> */}
+            <Route exact path="/unpaidPurchaseOrder" component={UnpaidPurchaseOrder} />            {/* <ProtectedComponent role={access.REPORT_PAGE_ROUTE}> */}
               <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
             {/* </ProtectedComponent> */}
           </ProtectedRoutes>

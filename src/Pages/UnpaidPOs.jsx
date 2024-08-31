@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import "../CSS/unpaidPOs.css"
+import React, { useEffect, useRef, useState } from 'react'
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
-import "../CSS/unpaidPOs.css"
 import WhatsApp from '../icons/whatsApp';
+import { useHistory } from "react-router-dom";
 const UnpaidPOs = () => {
+  const linkRef = useRef(null);
+  const history = useHistory();
 
   const [unpaidStatusList, setUnpaidStatusList] = useState([]);
   const query = { isApproved: false, isDraft: false };
@@ -34,19 +37,19 @@ const UnpaidPOs = () => {
   return (
     <div className='unpaidPOs-container'>
       <h1>Unpaid POs</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th>Dealer Name</th>
-            <th>Phone Number</th>
-            <th>Payment</th>
-            <th>Bill Amount</th>
-            <th>Paid Amount</th>
-            <th>Procurement Source</th>
-            <th>Created At</th>
-            <th>Remark</th>
-            <th>Status</th>
+      <table className='unpaidPOs-table'>
+        <thead className='unpaidPOs-table-thead'>
+          <tr className='unpaidPOs-table-thead-tr'>
+            <th className='unpaidPOs-table-thead-tr-th'>S.No</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Dealer Name</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Phone Number</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Payment</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Bill Amount</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Paid Amount</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Procurement Source</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Created At</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Remark</th>
+            <th className='unpaidPOs-table-thead-tr-th'>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +69,9 @@ const UnpaidPOs = () => {
                   <p>{paidStatus?.isPaid ? "Paid" : "Unpaid"}</p>
                   <button onClick={() => window.open(`https://wa.me/${paidStatus?.phoneNumber}?text= paid due url`)}><WhatsApp /></button>
                 </div>
+
               </td>
+
             </tr>
           ))
           }
