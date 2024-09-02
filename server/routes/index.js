@@ -294,7 +294,8 @@ router.post(
   '/api/purchaseOrder/payPurchaseOrderBill',
   isLoggedIn,
   isAdmin,
-  isLoggedIn,payPurchaseOrderBill
+  isLoggedIn,payPurchaseOrderBill,
+  payPurchaseOrderBill
 );
 
 module.exports = router;
