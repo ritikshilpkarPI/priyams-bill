@@ -5,7 +5,10 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import Next from '../icons/next'
 import Preview from '../icons/preview'
-import WhatsApp from 'src/icons/whatsApp'
+import {
+    WhatsappShareButton,
+    WhatsappIcon,
+  } from 'react-share';
 import ApprovePurchaseOrderForm from 'src/components/ApprovePurchaseOrderForm';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 const UnpaidPurchaseOrder = () => {
@@ -24,8 +27,6 @@ const UnpaidPurchaseOrder = () => {
             });
 
             if (response.status === 200 && response.data) {
-                console.log({ data: response.data });
-
                 setUnpaidPurchaseOrderData(response.data);
             }
         } catch (error) {
@@ -100,7 +101,9 @@ const UnpaidPurchaseOrder = () => {
                         )
                     }
                 >
-                    <WhatsApp />
+                    <WhatsappShareButton url={`\nhttp://localhost:3000/purchaseOrderBill/${unpaidPurchaseOrderData?._id}\nPay purchase Order Bill:- \n${unpaidPurchaseOrderData?.billPhotos[0]?.secure_url}`} title={"Pay purchase Order Bill:- "}>
+                      <WhatsappIcon size={32} round />
+                    </WhatsappShareButton>
                 </button>
             </div>
             <div className='unpaidPurchaseOrder-bill-container'>
@@ -138,7 +141,8 @@ const UnpaidPurchaseOrder = () => {
             </div>
             {/* <ProtectedComponent> */}
                 <ApprovePurchaseOrderForm 
-                billAmount={unpaidPurchaseOrderData?.billAmount}
+                billAmount={unpaidPurchaseOrderData?.billAmount} 
+                poId={ unpaidPurchaseOrderData?._id }
                 />
             {/* </ ProtectedComponent> */}
 

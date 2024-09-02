@@ -3,8 +3,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
-import WhatsApp from '../icons/whatsApp';
 import { useHistory } from "react-router-dom";
+import {
+  WhatsappShareButton,
+  WhatsappIcon,
+} from 'react-share';
 const UnpaidPOs = () => {
   const history = useHistory();
 
@@ -31,12 +34,14 @@ const UnpaidPOs = () => {
   useEffect(() => {
     getOrders();
   }, []);
-  const handleOnClickOfSharePurchaseOrder = async ({ paidStatus }) => {
-    const senderMobile = 7258072625;
-    const payPruchaseUrl = `http://localhost:3000/payPurchaseOrderBill?poId=${paidStatus?._id}`;
-    const message = `Pay purchase Order Bill:- \n${payPruchaseUrl}\nBill:- ${paidStatus.billPhotos[0].secure_url}`;
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${senderMobile}?text=${encodedMessage}`);
+  const handleOnClickOfSharePurchaseOrder = async ({event, paidStatus }) => {
+    event.stopPropagation();
+    event.preventDefault();
+    // const senderMobile = 7258072625;
+    // const payPruchaseUrl = `http://localhost:3000/payPurchaseOrderBill?poId=${paidStatus?._id}`;
+    // const message = `Pay purchase Order Bill:- \n${payPruchaseUrl}\nBill:- ${paidStatus.billPhotos[0].secure_url}`;
+    // const encodedMessage = encodeURIComponent(message);
+    // window.open(`https://wa.me/${senderMobile}?text=${encodedMessage}`);
   };
   return (
     <div className="unpaidPOs-container">
@@ -77,11 +82,13 @@ const UnpaidPOs = () => {
                 <div className=".unpaidPOs-table-tbody-tr-td-div" >
                   <p>{paidStatus?.isPaid ? 'Paid' : 'Unpaid'}</p>
                   <button className=".unpaidPOs-table-tbody-tr-td-cover-button"
-                    onClick={() =>
-                      handleOnClickOfSharePurchaseOrder({ paidStatus })
+                    onClick={(e) =>
+                      handleOnClickOfSharePurchaseOrder({event:e,paidStatus })
                     }
                   >
-                    <WhatsApp />
+                    <WhatsappShareButton url={`\nhttp://localhost:3000/purchaseOrderBill/${paidStatus?._id}\nPay purchase Order Bill:- \n${paidStatus.billPhotos[0]?.secure_url??""}`} title={"Pay purchase Order Bill:- "}>
+                      <WhatsappIcon size={32} round />
+                    </WhatsappShareButton>
                   </button>
                 </div>
               </td>
