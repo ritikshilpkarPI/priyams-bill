@@ -292,6 +292,9 @@ router.post(
 router.post('/api/purchaseOrder/getPurchaseOrderById', isLoggedIn,getPurchaseOrderById);
 router.post(
   '/api/purchaseOrder/payPurchaseOrderBill',
+  isLoggedIn,
+  isAdmin,
+  isLoggedIn,payPurchaseOrderBill,
   payPurchaseOrderBill
 );
 
