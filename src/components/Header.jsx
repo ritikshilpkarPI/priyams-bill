@@ -158,7 +158,7 @@ const Header = ({
                         to={{
                           pathname: `${subItem.url}`,
                           search:
-                            `${subItem.url}`.split('/')[1] === 'approval'
+                            `${subItem.url}`?.split('/')[1] === 'approval'
                               ? `?option=${subItem.name}`
                               : '',
                         }}
