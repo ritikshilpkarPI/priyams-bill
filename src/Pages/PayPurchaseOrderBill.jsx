@@ -28,7 +28,6 @@ const PayPurchaseOrderBill = () => {
     const poId = searchParams.get('poId');
     getPurchaseOrderdetails({ poId });
   }, []);
-  console.log({unpaidPurchaseOrderData});
   
   return (
     <div>

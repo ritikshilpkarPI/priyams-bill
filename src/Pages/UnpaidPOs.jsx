@@ -6,7 +6,6 @@ import { genericAxios } from 'src/utils/genericAxiosMethod';
 import WhatsApp from '../icons/whatsApp';
 import { useHistory } from "react-router-dom";
 const UnpaidPOs = () => {
-  const linkRef = useRef(null);
   const history = useHistory();
 
   const [unpaidStatusList, setUnpaidStatusList] = useState([]);
@@ -34,7 +33,6 @@ const UnpaidPOs = () => {
   }, []);
   const handleOnClickOfSharePurchaseOrder = async ({ paidStatus }) => {
     const senderMobile = 7258072625;
-    console.log({ paidStatus });
     const payPruchaseUrl = `http://localhost:3000/payPurchaseOrderBill?poId=${paidStatus?._id}`;
     const message = `Pay purchase Order Bill:- \n${payPruchaseUrl}\nBill:- ${paidStatus.billPhotos[0].secure_url}`;
     const encodedMessage = encodeURIComponent(message);
@@ -58,22 +56,27 @@ const UnpaidPOs = () => {
             <th className='unpaidPOs-table-thead-tr-th'>Status</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='unpaidPOs-table-tbody'>
           {unpaidStatusList?.map((paidStatus, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{paidStatus?.dealerName}</td>
-              <td>{paidStatus?.phoneNumber}</td>
-              <td>{paidStatus?.payment}</td>
-              <td>{paidStatus?.billAmount}</td>
-              <td>{paidStatus?.totalPaidAmount}</td>
-              <td>{paidStatus?.procurementSource}</td>
-              <td> {new Date(paidStatus?.createdAt).toUTCString()}</td>
-              <td>{paidStatus?.remark ? paidStatus?.remark : '...'}</td>
-              <td className="td-button">
-                <div>
+            <tr className={index%2===0?'unpaidPOs-table-tbody-tr-even':'unpaidPOs-table-tbody-tr-odd'}
+            key={index}
+            onClick={()=>{      
+              history.push(`/purchaseOrderBill/${paidStatus._id}`);
+            }}
+            >
+              <td className='unpaidPOs-table-tbody-tr-td'>{index + 1}</td>
+              <td className='unpaidPOs-table-tbody-tr-td'>{paidStatus?.dealerName}</td>
+              <td className='unpaidPOs-table-tbody-tr-td'>{paidStatus?.phoneNumber}</td>
+              <td className='unpaidPOs-table-tbody-tr-td'>{paidStatus?.payment}</td>
+              <td className='unpaidPOs-table-tbody-tr-td'>{paidStatus?.billAmount}</td>
+              <td className='unpaidPOs-table-tbody-tr-td'>{paidStatus?.totalPaidAmount}</td>
+              <td className='unpaidPOs-table-tbody-tr-td'>{paidStatus?.procurementSource}</td>
+              <td className='unpaidPOs-table-tbody-tr-td'> {new Date(paidStatus?.createdAt).toUTCString()}</td>
+              <td className='unpaidPOs-table-tbody-tr-td'>{paidStatus?.remark ? paidStatus?.remark : '...'}</td>
+              <td className='unpaidPOs-table-tbody-tr-td' id ="td-button">
+                <div className=".unpaidPOs-table-tbody-tr-td-div" >
                   <p>{paidStatus?.isPaid ? 'Paid' : 'Unpaid'}</p>
-                  <button
+                  <button className=".unpaidPOs-table-tbody-tr-td-cover-button"
                     onClick={() =>
                       handleOnClickOfSharePurchaseOrder({ paidStatus })
                     }
