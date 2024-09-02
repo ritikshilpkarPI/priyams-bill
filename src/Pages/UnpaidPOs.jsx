@@ -37,11 +37,6 @@ const UnpaidPOs = () => {
   const handleOnClickOfSharePurchaseOrder = async ({event, paidStatus }) => {
     event.stopPropagation();
     event.preventDefault();
-    // const senderMobile = 7258072625;
-    // const payPruchaseUrl = `http://localhost:3000/payPurchaseOrderBill?poId=${paidStatus?._id}`;
-    // const message = `Pay purchase Order Bill:- \n${payPruchaseUrl}\nBill:- ${paidStatus.billPhotos[0].secure_url}`;
-    // const encodedMessage = encodeURIComponent(message);
-    // window.open(`https://wa.me/${senderMobile}?text=${encodedMessage}`);
   };
   return (
     <div className="unpaidPOs-container">
