@@ -7,6 +7,7 @@ const approveOrder = async (req, res,next) => {
       id,
       {
         isApproved: true,
+        approveTime:Date.now(),
       },
       { new: true }
     );

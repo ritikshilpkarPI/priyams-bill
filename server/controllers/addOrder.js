@@ -35,6 +35,9 @@ const addOrder = async (req, res,next) => {
         phoneNumber,
         minimumQuantity,
       };
+      if(isDraft){
+        purchaseOrder.draftTime = Date.now();
+      }
       const order = await PurchaseOrder.create(purchaseOrder);
       res.status(201).send({ message: order, success: true });
     } catch (error) {

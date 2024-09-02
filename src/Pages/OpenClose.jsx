@@ -34,7 +34,7 @@ let id = '';
 const OpenClose = () => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
   const [expenseList, expenseDispatch] = expenseItemsStateAndDispatch;
-  const currentDate = new Date().toJSON().split('T')[0];
+  const currentDate = new Date().toJSON()?.split('T')[0];
 
   const [procedureValue, setProcedureValue] = useState('open');
   const [procedure, setProcedure] = useState([]);
@@ -141,7 +141,7 @@ const OpenClose = () => {
 
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split('T')[0];
+      createdAtDate = date?.split('T')[0];
 
       if (selectedDate === createdAtDate && procedureObj.procedure === 'open') {
         setOpeningNotes(procedureObj.notes);
@@ -164,7 +164,7 @@ const OpenClose = () => {
     id = '';
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split('T')[0];
+      createdAtDate = date?.split('T')[0];
       if (selectedDate === createdAtDate && procedureObj.procedure === 'open') {
         id = procedureObj._id;
         selectedProcedureDate = createdAtDate;
@@ -185,7 +185,7 @@ const OpenClose = () => {
       });
       if (newOpenProcedure.error) return;
       let dateFromDb = newOpenProcedure.data.message.createdAt;
-      createdAtDate = dateFromDb.split('T')[0];
+      createdAtDate = dateFromDb?.split('T')[0];
       id = newOpenProcedure.data.message._id;
     } else if (
       selectedDate === selectedProcedureDate &&
@@ -211,7 +211,7 @@ const OpenClose = () => {
     id = '';
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split('T')[0];
+      createdAtDate = date?.split('T')[0];
       if (
         selectedDate === createdAtDate &&
         procedureObj.procedure === 'close'
@@ -235,7 +235,7 @@ const OpenClose = () => {
       });
       if (newCloseProcedure.error) return;
       let dateFromDb = newCloseProcedure.data.message.createdAt;
-      createdAtDate = dateFromDb.split('T')[0];
+      createdAtDate = dateFromDb?.split('T')[0];
       id = newCloseProcedure.data.message._id;
     } else if (
       selectedDate === selectedProcedureDate &&

@@ -8,6 +8,7 @@ const draftOrder = async (req, res,next) => {
         {
           isDraft: true,
           isRejected: false,
+          draftTime: Date.now()
         },
         { new: true }
       );

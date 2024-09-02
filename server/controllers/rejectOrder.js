@@ -7,6 +7,7 @@ const rejectOrder = async (req, res,next) => {
         {
           isRejected: true,
           isDraft: false,
+          rejectTime: Date.now(),
         },
         { new: true }
       );
