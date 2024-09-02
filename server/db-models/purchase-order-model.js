@@ -72,12 +72,38 @@ const purchaseOrderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  payBillImage: {
-    public_id: String,
-    secure_url: String,
-  },
+  payBillImage: [
+    {
+      public_id: String,
+      secure_url: String,
+    },
+  ],
+  draftTime: Date,
+  approveTime: Date,
+  paidTime: Date,
+  rejectTime: Date,
+  statusHistory: [
+    { data: Object, createdAt: { type: Date, default: Date.now } },
+  ],
 });
 
-// pre hook to make is Approved true or false if approver is their
+
+purchaseOrderSchema.post("save",async (purchaseOrder, next) => {
+  const {isApproved,isDraft} = purchaseOrder;
+  if(!isApproved && isDraft){
+    const historyEntry = {
+      data: purchaseOrder.toObject(), 
+      createdAt: Date.now(), 
+    };
+    
+    // Add to draftHistory and save the document
+    purchaseOrder.statusHistory.push(historyEntry);
+
+    // Save the updated document with the new draft history entry
+    await purchaseOrder.save();
+  }
+  next();
+});
+
 
 module.exports = mongoose.model('PurchaseOrder', purchaseOrderSchema);

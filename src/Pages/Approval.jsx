@@ -15,7 +15,7 @@ const Approval = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   let option = query.get('option');
-  option = option.split(' ')[0];
+  option = option?.split(' ')[0];
   useEffect(() => {
     getOrders();
     // eslint-disable-next-line

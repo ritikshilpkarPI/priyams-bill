@@ -47,7 +47,7 @@ const PurchaseDetailsApproval = ({
           </thead>
           <tbody>
             {allPurchaseList
-              .map((list, index) => {
+              ?.map((list, index) => {
                 return indexDetail >= 0 ? (
                   index === indexDetail ? (
                     <tr key={index}>
