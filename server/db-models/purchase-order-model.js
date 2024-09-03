@@ -88,7 +88,7 @@ const purchaseOrderSchema = new mongoose.Schema({
 });
 
 
-purchaseOrderSchema.post("save",async (purchaseOrder, next) => {
+purchaseOrderSchema.pre("save",async (purchaseOrder, next) => {
   const {isApproved,isDraft} = purchaseOrder;
   if(!isApproved && isDraft){
     const historyEntry = {

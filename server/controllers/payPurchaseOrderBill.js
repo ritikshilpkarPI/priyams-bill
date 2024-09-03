@@ -20,6 +20,7 @@ const payPurchaseOrderBill = async (req, res,next) => {
       isPaid,
       payBillImage: imagesData,
       totalPaidAmount: paidAmount.toString(),
+      paidTime:Date.now(),
     },{new:true});
 
     res.status(200).send({ message: order, success: true });
