@@ -17,6 +17,7 @@
 
         .paidPOs-table-tbody {
             .paidPOs-table-tbody-tr {
+                cursor: pointer;
                 .paidPOs-table-tbody-tr-td{
                     font-size: small;
                     padding: 5px;

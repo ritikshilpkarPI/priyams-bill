@@ -51,7 +51,9 @@ const UnpaidPurchaseOrder = () => {
 
     return (
         <div className='unpaidPurchaseOrder-container'>
-            <h1 className='unpaidPurchaseOrder-title'>Unpaid Purchase Order</h1>
+            <h1 className='unpaidPurchaseOrder-title'>
+                
+                {(!unpaidPurchaseOrderData?.isPaid)?'Unpaid Purchase Order':'Paid Purchase Order'}</h1>
             <div className='unpaidPurchaseOrder-table-container'>
                 <table className='unpaidPurchaseOrder-table'>
                     <thead className='unpaidPurchaseOrder-table-thead'>
@@ -140,10 +142,13 @@ const UnpaidPurchaseOrder = () => {
                 )}
             </div>
             {/* <ProtectedComponent> */}
+            {(!unpaidPurchaseOrderData?.isPaid) &&
+
                 <ApprovePurchaseOrderForm 
                 billAmount={unpaidPurchaseOrderData?.billAmount} 
                 poId={ unpaidPurchaseOrderData?._id }
                 />
+            }
             {/* </ ProtectedComponent> */}
 
             <h3 className='unpaidPurchaseOrder-text'>Items</h3>
