@@ -7,7 +7,7 @@
     justify-content: flex-start;
     flex-direction: column;
     gap: 20px;
-    
+   
 
     .approvePurchaseOrderForm-form {
         display: flex;
@@ -33,11 +33,10 @@
             padding: 0 5px;
             margin-right: 10px;
             outline: none;
-
         }
 
-        .approvePurchaseOrderForm-amount-input-button,
-        .approvePurchaseOrderForm-amount-button{
+    
+        /* .approvePurchaseOrderForm-amount-button{
             height: 40px;
             width: 240px;
             background-color: rgb(75, 149, 254);
@@ -46,7 +45,35 @@
             border-radius: 7px;
             cursor: pointer;
             outline: none;
+        } */
+        .approvePurchaseOrderForm-amount-input-button{
+            height: 40px;
+            width: 240px;
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            border-radius: 7px;
+            cursor: pointer;
+            outline: none;
+            border: 1px solid rgb(75, 149, 254) ;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
+        .approvePurchaseOrderForm-amount-input-button-disabled{
+            height: 40px;
+            width: 240px;
+            background-color: #ccc;
+            border: none;
+            color: #fff;
+            border-radius: 7px;
+            cursor: no-drop;
+            outline: none;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
         .approvePurchaseOrderForm-file-input-button{
             height: 40px;
             width: 240px;
@@ -63,20 +90,24 @@
         }
         
 
-        .approvePurchaseOrderForm-checkbox-input-container {
-            padding-left: 5px;
+        .approvePurchaseOrderForm-checkbox-input-container,
+        .approvePurchaseOrderForm-Exact-amount-input-container {
+            padding: 5px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-between;
             gap: 20px;
+            width: 240px;
             
            
-            .approvePurchaseOrderForm-checkbox-input-label {
+            .approvePurchaseOrderForm-checkbox-input-label,
+            .approvePurchaseOrderForm-Exact-amount-input-label {
                 font-size: 12px;
                 font-weight: 600;
                 
             }
-            .approvePurchaseOrderForm-checkbox-input {
+            .approvePurchaseOrderForm-checkbox-input,
+            .approvePurchaseOrderForm-Exact-amount-input {
                 cursor: pointer;
                 height: 17px;
                 width: 17px;
