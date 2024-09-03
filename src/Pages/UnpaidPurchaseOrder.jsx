@@ -46,58 +46,38 @@ const UnpaidPurchaseOrder = () => {
     }
   };
 
-  return (
-    <div className="unpaidPurchaseOrder-container">
-      <h1 className="unpaidPurchaseOrder-title">Unpaid Purchase Order</h1>
-      <div className="unpaidPurchaseOrder-table-container">
-        <table className="unpaidPurchaseOrder-table">
-          <thead className="unpaidPurchaseOrder-table-thead">
-            <tr className="unpaidPurchaseOrder-table-thead-tr">
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                Dealer Name
-              </th>
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                {unpaidPurchaseOrderData?.dealerName}
-              </th>
-            </tr>
-            <tr className="unpaidPurchaseOrder-table-thead-tr">
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                Phone Number
-              </th>
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                {unpaidPurchaseOrderData?.phoneNumber}
-              </th>
-            </tr>
-            <tr className="unpaidPurchaseOrder-table-thead-tr">
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">Payment</th>
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                {unpaidPurchaseOrderData?.payment}
-              </th>
-            </tr>
-            <tr className="unpaidPurchaseOrder-table-thead-tr">
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                Bill Amount
-              </th>
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                {unpaidPurchaseOrderData?.billAmount}
-              </th>
-            </tr>
-            <tr className="unpaidPurchaseOrder-table-thead-tr">
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                Total Paid Amount
-              </th>
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                {unpaidPurchaseOrderData?.totalPaidAmount}
-              </th>
-            </tr>
-            <tr className="unpaidPurchaseOrder-table-thead-tr">
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                Procurement Source
-              </th>
-              <th className="unpaidPurchaseOrder-table-thead-tr-th">
-                {unpaidPurchaseOrderData?.procurementSource}
-              </th>
-            </tr>
+    return (
+        <div className='unpaidPurchaseOrder-container'>
+            <h1 className='unpaidPurchaseOrder-title'>
+                
+                {(!unpaidPurchaseOrderData?.isPaid)?'Unpaid Purchase Order':'Paid Purchase Order'}</h1>
+            <div className='unpaidPurchaseOrder-table-container'>
+                <table className='unpaidPurchaseOrder-table'>
+                    <thead className='unpaidPurchaseOrder-table-thead'>
+                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Dealer Name</th>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.dealerName}</th>
+                        </tr>
+                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Phone Number</th>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.phoneNumber}</th>
+                        </tr>
+                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Payment</th>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.payment}</th>
+                        </tr>
+                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Bill Amount</th>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.billAmount}</th>
+                        </tr>
+                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Total Paid Amount</th>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.totalPaidAmount}</th>
+                        </tr>
+                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Procurement Source</th>
+                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.procurementSource}</th>
+                        </tr>
 
             <tr className="unpaidPurchaseOrder-table-thead-tr">
               <th className="unpaidPurchaseOrder-table-thead-tr-th">
@@ -162,26 +142,27 @@ const UnpaidPurchaseOrder = () => {
                 <Preview />
               </button>
 
-              <button
-                className="carousel-button"
-                onClick={handleNext}
-                disabled={
-                  currentPhotoIndex ===
-                  unpaidPurchaseOrderData?.billPhotos?.length - 1
-                }
-              >
-                <Next />
-              </button>
+                            <button
+                                className='carousel-button'
+                                onClick={handleNext}
+                                disabled={currentPhotoIndex === unpaidPurchaseOrderData?.billPhotos?.length - 1}
+                            ><Next />
+                            </button>
+
+                        </div>
+
+                    </div>
+                )}
             </div>
-          </div>
-        )}
-      </div>
-      {/* <ProtectedComponent> */}
-      <ApprovePurchaseOrderForm
-        billAmount={unpaidPurchaseOrderData?.billAmount}
-        poId={unpaidPurchaseOrderData?._id}
-      />
-      {/* </ ProtectedComponent> */}
+            {/* <ProtectedComponent> */}
+            {(!unpaidPurchaseOrderData?.isPaid) &&
+
+                <ApprovePurchaseOrderForm 
+                billAmount={unpaidPurchaseOrderData?.billAmount} 
+                poId={ unpaidPurchaseOrderData?._id }
+                />
+            }
+            {/* </ ProtectedComponent> */}
 
       <h3 className="unpaidPurchaseOrder-text">Items</h3>
       <div className="unpaidPurchaseOrder-items-table-container">

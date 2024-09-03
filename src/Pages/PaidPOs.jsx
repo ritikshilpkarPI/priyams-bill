@@ -3,9 +3,11 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import "../CSS/paidPOs.css"
+import { useHistory } from 'react-router-dom';
 const PaidPOs = () => {
   const [paidStatusList, setPaidStatusList] = useState([]);
   const query = { isApproved: false, isDraft: false };
+  const history = useHistory();
 
   const getOrders = async () => {
     try {
@@ -47,9 +49,14 @@ const PaidPOs = () => {
             <th className='paidPOs-table-thead-tr-th'>Status</th>
           </tr>
         </thead>
-        <tbody className='paidPOs-table-tbody'>
+        <tbody className='paidPOs-table-tbody'
+        >
           {paidStatusList?.map((paidStatus, index) => (
-            <tr className='paidPOs-table-tbody-tr' key={index}>
+            <tr className='paidPOs-table-tbody-tr' key={index}
+        onClick={()=>history.push(`/purchaseOrderBill/${paidStatus._id}`)
+        }
+            
+            >
               <td className='paidPOs-table-tbody-tr-td'>{index + 1}</td>
               <td className='paidPOs-table-tbody-tr-td'>{paidStatus?.dealerName}</td>
               <td className='paidPOs-table-tbody-tr-td'>{paidStatus?.phoneNumber}</td>
