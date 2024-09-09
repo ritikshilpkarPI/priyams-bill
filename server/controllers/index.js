@@ -61,6 +61,11 @@ const getItemsLean = require('./getItemsLean');
 const saveOrCacheBill = require('./saveOrCacheBill');
 const getUnSavedBills = require('./getUnSavedBills');
 const addItemsToCartApp = require('./addItemsToCartApp');
+const getProductImageByProductName = require('./getProductImageByProductName');
+const uploadImageCloudinary = require("./uploadImageCloudinary")
+const getPurchaseOrderByPaidStatus = require('./getPurchaseOrderByPaidStatus');
+const getPurchaseOrderById = require('./getPurchaseOrderById');
+const payPurchaseOrderBill = require('./payPurchaseOrderBill');
 
 module.exports = {
   getStaff,
@@ -125,5 +130,10 @@ module.exports = {
   getItemsLean,
   saveOrCacheBill,
   getUnSavedBills,
-  addItemsToCartApp
+  addItemsToCartApp,
+  getProductImageByProductName,
+  uploadImageCloudinary,
+  getPurchaseOrderByPaidStatus,
+  getPurchaseOrderById,
+  payPurchaseOrderBill,
 };

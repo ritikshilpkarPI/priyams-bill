@@ -26,6 +26,10 @@ import {
   Orders,
   OrderStatusDetail,
   NewBillingPage,
+  PaidPOs,
+  UnpaidPOs,
+  UnpaidPurchaseOrder,
+  PayPurchaseOrderBill
 } from '../Pages';
 import Label from 'src/Pages/Label';
 import { Fragment } from 'react';
@@ -81,8 +85,13 @@ const StoreRoutes = () => {
               component={OrderStatusDetail}
             />
             <Route exact path="/newBilling" component={NewBillingPage} />
-            <Route exact path="/itemsBarcode" component={ ItemsBarCode} />
+            <Route exact path="/itemsBarcode" component={ItemsBarCode} />
             <Route exact path="/moveToCart" component={ItemQuantity} />
+            <Route exact path="/paidPOs" component={PaidPOs} />
+            <Route exact path="/unpaidPOs" component={UnpaidPOs} />
+            <Route exact path="/purchaseOrderBill/:id" component={UnpaidPurchaseOrder} />            {/* <ProtectedComponent role={access.REPORT_PAGE_ROUTE}> */}
+            <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
+                  {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>
       </Switch>

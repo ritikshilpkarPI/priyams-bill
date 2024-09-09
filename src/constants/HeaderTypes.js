@@ -78,6 +78,16 @@ export const sidebarListData = [
         url: '/approval',
         icon: 'images/rejectpurchaseorder.svg',
       },
+      {
+        name: 'Paid POs',
+        url: '/paidPOs',
+        icon: 'images/billPaid.svg',
+      },
+      {
+        name: 'Unpaid POs',
+        url: '/unpaidPOs',
+        icon: 'images/billUnpaid.svg',
+      },
     ],
   },
   {

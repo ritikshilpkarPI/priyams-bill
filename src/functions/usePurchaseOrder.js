@@ -422,8 +422,8 @@ const usePurchaseOrder = (history) => {
           editIndex >= 0
             ? await updateOrderByIndex(new_order, editIndex)
             : id
-            ? await updateSavedOrder(new_order)
-            : await saveOrder(new_order);
+              ? await updateSavedOrder(new_order)
+              : await saveOrder(new_order);
         const { order } = data;
         const { _id } = order;
         offLoader();
@@ -578,7 +578,7 @@ const usePurchaseOrder = (history) => {
     itemsList
   );
 
-  useEffect(()=> {
+  useEffect(() => {
     (async () => {
       const fetch = await genericAxios({
         url: API_PATHS.INVENTORY.GET_ITEMS,
@@ -668,7 +668,8 @@ const usePurchaseOrder = (history) => {
     deleteCloudBills,
     Loading,
     disableDraft,
-    itemsList
+    itemsList,
+    setLoading
   };
 };
 

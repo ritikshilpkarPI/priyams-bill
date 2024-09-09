@@ -15,5 +15,10 @@ export const Attendance = lazy(() => import('./Attendance'));
 export const Approval = lazy(() => import('./Approval'));
 export const ExpiredItems = lazy(() => import('./ExpiredItems'));
 export const Orders = lazy(() => import('./Orders'));
-export const OrderStatusDetail = lazy(() => import('./OrderStatusDetail'))
-export const NewBillingPage = lazy(()=>  import('./NewBillPage'))
+export const OrderStatusDetail = lazy(() => import('./OrderStatusDetail'));
+export const NewBillingPage = lazy(()=>  import('./NewBillPage'));
+export const PaidPOs = lazy(()=>  import('./PaidPOs'));
+export const UnpaidPOs = lazy(()=>  import('./UnpaidPOs'));
+export const UnpaidPurchaseOrder = lazy(()=>  import('./UnpaidPurchaseOrder'));
+export const PayPurchaseOrderBill = lazy(()=> import('./PayPurchaseOrderBill'))
+

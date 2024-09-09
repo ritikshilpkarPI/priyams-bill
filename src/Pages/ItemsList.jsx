@@ -84,6 +84,7 @@ const ItemsList = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [index, setIndex] = useState(0);
 
+
   const history = useHistory();
 
   useEffect(() => {
@@ -403,6 +404,7 @@ const ItemsList = () => {
         ? itemToBeUpdated[index].images
         : items[index].images
     );
+    const [googleImages, setGoogleImages] = useState([])
 
     if (!items[index]?.deletedImages?.length) items[index].deletedImages = [];
 
@@ -454,6 +456,52 @@ const ItemsList = () => {
       });
       items[index].images = itemToBeUpdated[index].images;
     };
+    const onSelectGoogleImage = (selectedImage, index) => {
+      itemToBeUpdated = {
+        [index]: { ...items[index], ...itemToBeUpdated[index] },
+      };
+
+      if (!itemToBeUpdated[index].images?.length) {
+        itemToBeUpdated[index].images = [];
+      }
+
+      itemToBeUpdated[index].images = [
+        ...itemToBeUpdated[index].images,
+        { public_id: '', secure_url: selectedImage },
+      ];
+
+      setImages((prev) => [{ public_id: '', secure_url: selectedImage }, ...prev]);
+
+      items[index].images = itemToBeUpdated[index].images;
+    };
+
+
+
+    const handleOnAddImages = async ({ itemBrandName, itemName, itemCategory }) => {
+      const response = await genericAxios({
+        method: API_METHODS.POST,
+        url: API_PATHS.GOOGLE_IMAGE.URL,
+        data: {
+          query: `title=${itemName},brand=${itemBrandName}`,
+          count: 10
+        },
+      });
+      if (response.status !== 200) {
+        console.error({ response });
+      }
+      else {
+        const imageUrls = response?.data?.map(image => image?.link)
+        setGoogleImages(imageUrls)
+
+      }
+
+    }
+    useEffect(() => {
+      const { itemBrandName, itemName, itemCategory } = items[index];
+      handleOnAddImages({ itemBrandName, itemName, itemCategory })
+    }, []);
+
+
     return (
       <div className="images-container">
         <div className="item-images-container">
@@ -475,6 +523,26 @@ const ItemsList = () => {
           )}
         </div>
         <div className="item-images-button-container">
+
+          <div className="google-images-container">
+            <p>Select google images</p>
+            <div className='google-images-scroll'>
+              {
+                !googleImages.length 
+                ? <p>This feature is currently unavailable</p> 
+                :(
+                  googleImages?.map((imageUrl, index) => (
+                    <div className='google-images-card'
+                    onClick={() => onSelectGoogleImage(imageUrl, index)}
+                    >
+                      <img className='google-images' src={imageUrl} alt="" />
+                    </div>
+                  ))
+                )
+              
+          }
+            </div>
+          </div>
           <Dropzone
             openRef={openRef}
             activateOnClick={false}
@@ -1236,11 +1304,9 @@ const ItemsList = () => {
   const UseByDateElement = () => {
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
-    }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
-    }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
+      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
+      }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1330,11 +1396,9 @@ const ItemsList = () => {
     const [savedDates, setSavedDates] = useState(data);
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
-    }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
-    }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
+      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
+      }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1867,12 +1931,12 @@ const TableRow = ({
     const data =
       name === 'quantityUnitName'
         ? [
-            { value: 'kg', label: 'kg' },
-            { value: 'grams', label: 'grams' },
-            { value: 'liter', label: 'liter' },
-            { value: 'ml', label: 'ml' },
-            { value: 'Piece', label: 'Piece' },
-          ]
+          { value: 'kg', label: 'kg' },
+          { value: 'grams', label: 'grams' },
+          { value: 'liter', label: 'liter' },
+          { value: 'ml', label: 'ml' },
+          { value: 'Piece', label: 'Piece' },
+        ]
         : categoryArray;
 
     return (

@@ -13,8 +13,11 @@ import {
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MyDatePicker from './DatePicker';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { API_PATHS } from "../utils/constants/apiPaths"
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -37,9 +40,21 @@ const OrderForm = ({
   deleteSlab,
   slabs,
   setSlabs,
+  setLoading
 }) => {
+  const [imageList, setImageList] = useState([])
+  const [selectedImage, setSelectedImage] = useState('')
+  const [isSelected, setIsSelected] = useState(true)
   const [toggle, setToggle] = useState(true);
   const [toggle1, setToggle1] = useState(false);
+  // const [addImage, setAddImage] = useState(null)
+  const imageInputRef = useRef(null);
+
+  const [imageSearch, setImageSearch] = useState(form.values.inputName)
+  useEffect(() => {
+    setImageSearch(form.values.inputName)
+  }, [form.values.inputName])
+
   const func1 = () => {
     setOpenDrawer(true);
   };
@@ -50,6 +65,78 @@ const OrderForm = ({
   const func3 = () => {
     setToggle1(true);
     setToggle(false);
+  };
+  const handleOnAddImages = async (count) => {
+    setLoading(true)
+    try {
+      const response = await genericAxios({
+        method: API_METHODS.POST,
+        url: API_PATHS.GOOGLE_IMAGE.URL,
+        data: {
+          query: imageSearch,
+          count: 10
+        },
+      });
+      if (response.status === 200) {
+        setImageList(response.data)
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    finally {
+      setLoading(false)
+    }
+
+  }
+  const handleImageSearch = (e) => {
+    const input = e.target.value
+    setImageSearch(input)
+  }
+
+  const handleSelectImage = (link) => {
+    setSelectedImage({
+      public_id: "",
+      secure_url: link
+    })
+    setIsSelected(true)
+    setImageSearch('')
+  }
+  const handleKeyDown = () => {
+    imageSearch && handleOnAddImages()
+    setIsSelected(false)
+  };
+
+  const handleFileChange = async (file) => {
+    try {
+      setLoading(true)
+      const dataUrl = await new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = () => resolve(fileReader.result);
+        fileReader.onerror = reject;
+      });
+      const responce = await genericAxios({
+        method: API_METHODS.POST,
+        url: "/api/purchase/uploadImageCloudinary",
+        data: {
+          file: dataUrl
+        },
+      });
+
+      if (responce.status !== 200) {
+        console.log(responce);
+
+      }
+      const { secure_url, public_id } = responce.data
+      setSelectedImage({ secure_url, public_id })
+
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+
+    }
   };
 
   return (
@@ -66,7 +153,10 @@ const OrderForm = ({
       <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'}>
         <form
           className="order-form"
-          onSubmit={form.onSubmit((values) => handleItemFrom(values))}
+          onSubmit={form.onSubmit((values) => {
+            values.imageUrl = selectedImage
+            handleItemFrom(values)
+          })}
         >
           <Switch
             checked={form.values.validate}
@@ -99,7 +189,7 @@ const OrderForm = ({
               className="form-input-tops"
               required
               placeholder="item name"
-              onClick={() => {
+              onClick={(e) => {
                 func1();
                 func3();
               }}
@@ -109,13 +199,13 @@ const OrderForm = ({
           <div className="barcode-filter-shift">
             {filterItems2.length > 1
               ? Boolean(filterItems2.length) &&
-                toggle &&
-                openDrawer && (
-                  <ListDropDownItem
-                    itemList={filterItems2}
-                    handleSelectOrderItems2={handleSelectOrderItems}
-                  />
-                )
+              toggle &&
+              openDrawer && (
+                <ListDropDownItem
+                  itemList={filterItems2}
+                  handleSelectOrderItems2={handleSelectOrderItems}
+                />
+              )
               : ''}
           </div>
           {Boolean(filterItems.length) && toggle1 && openDrawer && (
@@ -147,6 +237,75 @@ const OrderForm = ({
               {...form.getInputProps('unit')}
             />
           </Group>
+
+          <div className='image-select-container'>
+            <div className='image-input-container'>
+              <label className='image-input-label' htmlFor="image-input">Image</label>
+              {selectedImage &&
+                <div className='selected-image-card'>
+                  <img className='selected-image' src={selectedImage.secure_url} alt="" />
+                </div>}
+              <div className='image-input'>
+
+                <input
+                  id='image-input'
+                  className='input'
+                  value={imageSearch}
+                  type="text"
+                  placeholder='Search image'
+                  onChange={(e) => handleImageSearch(e)}
+                />
+
+                <div
+                  className={`search-image-button ${!imageSearch ? 'disabled' : ''}`}
+                  onClick={imageSearch ? handleKeyDown : null}
+                >
+                  Search
+                </div>
+              </div>
+            </div>
+            {!isSelected && !imageList.length
+              ? <>
+                <p>This feature is currently unavailable</p>
+                <Button onClick={() => imageInputRef.current.click()}
+                  style={{ marginTop: '15px' }}
+                >
+                  Select Image
+                </Button>
+              </>
+              : <div className='image-container'>
+                {!isSelected && imageList.map((image) => (
+                  <div className='image-card'
+                    onClick={() => handleSelectImage(image?.link)}
+                  >
+                    <img className='image' src={image?.link} alt="" />
+                  </div>
+                ))
+                }
+              </div>
+            }
+
+
+
+            <input
+              type="file"
+              ref={imageInputRef}
+              style={{ display: 'none' }}
+              onChange={(e) => handleFileChange(e.target.files[0])}
+              accept="image/*"
+            />
+
+            {/* {!isSelected &&
+              <div className='show-more-image-container'>
+                <p className='show-more-image-button' 
+                onClick={handleAddCounter}
+                >Show more</p>
+              </div>
+            } */}
+
+
+          </div>
+
           <div className="date-container">
             {/* <DatePicker
               className="useby-date-picker"
@@ -162,18 +321,18 @@ const OrderForm = ({
               style={{ width: '140px' }}
             /> */}
             <MyDatePicker
-            className="useby-date-picker"
-            placeholder="Pick date"
-            label="Expiry  date"
-            inputFormat="MM/DD/YYYY"
-            value={date}
-            onChange={(day) => {
-              let s = String(new Date(day).toLocaleDateString('en-US'));
-              setDate(s);
-            }}
-            style={{ width: '140px' }}
-            setDate={setDate}
-            date={date}
+              className="useby-date-picker"
+              placeholder="Pick date"
+              label="Expiry  date"
+              inputFormat="MM/DD/YYYY"
+              value={date}
+              onChange={(day) => {
+                let s = String(new Date(day).toLocaleDateString('en-US'));
+                setDate(s);
+              }}
+              style={{ width: '140px' }}
+              setDate={setDate}
+              date={date}
             />
             <NumberInput
               withAsterisk={form.values.validate}
@@ -187,19 +346,19 @@ const OrderForm = ({
           </div>
           {form.values.expiryDates?.length
             ? form.values.expiryDates.map((date, index) => {
-                return (
-                  <div className="expiry-date-showcase" key={index + 1}>
-                    <TextInput
-                      value={new Date(date.date).toLocaleDateString()}
-                      readOnly
-                    />
-                    <TextInput readOnly value={date.value} />
-                    <Button onClick={() => handleDateDelete(date)}>
-                      Delete
-                    </Button>
-                  </div>
-                );
-              })
+              return (
+                <div className="expiry-date-showcase" key={index + 1}>
+                  <TextInput
+                    value={new Date(date.date).toLocaleDateString()}
+                    readOnly
+                  />
+                  <TextInput readOnly value={date.value} />
+                  <Button onClick={() => handleDateDelete(date)}>
+                    Delete
+                  </Button>
+                </div>
+              );
+            })
             : ''}
           <Group className="order-flex-class">
             <NumberInput

@@ -1,5 +1,6 @@
 const { uploadImages } = require('../util/image');
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const { clodinaryFoldersPath } = require('../util/constant');
 
 const addOrder = async (req, res,next) => {
     try {
@@ -18,7 +19,7 @@ const addOrder = async (req, res,next) => {
       } = req.body.new_order.purchaseObj;
       const isDraft = req.body.new_order.isDraft;
   
-      let billPhotos = await uploadImages(bills);
+      let billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
   
       const purchaseOrder = {
         purchasedItems: [...orders],
@@ -34,6 +35,9 @@ const addOrder = async (req, res,next) => {
         phoneNumber,
         minimumQuantity,
       };
+      if(isDraft){
+        purchaseOrder.draftTime = Date.now();
+      }
       const order = await PurchaseOrder.create(purchaseOrder);
       res.status(201).send({ message: order, success: true });
     } catch (error) {
