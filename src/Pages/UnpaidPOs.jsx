@@ -28,7 +28,7 @@ const UnpaidPOs = () => {
       setUnpaidStatusList(result.orders);
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setLoading(false)
     }
   };
@@ -43,14 +43,14 @@ const UnpaidPOs = () => {
   };
   return (
 
-   
+
 
     <div className="unpaidPOs-container">
-       <LoadingOverlay
-       className="purchase-loader"
-       visible={Loading}
-       overlayBlur={1}
-     />
+      <LoadingOverlay
+        className="purchase-loader"
+        visible={Loading}
+        overlayBlur={1}
+      />
       <h1>Unpaid POs</h1>
       <table className="unpaidPOs-table">
         <thead className="unpaidPOs-table-thead">
@@ -69,27 +69,28 @@ const UnpaidPOs = () => {
         </thead>
         <tbody className="unpaidPOs-table-tbody">
           {unpaidStatusList.map((unpaidStatus, index) => (
+            (unpaidStatus?.isDraft) && (unpaidStatus?.isApproved) && (unpaidStatus?.isPaid) &&
             <tr
-            className={
-              index % 2 === 0
-                ? 'unpaidPOs-table-tbody-tr-even'
-                : 'unpaidPOs-table-tbody-tr-odd'
-            }
+              className={
+                index % 2 === 0
+                  ? 'unpaidPOs-table-tbody-tr-even'
+                  : 'unpaidPOs-table-tbody-tr-odd'
+              }
               key={index}
               onClick={() => {
                 history.push(`/purchaseOrderBill/${unpaidStatus._id}`);
               }}
-              >
-                <td className="unpaidPOs-table-tbody-tr-td" >{index+1}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.dealerName}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.phoneNumber}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.payment}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.billAmount}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.totalPaidAmount}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.procurementSource}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" >{new Date(unpaidStatus?.createdAt).toLocaleDateString('en-US')}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.remark ? unpaidStatus?.remark : '...'}</td>
-                <td className="unpaidPOs-table-tbody-tr-td" id="td-button">
+            >
+              <td className="unpaidPOs-table-tbody-tr-td" >{index + 1}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.dealerName}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.phoneNumber}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.payment}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.billAmount}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.totalPaidAmount}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.procurementSource}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" >{new Date(unpaidStatus?.createdAt).toLocaleDateString('en-US')}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.remark ? unpaidStatus?.remark : '...'}</td>
+              <td className="unpaidPOs-table-tbody-tr-td" id="td-button">
                 <div className=".unpaidPOs-table-tbody-tr-td-div">
                   <p>{unpaidStatus?.isPaid ? 'Paid' : 'Unpaid'}</p>
                   <button
@@ -102,13 +103,11 @@ const UnpaidPOs = () => {
                     }
                   >
                     <WhatsappShareButton
-                      url={`\n${baseUrl}/purchaseOrderBill/${
-                        unpaidStatus?._id
-                      }\n${
-                        unpaidStatus?.billPhotos[0]?.secure_url
+                      url={`\n${baseUrl}/purchaseOrderBill/${unpaidStatus?._id
+                        }\n${unpaidStatus?.billPhotos[0]?.secure_url
                           ? `Pay purchase Order Bill:- \n${unpaidStatus.billPhotos[0].secure_url}`
                           : ''
-                      }`}
+                        }`}
                       title={'Pay purchase Order Bill:- '}
                     >
                       <WhatsappIcon size={32} round />
@@ -116,7 +115,7 @@ const UnpaidPOs = () => {
                   </button>
                 </div>
               </td>
-           
+
             </tr>
           ))}
           {/* {unpaidStatusList.orders.map((paidStatus, index) => (
