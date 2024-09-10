@@ -88,20 +88,22 @@ const purchaseOrderSchema = new mongoose.Schema({
 });
 
 
-purchaseOrderSchema.pre("save",async (purchaseOrder, next) => {
-  const {isApproved,isDraft} = purchaseOrder;
-  if(!isApproved && isDraft){
+purchaseOrderSchema.pre("save", function (next) {
+  const purchaseOrder = this;
+  const { isApproved, isDraft } = purchaseOrder;
+
+  // If the purchase order is a draft and not yet approved
+  if (!isApproved && isDraft) {
     const historyEntry = {
       data: purchaseOrder.toObject(), 
       createdAt: Date.now(), 
     };
-    
-    // Add to draftHistory and save the document
-    purchaseOrder.statusHistory.push(historyEntry);
 
-    // Save the updated document with the new draft history entry
-    await purchaseOrder.save();
+    // Add to statusHistory array
+    purchaseOrder.statusHistory.push(historyEntry);
   }
+
+  // No need for next() with async operations or save recursion
   next();
 });
 
