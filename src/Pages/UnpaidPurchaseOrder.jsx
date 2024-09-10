@@ -8,6 +8,7 @@ import Preview from '../icons/preview';
 import { WhatsappShareButton, WhatsappIcon } from 'react-share';
 import ApprovePurchaseOrderForm from 'src/components/ApprovePurchaseOrderForm';
 import ProtectedComponent from 'src/components/ProtectedComponent';
+import ImageCarousel from 'src/components/ImageCarousel';
 const UnpaidPurchaseOrder = () => {
   const [unpaidPurchaseOrderData, setUnpaidPurchaseOrderData] = useState();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -34,6 +35,11 @@ const UnpaidPurchaseOrder = () => {
     getPurchaseOrderdetails(id);
   }, [id]);
 
+  useEffect(() => {
+    console.log(unpaidPurchaseOrderData);
+
+  }, [unpaidPurchaseOrderData])
+
   const handlePrevious = () => {
     if (currentPhotoIndex > 0) {
       setCurrentPhotoIndex(currentPhotoIndex - 1);
@@ -46,38 +52,38 @@ const UnpaidPurchaseOrder = () => {
     }
   };
 
-    return (
-        <div className='unpaidPurchaseOrder-container'>
-            <h1 className='unpaidPurchaseOrder-title'>
-                
-                {(!unpaidPurchaseOrderData?.isPaid)?'Unpaid Purchase Order':'Paid Purchase Order'}</h1>
-            <div className='unpaidPurchaseOrder-table-container'>
-                <table className='unpaidPurchaseOrder-table'>
-                    <thead className='unpaidPurchaseOrder-table-thead'>
-                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Dealer Name</th>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.dealerName}</th>
-                        </tr>
-                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Phone Number</th>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.phoneNumber}</th>
-                        </tr>
-                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Payment</th>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.payment}</th>
-                        </tr>
-                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Bill Amount</th>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.billAmount}</th>
-                        </tr>
-                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Total Paid Amount</th>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.totalPaidAmount}</th>
-                        </tr>
-                        <tr className='unpaidPurchaseOrder-table-thead-tr'>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>Procurement Source</th>
-                            <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.procurementSource}</th>
-                        </tr>
+  return (
+    <div className='unpaidPurchaseOrder-container'>
+      <h1 className='unpaidPurchaseOrder-title'>
+
+        {(!unpaidPurchaseOrderData?.isPaid) ? 'Unpaid Purchase Order' : 'Paid Purchase Order'}</h1>
+      <div className='unpaidPurchaseOrder-table-container'>
+        <table className='unpaidPurchaseOrder-table'>
+          <thead className='unpaidPurchaseOrder-table-thead'>
+            <tr className='unpaidPurchaseOrder-table-thead-tr'>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>Dealer Name</th>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.dealerName}</th>
+            </tr>
+            <tr className='unpaidPurchaseOrder-table-thead-tr'>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>Phone Number</th>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.phoneNumber}</th>
+            </tr>
+            <tr className='unpaidPurchaseOrder-table-thead-tr'>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>Payment</th>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.payment}</th>
+            </tr>
+            <tr className='unpaidPurchaseOrder-table-thead-tr'>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>Bill Amount</th>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.billAmount}</th>
+            </tr>
+            <tr className='unpaidPurchaseOrder-table-thead-tr'>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>Total Paid Amount</th>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.totalPaidAmount}</th>
+            </tr>
+            <tr className='unpaidPurchaseOrder-table-thead-tr'>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>Procurement Source</th>
+              <th className='unpaidPurchaseOrder-table-thead-tr-th'>{unpaidPurchaseOrderData?.procurementSource}</th>
+            </tr>
 
             <tr className="unpaidPurchaseOrder-table-thead-tr">
               <th className="unpaidPurchaseOrder-table-thead-tr-th">
@@ -108,10 +114,9 @@ const UnpaidPurchaseOrder = () => {
           onClick={() => window.open(`https://wa.me/?text= paid due url`)}
         >
           <WhatsappShareButton
-            url={`\n${baseUrl}/purchaseOrderBill/${unpaidPurchaseOrderData?._id}\n${
-                unpaidPurchaseOrderData?.billPhotos[0]?.secure_url
-                  ? `Pay purchase Order Bill:- \n${unpaidPurchaseOrderData.billPhotos[0].secure_url}`
-                  : ""
+            url={`\n${baseUrl}/purchaseOrderBill/${unpaidPurchaseOrderData?._id}\n${unpaidPurchaseOrderData?.billPhotos[0]?.secure_url
+                ? `Pay purchase Order Bill:- \n${unpaidPurchaseOrderData.billPhotos[0].secure_url}`
+                : ""
               }`}
             title={'Pay purchase Order Bill:- '}
           >
@@ -119,6 +124,9 @@ const UnpaidPurchaseOrder = () => {
           </WhatsappShareButton>
         </button>
       </div>
+{/* <ImageCarousel/> */}
+{/* <img src={unpaidPurchaseOrderData?.payBillImage[0]?.secure_url} alt="" /> */}
+
       <div className="unpaidPurchaseOrder-bill-container">
         {unpaidPurchaseOrderData?.billPhotos?.length > 0 && (
           <div className="carousel">
@@ -142,27 +150,68 @@ const UnpaidPurchaseOrder = () => {
                 <Preview />
               </button>
 
-                            <button
-                                className='carousel-button'
-                                onClick={handleNext}
-                                disabled={currentPhotoIndex === unpaidPurchaseOrderData?.billPhotos?.length - 1}
-                            ><Next />
-                            </button>
+              <button
+                className='carousel-button'
+                onClick={handleNext}
+                disabled={currentPhotoIndex === unpaidPurchaseOrderData?.billPhotos?.length - 1}
+              ><Next />
+              </button>
 
-                        </div>
-
-                    </div>
-                )}
             </div>
-            {/* <ProtectedComponent> */}
-            {(!unpaidPurchaseOrderData?.isPaid) &&
 
-                <ApprovePurchaseOrderForm 
-                billAmount={unpaidPurchaseOrderData?.billAmount} 
-                poId={ unpaidPurchaseOrderData?._id }
-                />
-            }
-            {/* </ ProtectedComponent> */}
+          </div>
+        )}
+      </div>
+
+      <div className="unpaidPurchaseOrder-bill-container">
+        {unpaidPurchaseOrderData?.payBillImage?.length > 0 && (
+          <div className="carousel">
+            <div className="carousel-image-container">
+              <img
+                className="carousel-image"
+                src={
+                  unpaidPurchaseOrderData?.payBillImage[currentPhotoIndex]
+                    ?.secure_url
+                }
+                alt={`Bill ${currentPhotoIndex + 1}`}
+              />
+            </div>
+
+            <div className="carousel-controls">
+              <button
+                className="carousel-button"
+                onClick={handlePrevious}
+                disabled={currentPhotoIndex === 0}
+              >
+                <Preview />
+              </button>
+
+              <button
+                className='carousel-button'
+                onClick={handleNext}
+                disabled={currentPhotoIndex === unpaidPurchaseOrderData?.payBillImage?.length - 1}
+              ><Next />
+              </button>
+
+            </div>
+
+          </div>
+        )}
+      </div>
+
+
+
+
+
+      {/* <ProtectedComponent> */}
+      {(!unpaidPurchaseOrderData?.isPaid) &&
+
+        <ApprovePurchaseOrderForm
+          billAmount={unpaidPurchaseOrderData?.billAmount}
+          poId={unpaidPurchaseOrderData?._id}
+        />
+      }
+      {/* </ ProtectedComponent> */}
 
       <h3 className="unpaidPurchaseOrder-text">Items</h3>
       <div className="unpaidPurchaseOrder-items-table-container">

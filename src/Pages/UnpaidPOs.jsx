@@ -5,38 +5,55 @@ import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { useHistory } from 'react-router-dom';
 import { WhatsappShareButton, WhatsappIcon } from 'react-share';
+import { LoadingOverlay } from '@mantine/core';
 const UnpaidPOs = () => {
   const history = useHistory();
-
+  const [Loading, setLoading] = useState(false);
   const [unpaidStatusList, setUnpaidStatusList] = useState([]);
   const query = { isApproved: false, isDraft: false };
   const baseUrl = process.env.REACT_APP_FRONTEND_BASE_URL;
+
   const getOrders = async () => {
     try {
+      setLoading(true)
       const response = await genericAxios({
         method: API_METHODS.POST,
-        url: '/api/purchaseOrder/getPurchaseOrderByPaidStatus',
+        url: '/api/purchaseOrder/getOrdersByQuery/',
         data: {
           isPaid: false,
         },
       });
 
       const result = response.data;
-      setUnpaidStatusList(result);
+      setUnpaidStatusList(result.orders);
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false)
     }
   };
 
   useEffect(() => {
     getOrders();
   }, []);
+
+  useEffect(() => {
+    console.log(unpaidStatusList);
+  }, [unpaidStatusList])
   const handleOnClickOfSharePurchaseOrder = async ({ event, paidStatus }) => {
     event.stopPropagation();
     event.preventDefault();
   };
   return (
+
+   
+
     <div className="unpaidPOs-container">
+       <LoadingOverlay
+       className="purchase-loader"
+       visible={Loading}
+       overlayBlur={1}
+     />
       <h1>Unpaid POs</h1>
       <table className="unpaidPOs-table">
         <thead className="unpaidPOs-table-thead">
@@ -54,7 +71,58 @@ const UnpaidPOs = () => {
           </tr>
         </thead>
         <tbody className="unpaidPOs-table-tbody">
-          {unpaidStatusList?.map((paidStatus, index) => (
+          {unpaidStatusList.map((unpaidStatus, index) => (
+            <tr
+            className={
+              index % 2 === 0
+                ? 'unpaidPOs-table-tbody-tr-even'
+                : 'unpaidPOs-table-tbody-tr-odd'
+            }
+              key={index}
+              onClick={() => {
+                history.push(`/purchaseOrderBill/${unpaidStatus._id}`);
+              }}
+              >
+                <td className="unpaidPOs-table-tbody-tr-td" >{index+1}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.dealerName}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.phoneNumber}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.payment}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.billAmount}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.totalPaidAmount}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.procurementSource}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" >{new Date(unpaidStatus?.createdAt).toLocaleDateString('en-US')}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" >{unpaidStatus?.remark ? unpaidStatus?.remark : '...'}</td>
+                <td className="unpaidPOs-table-tbody-tr-td" id="td-button">
+                <div className=".unpaidPOs-table-tbody-tr-td-div">
+                  <p>{unpaidStatus?.isPaid ? 'Paid' : 'Unpaid'}</p>
+                  <button
+                    className=".unpaidPOs-table-tbody-tr-td-cover-button"
+                    onClick={(e) =>
+                      handleOnClickOfSharePurchaseOrder({
+                        event: e,
+                        unpaidStatus,
+                      })
+                    }
+                  >
+                    <WhatsappShareButton
+                      url={`\n${baseUrl}/purchaseOrderBill/${
+                        unpaidStatus?._id
+                      }\n${
+                        unpaidStatus?.billPhotos[0]?.secure_url
+                          ? `Pay purchase Order Bill:- \n${unpaidStatus.billPhotos[0].secure_url}`
+                          : ''
+                      }`}
+                      title={'Pay purchase Order Bill:- '}
+                    >
+                      <WhatsappIcon size={32} round />
+                    </WhatsappShareButton>
+                  </button>
+                </div>
+              </td>
+           
+            </tr>
+          ))}
+          {/* {unpaidStatusList.orders.map((paidStatus, index) => (
             <tr
               className={
                 index % 2 === 0
@@ -120,7 +188,7 @@ const UnpaidPOs = () => {
                 </div>
               </td>
             </tr>
-          ))}
+          ))} */}
         </tbody>
       </table>
     </div>
