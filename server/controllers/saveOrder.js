@@ -1,6 +1,6 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 
-const saveOrder = async (req, res, next) => {
+const saveOrder = async (req, res ) => {
   try {
     const { new_order } = req.body;
     const purchaseOrder = await PurchaseOrder.create({
@@ -12,7 +12,7 @@ const saveOrder = async (req, res, next) => {
       order: purchaseOrder,
     });
   } catch (error) {
-    next(error)
+    res.status(500).send({message: 'failed to creating order', error: error});
   }
 };
 
