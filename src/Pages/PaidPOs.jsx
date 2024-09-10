@@ -37,10 +37,6 @@ const PaidPOs = () => {
     getOrders()
   }, [])
 
-  useEffect(() => {
-    console.log(paidStatusList);
-  })
-
   return (
     <div className='paidPOs-container'>
        <LoadingOverlay

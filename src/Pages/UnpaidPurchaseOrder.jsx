@@ -35,11 +35,6 @@ const UnpaidPurchaseOrder = () => {
     getPurchaseOrderdetails(id);
   }, [id]);
 
-  useEffect(() => {
-    console.log(unpaidPurchaseOrderData);
-
-  }, [unpaidPurchaseOrderData])
-
   const handlePrevious = () => {
     if (currentPhotoIndex > 0) {
       setCurrentPhotoIndex(currentPhotoIndex - 1);
@@ -124,8 +119,6 @@ const UnpaidPurchaseOrder = () => {
           </WhatsappShareButton>
         </button>
       </div>
-{/* <ImageCarousel/> */}
-{/* <img src={unpaidPurchaseOrderData?.payBillImage[0]?.secure_url} alt="" /> */}
 
       <div className="unpaidPurchaseOrder-bill-container">
         {unpaidPurchaseOrderData?.billPhotos?.length > 0 && (
@@ -192,17 +185,10 @@ const UnpaidPurchaseOrder = () => {
                 disabled={currentPhotoIndex === unpaidPurchaseOrderData?.payBillImage?.length - 1}
               ><Next />
               </button>
-
             </div>
-
           </div>
         )}
       </div>
-
-
-
-
-
       {/* <ProtectedComponent> */}
       {(!unpaidPurchaseOrderData?.isPaid) &&
 

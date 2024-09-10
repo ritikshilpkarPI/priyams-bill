@@ -37,9 +37,6 @@ const UnpaidPOs = () => {
     getOrders();
   }, []);
 
-  useEffect(() => {
-    console.log(unpaidStatusList);
-  }, [unpaidStatusList])
   const handleOnClickOfSharePurchaseOrder = async ({ event, paidStatus }) => {
     event.stopPropagation();
     event.preventDefault();

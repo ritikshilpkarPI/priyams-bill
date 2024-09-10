@@ -24,20 +24,17 @@ const ImageCarousel = ({ imageList, setImageList }) => {
             const updatedImageList = imageList.filter((_, index) => index !== currentPhotoIndex);
             setImageList(updatedImageList);
 
-            // Adjust the currentPhotoIndex after deletion
             if (currentPhotoIndex >= updatedImageList.length && updatedImageList.length > 0) {
                 setCurrentPhotoIndex(updatedImageList.length - 1);
             } else if (updatedImageList.length === 0) {
-                setCurrentPhotoIndex(0); // Reset index when no images are left
+                setCurrentPhotoIndex(0);
             }
         }
     };
 
     return (
         <div className='image-carousel-container'>
-        {imageList.length ?(
-
-        
+            {imageList.length ? (
                 <div className='carousel'>
                     <div className='carousel-image-container'>
                         <img
@@ -72,13 +69,12 @@ const ImageCarousel = ({ imageList, setImageList }) => {
                             className='carousel-delete-button'
                             onClick={handleDelete}
                         >
-                            <Delete/>
+                            <Delete />
                         </button>
                     </div>
-                </div>):''
-            
-        }
-                </div>
+                </div>) : ''
+            }
+        </div>
     );
 };
 
