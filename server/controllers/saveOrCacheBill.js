@@ -19,7 +19,7 @@ const saveOrCacheBill = async (req, res) => {
     cashPay,
     upiPay,
     amountReturn,
-    billId = uuidv4() + '/' + Date.now(),
+    billId =  `${uuidv4()}-${Date.now()}`,
   } = req.body;
   const newBillData = {
     customerName,
@@ -36,6 +36,12 @@ const saveOrCacheBill = async (req, res) => {
   try {
     const maxAttemptToSaveInDB = 3;
     setToBillsCache(billId, newBillData);
+    const duplicateBill = await Bill.findOne({slug: billId});
+    if(duplicateBill){
+      isBillSaved = true;
+      res.status(409).json({ message: "This bill already exist with same slug" });
+      return ;
+    }
     isBillSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
   } catch (error) {
     console.log(error);
@@ -152,6 +158,7 @@ const saveBill = async (
         customerName,
         customerPhone,
         items: allItems,
+        slug: billId,
         billMRPTotal,
         billAmountTotal,
         billDiscountTotal,
