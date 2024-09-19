@@ -4,26 +4,32 @@ import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import "../CSS/paidPOs.css"
 import { useHistory } from 'react-router-dom';
+import { LoadingOverlay } from '@mantine/core';
 const PaidPOs = () => {
+  const [Loading, setLoading] = useState(false);
   const [paidStatusList, setPaidStatusList] = useState([]);
   const query = { isApproved: false, isDraft: false };
   const history = useHistory();
 
   const getOrders = async () => {
     try {
+      setLoading(true)
       const response = await genericAxios({
         method: API_METHODS.POST,
-        url: "/api/purchaseOrder/getPurchaseOrderByPaidStatus",
+        url: '/api/purchaseOrder/getOrdersByQuery/',
         data: {
           isPaid: true
         },
       })
 
       const result = response.data;
-      setPaidStatusList(result);
+      setPaidStatusList(result.orders);
 
     } catch (error) {
       console.log(error);
+    }
+    finally{
+      setLoading(false)
     }
   };
 
@@ -33,6 +39,11 @@ const PaidPOs = () => {
 
   return (
     <div className='paidPOs-container'>
+       <LoadingOverlay
+       className="purchase-loader"
+       visible={Loading}
+       overlayBlur={1}
+     />
       <h1>Paid POs</h1>
       <table className='paidPOs-table'>
         <thead className='paidPOs-table-thead'>
@@ -52,10 +63,10 @@ const PaidPOs = () => {
         <tbody className='paidPOs-table-tbody'
         >
           {paidStatusList?.map((paidStatus, index) => (
+            (paidStatus?.isPaid) &&
             <tr className='paidPOs-table-tbody-tr' key={index}
-        onClick={()=>history.push(`/purchaseOrderBill/${paidStatus._id}`)
-        }
-            
+              onClick={() => history.push(`/purchaseOrderBill/${paidStatus._id}`)
+              }
             >
               <td className='paidPOs-table-tbody-tr-td'>{index + 1}</td>
               <td className='paidPOs-table-tbody-tr-td'>{paidStatus?.dealerName}</td>
