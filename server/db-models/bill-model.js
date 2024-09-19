@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 const BillSchema = new mongoose.Schema(
   {
     customerName: { type: String },
+    slug: { type: String },
     customerPhone: { type: Number },
     billMRPTotal: { type: Number },
     billAmountTotal: { type: Number },

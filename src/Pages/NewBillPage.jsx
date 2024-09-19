@@ -174,7 +174,7 @@ const NewBillPage = ({ billID = '' }) => {
     BILL_INITIAL_STATE,
     billID
   ) {
-    const newBillId = uuidv4();
+    const newBillId = `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
     let updateBill = {
       ...bill,
