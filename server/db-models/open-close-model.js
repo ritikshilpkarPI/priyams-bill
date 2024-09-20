@@ -31,6 +31,7 @@ const OpenCloseSchema = new mongoose.Schema(
       one: { type: Number },
     },
     createdAt: { type: Date, default: Date.now },
+    upiSum: { type: Number, default: 0 },
   },
   {
     timestamps: true,
