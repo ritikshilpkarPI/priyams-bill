@@ -90,6 +90,13 @@ const getDayWiseProcedures = async (req, res, next) => {
             },
           },
           date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          closingUpiSum: {
+            $cond: {
+              if: { $eq: ['$procedure', 'open'] },
+              then: 0,
+              else: '$upiSum',
+            },
+          },
         },
       },
       {
@@ -107,6 +114,7 @@ const getDayWiseProcedures = async (req, res, next) => {
           closingNotesSum: { $max: '$closingNotesSum' },
           closingTime: { $max: '$closingTime' },
           closingSum: { $max: '$closingSum' },
+          closingUpiSum: { $max: '$closingUpiSum' },
         },
       },
     ])

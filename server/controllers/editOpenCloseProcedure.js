@@ -5,7 +5,9 @@ const editOpenCloseProcedure = async (req, res,next) => {
       const { id, procedureToBeUpdated } = req.body;
       const changeOpenCloseProcedure = await OpenClose.findByIdAndUpdate(
         id,
-        procedureToBeUpdated,
+        {
+          $set: { ...procedureToBeUpdated }
+        },
         {
           new: true,
         }
