@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const SentMessageToDiscord = async (message) => {
   try {
-    const webhook_url = "https://discord.com/api/webhooks/1286637818013155328/PYgwWXMHhxxs4dr9l0ZuxaV64YWWBpXFXHxsmrabGZgWOBgGLX2WIZRP21bJpWP1ZKVv";
+    const webhook_url = process.env.DISCORD_WEB_HOOK_URL;
     
     if (!webhook_url) {
       throw new Error("Discord Webhook URL is missing!");
