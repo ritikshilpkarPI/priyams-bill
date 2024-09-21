@@ -7,6 +7,7 @@ const {
   setToBillsCache,
   deleteBillFromBillCacheById,
 } = require('../cache/billCacheConfig');
+const { SentMessageToDiscord } = require('../util');
 
 const saveOrCacheBill = async (req, res) => {
   const {
@@ -44,6 +45,8 @@ const saveOrCacheBill = async (req, res) => {
     }
     isBillSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
   } catch (error) {
+    
+    SentMessageToDiscord(JSON.stringify(error))
     console.log(error);
   } finally {
     if (isBillSaved) {
@@ -129,7 +132,9 @@ const saveBill = async (
                 );
                 await item.save();
               }
-            } catch (error) {}
+            } catch (error) {
+              SentMessageToDiscord(JSON.stringify(error))
+            }
           }
           if (!item) {
             throw new Error('item not exists');
@@ -187,6 +192,7 @@ const saveBillToUnsavedBills = async (data) => {
     await UnSavedBill.create({ data });
     return true;
   } catch (error) {
+    SentMessageToDiscord(JSON.stringify(error))
     return false;
   }
 };
