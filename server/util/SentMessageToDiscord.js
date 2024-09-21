@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const discordSentMessage = async (message) => {
+export const SentMessageToDiscord = async (message) => {
   try {
     const webhook_url = "https://discord.com/api/webhooks/1286637818013155328/PYgwWXMHhxxs4dr9l0ZuxaV64YWWBpXFXHxsmrabGZgWOBgGLX2WIZRP21bJpWP1ZKVv";
     
