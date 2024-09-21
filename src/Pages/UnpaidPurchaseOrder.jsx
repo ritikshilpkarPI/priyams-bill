@@ -13,7 +13,7 @@ const UnpaidPurchaseOrder = () => {
   const [unpaidPurchaseOrderData, setUnpaidPurchaseOrderData] = useState();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const { id } = useParams();
-  const baseUrl = process.env.REACT_APP_FRONTEND_BASE_URL;
+  const baseUrl = "https://priyams.netlify.app";
   const getPurchaseOrderdetails = async (poId) => {
     try {
       const response = await genericAxios({

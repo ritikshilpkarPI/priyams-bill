@@ -11,7 +11,7 @@ const UnpaidPOs = () => {
   const [Loading, setLoading] = useState(false);
   const [unpaidStatusList, setUnpaidStatusList] = useState([]);
   const query = { isApproved: false, isDraft: false };
-  const baseUrl = process.env.REACT_APP_FRONTEND_BASE_URL;
+  const baseUrl = "https://priyams.netlify.app";
 
   const getOrders = async () => {
     try {
@@ -20,7 +20,9 @@ const UnpaidPOs = () => {
         method: API_METHODS.POST,
         url: '/api/purchaseOrder/getOrdersByQuery/',
         data: {
-          isPaid: false,
+          query:{
+            isApproved: true,
+          }
         },
       });
 
@@ -69,7 +71,6 @@ const UnpaidPOs = () => {
         </thead>
         <tbody className="unpaidPOs-table-tbody">
           {unpaidStatusList.map((unpaidStatus, index) => (
-            (unpaidStatus?.isDraft) && (unpaidStatus?.isApproved) && (unpaidStatus?.isPaid) &&
             <tr
               className={
                 index % 2 === 0
