@@ -94,8 +94,8 @@ export const API_PATHS = {
      URL: "/api/purchaseOrder/getProductImage"
   }
   ,
-  EXPIRED_PRODUCT:{
-    ADD_EXPIRED_PRODUCT: "/api/addexpiredItem",
-    GET_EXPIRED_PRODUCTS: "/api/getExpiredItems"
+  EXPIRED_ITEM:{
+    ADD_EXPIRED_ITEM: "/api/addexpiredItem",
+    GET_EXPIRED_ITEMS: "/api/getExpiredItems"
  }
 };

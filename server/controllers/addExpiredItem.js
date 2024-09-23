@@ -1,13 +1,13 @@
 const { ExpiredItem } = require('../db-models/expired-item');
 
-const addExpiredItems = async (req, res, next) => {
+const addExpiredItem = async (req, res, next) => {
 
     const {
         itemId,
         expireDate,
         isExpired,
-        isDamage,
-        itemCount
+        isDamaged,
+        totalItems
     } = req.body;
 
     try {
@@ -15,15 +15,14 @@ const addExpiredItems = async (req, res, next) => {
             itemId,
             expireDate,
             isExpired,
-            isDamage,
-            itemCount
+            isDamaged,
+            totalItems
         }).save();
-        res.status(200).json({ status: true, message: 'expired product added', newExpiredItems });
+        res.status(200).json({ status: true, message: 'expired items added', newExpiredItems });
     } catch (error) {
         console.log({ error });
-
-        res.status(500).json({ status: false, message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
 
-module.exports = addExpiredItems;
+module.exports = addExpiredItem;

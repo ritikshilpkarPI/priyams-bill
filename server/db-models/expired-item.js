@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 
 const ExpiredItemSchema = new mongoose.Schema({
-  itemId: { type: mongoose.Schema.Types.ObjectId, required: true }, 
+  itemId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Item',
+    required: true 
+  }, 
   expireDate: { type: Date },
   isExpired: { type: Boolean },
-  isDamage: { type: Boolean },
-  itemCount: { type: Number }
-});
+  isDamaged: { type: Boolean },
+  totalItems: { type: Number }
+}, { timestamps: true }); 
 
-const ExpiredItem = mongoose.model('ExpiredProduct', ExpiredItemSchema);
+const ExpiredItem = mongoose.model('expiredItems', ExpiredItemSchema);
 module.exports = { ExpiredItem };

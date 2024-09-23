@@ -291,7 +291,7 @@ router.post(
   isLoggedIn,
   getPurchaseOrderByPaidStatus
 );
-router.post('/api/purchaseOrder/getPurchaseOrderById', (req, res) => res.status(200).send("hello"));
+router.post('/api/purchaseOrder/getPurchaseOrderById', isLoggedIn, getPurchaseOrderById);
 router.post(
   '/api/purchaseOrder/payPurchaseOrderBill',
   isLoggedIn,
@@ -299,7 +299,7 @@ router.post(
   // isLoggedIn,
   payPurchaseOrderBill
 );
-router.post(API_PATHS.EXPIRED_PRODUCT.ADD_EXPIRED_PRODUCT,addExpiredItem)
-router.get(API_PATHS.EXPIRED_PRODUCT.GET_EXPIRED_PRODUCTS,getExpiredItems)
+router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,addExpiredItem)
+router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,getExpiredItems)
 
 module.exports = router;
