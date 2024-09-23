@@ -5,6 +5,7 @@ import AppFunction from './functions/AppFunction';
 import StoreRoutes from './components/StoreRoutes';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
+import { API_PATHS } from './utils/constants/apiPaths';
 
 function App({ history, location }) {
   
@@ -60,6 +61,17 @@ function App({ history, location }) {
   } = AppFunction(history, location);
 
   const devBg = process.env.NODE_ENV !== 'production' ? 'indianred' : 'none';
+
+  useEffect(()=>{
+    (async()=>{
+      const res = await fetch(API_PATHS.PURCHASE_ORDER.EXPIRED_ITEM,{
+        method: "POST"
+      })
+
+      const data = await res.json();
+console.log({data})
+    })()
+  },[])
   return (
     <div className="App" style={{ backgroundColor: devBg }}>
       {staffUserName && (
