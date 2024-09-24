@@ -62,16 +62,6 @@ function App({ history, location }) {
 
   const devBg = process.env.NODE_ENV !== 'production' ? 'indianred' : 'none';
 
-  useEffect(()=>{
-    (async()=>{
-      const res = await fetch(API_PATHS.PURCHASE_ORDER.EXPIRED_ITEM,{
-        method: "POST"
-      })
-
-      const data = await res.json();
-console.log({data})
-    })()
-  },[])
   return (
     <div className="App" style={{ backgroundColor: devBg }}>
       {staffUserName && (
