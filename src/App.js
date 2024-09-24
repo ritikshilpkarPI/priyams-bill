@@ -5,7 +5,6 @@ import AppFunction from './functions/AppFunction';
 import StoreRoutes from './components/StoreRoutes';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
-import { API_PATHS } from './utils/constants/apiPaths';
 
 function App({ history, location }) {
   
