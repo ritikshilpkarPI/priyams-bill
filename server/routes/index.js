@@ -69,7 +69,9 @@ const {
   uploadImageCloudinary,
   getPurchaseOrderByPaidStatus,
   getPurchaseOrderById,
-  payPurchaseOrderBill
+  payPurchaseOrderBill,
+  addExpiredItem,
+  getExpiredItems
 } = require('../controllers/index');
 
 // online order apis
@@ -297,5 +299,7 @@ router.post(
   // isLoggedIn,
   payPurchaseOrderBill
 );
+router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)
+router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,isLoggedIn,getExpiredItems)
 
 module.exports = router;

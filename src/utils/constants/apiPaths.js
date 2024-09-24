@@ -11,6 +11,7 @@ export const API_PATHS = {
     POST_UPDATE_ORDER_BY_INDEX: '/api/purchaseOrder/updateOrderByIndex',
     POST_DELETE_ITEM: '/api/purchaseOrder/deleteItem',
     GET_ORDERS: '/api/purchaseOrder/orders',
+    EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
   },
   ATTENDANCE: {
     GET_MONTHLY_ATTENDANCE: '/api/attendance/monthlyAttendance',
@@ -92,4 +93,9 @@ export const API_PATHS = {
   GOOGLE_IMAGE:{
      URL: "/api/purchaseOrder/getProductImage"
   }
+  ,
+  EXPIRED_ITEM:{
+    ADD_EXPIRED_ITEM: "/api/addexpiredItem",
+    GET_EXPIRED_ITEMS: "/api/getExpiredItems"
+ }
 };
