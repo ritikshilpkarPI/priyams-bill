@@ -299,7 +299,7 @@ router.post(
   // isLoggedIn,
   payPurchaseOrderBill
 );
-router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,addExpiredItem)
-router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,getExpiredItems)
+router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)
+router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,isLoggedIn,getExpiredItems)
 
 module.exports = router;
