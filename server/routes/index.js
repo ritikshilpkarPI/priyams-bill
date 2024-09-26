@@ -70,6 +70,8 @@ const {
   getPurchaseOrderByPaidStatus,
   getPurchaseOrderById,
   payPurchaseOrderBill,
+  addExpiredItem,
+  getExpiredItems,
   addNewReturnBill,
 } = require('../controllers/index');
 
@@ -299,5 +301,7 @@ router.post(
   // isLoggedIn,
   payPurchaseOrderBill
 );
+router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)
+router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,isLoggedIn,getExpiredItems)
 
 module.exports = router;
