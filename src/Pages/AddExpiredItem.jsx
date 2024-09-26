@@ -4,7 +4,6 @@ import { LoadingOverlay } from '@mantine/core';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
-const axios = require('axios');
 
 const AddExpiredItem = () => {
     const [nameInput, setNameInput] = useState('');
@@ -12,18 +11,18 @@ const AddExpiredItem = () => {
     const [itemsList, setItemsList] = useState([]);
     const [fliterItemsList, setFliterItemsList] = useState([]);
 
-    const [formData,setFormData] = useState({
+    const defaultFormData = {
         itemId:'',
         expireDate:'',
         isExpired:false,
         isDamaged:false,
         totalItems:''
-    }) 
-
+    }
+    const [formData,setFormData] = useState(defaultFormData)
     const [itemName, setItemName] = useState('')
     const [itemBarcode, setItemBarcode] = useState('')
     const [itemStockQuantity, setItemStockQuantity] = useState('')
-    const [Loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [isEnable, setIsEnable] = useState(false)
     const getItemList = async () => {
         try {
@@ -83,13 +82,7 @@ const AddExpiredItem = () => {
             if (response.status === 200) {
                 alert('Expired item added successfully:');
                 console.log('Expired item added successfully:', response.data);
-                setFormData({
-                    itemId: '',
-                    expireDate: '',
-                    isExpired: false,
-                    isDamaged: false,
-                    totalItems: ''
-                });
+                setFormData(defaultFormData);
                 setItemName('');
                 setItemBarcode('');
             } else {
@@ -124,7 +117,7 @@ const AddExpiredItem = () => {
         <div className='add-expired-item-component' >
             <LoadingOverlay
                 className="purchase-loader"
-                visible={Loading}
+                visible={loading}
                 overlayBlur={1}
             />
             <h4 className='add-expired-item-head-line'>Add Expired Item</h4>
@@ -181,14 +174,6 @@ const AddExpiredItem = () => {
                     <form className='add-expired-item-form' action="">
                         <p className='add-expired-item-p'>Item Name: <span className='add-expired-item-p-span'>{itemName}</span></p>
                         <p className='add-expired-item-p'>Item Barcode: <span className='add-expired-item-p-span'>{itemBarcode}</span></p>
-                        {/* <label className='add-expired-item-label' htmlFor="">Item ID</label>
-                        <input
-                            className='add-expired-item-input'
-                            type="text"
-                            placeholder='enter item id'
-                            value={formData.itemId}
-                            required
-                        /> */}
                         <label className='add-expired-item-label' htmlFor="">Expire Date</label>
                         <input
                             className='add-expired-item-input'
