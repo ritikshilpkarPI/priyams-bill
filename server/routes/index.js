@@ -69,7 +69,8 @@ const {
   uploadImageCloudinary,
   getPurchaseOrderByPaidStatus,
   getPurchaseOrderById,
-  payPurchaseOrderBill
+  payPurchaseOrderBill,
+  addNewReturnBill,
 } = require('../controllers/index');
 
 // online order apis
@@ -202,6 +203,7 @@ router.post(API_PATHS.BILLING.POST_SEND_MESSAGE, isLoggedIn, sendMessage);
 router.post(API_PATHS.BILLING.POST_NEW_BILL, isLoggedIn, addNewBill);
 router.delete(API_PATHS.BILLING.DELETE_BILL, isLoggedIn, deleteBill);
 router.post(API_PATHS.BILLING.SAVE_OR_CACHE_BILL, isLoggedIn, saveOrCacheBill);
+router.post(API_PATHS.BILLING.POST_RETURN_BILLS, isLoggedIn, addNewReturnBill);
 router.get(API_PATHS.BILLING.GET_UNSAVED_BILLS, isLoggedIn, getUnSavedBills);
 
 //attendance APIs

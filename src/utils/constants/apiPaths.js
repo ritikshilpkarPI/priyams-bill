@@ -31,6 +31,7 @@ export const API_PATHS = {
     GET_CUSTOMER_BILL: '/api/billing/getCustomerBill',
     SAVE_OR_CACHE_BILL: '/api/billing/saveOrCacheBill',
     GET_UNSAVED_BILLS: '/api/billing/unSavedBills',
+    POST_RETURN_BILLS: '/api/billing/returnBill',
   },
   INVENTORY: {
     POST_ADD_NEW_ITEM: '/api/inventory/addNewItem',

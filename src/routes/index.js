@@ -19,5 +19,6 @@ export const routes = {
   paidPOs:"./paidPOs",
   unpaidPOs:"./unpaidPOs",
   unpaidPurchaseOrder:"./unpaidPurchaseOrder",
-  payPurchaseOrderBill:"/payPurchaseOrderBill"
+  payPurchaseOrderBill:"/payPurchaseOrderBill",
+  returnAndExchange: "/returnAndExchange"
 };
