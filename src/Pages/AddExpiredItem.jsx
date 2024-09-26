@@ -80,8 +80,6 @@ const AddExpiredItem = () => {
                 data: formData,
             })
 
-            // const response = await axios.post("http://localhost:3000/api/addExpiredItem", formData);
-
             if (response.status === 200) {
                 alert('Expired item added successfully:');
                 console.log('Expired item added successfully:', response.data);
