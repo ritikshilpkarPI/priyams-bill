@@ -29,7 +29,8 @@ import {
   PaidPOs,
   UnpaidPOs,
   UnpaidPurchaseOrder,
-  PayPurchaseOrderBill
+  PayPurchaseOrderBill,
+  AddExpiredItem,
 } from '../Pages';
 import Label from 'src/Pages/Label';
 import { Fragment } from 'react';
@@ -46,6 +47,7 @@ const StoreRoutes = () => {
           path="/showBill/:customerBillId"
           component={CustomerBill}
         />
+          <Route exact path="/addExpiredItem" component={AddExpiredItem} />
         <Fragment>
           <ProtectedRoutes>
             <Route path="/billing" exact component={NewBillingPage} />
