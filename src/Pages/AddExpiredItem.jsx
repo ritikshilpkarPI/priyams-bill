@@ -1,6 +1,9 @@
 import '../CSS/addExpiredItem.scss';
 import React, { useEffect, useState } from 'react';
 import { LoadingOverlay } from '@mantine/core';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 const axios = require('axios');
 
 const AddExpiredItem = () => {
@@ -8,11 +11,15 @@ const AddExpiredItem = () => {
     const [barcodeInput, setBarcodeInput] = useState('');
     const [itemsList, setItemsList] = useState([]);
     const [fliterItemsList, setFliterItemsList] = useState([]);
-    const [itemID, setItemID] = useState('')
-    const [expireDate, setExpireDate] = useState('')
-    const [isExpired, setIsExpired] = useState(false)
-    const [isDamaged, setIsDamaged] = useState(false)
-    const [totalItems, setTotalItems] = useState('')
+
+    const [formData,setFormData] = useState({
+        itemId:'',
+        expireDate:'',
+        isExpired:false,
+        isDamaged:false,
+        totalItems:''
+    }) 
+
     const [itemName, setItemName] = useState('')
     const [itemBarcode, setItemBarcode] = useState('')
     const [itemStockQuantity, setItemStockQuantity] = useState('')
@@ -21,7 +28,10 @@ const AddExpiredItem = () => {
     const getItemList = async () => {
         try {
             setLoading(true)
-            const response = await axios.get('http://localhost:3000/api/inventory/getItemsLeanForBilling');
+            const response = await genericAxios({
+                url:API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+                method:API_METHODS.GET
+            })
             if (response) {
                 const items = response.data;
                 setItemsList(Object.values(items.message.itemsNameMap));
@@ -52,36 +62,38 @@ const AddExpiredItem = () => {
     };
 
     const itemIdHandler = (item) => {
-        setItemID(item._id)
-        setItemName(item.itemName)
-        setItemBarcode(item.itemBarcode)
-        setNameInput('')
-        setBarcodeInput('')
-        setItemStockQuantity(item.itemStockQuantity)
-    }
+        setFormData({ ...formData, itemId: item._id });
+        setItemName(item.itemName);
+        setItemBarcode(item.itemBarcode);
+        setNameInput('');
+        setBarcodeInput('');
+        setItemStockQuantity(item.itemStockQuantity);
+    };
     const submitHandler = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const data = {
-            itemId: itemID,
-            expireDate: expireDate,
-            isExpired: isExpired,
-            isDamaged: isDamaged,
-            totalItems: totalItems,
-        };
+        
         try {
-            const response = await axios.post("http://localhost:3000/api/addExpiredItem", data);
+            const response = await genericAxios({
+                url: API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,
+                method: API_METHODS.POST,
+                data: formData,
+            })
+
+            // const response = await axios.post("http://localhost:3000/api/addExpiredItem", formData);
 
             if (response.status === 200) {
                 alert('Expired item added successfully:');
                 console.log('Expired item added successfully:', response.data);
-                setItemID('');
+                setFormData({
+                    itemId: '',
+                    expireDate: '',
+                    isExpired: false,
+                    isDamaged: false,
+                    totalItems: ''
+                });
                 setItemName('');
                 setItemBarcode('');
-                setExpireDate('');
-                setIsExpired(false);
-                setIsDamaged(false);
-                setTotalItems('');
             } else {
                 alert('Failed to add expired item:');
                 console.log('Failed to add expired item:', response.status);
@@ -107,8 +119,8 @@ const AddExpiredItem = () => {
     }, [barcodeInput]);
 
     useEffect(() => {
-        setIsEnable((isDamaged || isExpired) && itemID && expireDate && totalItems);
-    }, [isDamaged, isExpired, itemID, expireDate, totalItems]);
+        setIsEnable((formData.isDamaged || formData.isExpired) && formData.itemId && formData.expireDate && formData.totalItems);
+    }, [formData]);
 
     return (
         <div className='add-expired-item-component' >
@@ -171,20 +183,20 @@ const AddExpiredItem = () => {
                     <form className='add-expired-item-form' action="">
                         <p className='add-expired-item-p'>Item Name: <span className='add-expired-item-p-span'>{itemName}</span></p>
                         <p className='add-expired-item-p'>Item Barcode: <span className='add-expired-item-p-span'>{itemBarcode}</span></p>
-                        <label className='add-expired-item-label' htmlFor="">Item ID</label>
+                        {/* <label className='add-expired-item-label' htmlFor="">Item ID</label>
                         <input
                             className='add-expired-item-input'
                             type="text"
                             placeholder='enter item id'
-                            value={itemID}
+                            value={formData.itemId}
                             required
-                        />
+                        /> */}
                         <label className='add-expired-item-label' htmlFor="">Expire Date</label>
                         <input
                             className='add-expired-item-input'
                             type="date"
-                            value={expireDate}
-                            onChange={(e) => setExpireDate(e.target.value)}
+                            value={formData.expireDate}
+                            onChange={(e) => setFormData({ ...formData, expireDate: e.target.value })}
                             required
                         />
                         <div className='add-expired-item-radio-group'>
@@ -197,28 +209,20 @@ const AddExpiredItem = () => {
                                     type="radio"
                                     name="itemStatus"
                                     value="expired"
-                                    checked={isExpired === true}
-                                    onChange={() => {
-                                        setIsExpired(true);
-                                        setIsDamaged(false);
-                                    }}
+                                    checked={formData.isExpired}
+                                    onChange={() => setFormData({ ...formData, isExpired: true, isDamaged: false })}
                                     required
                                 />
                             </div>
                             <div className='add-expired-item-radio-container'>
-                                <label className='add-expired-item-label'>
-                                    Is Damaged
-                                </label>
+                                <label className='add-expired-item-label'>Is Damaged</label>
                                 <input
                                     className='add-expired-item-input-radio'
                                     type="radio"
                                     name="itemStatus"
                                     value="damaged"
-                                    checked={isDamaged === true}
-                                    onChange={() => {
-                                        setIsDamaged(true);
-                                        setIsExpired(false);
-                                    }}
+                                    checked={formData.isDamaged}
+                                    onChange={() => setFormData({ ...formData, isExpired: false, isDamaged: true })}
                                 />
                             </div>
                         </div>
@@ -227,11 +231,11 @@ const AddExpiredItem = () => {
                         <input
                             className='add-expired-item-input'
                             type="number"
-                            value={totalItems}
+                            value={formData.totalItems}
                             onChange={(e) => {
                                 const value = e.target.value;
                                 if (Number(value) <= Number(itemStockQuantity)) {
-                                    setTotalItems(value);
+                                    setFormData({ ...formData, totalItems: value });
                                 } else {
                                     alert(`You cannot enter more than ${itemStockQuantity} items.`);
                                 }
