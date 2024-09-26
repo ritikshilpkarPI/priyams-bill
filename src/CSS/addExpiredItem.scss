@@ -1,0 +1,142 @@
+.add-expired-item-component {
+    height: 100vh;
+
+    .add-expired-item-container {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        .add-expired-item-get-container {
+            width: 50%;
+
+            .add-expired-item-get {
+                padding: 10px;
+                display: flex;
+                align-items: start;
+                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
+
+                .add-expired-item-get-label {
+                    font-size: 20px;
+                }
+
+                .add-expired-item-get-input {
+                    height: 40px;
+                    width: 300px;
+                    padding: 0 10px;
+                }
+            }
+
+            .item-list-container {
+
+                max-height: 500px;
+                overflow-y: scroll;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .item-list-table {
+                    width: 100%;
+                    margin: 10px;
+                    border-collapse: collapse;
+
+                    .item-list-table-thead {
+                        .item-list-table-tr {
+                            .item-list-table-th {
+                                padding: 7px;
+                                border: 1px solid;
+                                font-size: 12px;
+                            }
+                        }
+                    }
+
+                    .item-list-table-tbody {
+                        .item-list-table-tr {
+                            cursor: pointer;
+
+                            .item-list-table-td {
+                                padding: 7px;
+                                border: 1px solid;
+                                font-size: 12px;
+                            }
+
+                            &:nth-child(odd) {
+                                background-color: #fff;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .add-expired-item-form-container {
+            padding: 15px;
+            border: 1px solid black;
+
+            .add-expired-item-form {
+                width: 50%;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                gap: 10px;
+                flex-direction: column;
+
+                .add-expired-item-p {
+                    font-size: 15px;
+                    font-weight: 500;
+
+                    .add-expired-item-p-span {
+                        font-size: 13px;
+                        font-weight: 100;
+                        flex-shrink: 0;
+
+                    }
+                }
+
+                .add-expired-item-label {
+                    font-size: 20px;
+                }
+
+                .add-expired-item-input {
+                    height: 40px;
+                    width: 300px;
+                    padding: 0 10px;
+                }
+
+                .add-expired-item-radio-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    .add-expired-item-radio-container {
+                        width: 200px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        .add-expired-item-input-radio {
+                            width: 12px;
+                            height: 12px;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                .add-expired-item-input-button {
+                    width: 300px;
+                    height: 40px;
+                    cursor: pointer;
+                    color: rgb(0, 68, 255);
+                }
+
+                .add-expired-item-input-button-disabled {
+                    width: 300px;
+                    height: 40px;
+                    cursor: no-drop;
+                }
+            }
+        }
+    }
+}
