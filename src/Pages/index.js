@@ -21,5 +21,6 @@ export const UnpaidPOs = lazy(()=>  import('./UnpaidPOs'));
 export const UnpaidPurchaseOrder = lazy(()=>  import('./UnpaidPurchaseOrder'));
 export const PayPurchaseOrderBill = lazy(()=> import('./PayPurchaseOrderBill'))
 export const AddExpiredItem = lazy(()=> import('./AddExpiredItem'))
+export const ExpiredItemList = lazy(()=> import('./ExpiredItemList'))
 
 

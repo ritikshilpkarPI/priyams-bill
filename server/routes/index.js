@@ -71,7 +71,7 @@ const {
   getPurchaseOrderById,
   payPurchaseOrderBill,
   addExpiredItem,
-  getExpiredItems
+  getExpiredItems,
 } = require('../controllers/index');
 
 // online order apis

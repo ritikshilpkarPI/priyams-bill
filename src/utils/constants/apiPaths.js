@@ -90,12 +90,11 @@ export const API_PATHS = {
   PSTORE_CART: {
     POST_ITEMS_DATA_TO_CART: '/api/cart'
   },
-  GOOGLE_IMAGE:{
-     URL: "/api/purchaseOrder/getProductImage"
-  }
-  ,
-  EXPIRED_ITEM:{
+  GOOGLE_IMAGE: {
+    URL: "/api/purchaseOrder/getProductImage"
+  },
+  EXPIRED_ITEM: {
     ADD_EXPIRED_ITEM: "/api/addexpiredItem",
     GET_EXPIRED_ITEMS: "/api/getExpiredItems"
- }
+  }
 };
