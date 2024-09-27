@@ -2,7 +2,8 @@ const { ExpiredItem } = require('../db-models/expired-item');
 
 const getExpiredItems = async (req, res, next) => {
     try {
-        const expiredItems = await ExpiredItem.find({});
+        const expiredItems = await ExpiredItem.find({}).populate('itemId', '_id itemName itemBarcode'); 
+
         res.status(200).send({ message: 'Got all expired items', expiredItems });
     } catch (error) {
         console.error('Error failed to get expired items:', error);
@@ -11,3 +12,4 @@ const getExpiredItems = async (req, res, next) => {
 };
 
 module.exports = getExpiredItems;
+

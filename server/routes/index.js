@@ -71,7 +71,7 @@ const {
   getPurchaseOrderById,
   payPurchaseOrderBill,
   addExpiredItem,
-  getExpiredItems
+  getExpiredItems,
 } = require('../controllers/index');
 
 // online order apis
@@ -300,6 +300,6 @@ router.post(
   payPurchaseOrderBill
 );
 router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)
-router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,isLoggedIn,getExpiredItems)
+router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,getExpiredItems)
 
 module.exports = router;
