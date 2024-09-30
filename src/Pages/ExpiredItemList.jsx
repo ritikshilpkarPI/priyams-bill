@@ -8,8 +8,7 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 const ExpiredItemList = () => {
     const [itemList, setItemList] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [skip, setSkip] = useState(0);
-    const [totalItems, setTotalItems] = useState(0); // State to hold total unique items
+    const [totalItems, setTotalItems] = useState(0); 
     const limit = 50;
     const tableHeads = [
         "S.No",
@@ -32,8 +31,8 @@ const ExpiredItemList = () => {
 
             if (response && response.data) {
                 const expiredItems = response.data.expiredItems;
-                const total = response.data.totalItems; // Get total unique items
-                setTotalItems(total); // Set total unique items
+                const total = response.data.totalItems; 
+                setTotalItems(total); 
 
                 console.log(`Total unique expired items: ${total}`);
 
@@ -54,21 +53,24 @@ const ExpiredItemList = () => {
     };
 
     useEffect(() => {
-        getExpiredItemList(skip, limit);
-    }, [skip]);
+        getExpiredItemList(0, limit); 
+    }, []);
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const currentPage = Math.floor(itemList.length / limit) + 1;
 
     const paginationHandlerNext = () => {
-        setSkip(skip + limit);
-    };
-
-    const paginationHandlerBack = () => {
-        if (skip > 0) {
-            setSkip(skip - limit);
+        if (currentPage < totalPages) {
+            getExpiredItemList(currentPage * limit, limit);
         }
     };
 
-    // Calculate total pages
-    const totalPages = Math.ceil(totalItems / limit);
+    const paginationHandlerBack = () => {
+        if (currentPage > 1) {
+            getExpiredItemList((currentPage - 2) * limit, limit);
+        }
+    };
 
     return (
         <div className="add-expired-item-list-component">
@@ -100,44 +102,37 @@ const ExpiredItemList = () => {
                 </tbody>
             </table>
 
-            {!itemList.length ?
-                (
-                    <div className='expired-item-list-not-found' >
-                        <p>No Expired Item</p>
+            {!itemList.length ? (
+                <div className='expired-item-list-not-found'>
+                    <p>No Expired Item</p>
+                </div>
+            ) : (
+                <div className='expired-item-list-navigation-bar'>
+                    <div className='expired-item-list-navigation-bar-side'>
+                        <p className='expired-item-list-navigation-bar-side-p'>Total Items: <span className='expired-item-list-navigation-bar-side-span'>{totalItems}</span></p>
                     </div>
-                )
-                : (
-                    <div className='expired-item-list-navigation-bar'>
-
-
-                        <div className='expired-item-list-navigation-bar-side'>
-                            <p className='expired-item-list-navigation-bar-side-p'>Total Items: <span className='expired-item-list-navigation-bar-side-span'>{totalItems}</span></p>
-                        </div>
-                        <div className="expired-item-list-navigation-button-container">
-                            <button
-                                className={(itemList.length < limit) ? "expired-item-list-navigation-button-disabled" : "expired-item-list-navigation-button"}
-                                onClick={paginationHandlerBack}
-                                disabled={skip === 0}
-                            >
-                                Back
-                            </button>
-                            <p className="expired-item-list-page-counter">
-                                Page {Math.floor(skip / limit) + 1} of {totalPages}
-                            </p>
-                            <button
-                                className={(itemList.length < limit) ? "expired-item-list-navigation-button-disabled" : "expired-item-list-navigation-button"}
-                                onClick={paginationHandlerNext}
-                                disabled={itemList.length < limit}
-                            >
-                                Next
-                            </button>
-                        </div>
-                        <div className='expired-item-list-navigation-bar-side'></div>
+                    <div className="expired-item-list-navigation-button-container">
+                        <button
+                            className="expired-item-list-navigation-button"
+                            onClick={paginationHandlerBack}
+                            disabled={currentPage === 1}
+                        >
+                            Back
+                        </button>
+                        <p className="expired-item-list-page-counter">
+                            Page {currentPage} of {totalPages}
+                        </p>
+                        <button
+                            className="expired-item-list-navigation-button"
+                            onClick={paginationHandlerNext}
+                            disabled={currentPage >= totalPages}
+                        >
+                            Next
+                        </button>
                     </div>
-                )
-            }
-
-
+                    <div className='expired-item-list-navigation-bar-side'></div>
+                </div>
+            )}
         </div>
     );
 };
