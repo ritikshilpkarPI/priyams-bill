@@ -60,13 +60,13 @@ const ExpiredItemList = () => {
 
     const currentPage = Math.floor(itemList.length / limit) + 1;
 
-    const paginationHandlerNext = () => {
+    const onNext = () => {
         if (currentPage < totalPages) {
             getExpiredItemList(currentPage * limit, limit);
         }
     };
 
-    const paginationHandlerBack = () => {
+    const onPreview = () => {
         if (currentPage > 1) {
             getExpiredItemList((currentPage - 2) * limit, limit);
         }
@@ -114,7 +114,7 @@ const ExpiredItemList = () => {
                     <div className="expired-item-list-navigation-button-container">
                         <button
                             className="expired-item-list-navigation-button"
-                            onClick={paginationHandlerBack}
+                            onClick={onPreview}
                             disabled={currentPage === 1}
                         >
                             Back
@@ -124,7 +124,7 @@ const ExpiredItemList = () => {
                         </p>
                         <button
                             className="expired-item-list-navigation-button"
-                            onClick={paginationHandlerNext}
+                            onClick={onNext}
                             disabled={currentPage >= totalPages}
                         >
                             Next
