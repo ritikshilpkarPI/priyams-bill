@@ -2,9 +2,23 @@ const { ExpiredItem } = require('../db-models/expired-item');
 
 const getExpiredItems = async (req, res) => {
     try {
-        const skip = parseInt(req.query.skip) || 0; 
-        const limit = parseInt(req.query.limit) || 50; 
+        const skip = parseInt(req.query.skip) || 0;
+        const limit = parseInt(req.query.limit) || 50;
 
+        const totalCount = await ExpiredItem.aggregate([
+            {
+                $group: {
+                    _id: "$itemId", 
+                }
+            },
+            {
+                $count: "uniqueItems" 
+            }
+        ]);
+
+        const totalItems = totalCount.length > 0 ? totalCount[0].uniqueItems : 0;
+        console.log(`Total unique expired items: ${totalItems}`);
+        
         const expiredItems = await ExpiredItem.find({})
             .populate('itemId', '_id itemName itemBarcode')
             .skip(skip)
@@ -20,9 +34,12 @@ const getExpiredItems = async (req, res) => {
             }
             return acc;
         }, {});
+
         const groupedExpiredItems = Object.values(groupedItems);
+        
         res.status(200).send({
             message: 'Got all expired items',
+            totalItems,
             expiredItems: groupedExpiredItems
         });
     } catch (error) {
@@ -33,4 +50,5 @@ const getExpiredItems = async (req, res) => {
         });
     }
 };
+
 module.exports = getExpiredItems;

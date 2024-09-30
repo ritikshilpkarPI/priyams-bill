@@ -35,28 +35,72 @@
         }
     }
 
-    .expired-item-list-navigation-button-container {
+    .expired-item-list-not-found{
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        p{
+            padding: 15px;
+            border-radius: 10px;
+            width: fit-content;            
+            background-color: rgb(255, 255, 255);
+        }
+    }
+
+    .expired-item-list-navigation-bar {
         margin-top: 20px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 10px;
+        justify-content: space-between;
 
-        .expired-item-list-navigation-button {
-            border-radius: 10px;
-            height: 30px;
-            width: 90px;
-            border: none;
-            outline: none;
-            background-color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+        .expired-item-list-navigation-bar-side {
+            width: 200px;
 
-        .expired-item-list-page-counter {
-            font-size: 20px;
-            font-weight: 600;
+            .expired-item-list-navigation-bar-side-p {
+                font-size: 16px;
+                font-weight: 600;
+
+                .expired-item-list-navigation-bar-side-span {
+                font-weight: 400;
+
+                }
+            }
+        }        
+
+        .expired-item-list-navigation-button-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            .expired-item-list-navigation-button {
+                border-radius: 10px;
+                height: 30px;
+                width: 90px;
+                border: none;
+                outline: none;
+                background-color: #fff;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+            .expired-item-list-navigation-button-disabled{
+                border-radius: 10px;
+                height: 30px;
+                width: 90px;
+                border: none;
+                outline: none;
+                background-color: #fff;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: no-drop;
+            }
+
+
+            .expired-item-list-page-counter {
+                font-size: 20px;
+                font-weight: 600;
+            }
         }
     }
 }
