@@ -68,6 +68,9 @@ const getPurchaseOrderById = require('./getPurchaseOrderById');
 const payPurchaseOrderBill = require('./payPurchaseOrderBill');
 const addExpiredItem = require('./addExpiredItem');
 const getExpiredItems = require('./getExpiredItems');
+const { addNewReturnBill } = require('./addNewReturnBill');
+const { getBillForReturnExchange } = require('./getBillForReturnExchange');
+
 module.exports = {
   getStaff,
   addBulkItems,
