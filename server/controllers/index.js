@@ -66,11 +66,8 @@ const uploadImageCloudinary = require("./uploadImageCloudinary")
 const getPurchaseOrderByPaidStatus = require('./getPurchaseOrderByPaidStatus');
 const getPurchaseOrderById = require('./getPurchaseOrderById');
 const payPurchaseOrderBill = require('./payPurchaseOrderBill');
-const addExpiredItem = require('./addExpiredItem')
-const getExpiredItems = require('./getExpiredItems')
-const { getBillForReturnExchange } = require('./getBillForReturnExchange');
-const { addNewReturnBill } = require('./addNewReturnBill');
-
+const addExpiredItem = require('./addExpiredItem');
+const getExpiredItems = require('./getExpiredItems');
 module.exports = {
   getStaff,
   addBulkItems,
@@ -143,5 +140,5 @@ module.exports = {
   addExpiredItem,
   getExpiredItems,
   addNewReturnBill,
-  getBillForReturnExchange
+  getBillForReturnExchange,
 };

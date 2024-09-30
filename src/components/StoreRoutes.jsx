@@ -31,6 +31,7 @@ import {
   UnpaidPurchaseOrder,
   PayPurchaseOrderBill,
   AddExpiredItem,
+  ExpiredItemList,
   ReturnAndExchange,
 } from '../Pages';
 import Label from 'src/Pages/Label';
@@ -49,6 +50,7 @@ const StoreRoutes = () => {
           component={CustomerBill}
         />
           <Route exact path="/addExpiredItem" component={AddExpiredItem} />
+          <Route exact path="/expiredItemList" component={ExpiredItemList} />
         <Fragment>
           <ProtectedRoutes>
             <Route path="/billing" exact component={NewBillingPage} />

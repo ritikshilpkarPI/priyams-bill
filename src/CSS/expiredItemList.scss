@@ -1,0 +1,36 @@
+.add-expired-item-list-component {
+    min-height: 100vh;
+
+    .add-expired-item-list-head {
+        font-size: 30px;
+        margin-bottom: 20px;
+    }
+
+    .add-expired-item-list-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        .add-expired-item-list-table-thead {
+            .add-expired-item-list-table-tr {
+               .add-expired-item-list-table-th{
+                font-size: 16px;
+                padding: 5px;
+                border: 1px solid black;
+               } 
+            }
+        }
+
+        .add-expired-item-list-table-tbody {
+            .add-expired-item-list-table-tr {
+                .add-expired-item-list-table-td{
+                 font-size: 14px;
+                 padding: 5px;
+                 border: 1px solid black;
+                } 
+                &:nth-child(odd){
+                    background-color: #fff;
+                }
+             }
+        }
+    }
+}
