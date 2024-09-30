@@ -1,5 +1,5 @@
 const { Bill, ReturnBill, Item } = require('../db-models');
-const { ObjectId } = require('mongodb');
+const { findBillById, calculateFinalItems, getMergedItemMap } = require('./getBillForReturnExchange');
 
 const addNewReturnBill = async (req, res, next) => {
   try {
@@ -12,16 +12,22 @@ const addNewReturnBill = async (req, res, next) => {
       billItems = [],
       cashPay,
       upiPay,
+      refundAmount,
+      totalRefundAmount,
       amountReturn,
-     } = req.body;
+    } = req.body;
 
-    const existingBill = await Bill.findById(id);
+    let originalBillId = id;
+    let existingBill = await findBillById(id);
 
     if (!existingBill) {
-      res
-        .status(400)
-        .json({ message: "Bill doesn't exist to apply return or exchange" });
-      return;
+      const returnBill = await ReturnBill.findById(id);
+      if (!returnBill) {
+        res.status(400).json({ message: "Bill doesn't exist to apply return or exchange" });
+        return;
+      }
+      existingBill = await findBillById(returnBill.billId);
+      originalBillId = existingBill._id;
     }
 
     if (!returnedItems.length) {
@@ -36,41 +42,45 @@ const addNewReturnBill = async (req, res, next) => {
       returnItems[itemDetail._id] = itemQuantityInBill
     });
 
-    let newBillItems = [];
-    if(existingBill.items && existingBill.items.length){
-      for (let i = 0; i < existingBill.items.length; i++) {
-        const { itemDetail: itemId, itemQuantityInBill } = existingBill.items[i] || {};
-        if(returnItems.hasOwnProperty(itemId)){
+    const allReturnedItems = [];
+    const allAddedItems = existingBill.items;
+
+    if (existingBill.returnBills.length > 0) {
+      existingBill.returnBills.forEach(({ 
+        itemsReturned, items 
+      }) => {
+        allAddedItems.push(...items);
+        allReturnedItems.push(...itemsReturned);
+      });
+    }
+
+    const returnedItemsMap = getMergedItemMap(allReturnedItems);
+    const addedItemsMap = getMergedItemMap(allAddedItems);
+
+    const { items } = calculateFinalItems(
+      Object.values(addedItemsMap),
+      returnedItemsMap
+    );
+
+    if(items.length > 0){
+      for (let i = 0; i < items.length; i++) {
+        const { itemDetail: itemId, itemQuantityInBill } = items[i] || {};
+        if(returnItems[itemId]){
           const returnQuantity = Number(returnItems[itemId]);
-          if( returnQuantity && returnQuantity > itemQuantityInBill ||
+          if( returnQuantity && (returnQuantity > itemQuantityInBill) ||
             returnQuantity === 0){
-            res.status(400).json({ message: 'Returning item quantity mismatch' });
+            res.status(400).json({ 
+              message: 'Returning item quantity mismatched' 
+            });
             return;
-          } else {
-            const item = returnedItems.find(item =>
-              item.itemDetail._id === itemId.toString()
-            )
-            const newOjectId = ObjectId(item.itemDetail._id);
-            if((itemQuantityInBill - item.itemQuantityInBill) > 0){
-              newBillItems.push({
-                itemDetail: newOjectId,
-                itemQuantityInBill: itemQuantityInBill - item.itemQuantityInBill,
-                itemMRPtotal: item.itemMRPtotal,
-                itemDiscountTotal: item.itemDiscountTotal,
-                itemSellingPriceTotal: item.itemSellingPriceTotal
-              });
-            }
           }
-        } else {
-          newBillItems.push(existingBill.items[i]);
         }
       }
     }
 
-    const newFilterBillItems = newBillItems.filter(item=>item.itemQuantityInBill > 0);
-
     await Promise.all(
-      Object.entries(returnItems).map(async ([id, quantity]) => {
+      Object.entries(returnItems)
+      .map(async ([id, quantity]) => {
         if (id) {
           const item = await Item.findById(id);
           if (!item.itemStockQuantity) {
@@ -141,7 +151,7 @@ const addNewReturnBill = async (req, res, next) => {
     const newReturnBill = await ReturnBill.create({
       customerName: existingBill.customerName,
       customerPhone: existingBill.customerPhone,
-      billItems: [...newFilterBillItems, ...itemsExchanged],
+      items: itemsExchanged,
       itemsReturned: returnedItems,
       billMRPTotal,
       billAmountTotal,
@@ -152,11 +162,15 @@ const addNewReturnBill = async (req, res, next) => {
       cashPay,
       upiPay,
       amountReturn,
-      existingbillAmountTotal: existingBill.billAmountTotal,
+      refundAmount,
+      totalRefundAmount,
       billId: id
     });
-    existingBill.returnBills.push(newReturnBill._id);
-    await existingBill.save();
+
+    await Bill.findByIdAndUpdate(originalBillId,{
+      $push: { returnBills: originalBillId }
+    });
+
     res.status(200).json({ message: newReturnBill });
   } catch (error) {
     console.log(error);

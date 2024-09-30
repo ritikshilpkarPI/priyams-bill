@@ -68,7 +68,7 @@ const getPurchaseOrderById = require('./getPurchaseOrderById');
 const payPurchaseOrderBill = require('./payPurchaseOrderBill');
 const addExpiredItem = require('./addExpiredItem')
 const getExpiredItems = require('./getExpiredItems')
-
+const { getBillForReturnExchange } = require('./getBillForReturnExchange');
 const { addNewReturnBill } = require('./addNewReturnBill');
 
 module.exports = {
@@ -143,4 +143,5 @@ module.exports = {
   addExpiredItem,
   getExpiredItems,
   addNewReturnBill,
+  getBillForReturnExchange
 };

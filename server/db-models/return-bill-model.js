@@ -31,7 +31,7 @@ const ReturnBillSchema = new mongoose.Schema(
         itemSellingPriceTotal: { type: Number },
       },
     ],
-    billItems: [
+    items: [
       {
         itemDetail: {
           type: Schema.Types.ObjectId,
@@ -43,6 +43,7 @@ const ReturnBillSchema = new mongoose.Schema(
         itemSellingPriceTotal: { type: Number },
       },
     ],
+    refundAmount: { type: Number },
     totalRefundAmount: { type: Number },
     cashPay: { type: Number },
     upiPay: { type: Number },

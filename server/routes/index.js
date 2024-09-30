@@ -73,6 +73,7 @@ const {
   addExpiredItem,
   getExpiredItems,
   addNewReturnBill,
+  getBillForReturnExchange,
 } = require('../controllers/index');
 
 // online order apis
@@ -207,6 +208,7 @@ router.delete(API_PATHS.BILLING.DELETE_BILL, isLoggedIn, deleteBill);
 router.post(API_PATHS.BILLING.SAVE_OR_CACHE_BILL, isLoggedIn, saveOrCacheBill);
 router.post(API_PATHS.BILLING.POST_RETURN_BILLS, isLoggedIn, addNewReturnBill);
 router.get(API_PATHS.BILLING.GET_UNSAVED_BILLS, isLoggedIn, getUnSavedBills);
+router.get(`${API_PATHS.BILLING.GET_BILL}/:id`, isLoggedIn, getBillForReturnExchange);
 
 //attendance APIs
 router.post(
