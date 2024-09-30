@@ -31,7 +31,8 @@ import {
   UnpaidPurchaseOrder,
   PayPurchaseOrderBill,
   AddExpiredItem,
-  ExpiredItemList
+  ExpiredItemList,
+  ReturnAndExchange,
 } from '../Pages';
 import Label from 'src/Pages/Label';
 import { Fragment } from 'react';
@@ -95,6 +96,7 @@ const StoreRoutes = () => {
             <Route exact path="/unpaidPOs" component={UnpaidPOs} />
             <Route exact path="/purchaseOrderBill/:id" component={UnpaidPurchaseOrder} />            {/* <ProtectedComponent role={access.REPORT_PAGE_ROUTE}> */}
             <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
+            <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>

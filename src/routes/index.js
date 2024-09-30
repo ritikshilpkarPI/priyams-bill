@@ -20,5 +20,6 @@ export const routes = {
   unpaidPOs:"./unpaidPOs",
   unpaidPurchaseOrder:"./unpaidPurchaseOrder",
   payPurchaseOrderBill:"/payPurchaseOrderBill",
-  addExpiredItem:'/addExpiredItem'
+  addExpiredItem:'/addExpiredItem',
+  returnAndExchange: "/returnAndExchange",
 };

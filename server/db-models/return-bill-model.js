@@ -1,19 +1,36 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const BillSchema = new mongoose.Schema(
+const ReturnBillSchema = new mongoose.Schema(
   {
     customerName: { type: String },
     slug: { type: String },
     customerPhone: { type: Number },
     billMRPTotal: { type: Number },
     billAmountTotal: { type: Number },
+    existingbillAmountTotal: { type: Number },
     billDiscountTotal: { type: Number },
     billPercentageDiscountTotal: { type: Number },
     totalNumberOfUniqueItems: { type: Number },
     totalNumberOfItems: { type: Number },
     totalBillProfit: { type: Number },
     messageSend: { type: Boolean, default: false },
+    billId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Bill',
+    },
+    itemsReturned: [
+      {
+        itemDetail: {
+          type: Schema.Types.ObjectId,
+          ref: 'Item',
+        },
+        itemQuantityInBill: { type: Number },
+        itemMRPtotal: { type: Number },
+        itemDiscountTotal: { type: Number },
+        itemSellingPriceTotal: { type: Number },
+      },
+    ],
     items: [
       {
         itemDetail: {
@@ -26,21 +43,17 @@ const BillSchema = new mongoose.Schema(
         itemSellingPriceTotal: { type: Number },
       },
     ],
+    refundAmount: { type: Number },
+    totalRefundAmount: { type: Number },
     cashPay: { type: Number },
     upiPay: { type: Number },
-    amountReturn: { type: Number },
-    createdAt: { type: Date, default: Date.now },
-    updated: { type: Array, default: Date.now },
-    returnBills: [{
-      type: Schema.Types.ObjectId,
-      ref: 'ReturnBill'
-    }]
+    amountReturn: { type: Number }
   },
   {
     timestamps: true,
   }
 );
 
-const Bill = mongoose.model('Bill', BillSchema);
+const ReturnBill = mongoose.model('ReturnBill', ReturnBillSchema);
 
-module.exports = { Bill };
+module.exports = { ReturnBill };

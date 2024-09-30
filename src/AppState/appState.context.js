@@ -8,10 +8,12 @@ import {
   purchaseNewItemInput,
   purchaseNewItemInputReducer,
 } from './reducers/purchaseItem.reducer';
+import { returnBillItemReducer, exchangeBillItems } from './reducers/returnbillItem.reducer';
 
 export const AppStateContext = createContext();
 
 export const AppStateContextProvider = ({ children }) => {
+  const returnBillItemsStateAndDispatch = useReducer(returnBillItemReducer, exchangeBillItems);
   const billItemsStateAndDispatch = useReducer(billItemReducer, billItems);
   const expenseItemsStateAndDispatch = useReducer(expenseReducer, expenseList);
   const purchaseItemsStateAndDispatch = useReducer(
@@ -30,6 +32,7 @@ export const AppStateContextProvider = ({ children }) => {
         expenseItemsStateAndDispatch,
         purchaseItemsStateAndDispatch,
         purchaseInputItemStateAndDispatch,
+        returnBillItemsStateAndDispatch
       }}
     >
       {children}
