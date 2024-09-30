@@ -9,7 +9,7 @@ const ExpiredItemList = () => {
     const [itemList, setItemList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [skip, setSkip] = useState(0);
-    const [limit] = useState(50); 
+    const limit = 50; 
     const tableHeads = [
         'Item Name',
         'Barcode',
