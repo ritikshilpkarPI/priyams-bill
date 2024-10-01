@@ -33,7 +33,7 @@ const saveOrCacheBill = async (req, res) => {
     upiPay,
     amountReturn,
   };
-  let isBillSaved;
+  let isBillSaved, billBarcode;
   try {
     const maxAttemptToSaveInDB = 3;
     setToBillsCache(billId, newBillData);
@@ -43,7 +43,9 @@ const saveOrCacheBill = async (req, res) => {
       res.status(409).json({ message: "This bill already exist with same slug" });
       return ;
     }
-    isBillSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
+    const billSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
+    isBillSaved = billSaved.isBillSaved;
+    billBarcode = billSaved.billBarcode;
   } catch (error) {
     
     SentMessageToDiscord(JSON.stringify(error))
@@ -56,6 +58,7 @@ const saveOrCacheBill = async (req, res) => {
         message: 'Bill saved successfully!',
         billId,
         isBillSaved,
+        billBarcode,
         isUnsavedBillCreated: false,
         isCached: false,
       });
@@ -69,6 +72,7 @@ const saveOrCacheBill = async (req, res) => {
         message: 'Unable to save bill',
         billId,
         isBillSaved,
+        billBarcode,
         isUnsavedBillCreated,
         isCached: true,
       });
@@ -83,7 +87,7 @@ const saveBill = async (
   currentAttempt = 0
 ) => {
   if (currentAttempt > maxAttemptToSaveInDB) {
-    return false;
+    return {isBillSaved: false, billBarcode: ''};
   } else {
     try {
       const {
@@ -159,7 +163,7 @@ const saveBill = async (
         })
       );
 
-      const newBill = new Bill({
+      const newBill = await Bill.create({
         customerName,
         customerPhone,
         items: allItems,
@@ -174,8 +178,7 @@ const saveBill = async (
         upiPay,
         amountReturn,
       });
-      await newBill.save();
-      return true;
+      return {isBillSaved: true, billBarcode: newBill._id};
     } catch (error) {
       return await saveBill(
         newBillData,

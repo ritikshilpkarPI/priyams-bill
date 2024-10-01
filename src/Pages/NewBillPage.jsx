@@ -7,6 +7,7 @@ import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { AppStateContext } from 'src/AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
+import Barcode from 'react-jsbarcode';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -57,6 +58,7 @@ const NewBillPage = ({ billID = '' }) => {
   const { billItemsStateAndDispatch } = useContext(AppStateContext);
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
+  const [billBarcode, setBillBarcode] = useState('');
 
   function handleItemNameFilter(event, setInputValue, itemsList, setData, key) {
     setInputValue((prev) => ({ ...prev, [key]: event.target.value }));
@@ -142,11 +144,10 @@ const NewBillPage = ({ billID = '' }) => {
   };
 
   // creating bill
-  function createBill(newBillId, setApiLoading) {
+  async function createBill(newBillId, setApiLoading) {
     const { newBillId: billUuid, ...billObject } = JSON.parse(
       localStorage.getItem(`newBill-${newBillId}`)
     );
-    (async function () {
       try {
         const addBillResponse = await genericAxios({
           ...billObject,
@@ -159,11 +160,11 @@ const NewBillPage = ({ billID = '' }) => {
           setApiLoading(false);
           throw Error();
         }
+        setBillBarcode(addBillResponse.data.billBarcode);
         localStorage.removeItem(`newBill-${newBillId}`);
       } catch (error) {
         throw console.error({ error });
       }
-    })();
   }
 
   //    adding new bill
@@ -201,11 +202,10 @@ const NewBillPage = ({ billID = '' }) => {
         ...createApi,
       })
     );
-    createBill(newBillId, setApiLoading);
+    await createBill(newBillId, setApiLoading);
 
-    window.print();
     setApiLoading(false);
-    setBill(BILL_INITIAL_STATE);
+    setBillBarcode('');
   }
 
   // To show prices according to slabs if exists
@@ -375,6 +375,11 @@ const NewBillPage = ({ billID = '' }) => {
     dispatch({ type: 'BILL_ITEMS_LIST', payload: bill });
     // eslint-disable-next-line
   }, [bill]);
+
+  useEffect(()=>{
+    billBarcode && window.print();
+    setBill(BILL_INITIAL_STATE);
+  },[billBarcode])
 
   return (
     <>
@@ -1079,6 +1084,14 @@ const NewBillPage = ({ billID = '' }) => {
             <h3>Date: {new Date().toDateString()}</h3>
             <h3>Time: {new Date().toLocaleTimeString()}</h3>
           </div>
+          {billBarcode && <Barcode
+              options={{
+                height: 30,
+                width: 1.2,
+                displayValue: false,
+              }}
+              value={billBarcode}
+            />}
           <div className="print-table-head">
             <p>Name</p>
             <p>Qty.</p>
