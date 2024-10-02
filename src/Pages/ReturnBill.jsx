@@ -5,6 +5,7 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { AppStateContext } from 'src/AppState/appState.context';
+import Barcode from 'react-jsbarcode';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
 
@@ -35,7 +36,7 @@ const INPUT_INITIAL_STATE = {
 };
 
 const ReturnBill = () => {
-  const [slug, setSlug] = useState('65f7a42012b3ba5a3bf71ac5');
+  const [slug, setSlug] = useState('');
   const [existingBill, setExistingBill] = useState({});
   const [refundAmount, setRefundAmount] = useState(0);
   const [returningItems, setReturningItem] = useState({});
@@ -56,9 +57,10 @@ const ReturnBill = () => {
   const [billItems, dispatch] = returnBillItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
   const [isBillLoading, setBillLoading] = useState(false);
+  const [billBarcode, setBillBarcode] = useState('');
 
-  const initializeBillForEdit = async () => {
-    setBillLoading(true); 
+  const getBillRequest = async () => {
+    setBillLoading(true);
     const editBill = await genericAxios({
       url: `${API_PATHS.BILLING.GET_BILL}/${slug}`,
       method: API_METHODS.GET,
@@ -88,7 +90,6 @@ const ReturnBill = () => {
   }
 
   const getAllLeanItems = async () => {
-    // if (Object.keys(returningItems).length <= 0) return;
     try {
       setLoaderDisplay(true);
       const response = await genericAxios({
@@ -126,28 +127,27 @@ const ReturnBill = () => {
   };
 
   // creating bill
-  function createBill(newBillId, setApiLoading) {
+  async function createBill(newBillId, setApiLoading) {
     const { newBillId: billUuid, ...billObject } = JSON.parse(
       localStorage.getItem(`newReturnBill-${newBillId}`)
     );
-    (async function () {
-      try {
-        const addBillResponse = await genericAxios({
-          ...billObject,
-          billId: newBillId,
-          headers: {
-            Cookie: '',
-          },
-        });
-        if (addBillResponse.error) {
-          setApiLoading(false);
-          throw Error();
-        }
-        localStorage.removeItem(`newReturnBill-${newBillId}`);
-      } catch (error) {
-        throw console.error({ error });
+    try {
+      const addBillResponse = await genericAxios({
+        ...billObject,
+        billId: newBillId,
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (addBillResponse.error) {
+        setApiLoading(false);
+        throw Error();
       }
-    })();
+      localStorage.removeItem(`newReturnBill-${newBillId}`);
+      setBillBarcode(addBillResponse.data.message._id);
+    } catch (error) {
+      throw console.error({ error });
+    }
   }
 
   //    adding new bill
@@ -178,15 +178,15 @@ const ReturnBill = () => {
         ...createApi,
       })
     );
-    createBill(newBillId, setApiLoading);
+    await createBill(newBillId, setApiLoading);
 
-    // window.print();
     setApiLoading(false);
     setBill(BILL_INITIAL_STATE);
     setExistingBill({});
     setRefundAmount(0);
     setReturningItem({});
     setShowReturnItems(false);
+    setBillBarcode('');
   }
 
   // To show prices according to slabs if exists
@@ -211,18 +211,6 @@ const ReturnBill = () => {
       // if slabs does not exist
       return item['itemSellingPricePerUnit'];
     }
-  };
-
-  const removeItemFromBill = (barcode = '') => {
-    setBill((prev) => {
-      const billItems = [];
-      prev.billItems.forEach((item) => {
-        if (item.itemDetail.itemBarcode !== Number(barcode)) {
-          billItems.push(item);
-        }
-      });
-      return { ...prev, billItems };
-    });
   };
 
   const onItemAddToBill = ({ e, itemData, key = '', quantity = 1 }) => {
@@ -325,9 +313,9 @@ const ReturnBill = () => {
     );
     setRefundAmount(refund);
 
-    totalRefundAmount = refund - Math.ceil(totalSum)
-    if(totalRefundAmount < 0){
-        totalRefundAmount = 0;
+    totalRefundAmount = refund - Math.ceil(totalSum);
+    if (totalRefundAmount < 0) {
+      totalRefundAmount = 0;
     }
 
     setBill((prev) => ({
@@ -340,16 +328,23 @@ const ReturnBill = () => {
       totalBillProfit: profitAmount,
       returnedItems,
       refundAmount: refund,
-      totalRefundAmount
+      totalRefundAmount,
     }));
   };
 
   // updating bill amount
   const updateReturnAmount = (setBill, bill) => {
+    let amountReturn =
+      bill?.cashPay + bill?.upiPay - bill?.billAmountTotal + refundAmount;
+    if (
+      bill?.totalRefundAmount > 0 &&
+      bill?.totalRefundAmount >= amountReturn
+    ) {
+      amountReturn = 0;
+    }
     setBill((prev) => ({
       ...prev,
-      amountReturn:
-        bill?.cashPay + bill?.upiPay - bill?.billAmountTotal + refundAmount,
+      amountReturn,
     }));
   };
 
@@ -358,6 +353,10 @@ const ReturnBill = () => {
     // eslint-disable-next-line
     []
   );
+
+  useEffect(() => {
+    billBarcode && window.print();
+  }, [billBarcode]);
 
   useEffect(
     () => updateBillValuesOnItemChange(bill, setBill),
@@ -391,17 +390,20 @@ const ReturnBill = () => {
           padding: '20px',
         }}
       >
-        <Input value={slug} onChange={(e) => setSlug(e.target.value)} style={{width: '250px'}}/>
-        <Button onClick={initializeBillForEdit}>Get Bill</Button>
+        <Input
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          style={{ width: '250px' }}
+        />
+        <Button disabled={!slug} onClick={getBillRequest}>Get Bill</Button>
       </div>
-      <div style={{padding:'20px'}}>
+      <div style={{ padding: '20px' }}>
         <div
           style={{
             display: 'flex',
             flexWrap: 'wrap',
             width: '100%',
             gap: '10px',
-            
           }}
         >
           <div
@@ -410,48 +412,30 @@ const ReturnBill = () => {
               flexDirection: 'column',
               gap: '5px',
               fontSize: '20px',
-            //   paddingLeft: '20px',
               alignItems: 'flex-start',
             }}
           >
             <div>Customer Name: {existingBill?.customerName ?? ''}</div>
             <div>Customer Phone: {existingBill?.customerPhone ?? ''}</div>
             <div>
-              Number of Unique Items:{' '}
-              {existingBill?.totalNumberOfUniqueItems ?? ''}
+              Billing Time:{' '}
+              {existingBill?.createdAt
+                ? new Date(existingBill?.createdAt).toLocaleString()
+                : ''}
             </div>
-            <div>Number of Items: {existingBill?.totalNumberOfItems ?? ''}</div>
-            <div>Billing Time: {existingBill?.createdAt ? new Date(existingBill?.createdAt).toLocaleString() : ''}</div>
             <div>Available Credits: {existingBill?.availableCredits ?? ''}</div>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '5px',
-              fontSize: '20px',
-              paddingLeft: '20px',
-              alignItems: 'flex-start',
-            }}
-          >
-            {/* <div>Upi Paid: {existingBill?.upiPay ?? ''}</div>
-            <div>Amount Returned: {existingBill?.amountReturn ?? ''}</div>
-            <div>MRP Total: {existingBill?.billMRPTotal ?? ''}</div>
-            <div>Amount Total: {existingBill?.billAmountTotal ?? ''}</div>
-            <div>Discount Total: {existingBill?.billDiscountTotal ?? ''}</div> */}
-          </div>
         </div>
-          <div style={{width: 'fit-content'}}>
-            <Button
-              disabled={Object.keys(returningItems).length <= 0}
-              onClick={()=>setShowReturnItems(!showReturnItems)}
-            >
-              {showReturnItems ? 'Remove' : 'Add'} Items
-            </Button>
-          </div>
+        <div style={{ width: 'fit-content' }}>
+          <Button
+            disabled={Object.keys(returningItems).length <= 0}
+            onClick={() => setShowReturnItems(!showReturnItems)}
+          >
+            {showReturnItems ? 'Reset' : 'Return'}
+          </Button>
+        </div>
 
         {Boolean(existingBill?.items?.length) && !showReturnItems && (
-          //   <table style={{border: '1px solid', margin: '20px 0'}}>
           <Table
             className="barcode-suggestion-list"
             style={{
@@ -465,10 +449,11 @@ const ReturnBill = () => {
                 <td style={{ textAlign: 'start' }}>Return or Exchange</td>
                 <td style={{ textAlign: 'center' }}>Barcode</td>
                 <td style={{ textAlign: 'center' }}>Name</td>
-                <td style={{ textAlign: 'center' }}>PerUnitQuantity</td>
-                <td style={{ textAlign: 'center' }}>SellingPricePerUnit</td>
-                <td style={{ textAlign: 'center' }}>QuantityInBill</td>
-                <td style={{ textAlign: 'center' }}>SellingPriceTotal</td>
+                <td style={{ textAlign: 'center' }}>Item Per Unit Quantity</td>
+                <td style={{ textAlign: 'center' }}>Quantity Unit Name</td>
+                <td style={{ textAlign: 'center' }}>Selling Price Per Unit</td>
+                <td style={{ textAlign: 'center' }}>Quantity In Bill</td>
+                <td style={{ textAlign: 'center' }}>Selling Price Total</td>
               </tr>
               {existingBill?.items?.map((item, idx) => {
                 const {
@@ -524,8 +509,9 @@ const ReturnBill = () => {
                     <td style={{ textAlign: 'center' }}>{itemBarcode}</td>
                     <td style={{ textAlign: 'center' }}>{itemName}</td>
                     <td style={{ textAlign: 'center' }}>
-                      {itemPerUnitQuantity} {quantityUnitName}
+                      {itemPerUnitQuantity}
                     </td>
+                    <td style={{ textAlign: 'center' }}>{quantityUnitName}</td>
                     <td style={{ textAlign: 'center' }}>
                       {itemSellingPricePerUnit}
                     </td>
@@ -586,7 +572,10 @@ const ReturnBill = () => {
                   quantityUnitName,
                   itemSellingPricePerUnit,
                 } = itemDetail;
-                const {itemQuantityInBill: existingItemQuantity} = existingBill.items.find(item=>item.itemDetail._id === _id);
+                const { itemQuantityInBill: existingItemQuantity } =
+                  existingBill.items.find(
+                    (item) => item.itemDetail._id === _id
+                  );
                 return (
                   <tr
                     key={`tr-key-${idx}`}
@@ -606,35 +595,37 @@ const ReturnBill = () => {
                       {itemSellingPricePerUnit}
                     </td>
                     <td style={{ textAlign: 'center' }}>
-                        <select
-                          style={{
-                            width: '100px',
-                            padding: '8px',
-                            fontSize: '15px',
-                          }}
-                          onChange={(e) => {
-                            const quantity = Number(e.target.value);
-                            setReturningItem((state) => {
-                              const newState = { ...state };
-                              newState[_id] = {
-                                ...newState[_id],
-                                itemQuantityInBill: quantity,
-                                itemSellingPriceTotal:
-                                  itemSellingPricePerUnit * quantity,
-                              };
-                              return newState;
-                            });
-                          }}
-                          defaultValue={itemQuantityInBill}
-                        >
-                          {Array(Number(existingItemQuantity))
-                            .fill(null)
-                            .map((_, idx) => (
-                              <option value={idx + 1}>{idx + 1}</option>
-                            ))}
-                        </select>
+                      <select
+                        style={{
+                          width: '100px',
+                          padding: '8px',
+                          fontSize: '15px',
+                        }}
+                        onChange={(e) => {
+                          const quantity = Number(e.target.value);
+                          setReturningItem((state) => {
+                            const newState = { ...state };
+                            newState[_id] = {
+                              ...newState[_id],
+                              itemQuantityInBill: quantity,
+                              itemSellingPriceTotal:
+                                itemSellingPricePerUnit * quantity,
+                            };
+                            return newState;
+                          });
+                        }}
+                        defaultValue={itemQuantityInBill}
+                      >
+                        {Array(Number(existingItemQuantity))
+                          .fill(null)
+                          .map((_, idx) => (
+                            <option value={idx + 1}>{idx + 1}</option>
+                          ))}
+                      </select>
                     </td>
-                    <td style={{ textAlign: 'center' }}>{existingItemQuantity}</td>
+                    <td style={{ textAlign: 'center' }}>
+                      {existingItemQuantity}
+                    </td>
                     <td style={{ textAlign: 'center' }}>
                       {returningItems[_id]
                         ? returningItems[_id].itemSellingPriceTotal
@@ -646,57 +637,44 @@ const ReturnBill = () => {
             </tbody>
           </Table>
         )}
-        <div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           <div
+            className="bill-total"
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
+              backgroundColor: 'black',
+              width: 'fit-content',
+              padding: '10px',
+              borderRadius: '10px',
             }}
           >
-            <div
-              className="bill-total"
-              style={{
-                backgroundColor: 'black',
-                width: 'fit-content',
-                padding: '10px',
-                borderRadius: '10px',
-              }}
-            >
-              <Text
-                color="red"
-                size="xl"
-                weight={800}
-                className="final-bill-text print-text"
-                td="underline"
-                style={{ textAlign: 'start' }}
-              >
-                Available Credits: 
-                <h2>{existingBill?.availableCredits?.toFixed(2)}</h2>
-              </Text>
-            </div>
             <Text
-              color="black"
+              color="red"
               size="xl"
               weight={800}
               className="final-bill-text print-text"
+              td="underline"
               style={{ textAlign: 'start' }}
             >
-              Total Items: {existingBill?.totalNumberOfItems?.toFixed(2)}
-            </Text>
-            <Text
-              color="black"
-              size="xl"
-              weight={800}
-              className="final-bill-text print-text"
-              style={{ textAlign: 'start' }}
-            >
-              Item Amount to be Returned: {refundAmount || 0}
+              Available Credits:
+              <h2>{existingBill?.availableCredits?.toFixed(2)}</h2>
             </Text>
           </div>
+          <Text
+            color="black"
+            size="xl"
+            weight={800}
+            className="final-bill-text print-text"
+            style={{ textAlign: 'start' }}
+          >
+            Item Amount to be Returned: {refundAmount || 0}
+          </Text>
         </div>
       </div>
-      <div></div>
       <div>
         <div className="billing-container">
           <p style={{ marginBottom: '20px', fontWeight: '700' }}>
@@ -751,7 +729,9 @@ const ReturnBill = () => {
 
           <Button
             sx={{ marginRight: '1rem' }}
-            disabled={!Object.keys(returningItems).length}
+            disabled={
+              !Object.keys(returningItems).length || bill.amountReturn < 0
+            }
             className="print-btn"
             onClick={() => {
               addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE);
@@ -1198,8 +1178,16 @@ const ReturnBill = () => {
                   className="final-bill-text print-text"
                   td="underline"
                 >
-                  Amount Return:
-                  <h2> {bill.amountReturn}</h2>
+                  {bill.totalRefundAmount > 0
+                    ? 'Refund Amount'
+                    : 'Amount Return'}
+                  :
+                  <h2>
+                    {' '}
+                    {bill.totalRefundAmount > 0
+                      ? bill.totalRefundAmount
+                      : bill.amountReturn}
+                  </h2>
                 </Text>
               </div>
             </div>
@@ -1308,13 +1296,27 @@ const ReturnBill = () => {
             <h3>Date: {new Date().toDateString()}</h3>
             <h3>Time: {new Date().toLocaleTimeString()}</h3>
           </div>
-          <div className="print-table-head">
-            <p>Name</p>
-            <p>Qty.</p>
-            <p>MRP</p>
-            <p>Price</p>
-            <p>Total</p>
-          </div>
+          {/* <div className="print-table-head"> */}
+          {billBarcode && (
+            <Barcode
+              options={{
+                height: 30,
+                width: 1.2,
+                displayValue: false,
+              }}
+              value={billBarcode}
+            />
+          )}
+          {/* </div> */}
+          {bill.billItems.length > 0 && (
+            <div className="print-table-head">
+              <p>Name</p>
+              <p>Qty.</p>
+              <p>MRP</p>
+              <p>Price</p>
+              <p>Total</p>
+            </div>
+          )}
           <div className="print-table-body">
             {bill.billItems.map((item, index) => {
               const itemObj = { ...item, ...item.itemDetail };
@@ -1354,11 +1356,20 @@ const ReturnBill = () => {
                     {Number(bill.amountReturn || 0)}
                   </p>
                 </div>
+                {Number(bill.totalRefundAmount) > 0 && (
+                  <div>
+                    <p>Amount Refunded</p>
+                    <p className="final-amount">
+                      {Number(bill.totalRefundAmount)}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             <div className="discount-section">
               <p>You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP</p>
             </div>
+            <h2 style={{ color: 'red' }}>Returned Bill</h2>
           </div>
         </div>
       </div>
