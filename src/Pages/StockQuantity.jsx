@@ -5,16 +5,34 @@ import { openConfirmModal } from '@mantine/modals';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { Pagination } from '../components/pagination/paginations';
 
 const StockQuantity = () => {
   const [minimumQuantityItem, setMinimumQuantityItem] = useState([]);
   const [loader, setLoader] = useState(false);
   const [Id, setId] = useState('');
   const [modalToggle, setModalToggle] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limitPage, setLimitPage] = useState(200);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
+  const totalPages = totalItemsCount ? Math.ceil(totalItemsCount / limitPage) - 1 : 0;
+  const paginationArrLength = 8;
+
+  const [paginationIndices, setPaginationIndices] = useState([]);
+  const skip = limitPage*(currentPage-1);
+
+
+  const paginationArr = (length)=> {
+    let arr = [], startElem = 2;
+    for (let i = 0; i < length; i++) { 
+      arr[i]=startElem++;
+    }
+    setPaginationIndices(arr);
+  }
 
   useEffect(() => {
     getAllItemsFeed();
-  }, []);
+  }, [currentPage]);
   const getAllItemsFeed = async () => {
     setLoader(true);
     const fetch = await genericAxios({
@@ -24,6 +42,8 @@ const StockQuantity = () => {
         filters: {
           minStockOnly: true,
           isDeleted: false,
+          skip,
+          limit: limitPage
         },
       },
       headers: {
@@ -33,8 +53,14 @@ const StockQuantity = () => {
     if (fetch.error) return;
     const minStockItems = fetch.data.message.items;
     setMinimumQuantityItem(minStockItems);
+    const itemCount = fetch?.data?.message?.itemCount??0;
+    setTotalItemsCount(itemCount)
     setLoader(false);
   };
+  useEffect(()=>{
+    const length = totalPages > paginationArrLength ? paginationArrLength - 2 : totalPages - 2;
+      !paginationIndices.length && paginationArr(length)
+  },[totalItemsCount])
   useEffect(() => {
     const openDeleteModal = () =>
       openConfirmModal({
@@ -124,6 +150,7 @@ const StockQuantity = () => {
               </tr>
             </thead>
             <tbody>{rows}</tbody>
+            <Pagination  currentPage={currentPage} totalPages={totalPages} paginationIndices={paginationIndices} setCurrentPage={setCurrentPage} setPaginationIndices={ setPaginationIndices } className={"inventory-pagination"}/>
           </Table>
         </div>
       )}
