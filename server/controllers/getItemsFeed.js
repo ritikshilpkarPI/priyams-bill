@@ -20,8 +20,8 @@ const getItemsFeed = async (req, res,next) => {
         $gte: ["$minimumStockQuantity", "$itemStockQuantity"] // Compare stock quantities within MongoDB
       };
     }
-        
-      const totalCount = await Item.countDocuments(query);
+
+    const totalCount = await Item.countDocuments(query);
       
           // Query to get the paginated items (only apply skip and limit if they are defined)
     let itemsQuery = Item.find(query).sort({ itemName: 1 });

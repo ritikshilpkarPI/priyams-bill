@@ -31,9 +31,11 @@
     user-select: none;
     cursor: pointer;
     color: #ffff;
+    transition: all 0.3s ease;
 
     &.selected{
-        background-color: rgb(35, 35, 35);;
+        color: rgb(35, 35, 35);
+        background-color: #fff;
         box-shadow: 0 0 4px 0 rgb(128, 128, 128);
         cursor: default;
     }

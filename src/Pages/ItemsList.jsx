@@ -85,7 +85,7 @@ const ItemsList = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [index, setIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [limitPage, setLimitPage] = useState(200);
+  const [limitPage, setLimitPage] = useState(100);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
   const totalPages = totalItemsCount ? Math.ceil(totalItemsCount / limitPage) - 1 : 0;
   const paginationArrLength = 8;
