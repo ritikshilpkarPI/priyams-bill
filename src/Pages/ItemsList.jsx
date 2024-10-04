@@ -120,8 +120,11 @@ const ItemsList = () => {
           Cookie: '',
         },
       });
-      if (fetch.error) return;
-      const itemsData = fetch?.data?.message?.items;
+      if (fetch.error){ 
+        setItemsList([]);
+        return;
+      }
+      const itemsData = fetch?.data?.message?.items??[];
       const itemCount = fetch?.data?.message?.itemCount??0;    
       // const prevCurrent = [...itemsList,...itemsData];      
       setItemsList(itemsData);
