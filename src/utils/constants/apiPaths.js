@@ -11,6 +11,7 @@ export const API_PATHS = {
     POST_UPDATE_ORDER_BY_INDEX: '/api/purchaseOrder/updateOrderByIndex',
     POST_DELETE_ITEM: '/api/purchaseOrder/deleteItem',
     GET_ORDERS: '/api/purchaseOrder/orders',
+    EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
   },
   ATTENDANCE: {
     GET_MONTHLY_ATTENDANCE: '/api/attendance/monthlyAttendance',
@@ -31,8 +32,11 @@ export const API_PATHS = {
     GET_CUSTOMER_BILL: '/api/billing/getCustomerBill',
     SAVE_OR_CACHE_BILL: '/api/billing/saveOrCacheBill',
     GET_UNSAVED_BILLS: '/api/billing/unSavedBills',
+    POST_RETURN_BILLS: '/api/billing/returnBill',
+    GET_BILL: '/api/billing/getBill',
   },
   INVENTORY: {
+    GET_ITEMS_FOR_PURCHASE_ORDER: '/api/inventory/getItemsWithSelection',
     POST_ADD_NEW_ITEM: '/api/inventory/addNewItem',
     POST_FILTER_EXPIRY_DATES: '/api/inventory/filterExpiryDates',
     POST_SAVE_INVENTORY: '/api/inventory/saveInventory',
@@ -89,7 +93,11 @@ export const API_PATHS = {
   PSTORE_CART: {
     POST_ITEMS_DATA_TO_CART: '/api/cart'
   },
-  GOOGLE_IMAGE:{
-     URL: "/api/purchaseOrder/getProductImage"
+  GOOGLE_IMAGE: {
+    URL: "/api/purchaseOrder/getProductImage"
+  },
+  EXPIRED_ITEM: {
+    ADD_EXPIRED_ITEM: "/api/addexpiredItem",
+    GET_EXPIRED_ITEMS: "/api/getExpiredItems"
   }
 };

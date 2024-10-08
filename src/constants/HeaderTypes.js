@@ -32,13 +32,17 @@ export const sidebarListData = [
       },
       { name: 'Item Labels', url: '/label', icon: 'images/label.svg' },
       { name: 'Item Barcode ', url: '/itemsBarcode', icon: 'images/barcode.svg' },
-      {name: 'Move Item To Cart', url: '/moveToCart', icon: 'images/purchaseorder.svg'}
+      {name: 'Move Item To Cart', url: '/moveToCart', icon: 'images/purchaseorder.svg'},
+      {name: 'Add Expired Item', url:'/addExpiredItem', icon: 'images/addExpiredIcon.svg'},
+      {name: 'Expired Items', url:'/expiredItemList', icon: 'images/expireIcon.svg'},
+
 
     ],
   },
   {
     BILL: [
       { name: 'All Bills', url: '/allBill', icon: 'images/bill.svg' },
+      { name: 'Return & Exchange', url: '/returnAndExchange', icon: 'images/returnBill.svg' },
       { name: 'Day Bills', url: '/dayBill', icon: 'images/dailybills.svg' },
       { name: 'Reports', url: '/report', icon: 'images/report.svg' },
       { name: 'New Billing Page', url: '/newBilling', icon: 'images/report.svg' },

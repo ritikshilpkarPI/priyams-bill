@@ -5,9 +5,9 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { AppStateContext } from 'src/AppState/appState.context';
+import Barcode from 'react-jsbarcode';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
-import Barcode from 'react-jsbarcode';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -22,6 +22,9 @@ const BILL_INITIAL_STATE = {
   cashPay: 0,
   upiPay: 0,
   amountReturn: 0,
+  returnedItems: [],
+  refundAmount: 0,
+  totalRefundAmount: 0,
 };
 
 const INPUT_INITIAL_STATE = {
@@ -32,33 +35,49 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: '',
 };
 
-const refreshPage = (setBill, BILL_INITIAL_STATE) => {
-  let answer = window.confirm('Do you want to refresh page?');
-  if (answer) {
-    setBill(BILL_INITIAL_STATE);
-  }
-};
-
-const NewBillPage = ({ billID = '' }) => {
+const ReturnBill = () => {
+  const [slug, setSlug] = useState('');
+  const [existingBill, setExistingBill] = useState({});
+  const [refundAmount, setRefundAmount] = useState(0);
+  const [returningItems, setReturningItem] = useState({});
   const [itemsByName, setItemsByName] = useState([]);
   const [itemsByBarcode, setItemsByBarcode] = useState();
   const [itemBarCodesList, setItemBarCodesList] = useState([]);
   const [filterBarcodeData, setFilterBarcodeData] = useState([]);
   const [itemNamesList, setItemNamesList] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [userProfileData, setUserDataProfile] = useState([]);
   const [bill, setBill] = useState(BILL_INITIAL_STATE);
-  const [showProfileData, setShowProfileData] = useState(false);
-  const [filterUserProfile, setFilterUserProfile] = useState([]);
+  const [showReturnItems, setShowReturnItems] = useState(false);
   const [phoneError, setPhoneError] = useState('');
   const [apiLoading, setApiLoading] = useState(false);
   const barRef = useRef('');
   const [inputValue, setInputValue] = useState(INPUT_INITIAL_STATE);
   const [filteredData, setFilteredData] = useState([]);
-  const { billItemsStateAndDispatch } = useContext(AppStateContext);
-  const [billItems, dispatch] = billItemsStateAndDispatch;
+  const { returnBillItemsStateAndDispatch } = useContext(AppStateContext);
+  const [billItems, dispatch] = returnBillItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
+  const [isBillLoading, setBillLoading] = useState(false);
   const [billBarcode, setBillBarcode] = useState('');
+
+  const getBillRequest = async () => {
+    setBillLoading(true);
+    const editBill = await genericAxios({
+      url: `${API_PATHS.BILLING.GET_BILL}/${slug}`,
+      method: API_METHODS.GET,
+    });
+    setBillLoading(false);
+    if (editBill.error) return;
+    if (editBill?.data?.message) {
+      setExistingBill(editBill?.data?.message);
+    }
+  };
+
+  const refreshPage = (setBill, BILL_INITIAL_STATE) => {
+    let answer = window.confirm('Do you want to refresh page?');
+    if (answer) {
+      setBill(BILL_INITIAL_STATE);
+    }
+  };
 
   function handleItemNameFilter(event, setInputValue, itemsList, setData, key) {
     setInputValue((prev) => ({ ...prev, [key]: event.target.value }));
@@ -69,31 +88,6 @@ const NewBillPage = ({ billID = '' }) => {
     });
     setData(filteredData);
   }
-
-  function findNameOrNumber(string, value) {
-    for (let i = 0; i < value.toString().length; i++) {
-      if (string.toString()[i] !== value[i]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  // fetching user details
-  const getUserData = async () => {
-    try {
-      const response = await genericAxios({
-        url: API_PATHS.BILLING.GET_USER_DETAILS,
-        method: API_METHODS.GET,
-      });
-      if (response.error) return;
-      setUserDataProfile(response.data.message);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  //   fetching items
 
   const getAllLeanItems = async () => {
     try {
@@ -118,17 +112,6 @@ const NewBillPage = ({ billID = '' }) => {
     }
   };
 
-  //  handing the user search
-  const handleUserSearch = (e) => {
-    setShowProfileData(true);
-    const users = userProfileData.filter((data) => {
-      const str =
-        e.target.dataset.name === 'name' ? data.customerName : data._id;
-      return findNameOrNumber(str, e.target.value);
-    });
-    setFilterUserProfile(users);
-  };
-
   // handling the input change
   function handleItemInputChange(event, setInputValue) {
     const { name, value } = event.target;
@@ -146,35 +129,29 @@ const NewBillPage = ({ billID = '' }) => {
   // creating bill
   async function createBill(newBillId, setApiLoading) {
     const { newBillId: billUuid, ...billObject } = JSON.parse(
-      localStorage.getItem(`newBill-${newBillId}`)
+      localStorage.getItem(`newReturnBill-${newBillId}`)
     );
-      try {
-        const addBillResponse = await genericAxios({
-          ...billObject,
-          billId: newBillId,
-          headers: {
-            Cookie: '',
-          },
-        });
-        if (addBillResponse.error) {
-          setApiLoading(false);
-          throw Error();
-        }
-        setBillBarcode(addBillResponse.data.billBarcode);
-        localStorage.removeItem(`newBill-${newBillId}`);
-      } catch (error) {
-        throw console.error({ error });
+    try {
+      const addBillResponse = await genericAxios({
+        ...billObject,
+        billId: newBillId,
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (addBillResponse.error) {
+        setApiLoading(false);
+        throw Error();
       }
+      localStorage.removeItem(`newReturnBill-${newBillId}`);
+      setBillBarcode(addBillResponse.data.message._id);
+    } catch (error) {
+      throw console.error({ error });
+    }
   }
 
   //    adding new bill
-  async function addNewBill(
-    setApiLoading,
-    bill,
-    setBill,
-    BILL_INITIAL_STATE,
-    billID
-  ) {
+  async function addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE) {
     const newBillId = `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
     let updateBill = {
@@ -182,20 +159,19 @@ const NewBillPage = ({ billID = '' }) => {
       [bill.updated]: bill?.updated?.push(Date.now()),
     };
     setBill(updateBill);
-    // const editApi = {
-    //   url: API_PATHS.BILLING.PUT_EDIT_BILL,
-    //   method: API_METHODS.PUT,
-    //   data: { id: billID, itemWithChanges: { ...bill } },
-    // };
     const createApi = {
-      url: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
+      url: API_PATHS.BILLING.POST_RETURN_BILLS,
       method: API_METHODS.POST,
-      data: { ...bill, billId: newBillId },
+      data: {
+        ...bill,
+        billId: newBillId,
+        id: existingBill._id,
+        refundAmount,
+      },
     };
-    // const objectOfInterest = billID ? editApi : createApi;
 
     localStorage.setItem(
-      `newBill-${newBillId}`,
+      `newReturnBill-${newBillId}`,
       JSON.stringify({
         newBillId,
         createdAt: new Date().toLocaleString(),
@@ -205,6 +181,11 @@ const NewBillPage = ({ billID = '' }) => {
     await createBill(newBillId, setApiLoading);
 
     setApiLoading(false);
+    setBill(BILL_INITIAL_STATE);
+    setExistingBill({});
+    setRefundAmount(0);
+    setReturningItem({});
+    setShowReturnItems(false);
     setBillBarcode('');
   }
 
@@ -232,72 +213,74 @@ const NewBillPage = ({ billID = '' }) => {
     }
   };
 
-  const addItemToBill = ({ e, itemData, key = '' }) => {
-    const itemKey = Boolean(key) ? key : e.target.innerText;
-    const itemDetail = getItemDetail(itemData, itemKey);
+  const onItemAddToBill = ({ e, itemData, key = '', quantity = 1 }) => {
+    if (itemData[Boolean(key) ? key : e.target.innerText]) {
+      // let index;
+      let itemDetail;
+      if (Boolean(key)) {
+        itemDetail = itemData[key]?.[0];
+      } else {
+        itemDetail = itemData[e.target.innerText];
+      }
 
-    if (!itemDetail) return;
-
-    const existingItemIndex = findExistingItemIndex(bill.billItems, itemDetail);
-
-    if (existingItemIndex !== -1) {
-      updateExistingItem(existingItemIndex, itemDetail);
-    } else {
-      addNewItemToBill(itemDetail);
-    }
-
-    resetInputState(Boolean(key));
-  };
-
-  const getItemDetail = (itemData, itemKey) => {
-    return itemData[itemKey]?.[0] || itemData[itemKey];
-  };
-
-  const findExistingItemIndex = (billItems, itemDetail) => {
-    return billItems.findIndex(
-      (billItem) => billItem.itemDetail.itemName === itemDetail.itemName
-    );
-  };
-
-  const updateExistingItem = (index, itemDetail) => {
-    const updatedItem = {
-      ...bill.billItems[index],
-      itemDetail: {
-        ...bill.billItems[index].itemDetail,
-      },
-      itemQuantityInBill: bill.billItems[index].itemQuantityInBill + 1,
-    };
-    bill.billItems.splice(index, 1);
-    setBill((prev) => ({
-      totalNumberOfItems: prev.totalNumberOfItems + 1,
-      ...prev,
-      billItems: [updatedItem, ...prev.billItems],
-    }));
-  };
-
-  const addNewItemToBill = (itemDetail) => {
-    const newItem = {
-      itemDetail,
-      itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-      itemDiscountTotal:
-        itemDetail.itemMRPperUnit - itemDetail.itemSellingPricePerUnit,
-      itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-      _id: itemDetail._id,
-      itemQuantityInBill: 1,
-    };
-
-    setBill((prev) => ({
-      ...prev,
-      billItems: [newItem, ...prev.billItems],
-    }));
-  };
-
-  const resetInputState = (isKeyPresent) => {
-    setInputValue(INPUT_INITIAL_STATE);
-    if (isKeyPresent) {
-      setFilterBarcodeData([]);
-    } else {
-      setFilteredData([]);
+      bill.billItems.map((billItem, index) => {
+        if (itemDetail.itemName === billItem.itemDetail.itemName) {
+          const updatedItem = {
+            ...billItem,
+            itemDetail: {
+              ...billItem.itemDetail,
+            },
+            itemQuantityInBill: billItem.itemQuantityInBill + 1,
+          };
+          bill.billItems.splice(index, 1);
+          setBill((prev) => ({
+            totalNumberOfItems: prev.totalNumberOfItems + 1,
+            ...prev,
+            billItems: [updatedItem, ...prev.billItems],
+          }));
+        } else if (index === bill.totalNumberOfUniqueItems - 1) {
+          setBill((prev) => ({
+            ...prev,
+            billItems: [
+              {
+                itemDetail,
+                itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+                itemDiscountTotal: itemDetail.itemDiscountPerUnit,
+                itemSellingPriceTotal: Number(
+                  itemDetail.itemSellingPricePerUnit
+                ),
+                _id: itemDetail._id,
+                itemQuantityInBill: quantity,
+              },
+              ...prev.billItems,
+            ],
+          }));
+        }
+        return <></>;
+      });
+      if (bill.totalNumberOfItems === 0) {
+        setBill((prev) => ({
+          ...prev,
+          billItems: [
+            {
+              itemDetail,
+              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+              itemDiscountTotal:
+                itemDetail.itemMRPperUnit - itemDetail.itemSellingPricePerUnit,
+              itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+              _id: itemDetail._id,
+              itemQuantityInBill: quantity,
+            },
+            ...prev.billItems,
+          ],
+        }));
+      }
+      setInputValue(INPUT_INITIAL_STATE);
+      if (Boolean(key)) {
+        setFilterBarcodeData([]);
+      } else {
+        setFilteredData([]);
+      }
     }
   };
 
@@ -307,6 +290,9 @@ const NewBillPage = ({ billID = '' }) => {
     let savedAmount = 0;
     let profitAmount = 0;
     let numOfItems = 0;
+    let refund = 0;
+    let totalRefundAmount = 0;
+
     bill.billItems.forEach((item) => {
       totalSum += Math.ceil(
         item.itemDetail['itemSellingPricePerUnit'] * item['itemQuantityInBill']
@@ -321,6 +307,17 @@ const NewBillPage = ({ billID = '' }) => {
         item['itemQuantityInBill'];
     });
 
+    const returnedItems = Object.values(returningItems);
+    returnedItems?.forEach(
+      ({ itemSellingPriceTotal }) => (refund += itemSellingPriceTotal)
+    );
+    setRefundAmount(refund);
+
+    totalRefundAmount = refund - Math.ceil(totalSum);
+    if (totalRefundAmount < 0) {
+      totalRefundAmount = 0;
+    }
+
     setBill((prev) => ({
       ...prev,
       totalNumberOfUniqueItems: bill.billItems.length,
@@ -329,14 +326,25 @@ const NewBillPage = ({ billID = '' }) => {
       billAmountTotal: Math.ceil(totalSum),
       billDiscountTotal: savedAmount,
       totalBillProfit: profitAmount,
+      returnedItems,
+      refundAmount: refund,
+      totalRefundAmount,
     }));
   };
 
   // updating bill amount
   const updateReturnAmount = (setBill, bill) => {
+    let amountReturn =
+      bill?.cashPay + bill?.upiPay - bill?.billAmountTotal + refundAmount;
+    if (
+      bill?.totalRefundAmount > 0 &&
+      bill?.totalRefundAmount >= amountReturn
+    ) {
+      amountReturn = 0;
+    }
     setBill((prev) => ({
       ...prev,
-      amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
+      amountReturn,
     }));
   };
 
@@ -346,38 +354,328 @@ const NewBillPage = ({ billID = '' }) => {
     []
   );
 
+  useEffect(() => {
+    billBarcode && window.print();
+  }, [billBarcode]);
+
   useEffect(
     () => updateBillValuesOnItemChange(bill, setBill),
     // eslint-disable-next-line
-    [bill.billItems]
+    [bill.billItems, returningItems]
   );
 
   useEffect(
     () => updateReturnAmount(setBill, bill),
     // eslint-disable-next-line
-    [bill.cashPay, bill.upiPay, bill.billAmountTotal]
+    [bill.cashPay, bill.upiPay, bill.billAmountTotal, refundAmount]
   );
 
   useEffect(() => {
     getAllLeanItems();
-    getUserData();
   }, []);
 
-  // To save bill items in billItem Reducer
   useEffect(() => {
     dispatch({ type: 'BILL_ITEMS_LIST', payload: bill });
     // eslint-disable-next-line
   }, [bill]);
 
-  useEffect(()=>{
-    billBarcode && window.print();
-    setBill(BILL_INITIAL_STATE);
-  },[billBarcode])
-
   return (
-    <>
+    <div>
+      <div
+        style={{
+          display: 'flex',
+          width: '100%',
+          gap: '5px',
+          fontSize: '20px',
+          padding: '20px',
+        }}
+      >
+        <Input
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          style={{ width: '250px' }}
+        />
+        <Button disabled={!slug} onClick={getBillRequest}>Get Bill</Button>
+      </div>
+      <div style={{ padding: '20px' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            width: '100%',
+            gap: '10px',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '5px',
+              fontSize: '20px',
+              alignItems: 'flex-start',
+            }}
+          >
+            <div>Customer Name: {existingBill?.customerName ?? ''}</div>
+            <div>Customer Phone: {existingBill?.customerPhone ?? ''}</div>
+            <div>
+              Billing Time:{' '}
+              {existingBill?.createdAt
+                ? new Date(existingBill?.createdAt).toLocaleString()
+                : ''}
+            </div>
+            <div>Available Credits: {existingBill?.availableCredits ?? ''}</div>
+          </div>
+        </div>
+        <div style={{ width: 'fit-content' }}>
+          <Button
+            disabled={Object.keys(returningItems).length <= 0}
+            onClick={() => setShowReturnItems(!showReturnItems)}
+          >
+            {showReturnItems ? 'Reset' : 'Return'}
+          </Button>
+        </div>
+
+        {Boolean(existingBill?.items?.length) && !showReturnItems && (
+          <Table
+            className="barcode-suggestion-list"
+            style={{
+              backgroundColor: 'white',
+              border: '1px solid #d3c7c7',
+              margin: '20px 0',
+            }}
+          >
+            <tbody>
+              <tr>
+                <td style={{ textAlign: 'start' }}>Return or Exchange</td>
+                <td style={{ textAlign: 'center' }}>Barcode</td>
+                <td style={{ textAlign: 'center' }}>Name</td>
+                <td style={{ textAlign: 'center' }}>Item Per Unit Quantity</td>
+                <td style={{ textAlign: 'center' }}>Quantity Unit Name</td>
+                <td style={{ textAlign: 'center' }}>Selling Price Per Unit</td>
+                <td style={{ textAlign: 'center' }}>Quantity In Bill</td>
+                <td style={{ textAlign: 'center' }}>Selling Price Total</td>
+              </tr>
+              {existingBill?.items?.map((item, idx) => {
+                const {
+                  itemDetail,
+                  itemQuantityInBill,
+                  itemSellingPriceTotal,
+                } = item;
+                const {
+                  _id,
+                  itemName,
+                  itemBarcode,
+                  itemPerUnitQuantity,
+                  quantityUnitName,
+                  itemSellingPricePerUnit,
+                } = itemDetail;
+                return (
+                  <tr
+                    key={`tr-key-${idx}`}
+                    style={{
+                      padding: '5px',
+                      fontSize: '16px',
+                      fontStyle: 'bold',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      if (!returningItems[_id]) {
+                        setReturningItem((state) => ({
+                          ...state,
+                          [_id]: item,
+                        }));
+                      } else {
+                        setReturningItem((state) => {
+                          const newState = {};
+                          Object.entries(state).forEach(([key, val]) => {
+                            if (_id !== key) newState[key] = val;
+                          });
+                          return newState;
+                        });
+                      }
+                    }}
+                  >
+                    <td style={{ textAlign: 'start' }}>
+                      <input
+                        type="checkbox"
+                        style={{
+                          width: '25px',
+                          height: '25px',
+                          cursor: 'pointer',
+                        }}
+                        checked={Boolean(returningItems[_id])}
+                      />
+                    </td>
+                    <td style={{ textAlign: 'center' }}>{itemBarcode}</td>
+                    <td style={{ textAlign: 'center' }}>{itemName}</td>
+                    <td style={{ textAlign: 'center' }}>
+                      {itemPerUnitQuantity}
+                    </td>
+                    <td style={{ textAlign: 'center' }}>{quantityUnitName}</td>
+                    <td style={{ textAlign: 'center' }}>
+                      {itemSellingPricePerUnit}
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {itemQuantityInBill}
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {returningItems[_id]
+                        ? returningItems[_id].itemSellingPriceTotal
+                        : itemSellingPriceTotal}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        )}
+        <div
+          style={{
+            display: isBillLoading ? 'flex' : 'none',
+            justifyContent: 'center',
+            width: '100%',
+            padding: '30px',
+          }}
+        >
+          <Loader />
+        </div>
+        {showReturnItems && Object.values(returningItems).length > 0 && (
+          <Table
+            className="barcode-suggestion-list"
+            style={{
+              backgroundColor: 'white',
+              border: '1px solid #d3c7c7',
+              margin: '20px 0',
+            }}
+          >
+            <tbody>
+              <tr>
+                <td style={{ textAlign: 'center' }}>Barcode</td>
+                <td style={{ textAlign: 'center' }}>Name</td>
+                <td style={{ textAlign: 'center' }}>PerUnitQuantity</td>
+                <td style={{ textAlign: 'center' }}>SellingPricePerUnit</td>
+                <td style={{ textAlign: 'center' }}>Return Quantity</td>
+                <td style={{ textAlign: 'center' }}>QuantityInBill</td>
+                <td style={{ textAlign: 'center' }}>SellingPriceTotal</td>
+              </tr>
+              {Object.values(returningItems)?.map((item, idx) => {
+                const {
+                  itemDetail,
+                  itemQuantityInBill,
+                  itemSellingPriceTotal,
+                } = item;
+                const {
+                  _id,
+                  itemName,
+                  itemBarcode,
+                  itemPerUnitQuantity,
+                  quantityUnitName,
+                  itemSellingPricePerUnit,
+                } = itemDetail;
+                const { itemQuantityInBill: existingItemQuantity } =
+                  existingBill.items.find(
+                    (item) => item.itemDetail._id === _id
+                  );
+                return (
+                  <tr
+                    key={`tr-key-${idx}`}
+                    style={{
+                      padding: '5px',
+                      fontSize: '16px',
+                      fontStyle: 'bold',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <td style={{ textAlign: 'center' }}>{itemBarcode}</td>
+                    <td style={{ textAlign: 'center' }}>{itemName}</td>
+                    <td style={{ textAlign: 'center' }}>
+                      {itemPerUnitQuantity} {quantityUnitName}
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {itemSellingPricePerUnit}
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      <select
+                        style={{
+                          width: '100px',
+                          padding: '8px',
+                          fontSize: '15px',
+                        }}
+                        onChange={(e) => {
+                          const quantity = Number(e.target.value);
+                          setReturningItem((state) => {
+                            const newState = { ...state };
+                            newState[_id] = {
+                              ...newState[_id],
+                              itemQuantityInBill: quantity,
+                              itemSellingPriceTotal:
+                                itemSellingPricePerUnit * quantity,
+                            };
+                            return newState;
+                          });
+                        }}
+                        defaultValue={itemQuantityInBill}
+                      >
+                        {Array(Number(existingItemQuantity))
+                          .fill(null)
+                          .map((_, idx) => (
+                            <option value={idx + 1}>{idx + 1}</option>
+                          ))}
+                      </select>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {existingItemQuantity}
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {returningItems[_id]
+                        ? returningItems[_id].itemSellingPriceTotal
+                        : itemSellingPriceTotal}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        )}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div
+            className="bill-total"
+            style={{
+              backgroundColor: 'black',
+              width: 'fit-content',
+              padding: '10px',
+              borderRadius: '10px',
+            }}
+          >
+            <Text
+              color="red"
+              size="xl"
+              weight={800}
+              className="final-bill-text print-text"
+              td="underline"
+              style={{ textAlign: 'start' }}
+            >
+              Available Credits:
+              <h2>{existingBill?.availableCredits?.toFixed(2)}</h2>
+            </Text>
+          </div>
+          <Text
+            color="black"
+            size="xl"
+            weight={800}
+            className="final-bill-text print-text"
+            style={{ textAlign: 'start' }}
+          >
+            Item Amount to be Returned: {refundAmount || 0}
+          </Text>
+        </div>
+      </div>
       <div>
-        <h1>Billing Page</h1>
         <div className="billing-container">
           <p style={{ marginBottom: '20px', fontWeight: '700' }}>
             Total Items : {totalItems}
@@ -390,34 +688,29 @@ const NewBillPage = ({ billID = '' }) => {
             <h3>Time: {new Date().toLocaleTimeString()}</h3>
           </div>
 
-          {/* Customer section */}
-
           <div style={{ display: 'flex', gap: '30px' }}>
             <TextInput
               label="Customer Name"
               data-name="name"
               style={{ width: '180px' }}
-              value={bill.customerName}
+              value={bill.customerName ?? existingBill.customerName}
               onBlur={(e) => {
                 e.preventDefault();
-                setShowProfileData(false);
               }}
               onChange={(e) => {
                 setBill((prevBill) => ({
                   ...prevBill,
                   customerName: e.target.value,
                 }));
-                handleUserSearch(e);
               }}
             />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <TextInput
                 type="number"
                 label="Customer Phone No."
-                value={bill.customerPhone}
+                value={bill.customerPhone ?? existingBill.customerPhone}
                 onBlur={(e) => {
                   e.preventDefault();
-                  setShowProfileData(false);
                 }}
                 style={{ width: '180px', paddingBottom: '4px' }}
                 onChange={(e) => {
@@ -428,77 +721,21 @@ const NewBillPage = ({ billID = '' }) => {
                     ...prevBill,
                     customerPhone: e.target.value,
                   }));
-                  handleUserSearch(e);
                 }}
               />
               <div style={{ height: '10px', color: 'red' }}>{phoneError}</div>
             </div>
-
-            {showProfileData && Boolean(filterUserProfile.length) ? (
-              <div className="user-profile-data">
-                <Table
-                  withBorder
-                  withColumnBorders
-                  striped
-                  highlightOnHover
-                  style={{ backgroundColor: 'white' }}
-                >
-                  <thead>
-                    <tr>
-                      <td>Name</td>
-                      <td>Mobile No</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filterUserProfile.map((value, key) => {
-                      return (
-                        <tr
-                          onMouseDown={() => {
-                            setBill((prevBill) => ({
-                              ...prevBill,
-                              customerPhone: value._id,
-                              customerName: value.customerName,
-                            }));
-                            setShowProfileData(false);
-                            setPhoneError('');
-                          }}
-                          key={key}
-                          style={{
-                            padding: '5px',
-                            fontSize: '16px',
-                            fontStyle: 'bold',
-                            cursor: 'pointer',
-                          }}
-                          className="show-data"
-                        >
-                          <td>{value.customerName}</td>
-                          <td>{value._id}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </Table>
-              </div>
-            ) : (
-              ''
-            )}
           </div>
 
           <Button
-            sx={{ background: 'black', marginRight: '1rem' }}
-            onClick={() => refreshPage(setBill, BILL_INITIAL_STATE)}
-          >
-            Refresh
-          </Button>
-          <Button
             sx={{ marginRight: '1rem' }}
-            disabled={!bill.billItems.length || bill.amountReturn < 0}
-            className="print-btn"
-            onClick={() =>
-              addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE, {
-                billID,
-              })
+            disabled={
+              !Object.keys(returningItems).length || bill.amountReturn < 0
             }
+            className="print-btn"
+            onClick={() => {
+              addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE);
+            }}
             loading={apiLoading}
           >
             Save and Print
@@ -622,7 +859,7 @@ const NewBillPage = ({ billID = '' }) => {
                           itemsByBarcode[e.target.value] &&
                           itemsByBarcode[e.target.value]?.length === 1
                         ) {
-                          addItemToBill({
+                          onItemAddToBill({
                             e: e,
                             itemData: itemsByBarcode,
                             key: e.target.value,
@@ -666,7 +903,7 @@ const NewBillPage = ({ billID = '' }) => {
                               }}
                               className="show-data"
                               onClick={(e) => {
-                                addItemToBill({
+                                onItemAddToBill({
                                   e: e,
                                   itemData: itemsByBarcode,
                                   key: value,
@@ -709,7 +946,7 @@ const NewBillPage = ({ billID = '' }) => {
                   {inputValue.itemName && Boolean(filteredData.length) && (
                     <div
                       onClick={(e) => {
-                        addItemToBill({ e: e, itemData: itemsByName });
+                        onItemAddToBill({ e: e, itemData: itemsByName });
                       }}
                       className="data-result"
                       style={{ minWidth: 'fit-content' }}
@@ -755,6 +992,12 @@ const NewBillPage = ({ billID = '' }) => {
                   <tr
                     className="bill-item-row"
                     key={`${idx}${itemObj['itemName']}`}
+                    style={{
+                      background:
+                        itemObj.itemQuantityInBill === 0
+                          ? '#c76868'
+                          : 'transparent',
+                    }}
                   >
                     <td className="idx">
                       <Text color="black" weight={700} size="lg">
@@ -893,24 +1136,60 @@ const NewBillPage = ({ billID = '' }) => {
             }}
           >
             <div
-              className="bill-total"
               style={{
-                backgroundColor: 'black',
-                width: 'fit-content',
-                padding: '10px',
-                borderRadius: '10px',
+                display: 'flex',
               }}
             >
-              <Text
-                color="red"
-                size="xl"
-                weight={800}
-                className="final-bill-text print-text"
-                td="underline"
+              <div
+                className="bill-total"
+                style={{
+                  backgroundColor: 'black',
+                  width: 'fit-content',
+                  padding: '10px',
+                  borderRadius: '10px',
+                }}
               >
-                Bill Total:
-                <h2>{bill?.billAmountTotal?.toFixed(2)}</h2>
-              </Text>
+                <Text
+                  color="red"
+                  size="xl"
+                  weight={800}
+                  className="final-bill-text print-text"
+                  td="underline"
+                >
+                  New Bill Total:
+                  <h2>
+                    {isNaN(bill.billAmountTotal) ? '' : bill.billAmountTotal}
+                  </h2>
+                </Text>
+              </div>
+              <div
+                className="bill-total"
+                style={{
+                  backgroundColor: 'white',
+                  width: 'fit-content',
+                  padding: '10px',
+                  borderRadius: '10px',
+                }}
+              >
+                <Text
+                  color="red"
+                  size="xl"
+                  weight={800}
+                  className="final-bill-text print-text"
+                  td="underline"
+                >
+                  {bill.totalRefundAmount > 0
+                    ? 'Refund Amount'
+                    : 'Amount Return'}
+                  :
+                  <h2>
+                    {' '}
+                    {bill.totalRefundAmount > 0
+                      ? bill.totalRefundAmount
+                      : bill.amountReturn}
+                  </h2>
+                </Text>
+              </div>
             </div>
             <div className="discount-line">
               <Text
@@ -998,14 +1277,6 @@ const NewBillPage = ({ billID = '' }) => {
                 </tr>
               </tbody>
             </Table>
-            <Text
-              color="black"
-              size="xl"
-              weight={800}
-              className="final-bill-text print-text"
-            >
-              Amount Return: {Number(bill.amountReturn || 0)}
-            </Text>
           </div>
         </div>
         <div
@@ -1017,58 +1288,6 @@ const NewBillPage = ({ billID = '' }) => {
           }}
         >
           <Loader />
-          {billID && (
-            <div style={{ width: '50%' }}>
-              <Table>
-                <thead>
-                  <th>
-                    <Text weight={700} color="black" size="lg">
-                      Created By
-                    </Text>
-                  </th>
-                  <th>
-                    <Text weight={700} color="black" size="lg">
-                      Updated At
-                    </Text>
-                  </th>
-                </thead>
-                <tbody>
-                  {bill?.updated?.map((value, key) => {
-                    return (
-                      <tr
-                        key={key}
-                        style={{
-                          padding: '5px',
-                          fontSize: '16px',
-                          fontStyle: 'bold',
-                        }}
-                        className="show-data"
-                      >
-                        <td>
-                          <Text weight={500} color="black" size="md">
-                            User
-                          </Text>
-                        </td>
-                        <td>
-                          <Text weight={500} color="black" size="md">
-                            {new Date(value).toLocaleDateString('en-US', {
-                              weekday: 'long',
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit',
-                            })}
-                          </Text>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
-            </div>
-          )}
         </div>
         <div className="print-container">
           <div className="header">
@@ -1077,21 +1296,27 @@ const NewBillPage = ({ billID = '' }) => {
             <h3>Date: {new Date().toDateString()}</h3>
             <h3>Time: {new Date().toLocaleTimeString()}</h3>
           </div>
-          {billBarcode && <Barcode
+          {/* <div className="print-table-head"> */}
+          {billBarcode && (
+            <Barcode
               options={{
                 height: 30,
                 width: 1.2,
                 displayValue: false,
               }}
               value={billBarcode}
-            />}
-          <div className="print-table-head">
-            <p>Name</p>
-            <p>Qty.</p>
-            <p>MRP</p>
-            <p>Price</p>
-            <p>Total</p>
-          </div>
+            />
+          )}
+          {/* </div> */}
+          {bill.billItems.length > 0 && (
+            <div className="print-table-head">
+              <p>Name</p>
+              <p>Qty.</p>
+              <p>MRP</p>
+              <p>Price</p>
+              <p>Total</p>
+            </div>
+          )}
           <div className="print-table-body">
             {bill.billItems.map((item, index) => {
               const itemObj = { ...item, ...item.itemDetail };
@@ -1131,16 +1356,25 @@ const NewBillPage = ({ billID = '' }) => {
                     {Number(bill.amountReturn || 0)}
                   </p>
                 </div>
+                {Number(bill.totalRefundAmount) > 0 && (
+                  <div>
+                    <p>Amount Refunded</p>
+                    <p className="final-amount">
+                      {Number(bill.totalRefundAmount)}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             <div className="discount-section">
               <p>You saved {bill?.billDiscountTotal?.toFixed(2)} on MRP</p>
             </div>
+            <h2 style={{ color: 'red' }}>Returned Bill</h2>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default NewBillPage;
+export default ReturnBill;

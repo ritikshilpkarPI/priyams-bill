@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-
 export const Home = lazy(() => import('./Home'));
 export const BillFeed = lazy(() => import('./BillFeed'));
 export const Billing = lazy(() => import('./Billing'));
@@ -21,4 +20,7 @@ export const PaidPOs = lazy(()=>  import('./PaidPOs'));
 export const UnpaidPOs = lazy(()=>  import('./UnpaidPOs'));
 export const UnpaidPurchaseOrder = lazy(()=>  import('./UnpaidPurchaseOrder'));
 export const PayPurchaseOrderBill = lazy(()=> import('./PayPurchaseOrderBill'))
+export const AddExpiredItem = lazy(()=> import('./AddExpiredItem'))
+export const ExpiredItemList = lazy(()=> import('./ExpiredItemList'))
+export const ReturnAndExchange = lazy(()=> import('./ReturnBill'));
 

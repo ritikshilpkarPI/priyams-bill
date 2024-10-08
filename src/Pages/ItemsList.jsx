@@ -27,6 +27,7 @@ import { Dropzone } from '@mantine/dropzone';
 import { useDisclosure } from '@mantine/hooks';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access.js';
+import { Pagination } from '../components/pagination/paginations.jsx';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: '',
@@ -83,10 +84,25 @@ const ItemsList = () => {
   const openRef = useRef(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [index, setIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limitPage, setLimitPage] = useState(100);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
+  const totalPages = totalItemsCount ? Math.ceil(totalItemsCount / limitPage) - 1 : 0;
+  const paginationArrLength = 8;
 
-
+  const [paginationIndices, setPaginationIndices] = useState([]);
+  const skip = limitPage*(currentPage-1);
+  
   const history = useHistory();
 
+  const paginationArr = (length)=> {
+    let arr = [], startElem = 2;
+    for (let i = 0; i < length; i++) { 
+      arr[i]=startElem++;
+    }
+    setPaginationIndices(arr);
+  }
+  
   useEffect(() => {
     (async () => {
       const fetch = await genericAxios({
@@ -96,19 +112,31 @@ const ItemsList = () => {
           filters: {
             minStockOnly: false,
             isDeleted: false,
+            skip,
+            limit: limitPage
           },
         },
         headers: {
           Cookie: '',
         },
       });
-      if (fetch.error) return;
-      const itemsData = fetch?.data?.message?.items;
+      if (fetch.error){ 
+        setItemsList([]);
+        return;
+      }
+      const itemsData = fetch?.data?.message?.items??[];
+      const itemCount = fetch?.data?.message?.itemCount??0;    
+      // const prevCurrent = [...itemsList,...itemsData];      
       setItemsList(itemsData);
+      setTotalItemsCount(itemCount)
       // setLoaderDisplay(false);
     })();
     // eslint-disable-next-line
-  }, []);
+  }, [currentPage]);
+  useEffect(()=>{
+    const length = totalPages > paginationArrLength ? paginationArrLength - 2 : totalPages - 2;
+      !paginationIndices.length && paginationArr(length)
+  },[totalItemsCount])
 
   useEffect(() => {
     setItems([...itemsList]);
@@ -1526,7 +1554,7 @@ const ItemsList = () => {
           Barcode Scanner
         </Button>
       </div>
-      <h4 className="total-item-count">Total Items : {items.length}</h4>
+      <h4 className="total-item-count">Total Items : {totalItemsCount}</h4>
       {openScanner && (
         <BarcodeScannerComponent
           width={500}
@@ -1902,6 +1930,7 @@ const ItemsList = () => {
         <Table className="show-items-table">
           <tbody className="add-item-row-body">
             <ListComponents />
+            <Pagination  currentPage={currentPage} totalPages={totalPages} paginationIndices={paginationIndices} setCurrentPage={setCurrentPage} setPaginationIndices={ setPaginationIndices } className={"inventory-pagination"}/>
           </tbody>
         </Table>
       </div>

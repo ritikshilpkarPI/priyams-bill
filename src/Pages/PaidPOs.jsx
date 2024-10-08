@@ -16,9 +16,11 @@ const PaidPOs = () => {
       setLoading(true)
       const response = await genericAxios({
         method: API_METHODS.POST,
-        url: '/api/purchaseOrder/getOrdersByQuery/',
+        url: '/api/purchaseOrder/getOrdersByQuery',
         data: {
-          isPaid: true
+          query:{
+            isPaid:true
+          }
         },
       })
 

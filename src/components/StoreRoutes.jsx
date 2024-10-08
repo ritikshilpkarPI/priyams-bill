@@ -29,7 +29,10 @@ import {
   PaidPOs,
   UnpaidPOs,
   UnpaidPurchaseOrder,
-  PayPurchaseOrderBill
+  PayPurchaseOrderBill,
+  AddExpiredItem,
+  ExpiredItemList,
+  ReturnAndExchange,
 } from '../Pages';
 import Label from 'src/Pages/Label';
 import { Fragment } from 'react';
@@ -46,6 +49,8 @@ const StoreRoutes = () => {
           path="/showBill/:customerBillId"
           component={CustomerBill}
         />
+          <Route exact path="/addExpiredItem" component={AddExpiredItem} />
+          <Route exact path="/expiredItemList" component={ExpiredItemList} />
         <Fragment>
           <ProtectedRoutes>
             <Route path="/billing" exact component={NewBillingPage} />
@@ -91,6 +96,7 @@ const StoreRoutes = () => {
             <Route exact path="/unpaidPOs" component={UnpaidPOs} />
             <Route exact path="/purchaseOrderBill/:id" component={UnpaidPurchaseOrder} />            {/* <ProtectedComponent role={access.REPORT_PAGE_ROUTE}> */}
             <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
+            <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>

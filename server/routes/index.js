@@ -69,7 +69,13 @@ const {
   uploadImageCloudinary,
   getPurchaseOrderByPaidStatus,
   getPurchaseOrderById,
-  payPurchaseOrderBill
+  payPurchaseOrderBill,
+  addExpiredItem,
+  getExpiredItems,
+  addNewReturnBill,
+  getBillForReturnExchange,
+  getItemsWithSelection,
+  getItemByBarcode,
 } = require('../controllers/index');
 
 // online order apis
@@ -77,6 +83,8 @@ router.get(API_PATHS.ORDERS.GET_USER_ORDERS, isLoggedIn, getUserOrders);
 router.post(API_PATHS.ORDERS.UPDATE_USER_ORDERS, isLoggedIn, updateOrderStatus);
 
 router.get(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsFeed);
+router.get(API_PATHS.INVENTORY.GET_ITEMS_FOR_PURCHASE_ORDER, isLoggedIn, getItemsWithSelection);
+router.get(`${API_PATHS.INVENTORY.GET_ITEMS}/:itemBarcode`, isLoggedIn, getItemByBarcode);
 router.get(
   API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
   isLoggedIn,
@@ -202,7 +210,9 @@ router.post(API_PATHS.BILLING.POST_SEND_MESSAGE, isLoggedIn, sendMessage);
 router.post(API_PATHS.BILLING.POST_NEW_BILL, isLoggedIn, addNewBill);
 router.delete(API_PATHS.BILLING.DELETE_BILL, isLoggedIn, deleteBill);
 router.post(API_PATHS.BILLING.SAVE_OR_CACHE_BILL, isLoggedIn, saveOrCacheBill);
+router.post(API_PATHS.BILLING.POST_RETURN_BILLS, isLoggedIn, addNewReturnBill);
 router.get(API_PATHS.BILLING.GET_UNSAVED_BILLS, isLoggedIn, getUnSavedBills);
+router.get(`${API_PATHS.BILLING.GET_BILL}/:id`, isLoggedIn, getBillForReturnExchange);
 
 //attendance APIs
 router.post(
@@ -297,5 +307,7 @@ router.post(
   // isLoggedIn,
   payPurchaseOrderBill
 );
+router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)
+router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,isLoggedIn,getExpiredItems)
 
 module.exports = router;
