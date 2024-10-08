@@ -70,6 +70,8 @@ const addExpiredItem = require('./addExpiredItem');
 const getExpiredItems = require('./getExpiredItems');
 const { addNewReturnBill } = require('./addNewReturnBill');
 const { getBillForReturnExchange } = require('./getBillForReturnExchange');
+const getItemsWithSelection = require('./getItemsWithSelection');
+const getItemByBarcode = require('./getItemByBarcode');
 
 module.exports = {
   getStaff,
@@ -144,4 +146,6 @@ module.exports = {
   getExpiredItems,
   addNewReturnBill,
   getBillForReturnExchange,
+  getItemsWithSelection,
+  getItemByBarcode
 };

@@ -36,6 +36,7 @@ export const API_PATHS = {
     GET_BILL: '/api/billing/getBill',
   },
   INVENTORY: {
+    GET_ITEMS_FOR_PURCHASE_ORDER: '/api/inventory/getItemsWithSelection',
     POST_ADD_NEW_ITEM: '/api/inventory/addNewItem',
     POST_FILTER_EXPIRY_DATES: '/api/inventory/filterExpiryDates',
     POST_SAVE_INVENTORY: '/api/inventory/saveInventory',
