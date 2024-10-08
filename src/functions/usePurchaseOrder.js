@@ -22,6 +22,7 @@ const usePurchaseOrder = (history) => {
   const [deleteBills, setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
   const [Loading, setLoading] = useState(false);
+  const [itemLoading, setItemLoading] = useState(false);
   const [, setPrevPaidAmount] = useState(0);
   const [, setState] = useState({});
   const [disableDraft, setDisableDraft] = useState(false);
@@ -581,7 +582,7 @@ const usePurchaseOrder = (history) => {
   useEffect(() => {
     (async () => {
       const fetch = await genericAxios({
-        url: API_PATHS.INVENTORY.GET_ITEMS,
+        url: API_PATHS.INVENTORY.GET_ITEMS_FOR_PURCHASE_ORDER,
         method: API_METHODS.GET,
         params: {
           filters: {
@@ -627,6 +628,37 @@ const usePurchaseOrder = (history) => {
     setDisableDraft(flag);
   }, [purchaseList, purchaseForm]);
 
+  useEffect(() => {
+    if(form.values.barcode){
+      (async () => {
+        setItemLoading(true);
+        const fetch = await genericAxios({
+          url: `${API_PATHS.INVENTORY.GET_ITEMS}/${form.values.barcode}`,
+          method: API_METHODS.GET,
+          headers: {
+            Cookie: '',
+          },
+        });
+        if (fetch.error) return;
+        const item = fetch?.data?.message;
+        form.setValues(state=>({...state,
+          currentStock: item.itemStockQuantity,
+          stockQuantity: 0,
+          minimumQuantity: item.minimumStockQuantity,
+          brand: item.itemBrandName,
+          category: item.itemCategory,
+          sellingPrice: item.itemSellingPricePerUnit,
+          mrp: item.itemMRPperUnit,
+          costPrice: item.itemCostPricePerUnit,
+          slabPrice: item.slabPricing,
+          item_id: String(item._id),
+          unit: item.quantityUnitName,
+        }))
+        setItemLoading(false);
+      })();
+    }
+  }, [form.values.barcode])
+
   return {
     form,
     opened,
@@ -669,7 +701,8 @@ const usePurchaseOrder = (history) => {
     Loading,
     disableDraft,
     itemsList,
-    setLoading
+    setLoading,
+    itemLoading
   };
 };
 

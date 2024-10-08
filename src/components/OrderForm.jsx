@@ -8,6 +8,7 @@ import {
   NumberInput,
   Switch,
   Select,
+  LoadingOverlay,
 } from '@mantine/core';
 // import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
@@ -40,7 +41,8 @@ const OrderForm = ({
   deleteSlab,
   slabs,
   setSlabs,
-  setLoading
+  setLoading,
+  itemLoading
 }) => {
   const [imageList, setImageList] = useState([])
   const [selectedImage, setSelectedImage] = useState('')
@@ -150,6 +152,7 @@ const OrderForm = ({
       padding="sm"
       size="xl"
     >
+      <LoadingOverlay visible={itemLoading} />
       <Box sx={{ maxWidth: 400 }} mx="auto" my={'lg'}>
         <form
           className="order-form"

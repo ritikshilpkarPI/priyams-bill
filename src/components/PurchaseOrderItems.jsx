@@ -56,7 +56,8 @@ const PurchaseOrderItems = ({ history }) => {
     Loading,
     disableDraft,
     itemsList,
-    setLoading
+    setLoading,
+    itemLoading
   } = usePurchaseOrder(history);
 
   const { filteredItemsByName } = useNameSearchItem(form.values.inputName, itemsList);
@@ -103,6 +104,7 @@ const PurchaseOrderItems = ({ history }) => {
         slabs={slabs}
         setSlabs={setSlabs}
         setLoading={setLoading}
+        itemLoading={itemLoading}
       />
       <EditPurchaseDetail
         openPurchaseDrawer={openPurchaseDrawer}
