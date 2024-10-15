@@ -414,7 +414,7 @@ const usePurchaseOrder = (history) => {
       sum += element.value;
     });
     if (sum === values.stockQuantity || !form.values.validate) {
-      form.values.slabPrice = [...slabs];
+      form.values.slabPrice = Array.isArray(slabs) ? [...slabs] : [];
       const new_order = { ...values };
       try {
         onLoader();
