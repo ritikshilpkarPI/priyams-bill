@@ -105,14 +105,14 @@ const ItemsList = () => {
   }
 
   // useEffect(() => {
-    const getFilteredItems = async () => {
+    const getFilteredItems = async ({itemBarcode,itemName,itemBrandName }) => {
       const fetch = await genericAxios({
         url: API_PATHS.INVENTORY.GET_ITEMS,
         method: API_METHODS.POST,
         data: {
-          itemBarcode: newItemInput.itemBarcode,
-          itemName: newItemInput.itemName,
-          itemBrandName: newItemInput.itemBrandName,
+          itemBarcode,
+          itemName,
+          itemBrandName,
         },
         headers: {
           Cookie: '',
@@ -172,7 +172,8 @@ const ItemsList = () => {
 
   const handleNewItemInput = async (e) => {
     const { name, value } = e.target;
-    setNewItemInput({ ...newItemInput, [name]: value });
+    const newInputVal = { ...newItemInput, [name]: value };
+    setNewItemInput(newInputVal);
     let filteredItems = itemsList.filter(
       (itemObj) =>
         itemObj[name] &&
@@ -182,7 +183,7 @@ const ItemsList = () => {
           .includes(value.toString().toLowerCase())
     );
     if (filteredItems.length <= 0) {
-      filteredItems = await debounce(getFilteredItems, 1000)(); 
+      filteredItems = await debounce(()=>getFilteredItems(newInputVal), 1000)(); 
     }
     setItems([...filteredItems]);
   };
