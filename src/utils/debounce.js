@@ -1,0 +1,9 @@
+export const debounce = (func, delay) => {
+    let timeoutId;
+    return function (...args) {
+      const context = this;
+      clearTimeout(timeoutId);  // Clear the previous timeout
+      timeoutId = setTimeout(() => func.apply(context, args), delay); // Set a new timeout
+    };
+  }
+  

@@ -76,6 +76,7 @@ const {
   getBillForReturnExchange,
   getItemsWithSelection,
   getItemByBarcode,
+  getItemsByFilter
 } = require('../controllers/index');
 
 // online order apis
@@ -85,6 +86,7 @@ router.post(API_PATHS.ORDERS.UPDATE_USER_ORDERS, isLoggedIn, updateOrderStatus);
 router.get(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsFeed);
 router.get(API_PATHS.INVENTORY.GET_ITEMS_FOR_PURCHASE_ORDER, isLoggedIn, getItemsWithSelection);
 router.get(`${API_PATHS.INVENTORY.GET_ITEMS}/:itemBarcode`, isLoggedIn, getItemByBarcode);
+router.post(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsByFilter);
 router.get(
   API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
   isLoggedIn,
