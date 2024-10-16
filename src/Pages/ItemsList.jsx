@@ -110,7 +110,7 @@ const ItemsList = () => {
         url: API_PATHS.INVENTORY.GET_ITEMS,
         method: API_METHODS.POST,
         data: {
-          itemBarcode: "3573490963",
+          itemBarcode: newItemInput.itemBarcode,
           itemName: newItemInput.itemName,
           itemBrandName: newItemInput.itemBrandName,
         },
@@ -118,7 +118,6 @@ const ItemsList = () => {
           Cookie: '',
         },
       });
-      console.log({fetch})
       if (fetch.error){ 
         return [];
       }
@@ -182,12 +181,11 @@ const ItemsList = () => {
           .toLowerCase()
           .includes(value.toString().toLowerCase())
     );
-    if(filteredItems.length <= 0) {
-      filteredItems = await getFilteredItems();
+    if (filteredItems.length <= 0) {
+      filteredItems = await debounce(getFilteredItems, 1000)(); 
     }
     setItems([...filteredItems]);
   };
-
   const handleSelectChange = (value, name) => {
     setNewItemInput({ ...newItemInput, [name]: value });
     const filteredItems = itemsList.filter(
