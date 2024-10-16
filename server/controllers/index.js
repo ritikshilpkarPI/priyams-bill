@@ -72,6 +72,7 @@ const { addNewReturnBill } = require('./addNewReturnBill');
 const { getBillForReturnExchange } = require('./getBillForReturnExchange');
 const getItemsWithSelection = require('./getItemsWithSelection');
 const getItemByBarcode = require('./getItemByBarcode');
+const getItemsByFilter = require('./getItemsByFilter');
 
 module.exports = {
   getStaff,
@@ -147,5 +148,6 @@ module.exports = {
   addNewReturnBill,
   getBillForReturnExchange,
   getItemsWithSelection,
-  getItemByBarcode
+  getItemByBarcode,
+  getItemsByFilter
 };

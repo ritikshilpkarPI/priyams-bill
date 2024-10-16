@@ -28,6 +28,7 @@ import { useDisclosure } from '@mantine/hooks';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access.js';
 import { Pagination } from '../components/pagination/paginations.jsx';
+import { debounce } from 'src/utils/debounce.js';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: '',
@@ -102,6 +103,27 @@ const ItemsList = () => {
     }
     setPaginationIndices(arr);
   }
+
+  // useEffect(() => {
+    const getFilteredItems = async ({itemBarcode,itemName,itemBrandName }) => {
+      const fetch = await genericAxios({
+        url: API_PATHS.INVENTORY.GET_ITEMS,
+        method: API_METHODS.POST,
+        data: {
+          itemBarcode,
+          itemName,
+          itemBrandName,
+        },
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (fetch.error){ 
+        return [];
+      }
+      return fetch?.data?.message ?? [];
+    };
+  // },[])
   
   useEffect(() => {
     (async () => {
@@ -148,10 +170,11 @@ const ItemsList = () => {
     }
   }, [items]);
 
-  const handleNewItemInput = (e) => {
+  const handleNewItemInput = async (e) => {
     const { name, value } = e.target;
-    setNewItemInput({ ...newItemInput, [name]: value });
-    const filteredItems = itemsList.filter(
+    const newInputVal = { ...newItemInput, [name]: value };
+    setNewItemInput(newInputVal);
+    let filteredItems = itemsList.filter(
       (itemObj) =>
         itemObj[name] &&
         itemObj[name]
@@ -159,9 +182,11 @@ const ItemsList = () => {
           .toLowerCase()
           .includes(value.toString().toLowerCase())
     );
+    if (filteredItems.length <= 0) {
+      filteredItems = await debounce(()=>getFilteredItems(newInputVal), 1000)(); 
+    }
     setItems([...filteredItems]);
   };
-
   const handleSelectChange = (value, name) => {
     setNewItemInput({ ...newItemInput, [name]: value });
     const filteredItems = itemsList.filter(
