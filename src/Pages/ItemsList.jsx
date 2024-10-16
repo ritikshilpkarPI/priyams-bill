@@ -104,26 +104,24 @@ const ItemsList = () => {
     setPaginationIndices(arr);
   }
 
-  // useEffect(() => {
-    const getFilteredItems = async () => {
-      const fetch = await genericAxios({
-        url: API_PATHS.INVENTORY.GET_ITEMS,
-        method: API_METHODS.POST,
-        data: {
-          itemBarcode: newItemInput.itemBarcode,
-          itemName: newItemInput.itemName,
-          itemBrandName: newItemInput.itemBrandName,
-        },
-        headers: {
-          Cookie: '',
-        },
-      });
-      if (fetch.error){ 
-        return [];
-      }
-      return fetch?.data?.message ?? [];
-    };
-  // },[])
+  const getFilteredItems = async () => {
+    const fetch = await genericAxios({
+      url: API_PATHS.INVENTORY.GET_ITEMS,
+      method: API_METHODS.POST,
+      data: {
+        itemBarcode: newItemInput.itemBarcode,
+        itemName: newItemInput.itemName,
+        itemBrandName: newItemInput.itemBrandName,
+      },
+      headers: {
+        Cookie: '',
+      },
+    });
+    if (fetch.error){ 
+      return [];
+    }
+    return fetch?.data?.message ?? [];
+  };
   
   useEffect(() => {
     (async () => {
@@ -1562,7 +1560,6 @@ const ItemsList = () => {
   return (
     <div className="inventory-items-container">
       <div className="top-buttons">
-        <Button onClick={debounce(()=>console.log("logged"), 1000)}>Use Throttle</Button>
         {/* <ProtectedComponent role={access.UPLOAD_CSV_BUTTON}> */}
         <FileButton onChange={setCsvFile} className="upload-btn">
           {(props) => <Button {...props}>Upload CSV</Button>}
