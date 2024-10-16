@@ -1563,7 +1563,6 @@ const ItemsList = () => {
   return (
     <div className="inventory-items-container">
       <div className="top-buttons">
-        <Button onClick={debounce(()=>console.log("logged"), 1000)}>Use Throttle</Button>
         {/* <ProtectedComponent role={access.UPLOAD_CSV_BUTTON}> */}
         <FileButton onChange={setCsvFile} className="upload-btn">
           {(props) => <Button {...props}>Upload CSV</Button>}
