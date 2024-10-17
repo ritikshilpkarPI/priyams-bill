@@ -362,17 +362,17 @@ const usePurchaseOrder = (history) => {
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
       inputName: item.itemName,
-      currentStock: item.itemStockQuantity,
+      currentStock: item?.itemStockQuantity,
       stockQuantity: 0,
-      minimumQuantity: item.minimumStockQuantity,
-      brand: item.itemBrandName,
-      category: item.itemCategory,
-      sellingPrice: item.itemSellingPricePerUnit,
-      mrp: item.itemMRPperUnit,
-      costPrice: item.itemCostPricePerUnit,
-      slabPrice: item.slabPricing,
+      minimumQuantity: item?.minimumStockQuantity,
+      brand: item?.itemBrandName,
+      category: item?.itemCategory,
+      sellingPrice: item?.itemSellingPricePerUnit,
+      mrp: item?.itemMRPperUnit,
+      costPrice: item?.itemCostPricePerUnit,
+      slabPrice: item?.slabPricing,
       item_id: String(item._id),
-      unit: item.quantityUnitName,
+      unit: item?.quantityUnitName,
     }));
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
@@ -380,19 +380,19 @@ const usePurchaseOrder = (history) => {
   const handleSelectOrderItems = (item, filteredItemsByBarcode) => {
     if (filteredItemsByBarcode.length === 1) {
       form.setValues((prev) => ({
-        barcode: item.itemBarcode,
-        inputName: item.itemName,
-        currentStock: item.itemStockQuantity,
+        barcode: item?.itemBarcode,
+        inputName: item?.itemName,
+        currentStock: item?.itemStockQuantity,
         stockQuantity: 0,
-        minimumQuantity: item.minimumStockQuantity,
-        brand: item.itemBrandName,
-        category: item.itemCategory,
-        sellingPrice: item.itemSellingPricePerUnit,
-        mrp: item.itemMRPperUnit,
-        costPrice: item.itemCostPricePerUnit,
-        slabPrice: item.slabPricing,
-        item_id: String(item._id),
-        unit: item.quantityUnitName,
+        minimumQuantity: item?.minimumStockQuantity,
+        brand: item?.itemBrandName,
+        category: item?.itemCategory,
+        sellingPrice: item?.itemSellingPricePerUnit,
+        mrp: item?.itemMRPperUnit,
+        costPrice: item?.itemCostPricePerUnit,
+        slabPrice: item?.slabPricing,
+        item_id: String(item?._id),
+        unit: item?.quantityUnitName,
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
@@ -413,7 +413,7 @@ const usePurchaseOrder = (history) => {
     values.expiryDates.forEach((element) => {
       sum += element.value;
     });
-    if (sum === values.stockQuantity || !form.values.validate) {
+    if (sum === values?.stockQuantity || !form.values.validate) {
       form.values.slabPrice = Array.isArray(slabs) ? [...slabs] : [];
       const new_order = { ...values };
       try {
@@ -483,24 +483,24 @@ const usePurchaseOrder = (history) => {
       setEditIndex(index);
     }
     form.setValues((prev) => ({
-      barcode: item.barcode,
-      inputName: item.inputName.trim(),
-      stockQuantity: item.stockQuantity,
-      currentStock: item.currentStock,
-      minimumQuantity: item.minimumQuantity,
-      itemQuantity: item.itemQuantity,
-      unit: item.unit,
-      itemRemark: item.itemRemark,
-      sellingPrice: item.sellingPrice,
-      mrp: item.mrp,
-      costPrice: item.costPrice,
-      expiryDates: [...item.expiryDates],
-      validate: item.validate,
-      item_id: item.item_id,
-      brand: item.brand,
-      category: item.category,
+      barcode: item?.barcode,
+      inputName: item?.inputName.trim(),
+      stockQuantity: item?.stockQuantity,
+      currentStock: item?.currentStock,
+      minimumQuantity: item?.minimumQuantity,
+      itemQuantity: item?.itemQuantity,
+      unit: item?.unit,
+      itemRemark: item?.itemRemark,
+      sellingPrice: item?.sellingPrice,
+      mrp: item?.mrp,
+      costPrice: item?.costPrice,
+      expiryDates: [...item?.expiryDates],
+      validate: item?.validate,
+      item_id: item?.item_id,
+      brand: item?.brand,
+      category: item?.category,
     }));
-    setSlabs([...item.slabPrice]);
+    setSlabs([...item?.slabPrice]);
     setOpened(true);
   };
   const deleteOrder = async (order_id) => {
@@ -605,7 +605,7 @@ const usePurchaseOrder = (history) => {
       getDetails(id);
       setIsNotGetUpdated(false);
     }
-    if (Object.keys(barcodeFilteredItem).length && isEditable) {
+    if (Object.keys(barcodeFilteredItem)?.length && isEditable) {
       handleSelectOrderItems(barcodeFilteredItem, filteredItemsByBarcode);
     }
     return () => {
@@ -642,17 +642,17 @@ const usePurchaseOrder = (history) => {
         if (fetch.error) return;
         const item = fetch?.data?.message;
         form.setValues(state=>({...state,
-          currentStock: item.itemStockQuantity,
+          currentStock: item?.itemStockQuantity,
           stockQuantity: 0,
-          minimumQuantity: item.minimumStockQuantity,
-          brand: item.itemBrandName,
-          category: item.itemCategory,
-          sellingPrice: item.itemSellingPricePerUnit,
-          mrp: item.itemMRPperUnit,
-          costPrice: item.itemCostPricePerUnit,
-          slabPrice: item.slabPricing,
-          item_id: String(item._id),
-          unit: item.quantityUnitName,
+          minimumQuantity: item?.minimumStockQuantity,
+          brand: item?.itemBrandName,
+          category: item?.itemCategory,
+          sellingPrice: item?.itemSellingPricePerUnit,
+          mrp: item?.itemMRPperUnit,
+          costPrice: item?.itemCostPricePerUnit,
+          slabPrice: item?.slabPricing,
+          item_id: String(item?._id),
+          unit: item?.quantityUnitName,
         }))
         setItemLoading(false);
       })();
