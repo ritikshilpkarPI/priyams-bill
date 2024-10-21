@@ -93,7 +93,7 @@ const ItemsList = () => {
 
   const [paginationIndices, setPaginationIndices] = useState([]);
   const skip = limitPage*(currentPage-1);
-  const debouncedGetFilteredItems = debounce(getFilteredItems, 1000);
+  
   const history = useHistory();
 
   const paginationArr = (length)=> {
@@ -124,7 +124,7 @@ const ItemsList = () => {
       return fetch?.data?.message ?? [];
     };
   // },[])
- 
+
   useEffect(() => {
     (async () => {
       const fetch = await genericAxios({
@@ -170,6 +170,7 @@ const ItemsList = () => {
     }
   }, [items]);
 
+  const debouncedGetFilteredItems = debounce(getFilteredItems, 1000);
   const handleNewItemInput = async (e) => {
     const { name, value } = e.target;
     const newInputVal = { ...newItemInput, [name]: value };
