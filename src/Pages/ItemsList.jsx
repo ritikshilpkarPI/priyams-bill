@@ -11,7 +11,7 @@ import {
   Loader,
   Image,
   Textarea,
-  Select,
+  Select, 
   TextInput,
   NumberInput,
   Group,
@@ -93,7 +93,7 @@ const ItemsList = () => {
 
   const [paginationIndices, setPaginationIndices] = useState([]);
   const skip = limitPage*(currentPage-1);
-  
+  const debouncedGetFilteredItems = debounce(getFilteredItems, 1000);
   const history = useHistory();
 
   const paginationArr = (length)=> {
@@ -124,7 +124,7 @@ const ItemsList = () => {
       return fetch?.data?.message ?? [];
     };
   // },[])
-  
+ 
   useEffect(() => {
     (async () => {
       const fetch = await genericAxios({
@@ -183,7 +183,7 @@ const ItemsList = () => {
           .includes(value.toString().toLowerCase())
     );
     if (filteredItems.length <= 0) {
-      filteredItems = await debounce(()=>getFilteredItems(newInputVal), 1000)(); 
+      filteredItems = await debouncedGetFilteredItems(newInputVal);
     }
     setItems([...filteredItems]);
   };
@@ -1842,6 +1842,8 @@ const ItemsList = () => {
                   onChange={handleNewItemInput}
                   name="itemName"
                   autoComplete="off"
+                  className='item-search-input'
+
                 />
               </td>
               <td></td>
