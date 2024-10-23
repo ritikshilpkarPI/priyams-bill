@@ -1,8 +1,11 @@
 const { ORDER_STATUS } = require('../util/order');
-const { Order } = require('../db-models/orderSchema');
+const { Order, orderSchema } = require('../db-models/orderSchema');
+const { default: mongoose } = require('mongoose');
 
 const updateOrderStatus = async (req, res, next) => {
   const { step, id } = req.body;
+  const db = mongoose.createConnection(process.env.APP_MONGODB_URI, { useNewUrlParser: true });
+  const Order = db.model("Orders", orderSchema);
   const newOrderStatus = {
     step,
     status: ORDER_STATUS[`step${step}`],
