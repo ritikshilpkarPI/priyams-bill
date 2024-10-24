@@ -11,7 +11,7 @@ import {
   Loader,
   Image,
   Textarea,
-  Select,
+  Select, 
   TextInput,
   NumberInput,
   Group,
@@ -124,7 +124,7 @@ const ItemsList = () => {
       return fetch?.data?.message ?? [];
     };
   // },[])
-  
+
   useEffect(() => {
     (async () => {
       const fetch = await genericAxios({
@@ -170,6 +170,7 @@ const ItemsList = () => {
     }
   }, [items]);
 
+  const debouncedGetFilteredItems = debounce(getFilteredItems, 1000);
   const handleNewItemInput = async (e) => {
     const { name, value } = e.target;
     const newInputVal = { ...newItemInput, [name]: value };
@@ -183,7 +184,7 @@ const ItemsList = () => {
           .includes(value.toString().toLowerCase())
     );
     if (filteredItems.length <= 0) {
-      filteredItems = await debounce(()=>getFilteredItems(newInputVal), 1000)(); 
+      filteredItems = await debouncedGetFilteredItems(newInputVal);
     }
     setItems([...filteredItems]);
   };
@@ -1842,6 +1843,8 @@ const ItemsList = () => {
                   onChange={handleNewItemInput}
                   name="itemName"
                   autoComplete="off"
+                  className='item-search-input'
+
                 />
               </td>
               <td></td>
