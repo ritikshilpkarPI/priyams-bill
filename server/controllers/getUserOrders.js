@@ -1,7 +1,10 @@
-const { Order } = require('../db-models/orderSchema');
+const { default: mongoose } = require('mongoose');
+const {  orderSchema } = require('../db-models/orderSchema');
 
 const getUserOrders = async (req, res, next) => {
-  const { orderStatus } = req.query;
+  const db = mongoose.createConnection(process.env.APP_MONGODB_URI, { useNewUrlParser: true });
+  const { orderStatus } = req.query; const Order = db.model("Orders", orderSchema);
+ 
   const query = orderStatus
     ? {
         'orderStatus.status': orderStatus,
@@ -26,7 +29,8 @@ const getUserOrders = async (req, res, next) => {
     res.status(201).send({ message: 'got the orders', orders });
   } catch (error) {
     next(error);
-  }
+  }  
 };
 
 module.exports = getUserOrders;
+                                
