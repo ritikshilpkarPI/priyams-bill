@@ -3,7 +3,7 @@ const { Item } = require('../db-models/item-model');
 const saveInventory = async (req, res, next) => {
   try {
     const { new_items } = req.body;
-    console.log({ new_items });
+   
 
     for (const item of new_items) {
       const itemDetails = {
@@ -28,10 +28,7 @@ const saveInventory = async (req, res, next) => {
       }
 
       if (oldItem) {
-        console.log({ itemCostPricePerUnit: itemDetails.itemCostPricePerUnit });
-        console.log({ oldItem: oldItem.itemCostPricePerUnit });
-
-        // Ensure all values are valid numbers
+       
         let oldItemCost = Number(oldItem.itemCostPricePerUnit) || 0;
         let oldStock = Number(oldItem.itemStockQuantity) || 0;
         let newItemCost = itemDetails.itemCostPricePerUnit;
@@ -42,7 +39,6 @@ const saveInventory = async (req, res, next) => {
           totalStock > 0
             ? (oldItemCost * oldStock + newItemCost * newStock) / totalStock
             : 0;
-        console.log({ newCostPrice });
 
         let newTotalStock = newStock + oldStock;
         let newTotalItemQuantity =
