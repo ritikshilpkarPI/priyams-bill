@@ -4,7 +4,7 @@ const { orderSchema, Order } = require("../db-models/orderSchema");
 const dbAppConnection = () => {
   try {
     const db = mongoose.createConnection(process.env.APP_MONGODB_URI, { useNewUrlParser: true });
-
+    
     db.on('connecting', function () {
       console.log('connecting to MongoDB...');
     });
@@ -17,14 +17,22 @@ const dbAppConnection = () => {
       console.log('MongoDB connected!');
 
     });
-    db.once('open', function () {
+    db.once('open', async function () {
       console.log('MongoDB connection opened!');
       db.model("Orders", orderSchema);
-      const pipeline = [
-        { $match: { "operationType": "update" } }
-      ]
+      // const pipeline = [
+      //   { $match: { "operationType": "update" } }
+      // ]
+      const pipeline = [{ $match: { $or: [{ operationType: "update" }, { operationType: "insert" }, { operationType: "delete" }] } }];
+
+       const Order = db.model("Orders", orderSchema);
+      
+      
       const changeStream = Order.watch(pipeline, { fullDocument: "updateLookup" });
+      
+     
       changeStream.on("change", async (data) => {
+       
         const order = data.fullDocument;
         const { orderNumber, orderStatus } = order
         // Update Order in App Database
