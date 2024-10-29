@@ -1,10 +1,9 @@
 const { Item } = require('../db-models/item-model');
+const mongoose = require('mongoose');
 
 const saveInventory = async (req, res, next) => {
   try {
     const { new_items } = req.body;
-   
-
     for (const item of new_items) {
       const itemDetails = {
         itemName: item.inputName,
@@ -23,12 +22,12 @@ const saveInventory = async (req, res, next) => {
       };
 
       let oldItem;
-      if (item.item_id) {
+      // Check if item_id is valid before calling findById
+      if (item.item_id && mongoose.Types.ObjectId.isValid(item.item_id)) {
         oldItem = await Item.findById(item.item_id);
       }
 
       if (oldItem) {
-       
         let oldItemCost = Number(oldItem.itemCostPricePerUnit) || 0;
         let oldStock = Number(oldItem.itemStockQuantity) || 0;
         let newItemCost = itemDetails.itemCostPricePerUnit;
