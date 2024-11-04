@@ -547,7 +547,7 @@ const Billing = ({ billID = '', loaderDisplay }) => {
           </Button>
           <Button
             sx={{ marginRight: '1rem' }}
-            disabled={!bill.billItems.length || bill.amountReturn < 0}
+            disabled={!bill.billItems.length || bill.amountReturn < 0 || apiLoading}
             className="print-btn"
             onClick={() =>
               addNewBill(
