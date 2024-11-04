@@ -148,6 +148,7 @@ const NewBillPage = ({ billID = '' }) => {
     const { newBillId: billUuid, ...billObject } = JSON.parse(
       localStorage.getItem(`newBill-${newBillId}`)
     );
+    
       try {
         const addBillResponse = await genericAxios({
           ...billObject,

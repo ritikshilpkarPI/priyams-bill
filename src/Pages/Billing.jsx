@@ -200,6 +200,7 @@ function createBill(newBillId, setApiLoading) {
     try {
       const addBillResponse = await genericAxios({
         ...billObject,
+        billId: newBillId,
         headers: {
           Cookie: '',
         },
@@ -237,7 +238,7 @@ async function addNewBill(
   const createApi = {
     url: API_PATHS.BILLING.POST_NEW_BILL,
     method: API_METHODS.POST,
-    data: { ...bill },
+    data: { ...bill, billId: newBillId },
   };
   const objectOfInterest = billID ? editApi : createApi;
 
@@ -885,8 +886,8 @@ const Billing = ({ billID = '', loaderDisplay }) => {
                                 defaultValue={
                                   index !== itemObj.slabPricing.length - 1
                                     ? Number(
-                                        itemObj.slabPricing[index + 1][1]
-                                      ) - 1
+                                      itemObj.slabPricing[index + 1][1]
+                                    ) - 1
                                     : ''
                                 }
                               />{' '}
