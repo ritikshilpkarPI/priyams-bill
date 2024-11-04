@@ -148,7 +148,7 @@ const NewBillPage = ({ billID = '' }) => {
     const { newBillId: billUuid, ...billObject } = JSON.parse(
       localStorage.getItem(`newBill-${newBillId}`)
     );
-    
+
       try {
         const addBillResponse = await genericAxios({
           ...billObject,
@@ -169,6 +169,7 @@ const NewBillPage = ({ billID = '' }) => {
   }
 
   //    adding new bill
+
   async function addNewBill(
     setApiLoading,
     bill,
@@ -176,6 +177,7 @@ const NewBillPage = ({ billID = '' }) => {
     BILL_INITIAL_STATE,
     billID
   ) {
+
     const newBillId = `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
     let updateBill = {
@@ -500,7 +502,7 @@ const NewBillPage = ({ billID = '' }) => {
           </Button>
           <Button
             sx={{ marginRight: '1rem' }}
-            disabled={!bill.billItems.length || bill.amountReturn < 0}
+            disabled={!bill.billItems.length || bill.amountReturn < 0 || apiLoading}
             className="print-btn"
             onClick={() =>
               addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE, {
