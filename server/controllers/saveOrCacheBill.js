@@ -34,14 +34,14 @@ const saveOrCacheBill = async (req, res) => {
     slug: billId,
     amountReturn,
   };
-  let isBillSaved, billBarcode;
+  let isBillSaved, billBarcode, isDuplicate = false;
   try {
     const maxAttemptToSaveInDB = 1;
     setToBillsCache(billId, newBillData);
     const duplicateBill = await Bill.findOne({ slug: billId });
     if (duplicateBill) {
       isBillSaved = true;
-      res.status(409).json({ message: "This bill already exist with same slug" });
+      isDuplicate = true;
       return;
     }
     const billSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
@@ -55,7 +55,7 @@ const saveOrCacheBill = async (req, res) => {
       deleteBillFromBillCacheById(billId);
       res.status(200).json({
         success: true,
-        message: 'Bill saved successfully!',
+        message: isDuplicate ? 'This bill already exist with same slug!' : 'Bill saved successfully!',
         billId,
         isBillSaved,
         billBarcode,
