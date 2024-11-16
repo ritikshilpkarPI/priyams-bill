@@ -6,7 +6,7 @@ const softDeleteItem = async (req, res,next) => {
       await Item.findByIdAndUpdate(id, { isDeleted: true });
       let items = await Item.find();
       items = items.filter((item) => !item.isDeleted);
-      res.status(200).json({ message: 'item soft deleted!', items: items });
+      res.status(200).json({ message: 'item soft deleted!'});
     } catch (error) {
       next(error)
     }
