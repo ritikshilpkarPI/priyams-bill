@@ -6,9 +6,10 @@ const deleteOrderItemById = async (req, res,next) => {
       const { itemId } = req.body;
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
       const purchasedItems = purchaseOrder.purchasedItems.filter(
-        (order) => order._id?.toString() !== itemId
+        (order) => order._id.toString() !== itemId
       );
-      const updatedOrder = await purchaseOrder.updateOne({ purchasedItems });
+      purchaseOrder.purchasedItems = purchasedItems;
+      await purchaseOrder.save();
       res.status(200).send({
         message: 'order deleted successfully',
         success: true,
