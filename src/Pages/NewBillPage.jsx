@@ -177,7 +177,7 @@ const NewBillPage = ({ billID = '' }) => {
     BILL_INITIAL_STATE,
     billID
   ) {
-
+    setBillApiCountToLocalStorage();
     const newBillId = `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
     let updateBill = {
@@ -376,6 +376,19 @@ const NewBillPage = ({ billID = '' }) => {
     billBarcode && window.print();
     setBill(BILL_INITIAL_STATE);
   },[billBarcode])
+
+  const setBillApiCountToLocalStorage = () => {
+    const todayKey = new Date().toLocaleDateString();
+
+    const currentCount = parseInt(localStorage.getItem(todayKey));
+
+    if (isNaN(currentCount)) {
+      localStorage.setItem(todayKey, 1);
+    } else {
+      const updatedCount = currentCount + 1;
+      localStorage.setItem(todayKey, updatedCount);
+    }
+  };
 
   return (
     <>
