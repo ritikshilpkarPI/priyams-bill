@@ -44,7 +44,7 @@ const getDayWiseBills = async (req, res, next) => {
       },
     ])
       .sort({ _id: -1 })
-      .limit(15);
+      .limit(5);
     res.status(200).json({ message: { allDailyBills } });
   } catch (error) {
     next(error);
