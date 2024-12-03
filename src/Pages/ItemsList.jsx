@@ -114,6 +114,11 @@ const ItemsList = () => {
           itemName,
           itemBrandName,
         },
+        params: {
+          filters: {
+            isDeleted: false,
+          },
+        },
         headers: {
           Cookie: '',
         },
