@@ -25,8 +25,8 @@ app.use(
     tempFileDir: '/tmp/',
   })
 );
-app.use('', routers);
-app.use('/api/server', (req, res) => {
+app.use('/.netlify/functions/app', routers);
+app.get('/.netlify/functions/app/server', (req, res) => {
   res.status(200).json({ success: true })
 })
 
