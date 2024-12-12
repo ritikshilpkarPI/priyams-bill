@@ -3,7 +3,6 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
-const serverless = require('serverless-http');
 const routers = require('./routes');
 const fileUpload = require('express-fileupload');
 const handleErrors = require('./middleware/handleError');
@@ -50,4 +49,4 @@ dbAppConnection();
 
 app.use(handleErrors);
 
-module.exports.handler = serverless(app);
+module.exports = { app };
