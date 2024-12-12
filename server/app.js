@@ -25,7 +25,10 @@ app.use(
     tempFileDir: '/tmp/',
   })
 );
-app.use('/.netlify/functions/app', routers);
+app.use('', routers);
+app.use('/api/server', (req, res) => {
+  res.status(200).json({ success: true })
+})
 
 const mongoUriEnvMap = {
   staging: process.env.STAGING_DB,
