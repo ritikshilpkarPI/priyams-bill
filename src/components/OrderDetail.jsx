@@ -25,7 +25,7 @@ function OrderDetail({
   } = order || {};
   const rows = orderItems?.map((item, index) => (
     <tr key={index}>
-      <td>{item.product}</td>
+      <td>{item.product.itemName}</td>
       <td>{item.quantity}</td>
       <td>{item.price}</td>
     </tr>
