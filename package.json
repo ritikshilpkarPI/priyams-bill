@@ -85,6 +85,7 @@
     "snappy": "^7.1.1",
     "uuid": "^9.0.0",
     "validator": "^10.9.0",
+    "web-push": "^3.6.7",
     "web-vitals": "^0.2.4"
   },
   "resolutions": {

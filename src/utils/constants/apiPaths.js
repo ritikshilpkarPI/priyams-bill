@@ -13,6 +13,7 @@ export const API_PATHS = {
     GET_ORDERS: '/api/purchaseOrder/orders',
     EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
   },
+  SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {
     GET_MONTHLY_ATTENDANCE: '/api/attendance/monthlyAttendance',
     POST_MARK_ABSENT: '/api/attendance/markAbsent',
