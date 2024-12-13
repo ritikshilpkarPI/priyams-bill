@@ -9,11 +9,15 @@ webpush.setVapidDetails(
 
 async function sendPushNotification(payload) {
   try {
+    console.log("inside sendpushnotification");
+    
     const subscriptions = await Subscription.find();
     subscriptions;
 
     for (const subscription of subscriptions) {
       if (subscription && subscription.endpoint) {
+        console.log({subscription});
+        
         await webpush.sendNotification(subscription, JSON.stringify(payload));
       } else {
         console.log(`Invalid subscription: ${JSON.stringify(subscription)}`);

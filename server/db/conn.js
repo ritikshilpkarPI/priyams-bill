@@ -54,7 +54,8 @@ const dbAppConnection = () => {
             message: 'New order inserted',
           };
          
-
+        console.log("inside new order inserted");
+        
 
           const pushPayload = JSON.stringify(payload);
           await sendPushNotification(pushPayload)
