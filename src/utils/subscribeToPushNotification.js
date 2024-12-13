@@ -28,7 +28,7 @@ export const subscribeToPushNotification = async () => {
     console.log('Service Worker registered successfully:', registration);
 
     const applicationServerKey = urlBase64ToUint8Array(
-        process.env.REACT_APP_VAPID_PUBLIC_KEY
+        process.env.REACT_APP_CLIENT_VAPID_PUBLIC_KEY || process.env.VAPID_PUBLIC_KEY
     );
 
     let subscription = await registration.pushManager.getSubscription();
