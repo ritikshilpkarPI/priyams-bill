@@ -17,7 +17,6 @@ const getUserOrders = async (req, res, next) => {
       {
         $match: query,
       },
-     
       {
         $lookup: {
           from: "products",
@@ -27,21 +26,41 @@ const getUserOrders = async (req, res, next) => {
         },
       },
       {
-        $unwind: "$productDetails", 
-      },
-      {
         $addFields: {
-          "orderItems.product": "$productDetails", 
+          "orderItems": {
+            $map: {
+              input: "$orderItems",
+              as: "orderItem",
+              in: {
+                $mergeObjects: [
+                  "$$orderItem", 
+                  {
+                    product: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$productDetails",
+                            as: "productDetail",
+                            cond: { $eq: ["$$productDetail._id", "$$orderItem.product"] },
+                          },
+                        },
+                        0, 
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
         },
       },
-   
       {
         $group: {
           _id: {
-            $last: '$orderStatus.status',
+            $last: "$orderStatus.status",
           },
           orders: {
-            $push: '$$ROOT',
+            $push: "$$ROOT", 
           },
         },
       },
