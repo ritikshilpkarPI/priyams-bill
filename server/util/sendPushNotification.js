@@ -18,7 +18,9 @@ async function sendPushNotification(payload) {
       if (subscription && subscription.endpoint) {
         console.log({subscription});
         
-        await webpush.sendNotification(subscription, JSON.stringify(payload));
+       const sendMessage= await webpush.sendNotification(subscription, JSON.stringify(payload));
+       console.log({sendMessage});
+       
       } else {
         console.log(`Invalid subscription: ${JSON.stringify(subscription)}`);
       }
