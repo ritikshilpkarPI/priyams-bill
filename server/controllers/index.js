@@ -73,6 +73,7 @@ const { getBillForReturnExchange } = require('./getBillForReturnExchange');
 const getItemsWithSelection = require('./getItemsWithSelection');
 const getItemByBarcode = require('./getItemByBarcode');
 const getItemsByFilter = require('./getItemsByFilter');
+const getSaveSubscription = require('./getSaveSubscription');
 
 module.exports = {
   getStaff,
@@ -149,5 +150,6 @@ module.exports = {
   getBillForReturnExchange,
   getItemsWithSelection,
   getItemByBarcode,
-  getItemsByFilter
+  getItemsByFilter,
+  getSaveSubscription
 };

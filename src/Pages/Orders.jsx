@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import OrderCard from 'src/components/OrderCard';
 import OrderStatus from 'src/components/OrderStatus';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
@@ -6,12 +6,41 @@ import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { orderMapper } from 'src/utils/orderMapper';
 import '../CSS/_orders.scss';
-import { Loader } from '@mantine/core';
+import { Loader, Modal, Button } from '@mantine/core';
 import { ORDER_CARDS } from '../utils/constants/orders';
+
+import { useBeep } from 'src/utils/beep';
+import { subscribeToPushNotification } from 'src/utils/subscribeToPushNotification';
 
 function Orders() {
   const [userOrders, setUserOrders] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const { beep, stopBeep } = useBeep('audio/beep.mp3');
+
+  const handleMessage = (event) => {
+    if (event.data && event.data.type === 'NOTIFY_REACT') {
+      
+      beep();
+      setTimeout(() => {
+        setShowConfirmDialog(true);
+      }, 1000);
+    }
+  };
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', handleMessage);
+    }
+
+    return () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.removeEventListener('message', handleMessage);
+      }
+    };
+  }, []);
+
   const getUserOrders = async () => {
     setLoader(true);
     try {
@@ -53,9 +82,28 @@ function Orders() {
   };
   useEffect(() => {
     getUserOrders();
+    subscribeToPushNotification();
   }, []);
+
   return (
     <div className="order-card-page-container">
+      <Modal
+        opened={showConfirmDialog}
+        onClose={() => setShowConfirmDialog(false)}
+        title={`New order inserted. Please confirm the order`}
+      >
+        <Button
+          color="red"
+          onClick={() => {
+            stopBeep();
+            getUserOrders();
+            setShowConfirmDialog(false);
+          }}
+          style={{ display: 'flex', alignItems: 'center', margin: 'auto' }}
+        >
+          Yes
+        </Button>
+      </Modal>
       {loader ? (
         <div className="order-loader-container">
           <Loader color="blue" size="xl" />
