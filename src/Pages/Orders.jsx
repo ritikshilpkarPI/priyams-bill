@@ -17,7 +17,7 @@ function Orders() {
   const [loader, setLoader] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const { beep, stopBeep } = useBeep('audio/beep.mp3');
+  const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND}`);
 
   const handleMessage = (event) => {
     if (event.data && event.data.type === 'NOTIFY_REACT') {
@@ -82,6 +82,7 @@ function Orders() {
   };
   useEffect(() => {
     getUserOrders();
+    
     subscribeToPushNotification();
   }, []);
 
