@@ -27,6 +27,10 @@ function OrderDetail({
 
   const rows = orderItems?.map((item, index) => (
     <tr key={index}>
+      <td> <img style={{
+        width: "100px",
+        height: "100px"
+      }} src={item.product?.images?.[0]?.secureUrl} alt="product-image" /></td>
       <td>{item.product.itemName}</td>
       <td>{item.quantity}</td>
       <td>{item.price}</td>
@@ -102,7 +106,7 @@ function OrderDetail({
         padding="xl"
         position="right"
         keepMounted={true}
-        size={450}
+        size={650}
         opened={opened}
         onClose={close}
         title={`Purchased Order`}
@@ -136,6 +140,7 @@ function OrderDetail({
           >
             <thead>
               <tr>
+                <th>Product Image</th>
                 <th>Product</th>
                 <th>Product Quantity</th>
                 <th>Price</th>
