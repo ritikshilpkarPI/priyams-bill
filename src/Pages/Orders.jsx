@@ -17,7 +17,7 @@ function Orders() {
   const [loader, setLoader] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND}` || `${process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}`);
+  const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
 
   const handleMessage = (event) => {
     if (event.data && event.data.type === 'NOTIFY_REACT') {

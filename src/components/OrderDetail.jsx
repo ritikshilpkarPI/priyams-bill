@@ -37,7 +37,7 @@ function OrderDetail({
     </tr>
   ));
 
-  const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND}` || `${process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
+  const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const isCheckingRef = useRef(false);
