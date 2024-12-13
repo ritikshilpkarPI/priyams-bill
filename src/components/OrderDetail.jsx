@@ -33,7 +33,7 @@ function OrderDetail({
     </tr>
   ));
 
-  const { beep, stopBeep } = useBeep("audio/beep.mp3");
+  const { beep, stopBeep } = useBeep(`${process.env.REACT_APP_CLIENT_BEEP_SOUND}`);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const isCheckingRef = useRef(false);
