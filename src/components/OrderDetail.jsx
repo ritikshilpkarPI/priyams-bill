@@ -1,7 +1,7 @@
 import { Button, Card, Drawer, Group, Modal, Table, Text, Title } from '@mantine/core';
 import React, { useEffect, useRef, useState } from 'react';
 import '../CSS/_orderDetail.scss';
-import { useBeep } from 'src/utils/beep';
+// import { useBeep } from 'src/utils/beep';
 
 function OrderDetail({
   order,
@@ -37,56 +37,56 @@ function OrderDetail({
     </tr>
   ));
 
-  const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
-  const isCheckingRef = useRef(false);
+  // const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
+  // const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  // const [isConfirmed, setIsConfirmed] = useState(false);
+  // const isCheckingRef = useRef(false);
 
-  const latestOrderStatus = orderStatus?.[orderStatus?.length - 1]?.status || "Pending";
+  // const latestOrderStatus = orderStatus?.[orderStatus?.length - 1]?.status || "Pending";
 
-  const checkPendingPackaging = () => {
-    const pendingStatuses = orderStatus?.filter((status) =>
-      (status.step === 2 && !orderStatus.some((s) => s.step === 3)) || 
-      (status.step === 3 && !orderStatus.some((s) => s.step === 4))
-    );
+  // const checkPendingPackaging = () => {
+  //   const pendingStatuses = orderStatus?.filter((status) =>
+  //     (status.step === 2 && !orderStatus.some((s) => s.step === 3)) || 
+  //     (status.step === 3 && !orderStatus.some((s) => s.step === 4))
+  //   );
     
-    const hasPendingPackaging = pendingStatuses.length > 0;
-    if (hasPendingPackaging) {
-      isCheckingRef.current = true;
-      beep();
-      setTimeout(() => {
-        setShowConfirmDialog(true);
-      }, 1000);
-    }
-  };
+  //   const hasPendingPackaging = pendingStatuses.length > 0;
+  //   if (hasPendingPackaging) {
+  //     isCheckingRef.current = true;
+  //     beep();
+  //     setTimeout(() => {
+  //       setShowConfirmDialog(true);
+  //     }, 1000);
+  //   }
+  // };
 
-  const handleConfirm = () => {
-    stopBeep();
-    setShowConfirmDialog(false);
-    setIsConfirmed(true);
-    isCheckingRef.current = false;
+  // const handleConfirm = () => {
+  //   stopBeep();
+  //   setShowConfirmDialog(false);
+  //   setIsConfirmed(true);
+  //   isCheckingRef.current = false;
 
-    setTimeout(() => {
-      setIsConfirmed(false);
-    }, 10000);
-  };
+  //   setTimeout(() => {
+  //     setIsConfirmed(false);
+  //   }, 10000);
+  // };
 
-  const handleCloseModal = () => {
-    setShowConfirmDialog(false);
-    setIsConfirmed(false);
-  };
+  // const handleCloseModal = () => {
+  //   setShowConfirmDialog(false);
+  //   setIsConfirmed(false);
+  // };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      checkPendingPackaging();
-    }, 600000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     checkPendingPackaging();
+  //   }, 600000);
 
-    return () => clearInterval(interval);
-  }, [isConfirmed]);
+  //   return () => clearInterval(interval);
+  // }, [isConfirmed]);
 
   return (
     <div>
-      <Modal
+      {/* <Modal
         opened={showConfirmDialog}
         onClose={handleCloseModal}
         title={`Please confirm the Order ${orderNumber} - Status: ${latestOrderStatus}`}
@@ -101,7 +101,7 @@ function OrderDetail({
         <Button onClick={handleConfirm}>
           Confirm
         </Button>
-      </Modal>
+      </Modal> */}
       <Drawer
         padding="xl"
         position="right"
@@ -150,7 +150,8 @@ function OrderDetail({
           </Table>
           <Group className="order-detail">
             <Title order={5}>Order Status:</Title>
-            <Text>{latestOrderStatus}</Text>
+            {/* <Text>{latestOrderStatus}</Text> */}
+            {order?.orderStatus?.[order?.orderStatus?.length - 1]?.status}
           </Group>
           <Group className="order-detail">
             <Title order={5}>Order Date:</Title>
