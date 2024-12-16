@@ -1,5 +1,6 @@
 self.addEventListener('install', (event) => {
   console.log('[Service Worker] Install');
+  event.waitUntil(self.skipWaiting());
 });
 self.addEventListener('activate', (event) => {
   console.log('[Service Worker] Activate');
@@ -15,21 +16,23 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification('New Notification', options)
   );
   event.waitUntil(
-    self.clients
-      .matchAll({ type: 'window', includeUncontrolled: true })
-      .then((clients) => {
-        if (clients.length === 0) {
-          console.log(' No clients to send message to.');
-          return;
-        }
-        clients.forEach((client) => {
-          client.postMessage({
-            type: 'NOTIFY_REACT',
-            payload: { message: notificationData },
+    (async function retryClients() {
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      for (let i = 0; i < 5; i++) {
+        const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        if (clients.length > 0) {
+          clients.forEach((client) => {
+            client.postMessage({
+              type: 'NOTIFY_REACT',
+              payload: { message: notificationData },
+            });
           });
-        });
-      })
-      .catch((error) => console.error(' Error matching clients:', error))
+          return; 
+        }
+        await delay(1000); 
+      }
+      console.log('No clients found after retries.');
+    })()
   );
 });
 
