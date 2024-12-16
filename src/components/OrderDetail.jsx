@@ -1,4 +1,4 @@
-import { Button, Card, Drawer, Group, Modal, Table, Text, Title } from '@mantine/core';
+import { Button, Card, Checkbox, Drawer, Group, Modal, Table, Text, Title } from '@mantine/core';
 import React, { useEffect, useRef, useState } from 'react';
 import '../CSS/_orderDetail.scss';
 // import { useBeep } from 'src/utils/beep';
@@ -24,9 +24,33 @@ function OrderDetail({
     timeSlot,
     _id,
   } = order || {};
+  const [selectedProducts, setSelectedProducts] = useState([]);
 
+  const handleCheckboxChange = (productId) => {
+    setSelectedProducts((prevSelected) => {
+      if (prevSelected.includes(productId)) {
+        return prevSelected.filter((id) => id !== productId);
+      } else {
+        return [...prevSelected, productId];
+      }
+    });
+  };
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+    } else {
+      setSelectedProducts([]);
+    }
+  };
   const rows = orderItems?.map((item, index) => (
+   
     <tr key={index}>
+      <td>
+        <Checkbox
+          checked={selectedProducts.includes(item.product._id)}
+          onChange={() => 
+            handleCheckboxChange(item.product._id)}
+        />
+      </td>
       <td> <img style={{
         width: "100px",
         height: "100px"
@@ -131,7 +155,14 @@ function OrderDetail({
           <Group className="order-detail">
             <Title order={5}>Order Number:</Title>
             <Text>{orderNumber}</Text>
+           
           </Group>
+          <Checkbox
+              checked={selectedProducts.length === orderItems?.length}
+              onChange={handleSelectAll}
+              label="Select All"
+              className='checkbox'
+            />
           <Table
             className="order-detail"
             withBorder
@@ -140,6 +171,7 @@ function OrderDetail({
           >
             <thead>
               <tr>
+                <th>Select</th> 
                 <th>Product Image</th>
                 <th>Product</th>
                 <th>Product Quantity</th>
@@ -187,6 +219,7 @@ function OrderDetail({
           {buttonStatus && (
             <Button
               color="teal"
+              disabled={selectedProducts.length === 0} 
               onClick={() =>
                 updateOrderStatus(
                   orderStatus?.[orderStatus?.length - 1]?.step,
