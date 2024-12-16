@@ -6,14 +6,13 @@ export const useBeep = (audioSrc) => {
 
   useEffect(() => {
     const audio = new Audio(audioSrc);
-    audio.autoplay = true;
     audio.loop = true;
-    audio.pause();
     newBuzzer.current = audio;
   }, [audioSrc]);
 
   const beep = () => {
     setIsBeeping(true);
+    newBuzzer.current.loop=true;
     newBuzzer.current.play().catch((error) => {
       console.error('Error playing sound:', error);
     });
