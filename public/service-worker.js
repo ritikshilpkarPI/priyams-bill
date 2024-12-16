@@ -14,17 +14,23 @@ self.addEventListener('push', (event) => {
   event.waitUntil(
     self.registration.showNotification('New Notification', options)
   );
-
-  self.clients
-    .matchAll({ type: 'window', includeUncontrolled: true })
-    .then((clients) => {
-      clients.forEach((client) => {
-        client.postMessage({
-          type: 'NOTIFY_REACT',
-          payload: { message: notificationData },
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clients) => {
+        if (clients.length === 0) {
+          console.log(' No clients to send message to.');
+          return;
+        }
+        clients.forEach((client) => {
+          client.postMessage({
+            type: 'NOTIFY_REACT',
+            payload: { message: notificationData },
+          });
         });
-      });
-    });
+      })
+      .catch((error) => console.error(' Error matching clients:', error))
+  );
 });
 
 self.addEventListener('notificationclick', (event) => {
