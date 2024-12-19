@@ -26,7 +26,9 @@ const isLoggedIn = async (req, res, next) => {
       return;
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await Staff.findById(decoded.id);
+   const user = await Staff.findById(decoded.id);
+    req.user = user
+    req.body.username = user.username
     next();
   } catch (error) {
     next(error);
