@@ -77,7 +77,8 @@ const {
   getItemsWithSelection,
   getItemByBarcode,
   getItemsByFilter,
-  getSaveSubscription
+  getSaveSubscription,
+  approveRider
 } = require('../controllers/index');
 
 
@@ -312,6 +313,13 @@ router.post(
   // isLoggedIn,
   payPurchaseOrderBill
 );
+
+// rider apis
+
+router.post('/api/rider/approveRider/:id' ,isLoggedIn,
+  isAdmin,
+  isLoggedIn, approveRider)
+
 router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)
 router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,isLoggedIn,getExpiredItems)
 
