@@ -79,7 +79,8 @@ const {
   getItemsByFilter,
   getSaveSubscription,
   approveRider,
-  getAllRiders
+  getAllRiders,
+  handleCancellationRequest
 } = require('../controllers/index');
 
 
@@ -327,6 +328,14 @@ router.post(
   isAdmin,
   isLoggedIn,
   getAllRiders
+);
+
+router.post(
+  '/api/order/cancellation-decision/:id',
+  isLoggedIn,
+  isAdmin,
+  isLoggedIn,
+  handleCancellationRequest
 );
 
 router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)
