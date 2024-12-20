@@ -23,7 +23,9 @@ function OrderDetail({
     orderItems,
     timeSlot,
     _id,
+    orderCreatedAt
   } = order || {};
+  const orderPlacedDate = new Date(orderCreatedAt).toLocaleString('en-US');
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   const handleCheckboxChange = (productId) => {
@@ -152,6 +154,10 @@ function OrderDetail({
           <Title className="purchase-order-title" order={4}>
             Order Details
           </Title>
+          <Group className="order-detail">
+            <Title className='order-pace-date-time-label' order={5}>Order Placed Date:</Title>
+            <Text className='order-pace-date-time'>{ orderPlacedDate }</Text>
+          </Group>
           <Group className="order-detail">
             <Title order={5}>Order Number:</Title>
             <Text>{orderNumber}</Text>
