@@ -25,7 +25,7 @@ function OrderDetail({
     _id,
     orderCreatedAt
   } = order || {};
-  const orderPlacedDate = new Date(orderCreatedAt).toLocaleString('en-US');
+  const orderPlacedDate = new Date(orderCreatedAt).toLocaleString('en-IN');
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   const handleCheckboxChange = (productId) => {
