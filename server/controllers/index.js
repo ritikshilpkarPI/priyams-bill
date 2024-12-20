@@ -75,6 +75,7 @@ const getItemByBarcode = require('./getItemByBarcode');
 const getItemsByFilter = require('./getItemsByFilter');
 const getSaveSubscription = require('./getSaveSubscription');
 const approveRider = require('./approveRider')
+const getAllRiders = require('./getAllRiders');
 
 module.exports = {
   getStaff,
@@ -153,5 +154,6 @@ module.exports = {
   getItemByBarcode,
   getItemsByFilter,
   getSaveSubscription,
-  approveRider
+  approveRider,
+  getAllRiders,
 };
