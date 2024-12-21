@@ -80,14 +80,15 @@ const {
   getSaveSubscription,
   approveRider,
   getAllRiders,
-  handleCancellationRequest
+  handleCancellationRequest,
+  updateUserOrderAndOrderStatus
 } = require('../controllers/index');
 
 
 // online order apis
 router.get(API_PATHS.ORDERS.GET_USER_ORDERS, isLoggedIn, getUserOrders);
 router.post(API_PATHS.ORDERS.UPDATE_USER_ORDERS, isLoggedIn, updateOrderStatus);
-
+router.post(API_PATHS.ORDERS.UPDATE_USER_ORDER_AND_STATUS,  isLoggedIn,updateUserOrderAndOrderStatus);
 router.get(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsFeed);
 router.post(API_PATHS.SUBSCRIPTION, isLoggedIn, getSaveSubscription);
 router.get(API_PATHS.INVENTORY.GET_ITEMS_FOR_PURCHASE_ORDER, isLoggedIn, getItemsWithSelection);

@@ -77,6 +77,7 @@ const getSaveSubscription = require('./getSaveSubscription');
 const approveRider = require('./approveRider')
 const getAllRiders = require('./getAllRiders');
 const handleCancellationRequest = require('./handleCancelOrderRequest')
+const updateUserOrderAndOrderStatus = require('./updateUserOrderAndOrderStatus');
 
 module.exports = {
   getStaff,
@@ -157,5 +158,6 @@ module.exports = {
   getSaveSubscription,
   approveRider,
   getAllRiders,
-  handleCancellationRequest
+  handleCancellationRequest,
+  updateUserOrderAndOrderStatus
 };
