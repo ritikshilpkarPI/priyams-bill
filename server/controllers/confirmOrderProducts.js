@@ -1,12 +1,20 @@
-const { default: mongoose } = require('mongoose');
+const { default: mongoose, isValidObjectId } = require('mongoose');
 const { orderSchema } = require('../db-models/orderSchema');
 const { ORDER_STATUS } = require('../util/order');
 
 const confirmOrderProducts = async (request, response, next) => {
-  const { confirmedProducts, step } = request.body;
-  const { orderId } = request.params;
-
   try {
+    const { confirmedProducts, step } = request.body;
+    const { orderId } = request.params;
+    if (!isValidObjectId(orderId)) {
+      return response.status(400).json({ message: 'Invalid orderId' });
+    }
+    if (!Array.isArray(confirmedProducts) || confirmedProducts.length === 0) {
+      return response
+        .status(400)
+        .json({ message: 'No products provided for update' });
+    }
+
     const db = mongoose.createConnection(process.env.APP_MONGODB_URI, {
       useNewUrlParser: true,
     });
