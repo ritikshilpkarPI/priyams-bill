@@ -5,10 +5,9 @@ const { ORDER_STATUS } = require('../util/order');
 const confirmOrderProducts = async (request, response, next) => {
   try {
     const { confirmedProducts, step } = request.body;
-    const { orderId } = request.params;
-    if (!isValidObjectId(orderId)) {
-      return response.status(400).json({ message: 'Invalid orderId' });
-    }
+    
+    const { orderId } =  request.query;
+    
     if (!Array.isArray(confirmedProducts) || confirmedProducts.length === 0) {
       return response
         .status(400)
