@@ -76,8 +76,8 @@ const getItemsByFilter = require('./getItemsByFilter');
 const getSaveSubscription = require('./getSaveSubscription');
 const approveRider = require('./approveRider')
 const getAllRiders = require('./getAllRiders');
-const handleCancellationRequest = require('./handleCancelOrderRequest')
-const updateUserOrderAndOrderStatus = require('./updateUserOrderAndOrderStatus');
+const handleCancellationRequest = require('./handleCancelOrderRequest');
+const confirmOrderProducts = require('./confirmOrderProducts');
 
 module.exports = {
   getStaff,
@@ -159,5 +159,5 @@ module.exports = {
   approveRider,
   getAllRiders,
   handleCancellationRequest,
-  updateUserOrderAndOrderStatus
+  confirmOrderProducts
 };
