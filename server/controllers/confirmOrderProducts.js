@@ -5,9 +5,9 @@ const { ORDER_STATUS } = require('../util/order');
 const confirmOrderProducts = async (request, response, next) => {
   try {
     const { confirmedProducts, step } = request.body;
-    
-    const { orderId } =  request.query;
-    
+
+    const { orderId } = request.query;
+
     if (!Array.isArray(confirmedProducts) || confirmedProducts.length === 0) {
       return response
         .status(400)
@@ -86,7 +86,8 @@ const confirmOrderProducts = async (request, response, next) => {
         );
 
         if (productToUpdate) {
-          Object.assign(item, productToUpdate);
+          item.quantity = productToUpdate.quantity;
+          item.price = item.product.itemMRPperUnit * productToUpdate.quantity;
           return item;
         }
         return null;
@@ -103,19 +104,22 @@ const confirmOrderProducts = async (request, response, next) => {
       (total, item) => total + item.quantity,
       0
     );
-    const totalPrice = updatedItems.reduce(
-      (total, item) => total + item.price * item.quantity,
+    const totalPayableAmount = updatedItems.reduce(
+      (total, item) => total + item.price,
       0
     );
+
     const discountAmount = updatedItems.reduce((totalDiscount, item) => {
-      const itemDiscount = item.product.itemDiscountPerUnit * item.quantity;
+      const itemDiscount = item.product.itemDiscountPerUnit
+        ? item.product.itemDiscountPerUnit * item.quantity
+        : 0;
       return totalDiscount + itemDiscount;
     }, 0);
 
     const orderUpdate = {
       $set: {
         totalQuantity,
-        totalPayableAmount: totalPrice,
+        totalPayableAmount: totalPayableAmount,
         discountAmount,
         orderItems: updatedItems,
       },
