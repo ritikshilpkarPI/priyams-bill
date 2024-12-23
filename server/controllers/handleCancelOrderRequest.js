@@ -1,5 +1,5 @@
-const { isValidObjectId } = require('mongoose');
-const { Order } = require('../db-models/orderSchema');
+const { isValidObjectId, default: mongoose } = require('mongoose');
+const { orderSchema } = require('../db-models/orderSchema');
 
 const handleCancellationRequest = async (req, res, next) => {
   try {
@@ -25,6 +25,12 @@ const handleCancellationRequest = async (req, res, next) => {
       updateData.orderUpdatedAt = new Date();
       
     }
+
+    const db = mongoose.createConnection(process.env.APP_MONGODB_URI, {
+          useNewUrlParser: true,
+        });
+
+    const Order = db.model('Orders', orderSchema);
 
     const updatedOrder = await Order.findOneAndUpdate(
       { _id: orderId, cancellationRequest: true, cancellationRequestStatus: 'pending' },
