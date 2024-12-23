@@ -81,7 +81,8 @@ const {
   approveRider,
   getAllRiders,
   handleCancellationRequest,
-  confirmOrderProducts
+  confirmOrderProducts,
+  getCancellationOrders
 } = require('../controllers/index');
 
 
@@ -337,6 +338,15 @@ router.post(
   isAdmin,
   isLoggedIn,
   handleCancellationRequest
+);
+
+
+router.get(
+  '/api/order/get-cancellation-orders',
+  isLoggedIn,
+  isAdmin,
+  isLoggedIn,
+  getCancellationOrders
 );
 
 router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)

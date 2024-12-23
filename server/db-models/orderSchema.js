@@ -89,6 +89,22 @@ export const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  cancellationRequest: {
+    type: Boolean,
+    default: false,
+  },
+  cancellationReason: {
+    type: String,
+  },
+  cancellationProofImages: [
+    {
+      secureUrl: { type: String },
+      publicId: { type: String },
+    },
+  ],
+  riderId: {
+    type: String
+  }
 });
 
 export const Order = mongoose.model('order', orderSchema);
