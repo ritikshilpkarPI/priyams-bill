@@ -128,6 +128,7 @@ function Orders() {
                             order={order}
                             buttonStatus={card.button}
                             updateOrderStatus={updateOrderStatus}
+                            getUserOrders={getUserOrders}
                           />
                         </div>
                       );

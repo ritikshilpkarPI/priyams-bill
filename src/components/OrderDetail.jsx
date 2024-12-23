@@ -1,6 +1,9 @@
-import { Button, Card, Checkbox, Drawer, Group, Modal, Table, Text, Title } from '@mantine/core';
+import { Button, Card, Checkbox, Drawer, Group, Loader, Modal, Table, Text, TextInput, Title } from '@mantine/core';
 import React, { useEffect, useRef, useState } from 'react';
 import '../CSS/_orderDetail.scss';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
 // import { useBeep } from 'src/utils/beep';
 
 function OrderDetail({
@@ -9,6 +12,7 @@ function OrderDetail({
   close,
   buttonStatus,
   updateOrderStatus,
+  getUserOrders
 }) {
   const {
     contactNumber,
@@ -25,9 +29,67 @@ function OrderDetail({
     _id,
     orderCreatedAt
   } = order || {};
+ 
   const orderPlacedDate = new Date(orderCreatedAt).toLocaleString('en-IN');
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [loader, setLoader] = useState(false);
+  const [updatedTotalAmount, setUpdatedTotalAmount] = useState(0);
+const [updatedDiscount, setUpdatedDiscount] = useState(0);
+const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
+  const [productQuantities, setProductQuantities] = useState(
+    orderItems?.reduce(
+      (acc, item) => ({ ...acc, [item.product._id]: item.quantity }),
+      {}
+    )
+  );
+  
 
+  const calculateTotals = () => {
+    let newTotalAmount = 0;
+    let newDiscount = 0;
+    let newTotalQuantity = 0;
+  
+    orderItems?.forEach((item) => {
+      const productId = item.product._id;
+      const quantity = productQuantities[productId] ?? item.quantity; 
+      const unitPrice = item.price;
+  
+      newTotalAmount += unitPrice * quantity;
+      newTotalQuantity += quantity;
+      newDiscount += item.discountAmount ? item.discountAmount * quantity : 0;
+    });
+  
+    return {
+      updatedTotalAmount: newTotalAmount,
+      updatedDiscount: newDiscount,
+      updatedTotalQuantity: newTotalQuantity,
+    };
+  };
+  useEffect(() => {
+    const { updatedTotalAmount, updatedDiscount, updatedTotalQuantity } = calculateTotals();
+  
+    setUpdatedTotalAmount(updatedTotalAmount);
+    setUpdatedDiscount(updatedDiscount);
+    setUpdatedTotalQuantity(updatedTotalQuantity);
+  }, [productQuantities]); 
+  
+  const handleQuantityChange = (productId, value) => {
+    if (value === "" || /^[0-9\b]+$/.test(value)) {
+      const quantity = value === "" ? "" : parseInt(value, 10);
+      const maxQuantity = orderItems.find((item) => item.product._id === productId)?.quantity;
+  
+      if ((quantity >= 0 && quantity <= maxQuantity) || value === "") {
+        setProductQuantities((prev) => ({
+          ...prev,
+          [productId]: quantity,
+        }));
+       
+      } else if (quantity > maxQuantity) {
+        alert(`You cannot enter a quantity greater than the available stock (${maxQuantity}).`);
+      }
+    }
+  };
+  
   const handleCheckboxChange = (productId) => {
     setSelectedProducts((prevSelected) => {
       if (prevSelected.includes(productId)) {
@@ -39,29 +101,86 @@ function OrderDetail({
   };
   const handleSelectAll = (e) => {
     if (e.target.checked) {
+      setSelectedProducts(orderItems.map((item) => item.product._id));
     } else {
       setSelectedProducts([]);
     }
   };
-  const rows = orderItems?.map((item, index) => (
-   
+  
+  const confirmOrderProducts = async (data) => {
+    try {
+      if (window.confirm(`Do you want to ${buttonStatus}`)) {
+        setLoader(true);
+      await genericAxios({
+        url: API_PATHS.ORDERS.CONFIRM_ORDER_PRODUCTS,
+        method: API_METHODS.POST,
+        data: data,
+        params:{orderId:order._id},
+        headers: {
+          Cookie: '',
+        },
+      });
+      setLoader(false);
+      getUserOrders();
+    }
+    } catch (error) {
+      console.error('Error confirming order products:', error);
+    }
+  };
+  const confirmedProducts = selectedProducts.map((productId) => ({
+    productId,
+    quantity: productQuantities[productId],
+  }));
+  const orderStatusStep=orderStatus?.[orderStatus?.length - 1]?.step
+
+  const payload = {
+    confirmedProducts,
+    step: orderStatusStep + 1,
+  };
+  
+  const handleAction = () => {
+      confirmOrderProducts(payload);
+  };
+ 
+
+  const rows = orderItems?.map((item, index) => {
+    const unitPrice = item.price;
+    const quantity = productQuantities[item.product._id] ?? item.quantity; 
+    const totalPrice = unitPrice * quantity;
+    return (
     <tr key={index}>
       <td>
         <Checkbox
           checked={selectedProducts.includes(item.product._id)}
-          onChange={() => 
-            handleCheckboxChange(item.product._id)}
+          onChange={() => handleCheckboxChange(item.product._id)}
         />
       </td>
-      <td> <img style={{
-        width: "100px",
-        height: "100px"
-      }} src={item.product?.images?.[0]?.secureUrl} alt="product-image" /></td>
+      <td>
+        {' '}
+        <img
+          style={{
+            width: '100px',
+            height: '100px',
+          }}
+          src={item.product?.images?.[0]?.secureUrl}
+          alt="product-image"
+        />
+      </td>
       <td>{item.product.itemName}</td>
-      <td>{item.quantity}</td>
-      <td>{item.price}</td>
-    </tr>
-  ));
+      <td>
+        <TextInput
+         value={productQuantities[item.product._id] ?? item.quantity} 
+          onChange={(e) =>
+            handleQuantityChange(item.product._id, e.target.value)
+          }
+          type="number" 
+        />
+      </td>
+      <td>
+      {totalPrice}
+      </td>
+    </tr>)
+  });
 
   // const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
   // const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -111,7 +230,14 @@ function OrderDetail({
   // }, [isConfirmed]);
 
   return (
-    <div>
+    
+    <>
+    {loader ? (
+      <div className="order-loader-container">
+        <Loader color="blue" size="xl" />
+      </div>
+    ) : (
+      <div>
       {/* <Modal
         opened={showConfirmDialog}
         onClose={handleCloseModal}
@@ -201,7 +327,7 @@ function OrderDetail({
           </Group>
           <Group className="order-detail">
             <Title order={5}>Order Quantity:</Title>
-            <Text>{totalQuantity}</Text>
+            <Text>{updatedTotalQuantity}</Text>
           </Group>
         </Card>
         <Card>
@@ -214,11 +340,11 @@ function OrderDetail({
           </Group>
           <Group>
             <Title order={5}>Discount:</Title>
-            <Text>{discountAmount}</Text>
+            <Text>{updatedDiscount}</Text>
           </Group>
           <Group>
             <Title order={5}>Amount:</Title>
-            <Text>{totalPayableAmount}</Text>
+            <Text>{updatedTotalAmount}</Text>
           </Group>
         </Card>
         <Card>
@@ -227,11 +353,7 @@ function OrderDetail({
               color="teal"
               disabled={selectedProducts.length === 0} 
               onClick={() =>
-                updateOrderStatus(
-                  orderStatus?.[orderStatus?.length - 1]?.step,
-                  _id,
-                  buttonStatus
-                )
+                handleAction()
               }
             >
               {buttonStatus}
@@ -239,7 +361,9 @@ function OrderDetail({
           )}
         </Card>
       </Drawer>
-    </div>
+    </div>)}
+    </>
+
   );
 }
 
