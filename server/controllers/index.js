@@ -79,6 +79,7 @@ const getAllRiders = require('./getAllRiders');
 const handleCancellationRequest = require('./handleCancelOrderRequest');
 const confirmOrderProducts = require('./confirmOrderProducts');
 const getCancellationOrders = require('./getAllRequestedCancelOrdersDetails');
+const expelOrderToRider = require('./expelOrderToRider');
 
 module.exports = {
   getStaff,
@@ -161,5 +162,6 @@ module.exports = {
   getAllRiders,
   handleCancellationRequest,
   confirmOrderProducts,
-  getCancellationOrders
+  getCancellationOrders,
+  expelOrderToRider
 };
