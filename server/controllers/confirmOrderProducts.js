@@ -87,7 +87,7 @@ const confirmOrderProducts = async (request, response, next) => {
 
         if (productToUpdate) {
           item.quantity = productToUpdate.quantity;
-          item.price = item.product.itemMRPperUnit * productToUpdate.quantity;
+          item.price =(item.product.itemMRPperUnit - item.product.itemDiscountPerUnit ) * productToUpdate.quantity;
           return item;
         }
         return null;
