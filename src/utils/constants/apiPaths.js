@@ -90,7 +90,8 @@ export const API_PATHS = {
   ORDERS: {
     GET_USER_ORDERS: '/api/online/orders',
     UPDATE_USER_ORDERS: '/api/online/updateOrderStatus',
-    CONFIRM_ORDER_PRODUCTS:'/api/online/confirmOrderProducts'
+    CONFIRM_ORDER_PRODUCTS:'/api/online/confirmOrderProducts',
+    EXPEL_ORDER_TO_RIDER:"/api/expelOrderToRider"
   },
   PSTORE_CART: {
     POST_ITEMS_DATA_TO_CART: '/api/cart'
