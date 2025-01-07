@@ -1,6 +1,6 @@
 import { Button, Table } from '@mantine/core';
 import React from 'react';
-const ShowSlabPricing = ({ slabs, deleteSlab }) => {
+const ShowSlabPricing = ({ slabs = [], deleteSlab }) => {
   const rows = slabs.map((element, index) => (
     <tr key={index + 1}>
       <td>{element['1']}</td>

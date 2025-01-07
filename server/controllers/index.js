@@ -61,6 +61,25 @@ const getItemsLean = require('./getItemsLean');
 const saveOrCacheBill = require('./saveOrCacheBill');
 const getUnSavedBills = require('./getUnSavedBills');
 const addItemsToCartApp = require('./addItemsToCartApp');
+const getProductImageByProductName = require('./getProductImageByProductName');
+const uploadImageCloudinary = require("./uploadImageCloudinary")
+const getPurchaseOrderByPaidStatus = require('./getPurchaseOrderByPaidStatus');
+const getPurchaseOrderById = require('./getPurchaseOrderById');
+const payPurchaseOrderBill = require('./payPurchaseOrderBill');
+const addExpiredItem = require('./addExpiredItem');
+const getExpiredItems = require('./getExpiredItems');
+const { addNewReturnBill } = require('./addNewReturnBill');
+const { getBillForReturnExchange } = require('./getBillForReturnExchange');
+const getItemsWithSelection = require('./getItemsWithSelection');
+const getItemByBarcode = require('./getItemByBarcode');
+const getItemsByFilter = require('./getItemsByFilter');
+const getSaveSubscription = require('./getSaveSubscription');
+const approveRider = require('./approveRider')
+const getAllRiders = require('./getAllRiders');
+const handleCancellationRequest = require('./handleCancelOrderRequest');
+const confirmOrderProducts = require('./confirmOrderProducts');
+const getCancellationOrders = require('./getAllRequestedCancelOrdersDetails');
+const expelOrderToRider = require('./expelOrderToRider');
 
 module.exports = {
   getStaff,
@@ -125,5 +144,24 @@ module.exports = {
   getItemsLean,
   saveOrCacheBill,
   getUnSavedBills,
-  addItemsToCartApp
+  addItemsToCartApp,
+  getProductImageByProductName,
+  uploadImageCloudinary,
+  getPurchaseOrderByPaidStatus,
+  getPurchaseOrderById,
+  payPurchaseOrderBill,
+  addExpiredItem,
+  getExpiredItems,
+  addNewReturnBill,
+  getBillForReturnExchange,
+  getItemsWithSelection,
+  getItemByBarcode,
+  getItemsByFilter,
+  getSaveSubscription,
+  approveRider,
+  getAllRiders,
+  handleCancellationRequest,
+  confirmOrderProducts,
+  getCancellationOrders,
+  expelOrderToRider
 };

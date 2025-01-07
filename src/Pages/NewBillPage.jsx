@@ -7,6 +7,7 @@ import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { AppStateContext } from 'src/AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
+import Barcode from 'react-jsbarcode';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -57,6 +58,7 @@ const NewBillPage = ({ billID = '' }) => {
   const { billItemsStateAndDispatch } = useContext(AppStateContext);
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
+  const [billBarcode, setBillBarcode] = useState('');
 
   function handleItemNameFilter(event, setInputValue, itemsList, setData, key) {
     setInputValue((prev) => ({ ...prev, [key]: event.target.value }));
@@ -142,11 +144,11 @@ const NewBillPage = ({ billID = '' }) => {
   };
 
   // creating bill
-  function createBill(newBillId, setApiLoading) {
+  async function createBill(newBillId, setApiLoading) {
     const { newBillId: billUuid, ...billObject } = JSON.parse(
       localStorage.getItem(`newBill-${newBillId}`)
     );
-    (async function () {
+
       try {
         const addBillResponse = await genericAxios({
           ...billObject,
@@ -159,14 +161,15 @@ const NewBillPage = ({ billID = '' }) => {
           setApiLoading(false);
           throw Error();
         }
+        setBillBarcode(addBillResponse.data.billBarcode);
         localStorage.removeItem(`newBill-${newBillId}`);
       } catch (error) {
         throw console.error({ error });
       }
-    })();
   }
 
   //    adding new bill
+
   async function addNewBill(
     setApiLoading,
     bill,
@@ -174,7 +177,8 @@ const NewBillPage = ({ billID = '' }) => {
     BILL_INITIAL_STATE,
     billID
   ) {
-    const newBillId = uuidv4();
+    setBillApiCountToLocalStorage();
+    const newBillId = `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
     let updateBill = {
       ...bill,
@@ -201,11 +205,10 @@ const NewBillPage = ({ billID = '' }) => {
         ...createApi,
       })
     );
-    createBill(newBillId, setApiLoading);
+    await createBill(newBillId, setApiLoading);
 
-    window.print();
     setApiLoading(false);
-    setBill(BILL_INITIAL_STATE);
+    setBillBarcode('');
   }
 
   // To show prices according to slabs if exists
@@ -232,79 +235,72 @@ const NewBillPage = ({ billID = '' }) => {
     }
   };
 
-  const onItemAddToBill = ({ e, itemData, key = '' }) => {
-    if (itemData[Boolean(key) ? key : e.target.innerText]) {
-      // let index;
-      let itemDetail;
-      if (Boolean(key)) {
-        itemDetail = itemData[key]?.[0];
-      } else {
-        itemDetail = itemData[e.target.innerText];
-      }
+  const addItemToBill = ({ e, itemData, key = '' }) => {
+    const itemKey = Boolean(key) ? key : e.target.innerText;
+    const itemDetail = getItemDetail(itemData, itemKey);
 
-      bill.billItems.map((billItem, index) => {
-        // index = bill.billItems.findIndex((a) => a._id === billItem._id);
+    if (!itemDetail) return;
 
-        if (itemDetail.itemName === billItem.itemDetail.itemName) {
-          const updatedItem = {
-            ...billItem,
-            itemDetail: {
-              ...billItem.itemDetail,
-              // itemQuantityInBill: billItem.itemQuantityInBill + 1,
-            },
-            itemQuantityInBill: billItem.itemQuantityInBill + 1,
-          };
-          bill.billItems.splice(index, 1);
-          setBill((prev) => ({
-            totalNumberOfItems: prev.totalNumberOfItems + 1,
-            ...prev,
-            billItems: [updatedItem, ...prev.billItems],
-          }));
-        } else if (index === bill.totalNumberOfUniqueItems - 1) {
-          setBill((prev) => ({
-            ...prev,
-            billItems: [
-              {
-                itemDetail,
-                // itemQuantityInBill: itemDetail.itemQuantityInBill,
-                itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-                itemDiscountTotal: itemDetail.itemDiscountPerUnit,
-                itemSellingPriceTotal: Number(
-                  itemDetail.itemSellingPricePerUnit
-                ),
-                _id: itemDetail._id,
-                itemQuantityInBill: 1,
-              },
-              ...prev.billItems,
-            ],
-          }));
-        }
-        return <></>;
-      });
-      if (bill.totalNumberOfItems === 0) {
-        setBill((prev) => ({
-          ...prev,
-          billItems: [
-            {
-              itemDetail,
-              // itemQuantityInBill: itemDetail.itemQuantityInBill,
-              itemMRPtotal: Number(itemDetail.itemMRPperUnit),
-              itemDiscountTotal:
-                itemDetail.itemMRPperUnit - itemDetail.itemSellingPricePerUnit,
-              itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
-              _id: itemDetail._id,
-              itemQuantityInBill: 1,
-            },
-            ...prev.billItems,
-          ],
-        }));
-      }
-      setInputValue(INPUT_INITIAL_STATE);
-      if (Boolean(key)) {
-        setFilterBarcodeData([]);
-      } else {
-        setFilteredData([]);
-      }
+    const existingItemIndex = findExistingItemIndex(bill.billItems, itemDetail);
+
+    if (existingItemIndex !== -1) {
+      updateExistingItem(existingItemIndex, itemDetail);
+    } else {
+      addNewItemToBill(itemDetail);
+    }
+
+    resetInputState(Boolean(key));
+  };
+
+  const getItemDetail = (itemData, itemKey) => {
+    return itemData[itemKey]?.[0] || itemData[itemKey];
+  };
+
+  const findExistingItemIndex = (billItems, itemDetail) => {
+    return billItems.findIndex(
+      (billItem) => billItem.itemDetail.itemName === itemDetail.itemName
+    );
+  };
+
+  const updateExistingItem = (index, itemDetail) => {
+    const updatedItem = {
+      ...bill.billItems[index],
+      itemDetail: {
+        ...bill.billItems[index].itemDetail,
+      },
+      itemQuantityInBill: bill.billItems[index].itemQuantityInBill + 1,
+    };
+    bill.billItems.splice(index, 1);
+    setBill((prev) => ({
+      totalNumberOfItems: prev.totalNumberOfItems + 1,
+      ...prev,
+      billItems: [updatedItem, ...prev.billItems],
+    }));
+  };
+
+  const addNewItemToBill = (itemDetail) => {
+    const newItem = {
+      itemDetail,
+      itemMRPtotal: Number(itemDetail.itemMRPperUnit),
+      itemDiscountTotal:
+        itemDetail.itemMRPperUnit - itemDetail.itemSellingPricePerUnit,
+      itemSellingPriceTotal: Number(itemDetail.itemSellingPricePerUnit),
+      _id: itemDetail._id,
+      itemQuantityInBill: 1,
+    };
+
+    setBill((prev) => ({
+      ...prev,
+      billItems: [newItem, ...prev.billItems],
+    }));
+  };
+
+  const resetInputState = (isKeyPresent) => {
+    setInputValue(INPUT_INITIAL_STATE);
+    if (isKeyPresent) {
+      setFilterBarcodeData([]);
+    } else {
+      setFilteredData([]);
     }
   };
 
@@ -375,6 +371,24 @@ const NewBillPage = ({ billID = '' }) => {
     dispatch({ type: 'BILL_ITEMS_LIST', payload: bill });
     // eslint-disable-next-line
   }, [bill]);
+
+  useEffect(()=>{
+    billBarcode && window.print();
+    setBill(BILL_INITIAL_STATE);
+  },[billBarcode])
+
+  const setBillApiCountToLocalStorage = () => {
+    const todayKey = new Date().toLocaleDateString();
+
+    const currentCount = parseInt(localStorage.getItem(todayKey));
+
+    if (isNaN(currentCount)) {
+      localStorage.setItem(todayKey, 1);
+    } else {
+      const updatedCount = currentCount + 1;
+      localStorage.setItem(todayKey, updatedCount);
+    }
+  };
 
   return (
     <>
@@ -494,7 +508,7 @@ const NewBillPage = ({ billID = '' }) => {
           </Button>
           <Button
             sx={{ marginRight: '1rem' }}
-            disabled={!bill.billItems.length || bill.amountReturn < 0}
+            disabled={!bill.billItems.length || bill.amountReturn < 0 || apiLoading}
             className="print-btn"
             onClick={() =>
               addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE, {
@@ -624,7 +638,7 @@ const NewBillPage = ({ billID = '' }) => {
                           itemsByBarcode[e.target.value] &&
                           itemsByBarcode[e.target.value]?.length === 1
                         ) {
-                          onItemAddToBill({
+                          addItemToBill({
                             e: e,
                             itemData: itemsByBarcode,
                             key: e.target.value,
@@ -668,7 +682,7 @@ const NewBillPage = ({ billID = '' }) => {
                               }}
                               className="show-data"
                               onClick={(e) => {
-                                onItemAddToBill({
+                                addItemToBill({
                                   e: e,
                                   itemData: itemsByBarcode,
                                   key: value,
@@ -711,7 +725,7 @@ const NewBillPage = ({ billID = '' }) => {
                   {inputValue.itemName && Boolean(filteredData.length) && (
                     <div
                       onClick={(e) => {
-                        onItemAddToBill({ e: e, itemData: itemsByName });
+                        addItemToBill({ e: e, itemData: itemsByName });
                       }}
                       className="data-result"
                       style={{ minWidth: 'fit-content' }}
@@ -1079,6 +1093,14 @@ const NewBillPage = ({ billID = '' }) => {
             <h3>Date: {new Date().toDateString()}</h3>
             <h3>Time: {new Date().toLocaleTimeString()}</h3>
           </div>
+          {billBarcode && <Barcode
+              options={{
+                height: 30,
+                width: 1.2,
+                displayValue: false,
+              }}
+              value={billBarcode}
+            />}
           <div className="print-table-head">
             <p>Name</p>
             <p>Qty.</p>

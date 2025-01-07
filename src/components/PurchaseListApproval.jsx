@@ -100,7 +100,7 @@ const PurchaseListApproval = ({
   };
   const time = new Date(list.createdAt);
   let datetext = time.toTimeString();
-  datetext = datetext.split(' ')[0];
+  datetext = datetext?.split(' ')[0];
 
   return (
     <>

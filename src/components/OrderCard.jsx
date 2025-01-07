@@ -1,9 +1,9 @@
-import { Button } from '@mantine/core';
+import { Button, Group, Text, Title } from '@mantine/core';
 import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import '../CSS/_orders.scss';
 import OrderDetail from './OrderDetail';
-function OrderCard({ order, buttonStatus, updateOrderStatus }) {
+function OrderCard({ order, buttonStatus, updateOrderStatus,getUserOrders }) {
   const {
     timeSlot,
     paymentMethod,
@@ -11,8 +11,11 @@ function OrderCard({ order, buttonStatus, updateOrderStatus }) {
     contactNumber,
     orderStatus,
     _id,
+    orderCreatedAt
   } = order || {};
   const [opened, { open, close }] = useDisclosure(false);
+  const orderPlacedDate = new Date(orderCreatedAt).toLocaleString('en-IN');
+
   return (
     <div className="order-card-container">
       <div className="order-card-info-container" onClick={open}>
@@ -28,6 +31,10 @@ function OrderCard({ order, buttonStatus, updateOrderStatus }) {
             {' '}
             <span>Contact:</span> {contactNumber || '-'}
           </p>
+          <Group className="order-card">
+            <Title className='order-card-date-time-label' order={5}>Date:</Title>
+            <Text className='order-card-date-time'>{ orderPlacedDate }</Text>
+          </Group>
         </div>
       </div>
       {buttonStatus && (
@@ -54,6 +61,7 @@ function OrderCard({ order, buttonStatus, updateOrderStatus }) {
         order={order}
         buttonStatus={buttonStatus}
         updateOrderStatus={updateOrderStatus}
+        getUserOrders={getUserOrders}
       />
     </div>
   );

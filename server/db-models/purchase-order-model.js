@@ -18,6 +18,10 @@ const purchaseOrderSchema = new mongoose.Schema({
       item_id: String,
       brand: String,
       category: String,
+      imageUrl: {
+        public_id: String,
+        secure_url: String
+      },
       createdAt: { type: Date, default: Date.now },
       expiryDates: [
         {
@@ -64,8 +68,44 @@ const purchaseOrderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isPaid: {
+    type: Boolean,
+    default: false,
+  },
+  payBillImage: [
+    {
+      public_id: String,
+      secure_url: String,
+    },
+  ],
+  draftTime: Date,
+  approveTime: Date,
+  paidTime: Date,
+  rejectTime: Date,
+  statusHistory: [
+    { data: Object, createdAt: { type: Date, default: Date.now } },
+  ],
 });
 
-// pre hook to make is Approved true or false if approver is their
+
+purchaseOrderSchema.pre("save", function (next) {
+  const purchaseOrder = this;
+  const { isApproved, isDraft } = purchaseOrder;
+
+  // If the purchase order is a draft and not yet approved
+  if (!isApproved && isDraft) {
+    const historyEntry = {
+      data: purchaseOrder.toObject(), 
+      createdAt: Date.now(), 
+    };
+
+    // Add to statusHistory array
+    purchaseOrder.statusHistory.push(historyEntry);
+  }
+
+  // No need for next() with async operations or save recursion
+  next();
+});
+
 
 module.exports = mongoose.model('PurchaseOrder', purchaseOrderSchema);

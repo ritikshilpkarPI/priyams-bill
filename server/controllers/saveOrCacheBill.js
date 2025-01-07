@@ -7,6 +7,7 @@ const {
   setToBillsCache,
   deleteBillFromBillCacheById,
 } = require('../cache/billCacheConfig');
+const { SentMessageToDiscord } = require('../util');
 
 const saveOrCacheBill = async (req, res) => {
   const {
@@ -19,7 +20,7 @@ const saveOrCacheBill = async (req, res) => {
     cashPay,
     upiPay,
     amountReturn,
-    billId = uuidv4() + '/' + Date.now(),
+    billId,
   } = req.body;
   const newBillData = {
     customerName,
@@ -30,23 +31,34 @@ const saveOrCacheBill = async (req, res) => {
     billItems,
     cashPay,
     upiPay,
+    slug: billId,
     amountReturn,
   };
-  let isBillSaved;
+  let isBillSaved, billBarcode, isDuplicate = false;
   try {
-    const maxAttemptToSaveInDB = 3;
+    const maxAttemptToSaveInDB = 1;
     setToBillsCache(billId, newBillData);
-    isBillSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
+    const duplicateBill = await Bill.findOne({ slug: billId });
+    if (duplicateBill) {
+      isBillSaved = true;
+      isDuplicate = true;
+      return;
+    }
+    const billSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
+    isBillSaved = billSaved.isBillSaved;
+    billBarcode = billSaved.billBarcode;
   } catch (error) {
+    SentMessageToDiscord(JSON.stringify(error))
     console.log(error);
   } finally {
     if (isBillSaved) {
       deleteBillFromBillCacheById(billId);
       res.status(200).json({
         success: true,
-        message: 'Bill saved successfully!',
+        message: isDuplicate ? 'This bill already exist with same slug!' : 'Bill saved successfully!',
         billId,
         isBillSaved,
+        billBarcode,
         isUnsavedBillCreated: false,
         isCached: false,
       });
@@ -60,6 +72,7 @@ const saveOrCacheBill = async (req, res) => {
         message: 'Unable to save bill',
         billId,
         isBillSaved,
+        billBarcode,
         isUnsavedBillCreated,
         isCached: true,
       });
@@ -74,7 +87,7 @@ const saveBill = async (
   currentAttempt = 0
 ) => {
   if (currentAttempt > maxAttemptToSaveInDB) {
-    return false;
+    return { isBillSaved: false, billBarcode: '' };
   } else {
     try {
       const {
@@ -123,7 +136,9 @@ const saveBill = async (
                 );
                 await item.save();
               }
-            } catch (error) {}
+            } catch (error) {
+              SentMessageToDiscord(JSON.stringify(error))
+            }
           }
           if (!item) {
             throw new Error('item not exists');
@@ -148,10 +163,11 @@ const saveBill = async (
         })
       );
 
-      const newBill = new Bill({
+      const newBill = await Bill.create({
         customerName,
         customerPhone,
         items: allItems,
+        slug: billId,
         billMRPTotal,
         billAmountTotal,
         billDiscountTotal,
@@ -162,8 +178,7 @@ const saveBill = async (
         upiPay,
         amountReturn,
       });
-      await newBill.save();
-      return true;
+      return { isBillSaved: true, billBarcode: newBill._id };
     } catch (error) {
       return await saveBill(
         newBillData,
@@ -180,6 +195,7 @@ const saveBillToUnsavedBills = async (data) => {
     await UnSavedBill.create({ data });
     return true;
   } catch (error) {
+    SentMessageToDiscord(JSON.stringify(error))
     return false;
   }
 };

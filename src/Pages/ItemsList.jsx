@@ -11,14 +11,13 @@ import {
   Loader,
   Image,
   Textarea,
-  Select,
+  Select, 
   TextInput,
   NumberInput,
   Group,
   Modal,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import { AppStateContext } from '../AppState/appState.context';
 import Papa from 'papaparse';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
@@ -28,6 +27,8 @@ import { Dropzone } from '@mantine/dropzone';
 import { useDisclosure } from '@mantine/hooks';
 import ProtectedComponent from 'src/components/ProtectedComponent';
 import access from '../access.js';
+import { Pagination } from '../components/pagination/paginations.jsx';
+import { debounce } from 'src/utils/debounce.js';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: '',
@@ -84,8 +85,50 @@ const ItemsList = () => {
   const openRef = useRef(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [index, setIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limitPage, setLimitPage] = useState(100);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
+  const totalPages = totalItemsCount ? Math.ceil(totalItemsCount / limitPage) - 1 : 0;
+  const paginationArrLength = 8;
 
+  const [paginationIndices, setPaginationIndices] = useState([]);
+  const skip = limitPage*(currentPage-1);
+  
   const history = useHistory();
+
+  const paginationArr = (length)=> {
+    let arr = [], startElem = 2;
+    for (let i = 0; i < length; i++) { 
+      arr[i]=startElem++;
+    }
+    setPaginationIndices(arr);
+  }
+
+  // useEffect(() => {
+    const getFilteredItems = async ({itemBarcode,itemName,itemBrandName }) => {
+      const fetch = await genericAxios({
+        url: API_PATHS.INVENTORY.GET_ITEMS,
+        method: API_METHODS.POST,
+        data: {
+          itemBarcode,
+          itemName,
+          itemBrandName,
+        },
+        params: {
+          filters: {
+            isDeleted: false,
+          },
+        },
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (fetch.error){ 
+        return [];
+      }
+      return fetch?.data?.message ?? [];
+    };
+  // },[])
 
   useEffect(() => {
     (async () => {
@@ -96,33 +139,48 @@ const ItemsList = () => {
           filters: {
             minStockOnly: false,
             isDeleted: false,
+            skip,
+            limit: limitPage
           },
         },
         headers: {
           Cookie: '',
         },
       });
-      if (fetch.error) return;
-      const itemsData = fetch?.data?.message?.items;
-      setItemsList(itemsData)
+      if (fetch.error){ 
+        setItemsList([]);
+        return;
+      }
+      const itemsData = fetch?.data?.message?.items??[];
+      const itemCount = fetch?.data?.message?.itemCount??0;    
+      // const prevCurrent = [...itemsList,...itemsData];      
+      setItemsList(itemsData);
+      setTotalItemsCount(itemCount)
       // setLoaderDisplay(false);
     })();
     // eslint-disable-next-line
-  }, []);
-
+  }, [currentPage]);
+  useEffect(()=>{
+    const length = totalPages > paginationArrLength ? paginationArrLength - 2 : totalPages - 2;
+      !paginationIndices.length && paginationArr(length)
+  },[totalItemsCount])
 
   useEffect(() => {
     setItems([...itemsList]);
   }, [itemsList]);
+
   useEffect(() => {
     if (items.length) {
       setloaderDisplay(false);
     }
   }, [items]);
-  const handleNewItemInput = (e) => {
+
+  const debouncedGetFilteredItems = debounce(getFilteredItems, 1000);
+  const handleNewItemInput = async (e) => {
     const { name, value } = e.target;
-    setNewItemInput({ ...newItemInput, [name]: value });
-    const filteredItems = itemsList.filter(
+    const newInputVal = { ...newItemInput, [name]: value };
+    setNewItemInput(newInputVal);
+    let filteredItems = itemsList.filter(
       (itemObj) =>
         itemObj[name] &&
         itemObj[name]
@@ -130,9 +188,11 @@ const ItemsList = () => {
           .toLowerCase()
           .includes(value.toString().toLowerCase())
     );
+    if (filteredItems.length <= 0) {
+      filteredItems = await debouncedGetFilteredItems(newInputVal);
+    }
     setItems([...filteredItems]);
   };
-
   const handleSelectChange = (value, name) => {
     setNewItemInput({ ...newItemInput, [name]: value });
     const filteredItems = itemsList.filter(
@@ -205,7 +265,7 @@ const ItemsList = () => {
         },
       });
       if (newItem.error) return;
-      setItemsList([...itemsList, newItem.data.message])
+      setItemsList([...itemsList, newItem.data.message]);
     })();
     setApiLoading(false);
     setSlabArray([]);
@@ -261,7 +321,7 @@ const ItemsList = () => {
         alert('Item deleted...');
       }
       const newList = deletedItem.data.items;
-      setItemsList(newList)
+      setItemsList(newList);
       setApiLoading(false);
     };
 
@@ -403,6 +463,7 @@ const ItemsList = () => {
         ? itemToBeUpdated[index].images
         : items[index].images
     );
+    const [googleImages, setGoogleImages] = useState([])
 
     if (!items[index]?.deletedImages?.length) items[index].deletedImages = [];
 
@@ -454,6 +515,52 @@ const ItemsList = () => {
       });
       items[index].images = itemToBeUpdated[index].images;
     };
+    const onSelectGoogleImage = (selectedImage, index) => {
+      itemToBeUpdated = {
+        [index]: { ...items[index], ...itemToBeUpdated[index] },
+      };
+
+      if (!itemToBeUpdated[index].images?.length) {
+        itemToBeUpdated[index].images = [];
+      }
+
+      itemToBeUpdated[index].images = [
+        ...itemToBeUpdated[index].images,
+        { public_id: '', secure_url: selectedImage },
+      ];
+
+      setImages((prev) => [{ public_id: '', secure_url: selectedImage }, ...prev]);
+
+      items[index].images = itemToBeUpdated[index].images;
+    };
+
+
+
+    const handleOnAddImages = async ({ itemBrandName, itemName, itemCategory }) => {
+      const response = await genericAxios({
+        method: API_METHODS.POST,
+        url: API_PATHS.GOOGLE_IMAGE.URL,
+        data: {
+          query: `title=${itemName},brand=${itemBrandName}`,
+          count: 10
+        },
+      });
+      if (response.status !== 200) {
+        console.error({ response });
+      }
+      else {
+        const imageUrls = response?.data?.map(image => image?.link)
+        setGoogleImages(imageUrls)
+
+      }
+
+    }
+    useEffect(() => {
+      const { itemBrandName, itemName, itemCategory } = items[index];
+      handleOnAddImages({ itemBrandName, itemName, itemCategory })
+    }, []);
+
+
     return (
       <div className="images-container">
         <div className="item-images-container">
@@ -475,6 +582,26 @@ const ItemsList = () => {
           )}
         </div>
         <div className="item-images-button-container">
+
+          <div className="google-images-container">
+            <p>Select google images</p>
+            <div className='google-images-scroll'>
+              {
+                !googleImages.length 
+                ? <p>This feature is currently unavailable</p> 
+                :(
+                  googleImages?.map((imageUrl, index) => (
+                    <div className='google-images-card'
+                    onClick={() => onSelectGoogleImage(imageUrl, index)}
+                    >
+                      <img className='google-images' src={imageUrl} alt="" />
+                    </div>
+                  ))
+                )
+              
+          }
+            </div>
+          </div>
           <Dropzone
             openRef={openRef}
             activateOnClick={false}
@@ -495,7 +622,11 @@ const ItemsList = () => {
             <Button onClick={close} color="red">
               Cancel
             </Button>
-            <ItemUpdateButtonRow index={index} saveButton={true} setItemsList={setItemsList} />
+            <ItemUpdateButtonRow
+              index={index}
+              saveButton={true}
+              setItemsList={setItemsList}
+            />
           </div>
         </div>
       </div>
@@ -1232,11 +1363,9 @@ const ItemsList = () => {
   const UseByDateElement = () => {
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
-    }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
-    }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
+      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
+      }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1326,11 +1455,9 @@ const ItemsList = () => {
     const [savedDates, setSavedDates] = useState(data);
     const [newUseByDateVal, setNewUseByDateVal] = useState();
 
-    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${
-      new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
-    }${new Date(newUseByDateVal).getMonth() + 1}-${
-      new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
-    }${new Date(newUseByDateVal).getDate()}`;
+    const changedDateFormat = `${new Date(newUseByDateVal).getFullYear()}-${new Date(newUseByDateVal).getMonth() + 1 <= 9 ? 0 : ''
+      }${new Date(newUseByDateVal).getMonth() + 1}-${new Date(newUseByDateVal).getDate() <= 9 ? 0 : ''
+      }${new Date(newUseByDateVal).getDate()}`;
 
     // To add new date
     const addNewDate = (selectedDate) => {
@@ -1458,7 +1585,7 @@ const ItemsList = () => {
           Barcode Scanner
         </Button>
       </div>
-      <h4 className="total-item-count">Total Items : {items.length}</h4>
+      <h4 className="total-item-count">Total Items : {totalItemsCount}</h4>
       {openScanner && (
         <BarcodeScannerComponent
           width={500}
@@ -1721,6 +1848,8 @@ const ItemsList = () => {
                   onChange={handleNewItemInput}
                   name="itemName"
                   autoComplete="off"
+                  className='item-search-input'
+
                 />
               </td>
               <td></td>
@@ -1834,6 +1963,7 @@ const ItemsList = () => {
         <Table className="show-items-table">
           <tbody className="add-item-row-body">
             <ListComponents />
+            <Pagination  currentPage={currentPage} totalPages={totalPages} paginationIndices={paginationIndices} setCurrentPage={setCurrentPage} setPaginationIndices={ setPaginationIndices } className={"inventory-pagination"}/>
           </tbody>
         </Table>
       </div>
@@ -1863,12 +1993,12 @@ const TableRow = ({
     const data =
       name === 'quantityUnitName'
         ? [
-            { value: 'kg', label: 'kg' },
-            { value: 'grams', label: 'grams' },
-            { value: 'liter', label: 'liter' },
-            { value: 'ml', label: 'ml' },
-            { value: 'Piece', label: 'Piece' },
-          ]
+          { value: 'kg', label: 'kg' },
+          { value: 'grams', label: 'grams' },
+          { value: 'liter', label: 'liter' },
+          { value: 'ml', label: 'ml' },
+          { value: 'Piece', label: 'Piece' },
+        ]
         : categoryArray;
 
     return (
@@ -1907,33 +2037,38 @@ const UpdateItemButton = ({
   setItems,
   itemsList,
   saveButton,
-  setItemsList
+  setItemsList,
 }) => {
   const [apiLoading, setApiLoading] = useState(false);
   const handleAddItem = async () => {
+    console.log({ itemToBeUpdated, index });
     const { _id } = itemToBeUpdated[index];
-    setApiLoading(true);
-    const updatedItem = await genericAxios({
-      url: API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID,
-      method: API_METHODS.PUT,
-      data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
-      headers: {
-        Cookie: 'some_cookie',
-      },
-    });
-    if (updatedItem.error) return;
-    if (updatedItem.status === 200) {
-      alert('Item updated...');
+    try {
+      setApiLoading(true);
+      const updatedItem = await genericAxios({
+        url: API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID,
+        method: API_METHODS.PUT,
+        data: { id: _id, itemToBeUpdated: itemToBeUpdated[index] },
+        headers: {
+          Cookie: 'some_cookie',
+        },
+      });
+      if (updatedItem.error) return;
+      if (updatedItem.status === 200) {
+        alert('Item updated...');
+      }
+      itemToBeUpdated = {};
+      let newItemsList = [...itemsList];
+      newItemsList.splice(
+        itemsList.findIndex((item) => item._id === _id),
+        1
+      );
+      newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
+      setItemsList(newItemsList);
+      setApiLoading(false);
+    } catch (error) {
+      setApiLoading(false);
     }
-    itemToBeUpdated = {};
-    let newItemsList = [...itemsList];
-    newItemsList.splice(
-      itemsList.findIndex((item) => item._id === _id),
-      1
-    );
-    newItemsList = [{ ...updatedItem.data.message }, ...newItemsList];
-    setItemsList(newItemsList);
-    setApiLoading(false);
   };
 
   return (

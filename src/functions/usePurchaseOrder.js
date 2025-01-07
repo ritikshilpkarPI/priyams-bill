@@ -22,6 +22,7 @@ const usePurchaseOrder = (history) => {
   const [deleteBills, setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
   const [Loading, setLoading] = useState(false);
+  const [itemLoading, setItemLoading] = useState(false);
   const [, setPrevPaidAmount] = useState(0);
   const [, setState] = useState({});
   const [disableDraft, setDisableDraft] = useState(false);
@@ -361,17 +362,17 @@ const usePurchaseOrder = (history) => {
     form.setValues((prev) => ({
       barcode: item.itemBarcode,
       inputName: item.itemName,
-      currentStock: item.itemStockQuantity,
+      currentStock: item?.itemStockQuantity,
       stockQuantity: 0,
-      minimumQuantity: item.minimumStockQuantity,
-      brand: item.itemBrandName,
-      category: item.itemCategory,
-      sellingPrice: item.itemSellingPricePerUnit,
-      mrp: item.itemMRPperUnit,
-      costPrice: item.itemCostPricePerUnit,
-      slabPrice: item.slabPricing,
+      minimumQuantity: item?.minimumStockQuantity,
+      brand: item?.itemBrandName,
+      category: item?.itemCategory,
+      sellingPrice: item?.itemSellingPricePerUnit,
+      mrp: item?.itemMRPperUnit,
+      costPrice: item?.itemCostPricePerUnit,
+      slabPrice: item?.slabPricing,
       item_id: String(item._id),
-      unit: item.quantityUnitName,
+      unit: item?.quantityUnitName,
     }));
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
@@ -379,19 +380,19 @@ const usePurchaseOrder = (history) => {
   const handleSelectOrderItems = (item, filteredItemsByBarcode) => {
     if (filteredItemsByBarcode.length === 1) {
       form.setValues((prev) => ({
-        barcode: item.itemBarcode,
-        inputName: item.itemName,
-        currentStock: item.itemStockQuantity,
+        barcode: item?.itemBarcode,
+        inputName: item?.itemName,
+        currentStock: item?.itemStockQuantity,
         stockQuantity: 0,
-        minimumQuantity: item.minimumStockQuantity,
-        brand: item.itemBrandName,
-        category: item.itemCategory,
-        sellingPrice: item.itemSellingPricePerUnit,
-        mrp: item.itemMRPperUnit,
-        costPrice: item.itemCostPricePerUnit,
-        slabPrice: item.slabPricing,
-        item_id: String(item._id),
-        unit: item.quantityUnitName,
+        minimumQuantity: item?.minimumStockQuantity,
+        brand: item?.itemBrandName,
+        category: item?.itemCategory,
+        sellingPrice: item?.itemSellingPricePerUnit,
+        mrp: item?.itemMRPperUnit,
+        costPrice: item?.itemCostPricePerUnit,
+        slabPrice: item?.slabPricing,
+        item_id: String(item?._id),
+        unit: item?.quantityUnitName,
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
@@ -412,8 +413,8 @@ const usePurchaseOrder = (history) => {
     values.expiryDates.forEach((element) => {
       sum += element.value;
     });
-    if (sum === values.stockQuantity || !form.values.validate) {
-      form.values.slabPrice = [...slabs];
+    if (sum === values?.stockQuantity || !form.values.validate) {
+      form.values.slabPrice = Array.isArray(slabs) ? [...slabs] : [];
       const new_order = { ...values };
       try {
         onLoader();
@@ -422,8 +423,8 @@ const usePurchaseOrder = (history) => {
           editIndex >= 0
             ? await updateOrderByIndex(new_order, editIndex)
             : id
-            ? await updateSavedOrder(new_order)
-            : await saveOrder(new_order);
+              ? await updateSavedOrder(new_order)
+              : await saveOrder(new_order);
         const { order } = data;
         const { _id } = order;
         offLoader();
@@ -482,24 +483,24 @@ const usePurchaseOrder = (history) => {
       setEditIndex(index);
     }
     form.setValues((prev) => ({
-      barcode: item.barcode,
-      inputName: item.inputName.trim(),
-      stockQuantity: item.stockQuantity,
-      currentStock: item.currentStock,
-      minimumQuantity: item.minimumQuantity,
-      itemQuantity: item.itemQuantity,
-      unit: item.unit,
-      itemRemark: item.itemRemark,
-      sellingPrice: item.sellingPrice,
-      mrp: item.mrp,
-      costPrice: item.costPrice,
-      expiryDates: [...item.expiryDates],
-      validate: item.validate,
-      item_id: item.item_id,
-      brand: item.brand,
-      category: item.category,
+      barcode: item?.barcode,
+      inputName: item?.inputName.trim(),
+      stockQuantity: item?.stockQuantity,
+      currentStock: item?.currentStock,
+      minimumQuantity: item?.minimumQuantity,
+      itemQuantity: item?.itemQuantity,
+      unit: item?.unit,
+      itemRemark: item?.itemRemark,
+      sellingPrice: item?.sellingPrice,
+      mrp: item?.mrp,
+      costPrice: item?.costPrice,
+      expiryDates: [...item?.expiryDates],
+      validate: item?.validate,
+      item_id: item?.item_id,
+      brand: item?.brand,
+      category: item?.category,
     }));
-    setSlabs([...item.slabPrice]);
+    setSlabs([...item?.slabPrice]);
     setOpened(true);
   };
   const deleteOrder = async (order_id) => {
@@ -578,10 +579,10 @@ const usePurchaseOrder = (history) => {
     itemsList
   );
 
-  useEffect(()=> {
+  useEffect(() => {
     (async () => {
       const fetch = await genericAxios({
-        url: API_PATHS.INVENTORY.GET_ITEMS,
+        url: API_PATHS.INVENTORY.GET_ITEMS_FOR_PURCHASE_ORDER,
         method: API_METHODS.GET,
         params: {
           filters: {
@@ -604,7 +605,7 @@ const usePurchaseOrder = (history) => {
       getDetails(id);
       setIsNotGetUpdated(false);
     }
-    if (Object.keys(barcodeFilteredItem).length && isEditable) {
+    if (Object.keys(barcodeFilteredItem)?.length && isEditable) {
       handleSelectOrderItems(barcodeFilteredItem, filteredItemsByBarcode);
     }
     return () => {
@@ -626,6 +627,37 @@ const usePurchaseOrder = (history) => {
     }
     setDisableDraft(flag);
   }, [purchaseList, purchaseForm]);
+
+  useEffect(() => {
+    if(form.values.barcode){
+      (async () => {
+        setItemLoading(true);
+        const fetch = await genericAxios({
+          url: `${API_PATHS.INVENTORY.GET_ITEMS}/${form.values.barcode}`,
+          method: API_METHODS.GET,
+          headers: {
+            Cookie: '',
+          },
+        });
+        if (fetch.error) return;
+        const item = fetch?.data?.message;
+        form.setValues(state=>({...state,
+          currentStock: item?.itemStockQuantity,
+          stockQuantity: 0,
+          minimumQuantity: item?.minimumStockQuantity,
+          brand: item?.itemBrandName,
+          category: item?.itemCategory,
+          sellingPrice: item?.itemSellingPricePerUnit,
+          mrp: item?.itemMRPperUnit,
+          costPrice: item?.itemCostPricePerUnit,
+          slabPrice: item?.slabPricing,
+          item_id: String(item?._id),
+          unit: item?.quantityUnitName,
+        }))
+        setItemLoading(false);
+      })();
+    }
+  }, [form.values.barcode])
 
   return {
     form,
@@ -668,7 +700,9 @@ const usePurchaseOrder = (history) => {
     deleteCloudBills,
     Loading,
     disableDraft,
-    itemsList
+    itemsList,
+    setLoading,
+    itemLoading
   };
 };
 

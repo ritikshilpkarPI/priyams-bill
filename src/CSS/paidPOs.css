@@ -1,0 +1,34 @@
+.paidPOs-container {
+    .paidPOs-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        .paidPOs-table-thead {
+            .paidPOs-table-thead-tr {
+                .paidPOs-table-thead-tr-th {
+                    font-size: small;
+                    padding: 5px;
+                    text-align: left;
+                    border: 1px solid #ddd;
+
+                }
+            }
+        }
+
+        .paidPOs-table-tbody {
+            .paidPOs-table-tbody-tr {
+                cursor: pointer;
+                .paidPOs-table-tbody-tr-td{
+                    font-size: small;
+                    padding: 5px;
+                    text-align: left;
+                    border: 1px solid #ddd;                  
+                }               
+            }
+            .paidPOs-table-tbody-tr:nth-child(odd) {
+                background-color: aliceblue;
+            }
+        }
+    }
+
+}

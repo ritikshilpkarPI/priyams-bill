@@ -84,6 +84,11 @@ input[type='number'] {
 .App > div:nth-child(2), .App > .mantine-Table-root, .App > .attendance-wrapper{
   margin-left: 100px;
 }
+.App > div:nth-child(2){
+  @media print{
+    margin-left: 0;
+  }
+}
 .billing-container {
   margin-top: 0;
   .header {
@@ -157,6 +162,7 @@ input[type='number'] {
     .bill-table {
       max-width: 10px;
       margin-right: 200px;
+      display: none;
 
       tr {
         th {

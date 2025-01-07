@@ -34,7 +34,7 @@ let id = '';
 const OpenClose = () => {
   const { expenseItemsStateAndDispatch } = useContext(AppStateContext);
   const [expenseList, expenseDispatch] = expenseItemsStateAndDispatch;
-  const currentDate = new Date().toJSON().split('T')[0];
+  const currentDate = new Date().toJSON()?.split('T')[0];
 
   const [procedureValue, setProcedureValue] = useState('open');
   const [procedure, setProcedure] = useState([]);
@@ -43,6 +43,7 @@ const OpenClose = () => {
   const [closingNotes, setClosingNotes] = useState(INITIAL_VALS);
   const [openingCoin, setOpeningCoin] = useState(INITIAL_VALS);
   const [closingCoin, setClosingCoin] = useState(INITIAL_VALS);
+  const [upiSum, setUpiSum] = useState(0);
   const [allBills, setAllBills] = useState([]);
   const [expenseDataDate, setexpenseDataDate] = useState(currentDate);
 
@@ -100,6 +101,7 @@ const OpenClose = () => {
     notes:
       procedureValue === 'open' ? { ...openingNotes } : { ...closingNotes },
     coins: procedureValue === 'open' ? { ...openingCoin } : { ...closingCoin },
+    upiSum: upiSum ?? 0,
   };
 
   const getAllProcedure = async () => {
@@ -141,7 +143,7 @@ const OpenClose = () => {
 
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split('T')[0];
+      createdAtDate = date?.split('T')[0];
 
       if (selectedDate === createdAtDate && procedureObj.procedure === 'open') {
         setOpeningNotes(procedureObj.notes);
@@ -153,6 +155,7 @@ const OpenClose = () => {
       ) {
         setClosingNotes(procedureObj.notes);
         setClosingCoin(procedureObj.coins);
+        setUpiSum(procedureObj?.upiSum ?? 0);
       }
     });
   }, [procedure, currentDate, selectedDate]);
@@ -164,7 +167,7 @@ const OpenClose = () => {
     id = '';
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split('T')[0];
+      createdAtDate = date?.split('T')[0];
       if (selectedDate === createdAtDate && procedureObj.procedure === 'open') {
         id = procedureObj._id;
         selectedProcedureDate = createdAtDate;
@@ -185,7 +188,7 @@ const OpenClose = () => {
       });
       if (newOpenProcedure.error) return;
       let dateFromDb = newOpenProcedure.data.message.createdAt;
-      createdAtDate = dateFromDb.split('T')[0];
+      createdAtDate = dateFromDb?.split('T')[0];
       id = newOpenProcedure.data.message._id;
     } else if (
       selectedDate === selectedProcedureDate &&
@@ -211,7 +214,7 @@ const OpenClose = () => {
     id = '';
     procedure.forEach((procedureObj) => {
       let date = procedureObj.createdAt;
-      createdAtDate = date.split('T')[0];
+      createdAtDate = date?.split('T')[0];
       if (
         selectedDate === createdAtDate &&
         procedureObj.procedure === 'close'
@@ -235,7 +238,7 @@ const OpenClose = () => {
       });
       if (newCloseProcedure.error) return;
       let dateFromDb = newCloseProcedure.data.message.createdAt;
-      createdAtDate = dateFromDb.split('T')[0];
+      createdAtDate = dateFromDb?.split('T')[0];
       id = newCloseProcedure.data.message._id;
     } else if (
       selectedDate === selectedProcedureDate &&
@@ -305,6 +308,7 @@ const OpenClose = () => {
           gap: '30px',
           justifyContent: 'flex-start',
           alignItems: 'center',
+          flexWrap: 'wrap'
         }}
       >
         <div style={{ marginLeft: '18px' }}>
@@ -332,7 +336,7 @@ const OpenClose = () => {
           ]}
           value={procedureValue}
           onChange={setProcedureValue}
-          style={{ marginTop: '18px' }}
+          style={{ marginTop: '18px', marginLeft: '28px' }}
         />
       </div>
 
@@ -342,10 +346,13 @@ const OpenClose = () => {
       <div
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'start',
           gap: '20px',
           marginTop: '20px',
+          padding: "20px",
+          flexWrap: "wrap",
+          width: "100%"
         }}
         className="left-side-opening-container"
       >
@@ -472,6 +479,28 @@ const OpenClose = () => {
               </div>
             ))}
           </div>
+          {procedureValue === "close" && <div 
+            style={{
+              display:"flex", 
+              gap: "20px", 
+              alignItems: "flex-end", 
+              padding: "12px",
+              boxShadow: '0px 0px 15px -1px rgba(0,0,0,0.12)',
+              borderRadius: '8px',
+              marginLeft: '8px',
+            }}
+          >
+            <NumberInput
+              placeholder="Amount"
+              label="UPI Amount"
+              value={upiSum}
+              onChange={(value) => setUpiSum(value)}
+              style={{
+                width: "100%",
+                textAlign: "start"
+              }}
+            />
+          </div>}
           <div style={{ marginTop: '20px' }}>
             {procedureValue === 'open' ? (
               <Text size="xl" weight={700}>
@@ -516,24 +545,24 @@ const OpenClose = () => {
             <th>
               <Text>Opening Sum</Text>
             </th>
-            <th>
+            {/* <th>
               <Text>Opening Notes Sum</Text>
             </th>
             <th>
               <Text>Opening Coins Sum</Text>
-            </th>
+            </th> */}
             <th>
               <Text>Closing Time</Text>
             </th>
             <th>
               <Text>Closing Sum</Text>
             </th>
-            <th>
+            {/* <th>
               <Text>Closing Notes Sum</Text>
             </th>
             <th>
               <Text>Closing Coins Sum</Text>
-            </th>
+            </th> */}
             <th>
               <Text>Closing - Opening</Text>
             </th>
@@ -545,7 +574,18 @@ const OpenClose = () => {
             </th>
             <ProtectedComponent role={access.CHECK_AMOUNT_ROW}>
               <th>
-                <Text>Check</Text>
+                <Text>Cash Check</Text>
+              </th>
+            </ProtectedComponent>
+            <th>
+              <Text>Total UPI Pay</Text>
+            </th>
+            <th>
+              <Text>Closing UPI sum</Text>
+            </th>
+            <ProtectedComponent role={access.CHECK_AMOUNT_ROW}>
+              <th>
+                <Text>UPI Check</Text>
               </th>
             </ProtectedComponent>
           </tr>
@@ -626,6 +666,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
     closingNotesSum,
     closingTime,
     closingSum,
+    closingUpiSum,
   } = item;
 
   const filteredItem = expense.filter((element) => {
@@ -677,7 +718,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
             {openingSum}
           </Text>
         </td>
-        <td>
+        {/* <td>
           <Text color="black" weight={500}>
             {PopoverComponent(openingNotesSum, openingNotes)}
           </Text>
@@ -686,7 +727,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
           <Text color="black" weight={500}>
             {PopoverComponent(openingCoinsSum, openingCoins)}
           </Text>
-        </td>
+        </td> */}
         <td>
           <Text color="black" weight={500}>
             {closingTime === 0
@@ -699,7 +740,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
             {closingSum}
           </Text>
         </td>
-        <td>
+        {/* <td>
           <Text color="black" weight={500}>
             {PopoverComponent(closingNotesSum, closingNotes)}
           </Text>
@@ -708,7 +749,7 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
           <Text color="black" weight={500}>
             {PopoverComponent(closingCoinsSum, closingCoins)}
           </Text>
-        </td>
+        </td> */}
         <td>
           <Text color="black" weight={500}>
             {closingSum - openingSum}
@@ -736,6 +777,23 @@ const TableRow = ({ item, idx, expense, bill, expenseDate }) => {
           <td>
             <Text color="black" weight={500}>
               {filteredBill.length ? billBalanceCheck(0) : 0}
+            </Text>
+          </td>
+        </ProtectedComponent>
+        <td>
+          <Text color="black" weight={500}>
+            {filteredBill[0]?.totalUpiPay ?? 0}
+          </Text>
+        </td>
+        <td>
+            <Text color="black" weight={500}>
+              {(closingUpiSum ?? 0)}
+            </Text>
+          </td>
+        <ProtectedComponent role={access.CHECK_AMOUNT_ROW}>
+          <td>
+            <Text color="black" weight={500}>
+              {(closingUpiSum ?? 0)-(filteredBill[0]?.totalUpiPay ?? 0)}
             </Text>
           </td>
         </ProtectedComponent>

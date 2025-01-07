@@ -122,7 +122,7 @@ function OrderStatusDetail() {
       ) : (
         <>
           <h3 className="order-status-title">
-            {orderStatus.split('_').join(' ')}
+            {orderStatus?.split('_').join(' ')}
           </h3>
           <Table
             captionSide="top"

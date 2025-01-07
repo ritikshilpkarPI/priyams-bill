@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { isAdmin, isLoggedIn } = require('../middleware/isAdmin');
 const { API_PATHS } = require('../../src/utils/constants/apiPaths');
-
 const {
   getStaff,
   addBulkItems,
@@ -66,13 +65,39 @@ const {
   saveOrCacheBill,
   getUnSavedBills,
   addItemsToCartApp,
+  getProductImageByProductName,
+  uploadImageCloudinary,
+  getPurchaseOrderByPaidStatus,
+  getPurchaseOrderById,
+  payPurchaseOrderBill,
+  addExpiredItem,
+  getExpiredItems,
+  addNewReturnBill,
+  getBillForReturnExchange,
+  getItemsWithSelection,
+  getItemByBarcode,
+  getItemsByFilter,
+  getSaveSubscription,
+  approveRider,
+  getAllRiders,
+  handleCancellationRequest,
+  confirmOrderProducts,
+  getCancellationOrders,
+  expelOrderToRider
 } = require('../controllers/index');
+
 
 // online order apis
 router.get(API_PATHS.ORDERS.GET_USER_ORDERS, isLoggedIn, getUserOrders);
 router.post(API_PATHS.ORDERS.UPDATE_USER_ORDERS, isLoggedIn, updateOrderStatus);
+router.post(API_PATHS.ORDERS.CONFIRM_ORDER_PRODUCTS,isLoggedIn, confirmOrderProducts);
+router.post(API_PATHS.ORDERS.EXPEL_ORDER_TO_RIDER,isLoggedIn, expelOrderToRider);
 
 router.get(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsFeed);
+router.post(API_PATHS.SUBSCRIPTION, isLoggedIn, getSaveSubscription);
+router.get(API_PATHS.INVENTORY.GET_ITEMS_FOR_PURCHASE_ORDER, isLoggedIn, getItemsWithSelection);
+router.get(`${API_PATHS.INVENTORY.GET_ITEMS}/:itemBarcode`, isLoggedIn, getItemByBarcode);
+router.post(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsByFilter);
 router.get(
   API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
   isLoggedIn,
@@ -97,9 +122,10 @@ router.post(
   isLoggedIn,
   filterExpiryDates
 );
-router.put(API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID, editItemById);
+router.put(API_PATHS.INVENTORY.PUT_EDIT_ITEM_BY_ID, isLoggedIn, editItemById);
 router.delete(
   `${API_PATHS.INVENTORY.GET_PERMANENTLY_OUT_OF_STOCK}/:id`,
+  isLoggedIn,
   permanentlyOutOfStock
 );
 
@@ -197,7 +223,9 @@ router.post(API_PATHS.BILLING.POST_SEND_MESSAGE, isLoggedIn, sendMessage);
 router.post(API_PATHS.BILLING.POST_NEW_BILL, isLoggedIn, addNewBill);
 router.delete(API_PATHS.BILLING.DELETE_BILL, isLoggedIn, deleteBill);
 router.post(API_PATHS.BILLING.SAVE_OR_CACHE_BILL, isLoggedIn, saveOrCacheBill);
+router.post(API_PATHS.BILLING.POST_RETURN_BILLS, isLoggedIn, addNewReturnBill);
 router.get(API_PATHS.BILLING.GET_UNSAVED_BILLS, isLoggedIn, getUnSavedBills);
+router.get(`${API_PATHS.BILLING.GET_BILL}/:id`, isLoggedIn, getBillForReturnExchange);
 
 //attendance APIs
 router.post(
@@ -268,6 +296,63 @@ router.get(
   isLoggedIn,
   sendDayExpenses
 );
-router.post(`${API_PATHS.PSTORE_CART.POST_ITEMS_DATA_TO_CART}/items`, addItemsToCartApp)
+router.post(
+  `${API_PATHS.PSTORE_CART.POST_ITEMS_DATA_TO_CART}/items`,
+  addItemsToCartApp
+);
+
+router.post(
+  '/api/purchaseOrder/getProductImage',
+  isLoggedIn,
+  getProductImageByProductName
+);
+router.post('/api/purchase/uploadImageCloudinary', uploadImageCloudinary);
+router.post(
+  '/api/purchaseOrder/getPurchaseOrderByPaidStatus',
+  isLoggedIn,
+  getPurchaseOrderByPaidStatus
+);
+router.post('/api/purchaseOrder/getPurchaseOrderById', isLoggedIn, getPurchaseOrderById);
+router.post(
+  '/api/purchaseOrder/payPurchaseOrderBill',
+  isLoggedIn,
+  // isAdmin,
+  // isLoggedIn,
+  payPurchaseOrderBill
+);
+
+// rider apis
+
+router.post('/api/rider/approveRider/:id' ,isLoggedIn,
+  isAdmin,
+  isLoggedIn, approveRider)
+
+router.post(
+  '/api/riders',
+  isLoggedIn,
+  isAdmin,
+  isLoggedIn,
+  getAllRiders
+);
+
+router.post(
+  '/api/order/cancellation-decision/:id',
+  isLoggedIn,
+  isAdmin,
+  isLoggedIn,
+  handleCancellationRequest
+);
+
+
+router.get(
+  '/api/order/get-cancellation-orders',
+  isLoggedIn,
+  isAdmin,
+  isLoggedIn,
+  getCancellationOrders
+);
+
+router.post(API_PATHS.EXPIRED_ITEM.ADD_EXPIRED_ITEM,isLoggedIn,addExpiredItem)
+router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,isLoggedIn,getExpiredItems)
 
 module.exports = router;

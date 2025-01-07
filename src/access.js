@@ -10,7 +10,7 @@ const access = {
   // Inventory Page
   UPLOAD_CSV_BUTTON: ['admin'],
   DOWNLOAD_CSV_BUTTON: ['admin', 'manager'],
-  UPDATE_ITEM_BUTTON_ITEM_ROW: ['admin', 'manager'],
+  UPDATE_ITEM_BUTTON_ITEM_ROW: ['admin'],
 
   // Open-Close Page
   CHECK_AMOUNT_ROW: ['admin'],
@@ -19,6 +19,7 @@ const access = {
   BILL_PROFIT_ROW: ['admin'],
   DELETE_BILL_ROW: ['admin'],
   OPEN_CLOSE_TABLE: ['admin'],
+  PAY_PURCHASE_ORDER: ['admin'],
 };
 
 export default access;

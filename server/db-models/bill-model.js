@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 const BillSchema = new mongoose.Schema(
   {
     customerName: { type: String },
+    slug: { type: String },
     customerPhone: { type: Number },
     billMRPTotal: { type: Number },
     billAmountTotal: { type: Number },
@@ -30,6 +31,10 @@ const BillSchema = new mongoose.Schema(
     amountReturn: { type: Number },
     createdAt: { type: Date, default: Date.now },
     updated: { type: Array, default: Date.now },
+    returnBills: [{
+      type: Schema.Types.ObjectId,
+      ref: 'ReturnBill'
+    }]
   },
   {
     timestamps: true,

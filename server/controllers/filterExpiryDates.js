@@ -3,7 +3,7 @@ const { Item } = require('../db-models/item-model');
 const filterExpiryDates = async (req, res,next) => {
     const { startDate, endDate } = req.body;
     const splitDateInDbFormat = (date = 'dd/mm/yyyy') => {
-      const [day, month, year] = date.split('/'); // = [01, 02, 2028]
+      const [day, month, year] = date && date.split('/'); // = [01, 02, 2028]
       return new Date(Number(year), Number(month), Number(day));
     };
     try {

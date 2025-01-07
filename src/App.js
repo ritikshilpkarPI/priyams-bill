@@ -9,12 +9,14 @@ import { genericAxios } from './utils/genericAxiosMethod';
 function App({ history, location }) {
   
   useEffect(() => {
+    const timeOut = 36_00_000;
     async function saveBills() {
       // get all bill Ids from localStorage at once
       const unSavedBillIds = Object.keys(localStorage);
 
       if (unSavedBillIds.length) {
-        const billSaves = unSavedBillIds.map(async (billId) => {
+        for (let i = 0; i < unSavedBillIds.length; i++) {
+          const billId = unSavedBillIds[i];
           const billObject = JSON.parse(localStorage.getItem(billId));
 
           const { url, method, data: billData } = billObject;
@@ -28,10 +30,11 @@ function App({ history, location }) {
           if (response.status === 200) {
             localStorage.removeItem(billId);
           }
-        });
+        }
 
-        await Promise.allSettled(billSaves);
       }
+      console.log("api call will start in " + timeOut + "ms")
+      setTimeout(saveBills, timeOut);
     }
 
     async function saveBill(bill) {
@@ -45,10 +48,7 @@ function App({ history, location }) {
       return genericAxios(requestConfig);
     }
 
-    const intervalId = setInterval(saveBills, 36_00_000);
-    return () => {
-      clearInterval(intervalId);
-    };
+    setTimeout(saveBills, timeOut);
   }, []);
   const {
     logoutUser,
@@ -60,6 +60,7 @@ function App({ history, location }) {
   } = AppFunction(history, location);
 
   const devBg = process.env.NODE_ENV !== 'production' ? 'indianred' : 'none';
+
   return (
     <div className="App" style={{ backgroundColor: devBg }}>
       {staffUserName && (
