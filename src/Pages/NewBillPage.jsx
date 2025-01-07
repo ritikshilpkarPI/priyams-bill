@@ -1,4 +1,5 @@
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
+import { Modal } from '@mantine/core';
 import { useContext, useEffect, useRef, useState } from 'react';
 import BillNarrator from 'src/components/BillNarrator';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
@@ -59,6 +60,7 @@ const NewBillPage = ({ billID = '' }) => {
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
   const [billBarcode, setBillBarcode] = useState('');
+  const [billPaymentQRCode, setBillPaymentQRCode] = useState("");
 
   function handleItemNameFilter(event, setInputValue, itemsList, setData, key) {
     setInputValue((prev) => ({ ...prev, [key]: event.target.value }));
@@ -170,13 +172,7 @@ const NewBillPage = ({ billID = '' }) => {
 
   //    adding new bill
 
-  async function addNewBill(
-    setApiLoading,
-    bill,
-    setBill,
-    BILL_INITIAL_STATE,
-    billID
-  ) {
+  async function addNewBill() {
     setBillApiCountToLocalStorage();
     const newBillId = `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
@@ -342,6 +338,23 @@ const NewBillPage = ({ billID = '' }) => {
       amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
     }));
   };
+
+  const createQRByAmountAPI = async (amount) => {
+    const response = await genericAxios({
+      url: API_PATHS.RAZORPAY.QR,
+      method: API_METHODS.POST,
+      data: {
+        amountInRs: amount
+      },
+    });
+    const billPaymentQR = response?.data?.qrData?.image_url || "";
+    setBillPaymentQRCode(billPaymentQR);
+  }
+
+  const payBill = () => {
+    if(bill.upiPay) createQRByAmountAPI(bill.upiPay);
+    else addNewBill();
+  }
 
   useEffect(
     () => initializeBillState(billItems, BILL_INITIAL_STATE, setBill),
@@ -511,9 +524,7 @@ const NewBillPage = ({ billID = '' }) => {
             disabled={!bill.billItems.length || bill.amountReturn < 0 || apiLoading}
             className="print-btn"
             onClick={() =>
-              addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE, {
-                billID,
-              })
+              payBill()
             }
             loading={apiLoading}
           >
@@ -1155,6 +1166,11 @@ const NewBillPage = ({ billID = '' }) => {
           </div>
         </div>
       </div>
+      <Modal opened={billPaymentQRCode} onClose={()=> setBillPaymentQRCode("")} title="Payment Required">
+        <div className='bill-payment-qr-container'>
+           <img className='bill-payment-qr' src={billPaymentQRCode} alt="bill-qr" />
+        </div>
+      </Modal>
     </>
   );
 };
