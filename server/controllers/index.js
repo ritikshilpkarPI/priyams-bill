@@ -80,6 +80,7 @@ const handleCancellationRequest = require('./handleCancelOrderRequest');
 const confirmOrderProducts = require('./confirmOrderProducts');
 const getCancellationOrders = require('./getAllRequestedCancelOrdersDetails');
 const expelOrderToRider = require('./expelOrderToRider');
+const createRzpQRByAmount = require('./createRzpQRByAmount');
 
 module.exports = {
   getStaff,
@@ -163,5 +164,6 @@ module.exports = {
   handleCancellationRequest,
   confirmOrderProducts,
   getCancellationOrders,
-  expelOrderToRider
+  expelOrderToRider,
+  createRzpQRByAmount,
 };

@@ -102,5 +102,8 @@ export const API_PATHS = {
   EXPIRED_ITEM: {
     ADD_EXPIRED_ITEM: "/api/addexpiredItem",
     GET_EXPIRED_ITEMS: "/api/getExpiredItems"
+  },
+  RAZORPAY: {
+    QR: "/api/razorpay/qr"
   }
 };
