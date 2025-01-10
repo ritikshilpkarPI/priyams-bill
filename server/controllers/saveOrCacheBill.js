@@ -21,6 +21,8 @@ const saveOrCacheBill = async (req, res) => {
     upiPay,
     amountReturn,
     billId,
+    rzpPaymentId,
+    isUpiAmtPaid
   } = req.body;
   const newBillData = {
     customerName,
@@ -33,6 +35,8 @@ const saveOrCacheBill = async (req, res) => {
     upiPay,
     slug: billId,
     amountReturn,
+    rzpPaymentId,
+    isUpiAmtPaid
   };
   let isBillSaved, billBarcode, isDuplicate = false;
   try {

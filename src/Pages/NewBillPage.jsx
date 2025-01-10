@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
 import Barcode from 'react-jsbarcode';
 import useSocket from 'src/hooks/useSocket';
+import { socketEvents } from 'src/utils/constants/socketEvents';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -62,10 +63,13 @@ const NewBillPage = ({ billID = '' }) => {
   const [loaderDisplay, setLoaderDisplay] = useState(false);
   const [billBarcode, setBillBarcode] = useState('');
   const [billPaymentQRCode, setBillPaymentQRCode] = useState("");
-  useSocket({ billListener });
+  const billIdRef = useRef();
+  const { addSocketEventListener } = useSocket({ billListener });
 
-  function billListener (data) {
-    console.log({ data })
+  function billListener (data = {}) {
+    if(data?.isPaid && billIdRef.current === data?.billId){
+      addNewBill({ ...bill, rzpPaymentId: data?.paymentId, isUpiAmtPaid: data?.isPaid });
+    }
   }
 
   function handleItemNameFilter(event, setInputValue, itemsList, setData, key) {
@@ -178,7 +182,7 @@ const NewBillPage = ({ billID = '' }) => {
 
   //    adding new bill
 
-  async function addNewBill(billSlug) {
+  async function addNewBill(bill, billSlug) {
     setBillApiCountToLocalStorage();
     const newBillId = billSlug || `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
@@ -346,6 +350,7 @@ const NewBillPage = ({ billID = '' }) => {
   };
 
   const createQRByAmountAPI = async (amount, billSlug) => {
+    addSocketEventListener({ event: `${socketEvents.BILLS}/${billSlug}`, callback: billListener });
     const response = await genericAxios({
       url: API_PATHS.RAZORPAY.QR,
       method: API_METHODS.POST,
@@ -359,9 +364,9 @@ const NewBillPage = ({ billID = '' }) => {
   }
 
   const payBill = () => {
-    const billSlug = `${uuidv4()}-${Date.now()}`;
-    if(bill.upiPay) createQRByAmountAPI(bill.upiPay, billSlug);
-    else addNewBill(slug);
+    billIdRef.current = `${uuidv4()}-${Date.now()}`;
+    if(bill.upiPay && process.env.REACT_APP_ENABLE_QR_CODE_BILL_PAYMENTS) createQRByAmountAPI(bill.upiPay, billIdRef.current);
+    else addNewBill(bill, billIdRef.current);
   }
 
   useEffect(
