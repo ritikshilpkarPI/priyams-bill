@@ -1,4 +1,5 @@
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
+import { Modal } from '@mantine/core';
 import { useContext, useEffect, useRef, useState } from 'react';
 import BillNarrator from 'src/components/BillNarrator';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
@@ -9,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
 import Barcode from 'react-jsbarcode';
 import useSocket from 'src/hooks/useSocket';
+import { socketEvents } from 'src/utils/constants/socketEvents';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -60,10 +62,19 @@ const NewBillPage = ({ billID = '' }) => {
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
   const [billBarcode, setBillBarcode] = useState('');
-  useSocket({ billListener });
+  const [billPaymentQRCode, setBillPaymentQRCode] = useState("");
+  const billIdRef = useRef();
+  const { addSocketEventListener } = useSocket({ billListener });
 
-  function billListener (data) {
-    console.log({ data })
+  function billListener (data = {}) {
+    if(data?.isPaid && billIdRef.current === data?.billId){
+      addNewBill({
+        ...bill,
+        rzpPaymentId: data?.paymentId,
+        isUpiAmtPaid: data?.isPaid,
+        billId: data?.billId,
+      });
+    }
   }
 
   function handleItemNameFilter(event, setInputValue, itemsList, setData, key) {
@@ -176,15 +187,9 @@ const NewBillPage = ({ billID = '' }) => {
 
   //    adding new bill
 
-  async function addNewBill(
-    setApiLoading,
-    bill,
-    setBill,
-    BILL_INITIAL_STATE,
-    billID
-  ) {
+  async function addNewBill(bill, billSlug) {
     setBillApiCountToLocalStorage();
-    const newBillId = `${uuidv4()}-${Date.now()}`;
+    const newBillId = billSlug || `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
     let updateBill = {
       ...bill,
@@ -215,6 +220,7 @@ const NewBillPage = ({ billID = '' }) => {
 
     setApiLoading(false);
     setBillBarcode('');
+    setBillPaymentQRCode("");
   }
 
   // To show prices according to slabs if exists
@@ -348,6 +354,26 @@ const NewBillPage = ({ billID = '' }) => {
       amountReturn: bill?.cashPay + bill?.upiPay - bill?.billAmountTotal,
     }));
   };
+
+  const createQRByAmountAPI = async (amount, billSlug) => {
+    addSocketEventListener({ event: `${socketEvents.BILLS}/${billSlug}`, callback: billListener });
+    const response = await genericAxios({
+      url: API_PATHS.RAZORPAY.QR,
+      method: API_METHODS.POST,
+      data: {
+        amountInRs: amount,
+        id: billSlug
+      },
+    });
+    const billPaymentQR = response?.data?.qrData?.image_url || "";
+    setBillPaymentQRCode(billPaymentQR);
+  }
+
+  const payBill = () => {
+    billIdRef.current = `${uuidv4()}-${Date.now()}`;
+    if(bill.upiPay && process.env.REACT_APP_ENABLE_QR_CODE_BILL_PAYMENTS) createQRByAmountAPI(bill.upiPay, billIdRef.current);
+    else addNewBill(bill, billIdRef.current);
+  }
 
   useEffect(
     () => initializeBillState(billItems, BILL_INITIAL_STATE, setBill),
@@ -517,9 +543,7 @@ const NewBillPage = ({ billID = '' }) => {
             disabled={!bill.billItems.length || bill.amountReturn < 0 || apiLoading}
             className="print-btn"
             onClick={() =>
-              addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE, {
-                billID,
-              })
+              payBill()
             }
             loading={apiLoading}
           >
@@ -1161,6 +1185,12 @@ const NewBillPage = ({ billID = '' }) => {
           </div>
         </div>
       </div>
+      <Modal opened={billPaymentQRCode} onClose={()=> setBillPaymentQRCode("")} title="Payment Required">
+        <div className='bill-payment-qr-container'>
+           <img className='bill-payment-qr' src={billPaymentQRCode} alt="bill-qr" />
+           <Button className='bill-payment-btn' color='teal' onClick={()=> addNewBill(bill, billIdRef.current)}>Save Bill</Button>
+        </div>
+      </Modal>
     </>
   );
 };

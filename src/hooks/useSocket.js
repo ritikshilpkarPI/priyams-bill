@@ -1,10 +1,18 @@
 import { io } from 'socket.io-client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { socketEvents } from 'src/utils/constants/socketEvents';
 
-const useSocket = ({ billListener }) => {
+const useSocket = () => {
   const [socket, setSocket] = useState();
   const [isConnected, setIsConnected] = useState(false);
+  const listenersRef = useRef([]);
+
+  const addSocketEventListener = ({ event, callback }) => {
+    if (event && callback && isConnected) {
+      socket.on(event, callback);
+      listenersRef.current = [...listenersRef.current, { event, callback }];
+    }
+  };
 
   useEffect(() => {
     const _socket = io(process.env.REACT_APP_SOCKET_SERVER_URL || '', {
@@ -13,7 +21,6 @@ const useSocket = ({ billListener }) => {
       },
     });
     _socket.on(socketEvents.CONNECT, () => {
-      billListener && _socket.on(socketEvents.BILLS, billListener);
       setIsConnected(true);
     });
     _socket.on(socketEvents.DISCONNECT, () => {
@@ -23,14 +30,14 @@ const useSocket = ({ billListener }) => {
     setSocket(_socket);
     return () => {
       if (_socket.connected) {
-        billListener && _socket.off(socketEvents.BILLS, billListener);
+        listenersRef.current.map(({ event, callback }) => _socket.off(event, callback));
         _socket.disconnect();
       }
       setSocket(undefined);
     };
   }, []);
 
-  return { isConnected };
+  return { isConnected, addSocketEventListener };
 };
 
 export default useSocket;

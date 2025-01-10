@@ -550,3 +550,19 @@ p.staffname {
   margin-bottom: 2rem;
 }
 
+.bill-payment-qr-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bill-payment-btn {
+  cursor: pointer;
+}
+
+.bill-payment-qr {
+  height: 700px;
+  margin: auto;
+}

@@ -2,7 +2,7 @@ const { razorpay } = require('../config/razorpayConfig');
 
 const createRzpQRByAmount = async (req, res, next) => {
   try {
-    const { amountInRs } = req.body;
+    const { amountInRs, id } = req.body;
     const amountInPaise = amountInRs * 100;
 
     const qrData = await razorpay.qrCode.create({
@@ -13,6 +13,7 @@ const createRzpQRByAmount = async (req, res, next) => {
       payment_amount: amountInPaise,
       notes: {
         createdAt: new Date().toISOString(),
+        documentId: id,
       },
       description: `Payment for Bill`,
     });
