@@ -84,6 +84,7 @@
     "sass": "^1.58.3",
     "serverless-http": "^2.3.0",
     "snappy": "^7.1.1",
+    "socket.io-client": "^4.8.1",
     "uuid": "^9.0.0",
     "validator": "^10.9.0",
     "web-push": "^3.6.7",
