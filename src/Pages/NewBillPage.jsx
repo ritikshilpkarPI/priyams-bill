@@ -1188,6 +1188,7 @@ const NewBillPage = ({ billID = '' }) => {
       <Modal opened={billPaymentQRCode} onClose={()=> setBillPaymentQRCode("")} title="Payment Required">
         <div className='bill-payment-qr-container'>
            <img className='bill-payment-qr' src={billPaymentQRCode} alt="bill-qr" />
+           <Button className='bill-payment-btn' color='teal' onClick={()=> addNewBill(bill, billIdRef.current)}>Save Bill</Button>
         </div>
       </Modal>
     </>
