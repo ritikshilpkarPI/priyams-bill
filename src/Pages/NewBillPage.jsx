@@ -9,6 +9,7 @@ import { AppStateContext } from 'src/AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
 import Barcode from 'react-jsbarcode';
+import useSocket from 'src/hooks/useSocket';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -61,6 +62,11 @@ const NewBillPage = ({ billID = '' }) => {
   const [loaderDisplay, setLoaderDisplay] = useState(false);
   const [billBarcode, setBillBarcode] = useState('');
   const [billPaymentQRCode, setBillPaymentQRCode] = useState("");
+  useSocket({ billListener });
+
+  function billListener (data) {
+    console.log({ data })
+  }
 
   function handleItemNameFilter(event, setInputValue, itemsList, setData, key) {
     setInputValue((prev) => ({ ...prev, [key]: event.target.value }));
