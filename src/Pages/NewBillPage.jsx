@@ -172,9 +172,9 @@ const NewBillPage = ({ billID = '' }) => {
 
   //    adding new bill
 
-  async function addNewBill() {
+  async function addNewBill(billSlug) {
     setBillApiCountToLocalStorage();
-    const newBillId = `${uuidv4()}-${Date.now()}`;
+    const newBillId = billSlug || `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
     let updateBill = {
       ...bill,
@@ -339,12 +339,13 @@ const NewBillPage = ({ billID = '' }) => {
     }));
   };
 
-  const createQRByAmountAPI = async (amount) => {
+  const createQRByAmountAPI = async (amount, billSlug) => {
     const response = await genericAxios({
       url: API_PATHS.RAZORPAY.QR,
       method: API_METHODS.POST,
       data: {
-        amountInRs: amount
+        amountInRs: amount,
+        id: billSlug
       },
     });
     const billPaymentQR = response?.data?.qrData?.image_url || "";
@@ -352,8 +353,9 @@ const NewBillPage = ({ billID = '' }) => {
   }
 
   const payBill = () => {
-    if(bill.upiPay) createQRByAmountAPI(bill.upiPay);
-    else addNewBill();
+    const billSlug = `${uuidv4()}-${Date.now()}`;
+    if(bill.upiPay) createQRByAmountAPI(bill.upiPay, billSlug);
+    else addNewBill(slug);
   }
 
   useEffect(
