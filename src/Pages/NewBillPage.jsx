@@ -68,7 +68,12 @@ const NewBillPage = ({ billID = '' }) => {
 
   function billListener (data = {}) {
     if(data?.isPaid && billIdRef.current === data?.billId){
-      addNewBill({ ...bill, rzpPaymentId: data?.paymentId, isUpiAmtPaid: data?.isPaid });
+      addNewBill({
+        ...bill,
+        rzpPaymentId: data?.paymentId,
+        isUpiAmtPaid: data?.isPaid,
+        billId: data?.billId,
+      });
     }
   }
 
@@ -215,6 +220,7 @@ const NewBillPage = ({ billID = '' }) => {
 
     setApiLoading(false);
     setBillBarcode('');
+    setBillPaymentQRCode("");
   }
 
   // To show prices according to slabs if exists
