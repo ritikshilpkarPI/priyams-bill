@@ -205,7 +205,7 @@ const NewBillPage = ({ billID = '' }) => {
         ...createApi,
       })
     );
-    await createBill(newBillId, setApiLoading);
+     createBill(newBillId, setApiLoading);
 
     setApiLoading(false);
     setBillBarcode('');
