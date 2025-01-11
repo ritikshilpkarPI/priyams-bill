@@ -64,13 +64,14 @@ const NewBillPage = ({ billID = '' }) => {
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
   const [billBarcode, setBillBarcode] = useState('');
-  const [billPaymentQRCode, setBillPaymentQRCode] = useState("");
+  const [billPaymentQRCode, setBillPaymentQRCode] = useState('');
   const [disableRegenerateQR, setDisableRegenerateQR] = useState(true);
+  const [qrCodeErrorMsg, setQrCodeErrorMsg] = useState('');
   const QR_EXPIRY_TIME_IN_SEC = 110;
   const { addSocketEventListener } = useSocket({ billListener });
 
-  function billListener (data = {}) {
-    if(data?.isPaid && bill.billId === data?.billId){
+  function billListener(data = {}) {
+    if (data?.isPaid && bill.billId === data?.billId) {
       addNewBill({
         ...bill,
         rzpPaymentId: data?.paymentId,
@@ -169,23 +170,23 @@ const NewBillPage = ({ billID = '' }) => {
       localStorage.getItem(`newBill-${newBillId}`)
     );
 
-      try {
-        const addBillResponse = await genericAxios({
-          ...billObject,
-          billId: newBillId,
-          headers: {
-            Cookie: '',
-          },
-        });
-        if (addBillResponse.error) {
-          setApiLoading(false);
-          throw Error();
-        }
-        setBillBarcode(addBillResponse.data.billBarcode);
-        localStorage.removeItem(`newBill-${newBillId}`);
-      } catch (error) {
-        throw console.error({ error });
+    try {
+      const addBillResponse = await genericAxios({
+        ...billObject,
+        billId: newBillId,
+        headers: {
+          Cookie: '',
+        },
+      });
+      if (addBillResponse.error) {
+        setApiLoading(false);
+        throw Error();
       }
+      setBillBarcode(addBillResponse.data.billBarcode);
+      localStorage.removeItem(`newBill-${newBillId}`);
+    } catch (error) {
+      throw console.error({ error });
+    }
   }
 
   //    adding new bill
@@ -223,7 +224,7 @@ const NewBillPage = ({ billID = '' }) => {
 
     setApiLoading(false);
     setBillBarcode('');
-    setBillPaymentQRCode("");
+    setBillPaymentQRCode('');
   }
 
   // To show prices according to slabs if exists
@@ -359,8 +360,12 @@ const NewBillPage = ({ billID = '' }) => {
   };
 
   const createQRByAmountAPI = async () => {
+    setQrCodeErrorMsg("");
     const billId = bill.billId;
-    addSocketEventListener({ event: `${socketEvents.BILLS}/${billId}`, callback: billListener });
+    addSocketEventListener({
+      event: `${socketEvents.BILLS}/${billId}`,
+      callback: billListener,
+    });
     setDisableRegenerateQR(true);
     setApiLoading(true);
     const response = await genericAxios({
@@ -368,18 +373,23 @@ const NewBillPage = ({ billID = '' }) => {
       method: API_METHODS.POST,
       data: {
         amountInRs: bill.upiPay,
-        id: billId
+        id: billId,
       },
     });
-    const billPaymentQR = response?.data?.qrData?.image_url || "";
+    const billPaymentQR = response?.data?.qrData?.image_url || '';
+    if (response.error) {
+      setQrCodeErrorMsg('Unable to generate QR, please regenerate QR');
+    } else {
+      setBillPaymentQRCode(billPaymentQR);
+    }
     setApiLoading(false);
-    setBillPaymentQRCode(billPaymentQR);
-  }
+  };
 
   const payBill = () => {
-    if(bill.upiPay && process.env.REACT_APP_ENABLE_QR_CODE_BILL_PAYMENTS) createQRByAmountAPI(bill.upiPay);
+    if (bill.upiPay && process.env.REACT_APP_ENABLE_QR_CODE_BILL_PAYMENTS)
+      createQRByAmountAPI(bill.upiPay);
     else addNewBill(bill);
-  }
+  };
 
   useEffect(
     () => initializeBillState(billItems, BILL_INITIAL_STATE, setBill),
@@ -410,10 +420,10 @@ const NewBillPage = ({ billID = '' }) => {
     // eslint-disable-next-line
   }, [bill]);
 
-  useEffect(()=>{
+  useEffect(() => {
     billBarcode && window.print();
     setBill(BILL_INITIAL_STATE);
-  },[billBarcode])
+  }, [billBarcode]);
 
   const setBillApiCountToLocalStorage = () => {
     const todayKey = new Date().toLocaleDateString();
@@ -546,11 +556,11 @@ const NewBillPage = ({ billID = '' }) => {
           </Button>
           <Button
             sx={{ marginRight: '1rem' }}
-            disabled={!bill.billItems.length || bill.amountReturn < 0 || apiLoading}
-            className="print-btn"
-            onClick={() =>
-              payBill()
+            disabled={
+              !bill.billItems.length || bill.amountReturn < 0 || apiLoading
             }
+            className="print-btn"
+            onClick={() => payBill()}
             loading={apiLoading}
           >
             Save and Print
@@ -1129,14 +1139,16 @@ const NewBillPage = ({ billID = '' }) => {
             <h3>Date: {new Date().toDateString()}</h3>
             <h3>Time: {new Date().toLocaleTimeString()}</h3>
           </div>
-          {billBarcode && <Barcode
+          {billBarcode && (
+            <Barcode
               options={{
                 height: 30,
                 width: 1.2,
                 displayValue: false,
               }}
               value={billBarcode}
-            />}
+            />
+          )}
           <div className="print-table-head">
             <p>Name</p>
             <p>Qty.</p>
@@ -1192,23 +1204,55 @@ const NewBillPage = ({ billID = '' }) => {
         </div>
       </div>
 
-      {
-        billPaymentQRCode && (<Modal opened={billPaymentQRCode} onClose={()=> setBillPaymentQRCode("")} title="Payment Required">
-        <div className='bill-payment-qr-container'>
-           <div className='bill-pay-timer-container'>
-              <PaymentExpiryTimer id={billPaymentQRCode} expiryTimeInSec={QR_EXPIRY_TIME_IN_SEC} onTimerEnd={() => setDisableRegenerateQR(false)} />
-              <Button disabled={disableRegenerateQR} className='bill-payment-btn' variant='default' color='teal' onClick={()=> !disableRegenerateQR && payBill()}>&#x21bb; Regenerate QR</Button>
-           </div>
-           {
-            apiLoading ? <Loader size="lg" />
-            : disableRegenerateQR 
-            ? <img className='bill-payment-qr' src={billPaymentQRCode} alt="qrcodeimg" /> 
-            : "QR Expired, please regenerate QR"
-           }
-           <Button className='bill-payment-btn' color='teal' onClick={()=> addNewBill(bill)}>Save Bill</Button>
-        </div>
-      </Modal>)
-      }
+      {(billPaymentQRCode ||
+        qrCodeErrorMsg) && (
+          <Modal
+            opened={billPaymentQRCode || qrCodeErrorMsg}
+            onClose={() => setBillPaymentQRCode('')}
+            title="Payment Required"
+          >
+            <div className="bill-payment-qr-container">
+              <div className="bill-pay-timer-container">
+                <PaymentExpiryTimer
+                  id={billPaymentQRCode}
+                  expiryTimeInSec={
+                    billPaymentQRCode ? QR_EXPIRY_TIME_IN_SEC : 0
+                  }
+                  onTimerEnd={() => setDisableRegenerateQR(false)}
+                />
+                <Button
+                  disabled={disableRegenerateQR}
+                  className="bill-payment-btn"
+                  variant="default"
+                  color="teal"
+                  onClick={() => !disableRegenerateQR && payBill()}
+                >
+                  &#x21bb; Regenerate QR
+                </Button>
+              </div>
+              {apiLoading ? (
+                <Loader size="lg" />
+              ) : qrCodeErrorMsg ? (
+                qrCodeErrorMsg
+              ) : disableRegenerateQR ? (
+                <img
+                  className="bill-payment-qr"
+                  src={billPaymentQRCode}
+                  alt="qrcodeimg"
+                />
+              ) : (
+                'QR Expired, please regenerate QR'
+              )}
+              <Button
+                className="bill-payment-btn"
+                color="teal"
+                onClick={() => addNewBill(bill)}
+              >
+                Save Bill
+              </Button>
+            </div>
+          </Modal>
+        )}
     </>
   );
 };
