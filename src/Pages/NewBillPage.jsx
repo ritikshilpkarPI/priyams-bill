@@ -66,7 +66,7 @@ const NewBillPage = ({ billID = '' }) => {
   const [billBarcode, setBillBarcode] = useState('');
   const [billPaymentQRCode, setBillPaymentQRCode] = useState("");
   const [disableRegenerateQR, setDisableRegenerateQR] = useState(true);
-  const QR_EXPIRY_TIME_IN_SEC = 119;
+  const QR_EXPIRY_TIME_IN_SEC = 110;
   const { addSocketEventListener } = useSocket({ billListener });
 
   function billListener (data = {}) {
@@ -362,6 +362,7 @@ const NewBillPage = ({ billID = '' }) => {
     const billId = bill.billId;
     addSocketEventListener({ event: `${socketEvents.BILLS}/${billId}`, callback: billListener });
     setDisableRegenerateQR(true);
+    setApiLoading(true);
     const response = await genericAxios({
       url: API_PATHS.RAZORPAY.QR,
       method: API_METHODS.POST,
@@ -371,6 +372,7 @@ const NewBillPage = ({ billID = '' }) => {
       },
     });
     const billPaymentQR = response?.data?.qrData?.image_url || "";
+    setApiLoading(false);
     setBillPaymentQRCode(billPaymentQR);
   }
 
@@ -1194,10 +1196,15 @@ const NewBillPage = ({ billID = '' }) => {
         billPaymentQRCode && (<Modal opened={billPaymentQRCode} onClose={()=> setBillPaymentQRCode("")} title="Payment Required">
         <div className='bill-payment-qr-container'>
            <div className='bill-pay-timer-container'>
-              <PaymentExpiryTimer expiryTimeInSec={QR_EXPIRY_TIME_IN_SEC} onTimerEnd={() => setDisableRegenerateQR(false)} />
+              <PaymentExpiryTimer id={billPaymentQRCode} expiryTimeInSec={QR_EXPIRY_TIME_IN_SEC} onTimerEnd={() => setDisableRegenerateQR(false)} />
               <Button disabled={disableRegenerateQR} className='bill-payment-btn' variant='default' color='teal' onClick={()=> !disableRegenerateQR && payBill()}>&#x21bb; Regenerate QR</Button>
            </div>
-           <img className='bill-payment-qr' src={billPaymentQRCode} alt="bill-qr" />
+           {
+            apiLoading ? <Loader size="lg" />
+            : disableRegenerateQR 
+            ? <img className='bill-payment-qr' src={billPaymentQRCode} alt="qrcodeimg" /> 
+            : "QR Expired, please regenerate QR"
+           }
            <Button className='bill-payment-btn' color='teal' onClick={()=> addNewBill(bill)}>Save Bill</Button>
         </div>
       </Modal>)

@@ -553,9 +553,10 @@ p.staffname {
 .bill-payment-qr-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
   gap: 16px;
+  min-height: 800px;
 }
 
 .bill-pay-timer-container {
@@ -571,4 +572,9 @@ p.staffname {
 .bill-payment-qr {
   height: 700px;
   margin: auto;
+}
+
+.payment-timer-badge {
+  font-size: 14px;
+  padding: 0px 8px;
 }

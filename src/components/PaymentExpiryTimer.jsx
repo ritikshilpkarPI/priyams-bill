@@ -1,25 +1,36 @@
+import { Badge } from '@mantine/core';
 import { useEffect } from 'react';
 import useTimer from 'src/hooks/useTimer';
 
-export const PaymentExpiryTimer = ({ expiryTimeInSec = 10, onTimerEnd }) => {
-  const { start, time } = useTimer(expiryTimeInSec);
+export const PaymentExpiryTimer = ({
+  expiryTimeInSec = 10,
+  onTimerEnd,
+  id,
+}) => {
+  const { start, time, reset } = useTimer(expiryTimeInSec);
 
   useEffect(() => {
-    if(time === 0) {
+    if (time === 0) {
       onTimerEnd && onTimerEnd();
     }
-  }, [time])
-  
+  }, [time]);
+
   useEffect(() => {
-    start();
-  }, []);
+    if (time === expiryTimeInSec) {
+      start();
+    }
+  }, [time]);
+
+  useEffect(() => {
+    reset();
+  }, [id]);
 
   const remainingSecs = Math.floor(time % 60);
   const remainingMins = Math.floor(time / 60);
 
   return (
-    <span>
+    <Badge className="payment-timer-badge" color="yellow">
       {remainingMins} : {remainingSecs}
-    </span>
+    </Badge>
   );
 };
