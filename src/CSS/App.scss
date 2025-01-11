@@ -558,6 +558,12 @@ p.staffname {
   gap: 16px;
 }
 
+.bill-pay-timer-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .bill-payment-btn {
   cursor: pointer;
 }
