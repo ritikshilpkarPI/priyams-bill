@@ -67,6 +67,7 @@ const NewBillPage = ({ billID = '' }) => {
   const [billPaymentQRCode, setBillPaymentQRCode] = useState('');
   const [disableRegenerateQR, setDisableRegenerateQR] = useState(true);
   const [qrCodeErrorMsg, setQrCodeErrorMsg] = useState('');
+  const [isQRCodeGenerating, setIsQRCodeGenerating] = useState("");
   const QR_EXPIRY_TIME_IN_SEC = 110;
   const { addSocketEventListener } = useSocket({ billListener });
 
@@ -367,7 +368,7 @@ const NewBillPage = ({ billID = '' }) => {
       callback: billListener,
     });
     setDisableRegenerateQR(true);
-    setApiLoading(true);
+    setIsQRCodeGenerating(true);
     const response = await genericAxios({
       url: API_PATHS.RAZORPAY.QR,
       method: API_METHODS.POST,
@@ -382,7 +383,7 @@ const NewBillPage = ({ billID = '' }) => {
     } else {
       setBillPaymentQRCode(billPaymentQR);
     }
-    setApiLoading(false);
+    setIsQRCodeGenerating(false);
   };
 
   const payBill = () => {
@@ -1230,7 +1231,7 @@ const NewBillPage = ({ billID = '' }) => {
                   &#x21bb; Regenerate QR
                 </Button>
               </div>
-              {apiLoading ? (
+              {isQRCodeGenerating ? (
                 <Loader size="lg" />
               ) : qrCodeErrorMsg ? (
                 qrCodeErrorMsg
