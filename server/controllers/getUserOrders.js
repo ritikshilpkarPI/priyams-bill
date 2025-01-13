@@ -1,6 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const { orderSchema } = require('../db-models/orderSchema');
-
+const { Rider } = require('../db-models/rider-model');
 const getUserOrders = async (req, res, next) => {
   const db = mongoose.createConnection(process.env.APP_MONGODB_URI, { useNewUrlParser: true });
   const { orderStatus } = req.query;
@@ -66,6 +66,16 @@ const getUserOrders = async (req, res, next) => {
       },
     ]).exec();
 
+    for (const group of orders) {
+      for (const order of group.orders) {
+        if (order.riderId) {
+          const rider = await Rider.findById(order.riderId).lean();          
+          order.rider = rider || null;
+        } else {
+          order.rider = null;
+        }
+      }
+    }
     res.status(201).send({ message: 'got the orders', orders });
   } catch (error) {
     next(error);
