@@ -85,6 +85,7 @@ const {
   getCancellationOrders,
   expelOrderToRider,
   createRzpQRByAmount,
+  assignOrderToRider
 } = require('../controllers/index');
 
 
@@ -358,5 +359,13 @@ router.get(API_PATHS.EXPIRED_ITEM.GET_EXPIRED_ITEMS,isLoggedIn,getExpiredItems)
 
 
 router.post(API_PATHS.RAZORPAY.QR, isLoggedIn, createRzpQRByAmount);
+router.post( 
+  API_PATHS.ORDERS.ASSIGN_ORDER_TO_RIDER,  
+  isLoggedIn,
+  isAdmin,
+  isLoggedIn,
+  assignOrderToRider
+);
+
 
 module.exports = router;
