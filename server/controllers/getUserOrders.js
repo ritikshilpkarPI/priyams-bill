@@ -66,17 +66,32 @@ const getUserOrders = async (req, res, next) => {
       },
     ]).exec();
 
+    const riderIds = new Set();
     for (const group of orders) {
       for (const order of group.orders) {
         if (order.riderId) {
-          const rider = await Rider.findById(order.riderId).lean();          
-          order.rider = rider || null;
-        } else {
-          order.rider = null;
+          riderIds.add(order.riderId.toString());
         }
       }
     }
-    res.status(201).send({ message: 'got the orders', orders });
+    
+    const riders = await Rider.find({ _id: { $in: Array.from(riderIds) } }).lean();
+
+    const riderMap = riders.reduce((acc, rider) => {
+      acc[rider._id.toString()] = rider;
+      return acc;
+    }, {});
+
+    for (const group of orders) {
+      for (const order of group.orders) {
+        order.rider = order.riderId ? riderMap[order.riderId.toString()] || null : null;        
+      }
+    }
+
+    res.status(200).json({
+      message: 'Orders fetched successfully',
+      orders
+    });
   } catch (error) {
     next(error);
   }
