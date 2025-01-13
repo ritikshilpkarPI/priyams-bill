@@ -32,4 +32,4 @@ const riderSchema = new mongoose.Schema({
 
 const Rider = mongoose.model('rider', riderSchema);
 
-module.exports = { Rider };
+module.exports = { Rider, riderSchema };
