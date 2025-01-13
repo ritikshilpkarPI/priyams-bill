@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const { BadRequest, NotFound } = require('../util/errors');
 const { isValidObjectId } = require('mongoose');
-const { orderSchema:orderSchema } = require('../db-models/orderSchema'); 
+const { orderSchema } = require('../db-models/orderSchema'); 
+const { riderSchema } = require('../db-models/rider-model'); 
 
 const assignOrderToRider = async (req, res, next) => {
   let db;
@@ -10,8 +11,8 @@ const assignOrderToRider = async (req, res, next) => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    const Order = db.model('Order', orderSchema);
-
+    const Order = db.model('Order', orderSchema);    
+    const Rider = db.model('Rider', riderSchema);
     const { riderId, orderId } = req.body;
 
     if (!riderId || !orderId) {
@@ -30,7 +31,10 @@ const assignOrderToRider = async (req, res, next) => {
     if (!order) {
       throw new NotFound('Order not found');
     }
-
+    const rider = await Rider.findById(riderId);
+    if(!rider){
+      throw new NotFound('Rider not found' );
+    }
     if (order.riderId) {
       throw new BadRequest('Order is already assigned to a rider');
     }
