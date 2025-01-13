@@ -35,6 +35,19 @@ function OrderCard({ order, buttonStatus, updateOrderStatus,getUserOrders }) {
             <Title className='order-card-date-time-label' order={5}>Date:</Title>
             <Text className='order-card-date-time'>{ orderPlacedDate }</Text>
           </Group>
+          {order?.rider && <div className="rider-details-container-label">
+            Rider Details
+          </div>}
+          {order?.rider?.name && <Group className="order-card">
+            <Title className='order-card-date-time-label' order={5}>Name:</Title>
+            <Text className='order-card-date-time'>{ order?.rider?.name }</Text>
+          </Group>}
+          {
+            order?.rider?.phone && <Group className="order-card">
+            <Title className='order-card-date-time-label' order={5}>Phone:</Title>
+            <Text className='order-card-date-time'>{ order?.rider?.phone }</Text>
+          </Group>
+          }
         </div>
       </div>
       {buttonStatus && (
