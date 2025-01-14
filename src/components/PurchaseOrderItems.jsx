@@ -2,19 +2,19 @@ import React from 'react';
 import { Button, Group, LoadingOverlay, Title } from '@mantine/core';
 import { Notification } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
-import usePurchaseOrder from 'src/functions/usePurchaseOrder';
+import usePurchaseOrder from '../functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
-import useNameSearchItem from 'src/functions/useNameSearchItems';
-import useBarcodeSearchItems from 'src/functions/useBarcodeSearchItems';
+import useNameSearchItem from '../functions/useNameSearchItems';
+import useBarcodeSearchItems from '../functions/useBarcodeSearchItems';
 import ShowPurchaseDetails from './ShowPurchaseDetails';
 import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../CSS/purchaseOrder.css';
 import { useHistory, useParams } from 'react-router-dom';
-// import { genericAxios } from 'src/utils/genericAxiosMethod';
-// import { API_PATHS } from 'src/utils/constants/apiPaths';
-// import { API_METHODS } from 'src/utils/constants/apiMethods';
+// import { genericAxios } from '../utils/genericAxiosMethod';
+// import { API_PATHS } from '../utils/constants/apiPaths';
+// import { API_METHODS } from '../utils/constants/apiMethods';
 const PurchaseOrderItems = ({ history }) => {
   const {
     form,

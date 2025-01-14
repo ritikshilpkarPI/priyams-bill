@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
 
 const PayPurchaseOrderBill = () => {
   const location = useLocation();

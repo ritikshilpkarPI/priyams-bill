@@ -4,8 +4,8 @@ import { DatePicker } from '@mantine/dates';
 import {
   addItemRow,
   itemInitialObj,
-} from 'src/constants/purchaseOrderConstants';
-import { AppStateContext } from 'src/AppState/appState.context';
+} from '../constants/purchaseOrderConstants';
+import { AppStateContext } from '../AppState/appState.context';
 
 // To set use by date on item while adding
 const UseByDateElement = ({ itemObjState = [] }) => {

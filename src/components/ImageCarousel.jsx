@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Preview from 'src/icons/preview';
-import Next from 'src/icons/next';
+import Preview from '../icons/preview';
+import Next from '../icons/next';
 import "../CSS/ImageCarousel.css"
-import Delete from 'src/icons/Delete';
+import Delete from '../icons/Delete';
 
 const ImageCarousel = ({ imageList, setImageList }) => {
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);

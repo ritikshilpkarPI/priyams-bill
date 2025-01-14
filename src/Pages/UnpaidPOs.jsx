@@ -1,8 +1,8 @@
 import '../CSS/unpaidPOs.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { genericAxios } from '../utils/genericAxiosMethod';
 import { useHistory } from 'react-router-dom';
 import { WhatsappShareButton, WhatsappIcon } from 'react-share';
 import { LoadingOverlay } from '@mantine/core';

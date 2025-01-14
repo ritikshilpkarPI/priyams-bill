@@ -1,11 +1,11 @@
 import { Button, Card, Checkbox, Drawer, Group, Loader, Modal, Table, Text, TextInput, Title } from '@mantine/core';
 import React, { useEffect, useRef, useState } from 'react';
 import '../CSS/_orderDetail.scss';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 import AssignOrderToRider from './AssignOrderRider/AssignOrderToRider';
-// import { useBeep } from 'src/utils/beep';
+// import { useBeep } from '../utils/beep';
 
 function OrderDetail({
   order,

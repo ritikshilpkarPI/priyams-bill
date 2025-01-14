@@ -2,9 +2,9 @@
 // import { Group, Title, Select, Button } from '@mantine/core';
 // import { useState } from 'react';
 // import '../CSS/employeeAttendance.css';
-// import { genericAxios } from 'src/utils/genericAxiosMethod';
-// import { API_METHODS } from 'src/utils/constants/apiMethods';
-// import { API_PATHS } from 'src/utils/constants/apiPaths';
+// import { genericAxios } from '../utils/genericAxiosMethod';
+// import { API_METHODS } from '../utils/constants/apiMethods';
+// import { API_PATHS } from '../utils/constants/apiPaths';
 // const nameOptionAndValues = [
 //   { value: 'anjali', label: 'Anjali' },
 //   { value: 'shivam', label: 'Shivam' },

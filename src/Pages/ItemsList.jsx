@@ -20,15 +20,15 @@ import {
 import { DatePicker } from '@mantine/dates';
 import Papa from 'papaparse';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 import { Dropzone } from '@mantine/dropzone';
 import { useDisclosure } from '@mantine/hooks';
-import ProtectedComponent from 'src/components/ProtectedComponent';
+import ProtectedComponent from '../components/ProtectedComponent';
 import access from '../access.js';
 import { Pagination } from '../components/pagination/paginations.jsx';
-import { debounce } from 'src/utils/debounce.js';
+import { debounce } from '../utils/debounce.js';
 
 const ITEM_INITIAL_INPUT = {
   itemBarcode: '',

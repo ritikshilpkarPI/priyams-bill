@@ -1,10 +1,10 @@
 // import React, { useState, useEffect, useContext } from 'react';
 import { useState } from 'react';
 import { PAGES } from '../constants/HeaderTypes';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { parseJwt } from 'src/utils/cookie';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { parseJwt } from '../utils/cookie';
 import Cookies from 'js-cookie';
 
 const AppFunction = (history, location) => {

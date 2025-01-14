@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Loader, Table, Text } from '@mantine/core';
 import { Button } from '@mantine/core';
 import { openConfirmModal } from '@mantine/modals';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 import { Pagination } from '../components/pagination/paginations';
 
 const StockQuantity = () => {
