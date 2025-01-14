@@ -13,7 +13,7 @@ import useSocket from 'src/hooks/useSocket';
 import { socketEvents } from 'src/utils/constants/socketEvents';
 import { PaymentExpiryTimer } from 'src/components/PaymentExpiryTimer';
 
-const BILL_INITIAL_STATE = {
+const getBillInitialState = () => ({
   billItems: [],
   customerName: '',
   customerPhone: '',
@@ -27,7 +27,7 @@ const BILL_INITIAL_STATE = {
   upiPay: 0,
   amountReturn: 0,
   billId: `${uuidv4()}-${Date.now()}`,
-};
+})
 
 const INPUT_INITIAL_STATE = {
   itemBarcode: '',
@@ -37,10 +37,10 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: '',
 };
 
-const refreshPage = (setBill, BILL_INITIAL_STATE) => {
+const refreshPage = (setBill) => {
   let answer = window.confirm('Do you want to refresh page?');
   if (answer) {
-    setBill(BILL_INITIAL_STATE);
+    setBill(getBillInitialState())
   }
 };
 
@@ -52,7 +52,7 @@ const NewBillPage = ({ billID = '' }) => {
   const [itemNamesList, setItemNamesList] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [userProfileData, setUserDataProfile] = useState([]);
-  const [bill, setBill] = useState(BILL_INITIAL_STATE);
+  const [bill, setBill] = useState(getBillInitialState());
   const [showProfileData, setShowProfileData] = useState(false);
   const [filterUserProfile, setFilterUserProfile] = useState([]);
   const [phoneError, setPhoneError] = useState('');
@@ -73,6 +73,7 @@ const NewBillPage = ({ billID = '' }) => {
 
   function billListener(data = {}) {
     if (data?.isPaid && bill.billId === data?.billId) {
+      setBillPaymentQRCode("");
       addNewBill({
         ...bill,
         rzpPaymentId: data?.paymentId,
@@ -157,9 +158,9 @@ const NewBillPage = ({ billID = '' }) => {
     setInputValue((prevState) => ({ ...prevState, [name]: value }));
   }
 
-  const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
+  const initializeBillState = (billItems, setBill) => {
     if (billItems.length === 0) {
-      setBill(BILL_INITIAL_STATE);
+      setBill(getBillInitialState());
     } else {
       setBill(billItems);
     }
@@ -393,7 +394,7 @@ const NewBillPage = ({ billID = '' }) => {
   };
 
   useEffect(
-    () => initializeBillState(billItems, BILL_INITIAL_STATE, setBill),
+    () => initializeBillState(billItems, setBill),
     // eslint-disable-next-line
     []
   );
@@ -423,7 +424,7 @@ const NewBillPage = ({ billID = '' }) => {
 
   useEffect(() => {
     billBarcode && window.print();
-    setBill(BILL_INITIAL_STATE);
+    setBill(getBillInitialState());
   }, [billBarcode]);
 
   const setBillApiCountToLocalStorage = () => {
@@ -551,18 +552,18 @@ const NewBillPage = ({ billID = '' }) => {
 
           <Button
             sx={{ background: 'black', marginRight: '1rem' }}
-            onClick={() => refreshPage(setBill, BILL_INITIAL_STATE)}
+            onClick={() => refreshPage(setBill)}
           >
             Refresh
           </Button>
           <Button
             sx={{ marginRight: '1rem' }}
             disabled={
-              !bill.billItems.length || bill.amountReturn < 0 || apiLoading
+              !bill.billItems.length || bill.amountReturn < 0 || apiLoading || isQRCodeGenerating
             }
             className="print-btn"
             onClick={() => payBill()}
-            loading={apiLoading}
+            loading={apiLoading || isQRCodeGenerating}
           >
             Save and Print
           </Button>
