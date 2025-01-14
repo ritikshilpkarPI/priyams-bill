@@ -27,7 +27,7 @@ const useSocket = () => {
   useEffect(() => {
     const _socket = io(process.env.REACT_APP_SOCKET_SERVER_URL || '', {
       auth: {
-        token: process.env.SOCKET_SERVER_AUTH_TOKEN,
+        token: process.env.REACT_APP_SOCKET_SERVER_AUTH_TOKEN,
       },
     });
     _socket.on(socketEvents.CONNECT, () => {
