@@ -69,7 +69,11 @@ const NewBillPage = ({ billID = '' }) => {
   const [qrCodeErrorMsg, setQrCodeErrorMsg] = useState('');
   const [isQRCodeGenerating, setIsQRCodeGenerating] = useState("");
   const QR_EXPIRY_TIME_IN_SEC = 110;
-  const { addSocketEventListener, removeSocketEventListener } = useSocket({ billListener });
+  const { 
+    addSocketEventListener, 
+    removeSocketEventListener, 
+    isConnected 
+  } = useSocket({ billListener });
 
   function billListener(data = {}) {
     if (data?.isPaid && bill.billId === data?.billId) {
@@ -389,7 +393,7 @@ const NewBillPage = ({ billID = '' }) => {
   };
 
   const payBill = () => {
-    if (bill.upiPay && process.env.REACT_APP_ENABLE_QR_CODE_BILL_PAYMENTS)
+    if (bill.upiPay && process.env.REACT_APP_ENABLE_QR_CODE_BILL_PAYMENTS && isConnected)
       createQRByAmountAPI(bill.upiPay);
     else addNewBill(bill);
   };
