@@ -14,6 +14,16 @@ const useSocket = () => {
     }
   };
 
+  const removeSocketEventListener = (removeEventName) => {
+    const listener =
+      removeEventName &&
+      listenersRef.current.find(({ event }) => event === removeEventName);
+    if (listener) {
+      socket.off(listener.event, listener.callback);
+      listenersRef.current = listenersRef.current.filter(({ event }) => event !== removeEventName);
+    }
+  };
+
   useEffect(() => {
     const _socket = io(process.env.REACT_APP_SOCKET_SERVER_URL || '', {
       auth: {
@@ -30,14 +40,16 @@ const useSocket = () => {
     setSocket(_socket);
     return () => {
       if (_socket.connected) {
-        listenersRef.current.map(({ event, callback }) => _socket.off(event, callback));
+        listenersRef.current.map(({ event, callback }) =>
+          _socket.off(event, callback)
+        );
         _socket.disconnect();
       }
       setSocket(undefined);
     };
   }, []);
 
-  return { isConnected, addSocketEventListener };
+  return { isConnected, addSocketEventListener, removeSocketEventListener };
 };
 
 export default useSocket;
