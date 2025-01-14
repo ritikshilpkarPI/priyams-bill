@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": false,
     "target": "ES6",
     "module": "esnext",
     "outDir": "./dist",
@@ -9,23 +12,19 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "allowJs": true,
-    "checkJs": false,
+    "typeRoots": [
+      "./src/types.d.ts"
+    ],
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "baseUrl": "./src",
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "typeRoots": [
-      "./src/types.d.ts"
-    ]
+    "noEmit": true
   },
   "include": [
     "src"
@@ -33,6 +32,6 @@
   "exclude": [
     "node_modules",
     "*.scss",
-    "*.js",
+    "*.js"
   ]
 }
