@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { BadRequest, NotFound } = require('../util/errors');
 const { isValidObjectId } = require('mongoose');
 const { orderSchema } = require('../db-models/orderSchema'); 
-const { riderSchema } = require('../db-models/rider-model'); 
+const { Rider } = require('../db-models/rider-model'); 
 
 const assignOrderToRider = async (req, res, next) => {
   let db;
@@ -12,7 +12,6 @@ const assignOrderToRider = async (req, res, next) => {
       useUnifiedTopology: true,
     });
     const Order = db.model('Order', orderSchema);    
-    const Rider = db.model('Rider', riderSchema);
     const { riderId, orderId } = req.body;
 
     if (!riderId || !orderId) {
