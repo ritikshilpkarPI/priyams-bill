@@ -9,9 +9,9 @@ import { AppStateContext } from '../AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
 import Barcode from 'react-jsbarcode';
-import useSocket from 'src/hooks/useSocket';
-import { socketEvents } from 'src/utils/constants/socketEvents';
-import { PaymentExpiryTimer } from 'src/components/PaymentExpiryTimer';
+import useSocket from '../hooks/useSocket';
+import { socketEvents } from '../utils/constants/socketEvents';
+import { PaymentExpiryTimer } from '../components/PaymentExpiryTimer';
 
 const getBillInitialState = () => ({
   billItems: [],

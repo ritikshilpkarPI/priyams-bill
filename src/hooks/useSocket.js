@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
-import { socketEvents } from 'src/utils/constants/socketEvents';
+import { socketEvents } from '../utils/constants/socketEvents';
 
 const useSocket = () => {
   const [socket, setSocket] = useState();
