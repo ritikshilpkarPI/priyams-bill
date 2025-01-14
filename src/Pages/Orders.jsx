@@ -85,7 +85,31 @@ function Orders() {
     
     subscribeToPushNotification();
   }, []);
-
+  const handleOnExpelRider= async({riderId, orderId})=>{
+    try {
+      if (window.confirm(`Do you want to remove rider`)) {
+        console.log({riderId,orderId});
+        
+        setLoader(true);
+        await genericAxios({
+          url: API_PATHS.ORDERS.EXPEL_ORDER_TO_RIDER,
+          method: API_METHODS.POST,
+          data: {
+            riderId,
+            orderId
+          },
+          headers: {
+            Cookie: '',
+          },
+        });
+       getUserOrders();
+      }
+    } catch (error) {
+      console.error(error);
+    }finally{
+      loader && setLoader(false);
+    }
+  }
   return (
     <div className="order-card-page-container">
       <Modal
@@ -129,6 +153,7 @@ function Orders() {
                             buttonStatus={card.button}
                             updateOrderStatus={updateOrderStatus}
                             getUserOrders={getUserOrders}
+                            handleOnExpelRider={handleOnExpelRider}
                           />
                         </div>
                       );
