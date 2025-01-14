@@ -330,6 +330,21 @@ const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
             <Text>{updatedTotalQuantity}</Text>
           </Group>
         </Card>
+        {order?.rider && <Card>
+          <Title className="purchase-order-title" order={4}>
+            Rider Details
+           </Title>
+          {order?.rider?.name && <Group className="order-card">
+            <Title order={5}>Name:</Title>
+            <Text >{ order?.rider?.name }</Text>
+          </Group>}
+          {
+            order?.rider?.phone && <Group >
+            <Title  order={5}>Phone:</Title>
+            <Text>{ order?.rider?.phone }</Text>
+          </Group>
+          }
+        </Card>}
         <Card>
           <Title className="purchase-order-title" order={4}>
             Payment Details
