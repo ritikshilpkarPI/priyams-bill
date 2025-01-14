@@ -69,7 +69,7 @@ const NewBillPage = ({ billID = '' }) => {
   const [qrCodeErrorMsg, setQrCodeErrorMsg] = useState('');
   const [isQRCodeGenerating, setIsQRCodeGenerating] = useState("");
   const QR_EXPIRY_TIME_IN_SEC = 110;
-  const { addSocketEventListener } = useSocket({ billListener });
+  const { addSocketEventListener, removeSocketEventListener } = useSocket({ billListener });
 
   function billListener(data = {}) {
     if (data?.isPaid && bill.billId === data?.billId) {
@@ -80,6 +80,7 @@ const NewBillPage = ({ billID = '' }) => {
         isUpiAmtPaid: data?.isPaid,
         billId: data?.billId,
       });
+      removeSocketEventListener(`${socketEvents.BILLS}/${bill.billId}`);
     }
   }
 
