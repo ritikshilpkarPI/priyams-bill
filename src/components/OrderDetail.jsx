@@ -12,7 +12,8 @@ function OrderDetail({
   close,
   buttonStatus,
   updateOrderStatus,
-  getUserOrders
+  getUserOrders,
+  handleOnExpelRider
 }) {
   const {
     contactNumber,
@@ -181,6 +182,11 @@ const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
       </td>
     </tr>)
   });
+  const handleOnExpelRiderClick = async()=>{
+    const riderId =order.riderId;
+    const orderId=order._id
+    handleOnExpelRider({ riderId,orderId })
+  }
 
   // const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
   // const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -334,16 +340,20 @@ const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
           <Title className="purchase-order-title" order={4}>
             Rider Details
            </Title>
-          {order?.rider?.name && <Group className="order-card">
-            <Title order={5}>Name:</Title>
-            <Text >{ order?.rider?.name }</Text>
-          </Group>}
-          {
-            order?.rider?.phone && <Group >
-            <Title  order={5}>Phone:</Title>
-            <Text>{ order?.rider?.phone }</Text>
-          </Group>
-          }
+           <div className='rider-details-container-wrapper'>
+            <div className='rider-details-container'>
+              {order?.rider?.name && <Group className="order-card">
+                <Title order={5}>Name:</Title>
+                <Text >{ order?.rider?.name }</Text>
+              </Group>}
+              {
+                order?.rider?.phone && <Group >
+                <Title  order={5}>Phone:</Title>
+                <Text>{ order?.rider?.phone }</Text>
+              </Group>}
+            </div>
+            <div className="expel-order-button" onClick={ handleOnExpelRiderClick }>Remove Rider</div>
+           </div>
         </Card>}
         <Card>
           <Title className="purchase-order-title" order={4}>
