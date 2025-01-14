@@ -62,11 +62,8 @@ function Orders() {
     setLoader(true);
     try {
       const response = await genericAxios({
-        url: "/api/riders",
+        url: API_PATHS.RIDER.GET_ALL_RIDERS,
         method: API_METHODS.POST,
-        headers: {
-          Cookie: '',
-        },
       });      
       setRiders(response.data.data);
     } catch (error) {
@@ -138,9 +135,6 @@ function Orders() {
           data: {
             riderId,
             orderId
-          },
-          headers: {
-            Cookie: '',
           },
         });
        getUserOrders();
