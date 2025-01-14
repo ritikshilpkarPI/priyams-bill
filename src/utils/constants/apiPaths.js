@@ -106,5 +106,8 @@ export const API_PATHS = {
   },
   RAZORPAY: {
     QR: "/api/razorpay/qr"
+  },
+  RIDER:{
+    GET_ALL_RIDERS: "/api/riders"
   }
 };

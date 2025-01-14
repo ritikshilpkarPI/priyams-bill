@@ -55,7 +55,7 @@ export const orderSchema = new mongoose.Schema({
   },
   contactNumber: {
     type: Number,
-    required: true,
+    required: false,
   },
   paymentMethod: {
     type: String,

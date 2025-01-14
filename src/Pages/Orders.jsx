@@ -16,6 +16,7 @@ function Orders() {
   const [userOrders, setUserOrders] = useState([]);
   const [loader, setLoader] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [riders, setRiders] = useState([]);
 
   const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
 
@@ -57,6 +58,20 @@ function Orders() {
     }
     setLoader(false);
   };
+  const getRiders = async () => {
+    setLoader(true);
+    try {
+      const response = await genericAxios({
+        url: API_PATHS.RIDER.GET_ALL_RIDERS,
+        method: API_METHODS.POST,
+      });      
+      setRiders(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }finally{
+       loader && setLoader(false);
+    }
+  };
 
   const updateOrderStatus = async (orderStatusStep, id, buttonStatus) => {
     try {
@@ -84,6 +99,7 @@ function Orders() {
     getUserOrders();
     
     subscribeToPushNotification();
+    getRiders();
   }, []);
   const handleOnExpelRider= async({riderId, orderId})=>{
     try {
@@ -105,6 +121,27 @@ function Orders() {
     } catch (error) {
       console.error(error);
       window.alert("Unable to remove rider, please try again later")
+    }finally{
+      loader && setLoader(false);
+    }
+  }
+  const handleOnAssignOrder = async ({riderId, orderId,riderName})=>{
+    try {      
+      if (window.confirm(`Do you want to assign order to ${riderName}`)) {
+        setLoader(true);
+        await genericAxios({
+          url: API_PATHS.ORDERS.ASSIGN_ORDER_TO_RIDER,
+          method: API_METHODS.POST,
+          data: {
+            riderId,
+            orderId
+          },
+        });
+       getUserOrders();
+      }
+    } catch (error) {
+      console.error(error);
+      window.alert("Unable to assign order to rider, please try again later")
     }finally{
       loader && setLoader(false);
     }
@@ -153,6 +190,8 @@ function Orders() {
                             updateOrderStatus={updateOrderStatus}
                             getUserOrders={getUserOrders}
                             handleOnExpelRider={handleOnExpelRider}
+                            riders={riders}
+                            handleOnAssignOrder={handleOnAssignOrder}
                           />
                         </div>
                       );
