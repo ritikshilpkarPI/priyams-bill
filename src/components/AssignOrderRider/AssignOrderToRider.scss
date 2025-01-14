@@ -1,0 +1,35 @@
+.assign-rider-container-wrapper {
+  padding:0 20px;
+  max-width: 600px;
+  .assign-rider-header {
+    font-weight: 600;
+    font-size: 18px;
+    color: rgb(1, 49, 220);
+  }
+  .assign-rider-select-button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    .select-container {
+      padding: 8px;
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      overflow-y: auto !important; /* Makes the dropdown scrollable */
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .assign-rider-button {
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+  }
+  .selected-rider-details{
+    margin-top: 2px;
+  }
+}
+.selected-rider-details-label{
+   font-size: 14px;
+}

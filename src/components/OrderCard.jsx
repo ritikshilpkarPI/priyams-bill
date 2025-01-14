@@ -3,7 +3,7 @@ import React from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import '../CSS/_orders.scss';
 import OrderDetail from './OrderDetail';
-function OrderCard({ order, buttonStatus, updateOrderStatus,getUserOrders, handleOnExpelRider }) {
+function OrderCard({ order, buttonStatus, updateOrderStatus,getUserOrders, handleOnExpelRider,riders, handleOnAssignOrder }) {
   const {
     timeSlot,
     paymentMethod,
@@ -76,6 +76,8 @@ function OrderCard({ order, buttonStatus, updateOrderStatus,getUserOrders, handl
         updateOrderStatus={updateOrderStatus}
         getUserOrders={getUserOrders}
         handleOnExpelRider={handleOnExpelRider}
+        riders={riders}
+        handleOnAssignOrder={handleOnAssignOrder}
       />
     </div>
   );

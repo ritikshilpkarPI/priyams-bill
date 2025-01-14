@@ -4,6 +4,7 @@ import '../CSS/_orderDetail.scss';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
+import AssignOrderToRider from './AssignOrderRider/AssignOrderToRider';
 // import { useBeep } from 'src/utils/beep';
 
 function OrderDetail({
@@ -13,8 +14,10 @@ function OrderDetail({
   buttonStatus,
   updateOrderStatus,
   getUserOrders,
-  handleOnExpelRider
-}) {
+  handleOnExpelRider,
+  riders,
+  handleOnAssignOrder
+}) {  
   const {
     contactNumber,
     shippingAddress,
@@ -336,12 +339,12 @@ const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
             <Text>{updatedTotalQuantity}</Text>
           </Group>
         </Card>
-        {order?.rider && <Card>
+        <Card>
           <Title className="purchase-order-title" order={4}>
             Rider Details
            </Title>
            <div className='rider-details-container-wrapper'>
-            <div className='rider-details-container'>
+            { order?.rider &&<div className='rider-details-container'>
               {order?.rider?.name && <Group className="order-card">
                 <Title order={5}>Name:</Title>
                 <Text >{ order?.rider?.name }</Text>
@@ -351,10 +354,15 @@ const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
                 <Title  order={5}>Phone:</Title>
                 <Text>{ order?.rider?.phone }</Text>
               </Group>}
-            </div>
-            <div className="expel-order-button" onClick={ handleOnExpelRiderClick }>Remove Rider</div>
+            </div>}
+            {!order?.rider && <AssignOrderToRider
+              order={order}
+              riders={riders}
+              onAssignRider={handleOnAssignOrder}
+           />}
+            {order?.rider && <div className="expel-order-button" onClick={ handleOnExpelRiderClick }>Remove Rider</div>}
            </div>
-        </Card>}
+        </Card>
         <Card>
           <Title className="purchase-order-title" order={4}>
             Payment Details
