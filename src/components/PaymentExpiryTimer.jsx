@@ -1,6 +1,6 @@
 import { Badge } from '@mantine/core';
 import { useEffect } from 'react';
-import useTimer from 'src/hooks/useTimer';
+import useTimer from '../hooks/useTimer';
 
 export const PaymentExpiryTimer = ({
   expiryTimeInSec = 10,
