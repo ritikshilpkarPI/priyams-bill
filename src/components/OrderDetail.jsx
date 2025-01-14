@@ -182,8 +182,7 @@ const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
       </td>
     </tr>)
   });
-  const handleOnExpelRiderClick = async(e)=>{
-    // console.log("clicked",{riderId:order.riderId, orderId:order._id});
+  const handleOnExpelRiderClick = async()=>{
     const riderId =order.riderId;
     const orderId=order._id
     handleOnExpelRider({ riderId,orderId })

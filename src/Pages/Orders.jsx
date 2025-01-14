@@ -88,8 +88,6 @@ function Orders() {
   const handleOnExpelRider= async({riderId, orderId})=>{
     try {
       if (window.confirm(`Do you want to remove rider`)) {
-        console.log({riderId,orderId});
-        
         setLoader(true);
         await genericAxios({
           url: API_PATHS.ORDERS.EXPEL_ORDER_TO_RIDER,
@@ -106,6 +104,7 @@ function Orders() {
       }
     } catch (error) {
       console.error(error);
+      window.alert("Unable to remove rider, please try again later")
     }finally{
       loader && setLoader(false);
     }
