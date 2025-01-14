@@ -34,10 +34,10 @@ import {
   ExpiredItemList,
   ReturnAndExchange,
 } from '../Pages';
-import Label from 'src/Pages/Label';
+import Label from '../Pages/Label';
 import { Fragment } from 'react';
-import { ItemsBarCode } from 'src/Pages/itemsBarcode';
-import { ItemQuantity } from 'src/Pages/ItemQuantity';
+import { ItemsBarCode } from '../Pages/itemsBarcode';
+import { ItemQuantity } from '../Pages/ItemQuantity';
 
 const StoreRoutes = () => {
   return (

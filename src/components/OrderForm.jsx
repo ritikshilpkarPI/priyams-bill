@@ -16,8 +16,8 @@ import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
 import { useEffect, useRef, useState } from 'react';
 import MyDatePicker from './DatePicker';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from "../utils/constants/apiPaths"
 const OrderForm = ({
   openDrawer,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { tableHead } from 'src/constants/purchaseOrderConstants';
+import { tableHead } from '../constants/purchaseOrderConstants';
 
 const PurchaseOrderHeader = () => {
   return (

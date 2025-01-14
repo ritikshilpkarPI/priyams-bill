@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Table, Loader, Button } from '@mantine/core';
 import { Link } from 'react-router-dom';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 const PerItemListPurchaseOrder = () => {
   const [individualItemPurchaseDetail, setIndividualItemPurchaseDetail] =
     useState([]);

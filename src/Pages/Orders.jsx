@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import OrderCard from 'src/components/OrderCard';
-import OrderStatus from 'src/components/OrderStatus';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { orderMapper } from 'src/utils/orderMapper';
+import OrderCard from '../components/OrderCard';
+import OrderStatus from '../components/OrderStatus';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { orderMapper } from '../utils/orderMapper';
 import '../CSS/_orders.scss';
 import { Loader, Modal, Button } from '@mantine/core';
 import { ORDER_CARDS } from '../utils/constants/orders';
 
-import { useBeep } from 'src/utils/beep';
-import { subscribeToPushNotification } from 'src/utils/subscribeToPushNotification';
+import { useBeep } from '../utils/beep';
+import { subscribeToPushNotification } from '../utils/subscribeToPushNotification';
 
 function Orders() {
   const [userOrders, setUserOrders] = useState([]);

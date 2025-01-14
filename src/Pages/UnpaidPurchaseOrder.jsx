@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import '../CSS/unpaidPurchaseOrder.css';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
 import Next from '../icons/next';
 import Preview from '../icons/preview';
 import { WhatsappShareButton, WhatsappIcon } from 'react-share';
-import ApprovePurchaseOrderForm from 'src/components/ApprovePurchaseOrderForm';
-import ProtectedComponent from 'src/components/ProtectedComponent';
-import ImageCarousel from 'src/components/ImageCarousel';
+import ApprovePurchaseOrderForm from '../components/ApprovePurchaseOrderForm';
+import ProtectedComponent from '../components/ProtectedComponent';
+import ImageCarousel from '../components/ImageCarousel';
 const UnpaidPurchaseOrder = () => {
   const [unpaidPurchaseOrderData, setUnpaidPurchaseOrderData] = useState();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
