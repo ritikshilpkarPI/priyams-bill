@@ -110,7 +110,7 @@ const NewBillPage = ({ billID = '' }) => {
     try {
       const response = await getUserDataAPI();
       if (response.isError) return;
-      setUserDataProfile(response.data.message);
+      setUserDataProfile(response.message);
     } catch (error) {
       console.error(error);
     }
@@ -124,12 +124,12 @@ const NewBillPage = ({ billID = '' }) => {
       const response = await getBillingLeanItemsAPI();
 
       if (response.isError) return;
-      if (response?.data?.message) {
-        setItemBarCodesList(response?.data?.message?.itemBarCodesList);
-        setItemsByBarcode(response?.data?.message?.itemsBarCodeMap);
-        setItemsByName(response?.data?.message?.itemsNameMap);
-        setItemNamesList(response?.data?.message?.itemNamesList);
-        setTotalItems(response?.data?.message?.totalItemsCount);
+      if (response?.message) {
+        setItemBarCodesList(response?.message?.itemBarCodesList);
+        setItemsByBarcode(response?.message?.itemsBarCodeMap);
+        setItemsByName(response?.message?.itemsNameMap);
+        setItemNamesList(response?.message?.itemNamesList);
+        setTotalItems(response?.message?.totalItemsCount);
       }
     } catch (error) {
       console.error(error);
@@ -180,7 +180,7 @@ const NewBillPage = ({ billID = '' }) => {
         setApiLoading(false);
         throw Error();
       }
-      setBillBarcode(addBillResponse.data.billBarcode);
+      setBillBarcode(addBillResponse.billBarcode);
       localStorage.removeItem(`newBill-${newBillId}`);
     } catch (error) {
       throw console.error({ error });
@@ -368,7 +368,7 @@ const NewBillPage = ({ billID = '' }) => {
       amountInRs: bill.upiPay,
       id: billId,
     })
-    const billPaymentQR = response?.data?.qrData?.image_url || '';
+    const billPaymentQR = response?.qrData?.image_url || '';
     if (response.isError) {
       setQrCodeErrorMsg('Unable to generate QR, please regenerate QR');
     } else {
