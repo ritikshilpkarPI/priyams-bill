@@ -6,6 +6,19 @@ declare global {
   }
 
   export type RootState = ReturnType<typeof store.getState>;
+
+  export interface EnvironmentInterface {
+    REACT_APP_API_BASE_URL: string;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  export interface ApiCallParams<T = any> {
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+    path: string;
+    data?: T;
+    headers?: Record<string, string>;
+  }
+
 }
 
 declare module '*.scss' {

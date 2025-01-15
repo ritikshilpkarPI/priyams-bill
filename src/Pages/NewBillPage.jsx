@@ -12,6 +12,7 @@ import Barcode from 'react-jsbarcode';
 import useSocket from '../hooks/useSocket';
 import { socketEvents } from '../utils/constants/socketEvents';
 import { PaymentExpiryTimer } from '../components/PaymentExpiryTimer';
+import { getUserDataAPI } from '../utils/apiUtils';
 
 const getBillInitialState = () => ({
   billItems: [],
@@ -110,11 +111,8 @@ const NewBillPage = ({ billID = '' }) => {
   // fetching user details
   const getUserData = async () => {
     try {
-      const response = await genericAxios({
-        url: API_PATHS.BILLING.GET_USER_DETAILS,
-        method: API_METHODS.GET,
-      });
-      if (response.error) return;
+      const response = await getUserDataAPI();
+      if (response.isError) return;
       setUserDataProfile(response.data.message);
     } catch (error) {
       console.error(error.message);
