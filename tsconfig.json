@@ -2,7 +2,11 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -14,8 +18,16 @@
     "isolatedModules": true,
     "incremental": true,
     "baseUrl": "./src",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["./src", "**/*.ts", "**/*.tsx", "jest.config.js"],
+  "include": [
+    "./src",
+    "**/*.ts",
+    "**/*.tsx",
+    "jest.config.js"
+  ],
   "exclude": [
     "node_modules",
     "*.scss",

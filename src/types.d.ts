@@ -19,6 +19,15 @@ declare global {
     headers?: Record<string, string>;
   }
 
+  export interface SaveBillAPIDataType {
+    billId?: string;
+  }
+
+  export interface CreateRzpQRAPIDataType {
+    amountInRs: number;
+    id: string;
+  }
+
 }
 
 declare module '*.scss' {
