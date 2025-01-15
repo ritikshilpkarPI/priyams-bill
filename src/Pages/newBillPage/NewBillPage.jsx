@@ -2,9 +2,6 @@ import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
 import { Modal } from '@mantine/core';
 import { useContext, useEffect, useRef, useState } from 'react';
 import BillNarrator from '../../components/BillNarrator';
-import { API_METHODS } from '../../utils/constants/apiMethods';
-import { API_PATHS } from '../../utils/constants/apiPaths';
-import { genericAxios } from '../../utils/genericAxiosMethod';
 import { AppStateContext } from '../../AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from '../Billing';
@@ -12,7 +9,7 @@ import Barcode from 'react-jsbarcode';
 import useSocket from '../../hooks/useSocket';
 import { socketEvents } from '../../utils/constants/socketEvents';
 import { PaymentExpiryTimer } from '../../components/PaymentExpiryTimer';
-import { getUserDataAPI } from '../../utils/apiUtils';
+import { createRzpQrCodeAPI, getBillingLeanItemsAPI, getUserDataAPI, saveOrCacheBillAPI } from '../../utils/apiUtils';
 
 const getBillInitialState = () => ({
   billItems: [],
@@ -124,10 +121,7 @@ const NewBillPage = ({ billID = '' }) => {
   const getAllLeanItems = async () => {
     try {
       setLoaderDisplay(true);
-      const response = await genericAxios({
-        url: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
-        method: API_METHODS.GET,
-      });
+      const response = await getBillingLeanItemsAPI();
 
       if (response.error) return;
       if (response?.data?.message) {
@@ -176,12 +170,11 @@ const NewBillPage = ({ billID = '' }) => {
     );
 
     try {
-      const addBillResponse = await genericAxios({
-        ...billObject,
-        billId: newBillId,
-        headers: {
-          Cookie: '',
-        },
+      const addBillResponse = await saveOrCacheBillAPI({
+        data: {
+          ...billObject,
+          billID
+        }
       });
       if (addBillResponse.error) {
         setApiLoading(false);
@@ -210,11 +203,6 @@ const NewBillPage = ({ billID = '' }) => {
     //   method: API_METHODS.PUT,
     //   data: { id: billID, itemWithChanges: { ...bill } },
     // };
-    const createApi = {
-      url: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
-      method: API_METHODS.POST,
-      data: { ...bill, billId: newBillId },
-    };
     // const objectOfInterest = billID ? editApi : createApi;
 
     localStorage.setItem(
@@ -222,7 +210,10 @@ const NewBillPage = ({ billID = '' }) => {
       JSON.stringify({
         newBillId,
         createdAt: new Date().toLocaleString(),
-        ...createApi,
+        ...{
+          ...bill,
+          billId: newBillId
+        },
       })
     );
     await createBill(newBillId, setApiLoading);
@@ -373,14 +364,10 @@ const NewBillPage = ({ billID = '' }) => {
     });
     setDisableRegenerateQR(true);
     setIsQRCodeGenerating(true);
-    const response = await genericAxios({
-      url: API_PATHS.RAZORPAY.QR,
-      method: API_METHODS.POST,
-      data: {
-        amountInRs: bill.upiPay,
-        id: billId,
-      },
-    });
+    const response = await createRzpQrCodeAPI({
+      amountInRs: bill.upiPay,
+      id: billId,
+    })
     const billPaymentQR = response?.data?.qrData?.image_url || '';
     if (response.error) {
       setQrCodeErrorMsg('Unable to generate QR, please regenerate QR');
