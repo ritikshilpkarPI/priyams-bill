@@ -112,7 +112,7 @@ const NewBillPage = ({ billID = '' }) => {
       if (response.isError) return;
       setUserDataProfile(response.data.message);
     } catch (error) {
-      console.error(error.message);
+      console.error(error?.message);
     }
   };
 
@@ -123,7 +123,7 @@ const NewBillPage = ({ billID = '' }) => {
       setLoaderDisplay(true);
       const response = await getBillingLeanItemsAPI();
 
-      if (response.error) return;
+      if (response.isError) return;
       if (response?.data?.message) {
         setItemBarCodesList(response?.data?.message?.itemBarCodesList);
         setItemsByBarcode(response?.data?.message?.itemsBarCodeMap);
@@ -132,7 +132,7 @@ const NewBillPage = ({ billID = '' }) => {
         setTotalItems(response?.data?.message?.totalItemsCount);
       }
     } catch (error) {
-      console.error(error.message);
+      console.error(error?.message);
     } finally {
       setLoaderDisplay(false);
     }
@@ -176,7 +176,7 @@ const NewBillPage = ({ billID = '' }) => {
           billID
         }
       });
-      if (addBillResponse.error) {
+      if (addBillResponse.isError) {
         setApiLoading(false);
         throw Error();
       }
@@ -369,7 +369,7 @@ const NewBillPage = ({ billID = '' }) => {
       id: billId,
     })
     const billPaymentQR = response?.data?.qrData?.image_url || '';
-    if (response.error) {
+    if (response.isError) {
       setQrCodeErrorMsg('Unable to generate QR, please regenerate QR');
     } else {
       setBillPaymentQRCode(billPaymentQR);
