@@ -112,7 +112,7 @@ const NewBillPage = ({ billID = '' }) => {
       if (response.isError) return;
       setUserDataProfile(response.data.message);
     } catch (error) {
-      console.error(error?.message);
+      console.error(error);
     }
   };
 
@@ -132,7 +132,7 @@ const NewBillPage = ({ billID = '' }) => {
         setTotalItems(response?.data?.message?.totalItemsCount);
       }
     } catch (error) {
-      console.error(error?.message);
+      console.error(error);
     } finally {
       setLoaderDisplay(false);
     }
