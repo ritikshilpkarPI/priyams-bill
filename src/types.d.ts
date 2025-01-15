@@ -1,4 +1,12 @@
-declare global {}
+import { store } from "./redux/store";
+
+declare global {
+  export interface UserStateType {
+
+  }
+
+  export type RootState = ReturnType<typeof store.getState>;
+}
 
 declare module '*.scss' {
   const content: { [className: string]: string };
