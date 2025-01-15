@@ -1,18 +1,18 @@
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
 import { Modal } from '@mantine/core';
 import { useContext, useEffect, useRef, useState } from 'react';
-import BillNarrator from '../components/BillNarrator';
-import { API_METHODS } from '../utils/constants/apiMethods';
-import { API_PATHS } from '../utils/constants/apiPaths';
-import { genericAxios } from '../utils/genericAxiosMethod';
-import { AppStateContext } from '../AppState/appState.context';
+import BillNarrator from '../../components/BillNarrator';
+import { API_METHODS } from '../../utils/constants/apiMethods';
+import { API_PATHS } from '../../utils/constants/apiPaths';
+import { genericAxios } from '../../utils/genericAxiosMethod';
+import { AppStateContext } from '../../AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
-import { QuantBtn } from './Billing';
+import { QuantBtn } from '../Billing';
 import Barcode from 'react-jsbarcode';
-import useSocket from '../hooks/useSocket';
-import { socketEvents } from '../utils/constants/socketEvents';
-import { PaymentExpiryTimer } from '../components/PaymentExpiryTimer';
-import { getUserDataAPI } from '../utils/apiUtils';
+import useSocket from '../../hooks/useSocket';
+import { socketEvents } from '../../utils/constants/socketEvents';
+import { PaymentExpiryTimer } from '../../components/PaymentExpiryTimer';
+import { getUserDataAPI } from '../../utils/apiUtils';
 
 const getBillInitialState = () => ({
   billItems: [],

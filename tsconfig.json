@@ -1,34 +1,25 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
-    "allowJs": true,
-    "checkJs": false,
-    "target": "ES6",
-    "module": "esnext",
-    "outDir": "./dist",
-    "rootDir": "./src",
     "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "typeRoots": [
-      "./src/types.d.ts"
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": [
-    "src"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "jest.config.js"],
   "exclude": [
     "node_modules",
     "*.scss",
