@@ -13,13 +13,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "baseUrl": "./src",
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "jest.config.js"],
+  "include": ["./src", "**/*.ts", "**/*.tsx", "jest.config.js"],
   "exclude": [
     "node_modules",
     "*.scss",
