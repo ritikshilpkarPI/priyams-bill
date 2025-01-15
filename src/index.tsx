@@ -7,6 +7,8 @@ import { AppStateContextProvider } from './AppState/appState.context';
 import { BrowserRouter } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
+import { store } from './redux/store';
+import { Provider } from 'react-redux';
 
 const rootElement = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
@@ -14,16 +16,18 @@ const root = ReactDOM.createRoot(rootElement);
 if (root) {
   root.render(
     <BrowserRouter>
-      <AppStateContextProvider>
-        <React.StrictMode>
-          <MantineProvider>
-            <ModalsProvider>
-              <App />
-            </ModalsProvider>
-          </MantineProvider>
-        </React.StrictMode>
-      </AppStateContextProvider>
-    </BrowserRouter>,
+      <Provider store={store}>
+        <AppStateContextProvider>
+          <React.StrictMode>
+            <MantineProvider>
+              <ModalsProvider>
+                <App />
+              </ModalsProvider>
+            </MantineProvider>
+          </React.StrictMode>
+        </AppStateContextProvider>
+      </Provider>
+    </BrowserRouter>
   );
 }
 
