@@ -57,6 +57,15 @@ const Approval = () => {
     }
   };
 
+  useEffect(() => {
+    if(Loading){
+      hideScrollBar();
+    }else {
+      showScrollBar();
+    }
+    // eslint-disable-next-line
+  }, [Loading]);
+
   const onLoader = () => {
     setLoading(true);
     hideScrollBar();
@@ -85,6 +94,7 @@ const Approval = () => {
         getOrders={getOrders}
         allPurchaseList={filter}
         setAllPurchaseList={setFilter}
+        setLoading={setLoading}
       />
     </div>
   );
