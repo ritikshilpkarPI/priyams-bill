@@ -26,8 +26,8 @@ const getExpiredItemsData = async (startDate, endDate) => {
       url: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
       method: API_METHODS.POST,
       data: {
-        startDate: startDate.toLocaleDateString(),
-        endDate: endDate.toLocaleDateString(),
+        startDate: startDate.toLocaleDateString("en-GB"),
+        endDate: endDate.toLocaleDateString("en-GB"),
       },
     });
     if(response.error)return
