@@ -161,6 +161,10 @@ const NewBillPage = ({ billID = '' }) => {
           setApiLoading(false);
           throw Error();
         }
+        if (addBillResponse.status === 200) {          
+          generateNewBillId()
+        }
+
         setBillBarcode(addBillResponse.data.billBarcode);
         localStorage.removeItem(`newBill-${newBillId}`);
       } catch (error) {
@@ -168,8 +172,20 @@ const NewBillPage = ({ billID = '' }) => {
       }
   }
 
-  //    adding new bill
 
+  const [newBillId, setNewBillId] = useState();
+  // generate new billId 
+
+  const generateNewBillId =  () => {
+    const newBillId = `${uuidv4()}-${Date.now()}`;
+    setNewBillId(newBillId)
+  }
+
+  useEffect(()=> {
+    generateNewBillId()
+  },[])
+
+  //    adding new bill
   async function addNewBill(
     setApiLoading,
     bill,
@@ -178,7 +194,7 @@ const NewBillPage = ({ billID = '' }) => {
     billID
   ) {
     setBillApiCountToLocalStorage();
-    const newBillId = `${uuidv4()}-${Date.now()}`;
+    
     setApiLoading(true);
     let updateBill = {
       ...bill,
