@@ -113,7 +113,7 @@ export const GraphComponent: React.FC<GraphComponentProps> = ({ data,width,heigh
     });
 
     svg.on("mouseleave", () => tooltip.style("display", "none"));
-  }, [data]);
+  },  [data, width, height]);
 
   return <div  data-testid="graph-svg" ref={chartRef}></div>;
 };
