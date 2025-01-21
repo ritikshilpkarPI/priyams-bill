@@ -1,28 +1,37 @@
 const { isValidObjectId } = require('mongoose');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { Bill } = require('../db-models/bill-model');
+const { generateIntervals, groupByFilter } = require('../util/helper');
+const { convertToISTAndISO } = require('../util/convertToISTandISO');
+const { messages } = require('../constants/messages');
 
-const getItemSold = async (req, res, next) => {
+const getItemSold = async (req, res) => {
   const id = req.params.id;
+  const { startDate, endDate, filter } = req.query;
 
   try {
     if (!isValidObjectId(id)) {
       return res.status(400).json({
-        message: 'Invalid ID format',
-        success: false,
-        error: 'Bad Request',
+        error: messages.INVALID_ID_FORMAT,
       });
     }
-
+    if (!startDate || !endDate) {
+      return res.status(400).json({
+        error: messages.MISSING_REQUIRED_FIELDS,
+      });
+    }
+    if (!filter) {
+      return res.status(400).json({
+        error: messages.MISSING_FILTER_FIELD,
+      });
+    }
     const purchaseOrder = await PurchaseOrder.findById(id).select(
       'purchasedItems approveTime'
     );
 
     if (!purchaseOrder) {
       return res.status(404).json({
-        message: 'Purchase order not found',
-        success: false,
-        error: 'Not Found',
+        error: messages.PURCHASE_ORDER_NOT_FOUND,
       });
     }
 
@@ -33,14 +42,9 @@ const getItemSold = async (req, res, next) => {
     });
 
     const now = new Date();
-    const last30Days = new Date(now);
-    last30Days.setDate(last30Days.getDate() - 30);
-
-    const last3Months = new Date(now);
-    last3Months.setMonth(last3Months.getMonth() - 3);
-
-    const last1Year = new Date(now);
-    last1Year.setFullYear(last1Year.getFullYear() - 1);
+    const last30Days = convertToISTAndISO(
+      new Date(now.setDate(now.getDate() - 30))
+    );
 
     const items = Object.keys(itemMap);
 
@@ -55,6 +59,34 @@ const getItemSold = async (req, res, next) => {
       'items.itemDetail': { $in: items },
       createdAt: { $gt: approvedTime },
     }).select('items.itemDetail items.itemQuantityInBill createdAt');
+    const start = convertToISTAndISO(startDate);
+    const end = convertToISTAndISO(endDate);
+
+    const billsFilter = await Bill.find({
+      'items.itemDetail': { $in: items },
+      createdAt: { $gte: start, $lte: end },
+    }).select('items.itemDetail items.itemQuantityInBill createdAt');
+
+    const groupedData = {};
+    billsFilter.forEach((bill) => {
+      bill.items.forEach((item) => {
+        const itemId = item.itemDetail.toString();
+        const itemName = itemMap[itemId];
+        const billDate = new Date(bill.createdAt);
+        const formattedBillDate = convertToISTAndISO(billDate);
+        const groupKey = groupByFilter(formattedBillDate, filter);
+
+        if (itemName && groupKey) {
+          if (!groupedData[itemName]) {
+            groupedData[itemName] = {};
+          }
+          groupedData[itemName][groupKey] =
+            (groupedData[itemName][groupKey] || 0) + item.itemQuantityInBill;
+        }
+      });
+    });
+
+    const allIntervals = generateIntervals(start, end, filter);
 
     const totalItemQuantity = {};
 
@@ -80,10 +112,7 @@ const getItemSold = async (req, res, next) => {
               .skip(skipCount)
               .select('purchasedItems createdAt approveTime');
           } catch (err) {
-            console.error(
-              `Error fetching purchase order for item ${itemId}:`,
-              err
-            );
+            console.error(`${PURCHASE_ORDER_ITEM_FETCH_ERROR} ${itemId}:`, err);
             return null;
           }
         };
@@ -91,7 +120,6 @@ const getItemSold = async (req, res, next) => {
         const lastOrder = await fetchPurchaseOrder(itemId, 0);
         const secondLastOrder = await fetchPurchaseOrder(itemId, 1);
         const thirdLastOrder = await fetchPurchaseOrder(itemId, 2);
-
         const extractOrderDetails = (purchaseOrder) => {
           if (!purchaseOrder)
             return { approvalDate: null, amount: 0, costPrice: 0 };
@@ -114,73 +142,60 @@ const getItemSold = async (req, res, next) => {
       })
     );
 
-    const billsLastYear = await Bill.find({
+    const billsLast30Days = await Bill.find({
       'items.itemDetail': { $in: items },
-      createdAt: { $gt: last1Year },
+      createdAt: { $gte: last30Days },
     }).select('items.itemDetail items.itemQuantityInBill createdAt');
-
-    const monthlyData = {};
-    for (let i = 0; i < 12; i++) {
-      const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      monthlyData[monthDate.toISOString().slice(0, 7)] = 0;
-    }
 
     const itemQuantities = {};
 
-    billsLastYear.forEach((bill) => {
+    billsLast30Days.forEach((bill) => {
       bill.items.forEach((item) => {
         const itemId = item.itemDetail.toString();
         const billDate = new Date(bill.createdAt);
-        const monthKey = billDate.toISOString().slice(0, 7);
 
         if (items.includes(itemId)) {
           itemQuantities[itemId] = itemQuantities[itemId] || {
-            total: 0,
             last30Days: 0,
-            last3Months: 0,
-            last1Year: 0,
-            monthly: { ...monthlyData },
           };
-
-          itemQuantities[itemId].total += item.itemQuantityInBill;
 
           if (billDate >= last30Days) {
             itemQuantities[itemId].last30Days += item.itemQuantityInBill;
           }
-          if (billDate >= last3Months) {
-            itemQuantities[itemId].last3Months += item.itemQuantityInBill;
-          }
-          if (billDate >= last1Year) {
-            itemQuantities[itemId].last1Year += item.itemQuantityInBill;
-          }
-          if (itemQuantities[itemId].monthly[monthKey] !== undefined) {
-            itemQuantities[itemId].monthly[monthKey] += item.itemQuantityInBill;
-          }
         }
       });
     });
-
+    const responseData2 = Object.entries(groupedData).map(
+      ([itemName, data]) => {
+        const groupedArray = allIntervals.map((interval) => ({
+          date: interval,
+          value: data[interval] || 0,
+        }));
+        return {
+          itemName,
+          groupedData: groupedArray,
+        };
+      }
+    );
     const responseData = items.map((itemId) => {
       const itemName = itemMap[itemId];
       const itemData = itemQuantities[itemId] || {
-        total: 0,
         last30Days: 0,
-        last3Months: 0,
-        last1Year: 0,
-        monthly: { ...monthlyData },
       };
 
       const lastPurchaseOrderData = lastPurchaseOrders.find(
         (order) => order.item_id === itemId
       );
-
+      const groupedArray = allIntervals.map((interval) => ({
+        date: interval,
+        value: groupedData[itemName] ? groupedData[itemName][interval] || 0 : 0,
+      }));
       return {
         itemName,
         itemId,
         soldAfterApproval: totalItemQuantity[itemName] || 0,
         soldInLastMonth: itemData.last30Days,
-        soldInLastThreeMonths: Object.values(itemData.monthly).slice(0, 3),
-        soldInLastYear: Object.values(itemData.monthly),
+        soldItemsByDate: groupedArray,
         lastPurchaseOrder: lastPurchaseOrderData.lastPurchaseOrder || {
           approvalDate: null,
           amount: 0,
@@ -202,14 +217,13 @@ const getItemSold = async (req, res, next) => {
     });
 
     res.status(200).json({
-      message: 'Get sold items successfully',
-      data:responseData,
+      message: messages.GET_ITEM_SOLD_SUCCESSFULLY,
+      data: responseData,
       status: true,
     });
   } catch (error) {
-    console.error('Error in getItemSold:', error);
     res.status(500).json({
-      message: 'An unexpected error occurred',
+      message: messages.UNEXPECTED_ERROR,
       status: false,
       error: error.message,
     });
