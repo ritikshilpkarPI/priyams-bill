@@ -42,7 +42,7 @@ const refreshPage = (setBill) => {
   }
 };
 
-const NewBillPage = ({ billID = '' }) => {
+const NewBillPage = () => {
   const [itemsByName, setItemsByName] = useState([]);
   const [itemsByBarcode, setItemsByBarcode] = useState();
   const [itemBarCodesList, setItemBarCodesList] = useState([]);
@@ -173,7 +173,7 @@ const NewBillPage = ({ billID = '' }) => {
       const addBillResponse = await saveOrCacheBillAPI({
         data: {
           ...billObject,
-          billID
+          billID: bill.billId
         }
       });
       if (addBillResponse.isError) {
@@ -1071,7 +1071,7 @@ const NewBillPage = ({ billID = '' }) => {
           }}
         >
           <Loader />
-          {billID && (
+          {bill.billId && (
             <div style={{ width: '50%' }}>
               <Table>
                 <thead>
