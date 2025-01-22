@@ -1,0 +1,47 @@
+.sell-details-table-component {
+    width: 100%;
+    overflow-x: auto;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.sell-details-table {
+    border-collapse: collapse;
+}
+
+.sell-details-table-thead-tr-th,
+.sell-details-table-tbody-tr-td {
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    flex-shrink: 0;
+    white-space: nowrap;
+    width: 600px;
+
+}
+
+.sell-details-table-thead-tr-th {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.sell-details-table-tbody-tr-td {
+    font-size: 14px;
+    font-weight: 400;
+    background-color: #F1F1F2;
+}
+
+.sell-details-table-line-graph {
+    width: 300px;
+}
+
+@media (max-width: 399px) {
+    .sell-details-table-line-graph {
+        width: 70vw;
+    }
+}
