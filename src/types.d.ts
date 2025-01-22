@@ -28,6 +28,17 @@ declare global {
     id: string;
   }
 
+  interface SampleData {
+    date: string;
+    value: number;
+  }
+  
+  interface LineGraphProps {
+    data: SampleData[];
+    width: number;
+    height: number;
+  }
+
 }
 
 declare module '*.scss' {

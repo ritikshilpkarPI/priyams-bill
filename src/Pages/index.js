@@ -23,4 +23,5 @@ export const PayPurchaseOrderBill = lazy(()=> import('./PayPurchaseOrderBill'))
 export const AddExpiredItem = lazy(()=> import('./AddExpiredItem'))
 export const ExpiredItemList = lazy(()=> import('./ExpiredItemList'))
 export const ReturnAndExchange = lazy(()=> import('./ReturnBill'));
+export const SellDetailsPage = lazy(()=> import('./sellDetailsPage/SellDetailsPage'));
 
