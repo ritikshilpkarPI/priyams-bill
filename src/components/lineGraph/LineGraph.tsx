@@ -41,16 +41,18 @@ export const LineGraph: React.FC<LineGraphProps> = ({ data, width, height }) => 
       .attr("height", height)
       .attr(
         "style",
-        "max-width: 100%; height: auto; font: 10px sans-serif; overflow: visible;"
+        "max-width: 100%; height: auto; font: 15px sans-serif; overflow: visible;"
       )
       .style("-webkit-tap-highlight-color", "transparent");
 
-    svg
+    const xAxis = svg
       .append("g")
       .attr("transform", `translate(0,${height - marginBottom})`)
       .call(d3.axisBottom(x));
 
-    svg
+    xAxis.selectAll("text").style("font-size", "15px");
+
+    const yAxis = svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
       .call(d3.axisLeft(y))
@@ -70,6 +72,8 @@ export const LineGraph: React.FC<LineGraphProps> = ({ data, width, height }) => 
           .attr("fill", "currentColor")
           .attr("text-anchor", "start")
       );
+
+    yAxis.selectAll("text").style("font-size", "15px");
 
     svg
       .append("path")
