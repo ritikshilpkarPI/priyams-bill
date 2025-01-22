@@ -39,6 +39,27 @@ declare global {
     height: number;
   }
 
+  interface ItemSoldPurchaseOrder {
+    orderSequence:string
+    approvalDate: string;
+    amount: number;
+    costPrice: number
+  }
+
+  interface ItemSoldInterface {
+    itemName: string;
+    itemPrise: number;
+    soldAfterApproval: number;
+    soldInLastMonth: number;
+    soldInLastThreeMonths: { date: string; value: number }[];
+    soldInLastYear: { date: string; value: number }[];
+    lastThreePurchaseOrder : ItemSoldPurchaseOrder[];
+  }
+
+  interface SellDetailsTableProps {
+    tableData: ItemSoldInterface[];
+  } 
+  
 }
 
 declare module '*.scss' {
