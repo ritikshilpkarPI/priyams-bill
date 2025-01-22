@@ -86,7 +86,7 @@ const {
   expelOrderToRider,
   createRzpQRByAmount,
   assignOrderToRider,
-  getItemSold
+  getItemsSellDetailsByPurchaseOrderId
 } = require('../controllers/index');
 
 
@@ -331,7 +331,7 @@ router.post('/api/rider/approveRider/:id' ,isLoggedIn,
   isLoggedIn, approveRider)
 router.post(
     `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD}/:id`,
-    getItemSold
+    getItemsSellDetailsByPurchaseOrderId
   );
 
 router.post(
