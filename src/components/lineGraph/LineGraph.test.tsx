@@ -1,10 +1,11 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { GraphComponent } from "./GraphComponent"; 
+import { render, screen, fireEvent } from "@testing-library/react";
+import { LineGraph } from "./LineGraph";
 import * as d3 from 'd3';
 
 jest.mock('d3', () => ({
-  max: jest.fn(), 
+  max: jest.fn(),
+  min: jest.fn(),
   scalePoint: jest.fn().mockReturnValue({
     domain: jest.fn().mockReturnThis(),
     range: jest.fn().mockReturnThis(),
@@ -19,17 +20,20 @@ jest.mock('d3', () => ({
     x: jest.fn().mockReturnThis(),
     y: jest.fn().mockReturnThis(),
   }),
-  select: jest.fn().mockReturnValue({
-    select: jest.fn().mockReturnThis(), 
-    append: jest.fn().mockReturnThis(), 
+  select: jest.fn().mockImplementation(() => ({
+    append: jest.fn().mockReturnThis(),
     attr: jest.fn().mockReturnThis(),
-    style: jest.fn().mockReturnThis(), 
-    call: jest.fn().mockReturnThis(), 
+    style: jest.fn().mockReturnThis(),
     on: jest.fn().mockReturnThis(),
-    remove: jest.fn().mockReturnThis(), 
-    datum: jest.fn().mockReturnThis(), 
-  }),
-  pointer: jest.fn().mockReturnValue([100]), 
+    call: jest.fn().mockReturnThis(),
+    selectAll: jest.fn().mockReturnThis(),
+    remove: jest.fn().mockReturnThis(),
+    datum: jest.fn().mockReturnThis(),
+    select: jest.fn().mockReturnThis(),
+    node: jest.fn().mockReturnValue({
+    }), 
+  })),
+  pointer: jest.fn().mockReturnValue([100]),
   axisBottom: jest.fn().mockReturnThis(),
   axisLeft: jest.fn().mockReturnThis(),
 }));
@@ -46,7 +50,7 @@ describe('GraphComponent', () => {
   const height = 200;
 
   it("renders an SVG element", () => {
-    render(<GraphComponent data={testData} width={width} height={height} />);
+    render(<LineGraph data={testData} width={width} height={height} />);
     const svgElement = screen.getByTestId("graph-svg");
     expect(svgElement).toBeInTheDocument();
   });

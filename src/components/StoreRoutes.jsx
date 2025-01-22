@@ -98,7 +98,7 @@ const StoreRoutes = () => {
             <Route exact path="/purchaseOrderBill/:id" component={UnpaidPurchaseOrder} />            {/* <ProtectedComponent role={access.REPORT_PAGE_ROUTE}> */}
             <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
             <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
-            <Route exact path="/sellDetailsPage" component={SellDetailsPage} />
+            <Route exact path="/sellDetailsPage/:purchaseOrderId" component={SellDetailsPage} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>

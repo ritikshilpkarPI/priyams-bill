@@ -1,5 +1,5 @@
-import { GraphComponent } from 'components/graphComponent/GraphComponent'
 import React from 'react'
+import { LineGraph } from '../../components/lineGraph/LineGraph';
 
 const SellDetailsPage = () => {
     const sampleData = [
@@ -9,11 +9,9 @@ const SellDetailsPage = () => {
       { date: "10:26:25", value: 168 },
       { date: "10:28:25", value: 175 },
     ];
-   const width= 900; 
-   const height= 500;
   return (
     <div>
-          <GraphComponent data={sampleData} width={width} height={height} />
+          <LineGraph data={sampleData} width={900} height={500} />
     </div>
   )
 }

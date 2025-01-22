@@ -1,18 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-interface SampleData {
-  date: string;
-  value: number;
-}
-
-interface GraphComponentProps {
-  data: SampleData[];
-  width: number; 
-  height: number;
-}
-
-export const GraphComponent: React.FC<GraphComponentProps> = ({ data,width,height }) => {
+export const LineGraph: React.FC<LineGraphProps> = ({ data, width, height }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -30,7 +19,10 @@ export const GraphComponent: React.FC<GraphComponentProps> = ({ data,width,heigh
 
     const y = d3
       .scaleLinear()
-      .domain([0, d3.max(data, (d) => d.value) || 0])
+      .domain([
+        d3.min(data, (d) => d.value) || 0,
+        d3.max(data, (d) => d.value) || 0
+      ])
       .nice()
       .range([height - marginBottom, marginTop]);
 
@@ -77,7 +69,6 @@ export const GraphComponent: React.FC<GraphComponentProps> = ({ data,width,heigh
           .attr("y", 10)
           .attr("fill", "currentColor")
           .attr("text-anchor", "start")
-          .text("↑ Value")
       );
 
     svg
@@ -96,13 +87,13 @@ export const GraphComponent: React.FC<GraphComponentProps> = ({ data,width,heigh
       .append("text")
       .attr("text-anchor", "middle")
       .attr("y", -10)
-      .attr("fill", "black"); 
+      .attr("fill", "black");
 
     svg.on("mousemove", function (event) {
       const [mx] = d3.pointer(event);
-      const closestMonthIndex = Math.round((mx - marginLeft) / (x.step() || 1));
-      const closestMonth = date[closestMonthIndex];
-      const datum = data.find((d) => d.date === closestMonth);
+      const closestDateIndex = Math.round((mx - marginLeft) / (x.step() || 1));
+      const closestDate = date[closestDateIndex];
+      const datum = data.find((d) => d.date === closestDate);
 
       if (datum) {
         tooltip
@@ -113,7 +104,7 @@ export const GraphComponent: React.FC<GraphComponentProps> = ({ data,width,heigh
     });
 
     svg.on("mouseleave", () => tooltip.style("display", "none"));
-  },  [data, width, height]);
+  }, [data, width, height]);
 
-  return <div  data-testid="graph-svg" ref={chartRef}></div>;
+  return <div data-testid="graph-svg" ref={chartRef}></div>;
 };
