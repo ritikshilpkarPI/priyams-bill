@@ -16,7 +16,7 @@ const validateGetItemsSellDetails = Joi.object({
     "any.required": "End date is required.",
   }),
   timePeriod: Joi.string()
-    .valid("daily", "weekly", "monthly", "quarterly", "yearly")
+    .valid("daywise", "weekly", "monthly", "quarterly", "yearly")
     .required()
     .messages({
       "any.only": "Time period must be one of 'daily', 'weekly', 'monthly', 'quarterly', or 'yearly'.",
