@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 
 declare global {
@@ -37,6 +38,24 @@ declare global {
     data: SampleData[];
     width: number;
     height: number;
+  }
+
+  interface CategorySchemaType {
+    name: string;
+  }
+
+  interface SubCategorySchemaType {
+    name: string;
+    categoryId: ObjectId;
+  }
+
+  interface BrandSchemaType {
+    name: string;
+    companyId: ObjectId;
+  }
+
+  interface CompanySchemaType {
+    name: string;
   }
 
 }
