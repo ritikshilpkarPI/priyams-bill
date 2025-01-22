@@ -3,7 +3,7 @@ const { Bill } = require('../db-models/bill-model');
 const {
   groupByTimePeriod,
 } = require('../util/groupByTimePeriod');
-const { convertDateToIST } = require('../util/convertToISTandISO');
+const { convertDateToIST } = require('../util/convertDateToIST');
 const { MESSAGES } = require('../constants/messages');
 const {
   validateGetItemsSellDetails,
