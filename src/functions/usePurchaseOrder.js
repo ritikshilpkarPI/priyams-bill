@@ -628,19 +628,20 @@ const usePurchaseOrder = (history) => {
     })();
   }, [])
   //barcode changing
-  useEffect(() => {
-    if (id && isNotGetUpdated) {
-      getDetails(id);
-      setIsNotGetUpdated(false);
-    }
-    if (Object.keys(barcodeFilteredItem)?.length && isEditable) {
-      handleSelectOrderItems(barcodeFilteredItem, filteredItemsByBarcode);
-    }
-    return () => {
-      setState({}); // This worked for me
-    };
+  // useEffect(() => {
+    // if(!form.values.search && form.values.searchBy !== 'barcode') return;
+    // if (id && isNotGetUpdated) {
+    //   getDetails(id);
+    //   setIsNotGetUpdated(false);
+    // }
+    // if (Object.keys(barcodeFilteredItem)?.length && isEditable) {
+    //   handleSelectOrderItems(barcodeFilteredItem, filteredItemsByBarcode);
+    // }
+    // return () => {
+    //   setState({}); // This worked for me
+    // };
     // eslint-disable-next-line
-  }, [form.values.barcode]);
+  // }, [form.values.search, form.values.searchBy]);
 
   useEffect(() => {
     let flag = false;
@@ -656,43 +657,43 @@ const usePurchaseOrder = (history) => {
     setDisableDraft(flag);
   }, [purchaseList, purchaseForm]);
 
-  useEffect(() => {
-    if(form.values.barcode){
-      (async () => {
-        setItemLoading(true);
-        const fetch = await genericAxios({
-          url: `${API_PATHS.INVENTORY.GET_ITEMS}/${form.values.barcode}`,
-          method: API_METHODS.GET,
-          headers: {
-            Cookie: '',
-          },
-        });
-        if (fetch.error) return;
-        const item = fetch?.data?.message;
-        form.setValues(state=>({...state,
-          currentStock: item?.itemStockQuantity,
-          stockQuantity: 0,
-          minimumQuantity: item?.minimumStockQuantity,
-          brand: item?.itemBrandName,
-          category: item?.itemCategory,
-          sellingPrice: item?.itemSellingPricePerUnit,
-          mrp: item?.itemMRPperUnit,
-          costPrice: item?.itemCostPricePerUnit,
-          slabPrice: item?.slabPricing,
-          item_id: String(item?._id),
-          unit: item?.quantityUnitName,
-          subCategory: item?.subCategory,
-          flavourOrFeature: item?.flavourOrFeature,
-          saleTime: item?.saleTime,
-          sellingPrice: item?.itemSellingPricePerUnit,
-          returnPolicyAvailable: item?.returnPolicyAvailable,
-          freeItemsAvailable: item?.freeItemsAvailable,
-          returnPolicyRemarks: item?.returnPolicyRemarks,
-        }))
-        setItemLoading(false);
-      })();
-    }
-  }, [form.values.barcode])
+  // useEffect(() => {
+  //   if(form.values.search && form.values.searchBy === 'barcode'){
+  //     (async () => {
+  //       setItemLoading(true);
+  //       const fetch = await genericAxios({
+  //         url: `${API_PATHS.INVENTORY.GET_ITEMS}/${form.values.barcode}`,
+  //         method: API_METHODS.GET,
+  //         headers: {
+  //           Cookie: '',
+  //         },
+  //       });
+  //       if (fetch.error) return;
+  //       const item = fetch?.data?.message;
+  //       form.setValues(state=>({...state,
+  //         currentStock: item?.itemStockQuantity,
+  //         stockQuantity: 0,
+  //         minimumQuantity: item?.minimumStockQuantity,
+  //         brand: item?.itemBrandName,
+  //         category: item?.itemCategory,
+  //         sellingPrice: item?.itemSellingPricePerUnit,
+  //         mrp: item?.itemMRPperUnit,
+  //         costPrice: item?.itemCostPricePerUnit,
+  //         slabPrice: item?.slabPricing,
+  //         item_id: String(item?._id),
+  //         unit: item?.quantityUnitName,
+  //         subCategory: item?.subCategory,
+  //         flavourOrFeature: item?.flavourOrFeature,
+  //         saleTime: item?.saleTime,
+  //         sellingPrice: item?.itemSellingPricePerUnit,
+  //         returnPolicyAvailable: item?.returnPolicyAvailable,
+  //         freeItemsAvailable: item?.freeItemsAvailable,
+  //         returnPolicyRemarks: item?.returnPolicyRemarks,
+  //       }))
+  //       setItemLoading(false);
+  //     })();
+  //   }
+  // }, [form.values.search, form.values.searchBy])
 
   return {
     form,

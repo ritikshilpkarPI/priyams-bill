@@ -324,17 +324,30 @@ const OrderForm = ({
                 ]}
                 {...form.getInputProps('searchBy')}
               />
-              <TextInput
-                // wrapperProps=""
-                label="Search"
-                className="form-input-tops"
-                placeholder="search"
-                onSelect={() => {
-                  func1();
-                  func2();
-                }}
-                {...form.getInputProps('search')}
-            />
+              <div className='item-search-container-box'>
+                  <TextInput
+                    // wrapperProps=""
+                    label="Search"
+                    className="form-input-tops"
+                    placeholder="search"
+                    onSelect={() => {
+                      func1();
+                      func2();
+                    }}
+                    {...form.getInputProps('search')}
+                />
+                <div className="barcode-filter-shift">
+                  {filterItems2.length > 1
+                    ? Boolean(filterItems2.length) &&
+                      openDrawer && (
+                        <ListDropDownItem
+                          itemList={filterItems2}
+                          handleSelectOrderItems2={handleSelectOrderItems}
+                        />
+                      )
+                    : ''}
+                </div>
+              </div>
           </Group>
           <Divider my="xs" label="Add Item Details" labelPosition="center" />
           <Group className="order-flex-class">
@@ -426,17 +439,6 @@ const OrderForm = ({
               {...form.getInputProps('flavourOrFeature')}
             />
           </Group>
-          <div className="barcode-filter-shift">
-            {filterItems2.length > 1
-              ? Boolean(filterItems2.length) &&
-                openDrawer && (
-                  <ListDropDownItem
-                    itemList={filterItems2}
-                    handleSelectOrderItems2={handleSelectOrderItems}
-                  />
-                )
-              : ''}
-          </div>
           {/* {Boolean(filterItems.length) && toggle1 && openDrawer && (
             <ListDropDownItem
               itemList={filterItems}
