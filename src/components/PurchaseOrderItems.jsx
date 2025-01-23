@@ -57,11 +57,13 @@ const PurchaseOrderItems = ({ history }) => {
     disableDraft,
     itemsList,
     setLoading,
-    itemLoading
+    itemLoading,
+    mfgDate,
+    setMfgDate
   } = usePurchaseOrder(history);
-
-  const { filteredItemsByName } = useNameSearchItem(form.values.inputName, itemsList);
-  const { filteredItemsByBarcode } = useBarcodeSearchItems(form.values.barcode, itemsList);
+  const isSearchByBarcode = form.values.searchBy === 'barcode';
+  const { filteredItemsByName } = useNameSearchItem(isSearchByBarcode ? '' : form.values.search, itemsList);
+  const { filteredItemsByBarcode } = useBarcodeSearchItems(isSearchByBarcode ? form.values.search : '', itemsList);
   const locate = useHistory();
   const { id } = useParams();
   return (
@@ -105,6 +107,8 @@ const PurchaseOrderItems = ({ history }) => {
         setSlabs={setSlabs}
         setLoading={setLoading}
         itemLoading={itemLoading}
+        mfgDate={mfgDate}
+        setMfgDate={setMfgDate}
       />
       <EditPurchaseDetail
         openPurchaseDrawer={openPurchaseDrawer}

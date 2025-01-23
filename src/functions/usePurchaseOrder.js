@@ -11,6 +11,7 @@ const usePurchaseOrder = (history) => {
   const [opened, setOpened] = useState(false);
   const [openPurchaseDrawer, setPurchaseDrawer] = useState(false);
   const [date, setDate] = useState('');
+  const [mfgDate, setMfgDate] = useState('');
   const [expiryQuantity, setExpiryQuantity] = useState(0);
   const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -96,6 +97,11 @@ const usePurchaseOrder = (history) => {
       validate: false,
       slabPrice: [],
       item_id: '',
+      searchBy: 'barcode',
+      search: '',
+      category: '',
+      subCategory: '',
+      featureOrFlavour: '',
     },
     validate: {
       itemQuantity: (value) =>
@@ -564,15 +570,17 @@ const usePurchaseOrder = (history) => {
     setSlabs(slabsArrayCopy.map((slab, idx) => [idx, slab[1], slab[2]]));
   };
   const handleExpiryDate = () => {
-    if (!date && expiryQuantity === 0) {
-      return alert('add Date and expiry quantity ');
+    if (!mfgDate && !date && expiryQuantity === 0) {
+      return alert('add Mfg. Dt., Exp. date and expiry quantity ');
     }
     form.insertListItem('expiryDates', {
       date: new Date(date).toLocaleDateString('en-US', options),
       value: expiryQuantity,
+      mfgDate: new Date(mfgDate).toLocaleDateString('en-US', options)
     });
     setDate('');
     setExpiryQuantity(0);
+    setMfgDate('')
   };
   const { barcodeFilteredItem, filteredItemsByBarcode } = useBarcodeSearchItems(
     form.values.barcode,
@@ -702,7 +710,9 @@ const usePurchaseOrder = (history) => {
     disableDraft,
     itemsList,
     setLoading,
-    itemLoading
+    itemLoading,
+    mfgDate,
+    setMfgDate
   };
 };
 
