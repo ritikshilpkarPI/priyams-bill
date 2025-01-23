@@ -1,4 +1,4 @@
-const { getItemNameByItem } = require('src/utils/getItemNameByItem');
+const { getItemNameByItem } = require('../util/getItemNameByItem');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 
 const saveOrder = async (req, res ) => {
