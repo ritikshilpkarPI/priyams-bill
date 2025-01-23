@@ -593,15 +593,15 @@ const usePurchaseOrder = (history) => {
     if (!mfgDate && !date && expiryQuantity === 0) {
       return alert('add Mfg. Dt., Exp. date and expiry quantity ');
     }
-    const newMfgDate = new Date(mfgDate).toLocaleDateString('en-US', options);
-    const newExpiryDate = new Date(date).toLocaleDateString('en-US', options);
-    if(newMfgDate < newExpiryDate) {
+    const newMfgDate = new Date(mfgDate)
+    const newExpiryDate = new Date(date)
+    if(newMfgDate.getTime() < newExpiryDate.getTime()) {
       return alert('Manufacturing date cannot be less than expiry date');
     }
     form.insertListItem('expiryDates', {
-      date: newExpiryDate,
+      date: newExpiryDate.toLocaleDateString('en-US', options),
       value: expiryQuantity,
-      mfgDate: newMfgDate
+      mfgDate: newMfgDate.toLocaleDateString('en-US', options)
     });
     setDate('');
     setExpiryQuantity(0);
