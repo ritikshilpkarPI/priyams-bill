@@ -62,7 +62,7 @@ const PurchaseOrderItems = ({ history }) => {
     setMfgDate
   } = usePurchaseOrder(history);
   const isSearchByBarcode = form.values.searchBy === 'barcode';
-  const { filteredItemsByName } = useNameSearchItem(isSearchByBarcode ? '' : form.values.search, itemsList);
+  const { filteredItemsByName } = useNameSearchItem(!isSearchByBarcode ? form.values.search : '' , itemsList);
   const { filteredItemsByBarcode } = useBarcodeSearchItems(isSearchByBarcode ? form.values.search : '', itemsList);
   const locate = useHistory();
   const { id } = useParams();
@@ -96,10 +96,8 @@ const PurchaseOrderItems = ({ history }) => {
         handleExpiryDate={handleExpiryDate}
         setDate={setDate}
         date={date}
-        filterItems={filteredItemsByName}
-        filterItems2={filteredItemsByBarcode}
-        handleSelectOrderItems={handleSelectOrderItems}
-        handleSelectOrderItems2={handleSelectOrderItems2}
+        filterItems={isSearchByBarcode ? filteredItemsByBarcode : filteredItemsByName}
+        handleSelectOrderItems={isSearchByBarcode ? handleSelectOrderItems : handleSelectOrderItems2}
         slabForm={slabForm}
         addSlabPrice={addSlabPrice}
         deleteSlab={deleteSlab}

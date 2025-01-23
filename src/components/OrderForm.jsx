@@ -42,9 +42,7 @@ const OrderForm = ({
   setDate,
   date,
   filterItems,
-  filterItems2,
   handleSelectOrderItems,
-  handleSelectOrderItems2,
   slabForm,
   addSlabPrice,
   deleteSlab,
@@ -337,11 +335,11 @@ const OrderForm = ({
                     {...form.getInputProps('search')}
                 />
                 <div className="barcode-filter-shift">
-                  {filterItems2.length > 1
-                    ? Boolean(filterItems2.length) &&
+                  {filterItems.length > 1
+                    ? Boolean(filterItems.length) &&
                       openDrawer && (
                         <ListDropDownItem
-                          itemList={filterItems2}
+                          itemList={filterItems}
                           handleSelectOrderItems2={handleSelectOrderItems}
                         />
                       )
