@@ -601,7 +601,7 @@ const usePurchaseOrder = (history) => {
     form.insertListItem('expiryDates', {
       date: newExpiryDate,
       value: expiryQuantity,
-      mfgDate: newExpiryDate
+      mfgDate: newMfgDate
     });
     setDate('');
     setExpiryQuantity(0);
