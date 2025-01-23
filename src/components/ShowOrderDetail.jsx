@@ -4,7 +4,7 @@ import React from 'react';
 const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
   const rows = purchaseList.orders.map((element, index) => (
     <tr
-      className={`${element.validate ? 'validate' : 'not-validate' }${element?.expiryDates?.find(expiryDate => expiryDate?.isShelfExpired ? 'shelf-expired-item-table-row' : '')}`}
+      className={`${element.validate ? 'validate' : 'not-validate' } ${element?.expiryDates?.find(expiryDate => expiryDate?.isShelfExpired) ? 'shelf-expired-item-table-row' : ''}`}
       key={index + 1}
     >
       <td>{element.barcode}</td>
