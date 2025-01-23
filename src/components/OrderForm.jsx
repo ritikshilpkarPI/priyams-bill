@@ -476,10 +476,12 @@ const OrderForm = ({
             />
             <Checkbox
               label="Return Policy Available?"
+              checked={form.values.returnPolicyAvailable}
               {...form.getInputProps('returnPolicyAvailable')}
             />
             <Checkbox
               label="Free Items Available?"
+              checked={form.values.freeItemsAvailable}
               {...form.getInputProps('freeItemsAvailable')}
             />
             {

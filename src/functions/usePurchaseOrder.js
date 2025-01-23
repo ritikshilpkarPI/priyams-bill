@@ -385,6 +385,7 @@ const usePurchaseOrder = (history) => {
       slabPrice: item?.slabPricing,
       item_id: String(item._id),
       unit: item?.quantityUnitName,
+      companyName: item?.companyName
     }));
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
@@ -412,6 +413,7 @@ const usePurchaseOrder = (history) => {
         returnPolicyAvailable: item?.returnPolicyAvailable,
         freeItemsAvailable: item?.freeItemsAvailable,
         returnPolicyRemarks: item?.returnPolicyRemarks,
+        companyName: item?.companyName
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
@@ -525,6 +527,7 @@ const usePurchaseOrder = (history) => {
       returnPolicyAvailable: item?.returnPolicyAvailable,
       freeItemsAvailable: item?.freeItemsAvailable,
       returnPolicyRemarks: item?.returnPolicyRemarks,
+      companyName: item?.companyName
     }));
     setSlabs([...item?.slabPrice]);
     setOpened(true);
@@ -694,6 +697,7 @@ const usePurchaseOrder = (history) => {
           returnPolicyAvailable: item?.returnPolicyAvailable,
           freeItemsAvailable: item?.freeItemsAvailable,
           returnPolicyRemarks: item?.returnPolicyRemarks,
+          companyName: item?.companyName
         }))
         setItemLoading(false);
       })();
