@@ -3,14 +3,14 @@ export const getItemNameByItem = (itemData) => {
       subCategory,
       brand,
       unit,
-      featureOrFlavour,
+      flavourOrFeature,
       stockQuantity,
       mrp,
     } = itemData;
     return `
     ${brand ? `${brand} - ` : ''} ${
       subCategory ? `${subCategory} - ` : ''
-    }${featureOrFlavour ? `${featureOrFlavour} - ` : ''}${stockQuantity || ''}${
+    }${flavourOrFeature ? `${flavourOrFeature} - ` : ''}${stockQuantity || ''}${
       unit ? `${unit} - ` : '-'
     } Rs ${mrp}`;
   };
