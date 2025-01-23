@@ -400,7 +400,7 @@ const OrderForm = ({
               required={form.values.validate}
               className="form-input-tops"
               placeholder="brand name"
-              autoCapitalize
+              autoCapitalize="on"
               height={100}
               limit={100}
               {...form.getInputProps('brand')}
@@ -409,7 +409,7 @@ const OrderForm = ({
               label="Add Category"
               placeholder="Add Category"
               data={Object.keys(categoriesWithSubcategories)}
-              autoCapitalize
+              autoCapitalize="on"
               limit={Infinity}
               maxDropdownHeight={250}
               {...form.getInputProps('category')}
@@ -420,7 +420,7 @@ const OrderForm = ({
               data={categoriesWithSubcategories[form.values.category] || []}
               limit={Infinity}
               maxDropdownHeight={250}
-              autoCapitalize
+              autoCapitalize="on"
               disabled={!form.values.category?.trim()}
               {...form.getInputProps('subCategory')}
             />
@@ -430,7 +430,7 @@ const OrderForm = ({
               required={form.values.validate}
               className="form-input-tops"
               placeholder="Flavour/feature name"
-              autoCapitalize
+              autoCapitalize="on"
               height={100}
               limit={100}
               disabled={!form.values.category?.trim()}
