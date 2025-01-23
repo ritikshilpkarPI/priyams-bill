@@ -22,7 +22,10 @@ const ShowOrderDetail = ({ purchaseList, handleItemEdit, deleteOrder }) => {
             <table key={index}>
               <tbody>
                 <tr>
-                  <td>{String(date.date).slice(0, 10)}</td>
+                  <td>Exp: {String(date.date).slice(0, 10)}</td>
+                </tr>
+                <tr>
+                  <td>Mfg: { date?.mfgDate ? String(date?.mfgDate)?.slice(0, 10) || '' : ''}</td>
                 </tr>
                 <tr>
                   <td>{date.value}</td>

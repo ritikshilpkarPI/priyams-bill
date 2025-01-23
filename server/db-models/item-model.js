@@ -78,6 +78,9 @@ const ItemSchema = new mongoose.Schema(
         },
         mfgDate: {
           type: Date,
+        },
+        isShelfExpired: { 
+          type: Boolean
         }
       },
     ],
