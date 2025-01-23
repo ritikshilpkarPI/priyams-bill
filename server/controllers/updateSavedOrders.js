@@ -7,16 +7,19 @@ const updateSavedOrders = async (req, res, next) => {
     const id = req.params.id;
     const { new_order } = req.body;
     const itemName = getItemNameByItem(new_order);
+    let updatedExpiryDates = new_order.expiryDates;
     if(new_order.expiryDates) {
-      new_order.expiryDates.forEach(expiryDates => {
-        expiryDates.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
-      })
+      updatedExpiryDates = new_order.expiryDates.map(expiryDates => ({
+        ...expiryDates,
+        isShelfExpired: isShelfExpired(expiryDates.mfgDate, expiryDates.date)
+      }))
     }
     const purchaseOrder = await PurchaseOrder.findById(id);
     const updatedOrder = await purchaseOrder.updateOne({
       purchasedItems: [...purchaseOrder.purchasedItems, {
         ...new_order,
         inputName: itemName,
+        expiryDates: updatedExpiryDates
       }],
     });
     res.status(200).send({

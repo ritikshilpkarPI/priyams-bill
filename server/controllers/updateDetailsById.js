@@ -32,13 +32,21 @@ const updateDetailsById = async (req, res,next) => {
     billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
     billPhotos = [...billPhotos, ...uploadedImages];
 
+    let updatedOrders = orders;
     if(orders && orders.length){
-      orders.forEach((order => {
-        order.inputName = getItemNameByItem(order);
+      updatedOrders = orders.map(((order) => {
+        const inputName = getItemNameByItem(order);
+        let expiryDates = order.expiryDates;
         if(order.expiryDates) {
-          order.expiryDates.forEach(expiryDates => {
-            order.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
-          })
+          expiryDates = order.expiryDates.map(expiryDates => ({
+            ...expiryDates,
+            isShelfExpired: isShelfExpired(expiryDates.mfgDate, expiryDates.date)
+          }))
+        }
+        return {
+          ...order,
+          inputName,
+          expiryDates
         }
       }))
     }
