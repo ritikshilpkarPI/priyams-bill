@@ -86,7 +86,7 @@ const ItemSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    returnPolicyRemark: { type: String }, 
+    returnPolicyRemarks: { type: String }, 
     freeItemsAvailable: { type: Boolean, default: false },
   },
   { strict: false, timestamps: true }

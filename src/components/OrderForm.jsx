@@ -487,7 +487,7 @@ const OrderForm = ({
               form.values.returnPolicyAvailable && (<Textarea
                 label="Return Policy Remarks"
                 placeholder="Return Policy Remarks"
-                {...form.getInputProps('returnPolicyRemakrs')}
+                {...form.getInputProps('returnPolicyRemarks')}
               />)
             }
           </Group>

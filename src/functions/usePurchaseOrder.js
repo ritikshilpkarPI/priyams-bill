@@ -379,7 +379,7 @@ const usePurchaseOrder = (history) => {
       sellingPrice: item?.itemSellingPricePerUnit,
       returnPolicyAvailable: item?.returnPolicyAvailable,
       freeItemsAvailable: item?.freeItemsAvailable,
-      returnPolicyRemakrs: item?.returnPolicyRemakrs,
+      returnPolicyRemarks: item?.returnPolicyRemarks,
       mrp: item?.itemMRPperUnit,
       costPrice: item?.itemCostPricePerUnit,
       slabPrice: item?.slabPricing,
@@ -411,7 +411,7 @@ const usePurchaseOrder = (history) => {
         sellingPrice: item?.itemSellingPricePerUnit,
         returnPolicyAvailable: item?.returnPolicyAvailable,
         freeItemsAvailable: item?.freeItemsAvailable,
-        returnPolicyRemakrs: item?.returnPolicyRemakrs,
+        returnPolicyRemarks: item?.returnPolicyRemarks,
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
@@ -524,7 +524,7 @@ const usePurchaseOrder = (history) => {
       sellingPrice: item?.itemSellingPricePerUnit,
       returnPolicyAvailable: item?.returnPolicyAvailable,
       freeItemsAvailable: item?.freeItemsAvailable,
-      returnPolicyRemakrs: item?.returnPolicyRemakrs,
+      returnPolicyRemarks: item?.returnPolicyRemarks,
     }));
     setSlabs([...item?.slabPrice]);
     setOpened(true);
@@ -687,7 +687,7 @@ const usePurchaseOrder = (history) => {
           sellingPrice: item?.itemSellingPricePerUnit,
           returnPolicyAvailable: item?.returnPolicyAvailable,
           freeItemsAvailable: item?.freeItemsAvailable,
-          returnPolicyRemakrs: item?.returnPolicyRemakrs,
+          returnPolicyRemarks: item?.returnPolicyRemarks,
         }))
         setItemLoading(false);
       })();
