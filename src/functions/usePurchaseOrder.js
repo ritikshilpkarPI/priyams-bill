@@ -595,8 +595,8 @@ const usePurchaseOrder = (history) => {
     }
     const newMfgDate = new Date(mfgDate)
     const newExpiryDate = new Date(date)
-    if(newMfgDate.getTime() < newExpiryDate.getTime()) {
-      return alert('Manufacturing date cannot be less than expiry date');
+    if(newMfgDate.getTime() > newExpiryDate.getTime()) {
+      return alert('Manufacturing date cannot be more than expiry date');
     }
     form.insertListItem('expiryDates', {
       date: newExpiryDate.toLocaleDateString('en-US', options),
