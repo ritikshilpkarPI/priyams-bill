@@ -373,7 +373,13 @@ const usePurchaseOrder = (history) => {
       minimumQuantity: item?.minimumStockQuantity,
       brand: item?.itemBrandName,
       category: item?.itemCategory,
+      subCategory: item?.subCategory,
+      flavourOrFeature: item?.flavourOrFeature,
+      saleTime: item?.saleTime,
       sellingPrice: item?.itemSellingPricePerUnit,
+      returnPolicyAvailable: item?.returnPolicyAvailable,
+      freeItemsAvailable: item?.freeItemsAvailable,
+      returnPolicyRemakrs: item?.returnPolicyRemakrs,
       mrp: item?.itemMRPperUnit,
       costPrice: item?.itemCostPricePerUnit,
       slabPrice: item?.slabPricing,
@@ -399,6 +405,13 @@ const usePurchaseOrder = (history) => {
         slabPrice: item?.slabPricing,
         item_id: String(item?._id),
         unit: item?.quantityUnitName,
+        subCategory: item?.subCategory,
+        flavourOrFeature: item?.flavourOrFeature,
+        saleTime: item?.saleTime,
+        sellingPrice: item?.itemSellingPricePerUnit,
+        returnPolicyAvailable: item?.returnPolicyAvailable,
+        freeItemsAvailable: item?.freeItemsAvailable,
+        returnPolicyRemakrs: item?.returnPolicyRemakrs,
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
@@ -505,6 +518,13 @@ const usePurchaseOrder = (history) => {
       item_id: item?.item_id,
       brand: item?.brand,
       category: item?.category,
+      subCategory: item?.subCategory,
+      flavourOrFeature: item?.flavourOrFeature,
+      saleTime: item?.saleTime,
+      sellingPrice: item?.itemSellingPricePerUnit,
+      returnPolicyAvailable: item?.returnPolicyAvailable,
+      freeItemsAvailable: item?.freeItemsAvailable,
+      returnPolicyRemakrs: item?.returnPolicyRemakrs,
     }));
     setSlabs([...item?.slabPrice]);
     setOpened(true);
@@ -661,6 +681,13 @@ const usePurchaseOrder = (history) => {
           slabPrice: item?.slabPricing,
           item_id: String(item?._id),
           unit: item?.quantityUnitName,
+          subCategory: item?.subCategory,
+          flavourOrFeature: item?.flavourOrFeature,
+          saleTime: item?.saleTime,
+          sellingPrice: item?.itemSellingPricePerUnit,
+          returnPolicyAvailable: item?.returnPolicyAvailable,
+          freeItemsAvailable: item?.freeItemsAvailable,
+          returnPolicyRemakrs: item?.returnPolicyRemakrs,
         }))
         setItemLoading(false);
       })();

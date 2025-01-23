@@ -1,10 +1,15 @@
+const { getItemNameByItem } = require('src/utils/getItemNameByItem');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 
 const saveOrder = async (req, res ) => {
   try {
-    const { new_order } = req.body;
+    const { new_order = {} } = req.body;
+    const itemName = getItemNameByItem(new_order);
     const purchaseOrder = await PurchaseOrder.create({
-      purchasedItems: [new_order],
+      purchasedItems: [{
+        ...new_order,
+        inputName: itemName,
+      }],
     });
     res.status(201).send({
       message: 'order added successfully',

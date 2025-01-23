@@ -25,6 +25,7 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from "../utils/constants/apiPaths"
 import { DatePicker } from '@mantine/dates';
 import { isShelfExpired } from 'src/utils/isShelfExpired';
+import { getItemNameByItem } from 'src/utils/getItemNameByItem';
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -284,14 +285,7 @@ const OrderForm = ({
     ]
   };
 
-  const { companyName, category, subCategory, brand, unit, featureOrFlavour, stockQuantity, mrp } = form.values;
-  const itemName = `
-  ${companyName ? `${companyName} - ` : ''}
-  ${brand ? `${brand} - ` : ''}${category ? `${category} - ` : ''} ${
-    subCategory ? `${subCategory} - ` : ''
-  }${featureOrFlavour ? `${featureOrFlavour} - ` : ''}${stockQuantity || ''}${
-    unit ? `${unit} - ` : '-'
-  }${mrp}`;
+  const itemName = getItemNameByItem(form.values);
 
   return (
     <Drawer
