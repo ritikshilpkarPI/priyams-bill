@@ -7,7 +7,7 @@ const saveOrder = async (req, res ) => {
     const { new_order = {} } = req.body;
     const itemName = getItemNameByItem(new_order);
     new_order.expiryDates.forEach(expiryDates => {
-      expiryDates.isShelfExpired = isShelfExpired(expiryDates?.mfgDate, expiryDates?.date);
+      expiryDates.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
     })
     const purchaseOrder = await PurchaseOrder.create({
       purchasedItems: [{
