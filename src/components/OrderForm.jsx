@@ -23,7 +23,6 @@ import MyDatePicker from './DatePicker';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from "../utils/constants/apiPaths"
-import { DatePicker } from '@mantine/dates';
 import { isShelfExpired } from 'src/utils/isShelfExpired';
 import { getItemNameByItem } from 'src/utils/getItemNameByItem';
 const OrderForm = ({
@@ -581,20 +580,23 @@ const OrderForm = ({
               }}
               style={{ width: '140px' }}
             /> */}
-            <DatePicker
+            <MyDatePicker
               className="useby-date-picker"
               placeholder="Pick Mfg. Dt."
               label="MFG.  date"
-              inputFormat="MM/DD/YYYY"
               required={form.values.validate}
               withAsterisk={form.values.validate}
+              inputFormat="MM/DD/YYYY"
               onChange={(day) => {
                 let s = String(new Date(day).toLocaleDateString('en-US'));
                 setMfgDate(s);
               }}
               value={mfgDate}
+              date={mfgDate}
+              style={{ width: '140px' }}
+              setDate={setMfgDate}
             />
-            <DatePicker
+            <MyDatePicker
               className="useby-date-picker"
               placeholder="Pick date"
               label="Exp. Dt."
