@@ -49,7 +49,13 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
 
     const itemMap = {};
     purchaseOrder.purchasedItems.forEach((item) => {
-      itemMap[item.item_id.toString()] = item.inputName;
+      if (item && item.item_id) {
+        const itemId = item.item_id.toString(); 
+        itemMap[itemId] = {
+          inputName: item.inputName || "",
+          mrp: item.mrp || 0,
+        };
+      }
     });
 
     const itemIds = Object.keys(itemMap);
@@ -76,11 +82,16 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
     itemBills.forEach((bill) => {
       bill.items.forEach((item) => {
         const itemId = item.itemDetail.toString();
-        const itemName = itemMap[itemId];
+        const itemData = itemMap[itemId];
+
+        if (!itemData) {
+          return;
+        }
+
+        const itemName = itemData.inputName;
         const billDate = new Date(bill.createdAt);
         const formattedBillDate = convertDateToIST(billDate);
         const groupKey = groupByTimePeriod(formattedBillDate, timePeriod);
-
         if (itemName && groupKey) {
           if (!groupedData[itemName]) {
             groupedData[itemName] = {};
@@ -102,7 +113,11 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
     billsAfterPOApproval.forEach((bill) => {
       bill.items.forEach((item) => {
         const itemId = item.itemDetail.toString();
-        const itemName = itemMap[itemId];
+        const itemData = itemMap[itemId];
+        if (!itemData) {
+          return;
+        }
+        const itemName = itemData.inputName;
         if (itemName) {
           totalItemQuantity[itemName] =
             (totalItemQuantity[itemName] || 0) + item.itemQuantityInBill;
@@ -115,7 +130,13 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
 
     const flattenedLastPurchaseOrders = lastPurchaseOrdersMap.flat();
     const responseData = itemIds.map((itemId) => {
-      const itemName = itemMap[itemId];
+      const itemData = itemMap[itemId];
+        if (!itemData) {
+          return;
+        }
+
+      const itemName = itemData.inputName;
+      const itemMRP = itemData.mrp; 
 
       const ordersForItem = flattenedLastPurchaseOrders.filter(
         (order) => order.item_id === itemId
@@ -144,6 +165,7 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
       return {
         itemName,
         itemId,
+        itemMRP,
         soldAfterApproval: totalItemQuantity[itemName] || 0,
         totalItemsSoldInInterval,
         soldItemsByDate: groupedArray,
