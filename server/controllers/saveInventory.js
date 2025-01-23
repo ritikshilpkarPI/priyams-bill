@@ -19,6 +19,18 @@ const saveInventory = async (req, res, next) => {
         itemPerUnitQuantity: Number(item.itemQuantity) || 0,
         itemBrandName: item.brand,
         itemCategory: item.category,
+        companyName: item.companyName,
+        subCategory: item.subCategory,
+        featureOrFlavour: item.featureOrFlavour,
+        itemShelfDate: {
+          expiryDates: item.expiryDates,
+          manufacturingDates: item.manufacturingDates,
+        },
+        shelfLife: item.shelfLife,
+        saleTime: item.saleTime,
+        returnPolicyAvailable: item.returnPolicyAvailable,
+        returnPolicyRemark: item.returnPolicyRemark,
+        freeItemAvailable: item.freeItemAvailable,
       };
 
       let oldItem;
