@@ -60,10 +60,44 @@ const ItemSchema = new mongoose.Schema(
     itemPerUnitQuantity: { type: Number, default: 0 },
     images: [
       {
-        public_id: { type: String, required: true, unique: true },
-        secure_url: { type: String, required: true, unique: true }
+        public_id: { type: String, required: true },
+        secure_url: { type: String, required: true }
       },
-    ]
+    ],
+    companyName: { type: String, trim: true },
+    subCategory: { type: String },
+    featureOrFlavour: { type: String, trim: true }, 
+    shelfLife: { type: String }, 
+    itemShelfDate: {
+       expiryDates: [
+        {
+          date: {
+            type: Date,
+          },
+          value: {
+            type: Number,
+          },
+        },
+      ],
+      manufacturingDates: [
+        {
+          date: {
+            type: Date,
+          },
+          value: {
+            type: Number,
+          },
+        }
+      ],
+
+    },
+    saleTime: { type: String }, 
+    returnPolicyAvailable: {
+      type: Boolean,
+      default: false,
+    },
+    returnPolicyRemark: { type: String }, 
+    freeItemAvailable: { type: Boolean, default: false },
   },
   { strict: false, timestamps: true }
 );
