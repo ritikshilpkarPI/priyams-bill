@@ -701,8 +701,8 @@ const OrderForm = ({
             placeholder="current stock quantity"
             {...form.getInputProps('stockQuantity')}
           />
-          <Divider my="xs" label="Slab Details" labelPosition="center" />
-          <Group className="order-flex-class">
+          {/* <Divider my="xs" label="Slab Details" labelPosition="center" /> */}
+          {/* <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
               style={{ width: '15vmin' }}
@@ -728,8 +728,8 @@ const OrderForm = ({
             >
               +
             </Button>
-          </Group>
-          <ShowSlabPricing deleteSlab={deleteSlab} slabs={slabs} />
+          </Group> */}
+          {/* <ShowSlabPricing deleteSlab={deleteSlab} slabs={slabs} /> */}
           <Textarea
             label="Remarks"
             placeholder="remark"
