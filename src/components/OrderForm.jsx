@@ -646,7 +646,7 @@ const OrderForm = ({
                 );
               })
             : ''}
-          <Divider my="xs" label="Stock Details" labelPosition="center" />
+          {/* <Divider my="xs" label="Stock Details" labelPosition="center" />
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
@@ -663,7 +663,7 @@ const OrderForm = ({
               disabled
               {...form.getInputProps('currentStock')}
             />
-          </Group>
+          </Group> */}
           <Divider my="xs" label="Price Details" labelPosition="center" />
           <Group className="order-flex-class">
             <NumberInput
