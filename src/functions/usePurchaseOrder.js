@@ -652,7 +652,7 @@ const usePurchaseOrder = (history) => {
       setState({}); // This worked for me
     };
     // eslint-disable-next-line
-  }, [form.values.search, form.values.searchBy]);
+  }, [form.values.search]);
 
   useEffect(() => {
     let flag = false;
@@ -706,7 +706,7 @@ const usePurchaseOrder = (history) => {
         setItemLoading(false);
       })();
     }
-  }, [form.values.search, form.values.searchBy])
+  }, [form.values.search])
 
   return {
     form,

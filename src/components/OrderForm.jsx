@@ -48,7 +48,8 @@ const OrderForm = ({
   slabs,
   setSlabs,
   setLoading,
-  itemLoading
+  itemLoading,
+  isSearchByBarcode
 }) => {
   const [imageList, setImageList] = useState([])
   const [selectedImage, setSelectedImage] = useState('')
@@ -334,7 +335,7 @@ const OrderForm = ({
                     {...form.getInputProps('search')}
                 />
                 <div className="barcode-filter-shift">
-                  {filterItems.length > 1
+                  {(isSearchByBarcode ? filterItems.length > 1 : filterItems.length > 0)
                     ? Boolean(filterItems.length) &&
                       openDrawer && (
                         <ListDropDownItem
