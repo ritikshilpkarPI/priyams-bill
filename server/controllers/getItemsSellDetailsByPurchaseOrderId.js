@@ -124,7 +124,9 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
       const lastPurchaseOrders = ordersForItem.flatMap((order) =>
         ['first', 'second', 'third'].map((seq, index) => ({
           orderSequence: `${['First', 'Second', 'Third'][index]}`,
-          approvalDate: order[`${seq}PurchaseOrder`].approvalDate,
+          approvalDate: order[`${seq}PurchaseOrder`].approvalDate
+          ? new Date(order[`${seq}PurchaseOrder`].approvalDate).toISOString().slice(0, 10)
+          : null,
           amount: order[`${seq}PurchaseOrder`].amount,
           costPrice: order[`${seq}PurchaseOrder`].costPrice,
         }))
