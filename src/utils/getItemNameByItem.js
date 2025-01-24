@@ -2,6 +2,7 @@ export const getItemNameByItem = (itemData) => {
   const {
     brand,
     unit,
+    subCategory,
     flavourOrFeature,
     itemQuantity,
     mrp,
