@@ -3,7 +3,6 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
-const serverless = require('serverless-http');
 const routers = require('./routes');
 const fileUpload = require('express-fileupload');
 const handleErrors = require('./middleware/handleError');
@@ -29,6 +28,9 @@ app.use(
   })
 );
 app.use('/.netlify/functions/app', routers);
+app.get('/.netlify/functions/app/server', (req, res) => {
+  res.status(200).json({ success: true })
+})
 
 const mongoUriEnvMap = {
   staging: process.env.STAGING_DB,
@@ -52,4 +54,4 @@ dbAppConnection();
 
 app.use(handleErrors);
 
-module.exports.handler = serverless(app);
+module.exports = { app };
