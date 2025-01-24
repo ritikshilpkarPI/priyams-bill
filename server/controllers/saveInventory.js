@@ -21,7 +21,7 @@ const saveInventory = async (req, res, next) => {
         itemCategory: item.category,
         companyName: item.companyName,
         subCategory: item.subCategory,
-        featureOrFlavour: item.featureOrFlavour,
+        flavourOrFeature: item.flavourOrFeature,
         itemShelfDate: {
           expiryDates: item.expiryDates,
           manufacturingDates: item.manufacturingDates,

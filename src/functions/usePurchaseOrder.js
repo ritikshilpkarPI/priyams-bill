@@ -385,6 +385,8 @@ const usePurchaseOrder = (history) => {
       slabPrice: item?.slabPricing,
       item_id: String(item._id),
       unit: item?.quantityUnitName,
+      companyName: item?.companyName,
+      itemQuantity: item?.itemPerUnitQuantity,
     }));
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
@@ -412,6 +414,8 @@ const usePurchaseOrder = (history) => {
         returnPolicyAvailable: item?.returnPolicyAvailable,
         freeItemsAvailable: item?.freeItemsAvailable,
         returnPolicyRemarks: item?.returnPolicyRemarks,
+        companyName: item?.companyName,
+        itemQuantity: item?.itemPerUnitQuantity,
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
@@ -507,7 +511,7 @@ const usePurchaseOrder = (history) => {
       stockQuantity: item?.stockQuantity,
       currentStock: item?.currentStock,
       minimumQuantity: item?.minimumQuantity,
-      itemQuantity: item?.itemQuantity,
+      itemQuantity: item?.itemPerUnitQuantity,
       unit: item?.unit,
       itemRemark: item?.itemRemark,
       sellingPrice: item?.sellingPrice,
@@ -525,6 +529,8 @@ const usePurchaseOrder = (history) => {
       returnPolicyAvailable: item?.returnPolicyAvailable,
       freeItemsAvailable: item?.freeItemsAvailable,
       returnPolicyRemarks: item?.returnPolicyRemarks,
+      companyName: item?.companyName,
+      itemQuantity: item?.itemPerUnitQuantity,
     }));
     setSlabs([...item?.slabPrice]);
     setOpened(true);
@@ -593,10 +599,15 @@ const usePurchaseOrder = (history) => {
     if (!mfgDate && !date && expiryQuantity === 0) {
       return alert('add Mfg. Dt., Exp. date and expiry quantity ');
     }
+    const newMfgDate = new Date(mfgDate)
+    const newExpiryDate = new Date(date)
+    if(newMfgDate.getTime() > newExpiryDate.getTime()) {
+      return alert('Manufacturing date cannot be more than expiry date');
+    }
     form.insertListItem('expiryDates', {
-      date: new Date(date).toLocaleDateString('en-US', options),
+      date: newExpiryDate.toLocaleDateString('en-US', options),
       value: expiryQuantity,
-      mfgDate: new Date(mfgDate).toLocaleDateString('en-US', options)
+      mfgDate: newMfgDate.toLocaleDateString('en-US', options)
     });
     setDate('');
     setExpiryQuantity(0);
@@ -641,7 +652,7 @@ const usePurchaseOrder = (history) => {
       setState({}); // This worked for me
     };
     // eslint-disable-next-line
-  }, [form.values.search, form.values.searchBy]);
+  }, [form.values.search]);
 
   useEffect(() => {
     let flag = false;
@@ -689,11 +700,13 @@ const usePurchaseOrder = (history) => {
           returnPolicyAvailable: item?.returnPolicyAvailable,
           freeItemsAvailable: item?.freeItemsAvailable,
           returnPolicyRemarks: item?.returnPolicyRemarks,
+          companyName: item?.companyName,
+          itemQuantity: item?.itemPerUnitQuantity,
         }))
         setItemLoading(false);
       })();
     }
-  }, [form.values.search, form.values.searchBy])
+  }, [form.values.search])
 
   return {
     form,

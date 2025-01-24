@@ -107,6 +107,7 @@ const PurchaseOrderItems = ({ history }) => {
         itemLoading={itemLoading}
         mfgDate={mfgDate}
         setMfgDate={setMfgDate}
+        isSearchByBarcode={isSearchByBarcode}
       />
       <EditPurchaseDetail
         openPurchaseDrawer={openPurchaseDrawer}
