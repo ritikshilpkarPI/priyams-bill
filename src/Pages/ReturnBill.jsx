@@ -1,10 +1,10 @@
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
 import { useContext, useEffect, useRef, useState } from 'react';
-import BillNarrator from 'src/components/BillNarrator';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { AppStateContext } from 'src/AppState/appState.context';
+import BillNarrator from '../components/BillNarrator';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { AppStateContext } from '../AppState/appState.context';
 import Barcode from 'react-jsbarcode';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';

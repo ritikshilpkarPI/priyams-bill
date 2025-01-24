@@ -60,6 +60,7 @@ function App({ history, location }) {
   } = AppFunction(history, location);
 
   const devBg = process.env.NODE_ENV !== 'production' ? 'indianred' : 'none';
+  console.log("Test Prod")
 
   return (
     <div className="App" style={{ backgroundColor: devBg }}>

@@ -1,21 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
-import OrderCard from 'src/components/OrderCard';
-import OrderStatus from 'src/components/OrderStatus';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { orderMapper } from 'src/utils/orderMapper';
+import OrderCard from '../components/OrderCard';
+import OrderStatus from '../components/OrderStatus';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { orderMapper } from '../utils/orderMapper';
 import '../CSS/_orders.scss';
 import { Loader, Modal, Button } from '@mantine/core';
 import { ORDER_CARDS } from '../utils/constants/orders';
 
-import { useBeep } from 'src/utils/beep';
-import { subscribeToPushNotification } from 'src/utils/subscribeToPushNotification';
+import { useBeep } from '../utils/beep';
+import { subscribeToPushNotification } from '../utils/subscribeToPushNotification';
 
 function Orders() {
   const [userOrders, setUserOrders] = useState([]);
   const [loader, setLoader] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [riders, setRiders] = useState([]);
 
   const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
 
@@ -57,6 +58,20 @@ function Orders() {
     }
     setLoader(false);
   };
+  const getRiders = async () => {
+    setLoader(true);
+    try {
+      const response = await genericAxios({
+        url: API_PATHS.RIDER.GET_ALL_RIDERS,
+        method: API_METHODS.POST,
+      });      
+      setRiders(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }finally{
+       loader && setLoader(false);
+    }
+  };
 
   const updateOrderStatus = async (orderStatusStep, id, buttonStatus) => {
     try {
@@ -84,8 +99,53 @@ function Orders() {
     getUserOrders();
     
     subscribeToPushNotification();
+    getRiders();
   }, []);
-
+  const handleOnExpelRider= async({riderId, orderId})=>{
+    try {
+      if (window.confirm(`Do you want to remove rider`)) {
+        setLoader(true);
+        await genericAxios({
+          url: API_PATHS.ORDERS.EXPEL_ORDER_TO_RIDER,
+          method: API_METHODS.POST,
+          data: {
+            riderId,
+            orderId
+          },
+          headers: {
+            Cookie: '',
+          },
+        });
+       getUserOrders();
+      }
+    } catch (error) {
+      console.error(error);
+      window.alert("Unable to remove rider, please try again later")
+    }finally{
+      loader && setLoader(false);
+    }
+  }
+  const handleOnAssignOrder = async ({riderId, orderId,riderName})=>{
+    try {      
+      if (window.confirm(`Do you want to assign order to ${riderName}`)) {
+        setLoader(true);
+        await genericAxios({
+          url: API_PATHS.ORDERS.ASSIGN_ORDER_TO_RIDER,
+          method: API_METHODS.POST,
+          data: {
+            riderId,
+            orderId
+          },
+        });
+       getUserOrders();
+      }
+    } catch (error) {
+      console.error(error);
+      window.alert("Unable to assign order to rider, please try again later")
+    }finally{
+      loader && setLoader(false);
+    }
+  }
   return (
     <div className="order-card-page-container">
       <Modal
@@ -129,6 +189,9 @@ function Orders() {
                             buttonStatus={card.button}
                             updateOrderStatus={updateOrderStatus}
                             getUserOrders={getUserOrders}
+                            handleOnExpelRider={handleOnExpelRider}
+                            riders={riders}
+                            handleOnAssignOrder={handleOnAssignOrder}
                           />
                         </div>
                       );

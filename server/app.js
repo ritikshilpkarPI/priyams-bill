@@ -13,8 +13,10 @@ const app = express();
 
 app.use(express.json({ limit: '500mb' }));
 app.use(cookieParser());
+
 app.use(
   cors({
+    origin: process.env.CORS_ORIGINS?.split(","),
     credentials: true,
   })
 );

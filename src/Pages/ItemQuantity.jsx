@@ -1,9 +1,9 @@
-import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_PATHS } from '../utils/constants/apiPaths';
 import '../CSS/_itemQuantity.scss';
 import { useEffect, useState } from 'react';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { TableComponent } from 'src/components/TableComponent';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { TableComponent } from '../components/TableComponent';
 import { Loader } from '@mantine/core';
 export const ItemQuantity = () => {
   const [data, setData] = useState([]);
