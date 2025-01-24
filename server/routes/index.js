@@ -85,6 +85,8 @@ const {
   getCancellationOrders,
   expelOrderToRider,
   createRzpQRByAmount,
+  assignOrderToRider,
+  getItemsSellDetailsByPurchaseOrderId
 } = require('../controllers/index');
 
 
@@ -327,6 +329,10 @@ router.post(
 router.post('/api/rider/approveRider/:id' ,isLoggedIn,
   isAdmin,
   isLoggedIn, approveRider)
+router.post(
+    `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD}/:id`,
+    getItemsSellDetailsByPurchaseOrderId
+  );
 
 router.post(
   '/api/riders',

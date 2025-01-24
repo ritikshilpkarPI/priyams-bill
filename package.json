@@ -52,6 +52,7 @@
     "express-validator": "^6.13.0",
     "fs": "0.0.1-security",
     "isomorphic-fetch": "^2.2.1",
+    "joi": "^17.13.3",
     "js-cookie": "^3.0.1",
     "json2csv": "^5.0.7",
     "jsonwebtoken": "^8.5.1",
