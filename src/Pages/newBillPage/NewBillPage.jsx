@@ -171,10 +171,8 @@ const NewBillPage = () => {
 
     try {
       const addBillResponse = await saveOrCacheBillAPI({
-        data: {
           ...billObject,
           billID: bill.billId
-        }
       });
       if (addBillResponse.isError) {
         setApiLoading(false);
