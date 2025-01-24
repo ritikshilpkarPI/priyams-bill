@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Button, Loader, Table, Text, Collapse } from '@mantine/core';
 import { useHistory } from 'react-router-dom';
-import ProtectedComponent from 'src/components/ProtectedComponent';
+import ProtectedComponent from '../components/ProtectedComponent';
 import access from '../access';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 
 const BillFeed = ({ fromDayWise = false, bills = [] }) => {
   const [allBills, setAllBills] = useState([]);

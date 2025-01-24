@@ -28,6 +28,8 @@ const BillSchema = new mongoose.Schema(
     ],
     cashPay: { type: Number },
     upiPay: { type: Number },
+    isUpiAmtPaid: { type: Boolean },
+    rzpPaymentId: { type: String }, 
     amountReturn: { type: Number },
     createdAt: { type: Date, default: Date.now },
     updated: { type: Array, default: Date.now },

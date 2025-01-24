@@ -1,6 +1,6 @@
 import { Grid } from '@mantine/core';
 import React from 'react';
-import ExpiredItemTable from 'src/components/ExpiredItemTable';
+import ExpiredItemTable from '../components/ExpiredItemTable';
 
 const ExpiredItems = () => {
   const dateIntervalArr = [1, 7, 15, 30];

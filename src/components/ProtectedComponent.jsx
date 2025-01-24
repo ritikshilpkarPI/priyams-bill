@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { parseJwt } from "src/utils/cookie";
+import { parseJwt } from "../utils/cookie";
 
 const ProtectedComponent = ({ children, role, data }) => {
   const { role: userRole = '' } =  parseJwt(Cookies.get('token'))

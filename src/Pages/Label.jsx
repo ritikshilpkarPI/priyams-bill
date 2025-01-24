@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Loader, Button, Input, Checkbox } from '@mantine/core';
 import { CloseButton } from '@mantine/core';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 
 const Label = () => {
   const [value, setValue] = useState('');

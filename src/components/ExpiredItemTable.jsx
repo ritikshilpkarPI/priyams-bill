@@ -1,9 +1,9 @@
 import { Button, Loader, Table, Card, Title, Text } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import React, { useState, useEffect } from 'react';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { genericAxios } from '../utils/genericAxiosMethod';
 
 const addDays = (date, days) => {
   let dayToIncr = {
@@ -26,8 +26,8 @@ const getExpiredItemsData = async (startDate, endDate) => {
       url: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
       method: API_METHODS.POST,
       data: {
-        startDate: startDate.toLocaleDateString(),
-        endDate: endDate.toLocaleDateString(),
+        startDate: startDate.toLocaleDateString("en-GB"),
+        endDate: endDate.toLocaleDateString("en-GB"),
       },
     });
     if(response.error)return

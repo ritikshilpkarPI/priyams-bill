@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { orderMapper } from 'src/utils/orderMapper';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { orderMapper } from '../utils/orderMapper';
 import { Button, Loader, Table, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import OrderDetail from 'src/components/OrderDetail';
+import OrderDetail from '../components/OrderDetail';
 import '../CSS/orderStatusDetail.scss';
-import { ORDER_CARDS } from 'src/utils/constants/orders';
+import { ORDER_CARDS } from '../utils/constants/orders';
 
 function OrderStatusDetail() {
   const { orderStatus } = useParams();

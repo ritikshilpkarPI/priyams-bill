@@ -1,10 +1,11 @@
 import { Button, Card, Checkbox, Drawer, Group, Loader, Modal, Table, Text, TextInput, Title } from '@mantine/core';
 import React, { useEffect, useRef, useState } from 'react';
 import '../CSS/_orderDetail.scss';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-// import { useBeep } from 'src/utils/beep';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import AssignOrderToRider from './AssignOrderRider/AssignOrderToRider';
+// import { useBeep } from '../utils/beep';
 
 function OrderDetail({
   order,
@@ -12,8 +13,11 @@ function OrderDetail({
   close,
   buttonStatus,
   updateOrderStatus,
-  getUserOrders
-}) {
+  getUserOrders,
+  handleOnExpelRider,
+  riders,
+  handleOnAssignOrder
+}) {  
   const {
     contactNumber,
     shippingAddress,
@@ -181,6 +185,11 @@ const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
       </td>
     </tr>)
   });
+  const handleOnExpelRiderClick = async()=>{
+    const riderId =order.riderId;
+    const orderId=order._id
+    handleOnExpelRider({ riderId,orderId })
+  }
 
   // const { beep, stopBeep } = useBeep(`${process.env.ORDER_NOTIFICATION_SOUND || process.env.REACT_APP_ORDER_NOTIFICATION_SOUND}` );
   // const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -329,6 +338,30 @@ const [updatedTotalQuantity, setUpdatedTotalQuantity] = useState(0);
             <Title order={5}>Order Quantity:</Title>
             <Text>{updatedTotalQuantity}</Text>
           </Group>
+        </Card>
+        <Card>
+          <Title className="purchase-order-title" order={4}>
+            Rider Details
+           </Title>
+           <div className='rider-details-container-wrapper'>
+            { order?.rider &&<div className='rider-details-container'>
+              {order?.rider?.name && <Group className="order-card">
+                <Title order={5}>Name:</Title>
+                <Text >{ order?.rider?.name }</Text>
+              </Group>}
+              {
+                order?.rider?.phone && <Group >
+                <Title  order={5}>Phone:</Title>
+                <Text>{ order?.rider?.phone }</Text>
+              </Group>}
+            </div>}
+            {!order?.rider && <AssignOrderToRider
+              order={order}
+              riders={riders}
+              onAssignRider={handleOnAssignOrder}
+           />}
+            {order?.rider && <div className="expel-order-button" onClick={ handleOnExpelRiderClick }>Remove Rider</div>}
+           </div>
         </Card>
         <Card>
           <Title className="purchase-order-title" order={4}>

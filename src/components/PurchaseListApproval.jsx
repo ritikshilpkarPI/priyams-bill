@@ -2,10 +2,10 @@ import { Button } from '@mantine/core';
 import Cookies from 'js-cookie';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { parseJwt } from 'src/utils/cookie';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_METHODS } from '../utils/constants/apiMethods';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { parseJwt } from '../utils/cookie';
+import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
 const PurchaseListApproval = ({
   list,
@@ -13,11 +13,13 @@ const PurchaseListApproval = ({
   allPurchaseList,
   setIndexDetail,
   getOrders,
+  setLoading
+
 }) => {
   const rejectOrder = async (id, index) => {
-    const ans = window.confirm('Are you sure you want to reject this order?');
-    if (!ans) return;
+    if (window.confirm('Are you sure you want to reject this order?')) {
     try {
+      setLoading(true)
       await genericAxios({
         method: API_METHODS.POST,
         url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
@@ -29,12 +31,15 @@ const PurchaseListApproval = ({
       getOrders('rejected');
     } catch (err) {
       window.alert('Something went wrong,unable to reject order');
+    }finally{
+      setLoading(false);
+    }
     }
   };
   const approveOrder = async (id, index, list) => {
-    const ans = window.confirm('Are you sure you want to approve this order?');
-    if (!ans) return;
+    if (window.confirm('Are you sure you want to approve this order?')){
     try {
+      setLoading(true);
       await genericAxios({
         url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
         method: API_METHODS.POST,
@@ -50,18 +55,18 @@ const PurchaseListApproval = ({
         },
       });
       window.alert('Order approved successfully');
-      // getOrders('approved');
+      await getOrders('draft');
     } catch (err) {
       console.log(err);
       window.alert('Something went wrong,unable to approve order');
+    }finally{
+      setLoading(false);
+    }
     }
   };
 
-  const draftOrder = (id, index) => {
-    const ans = window.confirm('Do you want to draft this order ?');
-    if (!ans) {
-      return;
-    }
+  const draftOrder = async(id, index) => {
+    if (window.confirm('Do you want to draft this order ?')) {
     const order = allPurchaseList[index];
     let validate = true;
     let once = true;
@@ -82,11 +87,13 @@ const PurchaseListApproval = ({
     if (!validate) {
       return;
     }
-    saveDraft(id, index);
+    await saveDraft(id, index);
     getOrders('draft');
+  }
   };
   const saveDraft = async (id, index) => {
     try {
+      setLoading(true);
       await genericAxios({
         method: API_METHODS.POST,
         url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
@@ -96,6 +103,8 @@ const PurchaseListApproval = ({
     } catch (err) {
       console.log(err);
       alert(`Something went wrong.Unable to draft the order`);
+    }finally{
+      setLoading(false);
     }
   };
   const time = new Date(list.createdAt);

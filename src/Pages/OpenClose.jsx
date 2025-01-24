@@ -10,12 +10,12 @@ import {
 import { useEffect, useState, useContext } from 'react';
 import { AppStateContext } from '../AppState/appState.context';
 import AddExpense from '../components/AddExpense';
-import ProtectedComponent from 'src/components/ProtectedComponent';
+import ProtectedComponent from '../components/ProtectedComponent';
 import access from '../access';
 // import EmployeeAttendance from '../components/EmployeeAttendance';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 const INITIAL_VALS = {
   twoThousand: 0,
   fiveHundred: 0,
