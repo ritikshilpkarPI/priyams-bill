@@ -180,6 +180,7 @@ const NewBillPage = () => {
       }
       setBillBarcode(addBillResponse.billBarcode);
       localStorage.removeItem(`newBill-${newBillId}`);
+      setBill(getBillInitialState());
     } catch (error) {
       throw console.error({ error });
     }
