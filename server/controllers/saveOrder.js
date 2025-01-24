@@ -1,10 +1,21 @@
+const { getItemNameByItem } = require('../util/getItemNameByItem');
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const { isShelfExpired } = require('../util/isShelfExpired');
 
 const saveOrder = async (req, res ) => {
   try {
-    const { new_order } = req.body;
+    const { new_order = {} } = req.body;
+    const itemName = getItemNameByItem(new_order);
+    if(new_order.expiryDates) {
+      new_order.expiryDates.forEach(expiryDates => {
+        expiryDates.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
+      })
+    }
     const purchaseOrder = await PurchaseOrder.create({
-      purchasedItems: [new_order],
+      purchasedItems: [{
+        ...new_order,
+        inputName: itemName,
+      }],
     });
     res.status(201).send({
       message: 'order added successfully',

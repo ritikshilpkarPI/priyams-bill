@@ -9,6 +9,10 @@ import {
   Switch,
   Select,
   LoadingOverlay,
+  Autocomplete,
+  Divider,
+  Checkbox,
+  Alert,
 } from '@mantine/core';
 // import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
@@ -19,11 +23,15 @@ import MyDatePicker from './DatePicker';
 import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { API_PATHS } from "../utils/constants/apiPaths"
+import { isShelfExpired } from 'src/utils/isShelfExpired';
+import { getItemNameByItem } from 'src/utils/getItemNameByItem';
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
   handleDateDelete,
   setExpiryQuantity,
+  mfgDate,
+  setMfgDate,
   setOpenDrawer,
   setOpened,
   handleItemFrom,
@@ -33,9 +41,7 @@ const OrderForm = ({
   setDate,
   date,
   filterItems,
-  filterItems2,
   handleSelectOrderItems,
-  handleSelectOrderItems2,
   slabForm,
   addSlabPrice,
   deleteSlab,
@@ -47,8 +53,8 @@ const OrderForm = ({
   const [imageList, setImageList] = useState([])
   const [selectedImage, setSelectedImage] = useState('')
   const [isSelected, setIsSelected] = useState(true)
-  const [toggle, setToggle] = useState(true);
-  const [toggle1, setToggle1] = useState(false);
+  // const [toggle, setToggle] = useState(true);
+  // const [toggle1, setToggle1] = useState(false);
   // const [addImage, setAddImage] = useState(null)
   const imageInputRef = useRef(null);
 
@@ -61,12 +67,12 @@ const OrderForm = ({
     setOpenDrawer(true);
   };
   const func2 = () => {
-    setToggle(true);
-    setToggle1(false);
+    // setToggle(true);
+    // setToggle1(false);
   };
   const func3 = () => {
-    setToggle1(true);
-    setToggle(false);
+    // setToggle1(true);
+    // setToggle(false);
   };
   const handleOnAddImages = async (count) => {
     setLoading(true)
@@ -141,6 +147,143 @@ const OrderForm = ({
     }
   };
 
+  const categoriesWithSubcategories = {
+    Bakery: [
+      "Breads",
+      "Cakes",
+      "Cookies",
+      "Pastries",
+      "Buns & Bagels",
+      "Croissants",
+      "Muffins"
+    ],
+    Beverage: [
+      "Tea",
+      "Coffee",
+      "Juices",
+      "Energy Drinks",
+      "Soft Drinks",
+      "Flavored Milk",
+      "Water (Mineral/Packaged)"
+    ],
+    "Dairy and Frozen": [
+      "Milk",
+      "Cheese",
+      "Butter",
+      "Paneer",
+      "Yogurt/Curd",
+      "Ice Cream",
+      "Frozen Snacks (Nuggets, Fries, etc.)",
+      "Frozen Vegetables"
+    ],
+    Staple: [
+      "Rice",
+      "Wheat Flour",
+      "Lentils/Pulses",
+      "Sugar",
+      "Salt",
+      "Spices",
+      "Grains (Quinoa, Barley, etc.)"
+    ],
+    "Personal care": [
+      "Skin Care (Lotions, Face Wash)",
+      "Hair Care (Shampoos, Conditioners, Hair Oils)",
+      "Oral Care (Toothpaste, Mouthwash)",
+      "Hygiene Products (Sanitary Pads, Diapers)",
+      "Deodorants & Perfumes",
+      "Grooming Accessories (Razors, Trimmers)"
+    ],
+    "Packaged Food": [
+      "Breakfast Cereals",
+      "Instant Noodles",
+      "Snacks (Chips, Namkeen)",
+      "Biscuits & Cookies",
+      "Sauces & Dips",
+      "Ready-to-Eat Meals"
+    ],
+    "Home and Kitchen": [
+      "Cleaning Supplies (Dishwashers, Floor Cleaners)",
+      "Utensils (Cookware, Glassware)",
+      "Storage (Containers, Jars)",
+      "Decor (Candles, Table Mats)",
+      "Electricals (Bulbs, Batteries)"
+    ],
+    Stationery: [
+      "Notebooks",
+      "Pens & Pencils",
+      "Markers & Highlighters",
+      "Sticky Notes",
+      "Files & Folders",
+      "Craft Supplies (Scissors, Glue, Tape)"
+    ],
+    Grocery: [
+      "Fresh Vegetables",
+      "Fresh Fruits",
+      "Herbs & Spices",
+      "Dry Fruits & Nuts",
+      "Pickles & Sauces",
+      "Grains & Pulses"
+    ],
+    "Baby and Kids": [
+      "Baby Food",
+      "Diapers",
+      "Wipes",
+      "Baby Accessories (Bottles, Soothers)",
+      "Toys",
+      "Clothing & Footwear"
+    ],
+    Electronic: [
+      "Mobile Accessories (Chargers, Earphones)",
+      "Small Appliances (Toasters, Irons)",
+      "Batteries",
+      "Light Bulbs & LEDs",
+      "Cables & Adapters"
+    ],
+    "Spices and fast food": [
+      "Whole Spices (Cloves, Cardamom)",
+      "Ground Spices (Turmeric, Chili Powder)",
+      "Spice Mixes (Garam Masala, Chat Masala)",
+      "Fast Food Items (Noodles, Pizza Bases)",
+      "Sauces & Ketchup"
+    ],
+    Pooja: [
+      "Incense Sticks",
+      "Camphor",
+      "Diyas & Lamps",
+      "Pooja Samagri (Rice, Flowers)",
+      "Religious Books & Idols"
+    ],
+    "Oil and Ghee": [
+      "Cooking Oils (Sunflower, Mustard, Coconut)",
+      "Ghee (Cow, Buffalo)",
+      "Cold-Pressed Oils",
+      "Flavored Oils (Garlic Oil, Sesame Oil)"
+    ],
+    "Sweet and Chocolate": [
+      "Chocolates",
+      "Sweets (Laddoos, Barfis, Gulab Jamun)",
+      "Candy & Toffees",
+      "Chocolate Bars",
+      "Gift Boxes (Sweet Combos)"
+    ],
+    Plastic: [
+      "Buckets",
+      "Containers",
+      "Dustbins",
+      "Plastic Bags",
+      "Tubs & Storage Boxes"
+    ],
+    Miscellaneous: [
+      "Seasonal Goods",
+      "Small Tools (Screwdrivers, Tapes)",
+      "Party Supplies",
+      "Emergency Kits",
+      "Travel Accessories (Locks, Pouches)"
+    ]
+  };
+
+  const itemName = getItemNameByItem(form.values);
+
   return (
     <Drawer
       opened={opened}
@@ -157,8 +300,8 @@ const OrderForm = ({
         <form
           className="order-form"
           onSubmit={form.onSubmit((values) => {
-            values.imageUrl = selectedImage
-            handleItemFrom(values)
+            values.imageUrl = selectedImage;
+            handleItemFrom(values);
           })}
         >
           <Switch
@@ -166,7 +309,46 @@ const OrderForm = ({
             label="validate"
             {...form.getInputProps('validate')}
           />
+        <Divider my="xs" label="Search" labelPosition="center" />
+          <Group className='order-search-container'>
+            <Select
+                label="Search By"
+                className="form-input-tops"
+                placeholder="Search By"
+                data={[
+                  { value: 'barcode', label: 'Barcode' },
+                  { value: 'inputName', label: 'Item Name' },
+                ]}
+                {...form.getInputProps('searchBy')}
+              />
+              <div className='item-search-container-box'>
+                  <TextInput
+                    // wrapperProps=""
+                    label="Search"
+                    className="form-input-tops"
+                    placeholder="search"
+                    onSelect={() => {
+                      func1();
+                      func2();
+                    }}
+                    {...form.getInputProps('search')}
+                />
+                <div className="barcode-filter-shift">
+                  {filterItems.length > 1
+                    ? Boolean(filterItems.length) &&
+                      openDrawer && (
+                        <ListDropDownItem
+                          itemList={filterItems}
+                          handleSelectOrderItems2={handleSelectOrderItems}
+                        />
+                      )
+                    : ''}
+                </div>
+              </div>
+          </Group>
+          <Divider my="xs" label="Add Item Details" labelPosition="center" />
           <Group className="order-flex-class">
+            
             <TextInput
               withAsterisk={form.values.validate}
               // wrapperProps=""
@@ -187,7 +369,6 @@ const OrderForm = ({
                             {...form.getInputProps('email')}
                         /> */}
             <TextInput
-              withAsterisk
               label="Item Name"
               className="form-input-tops"
               required
@@ -197,26 +378,70 @@ const OrderForm = ({
                 func3();
               }}
               {...form.getInputProps('inputName')}
+              value={itemName}
+              disabled
+            />
+            <TextInput
+              withAsterisk={form.values.validate}
+              label="Company Name"
+              className="form-input-tops"
+              required={form.values.validate}
+              placeholder="company name"
+              onClick={(e) => {
+                func1();
+                func3();
+              }}
+              {...form.getInputProps('companyName')}
+            />
+            <TextInput
+              withAsterisk={form.values.validate}
+              label="Brand Name"
+              required={form.values.validate}
+              className="form-input-tops"
+              placeholder="brand name"
+              autoCapitalize="on"
+              height={100}
+              limit={100}
+              {...form.getInputProps('brand')}
+            />
+             <Autocomplete
+              label="Add Category"
+              placeholder="Add Category"
+              data={Object.keys(categoriesWithSubcategories)}
+              autoCapitalize="on"
+              limit={Infinity}
+              maxDropdownHeight={250}
+              {...form.getInputProps('category')}
+            />
+             <Autocomplete
+              label="Add Sub Category"
+              placeholder="Add Sub Category"
+              data={categoriesWithSubcategories[form.values.category] || []}
+              limit={Infinity}
+              maxDropdownHeight={250}
+              autoCapitalize="on"
+              disabled={!form.values.category?.trim()}
+              {...form.getInputProps('subCategory')}
+            />
+            <TextInput
+              withAsterisk={form.values.validate}
+              label="Flavour/Feature"
+              required={form.values.validate}
+              className="form-input-tops"
+              placeholder="Flavour/feature name"
+              autoCapitalize="on"
+              height={100}
+              limit={100}
+              disabled={!form.values.category?.trim()}
+              {...form.getInputProps('flavourOrFeature')}
             />
           </Group>
-          <div className="barcode-filter-shift">
-            {filterItems2.length > 1
-              ? Boolean(filterItems2.length) &&
-              toggle &&
-              openDrawer && (
-                <ListDropDownItem
-                  itemList={filterItems2}
-                  handleSelectOrderItems2={handleSelectOrderItems}
-                />
-              )
-              : ''}
-          </div>
-          {Boolean(filterItems.length) && toggle1 && openDrawer && (
+          {/* {Boolean(filterItems.length) && toggle1 && openDrawer && (
             <ListDropDownItem
               itemList={filterItems}
               handleSelectOrderItems2={handleSelectOrderItems2}
             />
-          )}
+          )} */}
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
@@ -239,56 +464,90 @@ const OrderForm = ({
               ]}
               {...form.getInputProps('unit')}
             />
+            <Select
+              label="Sale Time"
+              className="form-input-tops"
+              placeholder="Sale Time"
+              data={[
+                { value: 'seasonal', label: 'Seasonal' },
+                { value: 'yearly', label: 'Yearly' },
+              ]}
+              {...form.getInputProps('saleTime')}
+            />
+            <Checkbox
+              label="Return Policy Available?"
+              {...form.getInputProps('returnPolicyAvailable')}
+            />
+            <Checkbox
+              label="Free Items Available?"
+              {...form.getInputProps('freeItemsAvailable')}
+            />
+            {
+              form.values.returnPolicyAvailable && (<Textarea
+                label="Return Policy Remarks"
+                placeholder="Return Policy Remarks"
+                {...form.getInputProps('returnPolicyRemarks')}
+              />)
+            }
           </Group>
-
-          <div className='image-select-container'>
-            <div className='image-input-container'>
-              <label className='image-input-label' htmlFor="image-input">Image</label>
-              {selectedImage &&
-                <div className='selected-image-card'>
-                  <img className='selected-image' src={selectedImage.secure_url} alt="" />
-                </div>}
-              <div className='image-input'>
-
+          <Divider my="xs" label="Item Image" labelPosition="center" />
+          <div className="image-select-container">
+            <div className="image-input-container">
+              <label className="image-input-label" htmlFor="image-input">
+                Image
+              </label>
+              {selectedImage && (
+                <div className="selected-image-card">
+                  <img
+                    className="selected-image"
+                    src={selectedImage.secure_url}
+                    alt=""
+                  />
+                </div>
+              )}
+              <div className="image-input">
                 <input
-                  id='image-input'
-                  className='input'
+                  id="image-input"
+                  className="input"
                   value={imageSearch}
                   type="text"
-                  placeholder='Search image'
+                  placeholder="Search image"
                   onChange={(e) => handleImageSearch(e)}
                 />
 
                 <div
-                  className={`search-image-button ${!imageSearch ? 'disabled' : ''}`}
+                  className={`search-image-button ${
+                    !imageSearch ? 'disabled' : ''
+                  }`}
                   onClick={imageSearch ? handleKeyDown : null}
                 >
                   Search
                 </div>
               </div>
             </div>
-            {!isSelected && !imageList.length
-              ? <>
+            {!isSelected && !imageList.length ? (
+              <>
                 <p>This feature is currently unavailable</p>
-                <Button onClick={() => imageInputRef.current.click()}
+                <Button
+                  onClick={() => imageInputRef.current.click()}
                   style={{ marginTop: '15px' }}
                 >
                   Select Image
                 </Button>
               </>
-              : <div className='image-container'>
-                {!isSelected && imageList.map((image) => (
-                  <div className='image-card'
-                    onClick={() => handleSelectImage(image?.link)}
-                  >
-                    <img className='image' src={image?.link} alt="" />
-                  </div>
-                ))
-                }
+            ) : (
+              <div className="image-container">
+                {!isSelected &&
+                  imageList.map((image) => (
+                    <div
+                      className="image-card"
+                      onClick={() => handleSelectImage(image?.link)}
+                    >
+                      <img className="image" src={image?.link} alt="" />
+                    </div>
+                  ))}
               </div>
-            }
-
-
+            )}
 
             <input
               type="file"
@@ -305,10 +564,8 @@ const OrderForm = ({
                 >Show more</p>
               </div>
             } */}
-
-
           </div>
-
+          <Divider my="xs" label="Item Expiry Details" labelPosition="center" />
           <div className="date-container">
             {/* <DatePicker
               className="useby-date-picker"
@@ -325,8 +582,24 @@ const OrderForm = ({
             /> */}
             <MyDatePicker
               className="useby-date-picker"
+              placeholder="Pick Mfg. Dt."
+              label="MFG.  date"
+              required={form.values.validate}
+              withAsterisk={form.values.validate}
+              inputFormat="MM/DD/YYYY"
+              onChange={(day) => {
+                let s = String(new Date(day).toLocaleDateString('en-US'));
+                setMfgDate(s);
+              }}
+              value={mfgDate}
+              date={mfgDate}
+              style={{ width: '140px' }}
+              setDate={setMfgDate}
+            />
+            <MyDatePicker
+              className="useby-date-picker"
               placeholder="Pick date"
-              label="Expiry  date"
+              label="Exp. Dt."
               inputFormat="MM/DD/YYYY"
               value={date}
               onChange={(day) => {
@@ -348,21 +621,30 @@ const OrderForm = ({
             <Button onClick={handleExpiryDate}>Add Date</Button>
           </div>
           {form.values.expiryDates?.length
-            ? form.values.expiryDates.map((date, index) => {
-              return (
-                <div className="expiry-date-showcase" key={index + 1}>
-                  <TextInput
-                    value={new Date(date.date).toLocaleDateString()}
-                    readOnly
-                  />
-                  <TextInput readOnly value={date.value} />
-                  <Button onClick={() => handleDateDelete(date)}>
-                    Delete
-                  </Button>
-                </div>
-              );
-            })
+            ? form.values.expiryDates.map((expiryDateData, index) => {
+                const isShelfExpiredItem = isShelfExpired(expiryDateData.mfgDate, expiryDateData.date);
+                return (
+                  <div className={`${isShelfExpiredItem ? 'shelf-expiry-date-container' : 'shelf-non-expiry-date-container'}`}>
+                    <div className='expiry-date-showcase' key={index + 1}>
+                      <TextInput
+                        value={new Date(expiryDateData.mfgDate).toLocaleDateString()}
+                        readOnly
+                      />
+                      <TextInput
+                        value={new Date(expiryDateData.date).toLocaleDateString()}
+                        readOnly
+                      />
+                      <TextInput readOnly value={expiryDateData.value} />
+                    </div>
+                    <Button onClick={() => handleDateDelete(expiryDateData)}>
+                        Delete
+                    </Button>
+                    { isShelfExpiredItem && <Alert color={'red'}>These items are shelf expired</Alert> }
+                  </div>
+                );
+              })
             : ''}
+          <Divider my="xs" label="Stock Details" labelPosition="center" />
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
@@ -380,43 +662,7 @@ const OrderForm = ({
               {...form.getInputProps('currentStock')}
             />
           </Group>
-          <Group className="order-flex-class">
-            <TextInput
-              withAsterisk={form.values.validate}
-              label="Brand Name"
-              className="form-input-tops"
-              placeholder="brand name"
-              {...form.getInputProps('brand')}
-            />
-            <Select
-              label="Category"
-              className="form-input-tops"
-              placeholder="pick one"
-              data={[
-                { value: 'Bakery', label: 'Bakery' },
-                { value: 'Beverage', label: 'Beverage' },
-                { value: 'Dairy and Frozen', label: 'Dairy and Frozen' },
-                { value: 'Staple', label: 'Staple' },
-                { value: 'Personal care', label: 'Personal care' },
-                { value: 'Packaged Food', label: 'Packaged Food' },
-                { value: 'Home and Kitchen', label: 'Home and Kitchen' },
-                { value: 'Stationery', label: 'Stationery' },
-                { value: 'Grocery', label: 'Grocery' },
-                { value: 'Baby and kids', label: 'Baby and kids' },
-                { value: 'Electronic', label: 'Electronic' },
-                {
-                  value: 'Spices and fast food',
-                  label: 'Spices and fast food',
-                },
-                { value: 'Pooja', label: 'Pooja' },
-                { value: 'Oil and ghee', label: 'Oil and ghee' },
-                { value: 'Sweet and Chocolate', label: 'Sweet and Chocolate' },
-                { value: 'Plastic', label: 'Plastic' },
-                { value: 'Miscellanous', label: 'Miscellanous' },
-              ]}
-              {...form.getInputProps('category')}
-            />
-          </Group>
+          <Divider my="xs" label="Price Details" labelPosition="center" />
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
@@ -453,6 +699,7 @@ const OrderForm = ({
             placeholder="current stock quantity"
             {...form.getInputProps('stockQuantity')}
           />
+          <Divider my="xs" label="Slab Details" labelPosition="center" />
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
