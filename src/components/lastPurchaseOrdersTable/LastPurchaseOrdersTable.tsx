@@ -27,7 +27,6 @@ export const LastPurchaseOrdersTable: React.FC<LastPurchaseOrderTableProps> = ({
           {lastPurchaseOrders.length>0 && lastPurchaseOrders.map((purchaseOrder, index) => (
             <tr className="last-purchase-order-table-tbody-tr" 
             key={index}
-            onClick={()=>console.log(purchaseOrder.purchaseOrderId)}
             >
               <td className="last-purchase-order-table-tbody-tr-td">
                 {purchaseOrder.orderSequence}
