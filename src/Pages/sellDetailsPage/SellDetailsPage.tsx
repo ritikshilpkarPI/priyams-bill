@@ -12,7 +12,6 @@ import { LoadingOverlay, Text } from '@mantine/core';
 const SellDetailsPage = () => {
 
   const { purchaseOrderId } = useParams<{ purchaseOrderId: string }>();
-  console.log('purchaseOrderId:', purchaseOrderId);
   const [data, setData] = useState([]);
   const dates = getCurrentAndPreviousYearDates();
 
@@ -20,8 +19,6 @@ const SellDetailsPage = () => {
   const [endDate] = useState(dates.currentDate);
   const [timePeriod] = useState('monthly');
   const [loading, setLoading] = useState(false);
-
-
 
   const getItemsSellDetailsByPurchaseOrderId = async (
     purchaseOrderId: string,
@@ -44,9 +41,7 @@ const SellDetailsPage = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("hit");
-    
+  useEffect(() => {   
     if (purchaseOrderId && startDate && endDate && timePeriod) {
       getItemsSellDetailsByPurchaseOrderId(
         purchaseOrderId,
@@ -56,10 +51,7 @@ const SellDetailsPage = () => {
       );
     }
   },[purchaseOrderId, startDate, endDate, timePeriod]);
-  if (data && data) {
-    console.log(data);
-  }
-
+ 
   return (
     <div>
       <h1>Sell Details Page</h1>
