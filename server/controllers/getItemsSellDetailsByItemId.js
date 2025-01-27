@@ -58,7 +58,6 @@ const getItemsSellDetailsByItemId = async (req, res) => {
       isApproved: true,
     })
       .sort({ $natural: -1 })
-      .limit(1)
       .select(' approveTime updatedAt createdAt');
       
     const approvedTime =
