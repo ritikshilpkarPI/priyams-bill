@@ -16,9 +16,15 @@
 }
 .approve-btn {
   background-color: #40c057;
+  &:disabled{
+    background-color: #000;
+  }
 }
 .reject-btn {
   background-color: #f03e3e;
+  &:disabled{
+    background-color: #000;
+  }
 }
 .message {
   display: flex;

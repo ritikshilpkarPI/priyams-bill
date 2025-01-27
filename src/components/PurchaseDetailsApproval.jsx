@@ -11,7 +11,6 @@ const PurchaseDetailsApproval = ({
   allPurchaseList,
   setAllPurchaseList,
   getOrders,
-  setLoading
 }) => {
   const [indexDetail, setIndexDetail] = useState(-1);
   return (
@@ -61,7 +60,6 @@ const PurchaseDetailsApproval = ({
                         index={index}
                         setIndexDetail={setIndexDetail}
                         getOrders={getOrders}
-                        setLoading={setLoading}
                       />
                     </tr>
                   ) : (
@@ -76,7 +74,6 @@ const PurchaseDetailsApproval = ({
                       index={index}
                       setIndexDetail={setIndexDetail}
                       getOrders={getOrders}
-                      setLoading={setLoading}
                     />
                   </tr>
                 );
