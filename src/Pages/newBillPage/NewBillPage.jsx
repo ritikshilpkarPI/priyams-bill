@@ -171,10 +171,8 @@ const NewBillPage = () => {
 
     try {
       const addBillResponse = await saveOrCacheBillAPI({
-        data: {
           ...billObject,
           billID: bill.billId
-        }
       });
       if (addBillResponse.isError) {
         setApiLoading(false);
@@ -182,6 +180,7 @@ const NewBillPage = () => {
       }
       setBillBarcode(addBillResponse.billBarcode);
       localStorage.removeItem(`newBill-${newBillId}`);
+      setBill(getBillInitialState());
     } catch (error) {
       throw console.error({ error });
     }
