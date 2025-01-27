@@ -3,7 +3,6 @@ import { store } from "./redux/store";
 
 declare global {
   export interface UserStateType {
-
   }
 
   export type RootState = ReturnType<typeof store.getState>;
@@ -33,7 +32,7 @@ declare global {
     date: string;
     value: number;
   }
-  
+
   interface LineGraphProps {
     data: SampleData[];
     width: number;
@@ -41,26 +40,29 @@ declare global {
   }
 
   interface ItemSoldPurchaseOrder {
-    orderSequence:string
+    orderSequence: string;
     approvalDate: string;
     amount: number;
-    costPrice: number
+    costPrice: number;
+    purchaseOrderId: string;
   }
 
   interface ItemSoldInterface {
     itemName: string;
-    itemPrise: number;
+    itemMRP: number;
     soldAfterApproval: number;
-    soldInLastMonth: number;
-    soldInLastThreeMonths: { date: string; value: number }[];
-    soldInLastYear: { date: string; value: number }[];
-    lastThreePurchaseOrder : ItemSoldPurchaseOrder[];
+    totalItemsSoldInInterval: number;
+    soldItemsByDate: { date: string; value: number }[];
+    lastPurchaseOrders: ItemSoldPurchaseOrder[];
+    lastMonthSold?: number;
+    lastThreeMonthSold?: { date: string; value: number }[];
+    lastYearSold?: { date: string; value: number }[];
   }
 
   interface SellDetailsTableProps {
     tableData: ItemSoldInterface[];
-  } 
-  
+  }
+
   interface CategorySchemaType {
     name: string;
   }
@@ -100,6 +102,11 @@ declare global {
     paymentProofImage?: {  publicId: String , secureUrltype: String }; 
   }
   interface PaymentDetailsModelInterface extends Document, PaymentDetailsSchemaInterface {}
+
+  interface LastPurchaseOrderTableProps {
+    lastPurchaseOrders: ItemSoldPurchaseOrder[];
+    isDropdown?: boolean;
+  }
 }
 
 declare module '*.scss' {
