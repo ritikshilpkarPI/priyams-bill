@@ -32,7 +32,7 @@ export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
               </tr>
             </thead>
             <tbody className="sell-details-table-tbody">
-              {tableData.map((item, index) => (
+              {tableData.length>0 && tableData.map((item, index) => (
                 <tr className="sell-details-table-tbody-tr" key={index}>
                   <td className="sell-details-table-tbody-tr-td">
                     {item.itemName || 'N/A'}

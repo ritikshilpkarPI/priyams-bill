@@ -24,7 +24,7 @@ export const LastPurchaseOrdersTable: React.FC<LastPurchaseOrderTableProps> = ({
           </tr>
         </thead>
         <tbody className="last-purchase-order-table-tbody">
-          {lastPurchaseOrders.map((purchaseOrder, index) => (
+          {lastPurchaseOrders.length>0 && lastPurchaseOrders.map((purchaseOrder, index) => (
             <tr className="last-purchase-order-table-tbody-tr" 
             key={index}
             onClick={()=>console.log(purchaseOrder.purchaseOrderId)}
