@@ -83,6 +83,7 @@ const expelOrderToRider = require('./expelOrderToRider');
 const createRzpQRByAmount = require('./createRzpQRByAmount');
 const assignOrderToRider = require('./assignOrderToRider');
 const getItemsSellDetailsByPurchaseOrderId = require('./getItemsSellDetailsByPurchaseOrderId');
+const getItemsSellDetailsByItemId = require('./getItemsSellDetailsByItemId');
 
 module.exports = {
   getStaff,
@@ -168,6 +169,7 @@ module.exports = {
   getCancellationOrders,
   expelOrderToRider,
   createRzpQRByAmount,
-  assignOrderToRider,
-  getItemsSellDetailsByPurchaseOrderId
+   assignOrderToRider,
+  getItemsSellDetailsByPurchaseOrderId,
+  getItemsSellDetailsByItemId
 };
