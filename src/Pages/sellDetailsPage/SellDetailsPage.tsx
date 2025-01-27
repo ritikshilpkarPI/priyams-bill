@@ -3,7 +3,7 @@ import { SellDetailsTable } from '../../components/sellDetailsTable/SellDetailsT
 import { useParams } from 'react-router-dom';
 import { getCurrentAndPreviousYearDates } from '../../utils/getCurrentAndPreviousYearDates';
 import { LoadingOverlay, Text } from '@mantine/core';
-import { getItemsSellDetailsByPurchaseOrderIdAPI } from 'utils/apiUtils';
+import { getItemsSellDetailsByPurchaseOrderIdAPI } from '../../utils/apiUtils';
 
 const SellDetailsPage = () => {
   const { purchaseOrderId } = useParams<{ purchaseOrderId: string }>();
