@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Table, Text, Collapse } from '@mantine/core';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 import BillFeed from './BillFeed';
 
 const DayWiseBillFeed = () => {

@@ -33,11 +33,12 @@ import {
   AddExpiredItem,
   ExpiredItemList,
   ReturnAndExchange,
+  SellDetailsPage,
 } from '../Pages';
-import Label from 'src/Pages/Label';
+import Label from '../Pages/Label';
 import { Fragment } from 'react';
-import { ItemsBarCode } from 'src/Pages/itemsBarcode';
-import { ItemQuantity } from 'src/Pages/ItemQuantity';
+import { ItemsBarCode } from '../Pages/itemsBarcode';
+import { ItemQuantity } from '../Pages/ItemQuantity';
 
 const StoreRoutes = () => {
   return (
@@ -97,6 +98,7 @@ const StoreRoutes = () => {
             <Route exact path="/purchaseOrderBill/:id" component={UnpaidPurchaseOrder} />            {/* <ProtectedComponent role={access.REPORT_PAGE_ROUTE}> */}
             <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
             <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
+            <Route exact path="/sellDetailsPage/:purchaseOrderId" component={SellDetailsPage} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>

@@ -81,7 +81,7 @@ const confirmOrderProducts = require('./confirmOrderProducts');
 const getCancellationOrders = require('./getAllRequestedCancelOrdersDetails');
 const expelOrderToRider = require('./expelOrderToRider');
 const createRzpQRByAmount = require('./createRzpQRByAmount');
-// const assignOrderToRider = require('./assignOrderToRider');
+const assignOrderToRider = require('./assignOrderToRider');
 const getItemsSellDetailsByPurchaseOrderId = require('./getItemsSellDetailsByPurchaseOrderId');
 
 module.exports = {
@@ -168,6 +168,6 @@ module.exports = {
   getCancellationOrders,
   expelOrderToRider,
   createRzpQRByAmount,
-  // assignOrderToRider,
+  assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId
 };

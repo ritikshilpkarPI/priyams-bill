@@ -1,15 +1,17 @@
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
+import { Modal } from '@mantine/core';
 import { useContext, useEffect, useRef, useState } from 'react';
-import BillNarrator from 'src/components/BillNarrator';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { AppStateContext } from 'src/AppState/appState.context';
+import BillNarrator from '../../components/BillNarrator';
+import { AppStateContext } from '../../AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
-import { QuantBtn } from './Billing';
+import { QuantBtn } from '../Billing';
 import Barcode from 'react-jsbarcode';
+import useSocket from '../../hooks/useSocket';
+import { socketEvents } from '../../utils/constants/socketEvents';
+import { PaymentExpiryTimer } from '../../components/PaymentExpiryTimer';
+import { createRzpQrCodeAPI, getBillingLeanItemsAPI, getUserDataAPI, saveOrCacheBillAPI } from '../../utils/apiUtils';
 
-const BILL_INITIAL_STATE = {
+const getBillInitialState = () => ({
   billItems: [],
   customerName: '',
   customerPhone: '',
@@ -22,7 +24,8 @@ const BILL_INITIAL_STATE = {
   cashPay: 0,
   upiPay: 0,
   amountReturn: 0,
-};
+  billId: `${uuidv4()}-${Date.now()}`,
+})
 
 const INPUT_INITIAL_STATE = {
   itemBarcode: '',
@@ -32,14 +35,14 @@ const INPUT_INITIAL_STATE = {
   itemSellingPricePerUnit: '',
 };
 
-const refreshPage = (setBill, BILL_INITIAL_STATE) => {
+const refreshPage = (setBill) => {
   let answer = window.confirm('Do you want to refresh page?');
   if (answer) {
-    setBill(BILL_INITIAL_STATE);
+    setBill(getBillInitialState())
   }
 };
 
-const NewBillPage = ({ billID = '' }) => {
+const NewBillPage = () => {
   const [itemsByName, setItemsByName] = useState([]);
   const [itemsByBarcode, setItemsByBarcode] = useState();
   const [itemBarCodesList, setItemBarCodesList] = useState([]);
@@ -47,7 +50,7 @@ const NewBillPage = ({ billID = '' }) => {
   const [itemNamesList, setItemNamesList] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [userProfileData, setUserDataProfile] = useState([]);
-  const [bill, setBill] = useState(BILL_INITIAL_STATE);
+  const [bill, setBill] = useState(getBillInitialState());
   const [showProfileData, setShowProfileData] = useState(false);
   const [filterUserProfile, setFilterUserProfile] = useState([]);
   const [phoneError, setPhoneError] = useState('');
@@ -59,6 +62,29 @@ const NewBillPage = ({ billID = '' }) => {
   const [billItems, dispatch] = billItemsStateAndDispatch;
   const [loaderDisplay, setLoaderDisplay] = useState(false);
   const [billBarcode, setBillBarcode] = useState('');
+  const [billPaymentQRCode, setBillPaymentQRCode] = useState('');
+  const [disableRegenerateQR, setDisableRegenerateQR] = useState(true);
+  const [qrCodeErrorMsg, setQrCodeErrorMsg] = useState('');
+  const [isQRCodeGenerating, setIsQRCodeGenerating] = useState("");
+  const QR_EXPIRY_TIME_IN_SEC = 110;
+  const { 
+    addSocketEventListener, 
+    removeSocketEventListener, 
+    isConnected 
+  } = useSocket({ billListener });
+
+  function billListener(data = {}) {
+    if (data?.isPaid && bill.billId === data?.billId) {
+      setBillPaymentQRCode("");
+      addNewBill({
+        ...bill,
+        rzpPaymentId: data?.paymentId,
+        isUpiAmtPaid: data?.isPaid,
+        billId: data?.billId,
+      });
+      removeSocketEventListener(`${socketEvents.BILLS}/${bill.billId}`);
+    }
+  }
 
   function handleItemNameFilter(event, setInputValue, itemsList, setData, key) {
     setInputValue((prev) => ({ ...prev, [key]: event.target.value }));
@@ -82,14 +108,11 @@ const NewBillPage = ({ billID = '' }) => {
   // fetching user details
   const getUserData = async () => {
     try {
-      const response = await genericAxios({
-        url: API_PATHS.BILLING.GET_USER_DETAILS,
-        method: API_METHODS.GET,
-      });
-      if (response.error) return;
-      setUserDataProfile(response.data.message);
+      const response = await getUserDataAPI();
+      if (response.isError) return;
+      setUserDataProfile(response.message);
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
     }
   };
 
@@ -98,21 +121,18 @@ const NewBillPage = ({ billID = '' }) => {
   const getAllLeanItems = async () => {
     try {
       setLoaderDisplay(true);
-      const response = await genericAxios({
-        url: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
-        method: API_METHODS.GET,
-      });
+      const response = await getBillingLeanItemsAPI();
 
-      if (response.error) return;
-      if (response?.data?.message) {
-        setItemBarCodesList(response?.data?.message?.itemBarCodesList);
-        setItemsByBarcode(response?.data?.message?.itemsBarCodeMap);
-        setItemsByName(response?.data?.message?.itemsNameMap);
-        setItemNamesList(response?.data?.message?.itemNamesList);
-        setTotalItems(response?.data?.message?.totalItemsCount);
+      if (response.isError) return;
+      if (response?.message) {
+        setItemBarCodesList(response?.message?.itemBarCodesList);
+        setItemsByBarcode(response?.message?.itemsBarCodeMap);
+        setItemsByName(response?.message?.itemsNameMap);
+        setItemNamesList(response?.message?.itemNamesList);
+        setTotalItems(response?.message?.totalItemsCount);
       }
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
     } finally {
       setLoaderDisplay(false);
     }
@@ -135,9 +155,9 @@ const NewBillPage = ({ billID = '' }) => {
     setInputValue((prevState) => ({ ...prevState, [name]: value }));
   }
 
-  const initializeBillState = (billItems, BILL_INITIAL_STATE, setBill) => {
+  const initializeBillState = (billItems, setBill) => {
     if (billItems.length === 0) {
-      setBill(BILL_INITIAL_STATE);
+      setBill(getBillInitialState());
     } else {
       setBill(billItems);
     }
@@ -149,52 +169,29 @@ const NewBillPage = ({ billID = '' }) => {
       localStorage.getItem(`newBill-${newBillId}`)
     );
 
-      try {
-        const addBillResponse = await genericAxios({
+    try {
+      const addBillResponse = await saveOrCacheBillAPI({
+        data: {
           ...billObject,
-          billId: newBillId,
-          headers: {
-            Cookie: '',
-          },
-        });
-        if (addBillResponse.error) {
-          setApiLoading(false);
-          throw Error();
+          billID: bill.billId
         }
-        if (addBillResponse.status === 200) {          
-          generateNewBillId()
-        }
-
-        setBillBarcode(addBillResponse.data.billBarcode);
-        localStorage.removeItem(`newBill-${newBillId}`);
-      } catch (error) {
-        throw console.error({ error });
+      });
+      if (addBillResponse.isError) {
+        setApiLoading(false);
+        throw Error();
       }
+      setBillBarcode(addBillResponse.billBarcode);
+      localStorage.removeItem(`newBill-${newBillId}`);
+    } catch (error) {
+      throw console.error({ error });
+    }
   }
-
-
-  const [newBillId, setNewBillId] = useState();
-  // generate new billId 
-
-  const generateNewBillId =  () => {
-    const newBillId = `${uuidv4()}-${Date.now()}`;
-    setNewBillId(newBillId)
-  }
-
-  useEffect(()=> {
-    generateNewBillId()
-  },[])
 
   //    adding new bill
-  async function addNewBill(
-    setApiLoading,
-    bill,
-    setBill,
-    BILL_INITIAL_STATE,
-    billID
-  ) {
+
+  async function addNewBill(bill) {
     setBillApiCountToLocalStorage();
-    
+    const newBillId = bill.billId || `${uuidv4()}-${Date.now()}`;
     setApiLoading(true);
     let updateBill = {
       ...bill,
@@ -206,11 +203,6 @@ const NewBillPage = ({ billID = '' }) => {
     //   method: API_METHODS.PUT,
     //   data: { id: billID, itemWithChanges: { ...bill } },
     // };
-    const createApi = {
-      url: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
-      method: API_METHODS.POST,
-      data: { ...bill, billId: newBillId },
-    };
     // const objectOfInterest = billID ? editApi : createApi;
 
     localStorage.setItem(
@@ -218,13 +210,17 @@ const NewBillPage = ({ billID = '' }) => {
       JSON.stringify({
         newBillId,
         createdAt: new Date().toLocaleString(),
-        ...createApi,
+        ...{
+          ...bill,
+          billId: newBillId
+        },
       })
     );
-     createBill(newBillId, setApiLoading);
+    await createBill(newBillId, setApiLoading);
 
     setApiLoading(false);
     setBillBarcode('');
+    setBillPaymentQRCode('');
   }
 
   // To show prices according to slabs if exists
@@ -359,8 +355,36 @@ const NewBillPage = ({ billID = '' }) => {
     }));
   };
 
+  const createQRByAmountAPI = async () => {
+    setQrCodeErrorMsg("");
+    const billId = bill.billId;
+    addSocketEventListener({
+      event: `${socketEvents.BILLS}/${billId}`,
+      callback: billListener,
+    });
+    setDisableRegenerateQR(true);
+    setIsQRCodeGenerating(true);
+    const response = await createRzpQrCodeAPI({
+      amountInRs: bill.upiPay,
+      id: billId,
+    })
+    const billPaymentQR = response?.qrData?.image_url || '';
+    if (response.isError) {
+      setQrCodeErrorMsg('Unable to generate QR, please regenerate QR');
+    } else {
+      setBillPaymentQRCode(billPaymentQR);
+    }
+    setIsQRCodeGenerating(false);
+  };
+
+  const payBill = () => {
+    if (bill.upiPay && process.env.REACT_APP_ENABLE_QR_CODE_BILL_PAYMENTS && isConnected)
+      createQRByAmountAPI(bill.upiPay);
+    else addNewBill(bill);
+  };
+
   useEffect(
-    () => initializeBillState(billItems, BILL_INITIAL_STATE, setBill),
+    () => initializeBillState(billItems, setBill),
     // eslint-disable-next-line
     []
   );
@@ -388,10 +412,10 @@ const NewBillPage = ({ billID = '' }) => {
     // eslint-disable-next-line
   }, [bill]);
 
-  useEffect(()=>{
+  useEffect(() => {
     billBarcode && window.print();
-    setBill(BILL_INITIAL_STATE);
-  },[billBarcode])
+    setBill(getBillInitialState());
+  }, [billBarcode]);
 
   const setBillApiCountToLocalStorage = () => {
     const todayKey = new Date().toLocaleDateString();
@@ -518,20 +542,18 @@ const NewBillPage = ({ billID = '' }) => {
 
           <Button
             sx={{ background: 'black', marginRight: '1rem' }}
-            onClick={() => refreshPage(setBill, BILL_INITIAL_STATE)}
+            onClick={() => refreshPage(setBill)}
           >
             Refresh
           </Button>
           <Button
             sx={{ marginRight: '1rem' }}
-            disabled={!bill.billItems.length || bill.amountReturn < 0 || apiLoading}
-            className="print-btn"
-            onClick={() =>
-              addNewBill(setApiLoading, bill, setBill, BILL_INITIAL_STATE, {
-                billID,
-              })
+            disabled={
+              !bill.billItems.length || bill.amountReturn < 0 || apiLoading || isQRCodeGenerating
             }
-            loading={apiLoading}
+            className="print-btn"
+            onClick={() => payBill()}
+            loading={apiLoading || isQRCodeGenerating}
           >
             Save and Print
           </Button>
@@ -1049,7 +1071,7 @@ const NewBillPage = ({ billID = '' }) => {
           }}
         >
           <Loader />
-          {billID && (
+          {bill.billId && (
             <div style={{ width: '50%' }}>
               <Table>
                 <thead>
@@ -1109,14 +1131,16 @@ const NewBillPage = ({ billID = '' }) => {
             <h3>Date: {new Date().toDateString()}</h3>
             <h3>Time: {new Date().toLocaleTimeString()}</h3>
           </div>
-          {billBarcode && <Barcode
+          {billBarcode && (
+            <Barcode
               options={{
                 height: 30,
                 width: 1.2,
                 displayValue: false,
               }}
               value={billBarcode}
-            />}
+            />
+          )}
           <div className="print-table-head">
             <p>Name</p>
             <p>Qty.</p>
@@ -1171,6 +1195,56 @@ const NewBillPage = ({ billID = '' }) => {
           </div>
         </div>
       </div>
+
+      {(billPaymentQRCode ||
+        qrCodeErrorMsg) && (
+          <Modal
+            opened={billPaymentQRCode || qrCodeErrorMsg}
+            onClose={() => setBillPaymentQRCode('')}
+            title="Payment Required"
+          >
+            <div className="bill-payment-qr-container">
+              <div className="bill-pay-timer-container">
+                <PaymentExpiryTimer
+                  id={billPaymentQRCode}
+                  expiryTimeInSec={
+                    billPaymentQRCode ? QR_EXPIRY_TIME_IN_SEC : 0
+                  }
+                  onTimerEnd={() => setDisableRegenerateQR(false)}
+                />
+                <Button
+                  disabled={disableRegenerateQR}
+                  className="bill-payment-btn"
+                  variant="default"
+                  color="teal"
+                  onClick={() => !disableRegenerateQR && payBill()}
+                >
+                  &#x21bb; Regenerate QR
+                </Button>
+              </div>
+              {isQRCodeGenerating ? (
+                <Loader size="lg" />
+              ) : qrCodeErrorMsg ? (
+                qrCodeErrorMsg
+              ) : disableRegenerateQR ? (
+                <img
+                  className="bill-payment-qr"
+                  src={billPaymentQRCode}
+                  alt="qrcodeimg"
+                />
+              ) : (
+                'QR Expired, please regenerate QR'
+              )}
+              <Button
+                className="bill-payment-btn"
+                color="teal"
+                onClick={() => addNewBill(bill)}
+              >
+                Save Bill
+              </Button>
+            </div>
+          </Modal>
+        )}
     </>
   );
 };

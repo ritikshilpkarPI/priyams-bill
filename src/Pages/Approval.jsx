@@ -1,12 +1,12 @@
 import { LoadingOverlay } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
-import PurchaseDetailsApproval from 'src/components/PurchaseDetailsApproval';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import PurchaseDetailsApproval from '../components/PurchaseDetailsApproval';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 import { useLocation } from 'react-router-dom';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { genericAxios } from '../utils/genericAxiosMethod';
 import Cookies from 'js-cookie';
-import { parseJwt } from 'src/utils/cookie';
+import { parseJwt } from '../utils/cookie';
 
 const Approval = () => {
   const [filter, setFilter] = useState([]);
@@ -57,6 +57,15 @@ const Approval = () => {
     }
   };
 
+  useEffect(() => {
+    if(Loading){
+      hideScrollBar();
+    }else {
+      showScrollBar();
+    }
+    // eslint-disable-next-line
+  }, [Loading]);
+
   const onLoader = () => {
     setLoading(true);
     hideScrollBar();
@@ -85,6 +94,7 @@ const Approval = () => {
         getOrders={getOrders}
         allPurchaseList={filter}
         setAllPurchaseList={setFilter}
+        setLoading={setLoading}
       />
     </div>
   );

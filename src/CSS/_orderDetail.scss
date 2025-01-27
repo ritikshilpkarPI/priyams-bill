@@ -16,3 +16,21 @@
     margin: auto;
     padding-bottom: 8px;
 }
+.expel-order-button{
+    padding: 4px 8px;
+    background-color: rgb(34, 139, 230);
+    height: fit-content;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    width: fit-content;
+    margin: 4px 0;
+    &:hover{
+      background-color: rgb(7, 127, 233);
+    }
+  }
+  .rider-details-container-wrapper{
+    display: flex;
+    justify-content: space-between;
+  }

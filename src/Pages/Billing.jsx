@@ -2,9 +2,9 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Input, Loader, Table, Text, TextInput } from '@mantine/core';
 import { AppStateContext } from '../AppState/appState.context';
 import BillNarrator from '../components/BillNarrator';
-import { genericAxios } from 'src/utils/genericAxiosMethod';
-import { API_PATHS } from 'src/utils/constants/apiPaths';
-import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { genericAxios } from '../utils/genericAxiosMethod';
+import { API_PATHS } from '../utils/constants/apiPaths';
+import { API_METHODS } from '../utils/constants/apiMethods';
 import { v4 as uuidv4 } from 'uuid';
 
 const itemsByBarcode = {};
