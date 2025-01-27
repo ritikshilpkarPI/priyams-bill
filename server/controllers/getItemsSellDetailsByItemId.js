@@ -44,21 +44,16 @@ const getItemsSellDetailsByItemId = async (req, res) => {
     }
    
     let itemDetails = null;
-    purchaseOrders.forEach((purchaseOrder) => {
-      purchaseOrder.purchasedItems.forEach((item) => {
-        if (item.item_id.toString() === itemId) {
-          itemDetails = item;
-        }
-      });
+    purchaseOrders.find((purchaseOrder) => {
+      const purchasedItem = purchaseOrder.purchasedItems.find((item) => item.item_id.toString() === itemId);
+      if (purchasedItem) {
+        itemDetails = purchasedItem;
+      }
+      return purchasedItem;
     });
 
-    if (!itemDetails) {
-      return res.status(404).json({
-        message: MESSAGES.ITEM_NOT_FOUND_IN_PURCHASE_ORDER,
-        success: false,
-      });
-    }
-    const latestPurchaseOrders = await PurchaseOrder.find({
+  
+    const latestPurchaseOrders = await PurchaseOrder.findOne({
       'purchasedItems.item_id': itemId,
       isApproved: true,
     })
@@ -67,15 +62,11 @@ const getItemsSellDetailsByItemId = async (req, res) => {
       .select(' approveTime updatedAt createdAt');
       
     const approvedTime =
-      latestPurchaseOrders[0].approveTime ||
-      latestPurchaseOrders[0].updatedAt ||
-      latestPurchaseOrders[0].createdAt;
+      latestPurchaseOrders.approveTime ||
+      latestPurchaseOrders.updatedAt ||
+      latestPurchaseOrders.createdAt ;
 
-    if (!approvedTime) {
-      return res.status(400).json({
-        error: MESSAGES.APPROVAL_TIME_MISSING,
-      });
-    }
+   
 
     const itemMap = {
       [itemId]: {
@@ -131,19 +122,11 @@ const getItemsSellDetailsByItemId = async (req, res) => {
       });
     });
 
-    const lastPurchaseOrdersMap = await Promise.all(
-      chunkArray([itemId], 1).map((chunk) =>
-        fetchLastPurchaseOrders(chunk, (limit = 0))
-      )
-    );
+    const lastPurchaseOrdersMap = await fetchLastPurchaseOrders([itemId], 0);
 
-    const flattenedLastPurchaseOrders = lastPurchaseOrdersMap.flat();
 
-    const ordersForItem = flattenedLastPurchaseOrders.filter(
-      (order) => order.item_id === itemId
-    );
 
-    const lastPurchaseOrders = ordersForItem.flatMap((order) =>
+    const lastPurchaseOrders = lastPurchaseOrdersMap.flatMap((order) =>
       order.purchaseOrders.map((orderDetails, index) => ({
         orderSequence: `${index + 1}`,
         approvalDate: orderDetails.approvalDate
