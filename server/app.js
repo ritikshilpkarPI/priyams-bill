@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
+const serverless = require('serverless-http');
 const routers = require('./routes');
 const fileUpload = require('express-fileupload');
 const handleErrors = require('./middleware/handleError');
@@ -15,7 +16,6 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGINS?.split(","),
     credentials: true,
   })
 );
@@ -54,4 +54,5 @@ dbAppConnection();
 
 app.use(handleErrors);
 
-module.exports = { app };
+module.exports.handler = serverless(app);
+
