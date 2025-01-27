@@ -85,7 +85,7 @@ const {
   getCancellationOrders,
   expelOrderToRider,
   createRzpQRByAmount,
-  // assignOrderToRider,
+  assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId
 } = require('../controllers/index');
 
