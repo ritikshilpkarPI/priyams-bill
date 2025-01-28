@@ -41,11 +41,16 @@ const mongoUriEnvMap = {
 const MONGODB_URI =
   mongoUriEnvMap[process.env.ENV_NAME] || mongoUriEnvMap[process.env.NODE_ENV];
 
+  let isConnected = false;
 async function connectDB() {
+  
+  if (isConnected) return;
+
   await mongoose.connect(`${MONGODB_URI}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+  isConnected = true
 }
 
 connectDB();
@@ -53,6 +58,17 @@ connectDB();
 dbAppConnection();
 
 app.use(handleErrors);
+const handler = serverless(app);
 
-module.exports.handler = serverless(app);
+module.exports.handler = async (event, context) => {
+
+  context.callbackWaitsForEmptyEventLoop = false;
+
+   console.log({isConnected});
+   const response = await handler(event, context);
+   const connections = mongoose.connections.length;
+   console.log('Number of connections', {connections});
+
+   return response;
+}
 
