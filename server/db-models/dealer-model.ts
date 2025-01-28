@@ -1,35 +1,32 @@
 import mongoose, { Schema } from 'mongoose';
 
-
-
-const DealerSchema: Schema = new Schema(
+const DealerSchema = new Schema<DealerSchemaInterface>(
   {
     dealerName: {
       type: String,
-      required: false, 
     },
     dealerAddress: [
       {
-        address: { type: String, required: false },
-        updatedAt: { type: Date, default: Date.now }, 
+        address: { type: String },
+        updatedAt: { type: Date, default: Date.now },
       },
     ],
     dealerContactNumber: [
       {
-        contactNumber: { type: String, required: false }, 
+        contactNumber: { type: String },
         updatedAt: { type: Date, default: Date.now },
       },
     ],
     dealerVisitingCard: {
-      type: String,
-      required: false, 
+      publicId: { type: String },
+      secureUrl: { type: String },
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
 const Dealer = mongoose.model<DealerSchemaInterface>('Dealer', DealerSchema);
 
-module.exports = {Dealer}
+module.exports = { Dealer };

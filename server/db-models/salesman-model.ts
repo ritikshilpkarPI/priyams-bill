@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 
 
-const SalesmanSchema: Schema = new Schema(
+const SalesmanSchema = new Schema<SalesmanSchemaInterface>(
   {
     salesmanName: {
       type: String,
@@ -10,14 +10,13 @@ const SalesmanSchema: Schema = new Schema(
     },
     salesmanContactNumber: [
       {
-        contactNumber: { type: String, required: false }, 
+        contactNumber: { type: String}, 
         updatedAt: { type: Date, default: Date.now }, 
       },
     ],
-    dealerReference: {
+    dealerId: {
       type: Schema.Types.ObjectId,
       ref: 'Dealer',
-      required: false, 
     },
   },
   {

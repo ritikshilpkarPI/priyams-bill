@@ -81,7 +81,7 @@ declare global {
   interface SalesmanSchemaInterface {
     salesmanName?: string;
     salesmanContactNumber?: { contactNumber: string; updatedAt: Date }[];
-    dealerReference?: mongoose.Types.ObjectId; 
+    dealerId?: mongoose.Types.ObjectId; 
   }
   interface DealerSchemaInterface {
     dealerName?: string; 
