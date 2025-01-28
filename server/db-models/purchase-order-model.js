@@ -94,6 +94,14 @@ const purchaseOrderSchema = new mongoose.Schema({
   statusHistory: [
     { data: Object, createdAt: { type: Date, default: Date.now } },
   ],
+  dealerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Dealer', 
+  },
+  salesmanId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Salesman', 
+  },
 });
 
 
