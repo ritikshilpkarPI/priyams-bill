@@ -110,6 +110,7 @@
     "@babel/preset-typescript": "^7.26.0",
     "@types/d3": "^7.4.3",
     "@types/jest": "^29.5.14",
+    "@types/js-cookie": "^3.0.6",
     "babel-cli": "^6.26.0",
     "babel-loader": "8.1.0",
     "babel-plugin-module-resolver": "^3.1.1",
