@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core';
 import Cookies from 'js-cookie';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { parseJwt } from '../utils/cookie';
@@ -121,6 +121,19 @@ const PurchaseListApproval = ({
   let datetext = time.toTimeString();
   datetext = datetext?.split(' ')[0];
 
+  const location = useLocation();
+  const [isDetailsButtonEnabled, setIsDetailsButtonEnabled] = useState(false);
+  useEffect(() => {
+    if (
+      (location.search ==='?option=Approved POs' || location.search === '?option=Approved%20POs') &&
+      location.pathname === '/approval'
+    ) {
+      setIsDetailsButtonEnabled(true);
+    }else{
+      setIsDetailsButtonEnabled(false);
+    }
+  }, [location]);
+
   return (
     <>
       {list ? (
@@ -224,6 +237,18 @@ const PurchaseListApproval = ({
               </td>
             </>
           )}
+          {isDetailsButtonEnabled &&
+            <td>
+              <Link
+                className="purchase-list-details-button"
+                to={{
+                  pathname: `/sellDetailsPage/${list._id}`,
+                }}
+              >
+                Sell details
+              </Link>
+            </td>
+          }
         </>
       ) : (
         <></>
