@@ -35,3 +35,8 @@
     height: 50%;
     width: 50%;
   }
+
+  .last-purchase-order-table-tbody-tr{
+    cursor: pointer;
+  }
+  
