@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const DealerSchema = new Schema<DealerSchemaInterface>(
+const DealerSchema = new Schema<DealerModelInterface>(
   {
     dealerName: {
       type: String,
@@ -27,6 +27,6 @@ const DealerSchema = new Schema<DealerSchemaInterface>(
   }
 );
 
-const Dealer = mongoose.model<DealerSchemaInterface>('Dealer', DealerSchema);
+const Dealer = mongoose.model<DealerModelInterface>('Dealer', DealerSchema);
 
 module.exports = { Dealer };

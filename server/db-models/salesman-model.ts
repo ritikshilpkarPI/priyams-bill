@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 
 
-const SalesmanSchema = new Schema<SalesmanSchemaInterface>(
+const SalesmanSchema = new Schema<SalesmanModelInterface>(
   {
     salesmanName: {
       type: String,
@@ -24,6 +24,6 @@ const SalesmanSchema = new Schema<SalesmanSchemaInterface>(
   }
 );
 
-const Salesman = mongoose.model<SalesmanSchemaInterface>('Salesman', SalesmanSchema);
+const Salesman = mongoose.model<SalesmanModelInterface>('Salesman', SalesmanSchema);
 
 module.exports = { Salesman };
