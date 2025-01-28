@@ -39,11 +39,11 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
     }
 
     const approvedTime = purchaseOrder.approveTime;
-    if (!approvedTime) {
-      return res.status(400).json({
-        error: MESSAGES.APPROVAL_TIME_MISSING,
-      });
-    }
+    // if (!approvedTime) {
+    //   return res.status(400).json({
+    //     error: MESSAGES.APPROVAL_TIME_MISSING,
+    //   });
+    // }
     const start = convertDateToIST(startDate).toISOString();
     const end = convertDateToIST(endDate).toISOString();
 
