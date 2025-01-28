@@ -90,14 +90,18 @@ declare global {
     dealerName?: string; 
     dealerAddress?: { address: string; updatedAt: Date }[];
     dealerContactNumber?: { contactNumber: string; updatedAt: Date }[]; 
-    dealerVisitingCard?: string; 
+    dealerVisitingCard?: {  publicId: String , secureUrltype: String }; 
   }
   interface DealerModelInterface extends Document, DealerSchemaInterface {}
-
-  interface LastPurchaseOrderTableProps {
-    lastPurchaseOrders: ItemSoldPurchaseOrder[];
-    isDropdown?: boolean;
+  interface PaymentDetailsSchemaInterface {
+    paymentType?: 'Cash' | 'Cheque' | 'UPI' | 'NEFT'; 
+    paymentAmount?: number; 
+    purchaseOrderReference?: mongoose.Types.ObjectId; 
+    dealerReference?: mongoose.Types.ObjectId; 
+    paymentRemarks?: string; 
+    paymentProofImage?: {  publicId: String , secureUrltype: String }; 
   }
+  interface PaymentDetailsModelInterface extends Document, PaymentDetailsSchemaInterface {}
 }
 
 declare module '*.scss' {
