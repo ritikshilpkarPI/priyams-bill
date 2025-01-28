@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import "./LastPurchaseOrdersTable.css"
+import { useHistory } from 'react-router-dom';
 
 export const LastPurchaseOrdersTable: React.FC<LastPurchaseOrderTableProps> = ({
   lastPurchaseOrders,
   isDropdown = false
 }) => {
+  const history = useHistory();
   const [showAll, setShowAll] = useState(false);
 
   const toggleShowAll = () => {
     setShowAll(!showAll);
   };
-
+  const handlePurchaseOrderNavigation = (Id:string)=>{
+    history.push(`/purchase/${Id}`);
+  }
 
   return (
     <div>
@@ -27,6 +31,7 @@ export const LastPurchaseOrdersTable: React.FC<LastPurchaseOrderTableProps> = ({
           {lastPurchaseOrders.length>0 && lastPurchaseOrders.map((purchaseOrder, index) => (
             <tr className="last-purchase-order-table-tbody-tr" 
             key={index}
+            onClick={()=>handlePurchaseOrderNavigation(purchaseOrder.purchaseOrderId)}
             >
               <td className="last-purchase-order-table-tbody-tr-td">
                 {purchaseOrder.orderSequence}
