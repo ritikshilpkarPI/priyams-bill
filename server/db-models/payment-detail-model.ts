@@ -1,11 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
 
 
-const PaymentDetailsSchema= new Schema<PaymentDetailsModelInterface>(
+const PaymentDetailsSchema= new Schema<PaymentDetailsSchemaInterface>(
   {
     paymentType: {
       type: String,
-      enum: ['Cash', 'Cheque', 'UPI', 'NEFT'], 
     },
     paymentAmount: {
       type: Number,
