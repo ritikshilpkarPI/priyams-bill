@@ -124,7 +124,7 @@ const PurchaseListApproval = ({
   datetext = datetext?.split(' ')[0];
 
 useEffect(()=>{
-  const isAdmincheck = isAdmin();
+  const isUserAdmin = isAdmin();
   setIsAdminUser(isAdmincheck)
 },[])
   return (
