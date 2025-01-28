@@ -9,7 +9,7 @@ export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
 }) => {
   return (
     <div className="sell-details-table-component">
-      {tableData.length>0 ? (
+      {tableData.length > 0 ? (
         <div className="sell-details-table-container">
           <table className="sell-details-table">
             <thead className="sell-details-table-thead">
@@ -32,52 +32,55 @@ export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
               </tr>
             </thead>
             <tbody className="sell-details-table-tbody">
-              {tableData.length>0 && tableData.map((item, index) => (
-                <tr className="sell-details-table-tbody-tr" key={index}>
-                  <td className="sell-details-table-tbody-tr-td">
-                    {item.itemName || 'N/A'}
-                  </td>
-                  <td className="sell-details-table-tbody-tr-td">
-                    {item.itemMRP}
-                  </td>
-                  <td className="sell-details-table-tbody-tr-td">
-                    {item.soldAfterApproval }
-                  </td>
-                  <td className="sell-details-table-tbody-tr-td">
-                  {(item.soldItemsByDate
-                    .slice(-1)
-                    .reduce((sum, data) => sum + data.value, 0))
-                    }
-                  </td>
-                  <td className="sell-details-table-tbody-tr-td">
-                    {' '}
-                    <div className="sell-details-table-line-graph">
+              {tableData.length > 0 &&
+                tableData.map((item, index) => (
+                  <tr className="sell-details-table-tbody-tr" key={index}>
+                    <td className="sell-details-table-tbody-tr-td">
+                      {item.itemName || 'N/A'}
+                    </td>
+                    <td className="sell-details-table-tbody-tr-td">
+                      {item.itemMRP}
+                    </td>
+                    <td className="sell-details-table-tbody-tr-td">
+                      {item.soldAfterApproval}
+                    </td>
+                    <td className="sell-details-table-tbody-tr-td">
+                      {item.lastMonthSold}
+                    </td>
+                    <td className="sell-details-table-tbody-tr-td">
                       {' '}
-                      <LineGraph
-                        data={item.soldItemsByDate.slice(-3)}
-                        width={850}
-                        height={420}
-                      />{' '}
-                    </div>
-                  </td>
-                  <td className="sell-details-table-tbody-tr-td">
-                    {' '}
-                    <div className="sell-details-table-line-graph">
+                      <div className="sell-details-table-line-graph">
+                        {' '}
+                        <LineGraph
+                          data={item.lastThreeMonthSold || []}
+                          width={850}
+                          height={420}
+                        />{' '}
+                      </div>
+                    </td>
+                    <td className="sell-details-table-tbody-tr-td">
                       {' '}
-                      <LineGraph
-                        data={item.soldItemsByDate}
-                        width={850}
-                        height={420}
-                      />{' '}
-                    </div>
-                  </td>
-                  <td className="sell-details-table-tbody-tr-td">
-                    <LastPurchaseOrdersTable
-                      lastPurchaseOrders={item.lastPurchaseOrders}
-                    />
-                  </td>
-                </tr>
-              ))}
+                      <div className="sell-details-table-line-graph">
+                        {' '}
+                        <LineGraph
+                          data={item.lastYearSold || []}
+                          width={850}
+                          height={420}
+                        />{' '}
+                      </div>
+                    </td>
+                    <td className="sell-details-table-tbody-tr-td">
+                      {item.lastPurchaseOrders.length > 0 ? (
+                        
+                        <LastPurchaseOrdersTable
+                          lastPurchaseOrders={item.lastPurchaseOrders}
+                        />
+                      ) : (
+                        <Text>No data found</Text>
+                      )}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

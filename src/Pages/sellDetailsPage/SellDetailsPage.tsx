@@ -8,7 +8,7 @@ import './SellDetailsPage.css';
 
 const SellDetailsPage = () => {
   const { purchaseOrderId } = useParams<{ purchaseOrderId: string }>();
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState<ItemSoldInterface[]>([]);
   const dates = getCurrentAndPreviousYearDates();
 
   const [startDate] = useState(dates.previousYearDate);
@@ -35,11 +35,30 @@ const SellDetailsPage = () => {
         setLoading(false);
         setIsError(true);
       } else {
-        setTableData(response.data);
+        const fetchedData = response.data;
+        const updatedData = updateTableData(fetchedData);            
+        setTableData(updatedData);
+        setIsError(false);
         setLoading(false);
       }
     }
   };
+
+  const updateTableData = (tableDatas: ItemSoldInterface[]): ItemSoldInterface[] => {
+    return tableDatas.map((data) => {
+      const lastMonthData = data.soldItemsByDate.slice(-1)
+      .reduce((sum, data) => sum + data.value, 0);
+      const lastThreeMonthSoldData = data.soldItemsByDate.slice(-3)
+      const lastYearSoldData = data.soldItemsByDate
+      return {
+        ...data,
+        lastMonthSold: lastMonthData , 
+        lastThreeMonthSold:lastThreeMonthSoldData,
+        lastYearSold: lastYearSoldData
+      };
+    });
+  };
+  
 
   useEffect(() => {
     fetchDetails();

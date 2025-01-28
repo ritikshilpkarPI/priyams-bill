@@ -28,13 +28,13 @@ declare global {
     id: string;
   }
 
-  interface SampleData {
+  interface soldItemsByDateInterface {
     date: string;
     value: number;
   }
 
   interface LineGraphProps {
-    data: SampleData[];
+    data: soldItemsByDateInterface[];
     width: number;
     height: number;
   }
@@ -52,11 +52,11 @@ declare global {
     itemMRP: number;
     soldAfterApproval: number;
     totalItemsSoldInInterval: number;
-    soldItemsByDate: { date: string; value: number }[];
+    soldItemsByDate: soldItemsByDateInterface[];
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastMonthSold?: number;
-    lastThreeMonthSold?: { date: string; value: number }[];
-    lastYearSold?: { date: string; value: number }[];
+    lastThreeMonthSold?: soldItemsByDateInterface[];
+    lastYearSold?: soldItemsByDateInterface[];
   }
 
   interface SellDetailsTableProps {

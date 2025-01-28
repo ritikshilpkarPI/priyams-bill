@@ -27,7 +27,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({ data, width, height }) => 
       .range([height - marginBottom, marginTop]);
 
     const line = d3
-      .line<SampleData>()
+      .line<soldItemsByDateInterface>()
       .x((d) => x(d.date) as number)
       .y((d) => y(d.value) as number);
 
