@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const DealerSchema = new Schema<DealerModelInterface>(
+const DealerSchema = new Schema<DealerSchemaInterface>(
   {
     dealerName: {
       type: String,
