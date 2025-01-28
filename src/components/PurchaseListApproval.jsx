@@ -1,12 +1,13 @@
 import { Button } from '@mantine/core';
 import Cookies from 'js-cookie';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link  } from 'react-router-dom';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { parseJwt } from '../utils/cookie';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
+import { isAdmin } from 'utils/isAdmin';
 const PurchaseListApproval = ({
   list,
   index,
@@ -15,6 +16,7 @@ const PurchaseListApproval = ({
   getOrders,
 }) => {
   const [loadingState, setLoadingState] = useState({});
+  const [isAdminUser, setIsAdminUser] = useState(false)
 
   const setLoading = (id, state, buttonName) => {
     setLoadingState({[id]: state, btnName:buttonName });
@@ -121,7 +123,10 @@ const PurchaseListApproval = ({
   let datetext = time.toTimeString();
   datetext = datetext?.split(' ')[0];
 
-
+useEffect(()=>{
+  const isAdmincheck = isAdmin();
+  setIsAdminUser(isAdmincheck)
+},[])
   return (
     <>
       {list ? (
@@ -225,7 +230,7 @@ const PurchaseListApproval = ({
               </td>
             </>
           )}
-          {parseJwt(Cookies.get('token')).role === 'admin'  && list.isDraft &&
+          {isAdminUser && list.isDraft &&
             <td>
               <Link
                 className="purchase-list-details-button"
