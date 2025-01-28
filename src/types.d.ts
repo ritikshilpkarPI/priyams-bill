@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 
 declare global {
@@ -78,6 +78,19 @@ declare global {
   interface CompanySchemaType {
     name: string;
   }
+  interface SalesmanSchemaInterface {
+    salesmanName?: string;
+    salesmanContactNumber?: { contactNumber: string; updatedAt: Date }[];
+    dealerId?: mongoose.Types.ObjectId; 
+  }
+  interface SalesmanModelInterface extends Document, SalesmanSchemaInterface {}
+  interface DealerSchemaInterface {
+    dealerName?: string; 
+    dealerAddress?: { address: string; updatedAt: Date }[];
+    dealerContactNumber?: { contactNumber: string; updatedAt: Date }[]; 
+    dealerVisitingCard?: string; 
+  }
+  interface DealerModelInterface extends Document, DealerSchemaInterface {}
 
 }
 
