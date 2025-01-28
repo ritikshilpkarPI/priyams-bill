@@ -125,7 +125,7 @@ const PurchaseListApproval = ({
 
 useEffect(()=>{
   const isUserAdmin = isAdmin();
-  setIsAdminUser(isAdmincheck)
+  setIsAdminUser(isUserAdmin)
 },[])
   return (
     <>
