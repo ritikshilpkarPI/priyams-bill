@@ -102,6 +102,10 @@ declare global {
     paymentProofImage?: {  publicId: String , secureUrltype: String }; 
   }
   interface PaymentDetailsModelInterface extends Document, PaymentDetailsSchemaInterface {}
+  interface LastPurchaseOrderTableProps {
+    lastPurchaseOrders: ItemSoldPurchaseOrder[];
+    isDropdown?: boolean;
+  }
 }
 
 declare module '*.scss' {
@@ -115,3 +119,5 @@ declare module '*.sass' {
 }
 
 export {};
+
+
