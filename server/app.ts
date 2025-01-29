@@ -51,5 +51,7 @@ dbAppConnection();
 
 app.use(handleErrors);
 
-module.exports.handler = serverless(app);
+const handler = serverless(app);
+
+export { handler };
 
