@@ -1,6 +1,7 @@
-const router = require('express').Router();
-const { isAdmin, isLoggedIn } = require('../middleware/isAdmin');
-const { API_PATHS } = require('../../src/utils/constants/apiPaths');
+import express from "express";
+import { isAdmin, isLoggedIn } from '../middleware/isAdmin';
+import { API_PATHS } from '../../src/utils/constants/apiPaths';
+const router = express.Router();
 const {
   getStaff,
   addBulkItems,
@@ -378,4 +379,4 @@ router.post(
 );
 
 
-module.exports = router;
+export default router;
