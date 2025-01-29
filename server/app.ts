@@ -1,13 +1,13 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 require('dotenv').config();
-const mongoose = require('mongoose');
-const serverless = require('serverless-http');
-const routers = require('./routes');
-const fileUpload = require('express-fileupload');
-const handleErrors = require('./middleware/handleError');
-const dbAppConnection = require('./db/conn');
+import mongoose from 'mongoose';
+import serverless from 'serverless-http';
+import routers from './routes';
+import fileUpload from 'express-fileupload';
+import handleErrors from './middleware/handleError';
+import dbAppConnection from './db/conn';
 // require('./util/nodeCron');
 const app = express();
 
@@ -39,13 +39,10 @@ const mongoUriEnvMap = {
 };
 
 const MONGODB_URI =
-  mongoUriEnvMap[process.env.ENV_NAME] || mongoUriEnvMap[process.env.NODE_ENV];
+  mongoUriEnvMap[process.env.ENV_NAME || ""] || mongoUriEnvMap[process.env.NODE_ENV];
 
 async function connectDB() {
-  await mongoose.connect(`${MONGODB_URI}`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(`${MONGODB_URI}`);
 }
 
 connectDB();
@@ -54,5 +51,7 @@ dbAppConnection();
 
 app.use(handleErrors);
 
-module.exports.handler = serverless(app);
+const handler = serverless(app);
+
+export { handler };
 
