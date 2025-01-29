@@ -88,7 +88,7 @@ const {
   createRzpQRByAmount,
   assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId,
-   purchaseOrderDealerDetail,
+   createPurchaseOrderWithDealer,
 } = require('../controllers/index');
 
 // online order apis
@@ -337,7 +337,7 @@ router.post(
 
 router.post(
     `${API_PATHS.PURCHASE_ORDER.POST_DEALER_DETAILS}`,
-    purchaseOrderDealerDetail
+    createPurchaseOrderWithDealer
   );
 router.post(
   '/api/riders',
