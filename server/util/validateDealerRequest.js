@@ -1,5 +1,20 @@
 const Joi = require('joi');
-
+const validateFile = Joi.object({
+    file: Joi.object({
+      size: Joi.number()
+        .max(5 * 1024 * 1024) 
+        .required()
+        .messages({
+          'number.max': 'File size must be less than 5MB',
+        }),
+      mimetype: Joi.string()
+        .valid('image/jpeg', 'image/jpg', 'image/png')
+        .required()
+        .messages({
+          'string.valid': 'File must be in jpg, jpeg, or png format',
+        }),
+    }).required(),
+  });
 const validateDealerRequest = Joi.object({
   dealerName: Joi.when('dealerId', {
     is: Joi.exist(),
@@ -31,26 +46,7 @@ const validateDealerRequest = Joi.object({
       .required(),
   }),
 
-  dealerVisitingCard: Joi.when('dealerId', {
-    is: Joi.exist(),
-    then: Joi.optional(),
-    otherwise: Joi.object({
-      file: Joi.object({
-        size: Joi.number()
-          .max(5 * 1024 * 1024)
-          .required()
-          .messages({
-            'number.max': 'File size must be less than 5MB',
-          }),
-        mimetype: Joi.string()
-          .valid('image/jpeg', 'image/jpg', 'image/png')
-          .required()
-          .messages({
-            'string.valid': 'File must be in jpg, jpeg, or png format',
-          }),
-      }),
-    }).required(),
-  }),
+
   salesmanName: Joi.when('salesmanId', {
     is: Joi.exist(),
     then: Joi.optional(),
@@ -99,4 +95,4 @@ const validateDealerRequest = Joi.object({
   ),
 }).unknown(true);
 
-module.exports = { validateDealerRequest };
+module.exports = { validateDealerRequest, validateFile };
