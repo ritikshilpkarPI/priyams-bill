@@ -60,15 +60,17 @@ dbAppConnection();
 app.use(handleErrors);
 const handler = serverless(app);
 
-module.exports.handler = async (event, context) => {
+const handlerFunction = async (event, context) => {
 
-  context.callbackWaitsForEmptyEventLoop = false;
+context.callbackWaitsForEmptyEventLoop = false;
 
-   console.log({isConnected});
-   const response = await handler(event, context);
-   const connections = mongoose.connections.length;
-   console.log('Number of connections', {connections});
+console.log({isConnected});
+const response = await handler(event, context);
+const connections = mongoose.connections.length;
+console.log('Number of connections', {connections});
 
-   return response;
+return response;
 }
+
+export {  handlerFunction as handler }
 
