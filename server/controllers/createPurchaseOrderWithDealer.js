@@ -93,4 +93,4 @@ const createPurchaseOrderWithDealer = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { createPurchaseOrderWithDealer };
+module.exports = createPurchaseOrderWithDealer ;

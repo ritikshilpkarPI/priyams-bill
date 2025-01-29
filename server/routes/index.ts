@@ -88,7 +88,7 @@ const {
   createRzpQRByAmount,
   assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId,
-   createPurchaseOrderWithDealer,
+  createPurchaseOrderWithDealer,
 } = require('../controllers/index');
 
 // online order apis

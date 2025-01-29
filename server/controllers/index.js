@@ -83,7 +83,7 @@ const expelOrderToRider = require('./expelOrderToRider');
 const createRzpQRByAmount = require('./createRzpQRByAmount');
 const assignOrderToRider = require('./assignOrderToRider');
 const getItemsSellDetailsByPurchaseOrderId = require('./getItemsSellDetailsByPurchaseOrderId');
-const { createPurchaseOrderWithDealer } = require('./createPurchaseOrderWithDealer');
+const  createPurchaseOrderWithDealer  = require('./createPurchaseOrderWithDealer');
 
 
 module.exports = {
