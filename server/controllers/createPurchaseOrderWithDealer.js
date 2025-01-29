@@ -1,10 +1,12 @@
-const { validateDealerRequest ,validateFile} = require('../util/validateDealerRequest');
+const { validateDealerRequest } = require('../util/validateDealerRequest');
 const { Dealer } = require('../db-models/dealer-model');
 const { Salesman } = require('../db-models/salesman-model');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { uploadToCloudinary } = require('../util/image');
 const { MESSAGES } = require('../constants/messages');
-const createPurchaseOrderWithDealer = async (req, res, next) => {
+const { validateFile } = require('../util/validateFile');
+
+const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
   try {
     const { error } = validateDealerRequest.validate(req.body);
     if (error) {
@@ -12,14 +14,14 @@ const createPurchaseOrderWithDealer = async (req, res, next) => {
         .status(400)
         .json({ status: false, message: error.details[0].message });
     }
-    if(!req.body.dealerId){
-      const { error: fileError } = validateFile.validate(req.files);
+    if (error) return res.status(400).json({ status: false, message: error.details[0].message });
+  if (req.files && req.files.dealerVisitingCard) {
+      const dealerVisitingCard = req.files.dealerVisitingCard;
+      const { error: fileError } = validateFile.validate(dealerVisitingCard);
+    
       if (fileError) {
-        return res
-          .status(400)
-          .json({ status: false, message: fileError.details[0].message });
+        return res.status(400).json({ status: false, message: fileError.details[0].message });
       }
-      
     }
     
     const {
@@ -31,78 +33,60 @@ const createPurchaseOrderWithDealer = async (req, res, next) => {
       dealerId,
       salesmanId,
     } = req.body;
-   
+
     let dealer;
-    if (!dealerId) {
-      const {dealerVisitingCard}=req.files;
-    
 
-      let uploadedVisitingCard = null;
-      if (dealerVisitingCard && dealerVisitingCard.data) {
-        const result = await uploadToCloudinary(
-          dealerVisitingCard.data,
-          dealerVisitingCard.name
-        );
-  
-        if (result) {
-          uploadedVisitingCard = {
-            publicId: result.public_id,
-            secureUrl: result.secure_url,
-          };
-        }
-      }
-      dealer = new Dealer({
-        dealerName,
-        dealerAddress,
-        dealerContactNumber,
-        dealerVisitingCard: uploadedVisitingCard,
-      });
-      await dealer.save();
-    } else {
+    if (dealerId) {
       dealer = await Dealer.findById(dealerId);
-      if (!dealer) {
-        return res.status(400).json({
-          status: false,
-          message: MESSAGES.DEALER_NOT_EXIST,
-        });
-      }
-    }
-    let salesman;
-    if (!salesmanId) {
-      salesman = new Salesman({
-        salesmanName,
-        salesmanContactNumber,
-        dealerReference: dealer._id,
-      });
-      await salesman.save();
-    } else {
-      salesman = await Salesman.findById(salesmanId);
-      if (!salesman) {
-        return res.status(400).json({
-          status: false,
-          message: MESSAGES.SALESMAN_NOT_EXIST,
-        });
-      }
-    }
-    const newPurchaseOrder = new PurchaseOrder({
-      dealerId: dealer._id,
-      salesmanId: salesman._id,
-    });
+      if (!dealer) return res.status(400).json({ status: false, message: MESSAGES.DEALER_NOT_EXIST });
 
+      Object.assign(dealer, {
+        dealerName: dealerName || dealer.dealerName,
+        dealerAddress: dealerAddress || dealer.dealerAddress,
+        dealerContactNumber: dealerContactNumber || dealer.dealerContactNumber,
+      });
+    } else {
+      dealer = new Dealer({ dealerName, dealerAddress, dealerContactNumber });
+    }
+
+    if (req.files && req.files.dealerVisitingCard) {
+      const { dealerVisitingCard } = req.files;
+      const uploadResult = await uploadToCloudinary(dealerVisitingCard.data, dealerVisitingCard.name);
+      if (uploadResult) {
+        dealer.dealerVisitingCard = { publicId: uploadResult.public_id, secureUrl: uploadResult.secure_url };
+      }
+    }
+
+    await dealer.save();
+
+    let salesman;
+
+    if (salesmanId) {
+      salesman = await Salesman.findById(salesmanId);
+      if (!salesman) return res.status(400).json({ status: false, message: MESSAGES.SALESMAN_NOT_EXIST });
+
+      Object.assign(salesman, {
+        salesmanName: salesmanName || salesman.salesmanName,
+        salesmanContactNumber: salesmanContactNumber || salesman.salesmanContactNumber,
+      });
+    } else {
+      salesman = new Salesman({ salesmanName, salesmanContactNumber, dealerReference: dealer._id });
+    }
+
+    await salesman.save();
+
+    const newPurchaseOrder = new PurchaseOrder({ dealerId: dealer._id, salesmanId: salesman._id });
     await newPurchaseOrder.save();
 
     return res.status(200).json({
       status: true,
       message: MESSAGES.DEALER_AND_SALESMAN_DATA_SAVE_SUCCESSFULLY,
-      data: {
-        dealer,
-        salesman,
-      },
+      data: { dealer, salesman },
     });
   } catch (error) {
-    console.log({ error });
-
+    console.error(error);
     next(error);
   }
 };
-module.exports = createPurchaseOrderWithDealer ;
+
+module.exports = createOrUpdatePurchaseOrderWithDealer;
