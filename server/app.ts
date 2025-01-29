@@ -21,12 +21,7 @@ app.use(
 
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 app.use(
-  fileUpload(
-  //   {
-  //   // useTempFiles: true,
-  //   // tempFileDir: '/tmp/',
-  // }
-)
+  fileUpload()
 );
 app.use('/.netlify/functions/app', routers);
 app.get('/.netlify/functions/app/server', (req, res) => {
