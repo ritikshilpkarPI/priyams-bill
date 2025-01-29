@@ -49,7 +49,7 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
 
     const itemMap = {};
     purchaseOrder.purchasedItems.forEach((item) => {
-      if (item && item.item_id) {
+      if (item && item.item_id && item.item_id !== "undefined") {
         const itemId = item.item_id.toString(); 
         itemMap[itemId] = {
           inputName: item.inputName || "",
