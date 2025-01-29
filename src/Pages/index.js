@@ -24,4 +24,5 @@ export const AddExpiredItem = lazy(()=> import('./AddExpiredItem'))
 export const ExpiredItemList = lazy(()=> import('./ExpiredItemList'))
 export const ReturnAndExchange = lazy(()=> import('./ReturnBill'));
 export const SellDetailsPage = lazy(()=> import('./sellDetailsPage/SellDetailsPage'));
+export const CreatePurchaseOrderPage = lazy(()=>import('./createPurchaseOrderPage/CreatePurchaseOrderPage'))
 

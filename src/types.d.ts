@@ -106,6 +106,13 @@ declare global {
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     isDropdown?: boolean;
   }
+  interface StepperData {
+    label: string;
+    component: React.ReactNode;
+  }
+  interface FormStepperProps {
+    steps: StepperData[];
+  }
 }
 
 declare module '*.scss' {

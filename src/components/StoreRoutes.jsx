@@ -34,6 +34,7 @@ import {
   ExpiredItemList,
   ReturnAndExchange,
   SellDetailsPage,
+  CreatePurchaseOrderPage,
 } from '../Pages';
 import Label from '../Pages/Label';
 import { Fragment } from 'react';
@@ -99,6 +100,7 @@ const StoreRoutes = () => {
             <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
             <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
             <Route exact path="/sellDetailsPage/:purchaseOrderId" component={SellDetailsPage} />
+            <Route exact path="/CreatePurchaseOrderPage" component={CreatePurchaseOrderPage} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>
