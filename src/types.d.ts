@@ -48,6 +48,7 @@ declare global {
   }
 
   interface ItemSoldInterface {
+    itemId: string;
     itemName: string;
     itemMRP: number;
     soldAfterApproval: number;
@@ -61,6 +62,8 @@ declare global {
 
   interface SellDetailsTableProps {
     tableData: ItemSoldInterface[];
+    threeMonthDates?: { currentDate: string, previousDate:string}
+    oneYearDates?: { currentDate: string, previousDate:string}
   }
 
   interface CategorySchemaType {
