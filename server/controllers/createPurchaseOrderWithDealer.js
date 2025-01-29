@@ -1,4 +1,4 @@
-const { validateDealerRequest } = require('../util/validateDealerRequest');
+const { validateDealerRequest ,validateFile} = require('../util/validateDealerRequest');
 const { Dealer } = require('../db-models/dealer-model');
 const { Salesman } = require('../db-models/salesman-model');
 const PurchaseOrder = require('../db-models/purchase-order-model');
@@ -12,33 +12,45 @@ const createPurchaseOrderWithDealer = async (req, res, next) => {
         .status(400)
         .json({ status: false, message: error.details[0].message });
     }
+    if(!req.body.dealerId){
+      const { error: fileError } = validateFile.validate(req.files);
+      if (fileError) {
+        return res
+          .status(400)
+          .json({ status: false, message: fileError.details[0].message });
+      }
+      
+    }
+    
     const {
       dealerName,
       dealerAddress,
       dealerContactNumber,
-      dealerVisitingCard,
       salesmanName,
       salesmanContactNumber,
       dealerId,
       salesmanId,
-    } = req.files;
-
-    let uploadedVisitingCard = null;
-    if (dealerVisitingCard && dealerVisitingCard.data) {
-      const result = await uploadToCloudinary(
-        dealerVisitingCard.data,
-        dealerVisitingCard.name
-      );
-
-      if (result) {
-        uploadedVisitingCard = {
-          publicId: result.public_id,
-          secureUrl: result.secure_url,
-        };
-      }
-    }
+    } = req.body;
+   
     let dealer;
     if (!dealerId) {
+      const {dealerVisitingCard}=req.files;
+    
+
+      let uploadedVisitingCard = null;
+      if (dealerVisitingCard && dealerVisitingCard.data) {
+        const result = await uploadToCloudinary(
+          dealerVisitingCard.data,
+          dealerVisitingCard.name
+        );
+  
+        if (result) {
+          uploadedVisitingCard = {
+            publicId: result.public_id,
+            secureUrl: result.secure_url,
+          };
+        }
+      }
       dealer = new Dealer({
         dealerName,
         dealerAddress,
