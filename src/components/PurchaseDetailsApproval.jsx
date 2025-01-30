@@ -11,7 +11,6 @@ const PurchaseDetailsApproval = ({
   allPurchaseList,
   setAllPurchaseList,
   getOrders,
-  setLoading
 }) => {
   const [indexDetail, setIndexDetail] = useState(-1);
   return (
@@ -49,9 +48,11 @@ const PurchaseDetailsApproval = ({
           <tbody>
             {allPurchaseList
               ?.map((list, index) => {
+                console.log({ list })
+                const isShelfExpired = list?.purchasedItems?.find(purchaseItem => purchaseItem?.expiryDates?.find(expiryDate => expiryDate?.isShelfExpired));
                 return indexDetail >= 0 ? (
                   index === indexDetail ? (
-                    <tr key={index}>
+                    <tr key={index} className={`${`${isShelfExpired ? 'shelf-expired-item-table-row' : 'N'}`}`}>
                       <PurchaseListApproval
                         allPurchaseList={allPurchaseList}
                         setAllPurchaseList={setAllPurchaseList}
@@ -59,14 +60,13 @@ const PurchaseDetailsApproval = ({
                         index={index}
                         setIndexDetail={setIndexDetail}
                         getOrders={getOrders}
-                        setLoading={setLoading}
                       />
                     </tr>
                   ) : (
                     <div key={index}></div>
                   )
                 ) : (
-                  <tr key={index}>
+                  <tr key={index} className={`${`${isShelfExpired ? 'shelf-expired-item-table-row' : 'N'}`}`}>
                     <PurchaseListApproval
                       allPurchaseList={allPurchaseList}
                       setAllPurchaseList={setAllPurchaseList}
@@ -74,7 +74,6 @@ const PurchaseDetailsApproval = ({
                       index={index}
                       setIndexDetail={setIndexDetail}
                       getOrders={getOrders}
-                      setLoading={setLoading}
                     />
                   </tr>
                 );

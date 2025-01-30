@@ -1,68 +1,84 @@
 import { Button } from '@mantine/core';
 import Cookies from 'js-cookie';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link  } from 'react-router-dom';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { parseJwt } from '../utils/cookie';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
+import { isAdmin } from 'utils/isAdmin';
 const PurchaseListApproval = ({
   list,
   index,
   allPurchaseList,
   setIndexDetail,
   getOrders,
-  setLoading
-
 }) => {
-  const rejectOrder = async (id, index) => {
-    if (window.confirm('Are you sure you want to reject this order?')) {
+  const [loadingState, setLoadingState] = useState({});
+  const [isAdminUser, setIsAdminUser] = useState(false)
+
+  const setLoading = (id, state, buttonName) => {
+    setLoadingState({[id]: state, btnName:buttonName });
+  };
+
+  const handleApiCall = async (apiCall, id, index, successMessage, errorMessage, callback, buttonName) => {
     try {
-      setLoading(true)
-      await genericAxios({
-        method: API_METHODS.POST,
-        url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
-        data: {
-          username: parseJwt(Cookies.get('token')).username,
-        },
-      });
-      window.alert('Order rejected successfully');
-      getOrders('rejected');
+      setLoading(id, true, buttonName);
+      await apiCall();
+      window.alert(successMessage);
+      if (callback) callback();
     } catch (err) {
-      window.alert('Something went wrong,unable to reject order');
-    }finally{
-      setLoading(false);
-    }
+      console.error(err);
+      window.alert(errorMessage);
+    } finally {
+      setLoading(id, false, buttonName);
     }
   };
+
+  const rejectOrder = async (id, index) => {
+    await handleApiCall(
+      () =>
+        genericAxios({
+          method: API_METHODS.POST,
+          url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
+          data: {
+            username: parseJwt(Cookies.get('token')).username,
+          },
+        }),
+      id,
+      index,
+      'Order rejected successfully',
+      'Something went wrong, unable to reject order',
+      () => getOrders('rejected'),
+      "reject"
+    );
+  };
   const approveOrder = async (id, index, list) => {
-    if (window.confirm('Are you sure you want to approve this order?')){
-    try {
-      setLoading(true);
-      await genericAxios({
-        url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
-        method: API_METHODS.POST,
-        data: {
-          new_items: list.purchasedItems,
-        },
-      });
-      await genericAxios({
-        method: API_METHODS.POST,
-        url: `${API_PATHS.APPROVAL.POST_APPROVE_ORDER}/${id}`,
-        data: {
-          username: parseJwt(Cookies.get('token')).username,
-        },
-      });
-      window.alert('Order approved successfully');
-      await getOrders('draft');
-    } catch (err) {
-      console.log(err);
-      window.alert('Something went wrong,unable to approve order');
-    }finally{
-      setLoading(false);
-    }
-    }
+    await handleApiCall(
+      async () => {
+        await genericAxios({
+          url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
+          method: API_METHODS.POST,
+          data: {
+            new_items: list.purchasedItems,
+          },
+        });
+        await genericAxios({
+          method: API_METHODS.POST,
+          url: `${API_PATHS.APPROVAL.POST_APPROVE_ORDER}/${id}`,
+          data: {
+            username: parseJwt(Cookies.get('token')).username,
+          },
+        });
+      },
+      id,
+      index,
+      'Order approved successfully',
+      'Something went wrong, unable to approve order',
+      () => getOrders('draft'),
+      "approve"
+    );
   };
 
   const draftOrder = async(id, index) => {
@@ -87,30 +103,30 @@ const PurchaseListApproval = ({
     if (!validate) {
       return;
     }
-    await saveDraft(id, index);
-    getOrders('draft');
+    await handleApiCall(
+      () =>
+        genericAxios({
+          method: API_METHODS.POST,
+          url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
+          data: { id },
+        }),
+      id,
+      index,
+      'Order drafted successfully',
+      'Something went wrong, unable to draft the order',
+      () => getOrders('draft'),
+      "draft"
+    );
   }
-  };
-  const saveDraft = async (id, index) => {
-    try {
-      setLoading(true);
-      await genericAxios({
-        method: API_METHODS.POST,
-        url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
-        data: { id },
-      });
-      alert('Order drafted successfully');
-    } catch (err) {
-      console.log(err);
-      alert(`Something went wrong.Unable to draft the order`);
-    }finally{
-      setLoading(false);
-    }
   };
   const time = new Date(list.createdAt);
   let datetext = time.toTimeString();
   datetext = datetext?.split(' ')[0];
 
+useEffect(()=>{
+  const isUserAdmin = isAdmin();
+  setIsAdminUser(isUserAdmin)
+},[])
   return (
     <>
       {list ? (
@@ -158,11 +174,10 @@ const PurchaseListApproval = ({
               {list.isDraft ? (
                 <td>
                   <Button
-                    disabled={list.isRejected || list.isApproved}
+                    disabled={loadingState[list._id] || list.isRejected || list.isApproved}
                     className="approve-btn"
-                    onClick={() => {
-                      approveOrder(list._id, index, list);
-                    }}
+                    loading={loadingState[list._id] && loadingState.btnName === 'approve'}
+                    onClick={() => approveOrder(list._id, index, list)}
                   >
                     Approve
                   </Button>
@@ -170,11 +185,10 @@ const PurchaseListApproval = ({
               ) : (
                 <td>
                   <Button
-                    disabled={list.isRejected || list.isApproved}
+                    disabled={loadingState[list._id] || list.isRejected || list.isApproved}
                     className="approve-btn"
-                    onClick={() => {
-                      draftOrder(list._id, index);
-                    }}
+                    loading={loadingState[list._id] && loadingState.btnName === 'draft'}
+                    onClick={() => draftOrder(list._id, index)}
                   >
                     Draft
                   </Button>
@@ -182,11 +196,10 @@ const PurchaseListApproval = ({
               )}
               <td>
                 <Button
-                  disabled={list.isApproved || list.isRejected || !list.isDraft}
+                  disabled={loadingState[list._id] || list.isApproved || list.isRejected || !list.isDraft}
                   className="reject-btn"
-                  onClick={() => {
-                    rejectOrder(list._id, index);
-                  }}
+                  loading={loadingState[list._id] && loadingState.btnName === 'reject'}
+                  onClick={() => rejectOrder(list._id, index)}
                 >
                   Reject
                 </Button>
@@ -207,17 +220,28 @@ const PurchaseListApproval = ({
               </td>
               <td>
                 <Button
-                  disabled={list.isRejected}
+                  disabled={loadingState[list._id] || list.isRejected}
                   className="approve-btn"
-                  onClick={() => {
-                    draftOrder(list._id, index);
-                  }}
+                  loading={loadingState[list._id] && loadingState.btnName === 'draft'}
+                  onClick={() => draftOrder(list._id, index)}
                 >
                   Draft
                 </Button>
               </td>
             </>
           )}
+          {isAdminUser && list.isDraft &&
+            <td>
+              <Link
+                className="purchase-list-details-button"
+                to={{
+                  pathname: `/sellDetailsPage/${list._id}`,
+                }}
+              >
+                Sell details
+              </Link>
+            </td>
+          }
         </>
       ) : (
         <></>

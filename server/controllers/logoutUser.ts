@@ -1,4 +1,6 @@
-const logoutUser = async (req, res, next) => {
+import { NextFunction, Request, Response } from "express";
+
+export const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     res.cookie('token', '', {
       expires: new Date(Date.now()),
@@ -11,4 +13,3 @@ const logoutUser = async (req, res, next) => {
     next(error)
   }
 };
-module.exports = logoutUser;

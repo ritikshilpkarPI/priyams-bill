@@ -39,17 +39,17 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
     }
 
     const approvedTime = purchaseOrder.approveTime;
-    if (!approvedTime) {
-      return res.status(400).json({
-        error: MESSAGES.APPROVAL_TIME_MISSING,
-      });
-    }
+    // if (!approvedTime) {
+    //   return res.status(400).json({
+    //     error: MESSAGES.APPROVAL_TIME_MISSING,
+    //   });
+    // }
     const start = convertDateToIST(startDate).toISOString();
     const end = convertDateToIST(endDate).toISOString();
 
     const itemMap = {};
     purchaseOrder.purchasedItems.forEach((item) => {
-      if (item && item.item_id) {
+      if (item && item.item_id && item.item_id !== "undefined") {
         const itemId = item.item_id.toString(); 
         itemMap[itemId] = {
           inputName: item.inputName || "",
