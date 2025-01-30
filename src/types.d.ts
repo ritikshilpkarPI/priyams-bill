@@ -113,6 +113,18 @@ declare global {
   interface FormStepperProps {
     steps: StepperData[];
   }
+  interface StepInterface {
+    label: string;
+    component: React.ReactNode;
+  }
+  interface FormStepperProps {
+    steps: StepInterface[];
+  }
+
+  interface StepperStateInterface {
+    currentStep: number;
+    stepCompletion: boolean[];
+  }
 }
 
 declare module '*.scss' {

@@ -1,28 +1,30 @@
-import { DealerDetailsForm } from 'components/dealerDetailsForm/DealerDetailsForm';
-import { FormStepper } from 'components/formStepper/FormStepper';
-import { ItemDetailsForm } from 'components/itemDetailsForm/ItemDetailsForm';
-import { PaymentDetailsForm } from 'components/paymentDetailsForm/PaymentDetailsForm';
 import React from 'react';
+import { FormStepper } from 'components/formStepper/FormStepper';
+import './CreatePurchaseOrderPage.css';
+import { Text } from '@mantine/core';
 
 const CreatePurchaseOrderPage = () => {
   const stepsData: StepperData[] = [
     {
       label: 'Dealer Details',
-      component: <DealerDetailsForm />,
+      component: <div>Dealer Details Form</div>,
     },
     {
       label: 'Payment Details',
-      component: <PaymentDetailsForm />,
+      component: <div>Payment Details Form</div>,
     },
     {
       label: 'Items Details',
-      component: <ItemDetailsForm />,
+      component: <div>Item Details Form</div>,
     },
   ];
+  
   return (
-    <div>ss
-      CreatePurchaseOrderPage
-      <FormStepper steps={stepsData} />
+    <div className="create-purchase-order-page-container">
+      <Text size="xl">Create Purchase Order</Text>
+      <div style={{ maxWidth: 600, margin: 'auto', padding: 10 }}>
+         <FormStepper steps={stepsData} />
+      </div>
     </div>
   );
 };
