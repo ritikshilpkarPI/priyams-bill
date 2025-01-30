@@ -1,0 +1,101 @@
+/* Print-specific styles */
+@media print {
+
+    /* Hide everything except the print layout */
+    body * {
+        visibility: hidden;
+    }
+
+    .new-bill-page,
+    .new-bill-page * {
+        visibility: visible;
+    }
+
+    .new-bill-page {
+        width: 60mm;
+        /* Adjust to fit POS printer */
+        margin: 0 auto;
+        /* Center align the content */
+        font-size: 12px;
+    }
+
+    /* Center alignment for shop details and "You Saved" line */
+    .shop-details,
+    .savings {
+        text-align: center;
+        margin: 0 auto 5px auto;
+    }
+
+    .shop-details h2,
+    .shop-details p,
+    .savings {
+        margin: 0;
+        font-size: 12px;
+    }
+
+    .savings {
+        border: 2px dashed black;
+        padding: 5px;
+        font-weight: bold;
+    }
+
+    /* Table adjustments */
+    table {
+        width: 100%;
+        margin: 10px 0;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        text-align: left;
+        /* Align item names to the left */
+        padding: 2px;
+        /* Minimize vertical spacing */
+        border: none;
+        /* Remove all borders */
+        word-wrap: break-word;
+        /* Ensure text wraps properly */
+        font-size: 12px;
+    }
+
+    /* Specific columns */
+    th {
+        font-weight: bold;
+        text-align: left;
+    }
+
+    td:first-child {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Truncate if too long */
+    }
+
+    /* Remove unnecessary columns (e.g., Slab Pricing, Actions) */
+    th:nth-child(5),
+    td:nth-child(5),
+    th:nth-child(7),
+    td:nth-child(7) {
+        display: none;
+    }
+
+    /* Remove border for the Quantity column */
+    .quantity-input {
+        border: none;
+    }
+
+    /* Remove buttons and inputs from print view */
+    button,
+    input,
+    .payment-section,
+    .item-search {
+        display: none;
+    }
+
+    /* Barcode styling */
+    .barcode {
+        text-align: center;
+        margin: 10px 0;
+    }
+}
