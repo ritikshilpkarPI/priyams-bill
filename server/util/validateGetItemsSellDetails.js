@@ -22,6 +22,14 @@ const validateGetItemsSellDetails = Joi.object({
       "any.only": "Time period must be one of 'daily', 'weekly', 'monthly', 'quarterly', or 'yearly'.",
       "any.required": "Time period is required.",
     }),
+}).custom((value, helpers) => {
+  const { startDate, endDate } = value;
+
+  if (new Date(startDate) >= new Date(endDate)) {
+    return helpers.message('Start date must be before the end date.');
+  }
+
+  return value;
 });
 
 module.exports = { validateGetItemsSellDetails };
