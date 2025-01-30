@@ -1,13 +1,14 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 require('dotenv').config();
 import mongoose from 'mongoose';
-import serverless from 'serverless-http';
 import routers from './routes';
 import fileUpload from 'express-fileupload';
 import handleErrors from './middleware/handleError';
 import dbAppConnection from './db/conn';
+import path from 'path';
+
 // require('./util/nodeCron');
 const app = express();
 
@@ -27,12 +28,22 @@ app.use(
     tempFileDir: '/tmp/',
   })
 );
+
 app.use('/.netlify/functions/app', routers);
+
+const clientBuildPath = path.join(__dirname, '../../build');
+app.use(express.static(clientBuildPath));
+
+app.use('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(clientBuildPath, 'index.html'));
+})
+
+
 app.get('/.netlify/functions/app/server', (req, res) => {
   res.status(200).json({ success: true })
 })
 
-const mongoUriEnvMap = {
+const mongoUriEnvMap: any = {
   staging: process.env.STAGING_DB,
   production: process.env.PROD_DB,
   dev: process.env.DEV_DB,
@@ -50,8 +61,10 @@ connectDB();
 dbAppConnection();
 
 app.use(handleErrors);
+const PORT = 9000;
+app.listen(PORT, () => {
+  console.log(`Server running on PORT: ${9000}`)
+})
 
-const handler = serverless(app);
-
-export { handler };
+export { app };
 

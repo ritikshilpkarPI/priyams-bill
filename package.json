@@ -11,8 +11,7 @@
     "restart": "rimraf dist && npm run build && npm run start",
     "start": "cross-env ENV_NAME=dev npm-run-all --parallel server client",
     "client": "react-scripts start ",
-    "server": "netlify-lambda serve server -t 900",
-    "build": "npm run build:functions && npm run build:app",
+    "server": "node dist/app.js",
     "build:app": "CI=false react-scripts build",
     "debug": "netlify dev --inspect",
     "build:functions": "netlify-lambda build server",
@@ -20,7 +19,12 @@
     "prepare": "husky install",
     "imagesToCloudinary": "node server/scripts/imagesToCloudinaryAndDB.js",
     "generateBarcodeForItems": "node server/scripts/generateBarcodeForItems.js",
-    "test": "jest --config jest.config.js"
+    "test": "jest --config jest.config.js",
+    "build:server": "tsc",
+    "build:client": "npm run build",
+    "start:server": "node dist/server/app.js",
+    "start:client": "serve -s client/build",
+    "build": "npm run build:server && npm run build:client"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.3",
