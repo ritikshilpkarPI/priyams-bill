@@ -1,21 +1,16 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { Bill } = require('../db-models/bill-model');
-const {
-  groupByTimePeriod,
-} = require('../util/groupByTimePeriod');
+const { groupByTimePeriod } = require('../util/groupByTimePeriod');
 const { convertDateToIST } = require('../util/convertDateToIST');
 const { MESSAGES } = require('../constants/messages');
-const {
-  validateGetItemsSellDetails,
-} = require('../util/validateGetItemsSellDetails');
+const {validateGetItemsSellDetails} = require('../util/validateGetItemsSellDetails');
 const { chunkArray } = require('../util/chunkArray');
 const fetchLastPurchaseOrders = require('../util/fetchLastPurchaseOrders');
-const { generateIntervalDatesByTimePeriod } = require('../util/generateIntervalDatesByTimePeriod');
-
+const {generateIntervalDatesByTimePeriod} = require('../util/generateIntervalDatesByTimePeriod');
 const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
   try {
     const { error } = validateGetItemsSellDetails.validate(
-      { ...req.query, id: req.params.id },
+      { ...req.body, id: req.params.id },
       { abortEarly: false }
     );
 
@@ -25,13 +20,12 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
         errors: error.details.map((detail) => detail.message),
       });
     }
-    const id = req.params.id;
-    const { startDate, endDate, timePeriod } = req.query;
+    const { intervals } = req.body; 
+    const {id}=req.params
 
     const purchaseOrder = await PurchaseOrder.findById(id).select(
       'purchasedItems approveTime'
     );
-
     if (!purchaseOrder) {
       return res.status(404).json({
         error: MESSAGES.PURCHASE_ORDER_NOT_FOUND,
@@ -39,20 +33,12 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
     }
 
     const approvedTime = purchaseOrder.approveTime;
-    // if (!approvedTime) {
-    //   return res.status(400).json({
-    //     error: MESSAGES.APPROVAL_TIME_MISSING,
-    //   });
-    // }
-    const start = convertDateToIST(startDate).toISOString();
-    const end = convertDateToIST(endDate).toISOString();
-
     const itemMap = {};
     purchaseOrder.purchasedItems.forEach((item) => {
-      if (item && item.item_id && item.item_id !== "undefined") {
-        const itemId = item.item_id.toString(); 
+      if (item && item.item_id && item.item_id !== 'undefined') {
+        const itemId = item.item_id.toString();
         itemMap[itemId] = {
-          inputName: item.inputName || "",
+          inputName: item.inputName || '',
           mrp: item.mrp || 0,
         };
       }
@@ -73,39 +59,95 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
       createdAt: { $gt: approvedTime },
     }).select('items.itemDetail items.itemQuantityInBill createdAt');
 
-    const itemBills = await Bill.find({
-      'items.itemDetail': { $in: itemIds },
-      createdAt: { $gte: start, $lte: end },
-    }).select('items.itemDetail items.itemQuantityInBill createdAt');
-
     const groupedData = {};
-    itemBills.forEach((bill) => {
-      bill.items.forEach((item) => {
-        const itemId = item.itemDetail.toString();
-        const itemData = itemMap[itemId];
+    let allIntervals;
+    const intervalData = await Promise.all(
+      intervals.map(async (interval) => {
+        const { startDate, endDate, timePeriod } = interval;
+        const start = convertDateToIST(startDate).toISOString();
+        const end = convertDateToIST(endDate).toISOString();
 
-        if (!itemData) {
-          return;
+        const itemBills = await Bill.find({
+          'items.itemDetail': { $in: itemIds },
+          createdAt: { $gte: start, $lte: end },
+        }).select('items.itemDetail items.itemQuantityInBill createdAt');
+
+        itemBills.forEach((bill) => {
+          bill.items.forEach((item) => {
+            const itemId = item.itemDetail.toString();
+            const itemData = itemMap[itemId];
+
+            if (!itemData) {
+              return;
+            }
+
+            const itemName = itemData.inputName;
+            const billDate = new Date(bill.createdAt);
+            const formattedBillDate = convertDateToIST(billDate);
+            const groupKey = groupByTimePeriod(formattedBillDate, timePeriod);
+            if (itemName && groupKey) {
+              if (!groupedData[itemName]) {
+                groupedData[itemName] = {};
+              }
+              groupedData[itemName][groupKey] =
+                (groupedData[itemName][groupKey] || 0) +
+                item.itemQuantityInBill;
+            }
+          });
+        });
+
+        allIntervals = generateIntervalDatesByTimePeriod(
+          start,
+          end,
+          timePeriod
+        );
+        if (!allIntervals || allIntervals.length === 0) {
+          return res.status(400).json({
+            status: false,
+            message: 'No intervals generated for the provided time period.',
+          });
         }
 
-        const itemName = itemData.inputName;
-        const billDate = new Date(bill.createdAt);
-        const formattedBillDate = convertDateToIST(billDate);
-        const groupKey = groupByTimePeriod(formattedBillDate, timePeriod);
-        if (itemName && groupKey) {
-          if (!groupedData[itemName]) {
-            groupedData[itemName] = {};
-          }
-          groupedData[itemName][groupKey] =
-            (groupedData[itemName][groupKey] || 0) + item.itemQuantityInBill;
-        }
-      });
-    });
+        allIntervals.forEach((intervalDate) => {
+          Object.keys(groupedData).forEach((itemName) => {
+            groupedData[itemName][intervalDate] =
+              groupedData[itemName][intervalDate] || 0;
+          });
+        });
 
-    const allIntervals = generateIntervalDatesByTimePeriod(
-      start,
-      end,
-      timePeriod
+        const soldItemsByDate = allIntervals
+          .map((interval) => {
+            const itemNames = itemIds.map(
+              (itemId) => itemMap[itemId].inputName
+            );
+            return itemNames.map((itemName) => ({
+              itemName,
+              date: interval,
+              value: groupedData[itemName]
+                ? groupedData[itemName][interval] || 0
+                : 0, 
+            }));
+          })
+          .flat();
+        const totalItemsSoldInInterval = allIntervals.reduce(
+          (total, interval) => {
+            return (
+              total + Object.keys(groupedData).reduce((innerTotal, itemName) => {
+                return (innerTotal + ((groupedData[itemName] && groupedData[itemName][interval]) ||  0)
+                );
+              }, 0)
+            );
+          },
+          0
+        );
+        return {
+          startDate,
+          endDate,
+          timePeriod,
+          data: soldItemsByDate,
+          totalItemsSoldInInterval,
+        };
+      })
     );
 
     const totalItemQuantity = {};
@@ -125,51 +167,56 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
       });
     });
     const lastPurchaseOrdersMap = await Promise.all(
-      chunkArray(itemIds, 10).map((chunk) => fetchLastPurchaseOrders(chunk,limit=3))
+      chunkArray(itemIds, 10).map((chunk) =>
+        fetchLastPurchaseOrders(chunk, (limit = 3))
+      )
     );
 
     const flattenedLastPurchaseOrders = lastPurchaseOrdersMap.flat();
+
     const responseData = itemIds.map((itemId) => {
       const itemData = itemMap[itemId];
-        if (!itemData) {
-          return;
-        }
+      if (!itemData) {
+        return;
+      }
 
       const itemName = itemData.inputName;
-      const itemMRP = itemData.mrp; 
+      const itemMRP = itemData.mrp;
 
       const ordersForItem = flattenedLastPurchaseOrders.filter(
         (order) => order.item_id === itemId
       );
-
-      const lastPurchaseOrders = ordersForItem.flatMap((order) => 
+      const lastPurchaseOrders = ordersForItem.flatMap((order) =>
         order.purchaseOrders.map((orderDetails, index) => ({
-          orderSequence: `${index + 1}`, 
-          approvalDate: orderDetails.approvalDate 
-            ? new Date(orderDetails.approvalDate).toISOString().slice(0, 10) 
+          orderSequence: `${index + 1}`,
+          approvalDate: orderDetails.approvalDate
+            ? new Date(orderDetails.approvalDate).toISOString().slice(0, 10)
             : null,
           amount: orderDetails.amount,
           costPrice: orderDetails.costPrice,
-          purchaseOrderId: orderDetails.purchaseOrderId
+          purchaseOrderId: orderDetails.purchaseOrderId,
         }))
       );
 
-      const groupedArray = allIntervals.map((interval) => ({
-        date: interval,
-        value: groupedData[itemName] ? groupedData[itemName][interval] || 0 : 0,
-      }));
-      const totalItemsSoldInInterval = groupedArray.reduce(
-        (total, current) => total + current.value,
-        0
-      );
+      const filterIntervalDataByItemName = (intervalData, itemName) => {
+        return intervalData.map((interval) => {
+          const filteredData = interval.data.filter(
+            (item) => item.itemName === itemName
+          );
+          const cleanedData = filteredData.map(({ itemName, ...rest }) => rest);
+          return {
+            ...interval,
+            data: cleanedData,
+          };
+        });
+      };
 
       return {
         itemName,
         itemId,
         itemMRP,
         soldAfterApproval: totalItemQuantity[itemName] || 0,
-        totalItemsSoldInInterval,
-        soldItemsByDate: groupedArray,
+        intervals: filterIntervalDataByItemName(intervalData, itemName),
         lastPurchaseOrders,
       };
     });
