@@ -41,11 +41,14 @@ const mongoUriEnvMap = {
 const MONGODB_URI =
   mongoUriEnvMap[process.env.ENV_NAME || ""] || mongoUriEnvMap[process.env.NODE_ENV];
 
+let isDbConnected = false;
+
 async function connectDB() {
+  isDbConnected = true;
   await mongoose.connect(`${MONGODB_URI}`);
 }
 
-connectDB();
+if(!isDbConnected) connectDB();
 // connect PStore Database
 dbAppConnection();
 
@@ -53,5 +56,17 @@ app.use(handleErrors);
 
 const handler = serverless(app);
 
-export { handler };
+const handlerFunction = async (event, context) => {
+
+  context.callbackWaitsForEmptyEventLoop = false;
+  
+  console.log({ isDbConnected });
+  const response = await handler(event, context);
+  const connections = mongoose.connections.length;
+  console.log('Number of connections', {connections});
+  
+  return response;
+}
+
+export { handlerFunction as handler };
 
