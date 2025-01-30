@@ -1,9 +1,8 @@
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 
 declare global {
   export interface UserStateType {
-
   }
 
   export type RootState = ReturnType<typeof store.getState>;
@@ -29,38 +28,41 @@ declare global {
     id: string;
   }
 
-  interface SampleData {
+  interface soldItemsByDateInterface {
     date: string;
     value: number;
   }
-  
+
   interface LineGraphProps {
-    data: SampleData[];
+    data: soldItemsByDateInterface[];
     width: number;
     height: number;
   }
 
   interface ItemSoldPurchaseOrder {
-    orderSequence:string
+    orderSequence: string;
     approvalDate: string;
     amount: number;
-    costPrice: number
+    costPrice: number;
+    purchaseOrderId: string;
   }
 
   interface ItemSoldInterface {
     itemName: string;
-    itemPrise: number;
+    itemMRP: number;
     soldAfterApproval: number;
-    soldInLastMonth: number;
-    soldInLastThreeMonths: { date: string; value: number }[];
-    soldInLastYear: { date: string; value: number }[];
-    lastThreePurchaseOrder : ItemSoldPurchaseOrder[];
+    totalItemsSoldInInterval: number;
+    soldItemsByDate: soldItemsByDateInterface[];
+    lastPurchaseOrders: ItemSoldPurchaseOrder[];
+    lastMonthSold?: number;
+    lastThreeMonthSold?: soldItemsByDateInterface[];
+    lastYearSold?: soldItemsByDateInterface[];
   }
 
   interface SellDetailsTableProps {
     tableData: ItemSoldInterface[];
-  } 
-  
+  }
+
   interface CategorySchemaType {
     name: string;
   }
@@ -78,7 +80,32 @@ declare global {
   interface CompanySchemaType {
     name: string;
   }
-
+  interface SalesmanSchemaInterface {
+    salesmanName?: string;
+    salesmanContactNumber?: { contactNumber: string; updatedAt: Date }[];
+    dealerId?: mongoose.Types.ObjectId; 
+  }
+  interface SalesmanModelInterface extends Document, SalesmanSchemaInterface {}
+  interface DealerSchemaInterface {
+    dealerName?: string; 
+    dealerAddress?: { address: string; updatedAt: Date }[];
+    dealerContactNumber?: { contactNumber: string; updatedAt: Date }[]; 
+    dealerVisitingCard?: {  publicId: String , secureUrltype: String }; 
+  }
+  interface DealerModelInterface extends Document, DealerSchemaInterface {}
+  interface PaymentDetailsSchemaInterface {
+    paymentType?: 'Cash' | 'Cheque' | 'UPI' | 'NEFT'; 
+    paymentAmount?: number; 
+    purchaseOrderReference?: mongoose.Types.ObjectId; 
+    dealerReference?: mongoose.Types.ObjectId; 
+    paymentRemarks?: string; 
+    paymentProofImage?: {  publicId: String , secureUrltype: String }; 
+  }
+  interface PaymentDetailsModelInterface extends Document, PaymentDetailsSchemaInterface {}
+  interface LastPurchaseOrderTableProps {
+    lastPurchaseOrders: ItemSoldPurchaseOrder[];
+    isDropdown?: boolean;
+  }
 }
 
 declare module '*.scss' {
@@ -92,3 +119,5 @@ declare module '*.sass' {
 }
 
 export {};
+
+

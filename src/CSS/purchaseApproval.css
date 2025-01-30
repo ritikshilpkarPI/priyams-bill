@@ -37,3 +37,13 @@
   margin-top: 2vmin;
   margin-bottom: 2vmin;
 }
+
+.purchase-list-details-button{
+  height: 5vmin;
+  padding: 1vmin 2vmin;
+  color: white;
+  border-radius: 0.5vmin;
+  background-color:   #5783db;
+  text-decoration: none;
+  white-space: nowrap;  
+}
