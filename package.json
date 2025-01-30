@@ -40,6 +40,7 @@
     "@mantine/notifications": "^5.9.3",
     "@reduxjs/toolkit": "^2.5.0",
     "@tabler/icons": "^1.116.1",
+    "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@types/react-dom": "^19.0.3",
