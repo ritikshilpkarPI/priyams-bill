@@ -375,7 +375,7 @@ router.post(
   isLoggedIn,
   isAdmin,
   isLoggedIn,
-  // assignOrderToRider
+  assignOrderToRider
 );
 
 
