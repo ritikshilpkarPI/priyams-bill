@@ -47,8 +47,8 @@ const validateGetItemsSellDetails = Joi.object({
   const startDateObj = new Date(startDate);
   const endDateObj = new Date(endDate);
 
-  if (startDateObj >= endDateObj) {
-    throw new Error("Start date must be less than end date.");
+  if (startDateObj > endDateObj) {
+    throw new Error("Start date must be less than or equal to the end date.");
   }
 
   return value;
