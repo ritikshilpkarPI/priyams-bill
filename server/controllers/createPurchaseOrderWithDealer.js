@@ -1,4 +1,4 @@
-const { validateDealerRequest } = require('../util/validateDealerRequest');
+const { validateUpsertPODealerRequest } = require('../util/validateUpsertPODealerRequest');
 const { Dealer } = require('../db-models/dealer-model');
 const { Salesman } = require('../db-models/salesman-model');
 const PurchaseOrder = require('../db-models/purchase-order-model');
@@ -6,24 +6,21 @@ const { uploadToCloudinary } = require('../util/image');
 const { MESSAGES } = require('../constants/messages');
 const { validateFile } = require('../util/validateFile');
 
+const fileValidation = validateFile({ sizeInMB: 5, fileTypes: ['image/jpeg', 'image/png','image/jpg'] });
 const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
   try {
-    const { error } = validateDealerRequest.validate(req.body);
+    const { error } = validateUpsertPODealerRequest.validate(req.body);
     if (error) {
-      return res
-        .status(400)
-        .json({ status: false, message: error.details[0].message });
+      return res.status(400).json({ status: false, message: error.details[0].message });
     }
-    if (error) return res.status(400).json({ status: false, message: error.details[0].message });
-  if (req.files && req.files.dealerVisitingCard) {
-      const dealerVisitingCard = req.files.dealerVisitingCard;
-      const { error: fileError } = validateFile.validate(dealerVisitingCard);
-    
+
+    if (req.files && req.files.dealerVisitingCard) {
+      const fileError = fileValidation.validate(req.files.dealerVisitingCard).error;
       if (fileError) {
         return res.status(400).json({ status: false, message: fileError.details[0].message });
       }
     }
-    
+
     const {
       dealerName,
       dealerAddress,
@@ -39,12 +36,7 @@ const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
     if (dealerId) {
       dealer = await Dealer.findById(dealerId);
       if (!dealer) return res.status(400).json({ status: false, message: MESSAGES.DEALER_NOT_EXIST });
-
-      Object.assign(dealer, {
-        dealerName: dealerName || dealer.dealerName,
-        dealerAddress: dealerAddress || dealer.dealerAddress,
-        dealerContactNumber: dealerContactNumber || dealer.dealerContactNumber,
-      });
+      Object.assign(dealer, { dealerName: dealerName || dealer.dealerName, dealerAddress: dealerAddress || dealer.dealerAddress, dealerContactNumber: dealerContactNumber || dealer.dealerContactNumber });
     } else {
       dealer = new Dealer({ dealerName, dealerAddress, dealerContactNumber });
     }
@@ -64,11 +56,7 @@ const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
     if (salesmanId) {
       salesman = await Salesman.findById(salesmanId);
       if (!salesman) return res.status(400).json({ status: false, message: MESSAGES.SALESMAN_NOT_EXIST });
-
-      Object.assign(salesman, {
-        salesmanName: salesmanName || salesman.salesmanName,
-        salesmanContactNumber: salesmanContactNumber || salesman.salesmanContactNumber,
-      });
+      Object.assign(salesman, { salesmanName: salesmanName || salesman.salesmanName, salesmanContactNumber: salesmanContactNumber || salesman.salesmanContactNumber });
     } else {
       salesman = new Salesman({ salesmanName, salesmanContactNumber, dealerReference: dealer._id });
     }

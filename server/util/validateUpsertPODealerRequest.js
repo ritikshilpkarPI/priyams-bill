@@ -1,8 +1,6 @@
 const Joi = require('joi');
 
-
-
-const validateDealerRequest = Joi.object({
+const validateUpsertPODealerRequest = Joi.object({
   dealerId: Joi.string().optional(),
 
   dealerName: Joi.string().when('dealerId', {
@@ -59,4 +57,4 @@ const validateDealerRequest = Joi.object({
     }),
 }).unknown(true);
 
-module.exports = { validateDealerRequest };
+module.exports = { validateUpsertPODealerRequest };
