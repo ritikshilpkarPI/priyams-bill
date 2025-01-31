@@ -29,7 +29,7 @@ app.use(
   })
 );
 
-app.use('/.netlify/functions/app', routers);
+app.use('/.netlify/functions/server', routers);
 
 const clientBuildPath = path.join(__dirname, '../../build');
 app.use(express.static(clientBuildPath));

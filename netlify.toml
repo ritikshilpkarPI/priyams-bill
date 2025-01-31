@@ -8,16 +8,11 @@
 [dev]
   framework = "#custom"
   command = "npm run start:server"
-  targetPort = 9001
   port = 9000
+  targetPort = 9001
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:app"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "index.html"
+  from = "*"
+  to = "/.netlify/functions/server/*"
   status = 200
 
