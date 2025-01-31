@@ -10,7 +10,6 @@ import handleErrors from './middleware/handleError';
 import dbAppConnection from './db/conn';
 // require('./util/nodeCron');
 const app = express();
-
 app.use(express.json({ limit: '500mb' }));
 app.use(cookieParser());
 
@@ -22,10 +21,7 @@ app.use(
 
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: '/tmp/',
-  })
+  fileUpload()
 );
 app.use('/.netlify/functions/app', routers);
 app.get('/.netlify/functions/app/server', (req, res) => {
@@ -41,11 +37,14 @@ const mongoUriEnvMap = {
 const MONGODB_URI =
   mongoUriEnvMap[process.env.ENV_NAME || ""] || mongoUriEnvMap[process.env.NODE_ENV];
 
+let isDbConnected = false;
+
 async function connectDB() {
+  isDbConnected = true;
   await mongoose.connect(`${MONGODB_URI}`);
 }
 
-connectDB();
+if(!isDbConnected) connectDB();
 // connect PStore Database
 dbAppConnection();
 
@@ -53,5 +52,17 @@ app.use(handleErrors);
 
 const handler = serverless(app);
 
-export { handler };
+const handlerFunction = async (event, context) => {
+
+  context.callbackWaitsForEmptyEventLoop = false;
+  
+  console.log({ isDbConnected });
+  const response = await handler(event, context);
+  const connections = mongoose.connections.length;
+  console.log('Number of connections', {connections});
+  
+  return response;
+}
+
+export { handlerFunction as handler };
 

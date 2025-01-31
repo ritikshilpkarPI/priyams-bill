@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { convertDateToIST } = require('./convertDateToIST');
 
 const isValidDate = (dateString) => {
   const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -46,11 +47,12 @@ const validateGetItemsSellDetails = Joi.object({
             throw new Error(errors.join(' '));
           }
 
-          const startDateObj = new Date(startDate);
-          const endDateObj = new Date(endDate);
+  const startDateObj = new Date(startDate);
+  
+  const endDateObj = new Date(endDate);
 
-          if (startDateObj >= endDateObj) {
-            throw new Error("Start date must be less than end date.");
+          if (startDateObj > endDateObj) {
+            throw new Error("Start date must be less than or equal to the end date.");
           }
 
           return value;
@@ -64,6 +66,17 @@ const validateGetItemsSellDetails = Joi.object({
   if (!Array.isArray(value.intervals)) {
     throw new Error("Intervals must be an array of objects.");
   }
+  const currentDate = new Date();
+
+  const currentDateOnly = convertDateToIST(currentDate)
+    .toISOString()
+    .slice(0, 10);
+
+  const endDateOnly = convertDateToIST(endDateObj).toISOString().slice(0, 10);
+  if (endDateOnly > currentDateOnly) {
+    throw new Error("End date should not be greater than today's date.");
+  }
+
 
   return value;
 });
