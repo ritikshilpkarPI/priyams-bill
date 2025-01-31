@@ -9,7 +9,7 @@ if (
   process.env.ENV_NAME === 'production' ||
   process.env.NODE_ENV === 'production'
 ) {
-  axiosInstance.defaults.baseURL = '/.netlify/functions/app/';
+  axiosInstance.defaults.baseURL = '/.netlify/functions/server/';
 }
 
 export { source, axiosInstance as Axios };
