@@ -13,40 +13,36 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
       { ...req.body, id: req.params.id },
       { abortEarly: false }
     );
-
     if (error) {
       return res.status(400).json({
         status: false,
         errors: error.details.map((detail) => detail.message),
       });
     }
-    const { intervals } = req.body; 
-    const {id}=req.params
+    const { intervals } = req.body;
+    const { id } = req.params;
 
     const purchaseOrder = await PurchaseOrder.findById(id).select(
       'purchasedItems approveTime'
     );
     if (!purchaseOrder) {
-      return res.status(404).json({
-        error: MESSAGES.PURCHASE_ORDER_NOT_FOUND,
-      });
+      return res.status(404).json({ error: MESSAGES.PURCHASE_ORDER_NOT_FOUND });
     }
 
     const approvedTime = purchaseOrder.approveTime;
-    const itemMap = {};
+    const itemMap = new Map();
+
     purchaseOrder.purchasedItems.forEach((item) => {
-      if (item && item.item_id && item.item_id !== 'undefined') {
-        const itemId = item.item_id.toString();
-        itemMap[itemId] = {
+      if (item.item_id && item.item_id !== 'undefined') {
+        itemMap.set(item.item_id.toString(), {
           inputName: item.inputName || '',
           mrp: item.mrp || 0,
-        };
+        });
       }
     });
 
-    const itemIds = Object.keys(itemMap);
-
-    if (itemIds.length === 0) {
+    const itemIds = [...itemMap.keys()];
+    if (!itemIds.length) {
       return res.status(200).json({
         message: MESSAGES.NO_ITEMS_FOUND,
         success: true,
@@ -54,162 +50,131 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
       });
     }
 
-    const billsAfterPOApproval = await Bill.find({
-      'items.itemDetail': { $in: itemIds },
-      createdAt: { $gt: approvedTime },
-    }).select('items.itemDetail items.itemQuantityInBill createdAt');
+    const [billsAfterPOApproval, intervalData] = await Promise.all([
+      Bill.find({
+        'items.itemDetail': { $in: itemIds },
+        createdAt: { $gt: approvedTime },
+      }).select('items.itemDetail items.itemQuantityInBill createdAt'),
 
-    const groupedData = {};
-    let allIntervals;
-    const intervalData = await Promise.all(
-      intervals.map(async (interval) => {
-        const { startDate, endDate, timePeriod } = interval;
-        const start = convertDateToIST(startDate).toISOString();
-        const end = convertDateToIST(endDate).toISOString();
+      Promise.all(
+        intervals.map(async ({ startDate, endDate, timePeriod }) => {
+          const start = convertDateToIST(startDate).toISOString();
+          const end = convertDateToIST(endDate).toISOString();
 
-        const itemBills = await Bill.find({
-          'items.itemDetail': { $in: itemIds },
-          createdAt: { $gte: start, $lte: end },
-        }).select('items.itemDetail items.itemQuantityInBill createdAt');
+          const itemBills = await Bill.find({
+            'items.itemDetail': { $in: itemIds },
+            createdAt: { $gte: start, $lte: end },
+          }).select('items.itemDetail items.itemQuantityInBill createdAt');
 
-        itemBills.forEach((bill) => {
-          bill.items.forEach((item) => {
-            const itemId = item.itemDetail.toString();
-            const itemData = itemMap[itemId];
+          const groupedData = {};
+          itemBills.forEach(({ items, createdAt }) => {
+            const billDate = convertDateToIST(createdAt);
+            const groupKey = groupByTimePeriod(billDate, timePeriod);
 
-            if (!itemData) {
-              return;
-            }
-
-            const itemName = itemData.inputName;
-            const billDate = new Date(bill.createdAt);
-            const formattedBillDate = convertDateToIST(billDate);
-            const groupKey = groupByTimePeriod(formattedBillDate, timePeriod);
-            if (itemName && groupKey) {
-              if (!groupedData[itemName]) {
-                groupedData[itemName] = {};
+            items.forEach(({ itemDetail, itemQuantityInBill }) => {
+              const itemData = itemMap.get(itemDetail.toString());
+              if (itemData && groupKey) {
+                groupedData[itemData.inputName] =
+                  groupedData[itemData.inputName] || {};
+                groupedData[itemData.inputName][groupKey] =
+                  (groupedData[itemData.inputName][groupKey] || 0) +
+                  itemQuantityInBill;
               }
-              groupedData[itemName][groupKey] =
-                (groupedData[itemName][groupKey] || 0) +
-                item.itemQuantityInBill;
+            });
+          });
+
+          const allIntervals = generateIntervalDatesByTimePeriod(
+            start,
+            end,
+            timePeriod
+          );
+
+          if (!allIntervals.length) {
+            return res.status(400).json({
+              status: false,
+              message: 'No intervals generated for the provided time period.',
+            });
+          }
+
+          allIntervals.forEach((intervalDate) => {
+            for (const itemName of Object.keys(groupedData)) {
+              groupedData[itemName][intervalDate] =
+                groupedData[itemName][intervalDate] || 0;
             }
           });
-        });
 
-        allIntervals = generateIntervalDatesByTimePeriod(
-          start,
-          end,
-          timePeriod
-        );
-        if (!allIntervals || allIntervals.length === 0) {
-          return res.status(400).json({
-            status: false,
-            message: 'No intervals generated for the provided time period.',
-          });
+          const soldItemsByDate = allIntervals.flatMap((interval) =>
+            itemIds.map((itemId) => {
+              const itemData = itemMap.get(itemId);
+              if (!itemData) return null; 
+              const { inputName } = itemData;
+              return {
+                itemName: inputName,
+                date: interval,
+                value: groupedData[inputName] ? groupedData[inputName][interval] || 0 : 0, 
+              };
+            })
+          );
+          
+
+          const totalItemsSoldInInterval = allIntervals.reduce(
+            (total, interval) =>
+              total +
+              Object.keys(groupedData).reduce(
+                (innerTotal, itemName) =>
+                  innerTotal + ((groupedData[itemName] && groupedData[itemName][interval]) ||  0),
+                0
+              ),
+            0
+          );
+
+          return { startDate, endDate, timePeriod, data: soldItemsByDate, totalItemsSoldInInterval };
+        })
+      ),
+    ]);
+
+    const totalItemQuantity = {};
+    billsAfterPOApproval.forEach(({ items }) =>
+      items.forEach(({ itemDetail, itemQuantityInBill }) => {
+        const itemData = itemMap.get(itemDetail.toString());
+        if (itemData) {
+          totalItemQuantity[itemData.inputName] =
+            (totalItemQuantity[itemData.inputName] || 0) + itemQuantityInBill;
         }
-
-        allIntervals.forEach((intervalDate) => {
-          Object.keys(groupedData).forEach((itemName) => {
-            groupedData[itemName][intervalDate] =
-              groupedData[itemName][intervalDate] || 0;
-          });
-        });
-
-        const soldItemsByDate = allIntervals
-          .map((interval) => {
-            const itemNames = itemIds.map(
-              (itemId) => itemMap[itemId].inputName
-            );
-            return itemNames.map((itemName) => ({
-              itemName,
-              date: interval,
-              value: groupedData[itemName]
-                ? groupedData[itemName][interval] || 0
-                : 0, 
-            }));
-          })
-          .flat();
-        const totalItemsSoldInInterval = allIntervals.reduce(
-          (total, interval) => {
-            return (
-              total + Object.keys(groupedData).reduce((innerTotal, itemName) => {
-                return (innerTotal + ((groupedData[itemName] && groupedData[itemName][interval]) ||  0)
-                );
-              }, 0)
-            );
-          },
-          0
-        );
-        return {
-          startDate,
-          endDate,
-          timePeriod,
-          data: soldItemsByDate,
-          totalItemsSoldInInterval,
-        };
       })
     );
 
-    const totalItemQuantity = {};
-
-    billsAfterPOApproval.forEach((bill) => {
-      bill.items.forEach((item) => {
-        const itemId = item.itemDetail.toString();
-        const itemData = itemMap[itemId];
-        if (!itemData) {
-          return;
-        }
-        const itemName = itemData.inputName;
-        if (itemName) {
-          totalItemQuantity[itemName] =
-            (totalItemQuantity[itemName] || 0) + item.itemQuantityInBill;
-        }
-      });
-    });
     const lastPurchaseOrdersMap = await Promise.all(
-      chunkArray(itemIds, 10).map((chunk) =>
-        fetchLastPurchaseOrders(chunk, (limit = 3))
-      )
+      chunkArray(itemIds, 10).map((chunk) => fetchLastPurchaseOrders(chunk, 3))
     );
-
     const flattenedLastPurchaseOrders = lastPurchaseOrdersMap.flat();
 
     const responseData = itemIds.map((itemId) => {
-      const itemData = itemMap[itemId];
-      if (!itemData) {
-        return;
-      }
+      const itemData = itemMap.get(itemId);
+      if (!itemData) return;
 
-      const itemName = itemData.inputName;
-      const itemMRP = itemData.mrp;
-
+      const { inputName: itemName, mrp: itemMRP } = itemData;
       const ordersForItem = flattenedLastPurchaseOrders.filter(
         (order) => order.item_id === itemId
       );
+    
       const lastPurchaseOrders = ordersForItem.flatMap((order) =>
-        order.purchaseOrders.map((orderDetails, index) => ({
+        order.purchaseOrders.map(({ approvalDate, amount, costPrice, purchaseOrderId }, index) => ({
           orderSequence: `${index + 1}`,
-          approvalDate: orderDetails.approvalDate
-            ? new Date(orderDetails.approvalDate).toISOString().slice(0, 10)
-            : null,
-          amount: orderDetails.amount,
-          costPrice: orderDetails.costPrice,
-          purchaseOrderId: orderDetails.purchaseOrderId,
+          approvalDate: approvalDate ? new Date(approvalDate).toISOString().slice(0, 10) : null,
+          amount,
+          costPrice,
+          purchaseOrderId,
         }))
       );
 
-      const filterIntervalDataByItemName = (intervalData, itemName) => {
-        return intervalData.map((interval) => {
-          const filteredData = interval.data.filter(
-            (item) => item.itemName === itemName
-          );
-          const cleanedData = filteredData.map(({ itemName, ...rest }) => rest);
-          return {
-            ...interval,
-            data: cleanedData,
-          };
-        });
-      };
+      const filterIntervalDataByItemName = (intervalData, itemName) =>
+        intervalData.map((interval) => ({
+          ...interval,
+          data: interval.data
+            .filter((item) => item.itemName === itemName)
+            .map(({ itemName, ...rest }) => rest),
+        }));
 
       return {
         itemName,
