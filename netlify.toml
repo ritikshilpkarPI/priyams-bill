@@ -1,23 +1,23 @@
 [build]
-  # This will be run the site build
+  functions = "netlify/functions"
   command = "npm run build"
-  # This is the directory is publishing to netlify's CDN
-  publish = "build"
-  # functions build directory
-  functions = "functions-build"
+
+[functions]
+  directory = "netlify/functions"
 
 [dev]
-    command = "npm run server"
-    framework = "#custom"
-    targetPort = 9000
-    
+  framework = "#custom"
+  command = "npm run start:server"
+  targetPort = 9001
+  port = 9000
+
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/app"
+  to = "/.netlify/functions/:app"
   status = 200
-
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "index.html"
   status = 200
+

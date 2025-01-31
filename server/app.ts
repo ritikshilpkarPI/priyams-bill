@@ -63,7 +63,7 @@ dbAppConnection();
 app.use(handleErrors);
 const PORT = 9000;
 app.listen(PORT, () => {
-  console.log(`Server running on PORT: ${9000}`)
+  console.log(`Server running on PORT: ${PORT}`)
 })
 
 export { app };

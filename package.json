@@ -11,7 +11,7 @@
     "restart": "rimraf dist && npm run build && npm run start",
     "start": "npm run start:server",
     "client": "react-scripts start ",
-    "server": "node dist/app.js",
+    "server": "node dist/server/app.js",
     "build:app": "CI=false react-scripts build",
     "debug": "netlify dev --inspect",
     "build:functions": "netlify-lambda build server",
