@@ -6,7 +6,7 @@ const isValidDate = (dateString) => {
   if (!regex.test(dateString)) return false;
 
   const date = new Date(dateString);
-  return date instanceof Date && !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateString;
+  return !isNaN(date.getTime()) && date.toISOString().slice(0, 10) === dateString;
 };
 
 const validateGetItemsSellDetails = Joi.object({
@@ -30,33 +30,31 @@ const validateGetItemsSellDetails = Joi.object({
             "any.only": "Time period must be one of 'daywise', 'weekly', 'monthly', 'quarterly', or 'yearly'.",
             "any.required": "Time period is required.",
           }),
+      }).custom((value, helpers) => {
+        const { startDate, endDate } = value;
+        const errors = [];
+
+        if (!isValidDate(startDate)) {
+          errors.push("Start date is not a valid calendar date.");
+        }
+
+        if (!isValidDate(endDate)) {
+          errors.push("End date is not a valid calendar date.");
+        }
+
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+
+        if (startDateObj > endDateObj) {
+          errors.push("Start date must be less than or equal to the end date.");
+        }
+
+        if (errors.length > 0) {
+          return helpers.message(errors.join(" "));
+        }
+
+        return value;
       })
-        .custom((value, helpers) => {
-          const { startDate, endDate, timePeriod } = value;
-          const errors = [];
-
-          if (!isValidDate(startDate)) {
-            errors.push("Start date is not a valid calendar date.");
-          }
-
-          if (!isValidDate(endDate)) {
-            errors.push("End date is not a valid calendar date.");
-          }
-
-          if (errors.length > 0) {
-            throw new Error(errors.join(' '));
-          }
-
-  const startDateObj = new Date(startDate);
-  
-  const endDateObj = new Date(endDate);
-
-          if (startDateObj > endDateObj) {
-            throw new Error("Start date must be less than or equal to the end date.");
-          }
-
-          return value;
-        })
     )
     .required()
     .messages({
@@ -64,19 +62,18 @@ const validateGetItemsSellDetails = Joi.object({
     }),
 }).custom((value, helpers) => {
   if (!Array.isArray(value.intervals)) {
-    throw new Error("Intervals must be an array of objects.");
-  }
-  const currentDate = new Date();
-
-  const currentDateOnly = convertDateToIST(currentDate)
-    .toISOString()
-    .slice(0, 10);
-
-  const endDateOnly = convertDateToIST(endDateObj).toISOString().slice(0, 10);
-  if (endDateOnly > currentDateOnly) {
-    throw new Error("End date should not be greater than today's date.");
+    return helpers.message("Intervals must be an array of objects.");
   }
 
+  const currentDateOnly = convertDateToIST(new Date()).toISOString().slice(0, 10);
+
+  for (const interval of value.intervals) {
+    const endDateOnly = convertDateToIST(new Date(interval.endDate)).toISOString().slice(0, 10);
+
+    if (endDateOnly > currentDateOnly) {
+      return helpers.message("End date should not be greater than today's date.");
+    }
+  }
 
   return value;
 });
