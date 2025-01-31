@@ -86,7 +86,7 @@ const {
   getCancellationOrders,
   expelOrderToRider,
   createRzpQRByAmount,
-  // assignOrderToRider,
+  assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId
 } = require('../controllers/index');
 
@@ -370,7 +370,7 @@ router.post(
   isLoggedIn,
   isAdmin,
   isLoggedIn,
-  // assignOrderToRider
+  assignOrderToRider
 );
 
 
