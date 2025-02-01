@@ -40,10 +40,12 @@ import Label from '../Pages/Label';
 import { Fragment } from 'react';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
 import { ItemQuantity } from '../Pages/ItemQuantity';
+import { FormStepper } from './formStepper/FormStepper';
 
 const StoreRoutes = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
+      <FormStepper/>
       <Switch>
         <Route path="/login" exact component={Login} />
         <Route
@@ -100,7 +102,7 @@ const StoreRoutes = () => {
             <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
             <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
             <Route exact path="/sellDetailsPage/:purchaseOrderId" component={SellDetailsPage} />
-            <Route exact path="/CreatePurchaseOrderPage" component={CreatePurchaseOrderPage} />
+            <Route exact path="/createPurchaseOrderPage" component={CreatePurchaseOrderPage} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>

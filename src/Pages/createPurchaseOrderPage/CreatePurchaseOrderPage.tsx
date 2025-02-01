@@ -1,10 +1,15 @@
-import React from 'react';
-import { FormStepper } from 'components/formStepper/FormStepper';
+import React, { useEffect } from 'react';
 import './CreatePurchaseOrderPage.css';
 import { Text } from '@mantine/core';
+import { useDispatch } from 'react-redux';
+import {
+  initializeSteps,
+  toggleStepperVisibility,
+} from '../../redux/stepper/stepperSlice';
 
 const CreatePurchaseOrderPage = () => {
-  const stepsData: StepperData[] = [
+  const dispatch = useDispatch();
+  const stepsData: StepInterface[] = [
     {
       label: 'Dealer Details',
       component: <div>Dealer Details Form</div>,
@@ -18,13 +23,18 @@ const CreatePurchaseOrderPage = () => {
       component: <div>Item Details Form</div>,
     },
   ];
-  
+
+  useEffect(() => {
+    dispatch(toggleStepperVisibility(true));
+    dispatch(initializeSteps(stepsData));
+    return () => {
+      dispatch(toggleStepperVisibility(false));
+      dispatch(initializeSteps([]));
+    };
+  }, [dispatch]);
+
   return (
     <div className="create-purchase-order-page-container">
-      <Text size="xl">Create Purchase Order</Text>
-      <div style={{ maxWidth: 600, margin: 'auto', padding: 10 }}>
-         <FormStepper steps={stepsData} />
-      </div>
     </div>
   );
 };

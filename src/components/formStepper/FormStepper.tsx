@@ -5,11 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initializeSteps, setCurrentStep } from '../../redux/stepper/stepperSlice';
 import { useMediaQuery } from '@mantine/hooks';
 
-
-export const FormStepper: React.FC<FormStepperProps> = ({ steps }) => {
+export const FormStepper: React.FC = () => {
   const dispatch = useDispatch();
-  const { currentStep, stepCompletion } = useSelector(
-    (state: RootState) => state.stepper
+  const { currentStep, stepCompletion, steps, isStepperVisible } = useSelector(
+    (state: RootState) => state?.stepper
   );
 
   const isMobile = useMediaQuery('(max-width: 767px)');
@@ -31,11 +30,16 @@ export const FormStepper: React.FC<FormStepperProps> = ({ steps }) => {
   };
 
   useEffect(() => {
-    dispatch(initializeSteps(steps.length));
-  }, [dispatch, steps.length]);
+    if (steps?.length) {
+      dispatch(initializeSteps(steps));
+    }
+  }, [dispatch, steps]);
+
+  if (!isStepperVisible || !steps?.length) return null;
 
   return (
-    <div className="form-stepper-container">
+    <div className="form-stepper-component">
+      <div className="form-stepper-container" > 
       <Stepper
         size="xs"
         iconSize={isMobile ? 22 : 32}
@@ -44,7 +48,7 @@ export const FormStepper: React.FC<FormStepperProps> = ({ steps }) => {
           isStepClickable(index) && dispatch(setCurrentStep(index))
         }
       >
-        {steps.map((step, index) => (
+        {steps?.map((step, index) => (
           <Stepper.Step key={index} label={step.label}>
             {step.component}
           </Stepper.Step>
@@ -66,6 +70,7 @@ export const FormStepper: React.FC<FormStepperProps> = ({ steps }) => {
           {currentStep === steps.length - 1 ? 'Submit' : 'Save and Next'}
         </Button>
       </Group>
+      </div>
     </div>
   );
 };

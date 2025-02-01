@@ -106,24 +106,15 @@ declare global {
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     isDropdown?: boolean;
   }
-  interface StepperData {
-    label: string;
-    component: React.ReactNode;
-  }
-  interface FormStepperProps {
-    steps: StepperData[];
-  }
   interface StepInterface {
     label: string;
     component: React.ReactNode;
   }
-  interface FormStepperProps {
-    steps: StepInterface[];
-  }
-
   interface StepperStateInterface {
     currentStep: number;
     stepCompletion: boolean[];
+    isStepperVisible: boolean;
+    steps: StepInterface[];
   }
 }
 
