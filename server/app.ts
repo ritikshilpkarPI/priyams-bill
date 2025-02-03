@@ -68,7 +68,7 @@ app.listen(PORT, () => {
 
 const handler = ServerlessHttp(app);
 
-const handlerFunction = async (event, context) => {
+const handlerFunction = async (event: any, context: any) => {
 
   context.callbackWaitsForEmptyEventLoop = false;
   
