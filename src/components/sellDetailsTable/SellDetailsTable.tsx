@@ -1,8 +1,8 @@
 import React from 'react';
 import { Table, Text } from '@mantine/core';
-import { LineGraph } from 'components/lineGraph/LineGraph';
+import { LineGraph } from '../../components/lineGraph/LineGraph';
 import './SellDetailsTable.css';
-import { LastPurchaseOrdersTable } from 'components/lastPurchaseOrdersTable/LastPurchaseOrdersTable';
+import { LastPurchaseOrdersTable } from '../../components/lastPurchaseOrdersTable/LastPurchaseOrdersTable';
 
 export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
   tableData,

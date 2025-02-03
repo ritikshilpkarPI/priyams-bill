@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { getServerBaseUrl } from "../utils/getServerBaseUrl";
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: '/.netlify/functions/app',
+  baseURL: getServerBaseUrl(),
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
