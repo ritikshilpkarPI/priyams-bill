@@ -34,8 +34,9 @@ import {
   ExpiredItemList,
   ReturnAndExchange,
   SellDetailsPage,
+  BarcodePrint,
+  Label,
 } from '../Pages';
-import Label from '../Pages/Label';
 import { Fragment } from 'react';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
 import { ItemQuantity } from '../Pages/ItemQuantity';
@@ -99,6 +100,7 @@ const StoreRoutes = () => {
             <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
             <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
             <Route exact path="/sellDetailsPage/:purchaseOrderId" component={SellDetailsPage} />
+            <Route exact path="/barcodePrint" component={BarcodePrint} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>
