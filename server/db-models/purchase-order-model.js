@@ -116,7 +116,4 @@ purchaseOrderSchema.pre("save", function (next) {
 });
 
 
-module.exports = {
-  PurchaseOrder:  mongoose.model('PurchaseOrder', purchaseOrderSchema),
-  purchaseOrderSchema
-}
+module.exports =  mongoose.model('PurchaseOrder', purchaseOrderSchema);
