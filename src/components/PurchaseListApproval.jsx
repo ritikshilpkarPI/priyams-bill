@@ -7,7 +7,7 @@ import { API_PATHS } from '../utils/constants/apiPaths';
 import { parseJwt } from '../utils/cookie';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
-import { isAdmin } from 'utils/isAdmin';
+import { isAdmin } from '../utils/isAdmin';
 const PurchaseListApproval = ({
   list,
   index,
