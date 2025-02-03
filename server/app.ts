@@ -53,7 +53,6 @@ const MONGODB_URI =
 let isDbConnected = false;
 
 async function connectDB() {
-  isDbConnected = true;
   await mongoose.connect(`${MONGODB_URI}`);
 }
 
