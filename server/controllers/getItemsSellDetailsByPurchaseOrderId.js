@@ -145,8 +145,11 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
         soldAfterApproval: totalItemQuantity[itemData.inputName] || 0,
         intervals: intervalData.map((interval) => ({
           ...interval,
-          data: interval.data.filter((item) => item.itemName === itemData.inputName),
+          data: interval.data
+            .filter((item) => item.itemName === itemData.inputName)
+            .map(({ date, value }) => ({ date, value })),
         })),
+        
         lastPurchaseOrders: lastPurchaseOrders.filter((order) => order.item_id === itemId).flatMap((order, index) =>
           order.purchaseOrders.map(({ approvalDate, amount, costPrice, purchaseOrderId }) => ({
             orderSequence: `${index + 1}`,
