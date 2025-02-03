@@ -7,6 +7,7 @@ const { validateGetItemsSellDetails } = require('../util/validateGetItemsSellDet
 const { chunkArray } = require('../util/chunkArray');
 const fetchLastPurchaseOrders = require('../util/fetchLastPurchaseOrders');
 const { generateIntervalDatesByTimePeriod } = require('../util/generateIntervalDatesByTimePeriod');
+const isValidMongoId = require('../util/isValidMongoId');
 
 const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
   try {
@@ -34,7 +35,7 @@ const getItemsSellDetailsByPurchaseOrderId = async (req, res) => {
     const itemIds = [];
 
     purchaseOrder.purchasedItems.forEach((item) => {
-      if (item.item_id && /^[a-fA-F0-9]{24}$/.test(item.item_id.toString())) {
+      if (item.item_id && isValidMongoId(item.item_id.toString())) {
         const itemIdStr = item.item_id.toString();
         itemObj[itemIdStr] = { inputName: item.inputName || '', mrp: item.mrp || 0 };
         itemIds.push(itemIdStr);
