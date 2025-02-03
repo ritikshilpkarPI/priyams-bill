@@ -1,11 +1,17 @@
+const { normalizeDate } = require('../util/normalizeDate');
 const { Item } = require('../db-models/item-model');
 
 const filterExpiryDates = async (req, res,next) => {
-    const { startDate, endDate } = req.body;
-    const splitDateInDbFormat = (date = 'dd/mm/yyyy') => {
-      const [day, month, year] = date && date.split('/'); // = [01, 02, 2028]
-      return new Date(Number(year), Number(month), Number(day));
-    };
+      // Ensure consistent parsing of ISO date strings
+    let { startDate, endDate } = req.body;
+
+    // Normalize the dates
+    startDate = normalizeDate(startDate);
+    endDate = normalizeDate(endDate);
+  
+    if (!startDate || !endDate) {
+        throw Error("Invalid or missing date format. Expected a valid date.");
+    }
     try {
       const expiredItems = await Item.aggregate([
         { $project: { useByDate: 1, itemName: 1, itemBarcode: 1 } },
@@ -13,8 +19,8 @@ const filterExpiryDates = async (req, res,next) => {
         {
           $match: {
             'useByDate.date': {
-              $gte: splitDateInDbFormat(startDate),
-              $lte: splitDateInDbFormat(endDate),
+              $gte: new Date(startDate),
+              $lte: new Date(endDate),
             },
           },
         },

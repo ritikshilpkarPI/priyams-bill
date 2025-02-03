@@ -15,6 +15,9 @@ import { SERVER_ENVIRONMENT } from './util/serverEnvironment';
 const PORT = SERVER_ENVIRONMENT.SERVER_PORT;
 const isProductionEnv = SERVER_ENVIRONMENT.NODE_ENV === APP_ENVIRONMENT.PRODUCTION;
 const app = express();
+app.use(express.json({ limit: '500mb' }));
+app.use(cookieParser());
+
 app.use(
   cors({
     origin: true,
@@ -26,10 +29,7 @@ app.use(cookieParser());
 
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: '/tmp/',
-  })
+  fileUpload()
 );
 
 const urlPrefix = isProductionEnv ? "/.netlify/functions/server" : "";
@@ -49,11 +49,14 @@ const mongoUriEnvMap: any = {
 const MONGODB_URI =
   mongoUriEnvMap[process.env.ENV_NAME || ""] || mongoUriEnvMap[process.env.NODE_ENV || ""];
 
+let isDbConnected = false;
+
 async function connectDB() {
+  isDbConnected = true;
   await mongoose.connect(`${MONGODB_URI}`);
 }
 
-connectDB();
+if(!isDbConnected) connectDB();
 // connect PStore Database
 dbAppConnection();
 
@@ -62,5 +65,19 @@ app.listen(PORT, () => {
   console.log(`Server running on PORT: ${PORT}`)
 })
 
-export { app };
+const handler = serverless(app);
+
+const handlerFunction = async (event, context) => {
+
+  context.callbackWaitsForEmptyEventLoop = false;
+  
+  console.log({ isDbConnected });
+  const response = await handler(event, context);
+  const connections = mongoose.connections.length;
+  console.log('Number of connections', {connections});
+  
+  return response;
+}
+
+export { handlerFunction as handler };
 
