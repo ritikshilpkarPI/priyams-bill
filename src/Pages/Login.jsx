@@ -75,7 +75,7 @@ const Login = ({ history }) => {
         <label htmlFor="password">Password</label>
         <div className="password-container">
           <input
-            type="password"
+            type={passwordVisible ? "text" : "password"} 
             name="password"
             id="password"
             value={password}
