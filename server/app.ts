@@ -9,7 +9,7 @@ import handleErrors from './middleware/handleError';
 import dbAppConnection from './db/conn';
 import { APP_ENVIRONMENT } from "./util/constants/appEnvironment";
 import { SERVER_ENVIRONMENT } from './util/serverEnvironment';
-// import ServerlessHttp from 'serverless-http';
+import ServerlessHttp from 'serverless-http';
 
 
 // require('./util/nodeCron');
@@ -66,18 +66,18 @@ app.listen(PORT, () => {
   console.log(`Server running on PORT: ${PORT}`)
 })
 
-// const handler = ServerlessHttp(app);
+const handler = ServerlessHttp(app);
 
-// const handlerFunction = async (event: any, context: any) => {
+const handlerFunction = async (event: any, context: any) => {
 
-//   context.callbackWaitsForEmptyEventLoop = false;
+  context.callbackWaitsForEmptyEventLoop = false;
   
-//   console.log({ isDbConnected });
-//   const response = await handler(event, context);
-//   const connections = mongoose.connections.length;
-//   console.log('Number of connections', {connections});
-//   return response;
-// }
+  console.log({ isDbConnected });
+  const response = await handler(event, context);
+  const connections = mongoose.connections.length;
+  console.log('Number of connections', {connections});
+  return response;
+}
 
-export { app };
+export { handlerFunction as handler };
 
