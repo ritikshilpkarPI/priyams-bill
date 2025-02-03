@@ -26,7 +26,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!username || !password) {
-      setErrorMsg("username or password can't be blank");
+      setErrorMsg("Username or password can't be blank");
       return;
     }
 
@@ -52,7 +52,7 @@ const Login = () => {
           setErrorMsg('Login failed. Please try again.');
         }
       } else {
-        history.push('/billing');
+        navigate('/billing');
       }
     } finally {
       setLoading(false);
