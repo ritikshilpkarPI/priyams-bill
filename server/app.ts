@@ -76,7 +76,6 @@ const handlerFunction = async (event: any, context: any) => {
   const response = await handler(event, context);
   const connections = mongoose.connections.length;
   console.log('Number of connections', {connections});
-  
   return response;
 }
 
