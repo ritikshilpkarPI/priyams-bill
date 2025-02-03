@@ -79,5 +79,5 @@ const handlerFunction = async (event: any, context: any) => {
   return response;
 }
 
-export { handlerFunction as handler };
+export { handlerFunction as handler, app };
 
