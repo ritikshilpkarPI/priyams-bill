@@ -7,7 +7,7 @@
 
 [dev]
   framework = "#custom"
-  command = "npm run start:server"
+  command = "npm run serve:server"
   port = 9000
   targetPort = 9001
 
