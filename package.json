@@ -137,7 +137,8 @@
     "webpack-cli": "^4.9.1",
     "webpack-dev-middleware": "^5.2.1",
     "webpack-dev-server": "3.11.0",
-    "@types/papaparse": "^5.3.15"
+    "@types/papaparse": "^5.3.15",
+    "@types/uuid": "^10.0.0"
   },
   "resolutions": {
     "react-error-overlay": "6.0.9"
