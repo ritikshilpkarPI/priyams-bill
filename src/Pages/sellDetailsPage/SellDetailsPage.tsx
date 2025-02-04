@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SellDetailsTable } from '../../components/sellDetailsTable/SellDetailsTable';
 import { useParams } from 'react-router-dom';
-import { getCurrentAndPreviousDates } from '../../utils/getCurrentAndPreviousDates';
+import { generateDatePair } from '../../utils/generateDatePair';
 import { LoadingOverlay, Text } from '@mantine/core';
 import { getItemsSellDetailsByPurchaseOrderIdAPI } from '../../utils/apiUtils';
 import './SellDetailsPage.css';
@@ -11,13 +11,14 @@ const SellDetailsPage = () => {
   const [tableData, setTableData] = useState<ItemSoldInterface[]>([]);
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const oneYearDates = getCurrentAndPreviousDates(12);
-  const threeMonthDates = getCurrentAndPreviousDates(3);
-  const oneMonthDates = getCurrentAndPreviousDates(1);
+
+  const oneYearDates = generateDatePair(12);
+  const threeMonthDates = generateDatePair(3);
+  const oneMonthDates = generateDatePair(1);
 
   const convertMonthDates = (data: soldItemsByDateInterface[]): soldItemsByDateInterface[] => {
     return data.map(({ date, value }) => {
-      const dateObj = new Date(`${date}-01`);
+      const dateObj = new Date(`${date}`);
       const formattedDate = `${dateObj.getFullYear()}-${dateObj.toLocaleString('en-US', { month: 'short' })}`;
       return { date: formattedDate, value };
     });
@@ -41,20 +42,18 @@ const SellDetailsPage = () => {
     tableDatas: ItemSoldInterface[]
   ): ItemSoldInterface[] => {
     return tableDatas.map((data) => {
+      
       const lastMonthData = data.intervals
-        .filter((interval) => interval.startDate === oneMonthDates.previousDate)
-        .flatMap((interval) => interval.data)
-        .reduce((sum, data) => sum + data.value, 0);
+        .find((interval) => interval.startDate === oneMonthDates.previousDate)
+        ?.data?.reduce((sum, data) => sum + data.value, 0);
 
       const lastThreeMonthData = data.intervals
-        .filter(
-          (interval) => interval.startDate === threeMonthDates.previousDate
-        )
-        .flatMap((interval) => interval.data);
+        .find((interval) => interval.startDate === threeMonthDates.previousDate)
+        ?.data
 
       const lastYearData = data.intervals
-        .filter((interval) => interval.startDate === oneYearDates.previousDate)
-        .flatMap((interval) => interval.data);
+        .find((interval) => interval.startDate === oneYearDates.previousDate)
+        ?.data;
 
       return {
         ...data,
