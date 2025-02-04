@@ -11,7 +11,7 @@ import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../CSS/purchaseOrder.css';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // import { genericAxios } from '../utils/genericAxiosMethod';
 // import { API_PATHS } from '../utils/constants/apiPaths';
 // import { API_METHODS } from '../utils/constants/apiMethods';
@@ -62,7 +62,7 @@ const PurchaseOrderItems = ({ history }) => {
 
   const { filteredItemsByName } = useNameSearchItem(form.values.inputName, itemsList);
   const { filteredItemsByBarcode } = useBarcodeSearchItems(form.values.barcode, itemsList);
-  const locate = useHistory();
+  const locate = useNavigate();
   const { id } = useParams();
   return (
     <>
