@@ -3,7 +3,7 @@ const convertDateToISO = (date: Date): string => {
     .toISOString()
     .slice(0, 10);
 };
-export const getCurrentAndPreviousDates = (monthsAgo: number) => {
+export const generateDatePair = (monthsAgo: number) => {
   const currentDate = new Date();
   const previousMonthDate = new Date();
   previousMonthDate.setMonth(currentDate.getMonth() - monthsAgo);
