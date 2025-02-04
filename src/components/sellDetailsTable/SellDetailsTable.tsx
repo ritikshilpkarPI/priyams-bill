@@ -5,7 +5,7 @@ import './SellDetailsTable.css';
 import { LastPurchaseOrdersTable } from '../../components/lastPurchaseOrdersTable/LastPurchaseOrdersTable';
 
 export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
-  tableData, threeMonthDates, oneYearDates
+  tableData, currentDate, lastThreeMonthDate, lastYearDate
 }) => {
   return (
     <div className="sell-details-table-component">
@@ -23,10 +23,10 @@ export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
                   Last Month Sold
                 </th>
                 <th className="sell-details-table-thead-tr-th">
-                Last 3 Month Sold : <span className='sell-details-table-thead-tr-th-span' > {threeMonthDates?.previousDate} - {threeMonthDates?.currentDate} </span> 
+                Last 3 Month Sold : <span className='sell-details-table-thead-tr-th-span' > {lastThreeMonthDate} - {currentDate} </span> 
                 </th>
                 <th className="sell-details-table-thead-tr-th">
-                  Yearly Sold : <span className='sell-details-table-thead-tr-th-span' > {oneYearDates?.previousDate} - {oneYearDates?.currentDate} </span> 
+                  Yearly Sold : <span className='sell-details-table-thead-tr-th-span' > {lastYearDate} - {currentDate} </span> 
                 </th>
                 <th className="sell-details-table-thead-tr-th">
                   Last 3 Purchase Order
