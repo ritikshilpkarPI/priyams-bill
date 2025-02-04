@@ -109,6 +109,16 @@ declare global {
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     isDropdown?: boolean;
   }
+  interface Product {
+    id: string;
+    name: string;
+    mrp: number;
+    packetQty: number;
+    unit: string;
+    barcode: string;
+  }
+
+  type itemsByBarcode = string[] | any
 }
 
 declare module '*.scss' {

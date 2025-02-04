@@ -3,23 +3,13 @@ import { Container, TextInput, NumberInput, Select, Button, Card, Group, FileInp
 import JsBarcode from "react-jsbarcode";
 import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
-import { getBillingLeanItemsAPI } from "utils/apiUtils";
+import { getBillingLeanItemsAPI } from "../../utils/apiUtils";
 
-interface Product {
-    id: string;
-    name: string;
-    mrp: number;
-    packetQty: number;
-    unit: string;
-    barcode: string;
-}
-
-type itemsByBarcode = string[] | any
 const units = ["Kg", "Gm", "Piece", "mL", "L", "mm", "in", "mts"];
 
 const ProductForm = () => {
     const [products, setProducts] = useState<Product[]>([]);
-    const [itemsByBarcode, setItemsByBarcode] = useState<itemsByBarcode>();
+    const [itemsByBarcode, setItemsByBarcode] = useState<any>();
     const [loaderDisplay, setLoaderDisplay] = useState<boolean>(false);
     const [isPrinting, setIsPrinting] = useState(false);
     const [formData, setFormData] = useState({
@@ -29,6 +19,7 @@ const ProductForm = () => {
         unit: ""
     });
     const printRef = useRef<any>(null);
+    const singlePrintRef = useRef<any>(null);
 
     const getAllLeanItems = async () => {
         try {
@@ -47,8 +38,8 @@ const ProductForm = () => {
     };
 
     useEffect(() => {
-        getAllLeanItems()
-    }, [])
+        getAllLeanItems();
+    }, []);
 
     const generateUniqueBarcode = (existingBarcodes: string[]): string => {
         let newBarcode;
@@ -60,7 +51,7 @@ const ProductForm = () => {
 
     const handleAddProduct = () => {
         if (!formData.name || !formData.mrp || !formData.packetQty || !formData.unit) return;
-        const newBarcode = generateUniqueBarcode(itemsByBarcode);
+        const newBarcode = generateUniqueBarcode(Object.keys(itemsByBarcode || {}));
         setProducts([...products, {
             id: uuidv4(),
             name: formData.name,
@@ -96,71 +87,60 @@ const ProductForm = () => {
     };
 
     const printCard = (id: string) => {
-        const card = document.getElementById(`card-${id}`);
-        if (card) {
-            const printWindow = window.open('', '', 'width=200,height=600');
-            if (printWindow) {
-                printWindow.document.write('<html><head><title>Print</title></head><body>');
-                printWindow.document.write(card.innerHTML);
-                printWindow.document.write('</body></html>');
-                printWindow.document.close();
-                printWindow.print();
+        setIsPrinting(true);
+        setTimeout(() => {
+            const card = document.getElementById(`card-${id}`);
+            if (card) {
+                const printWindow = window.open('', '', 'width=60,height=600');
+                if (printWindow) {
+                    printWindow.document.write('<html><head><title>Print</title></head><body>');
+                    printWindow.document.write(card.innerHTML);
+                    printWindow.document.write('</body></html>');
+                    printWindow.document.close();
+                    printWindow.print();
+                }
             }
-        }
+            setIsPrinting(false);
+        }, 100);
     };
-
-    // const printAllCards = () => {
-    //     if (printRef.current) {
-    //         const printWindow = window.open('', '', 'width=200,height=600');
-    //         if (printWindow) {
-    //             printWindow.document.write('<html><head><title>Print</title></head><body>');
-    //             printWindow.document.write(printRef.current.innerHTML);
-    //             printWindow.document.write('</body></html>');
-    //             printWindow.document.close();
-    //             printWindow.print();
-    //         }
-    //     }
-    // };
 
     const printAllCards = () => {
         setIsPrinting(true);
         setTimeout(() => {
-          window.print();
-          setIsPrinting(false);
+            window.print();
+            setIsPrinting(false);
         }, 100);
-      };
+    };
 
     return (
         <Container>
-      <h2>Product Form</h2>
-      <TextInput label="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-      <NumberInput label="MRP" value={Number(formData.mrp)} onChange={(value) => setFormData({ ...formData, mrp: value?.toString() || "" })} />
-      <NumberInput label="Packet Qty." value={Number(formData.packetQty)} onChange={(value) => setFormData({ ...formData, packetQty: value?.toString() || "" })} />
-      <Select label="Unit" data={units} value={formData.unit} onChange={(value) => setFormData({ ...formData, unit: value || "" })} />
-
-            {loaderDisplay ? <Loader /> : <>
+            {!isPrinting && <>
+                <h2>Product Form</h2>
+                <TextInput label="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                <NumberInput label="MRP" value={Number(formData.mrp)} onChange={(value) => setFormData({ ...formData, mrp: value?.toString() || "" })} />
+                <NumberInput label="Packet Qty." value={Number(formData.packetQty)} onChange={(value) => setFormData({ ...formData, packetQty: value?.toString() || "" })} />
+                <Select label="Unit" data={units} value={formData.unit} onChange={(value) => setFormData({ ...formData, unit: value || "" })} />
                 <Button onClick={handleAddProduct} mt={10}>Add Product</Button>
-      <FileInput label="Upload CSV" accept=".csv" onChange={handleCSVUpload} mt={20} />
-      <Button onClick={printAllCards} mt={10} color="red">Print All Labels</Button>
-      
-      <h3>Product List</h3>
-      <div ref={printRef}>
-        {products.map((product) => (
-          <Card key={product.id} shadow="sm" mt={10} id={`card-${product.id}`}> 
-            <Group position="apart">
-              <div>
-                <h4>{product.name}</h4>
-                <p>MRP: {product.mrp}</p>
-                <p>Packet Qty: {product.packetQty}</p>
-                <p>Unit: {product.unit}</p>
-                <JsBarcode value={product.barcode} options={{ format: "CODE128" }} />
-              </div>
-              {!isPrinting && <CloseButton onClick={() => handleRemoveProduct(product.id)} />}
-            </Group>
-            {!isPrinting && <Button onClick={() => printAllCards()} mt={10}>Print Label</Button>}
-          </Card>
-        ))}
-      </div></>}
+                <FileInput label="Upload CSV" accept=".csv" onChange={handleCSVUpload} mt={20} />
+                <Button onClick={printAllCards} mt={10} color="red">Print All Labels</Button>
+            </>}
+            <h3>Product List</h3>
+            <div ref={printRef}>
+                {products.map((product) => (
+                    <Card key={product.id} shadow="sm" mt={10} id={`card-${product.id}`}> 
+                        <Group position="apart">
+                            <div>
+                                <h4>{product.name}</h4>
+                                <p>MRP: {product.mrp}</p>
+                                <p>Packet Qty: {product.packetQty} {product.unit}</p>
+                                <JsBarcode value={product.barcode} options={{ format: "CODE128" }} />
+                            </div>
+                            {!isPrinting && <CloseButton onClick={() => handleRemoveProduct(product.id)} />}
+                        </Group>
+                        {!isPrinting && <Button onClick={() => printCard(product.id)} mt={10}>Print Label</Button>}
+                    </Card>
+                ))}
+            </div>
         </Container>
     );
 };
