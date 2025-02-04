@@ -3,22 +3,27 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 require('dotenv').config();
 import mongoose from 'mongoose';
-import serverless from 'serverless-http';
 import routers from './routes';
 import fileUpload from 'express-fileupload';
 import handleErrors from './middleware/handleError';
 import dbAppConnection from './db/conn';
+import { APP_ENVIRONMENT } from "./util/constants/appEnvironment";
+import { SERVER_ENVIRONMENT } from './util/serverEnvironment';
+import ServerlessHttp from 'serverless-http';
+
+
 // require('./util/nodeCron');
+const PORT = SERVER_ENVIRONMENT.SERVER_PORT;
+const isProductionEnv = SERVER_ENVIRONMENT.NODE_ENV === APP_ENVIRONMENT.PRODUCTION;
 const app = express();
-
-app.use(express.json({ limit: '500mb' }));
-app.use(cookieParser());
-
 app.use(
   cors({
+    origin: true,
     credentials: true,
   })
 );
+app.use(express.json({ limit: '500mb' }));
+app.use(cookieParser());
 
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 app.use(
@@ -27,31 +32,52 @@ app.use(
     tempFileDir: '/tmp/',
   })
 );
-app.use('/.netlify/functions/app', routers);
+
+const urlPrefix = isProductionEnv ? "/.netlify/functions/server" : "";
+
+app.use(urlPrefix, routers);
+
 app.get('/.netlify/functions/app/server', (req, res) => {
   res.status(200).json({ success: true })
 })
 
-const mongoUriEnvMap = {
+const mongoUriEnvMap: any = {
   staging: process.env.STAGING_DB,
   production: process.env.PROD_DB,
   dev: process.env.DEV_DB,
 };
 
 const MONGODB_URI =
-  mongoUriEnvMap[process.env.ENV_NAME || ""] || mongoUriEnvMap[process.env.NODE_ENV];
+  mongoUriEnvMap[process.env.ENV_NAME || ""] || mongoUriEnvMap[process.env.NODE_ENV || ""];
+
+let isDbConnected = false;
 
 async function connectDB() {
   await mongoose.connect(`${MONGODB_URI}`);
 }
 
-connectDB();
+if(!isDbConnected) connectDB();
 // connect PStore Database
 dbAppConnection();
 
 app.use(handleErrors);
+app.listen(PORT, () => {
+  console.log(`Server running on PORT: ${PORT}`)
+})
 
-const handler = serverless(app);
+const handler = ServerlessHttp(app);
 
-export { handler };
+const handlerFunction = async (event: any, context: any) => {
+
+  context.callbackWaitsForEmptyEventLoop = false;
+  
+  console.log({ isDbConnected });
+  const response = await handler(event, context);
+  const connections = mongoose.connections.length;
+  console.log('Number of connections', {connections});
+  
+  return response;
+}
+
+export { handlerFunction as handler };
 

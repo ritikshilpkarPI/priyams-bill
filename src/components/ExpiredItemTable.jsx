@@ -1,6 +1,6 @@
 import { Button, Loader, Table, Card, Title, Text } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
@@ -26,8 +26,8 @@ const getExpiredItemsData = async (startDate, endDate) => {
       url: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
       method: API_METHODS.POST,
       data: {
-        startDate: startDate.toLocaleDateString("en-GB"),
-        endDate: endDate.toLocaleDateString("en-GB"),
+        startDate: startDate,
+        endDate: endDate
       },
     });
     if(response.error)return
@@ -135,7 +135,11 @@ const ExpiredItemTable = ({ day }) => {
                         <td>
                           {new Date(
                             expiredItemObj.useByDate.date
-                          ).toLocaleDateString()}
+                          ).toLocaleDateString("en-GB", {
+                            day: "2-digit",   // "01"
+                            month: "short",   // "Mar"
+                            year: "numeric",  // "2025"
+                          })}
                         </td>
                         <td>{expiredItemObj.useByDate.value}</td>
                       </tr>
