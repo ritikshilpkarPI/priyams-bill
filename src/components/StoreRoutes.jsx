@@ -2,8 +2,8 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Suspense } from 'react';
 import CustomerBill from '../Pages/CustomerBill';
-import ProtectedRoutes from '../components/ProtectedRoutes';
-import ProtectedComponent from '../components/ProtectedComponent';
+import ProtectedRoutes from './ProtectedRoutes';
+import ProtectedComponent from './ProtectedComponent';
 import access from '../access';
 import PerItemListPurchaseOrder from './IndividualItemListPurchaseOrder';
 import ItemListPurchaseOrderHistory from './ListPurchaseOrderHistory';
@@ -34,8 +34,9 @@ import {
   ExpiredItemList,
   ReturnAndExchange,
   SellDetailsPage,
+  BarcodePrint,
+  Label,
 } from '../Pages';
-import Label from '../Pages/Label';
 import { Fragment } from 'react';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
 import { ItemQuantity } from '../Pages/ItemQuantity';
@@ -99,6 +100,7 @@ const StoreRoutes = () => {
             <Route exact path="/payPurchaseOrderBill" component={PayPurchaseOrderBill} />
             <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
             <Route exact path="/sellDetailsPage/:purchaseOrderId" component={SellDetailsPage} />
+            <Route exact path="/barcodePrint" component={BarcodePrint} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>
