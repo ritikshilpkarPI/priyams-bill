@@ -11,60 +11,23 @@ const SellDetailsPage = () => {
   const [tableData, setTableData] = useState<ItemSoldInterface[]>([]);
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const monthlyDates = getCurrentAndPreviousDates(12);
-  const weeklyDates = getCurrentAndPreviousDates(3);
+  const oneYearDates = getCurrentAndPreviousDates(12);
+  const threeMonthDates = getCurrentAndPreviousDates(3);
+  const oneMonthDates = getCurrentAndPreviousDates(1);
 
-
-  const updateOneMonthAndYearTableData = (
-    tableDatas: ItemSoldInterface[]
-  ): ItemSoldInterface[] => {
-    return tableDatas.map((data) => {
-      const lastMonthData = data.soldItemsByDate
-        .slice(-1)
-        .reduce((sum, data) => sum + data.value, 0);
-      const lastYearSoldData = data.soldItemsByDate;
-      return {
-        ...data,
-        lastMonthSold: lastMonthData,
-        lastYearSold: lastYearSoldData,
-      };
+  const convertMonthDates = (data: soldItemsByDateInterface[]): soldItemsByDateInterface[] => {
+    return data.map(({ date, value }) => {
+      const dateObj = new Date(`${date}-01`);
+      const formattedDate = `${dateObj.getFullYear()}-${dateObj.toLocaleString('en-US', { month: 'short' })}`;
+      return { date: formattedDate, value };
     });
   };
-
-  const fetchSellDetails = async (
-    type: 'monthly' | 'weekly',
-    dates: { previousDate: string; currentDate: string },
-    purchaseOrderId: string
-  ) => {
-    try {
-      const response = await getItemsSellDetailsByPurchaseOrderIdAPI(
-        purchaseOrderId,
-        dates.previousDate,
-        dates.currentDate,
-        type
-      );
-      return response?.isError ? null : response.data;
-    } catch (error) {
-      return null;
-    }
-  };
-
-  const mergeWeeklyData = (
-    updatedData: any[],
-    weeklyFetchedData: ItemSoldInterface[]
-  ) => {
-    return updatedData.map((dataItem) => {
-      const matchedData = weeklyFetchedData.find(
-        (weeklyData) => weeklyData.itemId === dataItem.itemId
-      );
-
-      return {
-        ...dataItem,
-        lastThreeMonthSold: matchedData
-          ? formatSoldItemsByDate(matchedData.soldItemsByDate)
-          : [],
-      };
-    });
+ 
+  const formatDate = (dateString: string) => {
+    const formattedDate = new Date(dateString);
+    const month = formattedDate.toLocaleString('en-US', { month: 'short' });
+    const day = formattedDate.getDate().toString().padStart(2, '0');
+    return `${month}-${day}`;
   };
 
   const formatSoldItemsByDate = (soldItems: soldItemsByDateInterface[]) => {
@@ -74,53 +37,82 @@ const SellDetailsPage = () => {
     }));
   };
 
-  const formatDate = (dateString: string) => {
-    const formattedDate = new Date(dateString);
-    const month = formattedDate.toLocaleString('en-US', { month: 'short' });
-    const day = formattedDate.getDate().toString().padStart(2, '0');
-    return `${month}-${day}`;
+  const updateTableData = (
+    tableDatas: ItemSoldInterface[]
+  ): ItemSoldInterface[] => {
+    return tableDatas.map((data) => {
+      const lastMonthData = data.intervals
+        .filter((interval) => interval.startDate === oneMonthDates.previousDate)
+        .flatMap((interval) => interval.data)
+        .reduce((sum, data) => sum + data.value, 0);
+
+      const lastThreeMonthData = data.intervals
+        .filter(
+          (interval) => interval.startDate === threeMonthDates.previousDate
+        )
+        .flatMap((interval) => interval.data);
+
+      const lastYearData = data.intervals
+        .filter((interval) => interval.startDate === oneYearDates.previousDate)
+        .flatMap((interval) => interval.data);
+
+      return {
+        ...data,
+        lastMonthSold: lastMonthData,
+        lastYearSold: lastYearData ? convertMonthDates(lastYearData):[],
+        lastThreeMonthSold: lastThreeMonthData
+          ? formatSoldItemsByDate(lastThreeMonthData)
+          : [],
+      };
+    });
   };
 
-  const fetchTableDetails = async () => {
-    if (!purchaseOrderId?.trim()) return;
-
-    setLoading(true);
-
+  const fetchSellDetails = async (
+    intervals: IntervalPropInterface[],
+    purchaseOrderId: string
+  ) => {
     try {
-      const monthlyData = await fetchSellDetails(
-        'monthly',
-        monthlyDates,
-        purchaseOrderId
+      const response = await getItemsSellDetailsByPurchaseOrderIdAPI(
+        purchaseOrderId,
+        intervals
       );
-      if (!monthlyData) {
-        setIsError(true);
-        setLoading(false);
-        return;
-      }
-      const updatedData = updateOneMonthAndYearTableData(monthlyData);
-
-      const weeklyData = await fetchSellDetails(
-        'weekly',
-        weeklyDates,
-        purchaseOrderId
-      );
-      if (!weeklyData) {
-        setIsError(true);
-        setLoading(false);
-        return;
-      }
-
-      const finalData = mergeWeeklyData(updatedData, weeklyData);
-      setTableData(finalData);
-      setIsError(false);
+      return response?.isError ? null : response.data;
     } catch (error) {
-      setIsError(true);
-      setLoading(false);
-    } finally {
-      setLoading(false);
+      return null;
     }
   };
 
+  const fetchTableDetails = async () => {
+    const intervals: IntervalPropInterface[] = [
+      {
+        startDate: oneYearDates.previousDate,
+        endDate: oneYearDates.currentDate,
+        timePeriod: 'monthly',
+      },
+      {
+        startDate: threeMonthDates.previousDate,
+        endDate: threeMonthDates.currentDate,
+        timePeriod: 'weekly',
+      },
+      {
+        startDate: oneMonthDates.previousDate,
+        endDate: oneMonthDates.currentDate,
+        timePeriod: 'monthly',
+      },
+    ];
+    setLoading(true);
+    if (!purchaseOrderId?.trim()) return;
+    try {
+      const response = await fetchSellDetails(intervals, purchaseOrderId);
+      const updatedResponse = updateTableData(response);
+      setTableData(updatedResponse);      
+    } catch (error) {
+      setIsError(true);
+    }finally{
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
     fetchTableDetails();
   }, [purchaseOrderId]);
@@ -140,8 +132,8 @@ const SellDetailsPage = () => {
       ) : tableData.length > 0 ? (
         <SellDetailsTable
           tableData={tableData}
-          threeMonthDates={weeklyDates}
-          oneYearDates={monthlyDates}
+          threeMonthDates={threeMonthDates}
+          oneYearDates={oneYearDates}
         />
       ) : (
         <div className="error-text-container">
