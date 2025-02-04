@@ -38,7 +38,12 @@ declare global {
     width: number;
     height: number;
   }
-
+  interface IntervalInterface {
+    startDate: string;
+    endDate: string;
+    timePeriod: string; 
+    data: soldItemsByDateInterface[];
+  }
   interface ItemSoldPurchaseOrder {
     orderSequence: string;
     approvalDate: string;
@@ -52,8 +57,7 @@ declare global {
     itemName: string;
     itemMRP: number;
     soldAfterApproval: number;
-    totalItemsSoldInInterval: number;
-    soldItemsByDate: soldItemsByDateInterface[];
+    intervals: IntervalInterface[];
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastMonthSold?: number;
     lastThreeMonthSold?: soldItemsByDateInterface[];
@@ -119,8 +123,12 @@ declare global {
   }
 
   type itemsByBarcode = string[] | any
+  interface IntervalPropInterface {
+    startDate: string;
+    endDate: string;
+    timePeriod: string;
+  }
 }
-
 declare module '*.scss' {
   const content: { [className: string]: string };
   export default content;
