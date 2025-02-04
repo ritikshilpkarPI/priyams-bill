@@ -7,7 +7,7 @@ const { MESSAGES } = require('../constants/messages');
 const { validateFile } = require('../util/validateFile');
 
 const fileValidation = validateFile({ sizeInMB: 5, fileTypes: ['image/jpeg', 'image/png','image/jpg'] });
-const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
+const createPurchaseOrderWithDealer = async (req, res, next) => {
   try {
     const { error } = validateUpsertPODealerRequest.validate(req.body);
     if (error) {
@@ -77,4 +77,4 @@ const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
   }
 };
 
-module.exports = createOrUpdatePurchaseOrderWithDealer;
+module.exports = createPurchaseOrderWithDealer;
