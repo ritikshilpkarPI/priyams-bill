@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SellDetailsTable } from '../../components/sellDetailsTable/SellDetailsTable';
 import { useParams } from 'react-router-dom';
-import { generateDatePair } from '../../utils/generateDatePair';
+import { getDateBeforeMonths } from '../../utils/getDateBeforeMonths';
 import { LoadingOverlay, Text } from '@mantine/core';
 import { getItemsSellDetailsByPurchaseOrderIdAPI } from '../../utils/apiUtils';
 import './SellDetailsPage.css';
+import { convertDateToISO } from 'src/utils/convertDateToISO';
 
 const SellDetailsPage = () => {
   const { purchaseOrderId } = useParams<{ purchaseOrderId: string }>();
@@ -12,9 +13,10 @@ const SellDetailsPage = () => {
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const oneYearDates = generateDatePair(12);
-  const threeMonthDates = generateDatePair(3);
-  const oneMonthDates = generateDatePair(1);
+  const lastOneMonthDate = getDateBeforeMonths(1);
+  const lastThreeMonthDate = getDateBeforeMonths(3);
+  const lastYearDate = getDateBeforeMonths(12);
+  const currentDate = convertDateToISO(new Date())
 
   const convertMonthDates = (data: soldItemsByDateInterface[]): soldItemsByDateInterface[] => {
     return data.map(({ date, value }) => {
@@ -44,15 +46,15 @@ const SellDetailsPage = () => {
     return tableDatas.map((data) => {
       
       const lastMonthData = data.intervals
-        .find((interval) => interval.startDate === oneMonthDates.previousDate)
+        .find((interval) => interval.startDate === lastOneMonthDate)
         ?.data?.reduce((sum, data) => sum + data.value, 0);
 
       const lastThreeMonthData = data.intervals
-        .find((interval) => interval.startDate === threeMonthDates.previousDate)
+        .find((interval) => interval.startDate === lastThreeMonthDate)
         ?.data
 
       const lastYearData = data.intervals
-        .find((interval) => interval.startDate === oneYearDates.previousDate)
+        .find((interval) => interval.startDate === lastYearDate)
         ?.data;
 
       return {
@@ -84,18 +86,18 @@ const SellDetailsPage = () => {
   const fetchTableDetails = async () => {
     const intervals: IntervalPropInterface[] = [
       {
-        startDate: oneYearDates.previousDate,
-        endDate: oneYearDates.currentDate,
+        startDate: lastYearDate,
+        endDate: currentDate,
         timePeriod: 'monthly',
       },
       {
-        startDate: threeMonthDates.previousDate,
-        endDate: threeMonthDates.currentDate,
+        startDate: lastThreeMonthDate,
+        endDate: currentDate,
         timePeriod: 'weekly',
       },
       {
-        startDate: oneMonthDates.previousDate,
-        endDate: oneMonthDates.currentDate,
+        startDate: lastOneMonthDate,
+        endDate: currentDate,
         timePeriod: 'monthly',
       },
     ];
@@ -131,8 +133,9 @@ const SellDetailsPage = () => {
       ) : tableData.length > 0 ? (
         <SellDetailsTable
           tableData={tableData}
-          threeMonthDates={threeMonthDates}
-          oneYearDates={oneYearDates}
+          currentDate={currentDate}
+          lastThreeMonthDate={lastThreeMonthDate}
+          lastYearDate={lastYearDate}
         />
       ) : (
         <div className="error-text-container">

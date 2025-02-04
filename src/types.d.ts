@@ -62,8 +62,9 @@ declare global {
 
   interface SellDetailsTableProps {
     tableData: ItemSoldInterface[];
-    threeMonthDates?: { currentDate: string, previousDate:string}
-    oneYearDates?: { currentDate: string, previousDate:string}
+    currentDate?: string;
+    lastThreeMonthDate?: string;
+    lastYearDate?: string;
   }
 
   interface CategorySchemaType {
