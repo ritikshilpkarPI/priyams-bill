@@ -4,7 +4,6 @@ const fetchLastPurchaseOrders = async (chunk, limit = 0) => {
   try {
     const purchaseOrders = await PurchaseOrder.find({
       'purchasedItems.item_id': { $in: chunk },
-      isApproved: true,
     })
       .sort({ createdAt: -1 }) 
       .select('purchasedItems createdAt approveTime _id');
