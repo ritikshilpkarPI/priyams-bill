@@ -47,21 +47,6 @@ export const createRzpQrCodeAPI = async (data: CreateRzpQRAPIDataType) => {
   }
 };
 
-// export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
-//   purchaseOrderId: string,
-//   startDate: string,
-//   endDate: string,
-//   timePeriod: string
-// ) => {
-//   try {
-//     const response = await postAPI({
-//       path: `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD}/${purchaseOrderId}?startDate=${startDate}&endDate=${endDate}&timePeriod=${timePeriod}`,
-//     });
-//     return response; 
-//   } catch (error) {
-//     return { isError: true, error };
-//   }
-// };
 export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
   purchaseOrderId: string,
   intervals: IntervalPropInterface[]
