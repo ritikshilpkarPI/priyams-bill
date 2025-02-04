@@ -16,6 +16,9 @@ import ServerlessHttp from 'serverless-http';
 const PORT = SERVER_ENVIRONMENT.SERVER_PORT;
 const isProductionEnv = SERVER_ENVIRONMENT.NODE_ENV === APP_ENVIRONMENT.PRODUCTION;
 const app = express();
+app.use(express.json({ limit: '500mb' }));
+app.use(cookieParser());
+
 app.use(
   cors({
     origin: true,
@@ -72,7 +75,6 @@ const handlerFunction = async (event: any, context: any) => {
   const response = await handler(event, context);
   const connections = mongoose.connections.length;
   console.log('Number of connections', {connections});
-  
   return response;
 }
 
