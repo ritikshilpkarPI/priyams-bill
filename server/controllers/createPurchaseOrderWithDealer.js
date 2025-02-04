@@ -9,7 +9,9 @@ const { validateFile } = require('../util/validateFile');
 const fileValidation = validateFile({ sizeInMB: 5, fileTypes: ['image/jpeg', 'image/png','image/jpg'] });
 const createPurchaseOrderWithDealer = async (req, res, next) => {
   try {
-    const { error } = validateUpsertPODealerRequest.validate(req.body);
+    const parsedData = JSON.parse(req.body.data || '{}');
+    
+    const { error } = validateUpsertPODealerRequest.validate(parsedData);
     if (error) {
       return res.status(400).json({ status: false, message: error.details[0].message });
     }
@@ -29,7 +31,7 @@ const createPurchaseOrderWithDealer = async (req, res, next) => {
       salesmanContactNumber,
       dealerId,
       salesmanId,
-    } = req.body;
+    } = parsedData;
 
     let dealer;
 
