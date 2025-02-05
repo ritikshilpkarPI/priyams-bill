@@ -1,0 +1,11 @@
+.payment-details-form-container {
+    .payment-details-form-input {
+      text-align: left;
+    }
+    .mantine-TextInput-label,
+    .mantine-Autocomplete-label,
+    .mantine-FileInput-label,
+    .mantine-DatePicker-label {
+      font-size: 12px;
+    }
+  }
