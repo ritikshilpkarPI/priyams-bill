@@ -25,16 +25,17 @@ export const sidebarListData = [
         url: '/stockquantity',
         icon: 'images/shortage.svg',
       },
-      {
-        name: 'Expired Items',
-        url: '/expiredItems',
-        icon: 'images/expired.svg',
-      },
       { name: 'Item Labels', url: '/label', icon: 'images/label.svg' },
       { name: 'Item Barcode ', url: '/itemsBarcode', icon: 'images/barcode.svg' },
       {name: 'Move Item To Cart', url: '/moveToCart', icon: 'images/purchaseorder.svg'},
+      {
+        name: 'Expiry Alert',
+        url: '/expiredItems',
+        icon: 'images/expired.svg',
+      },
       {name: 'Add Expired Item', url:'/addExpiredItem', icon: 'images/addExpiredIcon.svg'},
       {name: 'Expired Items', url:'/expiredItemList', icon: 'images/expireIcon.svg'},
+      {name: 'Barcode Prints', url:'/barcodePrint', icon: 'images/barcode.svg'},
 
 
     ],
