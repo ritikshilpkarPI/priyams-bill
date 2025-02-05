@@ -10,27 +10,28 @@ import {
 import { useForm } from '@mantine/form';
 import { DatePicker } from '@mantine/dates';
 import './PaymentDetailsForm.css';
+
 const PaymentDetailsForm = () => {
   const form = useForm({
     initialValues: {
       totalAmount: '',
       paymentType: '',
       paidAmount: '',
-      paidBy: '',
+      paidMethod: '',
       pendingAmount: '',
       nextPaymentDate: null,
+      paymentTypes: ["Fully Paid", "Partially Paid", "Credit"],
+      paidmethods: ["Cash", "UPI", "NEFT"],
     },
     validate: {
-      totalAmount: (value: string): string | null =>
-        value &&
-        Number(value) ===
-          Number(form.values.paidAmount) + Number(form.values.pendingAmount)
+      totalAmount: (value, values) =>
+        value && Number(value) === Number(values.paidAmount) + Number(values.pendingAmount)
           ? null
-          : 'Total Amount must be equal to Paid Amount + Pending Amount',
-      paymentType: (value) => (value ? null : 'Payment Type is required'),
-      paidAmount: (value) => (value ? null : 'Paid Amount is required'),
-      paidBy: (value) => (value ? null : 'Payment Method is required'),
-      pendingAmount: (value) => (value ? null : 'Pending Amount is required'),
+          : "Total Amount must be equal to Paid Amount + Pending Amount",
+      paymentType: (value) => (value ? null : "Payment Type is required"),
+      paidAmount: (value, values) => (values.paymentType === "Credit" || value ? null : "Paid Amount is required"),
+      paidMethod: (value) => (value ? null : "Payment Method is required"),
+      pendingAmount: (value) => (value ? null : "Pending Amount is required"),
     },
   });
   return (
@@ -40,64 +41,66 @@ const PaymentDetailsForm = () => {
           <Title order={3} align="center" mb="md">
             Payment Details
           </Title>
-          <form action="">
+          <form>
             <Stack spacing="md">
               <TextInput
-                required
-                className="payment-details-form-input"
                 label="Total Amount"
                 placeholder="Enter total amount"
-                {...form.getInputProps('totalAmount')}
+                withAsterisk
+                {...form.getInputProps("totalAmount")}
+                className="payment-details-form-input"
               />
+
               <Autocomplete
-                required
                 label="Payment Type"
-                className="payment-details-form-input"
                 placeholder="Pick payment type"
-                data={['Fully Paid', 'Partially Paid', 'Credit']}
-                {...form.getInputProps('paymentType')}
-              />
-              <TextInput
-                required={form.values.paymentType !== 'Credit'}
+                withAsterisk
+                data={form.values.paymentTypes}
+                {...form.getInputProps("paymentType")}
                 className="payment-details-form-input"
+              />
+
+              <TextInput
                 label="Paid Amount"
                 placeholder="Enter paid amount"
-                {...form.getInputProps('paidAmount')}
+                withAsterisk={form.values.paymentType !== "Credit"}
+                {...form.getInputProps("paidAmount")}
+                className="payment-details-form-input"
               />
+
               <Autocomplete
-                required={form.values.paymentType !== 'Credit'}
-                disabled={form.values.paymentType === 'Credit'}
-                label="Paid by"
+                label="Paid method"
+                placeholder="Pick payment method"
+                data={form.values.paidmethods}
+                disabled={form.values.paymentType === "Credit"}
+                {...form.getInputProps("paidMethod")}
                 className="payment-details-form-input"
-                placeholder="Pick paid method"
-                data={['Cash', 'UPI', 'NEFT']}
-                {...form.getInputProps('paidBy')}
+                withAsterisk = {form.values.paymentType !== "Credit"}
               />
+
               <TextInput
-                className="payment-details-form-input"
                 label="Pending Amount"
-                placeholder="Enter pending amount"
-                value={
-                  form.values.totalAmount && form.values.paidAmount
-                    ? (
-                        Number(form.values.totalAmount) -
-                        Number(form.values.paidAmount)
-                      ).toString()
-                    : ''
-                }
+                placeholder="Auto calculated"
                 readOnly
-              />
-              <DatePicker
-                disabled={
-                  Number(form.values.totalAmount) ===
-                  Number(form.values.paidAmount) +
-                    Number(form.values.pendingAmount)
+                value={
+                  form.values.totalAmount
+                    ? (Number(form.values.totalAmount) - Number(form.values.paidAmount)).toString()
+                    : ""
                 }
                 className="payment-details-form-input"
+              />
+
+              <DatePicker
                 label="Next Payment Date"
                 placeholder="Pick date"
+                disabled={
+                  Number(form.values.totalAmount) ===
+                  Number(form.values.paidAmount) + Number(form.values.pendingAmount)
+                }
                 minDate={new Date()}
-                {...form.getInputProps('nextPaymentDate')}
+                {...form.getInputProps("nextPaymentDate")}
+                className="payment-details-form-input"
+                withAsterisk = {form.values.paymentType !== "Fully Paid"}
               />
             </Stack>
           </form>
