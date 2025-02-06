@@ -1,0 +1,57 @@
+@media print {
+
+    /* Table adjustments */
+    .bill-items-table {
+        width: 60mm;
+        margin: 10px 0;
+        border-collapse: collapse;
+    }
+
+    .bill-table-header,
+    .bill-body-tdata {
+        text-align: left;
+        /* Align item names to the left */
+        padding: 2px;
+        /* Minimize vertical spacing */
+        border: none;
+        /* Remove all borders */
+        word-wrap: break-word;
+        /* Ensure text wraps properly */
+        font-size: 12px;
+    }
+
+    /* Specific columns */
+    .bill-table-header {
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .bill-body-tdata:first-child {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Truncate if too long */
+    }
+
+    /* Remove unnecessary columns (e.g., Slab Pricing, Actions) */
+    .bill-table-header:nth-child(5),
+    .bill-body-tdata:nth-child(5),
+    .bill-table-header:nth-child(7),
+    .bill-body-tdata:nth-child(7) {
+        display: none;
+    }
+
+    /* Remove border for the Quantity column */
+    .quantity-input {
+        border: none;
+    }
+
+    /* Remove buttons and inputs from print view */
+    .bill-item-remove-btn,
+    .item-search {
+        display: none;
+    }
+    .bill-inputs {
+        border: none;
+    }
+}

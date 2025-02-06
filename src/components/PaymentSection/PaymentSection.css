@@ -1,0 +1,20 @@
+@media print {
+    .payment-section {
+        display: flex;
+        width: 60mm;
+    }
+
+    .payment-inputs {
+        display: flex;
+    }
+    .cash-input, .upi-input {
+        display: flex;
+    }
+    .cash-input * input, .upi-input * input {
+        border: none;
+    }
+
+    .pay-print-button {
+        display: none;
+    }
+}
