@@ -64,6 +64,7 @@ const PurchaseOrderItems = ({ history }) => {
   const isSearchByBarcode = form.values.searchBy === 'barcode';
   const { filteredItemsByName } = useNameSearchItem(!isSearchByBarcode ? form.values.search : '' , itemsList);
   const { filteredItemsByBarcode } = useBarcodeSearchItems(isSearchByBarcode ? form.values.search : '', itemsList);
+  const navigate = useNavigate();
   const { id } = useParams();
   return (
     <>
@@ -71,7 +72,7 @@ const PurchaseOrderItems = ({ history }) => {
         <Button
           className="back-button"
           disabled={id ? false : true}
-          onClick={() => locate.push('/approval')}
+          onClick={() => navigate('/approval')}
         >
           Back
         </Button>

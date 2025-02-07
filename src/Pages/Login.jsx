@@ -6,7 +6,7 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
 
 const Login = () => {
-  const [username, setusername] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
