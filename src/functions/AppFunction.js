@@ -9,9 +9,9 @@ import Cookies from 'js-cookie';
 import { useLocation, useNavigate } from 'react-router';
 
 const AppFunction = () => {
-  const { location } = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
-  const showBill = location.pathname.includes('showbill');
+  const showBill = pathname.includes('showbill');
   const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
   const { name: staffName = '', username: staffUserName = '' } =
     parseJwt(Cookies.get('token')) || {};
