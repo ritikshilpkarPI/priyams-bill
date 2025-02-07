@@ -5,7 +5,7 @@ import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 // axios.defaults.withCredentials = true;
 
-const Login = ({ history }) => {
+const Login = () => {
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');

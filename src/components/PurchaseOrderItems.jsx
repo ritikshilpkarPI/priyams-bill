@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Group, LoadingOverlay, Title } from '@mantine/core';
 import { Notification } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import usePurchaseOrder from '../functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from '../functions/useNameSearchItems';
