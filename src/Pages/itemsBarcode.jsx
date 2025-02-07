@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Barcode from 'react-jsbarcode';
+import { ReactBarcode } from 'react-jsbarcode';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
@@ -91,7 +91,7 @@ export const ItemsBarCode = () => {
             return (
               <div className="item-label">
                 <div>
-                  <Barcode options={{
+                  <ReactBarcode options={{
                     height: 35,
                     width: 4
                   }} value={itemBarcode} />

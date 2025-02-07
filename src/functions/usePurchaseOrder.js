@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from '@mantine/form';
 import useBarcodeSearchItems from './useBarcodeSearchItems';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
@@ -18,7 +18,7 @@ const usePurchaseOrder = (history) => {
   const [editIndex, setEditIndex] = useState(-1);
   const [slabs, setSlabs] = useState([]);
   const [isNotGetUpdated, setIsNotGetUpdated] = useState(true);
-  const locate = useHistory();
+  const navigate = useNavigate();
   const [cloudBills, setCloudBills] = useState([]);
   const [deleteBills, setDeleteBills] = useState([]);
   const [isEditable, setIsEditable] = useState(true);
@@ -203,7 +203,7 @@ const usePurchaseOrder = (history) => {
       if (id) {
         getDetails(id);
       } else {
-        locate.push(`/purchase/${_id}`);
+        navigate(`/purchase/${_id}`);
       }
     } catch (err) {
       offLoader();
@@ -319,7 +319,7 @@ const usePurchaseOrder = (history) => {
         setMessage({ success: true, failed: false, status });
         purchaseForm.reset();
         offLoader();
-        locate.push('/approval');
+        navigate('/approval');
       } else {
         setMessage({
           success: false,
@@ -452,7 +452,7 @@ const usePurchaseOrder = (history) => {
         const { _id } = order;
         offLoader();
         if (!id) {
-          locate.push(`/purchase/${_id}`);
+          navigate(`/purchase/${_id}`);
         } else {
           getDetails(id);
         }

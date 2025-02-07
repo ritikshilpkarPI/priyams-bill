@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Group, LoadingOverlay, Title } from '@mantine/core';
 import { Notification } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import usePurchaseOrder from '../functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from '../functions/useNameSearchItems';
@@ -11,7 +11,7 @@ import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../CSS/purchaseOrder.css';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // import { genericAxios } from '../utils/genericAxiosMethod';
 // import { API_PATHS } from '../utils/constants/apiPaths';
 // import { API_METHODS } from '../utils/constants/apiMethods';
@@ -64,7 +64,7 @@ const PurchaseOrderItems = ({ history }) => {
   const isSearchByBarcode = form.values.searchBy === 'barcode';
   const { filteredItemsByName } = useNameSearchItem(!isSearchByBarcode ? form.values.search : '' , itemsList);
   const { filteredItemsByBarcode } = useBarcodeSearchItems(isSearchByBarcode ? form.values.search : '', itemsList);
-  const locate = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams();
   return (
     <>
@@ -72,7 +72,7 @@ const PurchaseOrderItems = ({ history }) => {
         <Button
           className="back-button"
           disabled={id ? false : true}
-          onClick={() => locate.push('/approval')}
+          onClick={() => navigate('/approval')}
         >
           Back
         </Button>
