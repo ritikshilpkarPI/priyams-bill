@@ -1,8 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getBillingLeanItemsAPI } from 'src/utils/apiUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { AppDispatch } from '../store';
-
 
 
 const initialState: BillState = {
@@ -46,15 +43,3 @@ const billSlice = createSlice({
 
 export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState,setBillingItems } = billSlice.actions;
 export default billSlice.reducer;
-export const fetchBillingItems = () => async (dispatch: AppDispatch) => {
-    try {
-      const response = await getBillingLeanItemsAPI();
-      if (response && !response.isError) {
-        dispatch(setBillingItems(response));
-      } else {
-        throw new Error(response.err || 'Something went wrong');
-      }
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  };
