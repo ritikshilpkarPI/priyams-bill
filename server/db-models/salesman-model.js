@@ -1,8 +1,7 @@
-import mongoose, { Schema } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-
-
-const SalesmanSchema = new Schema<SalesmanSchemaInterface>(
+const SalesmanSchema = new Schema(
   {
     salesmanName: {
       type: String,
@@ -10,7 +9,7 @@ const SalesmanSchema = new Schema<SalesmanSchemaInterface>(
     },
     salesmanContactNumber: [
       {
-        contactNumber: { type: String}, 
+        contactNumber: { type: String }, 
         updatedAt: { type: Date, default: Date.now }, 
       },
     ],
@@ -24,6 +23,6 @@ const SalesmanSchema = new Schema<SalesmanSchemaInterface>(
   }
 );
 
-const Salesman = mongoose.model<SalesmanModelInterface>('Salesman', SalesmanSchema);
+const Salesman = mongoose.model('Salesman', SalesmanSchema);
 
 module.exports = { Salesman };

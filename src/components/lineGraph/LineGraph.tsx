@@ -45,10 +45,19 @@ export const LineGraph: React.FC<LineGraphProps> = ({ data, width, height }) => 
       )
       .style("-webkit-tap-highlight-color", "transparent");
 
-    const xAxis = svg
-      .append("g")
-      .attr("transform", `translate(0,${height - marginBottom})`)
-      .call(d3.axisBottom(x));
+  const xAxis = svg
+  .append("g")
+  .attr("transform", `translate(0,${height - marginBottom})`)
+  .call(d3.axisBottom(x))
+  .call((g) =>
+    g
+      .selectAll("text")
+      .attr("transform", "rotate(-35)") 
+      .attr("x", -10) 
+      .attr("y", 0) 
+      .style("text-anchor", "end") 
+      .style("font-size", "12px")
+  );
 
     xAxis.selectAll("text").style("font-size", "15px");
 
@@ -103,7 +112,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({ data, width, height }) => 
         tooltip
           .style("display", null)
           .attr("transform", `translate(${x(datum.date)},${y(datum.value)})`);
-        tooltipText.text(`${datum.date}: ${datum.value}`);
+        tooltipText.text(`${datum.value}`);
       }
     });
 
