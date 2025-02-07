@@ -4,7 +4,7 @@ import JsBarcode from "react-jsbarcode";
 import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
-import { selectBillingItems } from "src/redux/billing/billingSelectors";
+import { selectBillingItems } from "src/redux/bill/billSelectors";
 
 const units = ["Kg", "Gm", "Piece", "mL", "L", "mm", "in", "mts"];
 

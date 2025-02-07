@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getBillingLeanItemsAPI } from 'src/utils/apiUtils';
 import { v4 as uuidv4 } from 'uuid';
+import { AppDispatch } from '../store';
 
 export interface BillItem {
   itemDetail: {
@@ -12,6 +14,13 @@ export interface BillItem {
     slabPricing?: [number, number, number][];
   };
   itemQuantityInBill: number;
+}
+interface Item {
+  itemBarCodesList: number[];
+  itemNamesList: string[];
+  itemsBarCodeMap: Record<string, number[]>;
+  itemsNameMap: Record<string, object>;
+  totalItemsCount: number;
 }
 
 export interface BillState {
@@ -28,6 +37,7 @@ export interface BillState {
   upiPay: number;
   amountReturn: number;
   billId: string;
+  items: Item | null
 }
 
 const initialState: BillState = {
@@ -44,6 +54,7 @@ const initialState: BillState = {
   upiPay: 0,
   amountReturn: 0,
   billId: `${uuidv4()}-${Date.now()}`,
+  items: null,
 };
 
 const billSlice = createSlice({
@@ -62,8 +73,23 @@ const billSlice = createSlice({
     resetBillState: (state) => {
       Object.assign(state, initialState, { billId: `${uuidv4()}-${Date.now()}` });
     },
+    setBillingItems: (state, action: PayloadAction<Item>) => {
+      state.items = action.payload;
+    },
   },
 });
 
-export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState } = billSlice.actions;
+export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState,setBillingItems } = billSlice.actions;
 export default billSlice.reducer;
+export const fetchBillingItems = () => async (dispatch: AppDispatch) => {
+    try {
+      const response = await getBillingLeanItemsAPI();
+      if (response && !response.isError) {
+        dispatch(setBillingItems(response));
+      } else {
+        throw new Error(response.err || 'Something went wrong');
+      }
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };

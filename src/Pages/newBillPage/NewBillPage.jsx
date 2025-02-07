@@ -13,7 +13,7 @@ import { ItemSearch } from '../../components/ItemSearch';
 import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
-import { selectBillingItems } from 'src/redux/billing/billingSelectors';
+import { selectBillingItems } from 'src/redux/bill/billSelectors';
 
 
 const NewBillPage = () => {

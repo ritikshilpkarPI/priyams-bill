@@ -7,8 +7,8 @@ import {
     Loader,
     Group
   } from '@mantine/core';
-import { selectBillingItems } from "src/redux/billing/billingSelectors";
 import { useSelector } from "react-redux";
+import { selectBillingItems } from "src/redux/bill/billSelectors";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');

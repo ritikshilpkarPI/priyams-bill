@@ -6,7 +6,7 @@ import StoreRoutes from './components/StoreRoutes';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
 import { useDispatch } from 'react-redux';
-import { fetchBillingItems } from './redux/billing/billingSlice';
+import { fetchBillingItems } from './redux/bill/billSlice';
 
 function App({ history, location }) {
   const dispatch = useDispatch();
