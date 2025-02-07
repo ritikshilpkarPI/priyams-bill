@@ -1,4 +1,4 @@
-import { DatePickerInput, TimeInput } from '@mantine/dates';
+import { DateRangePicker, TimeInput } from '@mantine/dates';
 import { useState } from 'react';
 import {
   Button,
@@ -57,7 +57,7 @@ const Report = () => {
   return (
     <div>
       <div style={{ display: 'flex', gap: '50px' }}>
-        <DatePickerInput
+        <DateRangePicker
           style={{ width: '350px' }}
           label="Date Range"
           placeholder="Pick dates range"

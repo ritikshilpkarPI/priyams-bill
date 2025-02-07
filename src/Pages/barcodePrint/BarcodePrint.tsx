@@ -128,7 +128,7 @@ const ProductForm = () => {
             <div ref={printRef}>
                 {products.map((product) => (
                     <Card key={product.id} shadow="sm" mt={10} id={`card-${product.id}`}> 
-                        <Group justify="space-between">
+                        <Group position="apart">
                             <div>
                                 <h4>{product.name}</h4>
                                 <p>MRP: {product.mrp}</p>

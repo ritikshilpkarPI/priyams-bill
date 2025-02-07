@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Table, Loader, Title } from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
+import { DateRangePicker } from '@mantine/dates';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
@@ -100,7 +100,7 @@ const Attendance = () => {
   ));
   return (
     <tr className="attendance-wrapper">
-      <DatePickerInput
+      <DateRangePicker
         label="Select Date"
         placeholder="Pick dates range"
         value={value}
