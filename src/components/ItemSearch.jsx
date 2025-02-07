@@ -28,7 +28,6 @@ export const ItemSearch = ({ onItemSelect }) => {
     
        }, [items]);
   
-    // Handle search with local filtering
     const handleSearch = (value) => {
       setSearchTerm(value);
       if (!value || !itemsData) {
@@ -36,19 +35,15 @@ export const ItemSearch = ({ onItemSelect }) => {
         return;
       }
   
-      // Check if input is a barcode (only numbers)
       const isBarcode = /^\d+$/.test(value);
       let results = [];
   
       if (isBarcode) {
-        // Search in barcode map
         const barcodeMatches = itemsData.itemsBarCodeMap[value] || [];
         results = barcodeMatches;
       } else {
-        // Search in names map for partial matches
         const searchTermLower = value.toLowerCase();
   
-        // Search in itemsNameMap
         results = Object.entries(itemsData.itemsNameMap)
           .filter(([itemName]) => {
             return itemName.toLowerCase().includes(searchTermLower)
@@ -57,19 +52,16 @@ export const ItemSearch = ({ onItemSelect }) => {
             return item
           });
   
-        // Also search in itemsBarCodeMap for item names
         const barcodeMapResults = Object.values(itemsData.itemsBarCodeMap)
-          .flat() // Flatten because some barcodes might have multiple items
+          .flat()
           .filter(item =>
             item.itemName.toLowerCase().includes(searchTermLower)
           );
   
-        // Combine results and remove duplicates based on _id
         const allResults = [...results, ...barcodeMapResults];
         results = Array.from(new Map(allResults.map(item => [item._id, item])).values());
       }
   
-      // Limit results for better performance
       setSearchResults(results.slice(0, 10));
     };
   
@@ -78,7 +70,6 @@ export const ItemSearch = ({ onItemSelect }) => {
         return item.itemSellingPricePerUnit;
       }
   
-      // Find applicable slab price
       const applicableSlab = item.slabPricing
         .sort((a, b) => b[0] - a[0])
         .find(([slabQuantity]) => quantity >= slabQuantity);
@@ -125,7 +116,6 @@ export const ItemSearch = ({ onItemSelect }) => {
                   fullWidth
                   onClick={() => handleItemClick(item)}
                   mb="xs"
-                // disabled={item.itemStockQuantity <= 0}
                 >
                   <div style={{ textAlign: 'left', width: '100%' }}>
                     <Text>{item.itemName}</Text>

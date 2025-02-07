@@ -70,7 +70,6 @@ export const PaymentSection = ({
           </Alert>
         )}
 
-        {/* <PaymentExpiryTimer onExpiry={onSubmit} /> */}
 
         <Button
           fullWidth
