@@ -12,7 +12,9 @@ export const API_PATHS = {
     POST_DELETE_ITEM: '/api/purchaseOrder/deleteItem',
     GET_ORDERS: '/api/purchaseOrder/orders',
     EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
-    GET_ITEM_SOLD:'/api/purchaseOrder/itemSold'
+    GET_ITEM_SOLD:'/api/purchaseOrder/itemSold',
+    GET_ITEM_SOLD_BY_ITEMID: "/api/getItemsSellDetailsByItemId",
+    POST_DEALER_DETAILS:"/api/purchaseorder/dealer"
   },
   SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {
