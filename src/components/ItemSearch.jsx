@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { getBillingLeanItemsAPI } from "../utils/apiUtils";
 import {
     Paper,
     Text,
@@ -8,35 +7,26 @@ import {
     Loader,
     Group
   } from '@mantine/core';
+import { selectBillingItems } from "src/redux/billing/billingSelectors";
+import { useSelector } from "react-redux";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [itemsData, setItemsData] = useState([]);
-  
-    // Fetch items data once when component mounts
+    const items = useSelector(selectBillingItems);
+
+    
     useEffect(() => {
-      const fetchItemsData = async () => {
-        try {
-          setIsLoading(true);
-          const response = await getBillingLeanItemsAPI();
-          if (!response?.isError && itemsData.length === 0) {
-            setItemsData(response);
-          } else {
-            console.error('Error fetching items:', response.err);
-            // Show error notification
-          }
-        } catch (error) {
-          console.error('Error fetching items:', error);
-          // Show error notification
-        } finally {
-          setIsLoading(false);
-        }
-      };
-  
-      fetchItemsData();
-    }, []);
+      if (!items) {
+        setIsLoading(true);
+      } else {
+        setIsLoading(false);
+        setItemsData(items); 
+      }
+    
+       }, [items]);
   
     // Handle search with local filtering
     const handleSearch = (value) => {

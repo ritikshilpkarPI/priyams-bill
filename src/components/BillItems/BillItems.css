@@ -1,57 +1,91 @@
 @media print {
-
-    /* Table adjustments */
-    .bill-items-table {
+    .bill-items{
         width: 60mm;
-        margin: 10px 0;
-        border-collapse: collapse;
+    }
+    
+    .bill-items-table {
+        border: none !important;
+        width: auto !important;
+        margin: 0 !important;
+    }
+    .bill-items::before,
+    .bill-items::after {
+        content: "-------------------------------------------------------";
+        display: block;
+        text-align: center;
+        font-size: 12px;
+        margin: 5px 0;
     }
 
     .bill-table-header,
     .bill-body-tdata {
-        text-align: left;
-        /* Align item names to the left */
-        padding: 2px;
-        /* Minimize vertical spacing */
-        border: none;
-        /* Remove all borders */
-        word-wrap: break-word;
-        /* Ensure text wraps properly */
-        font-size: 12px;
+        text-align: left !important;
+        padding: 8px 5px !important; 
+        border: none !important;
+        font-size: 12px !important;
     }
 
-    /* Specific columns */
     .bill-table-header {
-        font-weight: bold;
-        text-align: left;
+        padding-bottom: 12px !important;
     }
 
-    .bill-body-tdata:first-child {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        /* Truncate if too long */
+    .bill-body-tdata {
+        padding-top: 8px !important; 
     }
 
-    /* Remove unnecessary columns (e.g., Slab Pricing, Actions) */
     .bill-table-header:nth-child(5),
     .bill-body-tdata:nth-child(5),
     .bill-table-header:nth-child(7),
     .bill-body-tdata:nth-child(7) {
-        display: none;
+        display: none !important;
     }
 
-    /* Remove border for the Quantity column */
     .quantity-input {
-        border: none;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        width: auto !important;
+        font-size: inherit !important; 
+        display: inline-block !important;
+    }
+    .quantity-input input {
+        border: none !important;
+        outline: none !important;
+        background: transparent !important;
     }
 
-    /* Remove buttons and inputs from print view */
+    .quantity-input:focus,
+    .quantity-input:active {
+        border: none !important;
+        outline: none !important;
+    }
+
     .bill-item-remove-btn,
     .item-search {
-        display: none;
+        display: none !important;
     }
+
     .bill-inputs {
-        border: none;
+        border: none !important;
+    }
+
+    .bill-items-table {
+        width: 100%;
+        
+    }
+
+    .bill-body-tdata:first-child {
+        word-wrap: break-word !important;
+        white-space: normal !important; 
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+        font-size: 12px !important;
+    }
+
+    .bill-body-tdata {
+        font-weight: normal !important;
+        font-size: 14px !important;
+        
     }
 }
+

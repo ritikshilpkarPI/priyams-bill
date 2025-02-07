@@ -5,9 +5,14 @@ import AppFunction from './functions/AppFunction';
 import StoreRoutes from './components/StoreRoutes';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
+import { useDispatch } from 'react-redux';
+import { fetchBillingItems } from './redux/billing/billingSlice';
 
 function App({ history, location }) {
-  
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchBillingItems());
+  }, []);
   useEffect(() => {
     const timeOut = 36_00_000;
     async function saveBills() {

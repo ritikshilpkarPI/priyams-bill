@@ -50,8 +50,8 @@ export const BillItems = ({ items, onRemoveItem, bill, setBill }) => {
       <Table withBorder highlightOnHover className='bill-items-table'>
         <thead>
           <tr>
-            <th className='bill-table-header'>Item Name</th>
-            <th className='bill-table-header'>Quantity</th>
+            <th className='bill-table-header'>Name</th>
+            <th className='bill-table-header'>Qt.</th>
             <th className='bill-table-header'>MRP</th>
             <th className='bill-table-header'>Price</th>
             <th className='bill-table-header'>Slab Pricing

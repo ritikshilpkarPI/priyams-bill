@@ -3,7 +3,8 @@ import { Container, TextInput, NumberInput, Select, Button, Card, Group, FileInp
 import JsBarcode from "react-jsbarcode";
 import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
-import { getBillingLeanItemsAPI } from "../../utils/apiUtils";
+import { useSelector } from "react-redux";
+import { selectBillingItems } from "src/redux/billing/billingSelectors";
 
 const units = ["Kg", "Gm", "Piece", "mL", "L", "mm", "in", "mts"];
 
@@ -20,26 +21,15 @@ const ProductForm = () => {
     });
     const printRef = useRef<any>(null);
     const singlePrintRef = useRef<any>(null);
-
-    const getAllLeanItems = async () => {
-        try {
-            setLoaderDisplay(true);
-            const response = await getBillingLeanItemsAPI();
-
-            if (response.isError) return;
-            if (response?.message) {
-                setItemsByBarcode(response?.message?.itemsBarCodeMap);
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoaderDisplay(false);
-        }
-    };
+    const items = useSelector(selectBillingItems);
 
     useEffect(() => {
-        getAllLeanItems();
-    }, []);
+        if (items) {
+          setLoaderDisplay(true);
+          setItemsByBarcode(items?.itemsBarCodeMap);
+          setLoaderDisplay(false);
+        }
+      }, []);
 
     const generateUniqueBarcode = (existingBarcodes: string[]): string => {
         let newBarcode;

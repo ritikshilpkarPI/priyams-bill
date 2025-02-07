@@ -1,20 +1,95 @@
 @media print {
     .payment-section {
-        display: flex;
         width: 60mm;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .payment-section * {
+        background: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        color: black !important;
+      
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .payment-details-text {
+        display: none !important;
+    }
+
+    .amount-display-text {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .amount-display * {
+        font-size: 14px !important;
+        font-weight: bold !important;
     }
 
     .payment-inputs {
         display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        font-weight: normal !important;
+        font-size: 14px !important;
     }
+
     .cash-input, .upi-input {
         display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        font-weight: normal !important;
+        font-size: 14px !important;
     }
-    .cash-input * input, .upi-input * input {
+
+    .cash-paid-text, .upi-paid-text {
+        width: 100% !important;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        font-weight: normal !important;
+        font-size: 14px !important;
+    }
+
+    .cash-input input, .upi-input input {
         border: none;
+        outline: none;
+        background: none;
+        font-size: 14px;
+        text-align: right;
     }
 
     .pay-print-button {
-        display: none;
+        display: none !important;
+    }
+
+    .mantine-Paper-root {
+        background: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .mantine-Alert-root {
+        border: none !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+
+    .cash-input label, .upi-input label {
+        margin-right: 10px;
     }
 }

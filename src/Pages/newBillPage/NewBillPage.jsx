@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Container,
   Grid,
@@ -12,16 +12,19 @@ import { useBillState } from '../../hooks/useBillState';
 import { ItemSearch } from '../../components/ItemSearch';
 import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
+import { useSelector } from "react-redux";
+import { selectBillingItems } from 'src/redux/billing/billingSelectors';
 
 
 const NewBillPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [itemsDataCount, setItemsDataCount] = useState(0);
   const {
     billState,
     updateBillItems,
     updatePayment,
     resetBillState,
-  } = useBillState(); // Assume this hook is imported
+  } = useBillState(); 
 
   const handleRemoveItem = (itemId) => {
     const updatedItems = billState.billItems.filter(
@@ -29,7 +32,13 @@ const NewBillPage = () => {
     );
     updateBillItems(updatedItems);
   };
-
+  const items = useSelector(selectBillingItems);
+    
+  useEffect(() => {
+    if (items) {
+      setItemsDataCount(items.totalItemsCount); 
+    }
+     }, []);
   const saveBillToDatabase = async (billData) => {
     try {
       const response = await saveOrCacheBillAPI(billData);
@@ -99,7 +108,11 @@ const NewBillPage = () => {
         You Saved: ₹
         {totalSaveOnBill} on your purchase!
       </p> : <></>}
+      
       <Container size="xl" py="md">
+        <h2>
+          Total items: {itemsDataCount}
+        </h2>
         <Title order={2} mb="lg">
           New Bill
         </Title>
