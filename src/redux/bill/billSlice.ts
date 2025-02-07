@@ -3,42 +3,7 @@ import { getBillingLeanItemsAPI } from 'src/utils/apiUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { AppDispatch } from '../store';
 
-export interface BillItem {
-  itemDetail: {
-    _id: string;
-    itemName: string;
-    itemMRPperUnit: number;
-    itemSellingPricePerUnit: number;
-    itemBarcode: string;
-    itemStockQuantity: number;
-    slabPricing?: [number, number, number][];
-  };
-  itemQuantityInBill: number;
-}
-interface Item {
-  itemBarCodesList: number[];
-  itemNamesList: string[];
-  itemsBarCodeMap: Record<string, number[]>;
-  itemsNameMap: Record<string, object>;
-  totalItemsCount: number;
-}
 
-export interface BillState {
-  billItems: BillItem[];
-  customerName: string;
-  customerPhone: string;
-  billMRPTotal: number;
-  billAmountTotal: number;
-  billDiscountTotal: number;
-  totalNumberOfItems: number;
-  totalNumberOfUniqueItems: number;
-  totalBillProfit: number;
-  cashPay: number;
-  upiPay: number;
-  amountReturn: number;
-  billId: string;
-  items: Item | null
-}
 
 const initialState: BillState = {
   billItems: [],
