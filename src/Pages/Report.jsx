@@ -1,4 +1,4 @@
-import { DateRangePicker, TimeInput } from '@mantine/dates';
+import { DateRangePicker, TimeRangeInput } from '@mantine/dates';
 import { useState } from 'react';
 import {
   Button,
@@ -64,7 +64,7 @@ const Report = () => {
           value={dateRange}
           onChange={setDateRange}
         />
-        <TimeInput
+        <TimeRangeInput
           style={{ width: '350px' }}
           format="12"
           label="Time Range"

@@ -7,8 +7,8 @@ import { parseJwt } from '../utils/cookie';
 
 const AdminRoute = () => {
     const { role: userRole = '' } =  parseJwt(Cookies.get('token'))
-  if (USER_ROLE.ADMIN === userRole) {
-    return <Navigate to={ROUTES.LOGIN} replace />;
+  if (USER_ROLE.ADMIN !== userRole) {
+    return <Navigate to={ROUTES.INVENTORY} replace />;
   }
 
   return <Outlet />;
