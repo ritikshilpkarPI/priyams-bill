@@ -91,7 +91,6 @@ const {
   getItemsSellDetailsByItemId
 } = require('../controllers/index');
 
-
 // online order apis
 router.get(API_PATHS.ORDERS.GET_USER_ORDERS, isLoggedIn, getUserOrders);
 router.post(API_PATHS.ORDERS.UPDATE_USER_ORDERS, isLoggedIn, updateOrderStatus);

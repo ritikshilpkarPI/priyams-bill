@@ -18,6 +18,13 @@ const purchaseOrderSchema = new mongoose.Schema({
       item_id: String,
       brand: String,
       category: String,
+      subCategory: String,
+      flavourOrFeature: String,
+      freeItemsAvailable: Boolean,
+      returnPolicyAvailable: Boolean,
+      returnPolicyRemarks: String,
+      companyName: String,
+      saleTime: String,
       imageUrl: {
         public_id: String,
         secure_url: String
@@ -27,6 +34,8 @@ const purchaseOrderSchema = new mongoose.Schema({
         {
           date: Date,
           value: Number,
+          mfgDate: Date,
+          isShelfExpired: Boolean,
         },
       ],
       slabPrice: [],
