@@ -70,9 +70,7 @@ const SellDetailsPage = () => {
       <LoadingOverlay
         className="purchase-loader"
         visible={loading}
-        overlayProps={{
-          blur: 1
-        }}
+        overlayBlur={1}
       />
       {isError ? (
         <div className="error-text-container">
