@@ -1,11 +1,72 @@
+.payment-input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .payment-input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    pointer-events: none;
+    z-index: 99;
+  }
+  
+  .payment-input-with-icon input {
+    padding-left: 40px !important; 
+  }
+  
+  
 @media print {
     .payment-section {
         display: flex;
-        width: 60mm;
+        flex-direction: column;
+        align-items: center;
+        background: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+      
+
+    .payment-section * {
+        background: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        color: black !important;
+      
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .payment-details-text {
+        display: none !important;
+    }
+
+    .amount-display-text {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .amount-display * {
+        font-size: 14px !important;
+        font-weight: bold !important;
     }
 
     .payment-inputs {
         display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        font-weight: normal !important;
+        font-size: 14px !important;
+   
     }
     .cash-input, .upi-input {
         display: flex;
@@ -13,8 +74,27 @@
     .cash-input * input, .upi-input * input {
         border: none;
     }
-
+    
     .pay-print-button {
-        display: none;
+        display: none !important;
     }
+
+    .mantine-Paper-root {
+        background: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .mantine-Alert-root {
+        border: none !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+
+    .cash-input label, .upi-input label {
+        margin-right: 10px;
+    }
+    .payment-input-icon {
+        display: none !important;
+    } 
 }

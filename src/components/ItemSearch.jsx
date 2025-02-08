@@ -8,6 +8,9 @@ import {
     Loader,
     Group
   } from '@mantine/core';
+import { useSelector } from "react-redux";
+import { selectBillingItems } from "src/redux/bill/billSelectors";
+import { fuzzySearch } from "src/utils/searchUtils";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -17,71 +20,48 @@ export const ItemSearch = ({ onItemSelect }) => {
   
     // Fetch items data once when component mounts
     useEffect(() => {
-      const fetchItemsData = async () => {
-        try {
-          setIsLoading(true);
-          const response = await getBillingLeanItemsAPI();
-          if (!response?.isError && itemsData.length === 0) {
-            setItemsData(response);
-          } else {
-            console.error('Error fetching items:', response.err);
-            // Show error notification
-          }
-        } catch (error) {
-          console.error('Error fetching items:', error);
-          // Show error notification
-        } finally {
-          setIsLoading(false);
-        }
-      };
-  
-      fetchItemsData();
-    }, []);
-  
-    // Handle search with local filtering
-    const handleSearch = (value) => {
-      setSearchTerm(value);
-      if (!value || !itemsData) {
-        setSearchResults([]);
-        return;
-      }
-  
-      // Check if input is a barcode (only numbers)
-      const isBarcode = /^\d+$/.test(value);
-      let results = [];
-  
-      if (isBarcode) {
-        // Search in barcode map
-        const barcodeMatches = itemsData.itemsBarCodeMap[value] || [];
-        results = barcodeMatches;
+      if (!items) {
+        setIsLoading(true);
       } else {
-        // Search in names map for partial matches
-        const searchTermLower = value.toLowerCase();
-  
-        // Search in itemsNameMap
-        results = Object.entries(itemsData.itemsNameMap)
-          .filter(([itemName]) => {
-            return itemName.toLowerCase().includes(searchTermLower)
-          })
-          .map(([_, item]) => {
-            return item
-          });
-  
-        // Also search in itemsBarCodeMap for item names
-        const barcodeMapResults = Object.values(itemsData.itemsBarCodeMap)
-          .flat() // Flatten because some barcodes might have multiple items
-          .filter(item =>
-            item.itemName.toLowerCase().includes(searchTermLower)
-          );
-  
-        // Combine results and remove duplicates based on _id
-        const allResults = [...results, ...barcodeMapResults];
-        results = Array.from(new Map(allResults.map(item => [item._id, item])).values());
+        setIsLoading(false);
+        setItemsData(items); 
       }
-  
-      // Limit results for better performance
-      setSearchResults(results.slice(0, 10));
-    };
+    
+       }, [items]);
+
+const handleSearch = (value) => {
+  setSearchTerm(value);
+
+  if (!value || !itemsData || !itemsData.itemsBarCodeMap || !itemsData.itemsNameMap) {
+    setSearchResults([]);
+    return;
+  }
+
+  const isBarcode = /^\d+$/.test(value); 
+  let results = [];
+
+  if (isBarcode) {
+    const barcodeMatches = itemsData.itemsBarCodeMap[value] || [];
+
+    const allItems = Object.values(itemsData.itemsBarCodeMap).flat();
+    const fuzzyBarcodeMatches = fuzzySearch(value, allItems);
+
+    results = Array.from(new Map([...barcodeMatches, ...fuzzyBarcodeMatches].map((item) => [item._id, item])).values());
+  } else {
+    const allItems = Object.values(itemsData.itemsNameMap);
+    const nameMatches = fuzzySearch(value, allItems);
+
+    const barcodeMapResults = Object.values(itemsData.itemsBarCodeMap)
+      .flat()
+      .filter((item) => item.itemName.toLowerCase().includes(value.toLowerCase()));
+
+    results = Array.from(new Map([...nameMatches, ...barcodeMapResults].map((item) => [item._id, item])).values());
+  }
+
+  setSearchResults(results.slice(0, 10)); 
+};
+
+
   
     const calculateItemPrice = (item, quantity) => {
       if (!item.slabPricing || item.slabPricing.length === 0) {
