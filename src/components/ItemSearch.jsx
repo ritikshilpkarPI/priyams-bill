@@ -9,6 +9,7 @@ import {
   } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { selectBillingItems } from "src/redux/bill/billSelectors";
+import { fuzzySearch } from "src/utils/searchUtils";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -27,43 +28,40 @@ export const ItemSearch = ({ onItemSelect }) => {
       }
     
        }, [items]);
-  
-    const handleSearch = (value) => {
-      setSearchTerm(value);
-      if (!value || !itemsData) {
-        setSearchResults([]);
-        return;
-      }
-  
-      const isBarcode = /^\d+$/.test(value);
-      let results = [];
-  
-      if (isBarcode) {
-        const barcodeMatches = itemsData.itemsBarCodeMap[value] || [];
-        results = barcodeMatches;
-      } else {
-        const searchTermLower = value.toLowerCase();
-  
-        results = Object.entries(itemsData.itemsNameMap)
-          .filter(([itemName]) => {
-            return itemName.toLowerCase().includes(searchTermLower)
-          })
-          .map(([_, item]) => {
-            return item
-          });
-  
-        const barcodeMapResults = Object.values(itemsData.itemsBarCodeMap)
-          .flat()
-          .filter(item =>
-            item.itemName.toLowerCase().includes(searchTermLower)
-          );
-  
-        const allResults = [...results, ...barcodeMapResults];
-        results = Array.from(new Map(allResults.map(item => [item._id, item])).values());
-      }
-  
-      setSearchResults(results.slice(0, 10));
-    };
+
+const handleSearch = (value) => {
+  setSearchTerm(value);
+
+  if (!value || !itemsData || !itemsData.itemsBarCodeMap || !itemsData.itemsNameMap) {
+    setSearchResults([]);
+    return;
+  }
+
+  const isBarcode = /^\d+$/.test(value); 
+  let results = [];
+
+  if (isBarcode) {
+    const barcodeMatches = itemsData.itemsBarCodeMap[value] || [];
+
+    const allItems = Object.values(itemsData.itemsBarCodeMap).flat();
+    const fuzzyBarcodeMatches = fuzzySearch(value, allItems);
+
+    results = Array.from(new Map([...barcodeMatches, ...fuzzyBarcodeMatches].map((item) => [item._id, item])).values());
+  } else {
+    const allItems = Object.values(itemsData.itemsNameMap);
+    const nameMatches = fuzzySearch(value, allItems);
+
+    const barcodeMapResults = Object.values(itemsData.itemsBarCodeMap)
+      .flat()
+      .filter((item) => item.itemName.toLowerCase().includes(value.toLowerCase()));
+
+    results = Array.from(new Map([...nameMatches, ...barcodeMapResults].map((item) => [item._id, item])).values());
+  }
+
+  setSearchResults(results.slice(0, 10)); 
+};
+
+
   
     const calculateItemPrice = (item, quantity) => {
       if (!item.slabPricing || item.slabPricing.length === 0) {

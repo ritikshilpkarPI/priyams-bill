@@ -8,9 +8,9 @@ export const fetchBillingItems = () => async (dispatch: AppDispatch) => {
       if (response && !response.isError) {
         dispatch(setBillingItems(response));
       } else {
-        throw new Error(response.err || 'Something went wrong');
+        console.error(response.err || 'Something went wrong');
       }
     } catch (error: any) {
-      throw new Error(error);
+        console.error(error);
     }
   };

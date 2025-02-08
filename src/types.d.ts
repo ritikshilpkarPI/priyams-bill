@@ -165,6 +165,11 @@ declare global {
     billId: string;
     items: Item | null
   }
+  interface SearchItem {
+    _id: string;
+    itemName: string;
+    itemBarcode?: string;
+  };
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

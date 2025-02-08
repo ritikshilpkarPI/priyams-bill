@@ -1,3 +1,23 @@
+.payment-input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .payment-input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    pointer-events: none;
+    z-index: 99;
+  }
+  
+  .payment-input-with-icon input {
+    padding-left: 40px !important; 
+  }
+  
+  
 @media print {
     .payment-section {
         width: 60mm;
@@ -10,6 +30,8 @@
         padding: 0 !important;
         margin: 0 !important;
     }
+    
+      
 
     .payment-section * {
         background: none !important;
@@ -45,6 +67,7 @@
         align-items: flex-start;
         font-weight: normal !important;
         font-size: 14px !important;
+   
     }
 
     .cash-input, .upi-input {
@@ -72,7 +95,7 @@
         font-size: 14px;
         text-align: right;
     }
-
+    
     .pay-print-button {
         display: none !important;
     }
@@ -92,4 +115,7 @@
     .cash-input label, .upi-input label {
         margin-right: 10px;
     }
+    .payment-input-icon {
+        display: none !important;
+    } 
 }
