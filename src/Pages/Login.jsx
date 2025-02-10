@@ -4,26 +4,16 @@ import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
 import { useNavigate } from 'react-router';
+import { fetchImageAPI } from 'src/utils/apiUtils';
 
-const storeImageLocally = async (imageUrl, key) => {
-  if (localStorage.getItem(key)) return; 
-  try {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-    const reader = new FileReader();
 
-    reader.onloadend = () => {
-      localStorage.setItem(key, reader.result);
-    };
-
-    reader.readAsDataURL(blob);
-  } catch (error) {
-    console.error('Failed to store image locally:', error);
-  }
-};
 
 const getImageFromLocalStorage = (key, fallbackUrl) => {
   return localStorage.getItem(key) || fallbackUrl;
+};
+
+const setImageInLocalStorage = (key, imageUrl) => {
+  localStorage.setItem(key, imageUrl);
 };
 
 const Login = () => {
@@ -37,15 +27,35 @@ const Login = () => {
   const [hideIcon, setHideIcon] = useState('');
   const navigate = useNavigate();
   useEffect(() => {
-    const images = [
-      { url: '/images/view.svg', key: 'viewIcon' },
-      { url: '/images/hide.svg', key: 'hideIcon' },
-    ];
+    const fetchIcons = async () => {
+      const storedViewIcon = getImageFromLocalStorage('viewIcon', '');
+      const storedHideIcon = getImageFromLocalStorage('hideIcon', '');
 
-    Promise.all(images.map(({ url, key }) => storeImageLocally(url, key))).then(() => {
-      setViewIcon(getImageFromLocalStorage('viewIcon', '/images/view.svg'));
-      setHideIcon(getImageFromLocalStorage('hideIcon', '/images/hide.svg'));
-    });
+      if (storedViewIcon && storedHideIcon) {
+        setViewIcon(storedViewIcon);
+        setHideIcon(storedHideIcon);
+        return; 
+      }
+
+      try {
+        const viewIconRes = await fetchImageAPI('/images/view.svg');
+        const hideIconRes = await fetchImageAPI('/images/hide.svg');
+
+        if (!viewIconRes.isError) {
+          setViewIcon(viewIconRes);
+          setImageInLocalStorage('viewIcon', viewIconRes);
+        }
+
+        if (!hideIconRes.isError) {
+          setHideIcon(hideIconRes);
+          setImageInLocalStorage('hideIcon', hideIconRes);
+        }
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      }
+    };
+
+    fetchIcons();
   }, []);
 
   const loginUser = async (e) => {

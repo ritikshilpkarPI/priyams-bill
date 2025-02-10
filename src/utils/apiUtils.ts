@@ -61,3 +61,11 @@ export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
     return { isError: true, error };
   }
 }; 
+export const fetchImageAPI = async (imagePath: string) => {
+  try {
+    const response = await getAPI({ path: imagePath });
+    return response; 
+  } catch (err) {
+    return { isError: true, err };
+  }
+};
