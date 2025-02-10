@@ -3,6 +3,7 @@ import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
+import { useNavigate } from 'react-router';
 
 const storeImageLocally = async (imageUrl, key) => {
   if (localStorage.getItem(key)) return; 
@@ -34,7 +35,7 @@ const Login = () => {
 
   const [viewIcon, setViewIcon] = useState('');
   const [hideIcon, setHideIcon] = useState('');
-
+  const navigate = useNavigate();
   useEffect(() => {
     const images = [
       { url: '/images/view.svg', key: 'viewIcon' },
