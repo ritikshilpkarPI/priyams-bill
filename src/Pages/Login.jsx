@@ -32,19 +32,16 @@ const Login = ({ history }) => {
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const [userIcon, setUserIcon] = useState('');
   const [viewIcon, setViewIcon] = useState('');
   const [hideIcon, setHideIcon] = useState('');
 
   useEffect(() => {
     const images = [
-      { url: '/images/user.svg', key: 'userIcon' },
       { url: '/images/view.svg', key: 'viewIcon' },
       { url: '/images/hide.svg', key: 'hideIcon' },
     ];
 
     Promise.all(images.map(({ url, key }) => storeImageLocally(url, key))).then(() => {
-      setUserIcon(getImageFromLocalStorage('userIcon', '/images/user.svg'));
       setViewIcon(getImageFromLocalStorage('viewIcon', '/images/view.svg'));
       setHideIcon(getImageFromLocalStorage('hideIcon', '/images/hide.svg'));
     });
@@ -96,7 +93,12 @@ const Login = ({ history }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          {userIcon && <img height="20px" src={userIcon} alt="user icon" className="username-icon" />}
+          <img
+            height={'20px'}
+            src="images/user.svg"
+            alt="user icon"
+            className="username-icon"
+          />
         </div>
 
         <label htmlFor="password">Password</label>
