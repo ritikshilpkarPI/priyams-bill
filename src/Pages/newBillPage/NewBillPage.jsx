@@ -12,6 +12,8 @@ import { useBillState } from '../../hooks/useBillState';
 import { ItemSearch } from '../../components/ItemSearch';
 import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
+import { useSelector } from "react-redux";
+import { selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 
 
 const NewBillPage = () => {
@@ -29,7 +31,13 @@ const NewBillPage = () => {
     );
     updateBillItems(updatedItems);
   };
-
+  const itemsFeedData = useSelector(selectItemsFeedData);
+    
+  useEffect(() => {
+    if (itemsFeedData) {
+      setItemsDataCount(itemsFeedData.totalItemsCount); 
+    }
+     }, []);
   const saveBillToDatabase = async (billData) => {
     try {
       const response = await saveOrCacheBillAPI(billData);

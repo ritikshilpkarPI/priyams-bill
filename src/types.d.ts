@@ -133,13 +133,7 @@ declare global {
     };
     itemQuantityInBill: number;
   }
-  interface Item {
-    itemBarCodesList: number[];
-    itemNamesList: string[];
-    itemsBarCodeMap: Record<string, number[]>;
-    itemsNameMap: Record<string, object>;
-    totalItemsCount: number;
-  }
+  
   
    interface BillState {
     billItems: BillItem[];
@@ -155,13 +149,23 @@ declare global {
     upiPay: number;
     amountReturn: number;
     billId: string;
-    items: Item | null
   }
   interface SearchItem {
     _id: string;
     itemName: string;
     itemBarcode?: string;
   };
+  interface AllItemsFeedData {
+    itemBarCodesList: number[];
+    itemNamesList: string[];
+    itemsBarCodeMap: Record<string, number[]>;
+    itemsNameMap: Record<string, object>;
+    totalItemsCount: number;
+  }
+  
+  interface AllItemsFeedDataState {
+    itemsFeedData: AllItemsFeedData;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

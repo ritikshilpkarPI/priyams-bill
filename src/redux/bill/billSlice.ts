@@ -62,6 +62,7 @@ const billSlice = createSlice({
     resetBillState: (state) => {
       Object.assign(state, initialState, { billId: `${uuidv4()}-${Date.now()}` });
     },
+   
   },
 });
 
