@@ -35,6 +35,7 @@ export const sidebarListData = [
       },
       {name: 'Add Expired Item', url:'/addExpiredItem', icon: 'images/addExpiredIcon.svg'},
       {name: 'Expired Items', url:'/expiredItemList', icon: 'images/expireIcon.svg'},
+      {name: 'Barcode Prints', url:'/barcodePrint', icon: 'images/barcode.svg'},
 
 
     ],

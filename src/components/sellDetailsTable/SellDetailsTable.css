@@ -39,6 +39,10 @@
 .sell-details-table-line-graph {
     width: 300px;
 }
+.sell-details-table-thead-tr-th-span{
+    font-size: 12px;
+    font-weight: 500;
+}
 
 @media (max-width: 399px) {
     .sell-details-table-line-graph {

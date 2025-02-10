@@ -25,7 +25,7 @@ const getImageFromLocalStorage = (key, fallbackUrl) => {
   return localStorage.getItem(key) || fallbackUrl;
 };
 
-const Login = ({ history }) => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -81,7 +81,7 @@ const Login = ({ history }) => {
           setErrorMsg('Login failed. Please try again.');
         }
       } else {
-        history.push('/billing');
+        navigate('/billing');
       }
     } finally {
       setLoading(false);
