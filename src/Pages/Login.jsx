@@ -1,8 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
+
+const storeImageLocally = async (imageUrl, key) => {
+  if (localStorage.getItem(key)) return; 
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      localStorage.setItem(key, reader.result);
+    };
+
+    reader.readAsDataURL(blob);
+  } catch (error) {
+    console.error('Failed to store image locally:', error);
+  }
+};
+
+const getImageFromLocalStorage = (key, fallbackUrl) => {
+  return localStorage.getItem(key) || fallbackUrl;
+};
 
 const Login = ({ history }) => {
   const [username, setUsername] = useState('');
@@ -10,6 +31,24 @@ const Login = ({ history }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const [userIcon, setUserIcon] = useState('');
+  const [viewIcon, setViewIcon] = useState('');
+  const [hideIcon, setHideIcon] = useState('');
+
+  useEffect(() => {
+    const images = [
+      { url: '/images/user.svg', key: 'userIcon' },
+      { url: '/images/view.svg', key: 'viewIcon' },
+      { url: '/images/hide.svg', key: 'hideIcon' },
+    ];
+
+    Promise.all(images.map(({ url, key }) => storeImageLocally(url, key))).then(() => {
+      setUserIcon(getImageFromLocalStorage('userIcon', '/images/user.svg'));
+      setViewIcon(getImageFromLocalStorage('viewIcon', '/images/view.svg'));
+      setHideIcon(getImageFromLocalStorage('hideIcon', '/images/hide.svg'));
+    });
+  }, []);
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -49,10 +88,6 @@ const Login = ({ history }) => {
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-
   return (
     <div className="login-card">
       <form onSubmit={loginUser}>
@@ -65,40 +100,38 @@ const Login = ({ history }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <img
-            height={'20px'}
-            src="images/user.svg"
-            alt="user icon"
-            className="username-icon"
-          />
+          {userIcon && <img height="20px" src={userIcon} alt="user icon" className="username-icon" />}
         </div>
+
         <label htmlFor="password">Password</label>
         <div className="password-container">
           <input
-            type={passwordVisible ? "text" : "password"} 
+            type={passwordVisible ? 'text' : 'password'}
             name="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <span onClick={togglePasswordVisibility} className="password-toggle">
-            {passwordVisible ? (
-              <img height={'20px'} src="images/view.svg" alt="view icon" />
-            ) : (
-              <img height={'20px'} src="images/hide.svg" alt="hide icon" />
-            )}
-          </span>
-        </div>
-        <p id="error-msg" style={{ textAlign: 'left' }}>
-          {errorMsg}
-        </p>
-        <button type="submit" disabled={loading}>
-          {loading && (
-            <div className="loader-container">
-              <Loader size="sm" color="white" />
-            </div>
+          {viewIcon && hideIcon && (
+            <span
+              onClick={() => setPasswordVisible(!passwordVisible)}
+              className="password-toggle"
+              style={{
+                backgroundImage: `url(${passwordVisible ? viewIcon : hideIcon})`,
+                backgroundSize: 'contain',
+                width: '20px',
+                height: '20px',
+                display: 'inline-block',
+                cursor: 'pointer',
+              }}
+            />
           )}
-          {!loading && 'Login'}
+        </div>
+
+        <p id="error-msg" style={{ textAlign: 'left' }}>{errorMsg}</p>
+
+        <button type="submit" disabled={loading}>
+          {loading ? <Loader size="sm" color="white" /> : 'Login'}
         </button>
       </form>
     </div>
