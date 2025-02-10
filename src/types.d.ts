@@ -129,6 +129,51 @@ declare global {
     endDate: string;
     timePeriod: string;
   }
+   interface BillItem {
+    itemDetail: {
+      _id: string;
+      itemName: string;
+      itemMRPperUnit: number;
+      itemSellingPricePerUnit: number;
+      itemBarcode: string;
+      itemStockQuantity: number;
+      slabPricing?: [number, number, number][];
+    };
+    itemQuantityInBill: number;
+  }
+  
+  
+   interface BillState {
+    billItems: BillItem[];
+    customerName: string;
+    customerPhone: string;
+    billMRPTotal: number;
+    billAmountTotal: number;
+    billDiscountTotal: number;
+    totalNumberOfItems: number;
+    totalNumberOfUniqueItems: number;
+    totalBillProfit: number;
+    cashPay: number;
+    upiPay: number;
+    amountReturn: number;
+    billId: string;
+  }
+  interface SearchItem {
+    _id: string;
+    itemName: string;
+    itemBarcode?: string;
+  };
+  interface AllItemsFeedData {
+    itemBarCodesList: number[];
+    itemNamesList: string[];
+    itemsBarCodeMap: Record<string, number[]>;
+    itemsNameMap: Record<string, object>;
+    totalItemsCount: number;
+  }
+  
+  interface AllItemsFeedDataState {
+    itemsFeedData: AllItemsFeedData;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

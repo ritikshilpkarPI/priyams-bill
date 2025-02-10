@@ -1,0 +1,91 @@
+@media print {
+    .bill-items{
+        width: 60mm;
+    }
+    
+    .bill-items-table {
+        border: none !important;
+        width: auto !important;
+        margin: 0 !important;
+    }
+    .bill-items::before,
+    .bill-items::after {
+        content: "-------------------------------------------------------";
+        display: block;
+        text-align: center;
+        font-size: 12px;
+        margin: 5px 0;
+    }
+
+    .bill-table-header,
+    .bill-body-tdata {
+        text-align: left !important;
+        padding: 8px 5px !important; 
+        border: none !important;
+        font-size: 12px !important;
+    }
+
+    .bill-table-header {
+        padding-bottom: 12px !important;
+    }
+
+    .bill-body-tdata {
+        padding-top: 8px !important; 
+    }
+
+    .bill-table-header:nth-child(5),
+    .bill-body-tdata:nth-child(5),
+    .bill-table-header:nth-child(7),
+    .bill-body-tdata:nth-child(7) {
+        display: none !important;
+    }
+
+    .quantity-input {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        width: auto !important;
+        font-size: inherit !important; 
+        display: inline-block !important;
+    }
+    .quantity-input input {
+        border: none !important;
+        outline: none !important;
+        background: transparent !important;
+    }
+
+    .quantity-input:focus,
+    .quantity-input:active {
+        border: none !important;
+        outline: none !important;
+    }
+
+    .bill-item-remove-btn,
+    .item-search {
+        display: none !important;
+    }
+
+    .bill-inputs {
+        border: none !important;
+    }
+
+    .bill-items-table {
+        width: 100%;
+        
+    }
+
+    .bill-body-tdata:first-child {
+        word-wrap: break-word !important;
+        white-space: normal !important; 
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+        font-size: 12px !important;
+    }
+
+    .bill-body-tdata {
+        font-weight: normal !important;
+        font-size: 14px !important;
+        
+    }
+}
+

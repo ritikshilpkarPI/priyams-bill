@@ -17,7 +17,8 @@ export const getBillingLeanItemsAPI = async () => {
     const response = await getAPI({
       path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
     });
-    return response;
+    
+    return response.message;
   } catch (err) {
     return { isError: true, err };
   }
