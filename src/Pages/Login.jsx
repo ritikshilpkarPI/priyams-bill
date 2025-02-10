@@ -1,9 +1,20 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
+import { useNavigate } from 'react-router';
+import { fetchImageAPI } from 'src/utils/apiUtils';
+
+
+
+const getImageFromLocalStorage = (key, fallbackUrl) => {
+  return localStorage.getItem(key) || fallbackUrl;
+};
+
+const setImageInLocalStorage = (key, imageUrl) => {
+  localStorage.setItem(key, imageUrl);
+};
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -11,7 +22,41 @@ const Login = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const [viewIcon, setViewIcon] = useState('');
+  const [hideIcon, setHideIcon] = useState('');
   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchIcons = async () => {
+      const storedViewIcon = getImageFromLocalStorage('viewIcon', '');
+      const storedHideIcon = getImageFromLocalStorage('hideIcon', '');
+
+      if (storedViewIcon && storedHideIcon) {
+        setViewIcon(storedViewIcon);
+        setHideIcon(storedHideIcon);
+        return; 
+      }
+
+      try {
+        const viewIconRes = await fetchImageAPI('/images/view.svg');
+        const hideIconRes = await fetchImageAPI('/images/hide.svg');
+
+        if (!viewIconRes.isError) {
+          setViewIcon(viewIconRes);
+          setImageInLocalStorage('viewIcon', viewIconRes);
+        }
+
+        if (!hideIconRes.isError) {
+          setHideIcon(hideIconRes);
+          setImageInLocalStorage('hideIcon', hideIconRes);
+        }
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      }
+    };
+
+    fetchIcons();
+  }, []);
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -51,10 +96,6 @@ const Login = () => {
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-
   return (
     <div className="login-card">
       <form onSubmit={loginUser}>
@@ -74,33 +115,36 @@ const Login = () => {
             className="username-icon"
           />
         </div>
+
         <label htmlFor="password">Password</label>
         <div className="password-container">
           <input
-            type={passwordVisible ? "text" : "password"} 
+            type={passwordVisible ? 'text' : 'password'}
             name="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <span onClick={togglePasswordVisibility} className="password-toggle">
-            {passwordVisible ? (
-              <img height={'20px'} src="images/view.svg" alt="view icon" />
-            ) : (
-              <img height={'20px'} src="images/hide.svg" alt="hide icon" />
-            )}
-          </span>
-        </div>
-        <p id="error-msg" style={{ textAlign: 'left' }}>
-          {errorMsg}
-        </p>
-        <button type="submit" disabled={loading}>
-          {loading && (
-            <div className="loader-container">
-              <Loader size="sm" color="white" />
-            </div>
+          {viewIcon && hideIcon && (
+            <span
+              onClick={() => setPasswordVisible(!passwordVisible)}
+              className="password-toggle"
+              style={{
+                backgroundImage: `url(${passwordVisible ? viewIcon : hideIcon})`,
+                backgroundSize: 'contain',
+                width: '20px',
+                height: '20px',
+                display: 'inline-block',
+                cursor: 'pointer',
+              }}
+            />
           )}
-          {!loading && 'Login'}
+        </div>
+
+        <p id="error-msg" style={{ textAlign: 'left' }}>{errorMsg}</p>
+
+        <button type="submit" disabled={loading}>
+          {loading ? <Loader size="sm" color="white" /> : 'Login'}
         </button>
       </form>
     </div>
