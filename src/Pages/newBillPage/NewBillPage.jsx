@@ -13,7 +13,7 @@ import { ItemSearch } from '../../components/ItemSearch';
 import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
-import { selectBillingItems } from 'src/redux/bill/billSelectors';
+import { selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 
 
 const NewBillPage = () => {
@@ -32,11 +32,11 @@ const NewBillPage = () => {
     );
     updateBillItems(updatedItems);
   };
-  const items = useSelector(selectBillingItems);
+  const itemsFeedData = useSelector(selectItemsFeedData);
     
   useEffect(() => {
-    if (items) {
-      setItemsDataCount(items.totalItemsCount); 
+    if (itemsFeedData) {
+      setItemsDataCount(itemsFeedData.totalItemsCount); 
     }
      }, []);
   const saveBillToDatabase = async (billData) => {

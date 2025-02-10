@@ -8,26 +8,26 @@ import {
     Group
   } from '@mantine/core';
 import { useSelector } from "react-redux";
-import { selectBillingItems } from "src/redux/bill/billSelectors";
 import { fuzzySearch } from "src/utils/searchUtils";
+import { selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [itemsData, setItemsData] = useState([]);
-    const items = useSelector(selectBillingItems);
+    const itemsFeedData = useSelector(selectItemsFeedData);
 
     
     useEffect(() => {
-      if (!items) {
+      if (!itemsFeedData) {
         setIsLoading(true);
       } else {
         setIsLoading(false);
-        setItemsData(items); 
+        setItemsData(itemsFeedData); 
       }
     
-       }, [items]);
+       }, [itemsFeedData]);
 
 const handleSearch = (value) => {
   setSearchTerm(value);

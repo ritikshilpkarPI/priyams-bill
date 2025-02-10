@@ -4,7 +4,7 @@ import { ReactBarcode } from "react-jsbarcode";
 import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
-import { selectBillingItems } from "src/redux/bill/billSelectors";
+import { selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 
 const units = ["Kg", "Gm", "Piece", "mL", "L", "mm", "in", "mts"];
 
@@ -21,12 +21,12 @@ const ProductForm = () => {
     });
     const printRef = useRef<any>(null);
     const singlePrintRef = useRef<any>(null);
-    const items = useSelector(selectBillingItems);
+    const itemsFeedData = useSelector(selectItemsFeedData);
 
     useEffect(() => {
-        if (items) {
+        if (itemsFeedData) {
           setLoaderDisplay(true);
-          setItemsByBarcode(items?.itemsBarCodeMap);
+          setItemsByBarcode(itemsFeedData?.itemsBarCodeMap);
           setLoaderDisplay(false);
         }
       }, []);

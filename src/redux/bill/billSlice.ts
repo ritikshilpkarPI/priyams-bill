@@ -16,7 +16,6 @@ const initialState: BillState = {
   upiPay: 0,
   amountReturn: 0,
   billId: `${uuidv4()}-${Date.now()}`,
-  items: null,
 };
 
 const billSlice = createSlice({
@@ -35,11 +34,9 @@ const billSlice = createSlice({
     resetBillState: (state) => {
       Object.assign(state, initialState, { billId: `${uuidv4()}-${Date.now()}` });
     },
-    setBillingItems: (state, action: PayloadAction<Item>) => {
-      state.items = action.payload;
-    },
+   
   },
 });
 
-export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState,setBillingItems } = billSlice.actions;
+export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState } = billSlice.actions;
 export default billSlice.reducer;
