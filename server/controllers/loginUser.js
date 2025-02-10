@@ -9,11 +9,11 @@ const loginUser = async (req, res, next) => {
     }
     const user = await Staff.findOne({ username }).select('+password');
     if (!user) {
-      throw new NotFound("Email or password doesn't exist");
+      throw new NotFound("Username doesn't exist");
     }
     const isPasswordCorrect = user.password === password;
     if (!isPasswordCorrect) {
-      throw new NotFound("Email or password doesn't exist");
+      throw new NotFound("Password doesn't exist");
     }
     const token = user.getJwtToken();
     const options = {

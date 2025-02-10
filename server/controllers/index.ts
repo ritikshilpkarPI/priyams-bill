@@ -83,7 +83,8 @@ import expelOrderToRider from './expelOrderToRider';
 import createRzpQRByAmount from './createRzpQRByAmount';
 import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
-
+import getItemsSellDetailsByItemId from './getItemsSellDetailsByItemId';
+import createPurchaseOrderWithDealer from "./createPurchaseOrderWithDealer"
 
 export {
   getStaff,
@@ -170,5 +171,7 @@ export {
   expelOrderToRider,
   createRzpQRByAmount,
   assignOrderToRider,
-  getItemsSellDetailsByPurchaseOrderId
+  getItemsSellDetailsByPurchaseOrderId,
+  getItemsSellDetailsByItemId,
+  createPurchaseOrderWithDealer
 };

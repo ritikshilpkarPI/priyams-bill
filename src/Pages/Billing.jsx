@@ -1239,11 +1239,11 @@ export const QuantBtn = ({ itemObj, idx, bill, setBill }) => {
   const handleQuantityChange = (e) => {
     if (e.target.value < 0) return;
     const billItemsCopy = [...bill.billItems];
-    billItemsCopy[idx].itemDetail['itemQuantityInBill'] = Number(
+    billItemsCopy[idx].itemQuantityInBill = Number(
       e.target.value
     );
-    billItemsCopy[idx]['itemQuantityInBill'] = Number(e.target.value);
-    setBill((prev) => ({ ...prev, billItems: [...billItemsCopy] }));
+    billItemsCopy[idx].itemQuantityInBill = Number(e.target.value);
+    setBill({billItems: [...billItemsCopy] });
   };
   return (
     <>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Group, LoadingOverlay, Title } from '@mantine/core';
 import { Notification } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import usePurchaseOrder from '../functions/usePurchaseOrder';
 import OrderForm from './OrderForm';
 import useNameSearchItem from '../functions/useNameSearchItems';
@@ -11,7 +11,7 @@ import Forms from './Forms';
 import EditPurchaseDetail from './EditPurchaseDetail';
 import ShowOrderDetail from './ShowOrderDetail';
 import '../CSS/purchaseOrder.css';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // import { genericAxios } from '../utils/genericAxiosMethod';
 // import { API_PATHS } from '../utils/constants/apiPaths';
 // import { API_METHODS } from '../utils/constants/apiMethods';
@@ -57,12 +57,14 @@ const PurchaseOrderItems = ({ history }) => {
     disableDraft,
     itemsList,
     setLoading,
-    itemLoading
+    itemLoading,
+    mfgDate,
+    setMfgDate
   } = usePurchaseOrder(history);
-
-  const { filteredItemsByName } = useNameSearchItem(form.values.inputName, itemsList);
-  const { filteredItemsByBarcode } = useBarcodeSearchItems(form.values.barcode, itemsList);
-  const locate = useHistory();
+  const isSearchByBarcode = form.values.searchBy === 'barcode';
+  const { filteredItemsByName } = useNameSearchItem(!isSearchByBarcode ? form.values.search : '' , itemsList);
+  const { filteredItemsByBarcode } = useBarcodeSearchItems(isSearchByBarcode ? form.values.search : '', itemsList);
+  const navigate = useNavigate();
   const { id } = useParams();
   return (
     <>
@@ -70,7 +72,7 @@ const PurchaseOrderItems = ({ history }) => {
         <Button
           className="back-button"
           disabled={id ? false : true}
-          onClick={() => locate.push('/approval')}
+          onClick={() => navigate('/approval')}
         >
           Back
         </Button>
@@ -94,10 +96,8 @@ const PurchaseOrderItems = ({ history }) => {
         handleExpiryDate={handleExpiryDate}
         setDate={setDate}
         date={date}
-        filterItems={filteredItemsByName}
-        filterItems2={filteredItemsByBarcode}
-        handleSelectOrderItems={handleSelectOrderItems}
-        handleSelectOrderItems2={handleSelectOrderItems2}
+        filterItems={isSearchByBarcode ? filteredItemsByBarcode : filteredItemsByName}
+        handleSelectOrderItems={isSearchByBarcode ? handleSelectOrderItems : handleSelectOrderItems2}
         slabForm={slabForm}
         addSlabPrice={addSlabPrice}
         deleteSlab={deleteSlab}
@@ -105,6 +105,9 @@ const PurchaseOrderItems = ({ history }) => {
         setSlabs={setSlabs}
         setLoading={setLoading}
         itemLoading={itemLoading}
+        mfgDate={mfgDate}
+        setMfgDate={setMfgDate}
+        isSearchByBarcode={isSearchByBarcode}
       />
       <EditPurchaseDetail
         openPurchaseDrawer={openPurchaseDrawer}

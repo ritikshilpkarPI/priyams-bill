@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState, useRef } from 'react';
 import { parse } from 'json2csv';
 import { VariableSizeList as List } from 'react-window';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   FileButton,
   Button,
@@ -94,7 +94,7 @@ const ItemsList = () => {
   const [paginationIndices, setPaginationIndices] = useState([]);
   const skip = limitPage*(currentPage-1);
   
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const paginationArr = (length)=> {
     let arr = [], startElem = 2;
@@ -1235,7 +1235,7 @@ const ItemsList = () => {
 
   const goToPerItemListPurchaseOrder = ({ index }) => {
     let itemname = items[index].itemName;
-    history.push(`/inventory/${itemname}`);
+    navigate(`/inventory/${itemname}`);
   };
   const rows = ({ index, style }) => {
     const { images } = items[index];

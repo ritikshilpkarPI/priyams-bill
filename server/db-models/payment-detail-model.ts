@@ -30,6 +30,6 @@ const PaymentDetailsSchema= new Schema<PaymentDetailsSchemaInterface>(
   }
 );
 
-const PaymentDetails = mongoose.model<PaymentDetailsModelInterface>('PaymentDetails', PaymentDetailsSchema);
+const PaymentDetails = mongoose.model('PaymentDetails', PaymentDetailsSchema);
 
 module.exports = {PaymentDetails}

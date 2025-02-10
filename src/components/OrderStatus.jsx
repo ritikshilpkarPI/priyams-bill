@@ -1,17 +1,17 @@
 import { Button } from '@mantine/core';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../CSS/_orders.scss';
 
 function OrderStatus({ title, children, number }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
     <>
       <div className="order-number-container">{number}</div>
       <div className="orders-wrapper">
         <header className="header">
           <p className="orders-title">{title.split('_').join(' ')} Orders</p>
-          <Button onClick={() => history.push(`/orders/${title}`)}>
+          <Button onClick={() => navigate(`/orders/${title}`)}>
             View Status
           </Button>
         </header>
