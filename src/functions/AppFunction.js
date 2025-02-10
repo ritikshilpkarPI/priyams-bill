@@ -6,9 +6,12 @@ import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { parseJwt } from '../utils/cookie';
 import Cookies from 'js-cookie';
+import { useLocation, useNavigate } from 'react-router';
 
-const AppFunction = (history, location) => {
-  const showBill = location.pathname.includes('showbill');
+const AppFunction = () => {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const showBill = pathname.includes('showbill');
   const [value, setValue] = useState(showBill ? {} : Object.keys(PAGES)[1]);
   const { name: staffName = '', username: staffUserName = '' } =
     parseJwt(Cookies.get('token')) || {};
@@ -19,7 +22,7 @@ const AppFunction = (history, location) => {
       method: API_METHODS.GET,
     });
     Cookies.remove('token');
-    history.push('/login');
+    navigate("/login");
   };
 
   return {
