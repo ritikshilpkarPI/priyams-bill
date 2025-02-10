@@ -217,11 +217,7 @@ const AddExpiredItem = () => {
                             value={formData.totalItems}
                             onChange={(e) => {
                                 const value = e.target.value;
-                                if (Number(value) <= Number(itemStockQuantity)) {
                                     setFormData({ ...formData, totalItems: value });
-                                } else {
-                                    alert(`You cannot enter more than ${itemStockQuantity} items.`);
-                                }
                             }}
                             placeholder='Enter item count'
                             required
