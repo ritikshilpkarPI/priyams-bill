@@ -1,13 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 // axios.defaults.withCredentials = true;
 
-const Login = ({ history }) => {
+const Login = () => {
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const navigate = useNavigate();
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ const Login = ({ history }) => {
       setErrorMsg('');
       return;
     }
-    history.push('/billing');
+    navigate('/billing');
   };
 
   return (
