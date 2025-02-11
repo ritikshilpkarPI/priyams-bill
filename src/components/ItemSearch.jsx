@@ -18,16 +18,15 @@ export const ItemSearch = ({ onItemSelect }) => {
     const [itemsData, setItemsData] = useState([]);
     const itemsFeedData = useSelector(selectItemsFeedData);
 
-    
     useEffect(() => {
-      if (!itemsFeedData) {
+      if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
         setIsLoading(true);
       } else {
+        console.log("Data received");
         setIsLoading(false);
-        setItemsData(itemsFeedData); 
+        setItemsData(itemsFeedData);
       }
-    
-       }, [itemsFeedData]);
+    }, [itemsFeedData]);
 
 const handleSearch = (value) => {
   setSearchTerm(value);
@@ -63,17 +62,22 @@ const handleSearch = (value) => {
 
 
   
-    const calculateItemPrice = (item, quantity) => {
-      if (!item.slabPricing || item.slabPricing.length === 0) {
-        return item.itemSellingPricePerUnit;
-      }
-  
-      const applicableSlab = item.slabPricing
-        .sort((a, b) => b[0] - a[0])
-        .find(([slabQuantity]) => quantity >= slabQuantity);
-  
-      return applicableSlab ? applicableSlab[2] : item.itemSellingPricePerUnit;
-    };
+const calculateItemPrice = (item, quantity) => {
+  if (!item.slabPricing || item.slabPricing.length === 0) {
+    return item.itemSellingPricePerUnit;
+  }
+
+  const sortedSlabPricing = item.slabPricing
+    .map((slab) => [...slab])
+    .sort((a, b) => b[0] - a[0]);
+
+  const applicableSlab = sortedSlabPricing.find(
+    ([slabQuantity]) => quantity >= slabQuantity
+  );
+
+  return applicableSlab ? applicableSlab[2] : item.itemSellingPricePerUnit;
+};
+
   
     const handleItemClick = (item) => {
       onItemSelect({

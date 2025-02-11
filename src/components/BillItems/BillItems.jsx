@@ -21,16 +21,14 @@ export const BillItems = ({ items, onRemoveItem, bill, setBill }) => {
 
   const handleQuantityChange = (item, idx, newQuantity) => {
     const updatedItems = [...bill.billItems];
-    const updatedItem = { ...updatedItems[idx] };
-
+    const updatedItem = { ...updatedItems[idx], itemDetail: { ...updatedItems[idx].itemDetail } }; 
+  
     updatedItem.itemQuantityInBill = newQuantity;
-
     updatedItem.itemDetail.itemSellingPricePerUnit = calculateItemPrice(
       updatedItem.itemDetail.slabPricing,
       newQuantity,
       updatedItem.itemDetail.itemSellingPricePerUnit
     );
-
     updatedItems[idx] = updatedItem;
     setBill({ ...bill, billItems: updatedItems });
   };

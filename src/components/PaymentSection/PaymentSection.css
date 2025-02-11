@@ -118,4 +118,8 @@
     .payment-input-icon {
         display: none !important;
     } 
+    
+    .mantine-f73we9 ,.mantine-1kz3j3d{
+        display: none !important;
+    }
 }
