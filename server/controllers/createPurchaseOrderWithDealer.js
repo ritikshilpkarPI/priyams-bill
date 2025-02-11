@@ -5,7 +5,7 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 const { uploadToCloudinary } = require('../util/image');
 const { MESSAGES } = require('../constants/messages');
 const { validateFile } = require('../util/validateFile');
-const { parseStringToJson } = require('server/util/parseStringToJson');
+const { parseStringToJson } = require('../util/parseStringToJson');
 
 const fileValidation = validateFile({ sizeInMB: 5, fileTypes: ['image/jpeg', 'image/png','image/jpg'] });
 
