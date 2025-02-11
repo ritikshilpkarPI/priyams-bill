@@ -4,49 +4,45 @@ import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
 import { useNavigate } from 'react-router';
+import { convertImageToBase64 } from 'src/utils/convertImageToBase64';
 
-const storeImageLocally = async (imageUrl, key) => {
-  if (localStorage.getItem(key)) return; 
-  try {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-    const reader = new FileReader();
 
-    reader.onloadend = () => {
-      localStorage.setItem(key, reader.result);
-    };
-
-    reader.readAsDataURL(blob);
-  } catch (error) {
-    console.error('Failed to store image locally:', error);
-  }
+const getImageFromLocalStorage = (key, fallback) => {
+  return localStorage.getItem(key) || fallback;
 };
 
-const getImageFromLocalStorage = (key, fallbackUrl) => {
-  return localStorage.getItem(key) || fallbackUrl;
-};
-
-const Login = ({ history }) => {
-  const [username, setusername] = useState('');
+const Login = () => {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [toggleIcon, setToggleIcon] = useState('');
 
-  const [viewIcon, setViewIcon] = useState('');
-  const [hideIcon, setHideIcon] = useState('');
   const navigate = useNavigate();
-  useEffect(() => {
-    const images = [
-      { url: '/images/view.svg', key: 'viewIcon' },
-      { url: '/images/hide.svg', key: 'hideIcon' },
-    ];
 
-    Promise.all(images.map(({ url, key }) => storeImageLocally(url, key))).then(() => {
-      setViewIcon(getImageFromLocalStorage('viewIcon', '/images/view.svg'));
-      setHideIcon(getImageFromLocalStorage('hideIcon', '/images/hide.svg'));
-    });
+  useEffect(() => {
+    const viewIconUrl = '/images/view.svg';
+    const hideIconUrl = '/images/hide.svg';
+
+    if (!localStorage.getItem('viewIcon')) {
+      convertImageToBase64(viewIconUrl, 'viewIcon');
+    }
+    if (!localStorage.getItem('hideIcon')) {
+      convertImageToBase64(hideIconUrl, 'hideIcon');
+    }
+
+    setToggleIcon(getImageFromLocalStorage('hideIcon', hideIconUrl));
   }, []);
+
+  const togglePasswordVisibility = () => {
+    const newIcon = passwordVisible
+      ? getImageFromLocalStorage('hideIcon', '/images/hide.svg')
+      : getImageFromLocalStorage('viewIcon', '/images/view.svg');
+
+    setToggleIcon(newIcon);
+    setPasswordVisible(!passwordVisible);
+  };
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -56,15 +52,18 @@ const Login = ({ history }) => {
       return;
     }
 
-    const payload = { username: username.toLowerCase(), password };
-    const response = await genericAxios({
-      url: API_PATHS.AUTH.POST_LOGIN,
-      method: API_METHODS.POST,
-      data: { ...payload },
-      headers: {
-        Cookie: '',
-      },
-    });
+    setLoading(true);
+
+    try {
+      const payload = { username: username.toLowerCase(), password };
+      const response = await genericAxios({
+        url: API_PATHS.AUTH.POST_LOGIN,
+        method: API_METHODS.POST,
+        data: payload,
+        headers: { Cookie: '' },
+      });
+
+      const errorMessage = response?.error?.response?.data?.error?.message;
 
       if (response.error) {
         if (errorMessage === "Username doesn't exist") {
@@ -95,9 +94,9 @@ const Login = ({ history }) => {
             onChange={(e) => setUsername(e.target.value)}
           />
           <img
-            height={'20px'}
-            src="images/user.svg"
-            alt="user icon"
+            height="20px"
+            src="/images/user.svg"
+            alt="User Icon"
             className="username-icon"
           />
         </div>
@@ -111,20 +110,18 @@ const Login = ({ history }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {viewIcon && hideIcon && (
-            <span
-              onClick={() => setPasswordVisible(!passwordVisible)}
-              className="password-toggle"
-              style={{
-                backgroundImage: `url(${passwordVisible ? viewIcon : hideIcon})`,
-                backgroundSize: 'contain',
-                width: '20px',
-                height: '20px',
-                display: 'inline-block',
-                cursor: 'pointer',
-              }}
-            />
-          )}
+          <span
+            onClick={togglePasswordVisibility}
+            className="password-toggle"
+            style={{
+              backgroundImage: `url(${toggleIcon})`,
+              backgroundSize: 'contain',
+              width: '20px',
+              height: '20px',
+              display: 'inline-block',
+              cursor: 'pointer',
+            }}
+          />
         </div>
 
         <p id="error-msg" style={{ textAlign: 'left' }}>{errorMsg}</p>
