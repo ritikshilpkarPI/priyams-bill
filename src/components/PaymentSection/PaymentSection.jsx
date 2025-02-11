@@ -1,8 +1,8 @@
 import {
   Paper,
   Text,
-  Input,
   Button,
+  NumberInput,
   Alert,
 } from '@mantine/core';
 import './PaymentSection.css'
@@ -46,14 +46,17 @@ export const PaymentSection = ({
                 height={20}
                 width={20}
               />
-              <Input
-                label="Cash Payment"
-                type="number"
-                value={cashPay}
-                onChange={(e) => onPaymentChange('cashPay', e.target.value)}
-                mb="sm"
+              <NumberInput
+                value={cashPay === 0 ? null : cashPay} 
+                placeholder="0"
+                onChange={(value) => onPaymentChange('cashPay', value ?? 0)}
                 min={0}
+                mb="sm"
                 className="payment-input-with-icon"
+                allowDecimal={false} 
+                allowNegative={false} 
+                parser={(value) => value.replace(/\D/g, '')} 
+                formatter={(value) => value.replace(/\D/g, '')} 
               />
             </div>
           </div>
@@ -70,14 +73,17 @@ export const PaymentSection = ({
                 height={20}
                 width={25}
               />
-              <Input
-                label="UPI Payment"
-                type="number"
-                value={upiPay}
-                onChange={(e) => onPaymentChange('upiPay', e.target.value)}
-                mb="sm"
+              <NumberInput
+                value={upiPay === 0 ? null : upiPay}
+                placeholder="0"
+                onChange={(value) => onPaymentChange("upiPay", value ?? 0)}
                 min={0}
+                mb="sm"
                 className="payment-input-with-icon"
+                allowDecimal={false} 
+                allowNegative={false} 
+                parser={(value) => value.replace(/\D/g, '')} 
+                formatter={(value) => value.replace(/\D/g, '')} 
               />
             </div>
           </div>
@@ -96,7 +102,7 @@ export const PaymentSection = ({
           loading={isLoading}
           disabled={saveBillButtonDisabled}
         >
-          Complete Payment
+          Save and Print
         </Button>
       </Paper>
     </div>
