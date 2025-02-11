@@ -4,7 +4,7 @@ import ImageCarousel from './ImageCarousel';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { Loader } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const ApprovePurchaseOrderForm = ({ billAmount, poId }) => {
     const [paidAmount, setPaidAmount] = useState('');
@@ -14,7 +14,7 @@ const ApprovePurchaseOrderForm = ({ billAmount, poId }) => {
     const [isLoading , setIsLoading] = useState(false)
     const fileInputRef = useRef(null);
 
-    const navigate = useNavigate()
+    const history = useHistory()
 
     const isFill = (paidAmount && approvePayment) ? "approvePurchaseOrderForm-amount-input-button" : "approvePurchaseOrderForm-amount-input-button-disabled"
 
@@ -68,7 +68,7 @@ const ApprovePurchaseOrderForm = ({ billAmount, poId }) => {
             });
             if (response.status === 200) {
                 const result = response.data;
-                navigate('/paidPOs')
+                history.push('/paidPOs')
 
             }
         } catch (error) {

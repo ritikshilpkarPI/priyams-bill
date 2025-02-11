@@ -4,7 +4,7 @@ const getItemsWithSelection = async (req, res,next) => {
     try {
       const { 
         minStockOnly = false, isDeleted = false 
-      } = req.query?.filters || {};
+      } = JSON.parse(req.query.filters);
 
       const query = {
         permanentlyOutOfStock: false,

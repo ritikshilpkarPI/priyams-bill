@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { sidebarListData } from '../constants/HeaderTypes';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import '../CSS/_header.scss';
 
 const handleToggle = (id) => {
@@ -39,7 +39,7 @@ const Header = ({
   const [inputText, setInputText] = useState('');
   const [listItemsData, setListItemsData] = useState(sidebarListData);
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   // to remove sidebar while login page is open
   // let location = useLocation();
@@ -61,7 +61,7 @@ const Header = ({
   }, [inputText]);
 
   const goToBilling = () => {
-    navigate('/billing');
+    history.push('/billing');
   };
 
   const handleToggleOuterView = () => {

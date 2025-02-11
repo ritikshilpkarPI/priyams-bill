@@ -2,7 +2,9 @@ const { Item } = require('../db-models/item-model');
 
 const getItemsFeed = async (req, res,next) => {
     try {
-      const { minStockOnly = false, isDeleted = false, skip , limit } = req.query?.filters || {};      
+      const { minStockOnly = false, isDeleted = false, skip , limit } = JSON.parse(
+        req.query.filters
+      );      
      // Build query conditions based on filters
      const query = {
       permanentlyOutOfStock: false, // Only fetch items that are not permanently out of stock
@@ -20,7 +22,6 @@ const getItemsFeed = async (req, res,next) => {
     }
 
     const totalCount = await Item.countDocuments(query);
-
       
           // Query to get the paginated items (only apply skip and limit if they are defined)
     let itemsQuery = Item.find(query).sort({ itemName: 1 });

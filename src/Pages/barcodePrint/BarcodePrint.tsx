@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Container, TextInput, NumberInput, Select, Button, Card, Group, FileInput, CloseButton, Loader } from "@mantine/core";
-import { ReactBarcode } from "react-jsbarcode";
+import JsBarcode from "react-jsbarcode";
 import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 import { getBillingLeanItemsAPI } from "../../utils/apiUtils";
@@ -133,7 +133,7 @@ const ProductForm = () => {
                                 <h4>{product.name}</h4>
                                 <p>MRP: {product.mrp}</p>
                                 <p>Packet Qty: {product.packetQty} {product.unit}</p>
-                                <ReactBarcode value={product.barcode} options={{ format: "CODE128" }} />
+                                <JsBarcode value={product.barcode} options={{ format: "CODE128" }} />
                             </div>
                             {!isPrinting && <CloseButton onClick={() => handleRemoveProduct(product.id)} />}
                         </Group>

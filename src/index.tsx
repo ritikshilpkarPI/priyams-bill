@@ -1,31 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './CSS/index.css';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AppStateContextProvider } from './AppState/appState.context';
+import { BrowserRouter } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { store } from './redux/store';
 import { Provider } from 'react-redux';
-import { router } from './routes/routes';
-import { RouterProvider } from 'react-router-dom';
 
 const rootElement = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
 
 if (root) {
   root.render(
+    <BrowserRouter>
       <Provider store={store}>
         <AppStateContextProvider>
           <React.StrictMode>
             <MantineProvider>
               <ModalsProvider>
-                <RouterProvider router={router} />
+                <App />
               </ModalsProvider>
             </MantineProvider>
           </React.StrictMode>
         </AppStateContextProvider>
       </Provider>
+    </BrowserRouter>
   );
 }
 

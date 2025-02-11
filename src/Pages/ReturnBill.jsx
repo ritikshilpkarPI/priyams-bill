@@ -5,7 +5,7 @@ import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { AppStateContext } from '../AppState/appState.context';
-import { ReactBarcode } from 'react-jsbarcode';
+import Barcode from 'react-jsbarcode';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
 
@@ -1298,7 +1298,7 @@ const ReturnBill = () => {
           </div>
           {/* <div className="print-table-head"> */}
           {billBarcode && (
-            <ReactBarcode
+            <Barcode
               options={{
                 height: 30,
                 width: 1.2,
