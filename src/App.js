@@ -1,13 +1,17 @@
 import './CSS/App.scss';
 import { useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
 import AppFunction from './functions/AppFunction';
-import StoreRoutes from './components/StoreRoutes';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
+import { useDispatch } from 'react-redux';
+import { fetchBillingItems } from './utils/fetchBillingItems';
+import { Outlet } from 'react-router-dom';
 
-function App({ history, location }) {
-  
+function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchBillingItems());
+  }, []);
   useEffect(() => {
     const timeOut = 36_00_000;
     async function saveBills() {
@@ -57,30 +61,27 @@ function App({ history, location }) {
     showBill,
     value,
     setValue,
-  } = AppFunction(history, location);
+  } = AppFunction();
 
   const devBg = process.env.NODE_ENV !== 'production' ? 'indianred' : 'none';
   console.log("Test Prod")
 
   return (
     <div className="App" style={{ backgroundColor: devBg }}>
-      {staffUserName && (
-        <Header
-          staffName={staffName}
-          staffUserName={staffUserName}
-          showBill={showBill}
-          setValue={setValue}
-          value={value}
-          logoutUser={logoutUser}
-        />
+        {staffUserName && (
+          <Header
+            staffName={staffName}
+            staffUserName={staffUserName}
+            showBill={showBill}
+            setValue={setValue}
+            value={value}
+            logoutUser={logoutUser}
+          />
       )}
-      <StoreRoutes
-        style={{ marginLeft: '100px' }}
-      />
-
+      <Outlet />
       {/* <QRComp /> */}
     </div>
   );
 }
 
-export default withRouter(App);
+export default App;

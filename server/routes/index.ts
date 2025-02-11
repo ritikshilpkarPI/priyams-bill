@@ -335,10 +335,10 @@ router.post(
     `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD}/:id`,
     getItemsSellDetailsByPurchaseOrderId
   );
-  router.get(
+router.post(
     `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD_BY_ITEMID}/:id`,
     getItemsSellDetailsByItemId
-  );
+);
 router.post(
     `${API_PATHS.PURCHASE_ORDER.POST_DEALER_DETAILS}`,
     createPurchaseOrderWithDealer

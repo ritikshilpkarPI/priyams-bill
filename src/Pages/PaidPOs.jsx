@@ -3,13 +3,13 @@ import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import "../CSS/paidPOs.css"
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LoadingOverlay } from '@mantine/core';
 const PaidPOs = () => {
   const [Loading, setLoading] = useState(false);
   const [paidStatusList, setPaidStatusList] = useState([]);
   const query = { isApproved: false, isDraft: false };
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const getOrders = async () => {
     try {
@@ -67,7 +67,7 @@ const PaidPOs = () => {
           {paidStatusList?.map((paidStatus, index) => (
             (paidStatus?.isPaid) &&
             <tr className='paidPOs-table-tbody-tr' key={index}
-              onClick={() => history.push(`/purchaseOrderBill/${paidStatus._id}`)
+              onClick={() => navigate(`/purchaseOrderBill/${paidStatus._id}`)
               }
             >
               <td className='paidPOs-table-tbody-tr-td'>{index + 1}</td>
