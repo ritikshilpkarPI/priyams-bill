@@ -5,11 +5,15 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 const { uploadToCloudinary } = require('../util/image');
 const { MESSAGES } = require('../constants/messages');
 const { validateFile } = require('../util/validateFile');
+const { parseStringToJson } = require('../util/parseStringToJson');
 
 const fileValidation = validateFile({ sizeInMB: 5, fileTypes: ['image/jpeg', 'image/png','image/jpg'] });
-const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
+
+const createPurchaseOrderWithDealer = async (req, res, next) => {
   try {
-    const { error } = validateUpsertPODealerRequest.validate(req.body);
+    const parsedData = parseStringToJson(req.body.data)
+    
+    const { error } = validateUpsertPODealerRequest.validate(parsedData);
     if (error) {
       return res.status(400).json({ status: false, message: error.details[0].message });
     }
@@ -29,7 +33,7 @@ const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
       salesmanContactNumber,
       dealerId,
       salesmanId,
-    } = req.body;
+    } = parsedData;
 
     let dealer;
 
@@ -77,4 +81,4 @@ const createOrUpdatePurchaseOrderWithDealer = async (req, res, next) => {
   }
 };
 
-module.exports = createOrUpdatePurchaseOrderWithDealer;
+module.exports = createPurchaseOrderWithDealer;
