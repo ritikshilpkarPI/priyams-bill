@@ -5,16 +5,10 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 const { uploadToCloudinary } = require('../util/image');
 const { MESSAGES } = require('../constants/messages');
 const { validateFile } = require('../util/validateFile');
+const { parseStringToJson } = require('server/util/parseStringToJson');
 
 const fileValidation = validateFile({ sizeInMB: 5, fileTypes: ['image/jpeg', 'image/png','image/jpg'] });
-const parseStringToJson = (stringifiedJson) => {
-  if (typeof stringifiedJson !== "string") return {};
-  try {
-    return JSON.parse(stringifiedJson);
-  } catch (err) {
-    return {};
-  }
-};
+
 const createPurchaseOrderWithDealer = async (req, res, next) => {
   try {
     const parsedData = parseStringToJson(req.body.data)
