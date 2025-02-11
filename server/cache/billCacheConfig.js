@@ -1,4 +1,4 @@
-import { LRUCache } from "lru-cache";
+const LRUCache = require('lru-cache');
 /**
  * max -> maximum no of items allowed in cache
  * updateAgeOnGet, updateAgeOnHas -> update item from cache. If true, age will be updated
@@ -8,7 +8,7 @@ const billsCache = new LRUCache({
   max: 20000,
   updateAgeOnGet: false,
   updateAgeOnHas: false,
-  ttl: 1000 * 60 * 60 * 24 * 20,
+  maxAge: 1000 * 60 * 60 * 24 * 20,
   // maxAge -> 1728000000ms -> 240hours -> 20days
 });
 

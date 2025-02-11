@@ -3,11 +3,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { WhatsappShareButton, WhatsappIcon } from 'react-share';
 import { LoadingOverlay } from '@mantine/core';
 const UnpaidPOs = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [Loading, setLoading] = useState(false);
   const [unpaidStatusList, setUnpaidStatusList] = useState([]);
   const query = { isApproved: false, isDraft: false };
@@ -79,7 +79,7 @@ const UnpaidPOs = () => {
               }
               key={index}
               onClick={() => {
-                navigate(`/purchaseOrderBill/${unpaidStatus._id}`);
+                history.push(`/purchaseOrderBill/${unpaidStatus._id}`);
               }}
             >
               <td className="unpaidPOs-table-tbody-tr-td" >{index + 1}</td>
@@ -128,7 +128,7 @@ const UnpaidPOs = () => {
               }
               key={index}
               onClick={() => {
-                navigate(`/purchaseOrderBill/${paidStatus._id}`);
+                history.push(`/purchaseOrderBill/${paidStatus._id}`);
               }}
             >
               <td className="unpaidPOs-table-tbody-tr-td">{index + 1}</td>

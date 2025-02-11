@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { genericAxios } from '../utils/genericAxiosMethod';
 

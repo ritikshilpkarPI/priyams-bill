@@ -115,7 +115,7 @@ declare global {
     barcode: string;
   }
 
-  type itemsByBarcode = string[] | any;
+  type itemsByBarcode = string[] | any
 }
 
 declare module '*.scss' {

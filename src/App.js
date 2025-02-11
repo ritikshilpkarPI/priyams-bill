@@ -1,11 +1,12 @@
 import './CSS/App.scss';
 import { useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import AppFunction from './functions/AppFunction';
+import StoreRoutes from './components/StoreRoutes';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
-import { Outlet } from 'react-router-dom';
 
-function App() {
+function App({ history, location }) {
   
   useEffect(() => {
     const timeOut = 36_00_000;
@@ -56,27 +57,30 @@ function App() {
     showBill,
     value,
     setValue,
-  } = AppFunction();
+  } = AppFunction(history, location);
 
   const devBg = process.env.NODE_ENV !== 'production' ? 'indianred' : 'none';
   console.log("Test Prod")
 
   return (
     <div className="App" style={{ backgroundColor: devBg }}>
-        {staffUserName && (
-          <Header
-            staffName={staffName}
-            staffUserName={staffUserName}
-            showBill={showBill}
-            setValue={setValue}
-            value={value}
-            logoutUser={logoutUser}
-          />
+      {staffUserName && (
+        <Header
+          staffName={staffName}
+          staffUserName={staffUserName}
+          showBill={showBill}
+          setValue={setValue}
+          value={value}
+          logoutUser={logoutUser}
+        />
       )}
-      <Outlet />
+      <StoreRoutes
+        style={{ marginLeft: '100px' }}
+      />
+
       {/* <QRComp /> */}
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);

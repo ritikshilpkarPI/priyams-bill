@@ -1,11 +1,11 @@
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const ProtectedRoutes = ({ children }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const token = Cookies.get('token');
   if (!token) {
-    navigate('/login');
+    history.push('/login');
     return <></>;
     // return <Redirect to="/login" />;
   }

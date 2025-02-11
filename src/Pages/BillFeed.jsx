@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Loader, Table, Text, Collapse } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import ProtectedComponent from '../components/ProtectedComponent';
 import access from '../access';
 import { genericAxios } from '../utils/genericAxiosMethod';
@@ -129,9 +129,9 @@ const BillFeed = ({ fromDayWise = false, bills = [] }) => {
 
 const TableRow = ({ bill, idx, isFromDayWiseBills }) => {
   const [open, setOpen] = useState(false);
-  let navigate = useNavigate();
+  let history = useHistory();
   function handleClick(id) {
-    navigate(`/edit/${id}`);
+    history.push(`/edit/${id}`);
   }
 
   async function handleDeleteBill(id) {

@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import "./LastPurchaseOrdersTable.css"
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 export const LastPurchaseOrdersTable: React.FC<LastPurchaseOrderTableProps> = ({
   lastPurchaseOrders,
   isDropdown = false
 }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [showAll, setShowAll] = useState(false);
 
   const toggleShowAll = () => {
     setShowAll(!showAll);
   };
   const handlePurchaseOrderNavigation = (Id:string)=>{
-    navigate(`/purchase/${Id}`);
+    history.push(`/purchase/${Id}`);
   }
 
   return (
