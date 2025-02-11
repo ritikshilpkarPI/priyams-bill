@@ -1,15 +1,12 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
 import { useNavigate } from 'react-router';
-import { convertImageToBase64 } from 'src/utils/convertImageToBase64';
 
 
-const getImageFromLocalStorage = (key, fallback) => {
-  return localStorage.getItem(key) || fallback;
-};
+
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -17,31 +14,12 @@ const Login = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [toggleIcon, setToggleIcon] = useState('');
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const viewIconUrl = '/images/view.svg';
-    const hideIconUrl = '/images/hide.svg';
-
-    if (!localStorage.getItem('viewIcon')) {
-      convertImageToBase64(viewIconUrl, 'viewIcon');
-    }
-    if (!localStorage.getItem('hideIcon')) {
-      convertImageToBase64(hideIconUrl, 'hideIcon');
-    }
-
-    setToggleIcon(getImageFromLocalStorage('hideIcon', hideIconUrl));
-  }, []);
-
   const togglePasswordVisibility = () => {
-    const newIcon = passwordVisible
-      ? getImageFromLocalStorage('hideIcon', '/images/hide.svg')
-      : getImageFromLocalStorage('viewIcon', '/images/view.svg');
-
-    setToggleIcon(newIcon);
-    setPasswordVisible(!passwordVisible);
+    
+    setPasswordVisible((prev) => !prev);
   };
 
   const loginUser = async (e) => {
@@ -110,17 +88,31 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <span
+          <img
+            src={'/images/hide.svg'}
+            alt="Toggle Password"
             onClick={togglePasswordVisibility}
             className="password-toggle"
             style={{
-              backgroundImage: `url(${toggleIcon})`,
-              backgroundSize: 'contain',
               width: '20px',
               height: '20px',
-              display: 'inline-block',
               cursor: 'pointer',
+               visibility: passwordVisible ? "hidden" : "visible"
             }}
+            
+          />
+           <img
+            src={'/images/view.svg'}
+            alt="Toggle Password"
+            onClick={togglePasswordVisibility}
+            className="password-toggle"
+            style={{
+              width: '20px',
+              height: '20px',
+              cursor: 'pointer',
+               visibility: !passwordVisible ? "hidden" : "visible"
+            }}
+            
           />
         </div>
 
