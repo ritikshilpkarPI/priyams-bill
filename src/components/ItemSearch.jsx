@@ -22,7 +22,6 @@ export const ItemSearch = ({ onItemSelect }) => {
       if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
         setIsLoading(true);
       } else {
-        console.log("Data received");
         setIsLoading(false);
         setItemsData(itemsFeedData);
       }
