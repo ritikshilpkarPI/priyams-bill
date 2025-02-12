@@ -3,19 +3,17 @@ import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
-import { useNavigate } from 'react-router';
 
 
 
 
-const Login = () => {
+const Login = ({ history }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     
@@ -52,7 +50,7 @@ const Login = () => {
           setErrorMsg('Login failed. Please try again.');
         }
       } else {
-        navigate('/billing');
+        history.push('/billing');
       }
     } finally {
       setLoading(false);
