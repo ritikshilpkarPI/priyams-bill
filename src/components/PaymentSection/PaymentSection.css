@@ -24,9 +24,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: none ;
-        box-shadow: none ;
-        border: none ;
+        background: none;
+        box-shadow: none;
+        border: none;
         padding: 0 ;
         margin: 0 ;
     }
@@ -34,9 +34,9 @@
       
 
     .payment-section * {
-        background: none ;
-        box-shadow: none ;
-        border: none ;
+        background: none;
+        box-shadow: none;
+        border: none;
         color: black ;
       
         margin: 0 ;
@@ -44,7 +44,7 @@
     }
 
     .payment-details-text {
-        display: none ;
+        display: none;
     }
 
     .amount-display-text {
@@ -58,14 +58,14 @@
 
     .amount-display * {
         font-size: 14px ;
-        font-weight: bold ;
+        font-weight: bold;
     }
 
     .payment-inputs {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        font-weight: normal ;
+        font-weight: normal;
         font-size: 14px ;
    
     }
@@ -84,7 +84,7 @@
         text-align: left;
         display: flex;
         align-items: center;
-        font-weight: normal ;
+        font-weight: normal;
         font-size: 14px ;
     }
 
@@ -97,29 +97,29 @@
     }
     
     .pay-print-button {
-        display: none ;
+        display: none;
     }
 
     .mantine-Paper-root {
-        background: none ;
-        box-shadow: none ;
-        border: none ;
+        background: none;
+        box-shadow: none;
+        border: none;
     }
 
     .mantine-Alert-root {
-        border: none ;
-        background: none ;
-        box-shadow: none ;
+        border: none;
+        background: none;
+        box-shadow: none;
     }
 
     .cash-input label, .upi-input label {
         margin-right: 10px;
     }
     .payment-input-icon {
-        display: none ;
+        display: none;
     } 
     
     .hide-arrows {
-        display: none !important;
+        display: none;
     }
 }
