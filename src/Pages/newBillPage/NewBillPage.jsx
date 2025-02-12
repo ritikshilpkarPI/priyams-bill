@@ -38,7 +38,7 @@ const NewBillPage = () => {
     if (itemsFeedData) {
       setItemsDataCount(itemsFeedData.totalItemsCount); 
     }
-     }, []);
+     }, [itemsFeedData]);
   const saveBillToDatabase = async (billData) => {
     try {
       const response = await saveOrCacheBillAPI(billData);
@@ -89,8 +89,8 @@ const NewBillPage = () => {
   return (
     <div className="new-bill-page">
       <div className="shop-details">
-        <h2>Shop Name</h2>
-        <p>Shop Address, City, State</p>
+        <h2>Priyam Store</h2>
+        <p>Shop No 2, Plot No 2, Indrapuri, Bhopal, M.P.</p>
         <p>Phone: 123-456-7890</p>
         <p>{currentDateTime}</p>
       </div>
