@@ -2,8 +2,8 @@ import {
   Paper,
   Text,
   Button,
-  NumberInput,
   Alert,
+  Input,
 } from '@mantine/core';
 import './PaymentSection.css'
 import { useEffect, useState } from 'react';
@@ -46,22 +46,25 @@ export const PaymentSection = ({
                 height={20}
                 width={20}
               />
-              <NumberInput
-                key={cashPay}
-                value={cashPay === 0 ? "" : cashPay} 
-                placeholder="0"
-                onChange={(value) => onPaymentChange('cashPay', value ?? 0)}
-                min={0}
-                mb="sm"
-                classNames={{
-                  input: 'payment-input-field',
-                  controlUp: 'hide-arrows',
-                  controlDown: 'hide-arrows'
+              <Input
+                label="Cash Payment"
+                type="number"
+                value={cashPay === 0 ? '' : cashPay}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d*$/.test(value)) {
+                    onPaymentChange('cashPay', Number(value));
+                  }
                 }}
-                allowDecimal={false} 
-                allowNegative={false} 
-                parser={(value) => value.replace(/\D/g, '')} 
-                formatter={(value) => value.replace(/\D/g, '')} 
+                onKeyDown={(e) => {
+                  if (['e', 'E', '-', '+', '.'].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                mb="sm"
+                min={0}
+                placeholder="0"
+                className="payment-input-with-icon"
               />
             </div>
           </div>
@@ -78,22 +81,25 @@ export const PaymentSection = ({
                 height={20}
                 width={25}
               />
-              <NumberInput
-                key={upiPay}
-                value={upiPay === 0 ? "" : upiPay}
-                placeholder="0"
-                onChange={(value) => onPaymentChange("upiPay", value ?? 0)}
-                min={0}
-                mb="sm"
-                classNames={{
-                  input: 'payment-input-field',
-                  controlUp: 'hide-arrows',
-                  controlDown: 'hide-arrows'
+              <Input
+                label="Upi Payment"
+                type="number"
+                value={upiPay === 0 ? '' : upiPay}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d*$/.test(value)) {
+                    onPaymentChange('upiPay', Number(value));
+                  }
                 }}
-                allowDecimal={false} 
-                allowNegative={false} 
-                parser={(value) => value.replace(/\D/g, '')} 
-                formatter={(value) => value.replace(/\D/g, '')} 
+                onKeyDown={(e) => {
+                  if (['e', 'E', '-', '+', '.'].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                mb="sm"
+                min={0}
+                placeholder="0"
+                className="payment-input-with-icon"
               />
             </div>
           </div>

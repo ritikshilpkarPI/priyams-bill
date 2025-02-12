@@ -13,7 +13,7 @@
     z-index: 99;
   }
   
-  .payment-input-field{
+  .payment-input-with-icon input{
     padding-left: 40px ; 
   }
   
@@ -112,7 +112,5 @@
         display: none;
     } 
     
-    .hide-arrows {
-        display: none;
-    }
+   
 }
