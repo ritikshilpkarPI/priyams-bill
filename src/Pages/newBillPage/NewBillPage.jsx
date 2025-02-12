@@ -14,6 +14,7 @@ import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
 import { selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import { trimToTwoDecimals } from 'src/utils/trimToTwoDecimals';
 
 
 const NewBillPage = () => {
@@ -127,8 +128,8 @@ const NewBillPage = () => {
             <PaymentSection
               cashPay={billState.cashPay}
               upiPay={billState.upiPay}
-              amountReturn={billState.amountReturn}
-              totalAmount={billState.billAmountTotal}
+              amountReturn={trimToTwoDecimals(billState.amountReturn)}
+              totalAmount={trimToTwoDecimals(billState.billAmountTotal)}
               onPaymentChange={updatePayment}
               onSubmit={handlePaymentSubmit}
               isLoading={isSubmitting}
