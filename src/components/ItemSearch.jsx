@@ -40,11 +40,7 @@ const handleSearch = (value) => {
 
   if (isBarcode) {
     const barcodeMatches = itemsData.itemsBarCodeMap[value] || [];
-
-    const allItems = Object.values(itemsData.itemsBarCodeMap).flat();
-    const fuzzyBarcodeMatches = fuzzySearch(value, allItems);
-
-    results = Array.from(new Map([...barcodeMatches, ...fuzzyBarcodeMatches].map((item) => [item._id, item])).values());
+    results = barcodeMatches;
   } else {
     const allItems = Object.values(itemsData.itemsNameMap);
     const nameMatches = fuzzySearch(value, allItems);

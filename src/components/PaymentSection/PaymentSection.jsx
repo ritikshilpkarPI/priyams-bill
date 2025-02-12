@@ -55,7 +55,8 @@ export const PaymentSection = ({
                 width={20}
               />
               <NumberInput
-                value={cashPay === 0 ? null : cashPay} 
+                key={cashPay}
+                value={cashPay === 0 ? "" : cashPay} 
                 placeholder="0"
                 onChange={(value) => onPaymentChange('cashPay', value ?? 0)}
                 min={0}
@@ -86,7 +87,8 @@ export const PaymentSection = ({
                 width={25}
               />
               <NumberInput
-                value={upiPay === 0 ? null : upiPay}
+                key={upiPay}
+                value={upiPay === 0 ? "" : upiPay}
                 placeholder="0"
                 onChange={(value) => onPaymentChange("upiPay", value ?? 0)}
                 min={0}
