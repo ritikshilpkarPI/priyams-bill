@@ -5,7 +5,7 @@ import BillNarrator from '../../components/BillNarrator';
 import { AppStateContext } from '../../AppState/appState.context';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from '../Billing';
-import Barcode from 'react-jsbarcode';
+import { ReactBarcode } from 'react-jsbarcode';
 import useSocket from '../../hooks/useSocket';
 import { socketEvents } from '../../utils/constants/socketEvents';
 import { PaymentExpiryTimer } from '../../components/PaymentExpiryTimer';
@@ -1131,7 +1131,7 @@ const NewBillPage = () => {
             <h3>Time: {new Date().toLocaleTimeString()}</h3>
           </div>
           {billBarcode && (
-            <Barcode
+            <ReactBarcode
               options={{
                 height: 30,
                 width: 1.2,

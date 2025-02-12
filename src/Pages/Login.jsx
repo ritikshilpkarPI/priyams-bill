@@ -1,4 +1,5 @@
-import {  useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
@@ -7,7 +8,7 @@ import { Loader } from '@mantine/core';
 
 
 
-const Login = ({ history }) => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -19,6 +20,7 @@ const Login = ({ history }) => {
     
     setPasswordVisible((prev) => !prev);
   };
+  const navigate = useNavigate();
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -50,7 +52,7 @@ const Login = ({ history }) => {
           setErrorMsg('Login failed. Please try again.');
         }
       } else {
-        history.push('/billing');
+        navigate('/billing');
       }
     } finally {
       setLoading(false);
