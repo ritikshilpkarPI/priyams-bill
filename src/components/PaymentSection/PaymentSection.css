@@ -13,8 +13,8 @@
     z-index: 99;
   }
   
-  .payment-input-with-icon input {
-    padding-left: 40px !important; 
+  .payment-input-field{
+    padding-left: 40px ; 
   }
   
   
@@ -23,27 +23,27 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: none !important;
-        box-shadow: none !important;
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
+        background: none ;
+        box-shadow: none ;
+        border: none ;
+        padding: 0 ;
+        margin: 0 ;
     }
     
       
 
     .payment-section * {
-        background: none !important;
-        box-shadow: none !important;
-        border: none !important;
-        color: black !important;
+        background: none ;
+        box-shadow: none ;
+        border: none ;
+        color: black ;
       
-        margin: 0 !important;
-        padding: 0 !important;
+        margin: 0 ;
+        padding: 0 ;
     }
 
     .payment-details-text {
-        display: none !important;
+        display: none ;
     }
 
     .amount-display-text {
@@ -56,49 +56,63 @@
     }
 
     .amount-display * {
-        font-size: 14px !important;
-        font-weight: bold !important;
+        font-size: 14px ;
+        font-weight: bold ;
     }
 
     .payment-inputs {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        font-weight: normal !important;
-        font-size: 14px !important;
+        font-weight: normal ;
+        font-size: 14px ;
    
     }
     .cash-input, .upi-input {
         display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        font-weight: normal ;
+        font-size: 14px ;
+    }
+
+    .cash-paid-text, .upi-paid-text {
+        width: 100% ;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        font-weight: normal ;
+        font-size: 14px ;
     }
     .cash-input * input, .upi-input * input {
         border: none;
     }
     
     .pay-print-button {
-        display: none !important;
+        display: none ;
     }
 
     .mantine-Paper-root {
-        background: none !important;
-        box-shadow: none !important;
-        border: none !important;
+        background: none ;
+        box-shadow: none ;
+        border: none ;
     }
 
     .mantine-Alert-root {
-        border: none !important;
-        background: none !important;
-        box-shadow: none !important;
+        border: none ;
+        background: none ;
+        box-shadow: none ;
     }
 
     .cash-input label, .upi-input label {
         margin-right: 10px;
     }
     .payment-input-icon {
-        display: none !important;
+        display: none ;
     } 
     
-    .mantine-f73we9 ,.mantine-1kz3j3d{
+    .hide-arrows {
         display: none !important;
     }
 }
