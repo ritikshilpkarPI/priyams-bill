@@ -3,7 +3,7 @@ import { getServerBaseUrl } from "../utils/getServerBaseUrl";
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: getServerBaseUrl(),
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     common: {
       'Content-Type': 'application/json',
