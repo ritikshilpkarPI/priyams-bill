@@ -8,9 +8,10 @@ import {
 } from '../../redux/stepper/stepperSlice';
 import { useMediaQuery } from '@mantine/hooks';
 
-export const FormStepper: React.FC = () => {
+
+export const FormStepper: React.FC<FormStepperProps> = ({steps}) => {
   const dispatch = useDispatch();
-  const { currentStep, stepCompletion, steps, isStepperVisible } = useSelector(
+  const { currentStep, stepCompletion } = useSelector(
     (state: RootState) => state?.stepper
   );
 
@@ -41,7 +42,6 @@ export const FormStepper: React.FC = () => {
     }
   }, [dispatch, steps]);
 
-  if (!isStepperVisible || !steps?.length) return null;
 
   return (
     <div className="form-stepper-component">
@@ -82,7 +82,7 @@ export const FormStepper: React.FC = () => {
           >
             <Popover.Target>
               <Button onClick={nextStep}>
-                {currentStep === steps.length - 1 ? 'Submit' : 'Save and Next'}
+                {currentStep === steps.length  ? 'Submit' : 'Save and Next'}
               </Button>
             </Popover.Target>
             <Popover.Dropdown>

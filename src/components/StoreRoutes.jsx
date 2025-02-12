@@ -41,12 +41,10 @@ import {
 import { Fragment } from 'react';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
 import { ItemQuantity } from '../Pages/ItemQuantity';
-import { FormStepper } from './formStepper/FormStepper';
 
 const StoreRoutes = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <FormStepper/>
       <Switch>
         <Route path="/login" exact component={Login} />
         <Route

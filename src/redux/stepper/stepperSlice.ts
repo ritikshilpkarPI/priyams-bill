@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const initialState: StepperStateInterface = {
   currentStep: 0,
   stepCompletion: [],
-  isStepperVisible: false,
   steps: [],
 };
 
@@ -23,12 +22,8 @@ const stepperSlice = createSlice({
     completeStep: (state, action: PayloadAction<number>) => {
       state.stepCompletion[action.payload] = true;
     },
-
-    toggleStepperVisibility: (state, action: PayloadAction<boolean>) => {
-      state.isStepperVisible = action.payload;
-    },
   },
 });
 
-export const { initializeSteps, setCurrentStep, completeStep, toggleStepperVisibility } = stepperSlice.actions;
+export const { initializeSteps, setCurrentStep, completeStep } = stepperSlice.actions;
 export default stepperSlice.reducer;

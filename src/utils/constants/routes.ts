@@ -31,5 +31,6 @@ export const ROUTES = Object.freeze({
     PAY_PURCHASE_ORDER_BILL: "/payPurchaseOrderBill",
     RETURN_AND_EXCHANGE: "/returnAndExchange",
     PO_SELL_DETAILS: "/sellDetailsPage/:purchaseOrderId",
-    BARCODE_PRINT: "/barcodePrint"
+    BARCODE_PRINT: "/barcodePrint",
+    CREATE_PURCHASE_ORDER: "/createPurchaseOrderPage"
 })

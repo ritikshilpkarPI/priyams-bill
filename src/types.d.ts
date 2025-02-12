@@ -131,7 +131,9 @@ declare global {
   interface StepperStateInterface {
     currentStep: number;
     stepCompletion: boolean[];
-    isStepperVisible: boolean;
+    steps: StepInterface[];
+  }
+  interface FormStepperProps {
     steps: StepInterface[];
   }
   interface IntervalPropInterface {
