@@ -60,7 +60,11 @@ export const PaymentSection = ({
                 onChange={(value) => onPaymentChange('cashPay', value ?? 0)}
                 min={0}
                 mb="sm"
-                className="payment-input-with-icon"
+                classNames={{
+                  input: 'payment-input-field',
+                  controlUp: 'hide-arrows',
+                  controlDown: 'hide-arrows'
+                }}
                 allowDecimal={false} 
                 allowNegative={false} 
                 parser={(value) => value.replace(/\D/g, '')} 
@@ -87,7 +91,11 @@ export const PaymentSection = ({
                 onChange={(value) => onPaymentChange("upiPay", value ?? 0)}
                 min={0}
                 mb="sm"
-                className="payment-input-with-icon"
+                classNames={{
+                  input: 'payment-input-field',
+                  controlUp: 'hide-arrows',
+                  controlDown: 'hide-arrows'
+                }}
                 allowDecimal={false} 
                 allowNegative={false} 
                 parser={(value) => value.replace(/\D/g, '')} 
