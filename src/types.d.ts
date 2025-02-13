@@ -115,6 +115,14 @@ declare global {
     barcode: string;
   }
 
+  interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
+  }
+
   type itemsByBarcode = string[] | any;
 }
 
