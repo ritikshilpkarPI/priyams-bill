@@ -3,10 +3,15 @@ import { useEffect } from 'react';
 import AppFunction from './functions/AppFunction';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
+import { useDispatch } from 'react-redux';
+import { fetchBillingItems } from './utils/fetchBillingItems';
 import { Outlet } from 'react-router-dom';
 
 function App() {
-  
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchBillingItems());
+  }, []);
   useEffect(() => {
     const timeOut = 36_00_000;
     async function saveBills() {
