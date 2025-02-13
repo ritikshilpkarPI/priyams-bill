@@ -29,11 +29,9 @@ const ProductForm = () => {
           setItemsByBarcode(itemsFeedData?.itemsBarCodeMap);
           setLoaderDisplay(false);
         }
-    };
+    });
 
-    useEffect(() => {
-        getAllLeanItems();
-    }, []);
+   
 
     const generateUniqueBarcode = (existingBarcodes: string[]): string => {
         let newBarcode;

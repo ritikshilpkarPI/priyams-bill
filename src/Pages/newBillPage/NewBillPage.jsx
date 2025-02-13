@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Container,
   Grid,
@@ -19,12 +19,13 @@ import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
 
 const NewBillPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [itemsDataCount, setItemsDataCount] = useState(0);
   const {
     billState,
     updateBillItems,
     updatePayment,
     resetBillState,
-  } = useBillState(); // Assume this hook is imported
+  } = useBillState(); 
 
   const handleRemoveItem = (itemId) => {
     const updatedItems = billState.billItems.filter(
@@ -45,15 +46,12 @@ const NewBillPage = () => {
 
       if (!response || response.isError) {
         console.error('Error saving bill to database:', response?.error);
-        // Show error notification
         return;
       }
 
-      // Remove the bill from localStorage once saved successfully
       localStorage.removeItem(`bill-${billData.billId}`);
     } catch (error) {
       console.error('Error saving bill to database:', error);
-      // Show error notification
     }
   };
 
@@ -63,24 +61,19 @@ const NewBillPage = () => {
     try {
       setIsSubmitting(true);
 
-      // Validate payment
       const totalPayment = billState.cashPay + billState.upiPay;
       if (totalPayment < billState.billAmountTotal) {
         throw new Error('Payment amount is less than bill amount');
       }
 
-      // Save bill to localStorage
       const billData = { ...billState };
       localStorage.setItem(`bill-${billData.billId}`, JSON.stringify(billData));
-      // Save bill to database
       saveBillToDatabase(billData);
       window.print()
 
-      // Clear bill state for the new bill
       resetBillState();
     } catch (error) {
       console.error('Error submitting bill:', error);
-      // Show error notification
     } finally {
       setIsSubmitting(false);
     }
@@ -103,12 +96,15 @@ const NewBillPage = () => {
         <p>{currentDateTime}</p>
       </div>
 
-      {/* Savings Section */}
       {totalSaveOnBill > 0 ? <p className="savings">
         You Saved: ₹
         {totalSaveOnBill} on your purchase!
       </p> : <></>}
+      
       <Container size="xl" py="md">
+        <h2>
+          Total items: {itemsDataCount}
+        </h2>
         <Title order={2} mb="lg">
           New Bill
         </Title>
