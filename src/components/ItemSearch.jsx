@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { getBillingLeanItemsAPI } from "../utils/apiUtils";
 import {
     Paper,
     Text,
@@ -114,7 +113,6 @@ const calculateItemPrice = (item, quantity) => {
                   fullWidth
                   onClick={() => handleItemClick(item)}
                   mb="xs"
-                // disabled={item.itemStockQuantity <= 0}
                 >
                   <div style={{ textAlign: 'left', width: '100%' }}>
                     <Text>{item.itemName}</Text>

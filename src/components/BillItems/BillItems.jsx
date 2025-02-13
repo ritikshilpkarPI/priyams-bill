@@ -9,15 +9,14 @@ import './BillItems.css'
 export const BillItems = ({ items, onRemoveItem, bill, setBill }) => {
   const calculateItemPrice = (slabPricing, quantity, defaultPrice) => {
     if (!slabPricing || slabPricing.length === 0) {
-      return defaultPrice; // Return default price if no slabs are defined
+      return defaultPrice; 
     }
 
-    // Find the applicable slab price
     const applicableSlab = slabPricing.find(([start, end]) => {
       return quantity > start && quantity <= end;
     });
 
-    return applicableSlab ? applicableSlab[2] : defaultPrice; // Use slab price if found, otherwise default
+    return applicableSlab ? applicableSlab[2] : defaultPrice; 
   };
 
   const handleQuantityChange = (item, idx, newQuantity) => {
@@ -47,8 +46,8 @@ export const BillItems = ({ items, onRemoveItem, bill, setBill }) => {
       <Table withBorder highlightOnHover className='bill-items-table'>
         <thead>
           <tr>
-            <th className='bill-table-header'>Item Name</th>
-            <th className='bill-table-header'>Quantity</th>
+            <th className='bill-table-header'>Name</th>
+            <th className='bill-table-header'>Qt.</th>
             <th className='bill-table-header'>MRP</th>
             <th className='bill-table-header'>Price</th>
             <th className='bill-table-header'>Slab Pricing
