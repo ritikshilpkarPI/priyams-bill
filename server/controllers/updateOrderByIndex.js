@@ -1,4 +1,4 @@
-const { getItemSKU } = require('server/util/getItemSKU');
+const { getItemSKU } = require('../util/getItemSKU');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 
 const updateOrderByIndex = async (req, res,next) => {
