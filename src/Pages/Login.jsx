@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {  useState } from 'react';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
@@ -23,6 +22,11 @@ const Login = () => {
     setPasswordVisible((prev) => !prev);
   };
   const navigate = useNavigate();
+
+  const togglePasswordVisibility = () => {
+    
+    setPasswordVisible((prev) => !prev);
+  };
 
   const loginUser = async (e) => {
     e.preventDefault();

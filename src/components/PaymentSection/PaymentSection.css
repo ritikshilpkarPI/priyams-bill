@@ -18,6 +18,26 @@
   }
   
   
+.payment-input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .payment-input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    pointer-events: none;
+    z-index: 99;
+  }
+  
+  .payment-input-with-icon input{
+    padding-left: 40px ; 
+  }
+  
+  
 @media print {
     .payment-section {
         width: 60mm;
