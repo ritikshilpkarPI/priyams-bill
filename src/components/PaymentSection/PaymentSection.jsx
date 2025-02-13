@@ -18,7 +18,17 @@ export const PaymentSection = ({
   isLoading
 }) => {
   const [saveBillButtonDisabled, setSaveBillButtonDisabled] = useState(false);
-
+  const handlePaymentInputChange = (e, field) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      onPaymentChange(field, Number(value));
+    }
+  };
+  const handleKeyDown = (e) => {
+    if (['e', 'E', '-', '+', '.'].includes(e.key)) {
+      e.preventDefault();
+    }
+  };
   useEffect(() => {
     setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0);
   }, [cashPay, upiPay, totalAmount]);
@@ -58,17 +68,8 @@ export const PaymentSection = ({
                 label="Cash Payment"
                 type="number"
                 value={cashPay === 0 ? '' : cashPay}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (/^\d*$/.test(value)) {
-                    onPaymentChange('cashPay', Number(value));
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (['e', 'E', '-', '+', '.'].includes(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
+                onChange={(e) => handlePaymentInputChange(e, "cashPay")}
+                onKeyDown={handleKeyDown}
                 mb="sm"
                 min={0}
                 placeholder="0"
@@ -93,17 +94,8 @@ export const PaymentSection = ({
                 label="Upi Payment"
                 type="number"
                 value={upiPay === 0 ? '' : upiPay}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (/^\d*$/.test(value)) {
-                    onPaymentChange('upiPay', Number(value));
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (['e', 'E', '-', '+', '.'].includes(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
+                onChange={(e) => handlePaymentInputChange(e, "upiPay")}
+                onKeyDown={handleKeyDown}
                 mb="sm"
                 min={0}
                 placeholder="0"
