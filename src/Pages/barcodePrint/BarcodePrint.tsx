@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Container, TextInput, NumberInput, Select, Button, Card, Group, FileInput, CloseButton, Loader } from "@mantine/core";
-import JsBarcode from "react-jsbarcode";
+import { ReactBarcode } from "react-jsbarcode";
 import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
@@ -127,7 +127,7 @@ const ProductForm = () => {
                                 <h4>{product.name}</h4>
                                 <p>MRP: {product.mrp}</p>
                                 <p>Packet Qty: {product.packetQty} {product.unit}</p>
-                                <JsBarcode value={product.barcode} options={{ format: "CODE128" }} />
+                                <ReactBarcode value={product.barcode} options={{ format: "CODE128" }} />
                             </div>
                             {!isPrinting && <CloseButton onClick={() => handleRemoveProduct(product.id)} />}
                         </Group>

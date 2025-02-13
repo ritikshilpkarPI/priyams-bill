@@ -87,7 +87,8 @@ const {
   expelOrderToRider,
   createRzpQRByAmount,
   assignOrderToRider,
-  getItemsSellDetailsByPurchaseOrderId
+  getItemsSellDetailsByPurchaseOrderId,
+  getItemsSellDetailsByItemId
 } = require('../controllers/index');
 
 
@@ -334,7 +335,10 @@ router.post(
     `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD}/:id`,
     getItemsSellDetailsByPurchaseOrderId
   );
-
+router.post(
+    `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD_BY_ITEMID}/:id`,
+    getItemsSellDetailsByItemId
+  );
 router.post(
   '/api/riders',
   isLoggedIn,
