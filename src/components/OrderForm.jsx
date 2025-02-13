@@ -179,6 +179,36 @@ const OrderForm = ({
               }}
               {...form.getInputProps('barcode')}
             />
+            <NumberInput
+              withAsterisk={form.values.validate}
+              label="M.R.P"
+              style={{ width: '15vmin' }}
+              required={form.values.validate}
+              placeholder="mrp"
+              precision={2}
+              {...form.getInputProps('mrp')}
+            />
+            <NumberInput
+              withAsterisk={form.values.validate}
+              label="Pkt. Amt."
+              className="form-input-tops"
+              required={form.values.validate}
+              placeholder="amount in 1 pack"
+              {...form.getInputProps('itemQuantity')}
+            />
+            <Select
+              label="unit"
+              className="form-input-tops"
+              placeholder="pick one"
+              data={[
+                { value: 'grams', label: 'grams' },
+                { value: 'kg', label: 'kg' },
+                { value: 'ml', label: 'ml' },
+                { value: 'liter', label: 'liter' },
+                { value: 'piece', label: 'piece' },
+              ]}
+              {...form.getInputProps('unit')}
+            />
 
             {/* <TextInput
                             withAsterisk={form.values.validate}
@@ -217,29 +247,6 @@ const OrderForm = ({
               handleSelectOrderItems2={handleSelectOrderItems2}
             />
           )}
-          <Group className="order-flex-class">
-            <NumberInput
-              withAsterisk={form.values.validate}
-              label="Pkt. Amt."
-              className="form-input-tops"
-              required={form.values.validate}
-              placeholder="amount in 1 pack"
-              {...form.getInputProps('itemQuantity')}
-            />
-            <Select
-              label="unit"
-              className="form-input-tops"
-              placeholder="pick one"
-              data={[
-                { value: 'grams', label: 'grams' },
-                { value: 'kg', label: 'kg' },
-                { value: 'ml', label: 'ml' },
-                { value: 'liter', label: 'liter' },
-                { value: 'piece', label: 'piece' },
-              ]}
-              {...form.getInputProps('unit')}
-            />
-          </Group>
 
           <div className='image-select-container'>
             <div className='image-input-container'>
@@ -418,15 +425,6 @@ const OrderForm = ({
             />
           </Group>
           <Group className="order-flex-class">
-            <NumberInput
-              withAsterisk={form.values.validate}
-              label="M.R.P"
-              style={{ width: '15vmin' }}
-              required={form.values.validate}
-              placeholder="mrp"
-              precision={2}
-              {...form.getInputProps('mrp')}
-            />
             <NumberInput
               withAsterisk={form.values.validate}
               label="C.P"
