@@ -35,11 +35,19 @@ export const PaymentSection = ({
   return (
     <div className="payment-section">
       <Paper p="md" radius="md" withBorder>
-        <Text size="lg" weight={500} mb="md">Payment Details</Text>
+        <Text size="lg" weight={500} mb="md" className="payment-details-text">
+          Payment Details
+        </Text>
 
         <div className="amount-display">
-          <Text size="xl" weight={700} color="blue">
-            Total Amount: ₹{totalAmount}
+          <Text
+            size="xl"
+            weight={700}
+            color="blue"
+            className="amount-display-text"
+          >
+            <span className="amount-label">Total Amount:</span>
+            <span className="amount-value">₹{totalAmount}</span>
           </Text>
         </div>
 

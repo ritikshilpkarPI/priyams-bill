@@ -20,6 +20,7 @@
   
 @media print {
     .payment-section {
+        width: 60mm;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -68,6 +69,7 @@
         font-size: 14px ;
    
     }
+
     .cash-input, .upi-input {
         display: flex;
         flex-direction: row;
@@ -85,8 +87,13 @@
         font-weight: normal;
         font-size: 14px ;
     }
-    .cash-input * input, .upi-input * input {
+
+    .cash-input input, .upi-input input {
         border: none;
+        outline: none;
+        background: none;
+        font-size: 14px;
+        text-align: right;
     }
     
     .pay-print-button {
