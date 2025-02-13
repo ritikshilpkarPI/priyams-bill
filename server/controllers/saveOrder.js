@@ -1,5 +1,5 @@
-const { getItemSKU } = require('../util/getItemSKU');
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const { getItemSKU } = require('../util/getItemSKU');
 
 const saveOrder = async (req, res ) => {
   try {

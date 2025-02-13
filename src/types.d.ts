@@ -115,7 +115,7 @@ declare global {
     barcode: string;
   }
 
-  interface ItemNameSKUProps {
+  export interface ItemNameSKUProps {
     itemName: string;
     barcode: string;
     mrp: number;
