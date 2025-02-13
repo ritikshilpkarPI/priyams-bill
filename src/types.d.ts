@@ -173,6 +173,7 @@ declare global {
   
   interface AllItemsFeedDataState {
     itemsFeedData: AllItemsFeedData;
+    loading: Boolean
   }
 }
 declare module '*.scss' {

@@ -1,9 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBillItems, updateCustomerInfo, updatePayment, resetBillState } from 'src/redux/bill/billSlice'; 
-import { useDispatch, useSelector } from 'react-redux';
-import { updateBillItems, updateCustomerInfo, updatePayment, resetBillState } from 'src/redux/bill/billSlice'; 
 import { calculateAmountReturn, calculateAmountTotal, calculateBillProfit, calculateMRPTotal, calculateTotalItems } from "../utils/billPageUtils";
-import { selectBill } from 'src/redux/bill/billSelectors';
 import { selectBill } from 'src/redux/bill/billSelectors';
 
 export const useBillState = () => {

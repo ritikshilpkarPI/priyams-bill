@@ -5,8 +5,6 @@ import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
 import { selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
-import { useSelector } from "react-redux";
-import { selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 
 const units = ["Kg", "Gm", "Piece", "mL", "L", "mm", "in", "mts"];
 
@@ -23,7 +21,6 @@ const ProductForm = () => {
     });
     const printRef = useRef<any>(null);
     const singlePrintRef = useRef<any>(null);
-    const itemsFeedData = useSelector(selectItemsFeedData);
     const itemsFeedData = useSelector(selectItemsFeedData);
 
     useEffect(() => {

@@ -5,6 +5,7 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 import { fetchBillingItems } from 'src/utils/fetchBillingItems';
+import { useNavigate } from 'react-router';
 
 
 
@@ -23,10 +24,7 @@ const Login = () => {
   };
   const navigate = useNavigate();
 
-  const togglePasswordVisibility = () => {
-    
-    setPasswordVisible((prev) => !prev);
-  };
+ 
 
   const loginUser = async (e) => {
     e.preventDefault();

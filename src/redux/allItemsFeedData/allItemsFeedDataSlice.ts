@@ -8,7 +8,7 @@ const initialState: AllItemsFeedDataState = {
     itemsBarCodeMap: {},
     itemsNameMap: {},
     totalItemsCount: 0,},
-    loading:false
+  loading:false
 };
 
 const allItemsFeedDataSlice = createSlice({
