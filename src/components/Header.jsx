@@ -63,6 +63,27 @@ const Header = ({
   const goToBilling = () => {
     navigate('/billing');
   };
+  useEffect(() => {
+    if (inputElem.current && profile.current && mainContainer.current && sidebarElem.current) {
+      inputElem.current.style.display = 'none';
+      profile.current.children[1].style.display = 'none'; 
+      profile.current.children[2].style.display = 'block';
+      mainContainer.current.style.width = '100px';
+      mainContainer.current.children[2].innerText = 'B';
+      mainContainer.current.children[4].innerText = 'L';
+      sidebarElem.current.style.height = 'calc(100vh - 190px)';
+  
+      liItem.current.forEach((ele) => {
+        if (ele) {
+          ele.children[0].style.display = 'none';
+          ele.children[1].childNodes.forEach((element) => {
+            element.children[0].children[1].style.display = 'none';
+          });
+        }
+      });
+    }
+  }, []);
+  
 
   const handleToggleOuterView = () => {
     if (inputElem.current.style.display === 'none') {
