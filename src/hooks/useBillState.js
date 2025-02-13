@@ -33,6 +33,9 @@ export const useBillState = () => {
       field: 'billAmountTotal',
       value: calculateAmountTotal(mergedItemsList).toString()
     }));
+    const billAmountTotal = calculateAmountTotal(mergedItemsList).toString();
+    const amountReturn = calculateAmountReturn(Number(billAmountTotal), billState).toString();
+    dispatch(updateCustomerInfo({ field: 'amountReturn', value: amountReturn }));
     dispatch(updateCustomerInfo({
       field: 'totalNumberOfItems',
       value: calculateTotalItems(mergedItemsList).toString()
