@@ -3,6 +3,7 @@ import {
   Container,
   Grid,
   Paper,
+  Button,
   Title,
 } from '@mantine/core';
 import "./NewBillPage.css"
@@ -106,11 +107,11 @@ const NewBillPage = () => {
         <h2 className='item-count'>
           Total items: {itemsDataCount}
         </h2>
-       
+        
         <Title order={2} mb="lg" className='new-bill-text-title'>
-        <Paper className="refresh-bill-button" onClick={resetBillState}>
+        <Button className="refresh-bill-button"  onClick={resetBillState}>
           Refresh Bill
-        </Paper>
+        </Button>
           New Bill
         </Title>
         <Grid className='items-payments-grid'>

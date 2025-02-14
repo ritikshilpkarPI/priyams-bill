@@ -1,16 +1,13 @@
 .savings-print-only {
     display: none;
 }
-
+.new-bill-text-title{
+    position: relative;
+}
 .refresh-bill-button{
-    display: inline;
-    padding: 5px 10px;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 5px;
-    cursor: pointer;
+    
     position: absolute;
-    left: 10%;
+    left: 0%;
 }
 @media print {
 
