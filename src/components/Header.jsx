@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { sidebarListData } from '../constants/HeaderTypes';
 import { Link, useNavigate } from 'react-router-dom';
 import '../CSS/_header.scss';
+import { toggleSidebar } from 'src/utils/toggleSidebar';
 
 const handleToggle = (id) => {
   let toggledElement = document.getElementById(`linkContainer${id}`);
@@ -63,40 +64,19 @@ const Header = ({
   const goToBilling = () => {
     navigate('/billing');
   };
-
+  
   const handleToggleOuterView = () => {
-    if (inputElem.current.style.display === 'none') {
-      inputElem.current.style.display = 'block';
-      profile.current.children[1].style.display = 'block';
-      profile.current.children[2].style.display = 'none';
-      mainContainer.current.style.width = '300px';
-      mainContainer.current.children[2].innerText = 'Billing';
-      mainContainer.current.children[4].innerText = 'Logout';
-      sidebarElem.current.style.height = 'calc(100vh - 230px)';
-
-      liItem.current.forEach((ele) => {
-        ele.children[0].style.display = 'block';
-        ele.children[1].childNodes.forEach((element) => {
-          element.children[0].children[1].style.display = 'block';
-        });
-      });
+    if (inputElem.current?.style.display === "none") {
+      toggleSidebar(true, { inputElem, profile, mainContainer, sidebarElem, liItem });
     } else {
-      inputElem.current.style.display = 'none';
-      profile.current.children[1].style.display = 'none';
-      profile.current.children[2].style.display = 'block';
-      mainContainer.current.style.width = '100px';
-      mainContainer.current.children[2].innerText = 'B';
-      mainContainer.current.children[4].innerText = 'L';
-      sidebarElem.current.style.height = 'calc(100vh - 190px)';
-
-      liItem.current.forEach((ele) => {
-        ele.children[0].style.display = 'none';
-        ele.children[1].childNodes.forEach((element) => {
-          element.children[0].children[1].style.display = 'none';
-        });
-      });
+      toggleSidebar(false, { inputElem, profile, mainContainer, sidebarElem, liItem });
     }
   };
+
+  useEffect(() => {
+    toggleSidebar(false, { inputElem, profile, mainContainer, sidebarElem, liItem }); 
+  }, []);
+  
   return (
     <div
       className="main-box-container"

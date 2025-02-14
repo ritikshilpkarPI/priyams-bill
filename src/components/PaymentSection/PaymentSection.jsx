@@ -7,6 +7,9 @@ import {
 } from '@mantine/core';
 import './PaymentSection.css'
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { itemsFeedAPILoading } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 
 export const PaymentSection = ({
   cashPay,
@@ -28,7 +31,8 @@ export const PaymentSection = ({
     if (['e', 'E', '-', '+', '.'].includes(e.key)) {
       e.preventDefault();
     }
-  };
+  };  
+  const loading = useSelector(itemsFeedAPILoading);
   useEffect(() => {
     setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0);
   }, [cashPay, upiPay, totalAmount]);
@@ -74,6 +78,7 @@ export const PaymentSection = ({
                 min={0}
                 placeholder="0"
                 className="payment-input-with-icon"
+                disabled={loading}
               />
             </div>
           </div>
@@ -100,6 +105,7 @@ export const PaymentSection = ({
                 min={0}
                 placeholder="0"
                 className="payment-input-with-icon"
+                disabled={loading}
               />
             </div>
           </div>
