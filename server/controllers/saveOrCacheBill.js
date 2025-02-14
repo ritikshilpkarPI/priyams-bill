@@ -39,6 +39,9 @@ const saveOrCacheBill = async (req, res) => {
     isUpiAmtPaid
   };
   let isBillSaved, billBarcode, isDuplicate = false;
+  
+  if(!billId) return res.status(400).json({ msg: 'Bill Id slug is required'});
+
   try {
     const maxAttemptToSaveInDB = 1;
     setToBillsCache(billId, newBillData);
