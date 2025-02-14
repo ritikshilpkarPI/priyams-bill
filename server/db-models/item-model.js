@@ -46,7 +46,7 @@ const ItemSchema = new mongoose.Schema(
     slabPricing: { type: Array },
     minStockReached: { type: Boolean, default: false },
     itemBrandName: { type: String },
-    itemCategory: { type: String, enum: inventoryItemCategory },
+    itemCategory: { type: String },
     useByDate: [
       {
         date: {
@@ -62,10 +62,37 @@ const ItemSchema = new mongoose.Schema(
     itemPerUnitQuantity: { type: Number, default: 0 },
     images: [
       {
-        public_id: { type: String, required: true, unique: true },
-        secure_url: { type: String, required: true, unique: true }
+        public_id: { type: String, required: true },
+        secure_url: { type: String, required: true }
       },
-    ]
+    ],
+    companyName: { type: String, trim: true },
+    subCategory: { type: String },
+    flavourOrFeature: { type: String, trim: true }, 
+    shelfLife: { type: String }, 
+    expiryDates: [
+      {
+        date: {
+          type: Date,
+        },
+        value: {
+          type: Number,
+        },
+        mfgDate: {
+          type: Date,
+        },
+        isShelfExpired: { 
+          type: Boolean
+        }
+      },
+    ],
+    saleTime: { type: String }, 
+    returnPolicyAvailable: {
+      type: Boolean,
+      default: false,
+    },
+    returnPolicyRemarks: { type: String }, 
+    freeItemsAvailable: { type: Boolean, default: false },
   },
   { strict: false, timestamps: true }
 );

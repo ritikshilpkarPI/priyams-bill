@@ -50,15 +50,14 @@ export const createRzpQrCodeAPI = async (data: CreateRzpQRAPIDataType) => {
 
 export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
   purchaseOrderId: string,
-  startDate: string,
-  endDate: string,
-  timePeriod: string
+  intervals: IntervalPropInterface[]
 ) => {
   try {
     const response = await postAPI({
-      path: `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD}/${purchaseOrderId}?startDate=${startDate}&endDate=${endDate}&timePeriod=${timePeriod}`,
+      path: `${API_PATHS.PURCHASE_ORDER.GET_ITEM_SOLD}/${purchaseOrderId}`,
+      data: { intervals },
     });
-    return response; 
+    return response;
   } catch (error) {
     return { isError: true, error };
   }

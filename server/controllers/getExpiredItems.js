@@ -21,7 +21,6 @@ const getExpiredItems = async (req, res) => {
         
         const expiredItems = await ExpiredItem.find({})
             .populate('itemId', '_id itemName itemBarcode')
-            .sort({ $natural: -1 })
             .skip(skip)
             .limit(limit)
             .lean();

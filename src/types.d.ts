@@ -1,5 +1,6 @@
 import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
+import { RefObject } from "react";
 
 declare global {
   export interface UserStateType {
@@ -38,7 +39,12 @@ declare global {
     width: number;
     height: number;
   }
-
+  interface IntervalInterface {
+    startDate: string;
+    endDate: string;
+    timePeriod: string; 
+    data: soldItemsByDateInterface[];
+  }
   interface ItemSoldPurchaseOrder {
     orderSequence: string;
     approvalDate: string;
@@ -48,11 +54,11 @@ declare global {
   }
 
   interface ItemSoldInterface {
+    itemId: string;
     itemName: string;
     itemMRP: number;
     soldAfterApproval: number;
-    totalItemsSoldInInterval: number;
-    soldItemsByDate: soldItemsByDateInterface[];
+    intervals: IntervalInterface[];
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastMonthSold?: number;
     lastThreeMonthSold?: soldItemsByDateInterface[];
@@ -61,6 +67,9 @@ declare global {
 
   interface SellDetailsTableProps {
     tableData: ItemSoldInterface[];
+    currentDate?: string;
+    lastThreeMonthDate?: string;
+    lastYearDate?: string;
   }
 
   interface CategorySchemaType {
@@ -181,6 +190,14 @@ declare global {
   
   interface AllItemsFeedDataState {
     itemsFeedData: AllItemsFeedData;
+    itemsFeedAPILoading:boolean;
+  }
+  interface SidebarRefs {
+    inputElem: RefObject<HTMLInputElement>;
+    profile: RefObject<HTMLDivElement>;
+    mainContainer: RefObject<HTMLDivElement>;
+    sidebarElem: RefObject<HTMLDivElement>;
+    liItem: RefObject<HTMLDivElement[]>;
   }
 }
 declare module '*.scss' {
