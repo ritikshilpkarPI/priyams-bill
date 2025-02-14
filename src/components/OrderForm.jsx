@@ -67,7 +67,7 @@ const OrderForm = ({
   const [selectedImage, setSelectedImage] = useState('')
   const [isSelected, setIsSelected] = useState(true)
   // const [toggle, setToggle] = useState(true);
-  const [toggle1, setToggle1] = useState(false);
+  // const [toggle1, setToggle1] = useState(false);
   const [showNewItemModal, setShowNewItemModal] = useState(false);
   // const [addImage, setAddImage] = useState(null)
   const imageInputRef = useRef(null);
@@ -525,46 +525,14 @@ const OrderForm = ({
               disabled={!form.values.category?.trim()}
               {...form.getInputProps('flavourOrFeature')}
             />
-            {!form.values.item_id && isSkuAlreadyExists && (
-              <Alert color="red" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <IconExclamationCircle size={20} color="red" style={{ marginRight: '10px' }} />
-                  Item already exists with the same SKU
-                </div>
-                <div style={{ marginTop: '10px', fontSize: '14px', color: '#b50000' }}>
-                  {newItemSku}
-                </div>
-              </Alert>
-            )}
-                </Group>
-          {Boolean(filterItems.length) && openDrawer && (
+          </Group>
+          {/* {Boolean(filterItems.length) && openDrawer && toggle1 && (
             <ListDropDownItem
               itemList={filterItems}
               handleSelectOrderItems2={handleSelectOrderItems}
             />
-          )}
+          )} */}
           <Group className="order-flex-class">
-            <NumberInput
-              withAsterisk={form.values.validate}
-              label="Pkt. Amt."
-              className="form-input-tops"
-              required={form.values.validate}
-              placeholder="amount in 1 pack"
-              {...form.getInputProps('itemQuantity')}
-            />
-            <Select
-              label="unit"
-              className="form-input-tops"
-              placeholder="pick one"
-              data={[
-                { value: 'grams', label: 'grams' },
-                { value: 'kg', label: 'kg' },
-                { value: 'ml', label: 'ml' },
-                { value: 'liter', label: 'liter' },
-                { value: 'piece', label: 'piece' },
-              ]}
-              {...form.getInputProps('unit')}
-            />
             <Select
               label="Sale Time"
               className="form-input-tops"
