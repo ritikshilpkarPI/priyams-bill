@@ -8,7 +8,7 @@ const initialState: AllItemsFeedDataState = {
     itemsBarCodeMap: {},
     itemsNameMap: {},
     totalItemsCount: 0,},
-  loading:false
+    itemsFeedAPILoading:false
 };
 
 const allItemsFeedDataSlice = createSlice({
@@ -17,14 +17,14 @@ const allItemsFeedDataSlice = createSlice({
   reducers: {
     setItemsFeedData: (state, action: PayloadAction<AllItemsFeedData>) => {
       state.itemsFeedData = action.payload;
-      state.loading = false;
+      state.itemsFeedAPILoading = false;
     },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
+    setItemsFeedAPILoading: (state, action: PayloadAction<boolean>) => {
+      state.itemsFeedAPILoading = action.payload;
     },
    
   },
 });
 
-export const { setItemsFeedData,setLoading } = allItemsFeedDataSlice.actions;
+export const { setItemsFeedData,setItemsFeedAPILoading } = allItemsFeedDataSlice.actions;
 export default allItemsFeedDataSlice.reducer;
