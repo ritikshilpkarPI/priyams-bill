@@ -653,7 +653,7 @@ const usePurchaseOrder = (history) => {
           mrp: item?.itemMRPperUnit,
           costPrice: item?.itemCostPricePerUnit,
           slabPrice: item?.slabPricing,
-          item_id: item?.id ? String(item._id) : "",
+          item_id: item?._id ? String(item._id) : "",
           unit: item?.quantityUnitName,
           itemQuantity: item?.itemPerUnitQuantity,
           sku: item?.sku

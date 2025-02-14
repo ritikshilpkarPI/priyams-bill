@@ -29,7 +29,6 @@ import { useSelector } from 'react-redux';
 import { selectItemsSkuList } from '../redux/items/itemsSelector';
 import { getItemSKU } from "../utils/getItemSKU";
 import { IconExclamationCircle, IconEdit } from '@tabler/icons-react';
-import { v4 as uuidv4 } from 'uuid';
 
 const OrderForm = ({
   openDrawer,
@@ -106,7 +105,7 @@ const OrderForm = ({
   }, [])
 
   const generateBarcode = () => {
-    form.setValues(prev => ({ ...prev, barcode: `PSTORES_${Date.now().toString().slice(-10)}${uuidv4()}` }))
+    form.setValues(prev => ({ ...prev, barcode: `PSTR_${Date.now().toString().slice(-10)}` }))
   }
 
   const func1 = () => {
@@ -193,6 +192,8 @@ const OrderForm = ({
     }
   };
 
+  console.log({ formValues: form.values })
+
   return (
     <Drawer
       opened={opened}
@@ -231,7 +232,7 @@ const OrderForm = ({
               }}
               {...form.getInputProps('barcode')}
               onChange={(e) => onSkuChange("barcode", e.target.value)}
-              rightSection={!form.values.barcode && <>
+              rightSection={<>
                <IconEdit onClick={()=> generateBarcode()} cursor="pointer" size={20} color="#228be6" />
               </>}
             />
