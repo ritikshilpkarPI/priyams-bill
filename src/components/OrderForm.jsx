@@ -537,18 +537,6 @@ const OrderForm = ({
               </Alert>
             )}
                 </Group>
-          <div className="barcode-filter-shift">
-            {filterItems2.length > 1
-              ? Boolean(filterItems2.length) &&
-              toggle &&
-              openDrawer && (
-                <ListDropDownItem
-                  itemList={filterItems2}
-                  handleSelectOrderItems2={handleSelectOrderItems}
-                />
-              )
-              : ''}
-          </div>
           {Boolean(filterItems.length) && toggle1 && openDrawer && (
             <ListDropDownItem
               itemList={filterItems}
