@@ -15,7 +15,7 @@ import { ItemSearch } from '../../components/ItemSearch';
 import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
-import { selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
 
 
@@ -28,7 +28,7 @@ const NewBillPage = () => {
     updatePayment,
     resetBillState,
   } = useBillState(); 
-
+  const loading = useSelector(itemsFeedAPILoading);
   const handleRemoveItem = (itemId) => {
     const updatedItems = billState.billItems.filter(
       (item) => item.itemDetail._id !== itemId
@@ -109,7 +109,7 @@ const NewBillPage = () => {
         </h2>
         
         <Title order={2} mb="lg" className='new-bill-text-title'>
-        <Button className="refresh-bill-button"  onClick={resetBillState}>
+        <Button className="refresh-bill-button"  onClick={resetBillState} disabled={loading}>
           Refresh Bill
         </Button>
           New Bill
