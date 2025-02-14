@@ -9,14 +9,14 @@ import {
   } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
-import { isLoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
+import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [itemsData, setItemsData] = useState([]);
     const itemsFeedData = useSelector(selectItemsFeedData);
-    const loading = useSelector(isLoading);
+    const loading = useSelector(itemsFeedAPILoading);
 
     useEffect(() => {
       if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {

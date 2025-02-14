@@ -5,7 +5,7 @@ import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
 import { useDispatch } from 'react-redux';
-import { fetchBillingItems } from 'src/utils/fetchBillingItems';
+import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 
 
 
@@ -54,7 +54,7 @@ const Login = () => {
           setErrorMsg('Login failed. Please try again.');
         }
       } else {
-        dispatch(fetchBillingItems());
+        dispatch(fetchBillingLeanItems());
         navigate('/billing');
       }
     } finally {
