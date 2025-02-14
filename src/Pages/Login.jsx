@@ -3,6 +3,8 @@ import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
+import { useDispatch } from 'react-redux';
+import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { useNavigate } from 'react-router';
 
 
@@ -15,12 +17,14 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const navigate = useNavigate();
-
+  const dispatch = useDispatch()
   const togglePasswordVisibility = () => {
     
     setPasswordVisible((prev) => !prev);
   };
+  const navigate = useNavigate();
+
+ 
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -52,6 +56,7 @@ const Login = () => {
           setErrorMsg('Login failed. Please try again.');
         }
       } else {
+        dispatch(fetchBillingLeanItems());
         navigate('/billing');
       }
     } finally {

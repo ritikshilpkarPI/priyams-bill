@@ -1,5 +1,6 @@
 import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
+import { RefObject } from "react";
 
 declare global {
   export interface UserStateType {
@@ -173,6 +174,14 @@ declare global {
   
   interface AllItemsFeedDataState {
     itemsFeedData: AllItemsFeedData;
+    itemsFeedAPILoading:boolean;
+  }
+  interface SidebarRefs {
+    inputElem: RefObject<HTMLInputElement>;
+    profile: RefObject<HTMLDivElement>;
+    mainContainer: RefObject<HTMLDivElement>;
+    sidebarElem: RefObject<HTMLDivElement>;
+    liItem: RefObject<HTMLDivElement[]>;
   }
 }
 declare module '*.scss' {
