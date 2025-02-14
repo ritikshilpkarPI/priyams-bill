@@ -11,7 +11,7 @@ import {
   LoadingOverlay,
   Alert,
   Modal,
-  Flex
+  Flex,
   Autocomplete,
   Divider,
   Checkbox,
@@ -67,7 +67,7 @@ const OrderForm = ({
   const [selectedImage, setSelectedImage] = useState('')
   const [isSelected, setIsSelected] = useState(true)
   // const [toggle, setToggle] = useState(true);
-  // const [toggle1, setToggle1] = useState(false);
+  const [toggle1, setToggle1] = useState(false);
   const [showNewItemModal, setShowNewItemModal] = useState(false);
   // const [addImage, setAddImage] = useState(null)
   const imageInputRef = useRef(null);
@@ -537,12 +537,12 @@ const OrderForm = ({
               </Alert>
             )}
                 </Group>
-          {Boolean(filterItems.length) && toggle1 && openDrawer && (
+          {Boolean(filterItems.length) && openDrawer && (
             <ListDropDownItem
               itemList={filterItems}
-              handleSelectOrderItems2={handleSelectOrderItems2}
+              handleSelectOrderItems2={handleSelectOrderItems}
             />
-          )} */}
+          )}
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
