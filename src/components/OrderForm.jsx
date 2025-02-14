@@ -9,16 +9,24 @@ import {
   Switch,
   Select,
   LoadingOverlay,
+  Alert
 } from '@mantine/core';
 // import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import MyDatePicker from './DatePicker';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from "../utils/constants/apiPaths"
+import { getItemsSkuAPI } from '../utils/apiUtils';
+import { useDispatch } from 'react-redux';
+import { setItemsData } from '../redux/items/itemsSlice';
+import { useSelector } from 'react-redux';
+import { selectItemsSkuList } from '../redux/items/itemsSelector';
+import { getItemSKU } from "../utils/getItemSKU";
+import { IconExclamationCircle } from '@tabler/icons-react';
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -44,6 +52,8 @@ const OrderForm = ({
   setLoading,
   itemLoading
 }) => {
+  const itemSkuList = useSelector(selectItemsSkuList);
+  const dispatch = useDispatch();
   const [imageList, setImageList] = useState([])
   const [selectedImage, setSelectedImage] = useState('')
   const [isSelected, setIsSelected] = useState(true)
@@ -52,10 +62,34 @@ const OrderForm = ({
   // const [addImage, setAddImage] = useState(null)
   const imageInputRef = useRef(null);
 
-  const [imageSearch, setImageSearch] = useState(form.values.inputName)
+  const newItemSku = useMemo(() => getItemSKU({
+    barcode: form.values.barcode?.toString()?.trim(),
+    itemName: form.values.inputName?.trim(),
+    mrp: form.values.mrp,
+    packetQty: form.values.itemQuantity,
+    packetUnit: form.values.unit
+  }), [form.values]);
+
+  const isSkuAlreadyExists = useMemo(() => itemSkuList.find(itemSku => itemSku === newItemSku), [newItemSku]);
+  console.log({ newItemSku, itemSkuList })
+  const [imageSearch, setImageSearch] = useState(form.values.inputName);
+
+  const getItemsSku = async () => {
+    const response = await getItemsSkuAPI();
+
+    if(!response && response.isError) return;
+
+    dispatch(setItemsData({ itemsSkuList: response.itemsSku }));
+  }
+
   useEffect(() => {
     setImageSearch(form.values.inputName)
   }, [form.values.inputName])
+
+
+  useEffect(() => {
+    getItemsSku();
+  }, [])
 
   const func1 = () => {
     setOpenDrawer(true);
@@ -228,7 +262,18 @@ const OrderForm = ({
               }}
               {...form.getInputProps('inputName')}
             />
-          </Group>
+            {isSkuAlreadyExists && (
+              <Alert color="red" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <IconExclamationCircle size={20} color="red" style={{ marginRight: '10px' }} />
+                  Item already exists with the same SKU
+                </div>
+                <div style={{ marginTop: '10px', fontSize: '14px', color: '#b50000' }}>
+                  {newItemSku}
+                </div>
+              </Alert>
+            )}
+                </Group>
           <div className="barcode-filter-shift">
             {filterItems2.length > 1
               ? Boolean(filterItems2.length) &&
