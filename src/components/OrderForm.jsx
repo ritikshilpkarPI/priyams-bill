@@ -9,7 +9,9 @@ import {
   Switch,
   Select,
   LoadingOverlay,
-  Alert
+  Alert,
+  Modal,
+  Flex
 } from '@mantine/core';
 // import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
@@ -59,8 +61,10 @@ const OrderForm = ({
   const [isSelected, setIsSelected] = useState(true)
   const [toggle, setToggle] = useState(true);
   const [toggle1, setToggle1] = useState(false);
+  const [showNewItemModal, setShowNewItemModal] = useState(false);
   // const [addImage, setAddImage] = useState(null)
   const imageInputRef = useRef(null);
+  const formOldValuesRef = useRef(null);
 
   const newItemSku = useMemo(() => getItemSKU({
     barcode: form.values.barcode?.toString()?.trim(),
@@ -71,7 +75,6 @@ const OrderForm = ({
   }), [form.values]);
 
   const isSkuAlreadyExists = useMemo(() => itemSkuList.find(itemSku => itemSku === newItemSku), [newItemSku]);
-  console.log({ newItemSku, itemSkuList })
   const [imageSearch, setImageSearch] = useState(form.values.inputName);
 
   const getItemsSku = async () => {
@@ -82,6 +85,16 @@ const OrderForm = ({
     dispatch(setItemsData({ itemsSkuList: response.itemsSku }));
   }
 
+  const onSkuChange = (name, value) => {
+    formOldValuesRef.current = { ...form.values };
+    if(form.values.item_id){
+      setShowNewItemModal(true);
+    } 
+    form.setValues((values) => ({
+      ...values,
+      [name]: value
+    }))
+  }
   useEffect(() => {
     setImageSearch(form.values.inputName)
   }, [form.values.inputName])
@@ -91,15 +104,6 @@ const OrderForm = ({
     getItemsSku();
   }, [])
 
-  useEffect(() => {
-    if(form.values.item_id && form.values.sku !== newItemSku) {
-      form.setValues((prev) => ({
-        ...prev,
-        item_id: null,
-        sku: null
-      }))
-    }
-  }, [newItemSku]);
 
   const func1 = () => {
     setOpenDrawer(true);
@@ -222,6 +226,7 @@ const OrderForm = ({
                 func2();
               }}
               {...form.getInputProps('barcode')}
+              onChange={(e) => onSkuChange("barcode", e.target.value)}
             />
             <NumberInput
               withAsterisk={form.values.validate}
@@ -231,6 +236,7 @@ const OrderForm = ({
               placeholder="mrp"
               precision={2}
               {...form.getInputProps('mrp')}
+              onChange={(value) => onSkuChange("mrp", value)}
             />
             <NumberInput
               withAsterisk={form.values.validate}
@@ -239,6 +245,7 @@ const OrderForm = ({
               required={form.values.validate}
               placeholder="amount in 1 pack"
               {...form.getInputProps('itemQuantity')}
+              onChange={(value) => onSkuChange("itemQuantity", value)}
             />
             <Select
               label="unit"
@@ -252,6 +259,8 @@ const OrderForm = ({
                 { value: 'piece', label: 'piece' },
               ]}
               {...form.getInputProps('unit')}
+              name="unit"
+              onChange={(e) => onSkuChange("unit", e.target.value)}
             />
 
             {/* <TextInput
@@ -271,6 +280,7 @@ const OrderForm = ({
                 func3();
               }}
               {...form.getInputProps('inputName')}
+              onChange={(e) => onSkuChange("inputName", e.target.value)}
             />
             {!form.values.item_id && isSkuAlreadyExists && (
               <Alert color="red" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
@@ -541,10 +551,30 @@ const OrderForm = ({
           />
 
           <Group position="right" mt="md">
-            <Button type="submit">Submit</Button>
+            <Button disabled={!form.values.item_id && isSkuAlreadyExists} type="submit">Submit</Button>
           </Group>
         </form>
       </Box>
+      <Modal opened={showNewItemModal} withCloseButton={false} onClose={()=> {}} title="Caution" centered>
+        <Flex
+         direction="column"
+         gap="16px"
+        >
+          Any change in SKU fields will create new item. Do you want to continue?
+          <div>SKU Fields: Barcode, Item name, MRP, Packet Amount, Unit</div>
+          <Flex justifyContent="space-between" gap="16px" sx={{ width: "100%" }}>
+            <Button onClick={()=> {
+              form.setValues((prev) => ({ ...prev, item_id: null, sku: null }));
+              setShowNewItemModal(false);
+            }}>Yes</Button>
+            <Button onClick={()=> {
+              setShowNewItemModal(false);
+              if(!formOldValuesRef.current) return;
+              form.setValues((state) => ({ ...formOldValuesRef.current }));
+            }}>No</Button>
+          </Flex>
+        </Flex>
+      </Modal>
     </Drawer>
   );
 };
