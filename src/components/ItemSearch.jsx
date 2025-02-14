@@ -9,20 +9,18 @@ import {
   } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
-import { selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
+import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [itemsData, setItemsData] = useState([]);
     const itemsFeedData = useSelector(selectItemsFeedData);
+    const loading = useSelector(itemsFeedAPILoading);
 
     useEffect(() => {
       if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
-        setIsLoading(true);
       } else {
-        setIsLoading(false);
         setItemsData(itemsFeedData);
       }
     }, [itemsFeedData]);
@@ -100,8 +98,10 @@ const calculateItemPrice = (item, quantity) => {
             placeholder="Enter item name or barcode"
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
-            rightSection={isLoading ? <Loader size="sm" /> : null}
+            rightSection={loading ? <Loader size="sm" /> : null}
             mb="sm"
+            disabled={loading}
+
           />
   
           {searchResults.length > 0 && (
@@ -133,7 +133,7 @@ const calculateItemPrice = (item, quantity) => {
             </Paper>
           )}
   
-          {searchTerm && searchResults.length === 0 && !isLoading && (
+          {searchTerm && searchResults.length === 0 && !loading && (
             <Text color="dimmed" align="center" size="sm">
               No items found
             </Text>

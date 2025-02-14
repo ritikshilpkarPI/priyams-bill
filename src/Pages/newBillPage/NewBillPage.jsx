@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import {
   Container,
   Grid,
+  Paper,
+  Button,
   Title,
 } from '@mantine/core';
 import "./NewBillPage.css"
@@ -13,7 +15,7 @@ import { ItemSearch } from '../../components/ItemSearch';
 import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
-import { selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
 
 
@@ -26,7 +28,7 @@ const NewBillPage = () => {
     updatePayment,
     resetBillState,
   } = useBillState(); 
-
+  const loading = useSelector(itemsFeedAPILoading);
   const handleRemoveItem = (itemId) => {
     const updatedItems = billState.billItems.filter(
       (item) => item.itemDetail._id !== itemId
@@ -90,7 +92,7 @@ const NewBillPage = () => {
   return (
     <div className="new-bill-page">
       <div className="shop-details">
-        <h2>Priyam Store</h2>
+        <h2 >Priyam Store</h2>
         <p>Shop No 2, Plot No 2, Indrapuri, Bhopal, M.P.</p>
         <p>Phone: 123-456-7890</p>
         <p>{currentDateTime}</p>
@@ -102,10 +104,14 @@ const NewBillPage = () => {
       </p> : <></>}
       
       <Container size="xl" py="md">
-        <h2>
+        <h2 className='item-count'>
           Total items: {itemsDataCount}
         </h2>
-        <Title order={2} mb="lg">
+        
+        <Title order={2} mb="lg" className='new-bill-text-title'>
+        <Button className="refresh-bill-button"  onClick={resetBillState} disabled={loading}>
+          Refresh Bill
+        </Button>
           New Bill
         </Title>
         <Grid className='items-payments-grid'>
@@ -135,6 +141,11 @@ const NewBillPage = () => {
               isLoading={isSubmitting}
             />
           </Grid.Col>
+          {totalSaveOnBill > 0 && (
+            <p className="savings-print-only">
+              You Saved: ₹ {totalSaveOnBill} on your purchase!
+            </p>
+          )}
         </Grid>
       </Container>
     </div>
