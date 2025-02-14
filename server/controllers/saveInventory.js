@@ -1,10 +1,32 @@
-const { Item } = require('../db-models/item-model');
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
+import { Item } from "../db-models/item-model";
+import PurchaseOrder from "../db-models/purchase-order-model";
 
 const saveInventory = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction(); // Start transaction
   try {
-    const { new_items } = req.body;
-    for (const item of new_items) {
+    const { newItems, purchaseOrderId } = req.body;
+
+    // Extract valid item IDs
+    const itemIds = newItems
+      .map((item) => item.item_id)
+      .filter((id) => mongoose.Types.ObjectId.isValid(id));
+
+    // Fetch all existing items in one go
+    const existingItems = await Item.find({ _id: { $in: itemIds } })
+      .lean()
+      .session(session);
+
+    // Create a map for quick lookup
+    const existingItemsMap = new Map(
+      existingItems.map((item) => [item._id.toString(), item])
+    );
+
+    let bulkOperations = [];
+    let failedItems = [];
+
+    newItems.forEach((item) => {
       const itemDetails = {
         itemName: item.inputName,
         itemBarcode: item.barcode,
@@ -33,11 +55,7 @@ const saveInventory = async (req, res, next) => {
         freeItemAvailable: item.freeItemAvailable,
       };
 
-      let oldItem;
-      // Check if item_id is valid before calling findById
-      if (item.item_id && mongoose.Types.ObjectId.isValid(item.item_id)) {
-        oldItem = await Item.findById(item.item_id);
-      }
+      const oldItem = existingItemsMap.get(item.item_id);
 
       if (oldItem) {
         let oldItemCost = Number(oldItem.itemCostPricePerUnit) || 0;
@@ -51,7 +69,7 @@ const saveInventory = async (req, res, next) => {
             ? (oldItemCost * oldStock + newItemCost * newStock) / totalStock
             : 0;
 
-        let newTotalStock = newStock + oldStock;
+        let newTotalStock = oldStock + newStock;
         let newTotalItemQuantity =
           itemDetails.itemPerUnitQuantity + oldItem.itemPerUnitQuantity;
 
@@ -70,54 +88,90 @@ const saveInventory = async (req, res, next) => {
           itemPerUnitQuantity: newTotalItemQuantity,
         };
 
-        await oldItem.updateOne(new_Item_Update, { new: true });
+        bulkOperations.push({
+          updateOne: {
+            filter: { _id: item.item_id },
+            update: { $set: new_Item_Update },
+          },
+        });
       } else {
-        await Item.create(itemDetails);
+        bulkOperations.push({
+          insertOne: { document: itemDetails },
+        });
       }
+    });
+
+    // Execute bulk operation if there are any updates
+    let bulkWriteResult = {};
+    if (bulkOperations.length > 0) {
+      bulkWriteResult = await Item.bulkWrite(bulkOperations, { session });
+      console.log({bulkWriteResult});
+      
     }
 
-    res.status(200).send({ message: 'Items updated', success: true });
+    // Identify failed items
+    failedItems = newItems.filter(
+      (item) =>
+        !bulkWriteResult.insertedCount &&
+        !bulkWriteResult.modifiedCount &&
+        item.inputName
+    );
+
+    if (failedItems.length === newItems.length) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(500).json({
+        message: "No items were added to the inventory.",
+        success: false,
+      });
+    }
+
+    if (failedItems.length > 0) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(429).json({
+        message: `Some items could not be processed: ${failedItems
+          .map((item) => item.inputName)
+          .join(", ")}`,
+        success: false,
+      });
+    }
+
+    // If all items are successfully inserted or updated, approve the purchase order
+    const order = await PurchaseOrder.findByIdAndUpdate(
+      purchaseOrderId,
+      {
+        isApproved: true,
+        approveTime: Date.now(),
+      },
+      { new: true, session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({
+      message: "All items updated and Order Approved successfully",
+      order,
+      success: true,
+    });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     next(error);
   }
 };
 
-// Helper function to merge expiry dates
+// Optimized helper function to merge expiry dates
 const mergeExpiryDates = (oldDates, newDates) => {
-  const mergedDates = [];
+  const dateMap = new Map();
 
-  newDates.forEach((newData) => {
-    let dateExists = false;
-
-    oldDates.forEach((oldData) => {
-      if (
-        new Date(oldData.date).toLocaleDateString() ===
-        new Date(newData.date).toLocaleDateString()
-      ) {
-        dateExists = true;
-        const totalExpiryItems = newData.value + oldData.value;
-        mergedDates.push({ date: newData.date, value: totalExpiryItems });
-      }
-    });
-
-    if (!dateExists) {
-      mergedDates.push({ ...newData });
-    }
+  [...oldDates, ...newDates].forEach(({ date, value }) => {
+    const formattedDate = new Date(date).toLocaleDateString();
+    dateMap.set(formattedDate, (dateMap.get(formattedDate) || 0) + value);
   });
 
-  oldDates.forEach((oldData) => {
-    const dateExists = newDates.some(
-      (newData) =>
-        new Date(oldData.date).toLocaleDateString() ===
-        new Date(newData.date).toLocaleDateString()
-    );
-
-    if (!dateExists) {
-      mergedDates.push({ ...oldData });
-    }
-  });
-
-  return mergedDates;
+  return Array.from(dateMap, ([date, value]) => ({ date, value }));
 };
 
-module.exports = saveInventory;
+export default saveInventory;
