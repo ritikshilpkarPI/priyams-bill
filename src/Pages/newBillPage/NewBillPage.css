@@ -1,0 +1,46 @@
+@media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    .new-bill-page,
+    .new-bill-page * {
+        visibility: visible;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .new-bill-page h2,
+    .new-bill-page .mantine-Title-root {
+        display: none !important; 
+    }
+   
+    .items-payments-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .new-bill-page {
+        width: 60mm;
+        margin: 0 auto;
+        font-size: 12px;
+    }
+
+    
+    .shop-details p {
+        margin-bottom: 5px !important;
+    }
+
+    .savings {
+        margin-top: 15px !important; 
+        border: 2px dashed black;
+        padding: 5px;
+        font-weight: bold;
+        margin-bottom: 20px !important
+    }
+    .barcode {
+        text-align: center;
+        margin: 10px 0;
+    }
+    
+}
