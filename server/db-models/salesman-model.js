@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const SalesmanSchema = new Schema<SalesmanSchemaInterface>(
+const SalesmanSchema = new Schema(
   {
     salesmanName: {
       type: String,
