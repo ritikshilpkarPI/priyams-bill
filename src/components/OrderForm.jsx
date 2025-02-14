@@ -91,6 +91,16 @@ const OrderForm = ({
     getItemsSku();
   }, [])
 
+  useEffect(() => {
+    if(form.values.item_id && form.values.sku !== newItemSku) {
+      form.setValues((prev) => ({
+        ...prev,
+        item_id: null,
+        sku: null
+      }))
+    }
+  }, [newItemSku]);
+
   const func1 = () => {
     setOpenDrawer(true);
   };
@@ -262,7 +272,7 @@ const OrderForm = ({
               }}
               {...form.getInputProps('inputName')}
             />
-            {isSkuAlreadyExists && (
+            {!form.values.item_id && isSkuAlreadyExists && (
               <Alert color="red" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <IconExclamationCircle size={20} color="red" style={{ marginRight: '10px' }} />

@@ -373,6 +373,7 @@ const usePurchaseOrder = (history) => {
       slabPrice: item?.slabPricing,
       item_id: String(item._id),
       unit: item?.quantityUnitName,
+      sku: item?.sku
     }));
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
@@ -393,6 +394,7 @@ const usePurchaseOrder = (history) => {
         slabPrice: item?.slabPricing,
         item_id: String(item?._id),
         unit: item?.quantityUnitName,
+        sku: item?.sku
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
@@ -653,6 +655,8 @@ const usePurchaseOrder = (history) => {
           slabPrice: item?.slabPricing,
           item_id: String(item?._id),
           unit: item?.quantityUnitName,
+          itemQuantity: item?.itemPerUnitQuantity,
+          sku: item?.sku
         }))
         setItemLoading(false);
       })();
