@@ -84,6 +84,7 @@ import createRzpQRByAmount from './createRzpQRByAmount';
 import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
 import getItemsSellDetailsByItemId from "./getItemsSellDetailsByItemId";
+import { getItemsSku } from "./getItemsSku";
 
 export {
   getStaff,
@@ -172,4 +173,5 @@ export {
   assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSellDetailsByItemId,
+  getItemsSku
 };

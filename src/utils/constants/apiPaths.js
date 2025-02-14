@@ -111,5 +111,8 @@ export const API_PATHS = {
   },
   RIDER:{
     GET_ALL_RIDERS: "/api/riders"
+  },
+  ITEMS: {
+    GET_ITEMS_SKU: "/api/items/sku"
   }
 };

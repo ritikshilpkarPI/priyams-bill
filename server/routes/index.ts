@@ -88,7 +88,8 @@ const {
   createRzpQRByAmount,
   assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId,
-  getItemsSellDetailsByItemId
+  getItemsSellDetailsByItemId,
+  getItemsSku
 } = require('../controllers/index');
 
 
@@ -377,5 +378,7 @@ router.post(
   assignOrderToRider
 );
 
+
+router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, getItemsSku);
 
 export default router;
