@@ -28,7 +28,9 @@ import { setItemsData } from '../redux/items/itemsSlice';
 import { useSelector } from 'react-redux';
 import { selectItemsSkuList } from '../redux/items/itemsSelector';
 import { getItemSKU } from "../utils/getItemSKU";
-import { IconExclamationCircle } from '@tabler/icons-react';
+import { IconExclamationCircle, IconEdit } from '@tabler/icons-react';
+import { v4 as uuidv4 } from 'uuid';
+
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -74,7 +76,7 @@ const OrderForm = ({
     packetUnit: form.values.unit
   }), [form.values]);
 
-  const isSkuAlreadyExists = useMemo(() => itemSkuList.find(itemSku => itemSku === newItemSku), [newItemSku]);
+  const isSkuAlreadyExists = useMemo(() => itemSkuList?.find(itemSku => itemSku === newItemSku), [newItemSku]);
   const [imageSearch, setImageSearch] = useState(form.values.inputName);
 
   const getItemsSku = async () => {
@@ -99,11 +101,13 @@ const OrderForm = ({
     setImageSearch(form.values.inputName)
   }, [form.values.inputName])
 
-
   useEffect(() => {
     getItemsSku();
   }, [])
 
+  const generateBarcode = () => {
+    form.setValues(prev => ({ ...prev, barcode: `PSTORES_${Date.now().toString().slice(-10)}${uuidv4()}` }))
+  }
 
   const func1 = () => {
     setOpenDrawer(true);
@@ -227,6 +231,9 @@ const OrderForm = ({
               }}
               {...form.getInputProps('barcode')}
               onChange={(e) => onSkuChange("barcode", e.target.value)}
+              rightSection={!form.values.barcode && <>
+               <IconEdit onClick={()=> generateBarcode()} cursor="pointer" size={20} color="#228be6" />
+              </>}
             />
             <NumberInput
               withAsterisk={form.values.validate}
