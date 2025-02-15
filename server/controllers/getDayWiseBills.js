@@ -5,7 +5,7 @@ const getDayWiseBills = async (req, res, next) => {
     // Calculate the start date for the last 5 days
     const today = new Date();
     const fiveDaysAgo = new Date(today);
-    fiveDaysAgo.setDate(today.getDate() - 5);
+    fiveDaysAgo.setDate(today.getDate() - 20);
 
     const allDailyBills = await Bill.aggregate(
       [
