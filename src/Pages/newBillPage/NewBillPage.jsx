@@ -17,6 +17,7 @@ import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
 import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
+import { ReactBarcode } from 'react-jsbarcode';
 
 
 const NewBillPage = () => {
@@ -140,6 +141,18 @@ const NewBillPage = () => {
               onSubmit={handlePaymentSubmit}
               isLoading={isSubmitting}
             />
+            {billState.billId && (
+              <div className="barcode-container">
+                <ReactBarcode
+                  value={billState.billId}
+                  options={{
+                    height: 40,
+                    width: 1.1,
+                    margin: 0,
+                  }}
+                />
+              </div>
+            )}
           </Grid.Col>
           {totalSaveOnBill > 0 && (
             <p className="savings-print-only">

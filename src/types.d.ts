@@ -45,7 +45,6 @@ declare global {
     timePeriod: string; 
     data: soldItemsByDateInterface[];
   }
-
   interface ItemSoldPurchaseOrder {
     orderSequence: string;
     approvalDate: string;
@@ -60,7 +59,6 @@ declare global {
     itemMRP: number;
     soldAfterApproval: number;
     intervals: IntervalInterface[];
-    lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastMonthSold?: number;
     lastThreeMonthSold?: soldItemsByDateInterface[];
@@ -124,6 +122,22 @@ declare global {
     packetQty: number;
     unit: string;
     barcode: string;
+  }
+
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
+  }
+
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
   }
 
   type itemsByBarcode = string[] | any

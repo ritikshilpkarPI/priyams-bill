@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { getItemSKU } = require('../util/getItemSKU');
 const inventoryItemCategory = [
   'Bakery',
   'Beverage',
@@ -22,7 +23,8 @@ const inventoryItemCategory = [
 const ItemSchema = new mongoose.Schema(
   {
     itemName: { type: String, required: true, trim: true },
-    itemBarcode: { type: Number },
+    itemBarcode: { type: String },
+    sku: { type: String },
     itemStockQuantity: { type: Number, default: 0 },
     minimumStockQuantity: { type: Number, default: 1 },
     itemMRPperUnit: { type: Number, required: true, default: 0 },
@@ -44,7 +46,7 @@ const ItemSchema = new mongoose.Schema(
     slabPricing: { type: Array },
     minStockReached: { type: Boolean, default: false },
     itemBrandName: { type: String },
-    itemCategory: { type: String, enum: inventoryItemCategory },
+    itemCategory: { type: String },
     useByDate: [
       {
         date: {
@@ -60,13 +62,53 @@ const ItemSchema = new mongoose.Schema(
     itemPerUnitQuantity: { type: Number, default: 0 },
     images: [
       {
-        public_id: { type: String, required: true, unique: true },
-        secure_url: { type: String, required: true, unique: true }
+        public_id: { type: String, required: true },
+        secure_url: { type: String, required: true }
       },
-    ]
+    ],
+    companyName: { type: String, trim: true },
+    subCategory: { type: String },
+    flavourOrFeature: { type: String, trim: true }, 
+    shelfLife: { type: String }, 
+    expiryDates: [
+      {
+        date: {
+          type: Date,
+        },
+        value: {
+          type: Number,
+        },
+        mfgDate: {
+          type: Date,
+        },
+        isShelfExpired: { 
+          type: Boolean
+        }
+      },
+    ],
+    saleTime: { type: String }, 
+    returnPolicyAvailable: {
+      type: Boolean,
+      default: false,
+    },
+    returnPolicyRemarks: { type: String }, 
+    freeItemsAvailable: { type: Boolean, default: false },
   },
   { strict: false, timestamps: true }
 );
 
 const Item = mongoose.model('Item', ItemSchema);
+
+ItemSchema.pre("save", function (next) {
+  const itemData = this;
+  itemData.sku = getItemSKU(itemData);
+  next();
+});
+
+ItemSchema.pre("findOneAndUpdate", function (next) {
+  const itemData = this;
+  itemData.sku = getItemSKU(itemData);
+  next();
+});
+
 module.exports = { Item, inventoryItemCategory, ItemSchema };

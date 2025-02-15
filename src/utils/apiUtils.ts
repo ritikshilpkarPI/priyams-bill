@@ -61,4 +61,15 @@ export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
   } catch (error) {
     return { isError: true, error };
   }
-}; 
+};
+
+export const getItemsSkuAPI = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.ITEMS.GET_ITEMS_SKU
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
