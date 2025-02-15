@@ -5,7 +5,8 @@ export const genericAxios = async ({
   method = 'get',
   data = {},
   headers = {
-    Cookie: '',
+    'Content-Type': 'application/json',
+    Cookie: 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNDZjZjFiOTgzZTg1YmZiOTNlNTg4ZCIsIm5hbWUiOiJUZXN0IEFkbWluIiwicm9sZSI6ImFkbWluIiwidXNlcm5hbWUiOiJ0ZXN0X2FkbWluIiwiaWF0IjoxNzM5NTk2NTU2LCJleHAiOjE3NDIxODg1NTZ9.9mOY7RXYioi-9zmVyZZM6ZQxOfwL0J0K7XT6n74NkLs',
   },
 }) => {
   try {
@@ -14,7 +15,10 @@ export const genericAxios = async ({
       params,
       method,
       data,
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNDZjZjFiOTgzZTg1YmZiOTNlNTg4ZCIsIm5hbWUiOiJUZXN0IEFkbWluIiwicm9sZSI6ImFkbWluIiwidXNlcm5hbWUiOiJ0ZXN0X2FkbWluIiwiaWF0IjoxNzM5NTk2NTU2LCJleHAiOjE3NDIxODg1NTZ9.9mOY7RXYioi-9zmVyZZM6ZQxOfwL0J0K7XT6n74NkLs'
+      },
       withCredentials: true,
     });
     return result;

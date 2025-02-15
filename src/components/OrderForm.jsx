@@ -34,7 +34,6 @@ import { getItemSKU } from "../utils/getItemSKU";
 import { IconExclamationCircle, IconEdit } from '@tabler/icons-react';
 
 import { isShelfExpired } from '../utils/isShelfExpired';
-import { getItemNameByItem } from '../utils/getItemNameByItem';
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -333,7 +332,6 @@ const OrderForm = ({
     ]
   };
 
-  const itemName = getItemNameByItem(form.values);
 
   return (
     <Drawer
@@ -468,8 +466,6 @@ const OrderForm = ({
               }}
               {...form.getInputProps('inputName')}
               onChange={(e) => onSkuChange("inputName", e.target.value)}
-              value={itemName}
-              disabled
             />
             <TextInput
               withAsterisk={form.values.validate}

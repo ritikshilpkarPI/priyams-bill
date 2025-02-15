@@ -1,8 +1,8 @@
 const { uploadImages } = require('../util/image');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { clodinaryFoldersPath } = require('../util/constant');
-const { getItemNameByItem } = require('../util/getItemNameByItem');
 const { isShelfExpired } = require('../util/isShelfExpired');
+const { getItemSKU } = require('../util/getItemSKU');
 
 const addOrder = async (req, res,next) => {
     try {
@@ -25,7 +25,7 @@ const addOrder = async (req, res,next) => {
 
       if(orders && orders.length){
         orders.forEach((order => {
-          order.inputName = getItemNameByItem(order);
+          order.sku = getItemSKU(order);
           if(order.expiryDates) {
             order.expiryDates.forEach(expiryDates => {
               order.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
