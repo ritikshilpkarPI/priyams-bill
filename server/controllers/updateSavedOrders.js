@@ -1,12 +1,12 @@
-const { getItemNameByItem } = require('../util/getItemNameByItem');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { isShelfExpired } = require('../util/isShelfExpired');
+const { getItemSKU } = require('../util/getItemSKU');
 
 const updateSavedOrders = async (req, res, next) => {
   try {
     const id = req.params.id;
     const { new_order } = req.body;
-    const itemName = getItemNameByItem(new_order);
+    const itemSKU = getItemSKU(new_order);
     let updatedExpiryDates = new_order.expiryDates;
     if(new_order.expiryDates) {
       updatedExpiryDates = new_order.expiryDates.map(expiryDates => ({
@@ -18,8 +18,8 @@ const updateSavedOrders = async (req, res, next) => {
     const updatedOrder = await purchaseOrder.updateOne({
       purchasedItems: [...purchaseOrder.purchasedItems, {
         ...new_order,
-        inputName: itemName,
-        expiryDates: updatedExpiryDates
+        expiryDates: updatedExpiryDates,
+        sku: itemSKU
       }],
     });
     res.status(200).send({

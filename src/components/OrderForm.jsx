@@ -20,7 +20,7 @@ import {
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import MyDatePicker from './DatePicker';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_METHODS } from '../utils/constants/apiMethods';
@@ -31,10 +31,9 @@ import { setItemsData } from '../redux/items/itemsSlice';
 import { useSelector } from 'react-redux';
 import { selectItemsSkuList } from '../redux/items/itemsSelector';
 import { getItemSKU } from "../utils/getItemSKU";
-import { IconExclamationCircle, IconEdit } from '@tabler/icons-react';
+import { IconExclamationCircle, IconEdit, IconCheck } from '@tabler/icons-react';
 
 import { isShelfExpired } from '../utils/isShelfExpired';
-import { getItemNameByItem } from '../utils/getItemNameByItem';
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -82,6 +81,7 @@ const OrderForm = ({
   }), [form.values]);
 
   const isSkuAlreadyExists = useMemo(() => itemSkuList?.find(itemSku => itemSku === newItemSku), [newItemSku]);
+  const isNewItemHaveSameSKU = !form.values.item_id && isSkuAlreadyExists;
   const [imageSearch, setImageSearch] = useState(form.values.inputName);
 
   const getItemsSku = async () => {
@@ -111,7 +111,9 @@ const OrderForm = ({
   }, [])
 
   const generateBarcode = () => {
-    form.setValues(prev => ({ ...prev, barcode: `PSTR_${Date.now().toString().slice(-10)}` }))
+    formOldValuesRef.current = { ...form.values };
+    form.setValues(prev => ({ ...prev, barcode: `PSTR_${Date.now().toString().slice(-10)}` }));
+    setShowNewItemModal(true);
   }
 
   const func1 = () => {
@@ -333,7 +335,6 @@ const OrderForm = ({
     ]
   };
 
-  const itemName = getItemNameByItem(form.values);
 
   return (
     <Drawer
@@ -397,14 +398,15 @@ const OrderForm = ({
                 </div>
               </div>
           </Group>
-          <Divider my="xs" label="Add Item Details" labelPosition="center" />
+          <Divider my="xs" label="Add SKU Details" labelPosition="center" />
           <Group className="order-flex-class">
             
             <TextInput
-              withAsterisk={form.values.validate}
               // wrapperProps=""
               label="Barcode"
               className="form-input-tops"
+              required
+              withAsterisk
               placeholder="barcode"
               onSelect={() => {
                 func1();
@@ -417,20 +419,20 @@ const OrderForm = ({
               </>}
             />
             <NumberInput
-              withAsterisk={form.values.validate}
+              withAsterisk
               label="M.R.P"
               style={{ width: '15vmin' }}
-              required={form.values.validate}
+              required
               placeholder="mrp"
               precision={2}
               {...form.getInputProps('mrp')}
               onChange={(value) => onSkuChange("mrp", value)}
             />
             <NumberInput
-              withAsterisk={form.values.validate}
+              withAsterisk
               label="Pkt. Amt."
               className="form-input-tops"
-              required={form.values.validate}
+              required
               placeholder="amount in 1 pack"
               {...form.getInputProps('itemQuantity')}
               onChange={(value) => onSkuChange("itemQuantity", value)}
@@ -439,6 +441,8 @@ const OrderForm = ({
               label="unit"
               className="form-input-tops"
               placeholder="pick one"
+              required
+              withAsterisk
               data={[
                 { value: 'grams', label: 'grams' },
                 { value: 'kg', label: 'kg' },
@@ -461,16 +465,40 @@ const OrderForm = ({
               label="Item Name"
               className="form-input-tops"
               required
+              withAsterisk
               placeholder="item name"
               onClick={(e) => {
                 func1();
                 func3();
               }}
               {...form.getInputProps('inputName')}
-              onChange={(e) => onSkuChange("inputName", e.target.value)}
-              value={itemName}
-              disabled
+              onChange={(e) => onSkuChange("inputName", e.target.value.toUpperCase().replace(/[^A-Z]/g, ""))}
             />
+              {
+                form.values.barcode && form.values.inputName && (<Alert color={isNewItemHaveSameSKU ? "red" : "green"} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  { 
+                   isNewItemHaveSameSKU 
+                   ? <React.Fragment>
+                      <IconExclamationCircle size={20} color="red" style={{ marginRight: '10px' }} />
+                      Item already exists with the same SKU
+                   </React.Fragment>
+                   : <React.Fragment>
+                    <IconCheck
+                     size={20} color="green" style={{ marginRight: '10px' }} 
+                    />
+                    Item SKU is new.
+                   </React.Fragment>
+                  }
+                </div>
+                <div style={{ marginTop: '10px', fontSize: '14px', color: isNewItemHaveSameSKU ? '#b50000' : "green" }}>
+                 {newItemSku}
+                </div>
+              </Alert>)
+              }
+          </Group>
+          <Divider my="xs" label="Add Item Details" labelPosition="center" />
+            <Group>
             <TextInput
               withAsterisk={form.values.validate}
               label="Company Name"
@@ -797,7 +825,7 @@ const OrderForm = ({
           />
 
           <Group position="right" mt="md">
-            <Button disabled={!form.values.item_id && isSkuAlreadyExists} type="submit">Submit</Button>
+            <Button disabled={isNewItemHaveSameSKU} type="submit">Submit</Button>
           </Group>
         </form>
       </Box>
