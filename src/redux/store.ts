@@ -2,11 +2,13 @@ import userSlice from './user/userSlice';
 import { configureStore } from '@reduxjs/toolkit';
 import billReducer from './bill/billSlice';
 import allItemsFeedDataSlice from './allItemsFeedData/allItemsFeedDataSlice'
+import itemsSlice from './items/itemsSlice';
 export const store = configureStore({
   reducer: {
     user: userSlice,
     bill: billReducer,
-    allItemsFeedData: allItemsFeedDataSlice
+    allItemsFeedData: allItemsFeedDataSlice,
+    items: itemsSlice
   },
 });
 

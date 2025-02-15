@@ -124,6 +124,22 @@ declare global {
     barcode: string;
   }
 
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
+  }
+
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
+  }
+
   type itemsByBarcode = string[] | any
   interface IntervalPropInterface {
     startDate: string;

@@ -1,5 +1,6 @@
 const { getItemNameByItem } = require('../util/getItemNameByItem');
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const { getItemSKU } = require('../util/getItemSKU');
 const { isShelfExpired } = require('../util/isShelfExpired');
 
 const saveOrder = async (req, res ) => {
@@ -11,6 +12,7 @@ const saveOrder = async (req, res ) => {
         expiryDates.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
       })
     }
+    new_order.sku = getItemSKU(new_order);
     const purchaseOrder = await PurchaseOrder.create({
       purchasedItems: [{
         ...new_order,
