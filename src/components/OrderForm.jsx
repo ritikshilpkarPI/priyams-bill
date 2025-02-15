@@ -472,7 +472,7 @@ const OrderForm = ({
                 func3();
               }}
               {...form.getInputProps('inputName')}
-              onChange={(e) => onSkuChange("inputName", e.target.value)}
+              onChange={(e) => onSkuChange("inputName", e.target.value.toUpperCase().replace(/[^A-Z]/g, ""))}
             />
               {
                 form.values.barcode && form.values.inputName && (<Alert color={isNewItemHaveSameSKU ? "red" : "green"} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
