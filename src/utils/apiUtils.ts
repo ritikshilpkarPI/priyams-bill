@@ -17,7 +17,6 @@ export const getBillingLeanItemsAPI = async () => {
     const response = await getAPI({
       path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
     });
-    
     return response.message;
   } catch (err) {
     return { isError: true, err };
@@ -61,4 +60,15 @@ export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
   } catch (error) {
     return { isError: true, error };
   }
-}; 
+};
+
+export const getItemsSkuAPI = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.ITEMS.GET_ITEMS_SKU
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}

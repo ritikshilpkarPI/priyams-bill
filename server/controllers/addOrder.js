@@ -1,6 +1,8 @@
 const { uploadImages } = require('../util/image');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { clodinaryFoldersPath } = require('../util/constant');
+const { isShelfExpired } = require('../util/isShelfExpired');
+const { getItemSKU } = require('../util/getItemSKU');
 
 const addOrder = async (req, res,next) => {
     try {
@@ -20,6 +22,17 @@ const addOrder = async (req, res,next) => {
       const isDraft = req.body.new_order.isDraft;
   
       let billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
+
+      if(orders && orders.length){
+        orders.forEach((order => {
+          order.sku = getItemSKU(order);
+          if(order.expiryDates) {
+            order.expiryDates.forEach(expiryDates => {
+              order.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
+            })
+          }
+        }))
+      }
   
       const purchaseOrder = {
         purchasedItems: [...orders],

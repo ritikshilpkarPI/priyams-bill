@@ -1,12 +1,13 @@
+const { findBillBySlug } = require('../util/findBillBySlug');
 const { Bill, ReturnBill } = require('../db-models');
 
 const getBillForReturnExchange = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    let bill = await findBillById(id);
+    const slug = req.params.id;
+    let bill = await findBillBySlug(slug);
 
     if (!bill) {
-      const returnBill = await ReturnBill.findById(id);
+      const returnBill = await ReturnBill.findOne({slug});
       if (!returnBill) {
         res.status(400).json({ message: 'Bill not found' });
         return;

@@ -1,6 +1,7 @@
-import mongoose, { Schema } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const DealerSchema = new Schema<DealerSchemaInterface>(
+const DealerSchema = new Schema(
   {
     dealerName: {
       type: String,
@@ -17,16 +18,15 @@ const DealerSchema = new Schema<DealerSchemaInterface>(
         updatedAt: { type: Date, default: Date.now },
       },
     ],
-    dealerVisitingCard: {
-      publicId: { type: String },
-      secureUrl: { type: String },
-    },
+    dealerVisitingCard: [
+      { publicId: { type: String }, secureUrl: { type: String } },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-const Dealer = mongoose.model<DealerModelInterface>('Dealer', DealerSchema);
+const Dealer = mongoose.model('Dealer', DealerSchema);
 
 module.exports = { Dealer };
