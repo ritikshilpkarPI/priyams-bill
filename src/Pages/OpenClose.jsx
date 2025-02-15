@@ -141,123 +141,69 @@ const OpenClose = () => {
     setClosingNotes(INITIAL_VALS);
     setClosingCoin(INITIAL_VALS);
 
-    procedure.forEach((procedureObj) => {
-      let date = procedureObj.createdAt;
-      createdAtDate = date?.split('T')[0];
+    dayWiseProcedures.forEach((procedureObj) => {
+      let date = procedureObj._id;
 
-      if (selectedDate === createdAtDate && procedureObj.procedure === 'open') {
-        setOpeningNotes(procedureObj.notes);
-        setOpeningCoin(procedureObj.coins);
-      }
-      if (
-        selectedDate === createdAtDate &&
-        procedureObj.procedure === 'close'
-      ) {
-        setClosingNotes(procedureObj.notes);
-        setClosingCoin(procedureObj.coins);
-        setUpiSum(procedureObj?.upiSum ?? 0);
+      if (selectedDate === date ) {
+
+        setOpeningNotes( procedureObj?.openingNotes );
+        setOpeningCoin( procedureObj?.openingCoins);
+
+        setClosingNotes(procedureObj?.closingNotes );
+        setClosingCoin(procedureObj?.closingCoins );
+        setUpiSum(procedureObj?.closingUpiSum ?? 0);
       }
     });
-  }, [procedure, currentDate, selectedDate]);
-
-  let selectedProcedureDate = '';
-
-  const addNewOpenProcedure = async () => {
+  }, [dayWiseProcedures, currentDate, selectedDate]);
+  const findSelectedProcedureDate = () => 
+    dayWiseProcedures.find(procedureObj => selectedDate === procedureObj._id)?._id || '';
+  
+  const handleProcedure = async () => {
     setApiLoading(true);
-    id = '';
-    procedure.forEach((procedureObj) => {
-      let date = procedureObj.createdAt;
-      createdAtDate = date?.split('T')[0];
-      if (selectedDate === createdAtDate && procedureObj.procedure === 'open') {
-        id = procedureObj._id;
-        selectedProcedureDate = createdAtDate;
+  
+    const selectedProcedureDate = findSelectedProcedureDate();
+    const isNewProcedure = selectedProcedureDate !== currentDate && selectedDate === currentDate;
+  
+    const API_PATHS_MAP = {
+      open: {
+        post: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
+        put: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN
+      },
+      close: {
+        post: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE,
+        put: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE
       }
-    });
-    let procedureToEdit = procedure?.find((x) => x._id === id);
-    if (
-      createdAtDate !== currentDate ||
-      (id === '' && selectedDate === currentDate)
-    ) {
-      const newOpenProcedure = await genericAxios({
-        url: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
-        method: API_METHODS.POST,
-        data: { ...finalProcedureData },
-        headers: {
-          Cookie: '',
-        },
+    };
+  
+    const { post, put } = API_PATHS_MAP[procedureValue];
+  console.log({selectedProcedureDate, procedureValue});
+  
+    if (isNewProcedure) {
+      const response = await genericAxios({ 
+        url: post, 
+        method: API_METHODS.POST, 
+        data: { ...finalProcedureData }, 
+        headers: { Cookie: '' } 
       });
-      if (newOpenProcedure.error) return;
-      let dateFromDb = newOpenProcedure.data.message.createdAt;
-      createdAtDate = dateFromDb?.split('T')[0];
-      id = newOpenProcedure.data.message._id;
-    } else if (
-      selectedDate === selectedProcedureDate &&
-      procedureToEdit.procedure === 'open'
-    ) {
-      await genericAxios({
-        url: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN,
-        method: API_METHODS.PUT,
-        data: { id, procedureToBeUpdated: { ...finalProcedureData } },
-        headers: {
-          Cookie: '',
-        },
+  
+      if (response?.error) {
+        setApiLoading(false);
+        return;
+      }
+    } else if (selectedDate === selectedProcedureDate) {
+
+      await genericAxios({ 
+        url: put, 
+        method: API_METHODS.PUT, 
+        data: { date: selectedDate, procedureType: procedureValue, procedureToBeUpdated: { ...finalProcedureData } }, 
+        headers: { Cookie: '' } 
       });
     }
-
-    await getAllProcedure();
+  
     await getDayWiseProcedure();
     setApiLoading(false);
   };
-
-  const addNewCloseProcedure = async () => {
-    setApiLoading(true);
-    id = '';
-    procedure.forEach((procedureObj) => {
-      let date = procedureObj.createdAt;
-      createdAtDate = date?.split('T')[0];
-      if (
-        selectedDate === createdAtDate &&
-        procedureObj.procedure === 'close'
-      ) {
-        id = procedureObj._id;
-        selectedProcedureDate = createdAtDate;
-      }
-    });
-    let procedureToEdit = procedure.find((x) => x._id === id);
-    if (
-      createdAtDate !== currentDate ||
-      (id === '' && selectedDate === currentDate)
-    ) {
-      const newCloseProcedure = await genericAxios({
-        url: API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE,
-        method: API_METHODS.POST,
-        data: { ...finalProcedureData },
-        headers: {
-          Cookie: '',
-        },
-      });
-      if (newCloseProcedure.error) return;
-      let dateFromDb = newCloseProcedure.data.message.createdAt;
-      createdAtDate = dateFromDb?.split('T')[0];
-      id = newCloseProcedure.data.message._id;
-    } else if (
-      selectedDate === selectedProcedureDate &&
-      procedureToEdit?.procedure === 'close'
-    ) {
-      await genericAxios({
-        url: API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE,
-        method: API_METHODS.PUT,
-        data: { id, procedureToBeUpdated: { ...finalProcedureData } },
-        headers: {
-          Cookie: '',
-        },
-      });
-    }
-    await getAllProcedure();
-    await getDayWiseProcedure();
-    setApiLoading(false);
-  };
-
+  
   useEffect(() => {
     if (!expenseList.length) {
       const getAllData = async () => {
@@ -514,11 +460,7 @@ const OpenClose = () => {
             <Button
               loading={apiLoading}
               style={{ width: '100px', marginTop: '5px' }}
-              onClick={
-                procedureValue === 'open'
-                  ? addNewOpenProcedure
-                  : addNewCloseProcedure
-              }
+              onClick={handleProcedure}
             >
               Save
             </Button>
