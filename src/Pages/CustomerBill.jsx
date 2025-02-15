@@ -4,6 +4,7 @@ import { Button, Group, Table, Text, Title } from '@mantine/core';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
+import { ReactBarcode } from 'react-jsbarcode';
 
 const options = {
   weekday: 'long',
@@ -174,6 +175,17 @@ const CustomerBill = () => {
             </tr>
           </tbody>
         </Table>
+        <div className="showbill-barcode">
+          <ReactBarcode
+            value={bill.slug}
+            options={{
+              height: 40,
+              width: 0.8,
+              margin: 0,
+              fontSize: 14,
+            }}
+          />
+        </div>
       </div>
       <footer className="footer">
         <Title>ThankYou for purchasing from priyam stores. </Title>
