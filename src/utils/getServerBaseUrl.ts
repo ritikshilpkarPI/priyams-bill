@@ -1,4 +1,4 @@
 import { APP_ENVIRONMENT } from "./constants/appEnvironment";
 import { CLIENT_ENVIRONMENT } from "./constants/clientEnvironment";
 
-export const getServerBaseUrl = () => CLIENT_ENVIRONMENT.REACT_APP_ENV === APP_ENVIRONMENT.PRODUCTION ? "/.netlify/functions/server" : "https://pstore-bill-dev-staging.netlify.app/.netlify/functions/server";
+export const getServerBaseUrl = () => CLIENT_ENVIRONMENT.REACT_APP_ENV === APP_ENVIRONMENT.PRODUCTION ? "/.netlify/functions/server" : "http://localhost:3001";
