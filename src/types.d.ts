@@ -39,7 +39,12 @@ declare global {
     width: number;
     height: number;
   }
-
+  interface IntervalInterface {
+    startDate: string;
+    endDate: string;
+    timePeriod: string; 
+    data: soldItemsByDateInterface[];
+  }
   interface ItemSoldPurchaseOrder {
     orderSequence: string;
     approvalDate: string;
@@ -49,11 +54,11 @@ declare global {
   }
 
   interface ItemSoldInterface {
+    itemId: string;
     itemName: string;
     itemMRP: number;
     soldAfterApproval: number;
-    totalItemsSoldInInterval: number;
-    soldItemsByDate: soldItemsByDateInterface[];
+    intervals: IntervalInterface[];
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastMonthSold?: number;
     lastThreeMonthSold?: soldItemsByDateInterface[];
@@ -62,6 +67,9 @@ declare global {
 
   interface SellDetailsTableProps {
     tableData: ItemSoldInterface[];
+    currentDate?: string;
+    lastThreeMonthDate?: string;
+    lastYearDate?: string;
   }
 
   interface CategorySchemaType {
@@ -114,6 +122,22 @@ declare global {
     packetQty: number;
     unit: string;
     barcode: string;
+  }
+
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
+  }
+
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
   }
 
   type itemsByBarcode = string[] | any
