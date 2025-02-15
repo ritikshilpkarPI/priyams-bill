@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import './CreatePurchaseOrderPage.css';
 import { Text } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 import {
