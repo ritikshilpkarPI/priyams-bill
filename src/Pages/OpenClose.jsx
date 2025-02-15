@@ -103,20 +103,7 @@ const OpenClose = () => {
     coins: procedureValue === 'open' ? { ...openingCoin } : { ...closingCoin },
     upiSum: upiSum ?? 0,
   };
-
-  const getAllProcedure = async () => {
-    const allProcedures = await genericAxios({
-      url: API_PATHS.OPENCLOSE.GET_ALL_PROCEDURE,
-      method: API_METHODS.GET,
-      headers: {
-        Cookie: '',
-      },
-    });
-    if (allProcedures.error) return;
-    const { procedures } = allProcedures.data.message;
-    setProcedure(procedures);
-  };
-
+  
   const getDayWiseProcedure = async () => {
     const allDayWiseProcedures = await genericAxios({
       url: API_PATHS.OPENCLOSE.GET_DAY_WISE_PROCEDURE,
@@ -131,7 +118,6 @@ const OpenClose = () => {
   };
 
   useEffect(() => {
-    getAllProcedure();
     getDayWiseProcedure();
   }, [setProcedure, procedureValue, setDayWiseProcedures]);
 
@@ -176,7 +162,6 @@ const OpenClose = () => {
     };
   
     const { post, put } = API_PATHS_MAP[procedureValue];
-  console.log({selectedProcedureDate, procedureValue});
   
     if (isNewProcedure) {
       const response = await genericAxios({ 
