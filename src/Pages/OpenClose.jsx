@@ -134,21 +134,22 @@ const OpenClose = () => {
 
         setOpeningNotes( procedureObj?.openingNotes );
         setOpeningCoin( procedureObj?.openingCoins);
-
-        setClosingNotes(procedureObj?.closingNotes );
-        setClosingCoin(procedureObj?.closingCoins );
+        if(procedureObj.closingTime !==0 ){
+          setClosingNotes(procedureObj?.closingNotes );
+          setClosingCoin(procedureObj?.closingCoins );
+        }
         setUpiSum(procedureObj?.closingUpiSum ?? 0);
       }
     });
-  }, [dayWiseProcedures, currentDate, selectedDate]);
-  const findSelectedProcedureDate = () => 
-    dayWiseProcedures.find(procedureObj => selectedDate === procedureObj._id)?._id || '';
+  }, [dayWiseProcedures, currentDate, selectedDate, procedureValue ]);
+  const findProcedureByDate = () => 
+    dayWiseProcedures.find(procedure => selectedDate === procedure._id) || null;
   
   const handleProcedure = async () => {
     setApiLoading(true);
-  
-    const selectedProcedureDate = findSelectedProcedureDate();
-    const isNewProcedure = selectedProcedureDate !== currentDate && selectedDate === currentDate;
+    const procedure = findProcedureByDate();
+    const selectedProcedureDate = procedure?._id;
+    const isNewProcedure = ((selectedProcedureDate !== currentDate || procedure.closingTime===0 ) && selectedDate === currentDate);
   
     const API_PATHS_MAP = {
       open: {
