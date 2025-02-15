@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { getItemSKU } = require('../util/getItemSKU');
 const inventoryItemCategory = [
   'Bakery',
   'Beverage',
@@ -22,7 +23,8 @@ const inventoryItemCategory = [
 const ItemSchema = new mongoose.Schema(
   {
     itemName: { type: String, required: true, trim: true },
-    itemBarcode: { type: Number },
+    itemBarcode: { type: String },
+    sku: { type: String },
     itemStockQuantity: { type: Number, default: 0 },
     minimumStockQuantity: { type: Number, default: 1 },
     itemMRPperUnit: { type: Number, required: true, default: 0 },
@@ -96,4 +98,17 @@ const ItemSchema = new mongoose.Schema(
 );
 
 const Item = mongoose.model('Item', ItemSchema);
+
+ItemSchema.pre("save", function (next) {
+  const itemData = this;
+  itemData.sku = getItemSKU(itemData);
+  next();
+});
+
+ItemSchema.pre("findOneAndUpdate", function (next) {
+  const itemData = this;
+  itemData.sku = getItemSKU(itemData);
+  next();
+});
+
 module.exports = { Item, inventoryItemCategory, ItemSchema };

@@ -69,7 +69,7 @@ const StoreRoutes = () => {
               path="/purchaseorder/:id"
               component={ItemListPurchaseOrderHistory}
             />
-            <Route exact path="/" component={Home} />
+            <Route exact path="/"  component={NewBillingPage} />
             <ProtectedComponent role={access.DAY_BILL_ROUTE}>
               <Route exact path="/dayBill" component={DayWiseBillFeed} />
             </ProtectedComponent>

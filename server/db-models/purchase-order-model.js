@@ -5,6 +5,7 @@ const purchaseOrderSchema = new mongoose.Schema({
     {
       barcode: String,
       inputName: String,
+      sku: String,
       stockQuantity: Number,
       minimumQuantity: Number,
       itemQuantity: Number,

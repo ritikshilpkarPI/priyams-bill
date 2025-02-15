@@ -5,6 +5,7 @@ import {
   Table,
 } from '@mantine/core';
 import './BillItems.css'
+import { roundNumber } from 'src/utils/roundNumber';
 
 export const BillItems = ({ items, onRemoveItem, bill, setBill }) => {
   const calculateItemPrice = (slabPricing, quantity, defaultPrice) => {
@@ -21,16 +22,14 @@ export const BillItems = ({ items, onRemoveItem, bill, setBill }) => {
 
   const handleQuantityChange = (item, idx, newQuantity) => {
     const updatedItems = [...bill.billItems];
-    const updatedItem = { ...updatedItems[idx] };
-
+    const updatedItem = { ...updatedItems[idx], itemDetail: { ...updatedItems[idx].itemDetail } }; 
+  
     updatedItem.itemQuantityInBill = newQuantity;
-
     updatedItem.itemDetail.itemSellingPricePerUnit = calculateItemPrice(
       updatedItem.itemDetail.slabPricing,
       newQuantity,
       updatedItem.itemDetail.itemSellingPricePerUnit
     );
-
     updatedItems[idx] = updatedItem;
     setBill({ ...bill, billItems: updatedItems });
   };
@@ -103,9 +102,7 @@ export const BillItems = ({ items, onRemoveItem, bill, setBill }) => {
                 )}
               </td>
               <td className='bill-body-tdata'>
-                {(
-                  item.itemQuantityInBill * item.itemDetail.itemSellingPricePerUnit
-                ).toFixed(2)}
+              {roundNumber(item.itemQuantityInBill * item.itemDetail.itemSellingPricePerUnit)}
               </td>
               <td className='bill-body-tdata'>
                 <Button

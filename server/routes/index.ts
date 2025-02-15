@@ -89,6 +89,7 @@ const {
   assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSellDetailsByItemId,
+  getItemsSku,
   createPurchaseOrderWithDealer,
 } = require('../controllers/index');
 
@@ -381,5 +382,7 @@ router.post(
   assignOrderToRider
 );
 
+
+router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, getItemsSku);
 
 export default router;

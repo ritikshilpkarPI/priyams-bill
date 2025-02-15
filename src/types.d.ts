@@ -1,5 +1,6 @@
 import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
+import { RefObject } from "react";
 
 declare global {
   export interface UserStateType {
@@ -123,6 +124,22 @@ declare global {
     barcode: string;
   }
 
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
+  }
+
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
+  }
+
   type itemsByBarcode = string[] | any
   interface StepInterface {
     label: string;
@@ -185,6 +202,14 @@ declare global {
   
   interface AllItemsFeedDataState {
     itemsFeedData: AllItemsFeedData;
+    itemsFeedAPILoading:boolean;
+  }
+  interface SidebarRefs {
+    inputElem: RefObject<HTMLInputElement>;
+    profile: RefObject<HTMLDivElement>;
+    mainContainer: RefObject<HTMLDivElement>;
+    sidebarElem: RefObject<HTMLDivElement>;
+    liItem: RefObject<HTMLDivElement[]>;
   }
 }
 declare module '*.scss' {

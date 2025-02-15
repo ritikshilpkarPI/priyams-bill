@@ -1,0 +1,1 @@
+export const selectItemsSkuList = (state: RootState) => state.items.itemsSkuList;

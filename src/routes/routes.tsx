@@ -67,7 +67,7 @@ export const router = createBrowserRouter(
         children: [
           {
             path: ROUTES.HOME,
-            element: <Home />,
+            element: <NewBillingPage />,
             index: true,
           },
           {

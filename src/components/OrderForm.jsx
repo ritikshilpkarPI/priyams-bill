@@ -9,22 +9,31 @@ import {
   Switch,
   Select,
   LoadingOverlay,
+  Alert,
+  Modal,
+  Flex,
   Autocomplete,
   Divider,
   Checkbox,
-  Alert,
 } from '@mantine/core';
 // import { DatePicker } from '@mantine/dates';
 import ListDropDownItem from './ListDropDownItem';
 import ShowSlabPricing from './ShowSlabPricing';
 import '../CSS/orderForm.css';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import MyDatePicker from './DatePicker';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from "../utils/constants/apiPaths"
+import { getItemsSkuAPI } from '../utils/apiUtils';
+import { useDispatch } from 'react-redux';
+import { setItemsData } from '../redux/items/itemsSlice';
+import { useSelector } from 'react-redux';
+import { selectItemsSkuList } from '../redux/items/itemsSelector';
+import { getItemSKU } from "../utils/getItemSKU";
+import { IconExclamationCircle, IconEdit, IconCheck } from '@tabler/icons-react';
+
 import { isShelfExpired } from '../utils/isShelfExpired';
-import { getItemNameByItem } from '../utils/getItemNameByItem';
 const OrderForm = ({
   openDrawer,
   expiryQuantity,
@@ -51,18 +60,61 @@ const OrderForm = ({
   itemLoading,
   isSearchByBarcode
 }) => {
+  const itemSkuList = useSelector(selectItemsSkuList);
+  const dispatch = useDispatch();
   const [imageList, setImageList] = useState([])
   const [selectedImage, setSelectedImage] = useState('')
   const [isSelected, setIsSelected] = useState(true)
   // const [toggle, setToggle] = useState(true);
   // const [toggle1, setToggle1] = useState(false);
+  const [showNewItemModal, setShowNewItemModal] = useState(false);
   // const [addImage, setAddImage] = useState(null)
   const imageInputRef = useRef(null);
+  const formOldValuesRef = useRef(null);
 
-  const [imageSearch, setImageSearch] = useState(form.values.inputName)
+  const newItemSku = useMemo(() => getItemSKU({
+    barcode: form.values.barcode?.toString()?.trim(),
+    itemName: form.values.inputName?.trim(),
+    mrp: form.values.mrp,
+    packetQty: form.values.itemQuantity,
+    packetUnit: form.values.unit
+  }), [form.values]);
+
+  const isSkuAlreadyExists = useMemo(() => itemSkuList?.find(itemSku => itemSku === newItemSku), [newItemSku]);
+  const isNewItemHaveSameSKU = !form.values.item_id && isSkuAlreadyExists;
+  const [imageSearch, setImageSearch] = useState(form.values.inputName);
+
+  const getItemsSku = async () => {
+    const response = await getItemsSkuAPI();
+
+    if(!response && response.isError) return;
+
+    dispatch(setItemsData({ itemsSkuList: response.itemsSku }));
+  }
+
+  const onSkuChange = (name, value) => {
+    formOldValuesRef.current = { ...form.values };
+    if(form.values.item_id){
+      setShowNewItemModal(true);
+    } 
+    form.setValues((values) => ({
+      ...values,
+      [name]: value
+    }))
+  }
   useEffect(() => {
     setImageSearch(form.values.inputName)
   }, [form.values.inputName])
+
+  useEffect(() => {
+    getItemsSku();
+  }, [])
+
+  const generateBarcode = () => {
+    formOldValuesRef.current = { ...form.values };
+    form.setValues(prev => ({ ...prev, barcode: `PSTR_${Date.now().toString().slice(-10)}` }));
+    setShowNewItemModal(true);
+  }
 
   const func1 = () => {
     setOpenDrawer(true);
@@ -283,7 +335,6 @@ const OrderForm = ({
     ]
   };
 
-  const itemName = getItemNameByItem(form.values);
 
   return (
     <Drawer
@@ -347,20 +398,61 @@ const OrderForm = ({
                 </div>
               </div>
           </Group>
-          <Divider my="xs" label="Add Item Details" labelPosition="center" />
+          <Divider my="xs" label="Add SKU Details" labelPosition="center" />
           <Group className="order-flex-class">
             
             <TextInput
-              withAsterisk={form.values.validate}
               // wrapperProps=""
               label="Barcode"
               className="form-input-tops"
+              required
+              withAsterisk
               placeholder="barcode"
               onSelect={() => {
                 func1();
                 func2();
               }}
               {...form.getInputProps('barcode')}
+              onChange={(e) => onSkuChange("barcode", e.target.value)}
+              rightSection={<>
+               <IconEdit onClick={()=> generateBarcode()} cursor="pointer" size={20} color="#228be6" />
+              </>}
+            />
+            <NumberInput
+              withAsterisk
+              label="M.R.P"
+              style={{ width: '15vmin' }}
+              required
+              placeholder="mrp"
+              precision={2}
+              {...form.getInputProps('mrp')}
+              onChange={(value) => onSkuChange("mrp", value)}
+            />
+            <NumberInput
+              withAsterisk
+              label="Pkt. Amt."
+              className="form-input-tops"
+              required
+              placeholder="amount in 1 pack"
+              {...form.getInputProps('itemQuantity')}
+              onChange={(value) => onSkuChange("itemQuantity", value)}
+            />
+            <Select
+              label="unit"
+              className="form-input-tops"
+              placeholder="pick one"
+              required
+              withAsterisk
+              data={[
+                { value: 'grams', label: 'grams' },
+                { value: 'kg', label: 'kg' },
+                { value: 'ml', label: 'ml' },
+                { value: 'liter', label: 'liter' },
+                { value: 'piece', label: 'piece' },
+              ]}
+              {...form.getInputProps('unit')}
+              name="unit"
+              onChange={(e) => onSkuChange("unit", e.target.value)}
             />
 
             {/* <TextInput
@@ -373,15 +465,40 @@ const OrderForm = ({
               label="Item Name"
               className="form-input-tops"
               required
+              withAsterisk
               placeholder="item name"
               onClick={(e) => {
                 func1();
                 func3();
               }}
               {...form.getInputProps('inputName')}
-              value={itemName}
-              disabled
+              onChange={(e) => onSkuChange("inputName", e.target.value.toUpperCase().replace(/[^A-Z]/g, ""))}
             />
+              {
+                form.values.barcode && form.values.inputName && (<Alert color={isNewItemHaveSameSKU ? "red" : "green"} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  { 
+                   isNewItemHaveSameSKU 
+                   ? <React.Fragment>
+                      <IconExclamationCircle size={20} color="red" style={{ marginRight: '10px' }} />
+                      Item already exists with the same SKU
+                   </React.Fragment>
+                   : <React.Fragment>
+                    <IconCheck
+                     size={20} color="green" style={{ marginRight: '10px' }} 
+                    />
+                    Item SKU is new.
+                   </React.Fragment>
+                  }
+                </div>
+                <div style={{ marginTop: '10px', fontSize: '14px', color: isNewItemHaveSameSKU ? '#b50000' : "green" }}>
+                 {newItemSku}
+                </div>
+              </Alert>)
+              }
+          </Group>
+          <Divider my="xs" label="Add Item Details" labelPosition="center" />
+            <Group>
             <TextInput
               withAsterisk={form.values.validate}
               label="Company Name"
@@ -437,34 +554,13 @@ const OrderForm = ({
               {...form.getInputProps('flavourOrFeature')}
             />
           </Group>
-          {/* {Boolean(filterItems.length) && toggle1 && openDrawer && (
+          {/* {Boolean(filterItems.length) && openDrawer && toggle1 && (
             <ListDropDownItem
               itemList={filterItems}
-              handleSelectOrderItems2={handleSelectOrderItems2}
+              handleSelectOrderItems2={handleSelectOrderItems}
             />
           )} */}
           <Group className="order-flex-class">
-            <NumberInput
-              withAsterisk={form.values.validate}
-              label="Pkt. Amt."
-              className="form-input-tops"
-              required={form.values.validate}
-              placeholder="amount in 1 pack"
-              {...form.getInputProps('itemQuantity')}
-            />
-            <Select
-              label="unit"
-              className="form-input-tops"
-              placeholder="pick one"
-              data={[
-                { value: 'grams', label: 'grams' },
-                { value: 'kg', label: 'kg' },
-                { value: 'ml', label: 'ml' },
-                { value: 'liter', label: 'liter' },
-                { value: 'piece', label: 'piece' },
-              ]}
-              {...form.getInputProps('unit')}
-            />
             <Select
               label="Sale Time"
               className="form-input-tops"
@@ -669,15 +765,6 @@ const OrderForm = ({
           <Group className="order-flex-class">
             <NumberInput
               withAsterisk={form.values.validate}
-              label="M.R.P"
-              style={{ width: '15vmin' }}
-              required={form.values.validate}
-              placeholder="mrp"
-              precision={2}
-              {...form.getInputProps('mrp')}
-            />
-            <NumberInput
-              withAsterisk={form.values.validate}
               label="C.P"
               required={form.values.validate}
               style={{ width: '15vmin' }}
@@ -738,10 +825,30 @@ const OrderForm = ({
           />
 
           <Group position="right" mt="md">
-            <Button type="submit">Submit</Button>
+            <Button disabled={isNewItemHaveSameSKU} type="submit">Submit</Button>
           </Group>
         </form>
       </Box>
+      <Modal opened={showNewItemModal} withCloseButton={false} onClose={()=> {}} title="Caution" centered>
+        <Flex
+         direction="column"
+         gap="16px"
+        >
+          Any change in SKU fields will create new item. Do you want to continue?
+          <div>SKU Fields: Barcode, Item name, MRP, Packet Amount, Unit</div>
+          <Flex justifyContent="space-between" gap="16px" sx={{ width: "100%" }}>
+            <Button onClick={()=> {
+              form.setValues((prev) => ({ ...prev, item_id: null, sku: null }));
+              setShowNewItemModal(false);
+            }}>Yes</Button>
+            <Button onClick={()=> {
+              setShowNewItemModal(false);
+              if(!formOldValuesRef.current) return;
+              form.setValues((state) => ({ ...formOldValuesRef.current }));
+            }}>No</Button>
+          </Flex>
+        </Flex>
+      </Modal>
     </Drawer>
   );
 };

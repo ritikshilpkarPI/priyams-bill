@@ -1,20 +1,14 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { Loader } from '@mantine/core';
+import { useDispatch } from 'react-redux';
+import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { useNavigate } from 'react-router';
-import { fetchImageAPI } from 'src/utils/apiUtils';
 
 
 
-const getImageFromLocalStorage = (key, fallbackUrl) => {
-  return localStorage.getItem(key) || fallbackUrl;
-};
-
-const setImageInLocalStorage = (key, imageUrl) => {
-  localStorage.setItem(key, imageUrl);
-};
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -23,40 +17,14 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const [viewIcon, setViewIcon] = useState('');
-  const [hideIcon, setHideIcon] = useState('');
+  const dispatch = useDispatch()
+  const togglePasswordVisibility = () => {
+    
+    setPasswordVisible((prev) => !prev);
+  };
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchIcons = async () => {
-      const storedViewIcon = getImageFromLocalStorage('viewIcon', '');
-      const storedHideIcon = getImageFromLocalStorage('hideIcon', '');
 
-      if (storedViewIcon && storedHideIcon) {
-        setViewIcon(storedViewIcon);
-        setHideIcon(storedHideIcon);
-        return; 
-      }
-
-      try {
-        const viewIconRes = await fetchImageAPI('/images/view.svg');
-        const hideIconRes = await fetchImageAPI('/images/hide.svg');
-
-        if (!viewIconRes.isError) {
-          setViewIcon(viewIconRes);
-          setImageInLocalStorage('viewIcon', viewIconRes);
-        }
-
-        if (!hideIconRes.isError) {
-          setHideIcon(hideIconRes);
-          setImageInLocalStorage('hideIcon', hideIconRes);
-        }
-      } catch (error) {
-        console.error('Error fetching images:', error);
-      }
-    };
-
-    fetchIcons();
-  }, []);
+ 
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -73,11 +41,10 @@ const Login = () => {
       const response = await genericAxios({
         url: API_PATHS.AUTH.POST_LOGIN,
         method: API_METHODS.POST,
-        data: { ...payload },
-        headers: {
-          Cookie: '',
-        },
+        data: payload,
+        headers: { Cookie: '' },
       });
+
       const errorMessage = response?.error?.response?.data?.error?.message;
 
       if (response.error) {
@@ -89,6 +56,7 @@ const Login = () => {
           setErrorMsg('Login failed. Please try again.');
         }
       } else {
+        dispatch(fetchBillingLeanItems());
         navigate('/billing');
       }
     } finally {
@@ -109,9 +77,9 @@ const Login = () => {
             onChange={(e) => setUsername(e.target.value)}
           />
           <img
-            height={'20px'}
-            src="images/user.svg"
-            alt="user icon"
+            height="20px"
+            src="/images/user.svg"
+            alt="User Icon"
             className="username-icon"
           />
         </div>
@@ -125,20 +93,32 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {viewIcon && hideIcon && (
-            <span
-              onClick={() => setPasswordVisible(!passwordVisible)}
-              className="password-toggle"
-              style={{
-                backgroundImage: `url(${passwordVisible ? viewIcon : hideIcon})`,
-                backgroundSize: 'contain',
-                width: '20px',
-                height: '20px',
-                display: 'inline-block',
-                cursor: 'pointer',
-              }}
-            />
-          )}
+          <img
+            src={'/images/hide.svg'}
+            alt="Toggle Password"
+            onClick={togglePasswordVisibility}
+            className="password-toggle"
+            style={{
+              width: '20px',
+              height: '20px',
+              cursor: 'pointer',
+               visibility: passwordVisible ? "hidden" : "visible"
+            }}
+            
+          />
+           <img
+            src={'/images/view.svg'}
+            alt="Toggle Password"
+            onClick={togglePasswordVisibility}
+            className="password-toggle"
+            style={{
+              width: '20px',
+              height: '20px',
+              cursor: 'pointer',
+               visibility: !passwordVisible ? "hidden" : "visible"
+            }}
+            
+          />
         </div>
 
         <p id="error-msg" style={{ textAlign: 'left' }}>{errorMsg}</p>

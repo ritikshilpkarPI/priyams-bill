@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import {
   Container,
   Grid,
+  Paper,
+  Button,
   Title,
 } from '@mantine/core';
 import "./NewBillPage.css"
@@ -13,7 +15,9 @@ import { ItemSearch } from '../../components/ItemSearch';
 import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
-import { selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
+import { ReactBarcode } from 'react-jsbarcode';
 
 
 const NewBillPage = () => {
@@ -25,7 +29,7 @@ const NewBillPage = () => {
     updatePayment,
     resetBillState,
   } = useBillState(); 
-
+  const loading = useSelector(itemsFeedAPILoading);
   const handleRemoveItem = (itemId) => {
     const updatedItems = billState.billItems.filter(
       (item) => item.itemDetail._id !== itemId
@@ -38,7 +42,7 @@ const NewBillPage = () => {
     if (itemsFeedData) {
       setItemsDataCount(itemsFeedData.totalItemsCount); 
     }
-     }, []);
+     }, [itemsFeedData]);
   const saveBillToDatabase = async (billData) => {
     try {
       const response = await saveOrCacheBillAPI(billData);
@@ -89,8 +93,8 @@ const NewBillPage = () => {
   return (
     <div className="new-bill-page">
       <div className="shop-details">
-        <h2>Shop Name</h2>
-        <p>Shop Address, City, State</p>
+        <h2 >Priyam Store</h2>
+        <p>Shop No 2, Plot No 2, Indrapuri, Bhopal, M.P.</p>
         <p>Phone: 123-456-7890</p>
         <p>{currentDateTime}</p>
       </div>
@@ -101,10 +105,14 @@ const NewBillPage = () => {
       </p> : <></>}
       
       <Container size="xl" py="md">
-        <h2>
+        <h2 className='item-count'>
           Total items: {itemsDataCount}
         </h2>
-        <Title order={2} mb="lg">
+        
+        <Title order={2} mb="lg" className='new-bill-text-title'>
+        <Button className="refresh-bill-button"  onClick={resetBillState} disabled={loading}>
+          Refresh Bill
+        </Button>
           New Bill
         </Title>
         <Grid className='items-payments-grid'>
@@ -133,7 +141,24 @@ const NewBillPage = () => {
               onSubmit={handlePaymentSubmit}
               isLoading={isSubmitting}
             />
+            {billState.billId && (
+              <div className="barcode-container">
+                <ReactBarcode
+                  value={billState.billId}
+                  options={{
+                    height: 40,
+                    width: 1.1,
+                    margin: 0,
+                  }}
+                />
+              </div>
+            )}
           </Grid.Col>
+          {totalSaveOnBill > 0 && (
+            <p className="savings-print-only">
+              You Saved: ₹ {totalSaveOnBill} on your purchase!
+            </p>
+          )}
         </Grid>
       </Container>
     </div>

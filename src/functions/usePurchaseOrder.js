@@ -383,10 +383,11 @@ const usePurchaseOrder = (history) => {
       mrp: item?.itemMRPperUnit,
       costPrice: item?.itemCostPricePerUnit,
       slabPrice: item?.slabPricing,
-      item_id: String(item._id),
+      item_id: item._id ? String(item._id) : "",
       unit: item?.quantityUnitName,
       companyName: item?.companyName,
       itemQuantity: item?.itemPerUnitQuantity,
+      sku: item?.sku
     }));
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
@@ -405,7 +406,7 @@ const usePurchaseOrder = (history) => {
         mrp: item?.itemMRPperUnit,
         costPrice: item?.itemCostPricePerUnit,
         slabPrice: item?.slabPricing,
-        item_id: String(item?._id),
+        item_id: item?._id ? String(item._id) : "",
         unit: item?.quantityUnitName,
         subCategory: item?.subCategory,
         flavourOrFeature: item?.flavourOrFeature,
@@ -691,17 +692,10 @@ const usePurchaseOrder = (history) => {
           mrp: item?.itemMRPperUnit,
           costPrice: item?.itemCostPricePerUnit,
           slabPrice: item?.slabPricing,
-          item_id: String(item?._id),
+          item_id: item?._id ? String(item._id) : "",
           unit: item?.quantityUnitName,
-          subCategory: item?.subCategory,
-          flavourOrFeature: item?.flavourOrFeature,
-          saleTime: item?.saleTime,
-          sellingPrice: item?.itemSellingPricePerUnit,
-          returnPolicyAvailable: item?.returnPolicyAvailable,
-          freeItemsAvailable: item?.freeItemsAvailable,
-          returnPolicyRemarks: item?.returnPolicyRemarks,
-          companyName: item?.companyName,
           itemQuantity: item?.itemPerUnitQuantity,
+          sku: item?.sku
         }))
         setItemLoading(false);
       })();

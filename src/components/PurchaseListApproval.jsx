@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core';
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
-import { Link  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { parseJwt } from '../utils/cookie';
@@ -19,33 +19,31 @@ const PurchaseListApproval = ({
   const [isAdminUser, setIsAdminUser] = useState(false)
 
   const setLoading = (id, state, buttonName) => {
-    setLoadingState({[id]: state, btnName:buttonName });
+    setLoadingState({ [id]: state, btnName: buttonName });
   };
 
   const handleApiCall = async (apiCall, id, index, successMessage, errorMessage, callback, buttonName) => {
-    try {
-      setLoading(id, true, buttonName);
-      await apiCall();
+    setLoading(id, true, buttonName);
+    const apiResponse = await apiCall();
+    setLoading(id, false, buttonName);
+    if (apiResponse.hasOwnProperty('error')) {
+      console.error(apiResponse.error);
+      window.alert(errorMessage);
+    } else {
       window.alert(successMessage);
       if (callback) callback();
-    } catch (err) {
-      console.error(err);
-      window.alert(errorMessage);
-    } finally {
-      setLoading(id, false, buttonName);
     }
   };
 
   const rejectOrder = async (id, index) => {
     await handleApiCall(
-      () =>
-        genericAxios({
-          method: API_METHODS.POST,
-          url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
-          data: {
-            username: parseJwt(Cookies.get('token')).username,
-          },
-        }),
+      async () => await genericAxios({
+        method: API_METHODS.POST,
+        url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
+        data: {
+          username: parseJwt(Cookies.get('token')).username,
+        },
+      }),
       id,
       index,
       'Order rejected successfully',
@@ -56,22 +54,14 @@ const PurchaseListApproval = ({
   };
   const approveOrder = async (id, index, list) => {
     await handleApiCall(
-      async () => {
-        await genericAxios({
-          url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
-          method: API_METHODS.POST,
-          data: {
-            new_items: list.purchasedItems,
-          },
-        });
-        await genericAxios({
-          method: API_METHODS.POST,
-          url: `${API_PATHS.APPROVAL.POST_APPROVE_ORDER}/${id}`,
-          data: {
-            username: parseJwt(Cookies.get('token')).username,
-          },
-        });
-      },
+      async () => await genericAxios({
+        url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
+        method: API_METHODS.POST,
+        data: {
+          newItems: list.purchasedItems,
+          purchaseOrderId: id
+        },
+      }),
       id,
       index,
       'Order approved successfully',
@@ -81,52 +71,51 @@ const PurchaseListApproval = ({
     );
   };
 
-  const draftOrder = async(id, index) => {
+  const draftOrder = async (id, index) => {
     if (window.confirm('Do you want to draft this order ?')) {
-    const order = allPurchaseList[index];
-    let validate = true;
-    let once = true;
-    if (!order.billAmount || !order.dealerName?.length) {
-      alert('please fill payment details information');
-      return;
-    }
-    order.purchasedItems.forEach((item) => {
-      if (!item.validate) {
-        validate = false;
-        if (once) {
-          alert('Cannot draft orders, please validate the orders');
-          once = false;
-        }
+      const order = allPurchaseList[index];
+      let validate = true;
+      let once = true;
+      if (!order.billAmount || !order.dealerName?.length) {
+        alert('please fill payment details information');
         return;
       }
-    });
-    if (!validate) {
-      return;
-    }
-    await handleApiCall(
-      () =>
-        genericAxios({
+      order.purchasedItems.forEach((item) => {
+        if (!item.validate) {
+          validate = false;
+          if (once) {
+            alert('Cannot draft orders, please validate the orders');
+            once = false;
+          }
+          return;
+        }
+      });
+      if (!validate) {
+        return;
+      }
+      await handleApiCall(
+        async () => await genericAxios({
           method: API_METHODS.POST,
           url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
           data: { id },
         }),
-      id,
-      index,
-      'Order drafted successfully',
-      'Something went wrong, unable to draft the order',
-      () => getOrders('draft'),
-      "draft"
-    );
-  }
+        id,
+        index,
+        'Order drafted successfully',
+        'Something went wrong, unable to draft the order',
+        () => getOrders('draft'),
+        "draft"
+      );
+    }
   };
   const time = new Date(list.createdAt);
   let datetext = time.toTimeString();
   datetext = datetext?.split(' ')[0];
 
-useEffect(()=>{
-  const isUserAdmin = isAdmin();
-  setIsAdminUser(isUserAdmin)
-},[])
+  useEffect(() => {
+    const isUserAdmin = isAdmin();
+    setIsAdminUser(isUserAdmin)
+  }, [])
   return (
     <>
       {list ? (
@@ -148,8 +137,8 @@ useEffect(()=>{
                 ? 'Approved'
                 : 'Drafted'
               : list.isRejected
-              ? 'Rejected'
-              : 'Saved'}
+                ? 'Rejected'
+                : 'Saved'}
           </td>
           {parseJwt(Cookies.get('token')).role === 'admin' ? (
             <>

@@ -9,25 +9,21 @@ import {
   } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
-import { selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
+import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [itemsData, setItemsData] = useState([]);
     const itemsFeedData = useSelector(selectItemsFeedData);
+    const loading = useSelector(itemsFeedAPILoading);
 
-    
     useEffect(() => {
-      if (!itemsFeedData) {
-        setIsLoading(true);
+      if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
       } else {
-        setIsLoading(false);
-        setItemsData(itemsFeedData); 
+        setItemsData(itemsFeedData);
       }
-    
-       }, [itemsFeedData]);
+    }, [itemsFeedData]);
 
 const handleSearch = (value) => {
   setSearchTerm(value);
@@ -42,11 +38,7 @@ const handleSearch = (value) => {
 
   if (isBarcode) {
     const barcodeMatches = itemsData.itemsBarCodeMap[value] || [];
-
-    const allItems = Object.values(itemsData.itemsBarCodeMap).flat();
-    const fuzzyBarcodeMatches = fuzzySearch(value, allItems);
-
-    results = Array.from(new Map([...barcodeMatches, ...fuzzyBarcodeMatches].map((item) => [item._id, item])).values());
+    results = barcodeMatches;
   } else {
     const allItems = Object.values(itemsData.itemsNameMap);
     const nameMatches = fuzzySearch(value, allItems);
@@ -63,17 +55,22 @@ const handleSearch = (value) => {
 
 
   
-    const calculateItemPrice = (item, quantity) => {
-      if (!item.slabPricing || item.slabPricing.length === 0) {
-        return item.itemSellingPricePerUnit;
-      }
-  
-      const applicableSlab = item.slabPricing
-        .sort((a, b) => b[0] - a[0])
-        .find(([slabQuantity]) => quantity >= slabQuantity);
-  
-      return applicableSlab ? applicableSlab[2] : item.itemSellingPricePerUnit;
-    };
+const calculateItemPrice = (item, quantity) => {
+  if (!item.slabPricing || item.slabPricing.length === 0) {
+    return item.itemSellingPricePerUnit;
+  }
+
+  const sortedSlabPricing = item.slabPricing
+    .map((slab) => [...slab])
+    .sort((a, b) => b[0] - a[0]);
+
+  const applicableSlab = sortedSlabPricing.find(
+    ([slabQuantity]) => quantity >= slabQuantity
+  );
+
+  return applicableSlab ? applicableSlab[2] : item.itemSellingPricePerUnit;
+};
+
   
     const handleItemClick = (item) => {
       onItemSelect({
@@ -101,8 +98,10 @@ const handleSearch = (value) => {
             placeholder="Enter item name or barcode"
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
-            rightSection={isLoading ? <Loader size="sm" /> : null}
+            rightSection={loading ? <Loader size="sm" /> : null}
             mb="sm"
+            disabled={loading}
+
           />
   
           {searchResults.length > 0 && (
@@ -134,7 +133,7 @@ const handleSearch = (value) => {
             </Paper>
           )}
   
-          {searchTerm && searchResults.length === 0 && !isLoading && (
+          {searchTerm && searchResults.length === 0 && !loading && (
             <Text color="dimmed" align="center" size="sm">
               No items found
             </Text>

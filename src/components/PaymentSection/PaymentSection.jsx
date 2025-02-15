@@ -1,12 +1,15 @@
 import {
   Paper,
   Text,
-  Input,
   Button,
   Alert,
+  Input,
 } from '@mantine/core';
 import './PaymentSection.css'
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { itemsFeedAPILoading } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 
 export const PaymentSection = ({
   cashPay,
@@ -18,7 +21,18 @@ export const PaymentSection = ({
   isLoading
 }) => {
   const [saveBillButtonDisabled, setSaveBillButtonDisabled] = useState(false);
-
+  const handlePaymentInputChange = (e, field) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      onPaymentChange(field, Number(value));
+    }
+  };
+  const handleKeyDown = (e) => {
+    if (['e', 'E', '-', '+', '.'].includes(e.key)) {
+      e.preventDefault();
+    }
+  };  
+  const loading = useSelector(itemsFeedAPILoading);
   useEffect(() => {
     setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0);
   }, [cashPay, upiPay, totalAmount]);
@@ -57,11 +71,14 @@ export const PaymentSection = ({
               <Input
                 label="Cash Payment"
                 type="number"
-                value={cashPay}
-                onChange={(e) => onPaymentChange('cashPay', e.target.value)}
+                value={cashPay === 0 ? '' : cashPay}
+                onChange={(e) => handlePaymentInputChange(e, "cashPay")}
+                onKeyDown={handleKeyDown}
                 mb="sm"
                 min={0}
+                placeholder="0"
                 className="payment-input-with-icon"
+                disabled={loading}
               />
             </div>
           </div>
@@ -79,13 +96,16 @@ export const PaymentSection = ({
                 width={25}
               />
               <Input
-                label="UPI Payment"
+                label="Upi Payment"
                 type="number"
-                value={upiPay}
-                onChange={(e) => onPaymentChange('upiPay', e.target.value)}
+                value={upiPay === 0 ? '' : upiPay}
+                onChange={(e) => handlePaymentInputChange(e, "upiPay")}
+                onKeyDown={handleKeyDown}
                 mb="sm"
                 min={0}
+                placeholder="0"
                 className="payment-input-with-icon"
+                disabled={loading}
               />
             </div>
           </div>
@@ -104,7 +124,7 @@ export const PaymentSection = ({
           loading={isLoading}
           disabled={saveBillButtonDisabled}
         >
-          Save and print
+          Save and Print
         </Button>
       </Paper>
     </div>
