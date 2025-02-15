@@ -135,8 +135,8 @@ const NewBillPage = () => {
             <PaymentSection
               cashPay={billState.cashPay}
               upiPay={billState.upiPay}
-              amountReturn={fixedToTwoDecimalPlace(billState.amountReturn)}
-              totalAmount={fixedToTwoDecimalPlace(billState.billAmountTotal)}
+              amountReturn={billState.amountReturn}
+              totalAmount={billState.billAmountTotal}
               onPaymentChange={updatePayment}
               onSubmit={handlePaymentSubmit}
               isLoading={isSubmitting}

@@ -10,6 +10,9 @@ const MESSAGES = Object.freeze({
   MISSING_REQUIRED_FIELDS: 'Some required fields are missing',
   MISSING_FILTER_FIELD: 'Filter feild is missing',
   APPROVAL_TIME_MISSING: 'Approval time is missing for this purchase order',
+  SALESMAN_NOT_EXIST: "Salesman with provided ID does not exist",
+  DEALER_NOT_EXIST: 'Dealer with provided ID does not exist.',
+  DEALER_AND_SALESMAN_DATA_SAVE_SUCCESSFULLY:'Dealer and Salesman details saved successfully.',
 });
 
 module.exports = { MESSAGES };

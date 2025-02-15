@@ -41,6 +41,18 @@ const saveInventory = async (req, res, next) => {
         itemPerUnitQuantity: Number(item.itemQuantity) || 0,
         itemBrandName: item.brand,
         itemCategory: item.category,
+        companyName: item.companyName,
+        subCategory: item.subCategory,
+        flavourOrFeature: item.flavourOrFeature,
+        itemShelfDate: {
+          expiryDates: item.expiryDates,
+          manufacturingDates: item.manufacturingDates,
+        },
+        shelfLife: item.shelfLife,
+        saleTime: item.saleTime,
+        returnPolicyAvailable: item.returnPolicyAvailable,
+        returnPolicyRemark: item.returnPolicyRemark,
+        freeItemAvailable: item.freeItemAvailable,
       };
 
       const oldItem = existingItemsMap.get(item.item_id);
