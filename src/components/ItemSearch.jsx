@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     Paper,
     Text,
@@ -17,7 +17,14 @@ export const ItemSearch = ({ onItemSelect }) => {
     const [itemsData, setItemsData] = useState([]);
     const itemsFeedData = useSelector(selectItemsFeedData);
     const loading = useSelector(itemsFeedAPILoading);
-
+    const inputRef = useRef(null); 
+    useEffect(() => {
+      if (inputRef.current && !loading) {
+        inputRef.current.focus(); 
+      }
+    }, [loading]); 
+    
+    
     useEffect(() => {
       if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
       } else {
@@ -87,8 +94,14 @@ const calculateItemPrice = (item, quantity) => {
       });
       setSearchTerm('');
       setSearchResults([]);
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        } 
+      }, 100);
     };
-  
+   
+    
     return (
       <div className="item-search">
         <Paper p="md" radius="md" withBorder mb="md">
@@ -96,6 +109,7 @@ const calculateItemPrice = (item, quantity) => {
   
           <Input
             placeholder="Enter item name or barcode"
+            ref={inputRef}
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
             rightSection={loading ? <Loader size="sm" /> : null}
