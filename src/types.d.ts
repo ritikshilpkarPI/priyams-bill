@@ -141,6 +141,18 @@ declare global {
   }
 
   type itemsByBarcode = string[] | any
+  interface StepInterface {
+    label: string;
+    component: React.ReactNode;
+  }
+  interface StepperStateInterface {
+    currentStep: number;
+    stepCompletion: boolean[];
+    steps: StepInterface[];
+  }
+  interface FormStepperProps {
+    steps: StepInterface[];
+  }
   interface IntervalPropInterface {
     startDate: string;
     endDate: string;
