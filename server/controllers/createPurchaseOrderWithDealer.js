@@ -132,18 +132,8 @@ const createPurchaseOrderWithDealer = async (req, res, next) => {
 
     await salesman.save();
 
-    const existingPurchaseOrder = await PurchaseOrder.findOne({
-      dealerId: dealer._id,
-      salesmanId: salesman._id,
-    });
-
-    if (!existingPurchaseOrder) {
-      const newPurchaseOrder = new PurchaseOrder({
-        dealerId: dealer._id,
-        salesmanId: salesman._id,
-      });
-      await newPurchaseOrder.save();
-    }
+    const newPurchaseOrder = new PurchaseOrder({ dealerId: dealer._id, salesmanId: salesman._id });
+    await newPurchaseOrder.save();
 
     return res.status(200).json({
       status: true,
