@@ -12,11 +12,23 @@ const saveInventory = async (req, res, next) => {
     const itemIds = newItems
       .map((item) => item.item_id)
       .filter((id) => mongoose.Types.ObjectId.isValid(id));
-
+      
+    const newItemSkus = newItems.filter((item) => !item.item_id).map(item => item.sku);
     // Fetch all existing items in one go
-    const existingItems = await Item.find({ _id: { $in: itemIds } })
-      .lean()
-      .session(session);
+    const existingItemWithIdPromise =  Item.find({ _id: { $in: itemIds } })
+    .lean()
+    .session(session);
+
+    const existingItemWithSkusPromise = Item.find({ sku: { $in: newItemSkus } }).lean();
+    
+    const [existingItemsWithIds, existingItemWithSkus] = await Promise.all(
+    [
+      existingItemWithIdPromise, 
+      existingItemWithSkusPromise
+    ]);
+
+
+    const existingItems = [...existingItemsWithIds, ...existingItemWithSkus]; 
 
     // Create a map for quick lookup
     const existingItemsMap = new Map(
