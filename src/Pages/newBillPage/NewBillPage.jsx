@@ -17,6 +17,7 @@ import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
 import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
+import { ReactBarcode } from 'react-jsbarcode';
 
 
 const NewBillPage = () => {
@@ -106,15 +107,16 @@ const NewBillPage = () => {
       <Container size="xl" py="md">
         <h2 className='item-count'>
           Total items: {itemsDataCount}
+          <Button
+            className="refresh-bill-button"
+            onClick={resetBillState}
+            disabled={loading}
+          >
+            Refresh Bill
+          </Button>
         </h2>
-        
-        <Title order={2} mb="lg" className='new-bill-text-title'>
-        <Button className="refresh-bill-button"  onClick={resetBillState} disabled={loading}>
-          Refresh Bill
-        </Button>
-          New Bill
-        </Title>
-        <Grid className='items-payments-grid'>
+
+        <Grid className="items-payments-grid">
           <Grid.Col span={8}>
             <ItemSearch
               onItemSelect={(item) => {
@@ -140,6 +142,18 @@ const NewBillPage = () => {
               onSubmit={handlePaymentSubmit}
               isLoading={isSubmitting}
             />
+            {billState.billId && (
+              <div className="barcode-container">
+                <ReactBarcode
+                  value={billState.billId}
+                  options={{
+                    height: 40,
+                    width: 1.1,
+                    margin: 0,
+                  }}
+                />
+              </div>
+            )}
           </Grid.Col>
           {totalSaveOnBill > 0 && (
             <p className="savings-print-only">

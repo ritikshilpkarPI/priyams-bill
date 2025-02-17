@@ -1,13 +1,43 @@
 .savings-print-only {
     display: none;
 }
-.new-bill-text-title{
+.item-count{
     position: relative;
+    margin-bottom: 20px;
 }
 .refresh-bill-button{
     
     position: absolute;
     left: 0%;
+    top: 0%;
+  
+}
+.barcode-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%; 
+    padding: 5px;
+    background-color: white; 
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.barcode-container svg {
+    width: 100% ; 
+    height: auto ;
+    display: block;
+    margin: 0 auto; 
+}
+
+.barcode-container svg text {
+    font-size: 16px !important; 
+   
+}
+.shop-details{
+    display: none;
 }
 @media print {
 
@@ -21,7 +51,9 @@
         margin: 0;
         padding: 0;
     }
-    
+    .shop-details {
+        display: block !important;
+    }
     .new-bill-page .item-count,
     .new-bill-page .mantine-Title-root {
         display: none; 
@@ -59,5 +91,21 @@
         text-align: center;
         margin: 10px 0;
     }
+    
+    .barcode-container {
+        border: none;
+    }
+
+    .barcode-container svg {
+        width: 227px ; 
+
+       
+    }
+    .barcode-container svg text {
+        font-size: 20px ;
+     
+    }
+    
+   
     
 }
