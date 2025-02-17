@@ -1,7 +1,17 @@
 const Joi = require('joi');
+const  mongoose  = require('mongoose');
 
 const validateUpsertPODealerRequest = Joi.object({
-  dealerId: Joi.string().optional(),
+  dealerId: Joi.string()
+    .trim()
+    .optional()
+    .custom((value, helpers) => {
+      if (value && !mongoose.isValidObjectId(value)) {
+        return helpers.error('any.invalid');
+      }
+      return value;
+    })
+    .messages({ 'any.invalid': 'Invalid dealerId format. Must be a valid MongoDB ObjectID.' }),
 
   dealerName: Joi.string()
     .trim()
@@ -45,7 +55,17 @@ const validateUpsertPODealerRequest = Joi.object({
       'string.pattern.base': 'Dealer contact number must be exactly 10 digits',
     }),
 
-  salesmanId: Joi.string().optional(),
+    salesmanId: Joi.string()
+    .trim()
+    .optional()
+    .custom((value, helpers) => {
+      if (value && !mongoose.isValidObjectId(value)) {
+        return helpers.error('any.invalid');
+      }
+      return value;
+    })
+    .messages({ 'any.invalid': 'Invalid salesmanId format. Must be a valid MongoDB ObjectID.' }),
+
 
   salesmanName: Joi.string()
     .trim()
