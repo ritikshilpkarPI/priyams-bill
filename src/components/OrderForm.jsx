@@ -453,6 +453,7 @@ const OrderForm = ({
                 { value: 'piece', label: 'piece' },
               ]}
               {...form.getInputProps('unit')}
+              value={form.values.unit?.toLowerCase()}
               name="unit"
               onChange={(value) => onSkuChange("unit", value)}
             />
