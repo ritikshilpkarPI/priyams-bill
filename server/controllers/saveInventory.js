@@ -20,7 +20,7 @@ const saveInventory = async (req, res, next) => {
     .lean()
     .session(session);
 
-    const existingItemWithSkusPromise = Item.find({ sku: { $in: newItemSkus } }).lean();
+    const existingItemWithSkusPromise = Item.find({ sku: { $in: newItemSkus } }).lean().session(session);
     
     const [existingItemsWithIds, existingItemWithSkus] = await Promise.all(
     [
