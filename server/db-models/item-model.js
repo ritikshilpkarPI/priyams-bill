@@ -22,7 +22,7 @@ const inventoryItemCategory = [
 const ItemSchema = new mongoose.Schema(
   {
     itemName: { type: String, required: true, trim: true },
-    itemBarcode: { type: Number },
+    itemBarcode: { type: String },
     itemStockQuantity: { type: Number, default: 0 },
     minimumStockQuantity: { type: Number, default: 1 },
     itemMRPperUnit: { type: Number, required: true, default: 0 },
