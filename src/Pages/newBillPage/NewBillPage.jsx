@@ -107,15 +107,16 @@ const NewBillPage = () => {
       <Container size="xl" py="md">
         <h2 className='item-count'>
           Total items: {itemsDataCount}
+          <Button
+            className="refresh-bill-button"
+            onClick={resetBillState}
+            disabled={loading}
+          >
+            Refresh Bill
+          </Button>
         </h2>
-        
-        <Title order={2} mb="lg" className='new-bill-text-title'>
-        <Button className="refresh-bill-button"  onClick={resetBillState} disabled={loading}>
-          Refresh Bill
-        </Button>
-          New Bill
-        </Title>
-        <Grid className='items-payments-grid'>
+
+        <Grid className="items-payments-grid">
           <Grid.Col span={8}>
             <ItemSearch
               onItemSelect={(item) => {
