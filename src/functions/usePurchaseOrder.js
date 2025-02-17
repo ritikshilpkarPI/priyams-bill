@@ -450,7 +450,7 @@ const usePurchaseOrder = (history) => {
         const { order } = data;
         const { _id } = order;
         offLoader();
-        const purchaseOrderId = _id || data?.order?._id;
+        const purchaseOrderId = _id || id;
         if(purchaseOrderId) getDetails(purchaseOrderId);
         if (!id) navigate(`/purchase/${_id}`);
       } catch (err) {
