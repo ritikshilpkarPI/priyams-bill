@@ -99,16 +99,4 @@ const ItemSchema = new mongoose.Schema(
 
 const Item = mongoose.model('Item', ItemSchema);
 
-ItemSchema.pre("save", function (next) {
-  const itemData = this;
-  itemData.sku = getItemSKU(itemData);
-  next();
-});
-
-ItemSchema.pre("findOneAndUpdate", function (next) {
-  const itemData = this;
-  itemData.sku = getItemSKU(itemData);
-  next();
-});
-
 module.exports = { Item, inventoryItemCategory, ItemSchema };

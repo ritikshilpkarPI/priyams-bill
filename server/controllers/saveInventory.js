@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
 
@@ -65,6 +66,13 @@ const saveInventory = async (req, res, next) => {
         returnPolicyAvailable: item.returnPolicyAvailable,
         returnPolicyRemark: item.returnPolicyRemark,
         freeItemAvailable: item.freeItemAvailable,
+        sku: getItemSKU({
+          itemQuantity: item?.itemQuantity,
+          unit: item?.unit,
+          mrp: item?.mrp,
+          barcode: item?.barcode,
+          itemName: item?.inputName,
+        })
       };
 
       const oldItem = existingItemsMap.get(item.item_id);
