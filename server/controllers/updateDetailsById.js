@@ -1,6 +1,8 @@
 const { clodinaryFoldersPath } = require('../util/constant');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { uploadImages, deleteImages } = require('../util/image');
+const { isShelfExpired } = require('../util/isShelfExpired');
+const { getItemSKU } = require('../util/getItemSKU');
 
 const updateDetailsById = async (req, res,next) => {
   try {
@@ -29,6 +31,30 @@ const updateDetailsById = async (req, res,next) => {
     let billPhotos = [];
     billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
     billPhotos = [...billPhotos, ...uploadedImages];
+
+    let updatedOrders = orders;
+    if(orders && orders.length){
+      updatedOrders = orders.map(((order) => {
+        let expiryDates = order.expiryDates;
+        if(order.expiryDates) {
+          expiryDates = order.expiryDates.map(expiryDates => ({
+            ...expiryDates,
+            isShelfExpired: isShelfExpired(expiryDates.mfgDate, expiryDates.date)
+          }))
+        }
+        return {
+          ...order,
+          expiryDates,
+          sku: getItemSKU({
+            itemQuantity: order.itemQuantity,
+            unit: order.unit,
+            itemName: order.inputName,
+            barcode: order.barcode,
+            mrp: order.mrp
+          })
+        }
+      }))
+    }
 
     const purchaseOrder = {
       purchasedItems: [...orders],

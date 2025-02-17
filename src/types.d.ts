@@ -185,6 +185,15 @@ declare global {
     sidebarElem: RefObject<HTMLDivElement>;
     liItem: RefObject<HTMLDivElement[]>;
   }
+
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: number;
+  }
+  
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

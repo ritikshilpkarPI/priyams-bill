@@ -15,7 +15,7 @@ const getItemsWithSelection = async (req, res,next) => {
       }
       
       let items = await Item.find(query)
-        .select('_id itemBarcode itemName itemMRPperUnit')
+        .select('_id itemBarcode itemName itemMRPperUnit quantityUnitName itemPerUnitQuantity')
         .sort({ itemName: 1 });
       
       const itemCount = items.length;
