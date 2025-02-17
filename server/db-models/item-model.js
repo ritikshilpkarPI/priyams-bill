@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { getItemSKU } = require('../util/getItemSKU');
 const inventoryItemCategory = [
   'Bakery',
   'Beverage',
