@@ -3,6 +3,7 @@ import {
   Container,
   Grid,
   Paper,
+  Button,
   Title,
 } from '@mantine/core';
 import "./NewBillPage.css"
@@ -14,8 +15,9 @@ import { ItemSearch } from '../../components/ItemSearch';
 import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
-import { selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
+import { ReactBarcode } from 'react-jsbarcode';
 
 
 const NewBillPage = () => {
@@ -27,7 +29,7 @@ const NewBillPage = () => {
     updatePayment,
     resetBillState,
   } = useBillState(); 
-
+  const loading = useSelector(itemsFeedAPILoading);
   const handleRemoveItem = (itemId) => {
     const updatedItems = billState.billItems.filter(
       (item) => item.itemDetail._id !== itemId
@@ -106,11 +108,11 @@ const NewBillPage = () => {
         <h2 className='item-count'>
           Total items: {itemsDataCount}
         </h2>
-       
+        
         <Title order={2} mb="lg" className='new-bill-text-title'>
-        <Paper className="refresh-bill-button" onClick={resetBillState}>
+        <Button className="refresh-bill-button"  onClick={resetBillState} disabled={loading}>
           Refresh Bill
-        </Paper>
+        </Button>
           New Bill
         </Title>
         <Grid className='items-payments-grid'>
@@ -133,12 +135,24 @@ const NewBillPage = () => {
             <PaymentSection
               cashPay={billState.cashPay}
               upiPay={billState.upiPay}
-              amountReturn={fixedToTwoDecimalPlace(billState.amountReturn)}
-              totalAmount={fixedToTwoDecimalPlace(billState.billAmountTotal)}
+              amountReturn={billState.amountReturn}
+              totalAmount={billState.billAmountTotal}
               onPaymentChange={updatePayment}
               onSubmit={handlePaymentSubmit}
               isLoading={isSubmitting}
             />
+            {billState.billId && (
+              <div className="barcode-container">
+                <ReactBarcode
+                  value={billState.billId}
+                  options={{
+                    height: 40,
+                    width: 1.1,
+                    margin: 0,
+                  }}
+                />
+              </div>
+            )}
           </Grid.Col>
           {totalSaveOnBill > 0 && (
             <p className="savings-print-only">
