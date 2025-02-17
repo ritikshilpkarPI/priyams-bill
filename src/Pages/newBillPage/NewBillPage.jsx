@@ -147,7 +147,7 @@ const NewBillPage = () => {
                 <ReactBarcode
                   value={billState.billId}
                   options={{
-                    height: 40,
+                     height: 90,
                     width: 1.1,
                     margin: 0,
                   }}
