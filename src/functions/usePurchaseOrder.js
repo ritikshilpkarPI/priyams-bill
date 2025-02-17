@@ -512,7 +512,6 @@ const usePurchaseOrder = (history) => {
       stockQuantity: item?.stockQuantity,
       currentStock: item?.currentStock,
       minimumQuantity: item?.minimumQuantity,
-      itemQuantity: item?.itemPerUnitQuantity,
       unit: item?.unit,
       itemRemark: item?.itemRemark,
       sellingPrice: item?.sellingPrice,
@@ -531,7 +530,7 @@ const usePurchaseOrder = (history) => {
       freeItemsAvailable: item?.freeItemsAvailable,
       returnPolicyRemarks: item?.returnPolicyRemarks,
       companyName: item?.companyName,
-      itemQuantity: item?.itemPerUnitQuantity,
+      itemQuantity: item?.itemQuantity,
     }));
     setSlabs([...item?.slabPrice]);
     setOpened(true);

@@ -6,7 +6,13 @@ const updateSavedOrders = async (req, res, next) => {
   try {
     const id = req.params.id;
     const { new_order } = req.body;
-    const itemSKU = getItemSKU(new_order);
+    const itemSKU = getItemSKU({
+      itemQuantity: new_order.itemQuantity,
+      unit: new_order.unit,
+      itemName: new_order.inputName,
+      barcode: new_order.barcode,
+      mrp: new_order.mrp
+    });;
     let updatedExpiryDates = new_order.expiryDates;
     if(new_order.expiryDates) {
       updatedExpiryDates = new_order.expiryDates.map(expiryDates => ({
