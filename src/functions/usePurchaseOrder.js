@@ -692,7 +692,12 @@ const usePurchaseOrder = (history) => {
           item_id: item?._id ? String(item._id) : "",
           unit: item?.quantityUnitName,
           itemQuantity: item?.itemPerUnitQuantity,
-          sku: item?.sku
+          inputName: item?.itemName,
+          barcode: item?.itemBarcode,
+          companyName: item?.companyName,
+          subCategory: item?.subCategory,
+          flavourOrFeature: item?.flavourOrFeature,
+          saleTime: item?.saleTime,
         }))
         setItemLoading(false);
       })();
