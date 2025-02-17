@@ -1,13 +1,16 @@
 .savings-print-only {
     display: none;
 }
-.new-bill-text-title{
+.item-count{
     position: relative;
+    margin-bottom: 20px;
 }
 .refresh-bill-button{
     
     position: absolute;
     left: 0%;
+    top: 0%;
+  
 }
 .barcode-container {
     display: flex;
@@ -33,6 +36,9 @@
     font-size: 16px !important; 
    
 }
+.shop-details{
+    display: none;
+}
 @media print {
 
     body * {
@@ -45,7 +51,9 @@
         margin: 0;
         padding: 0;
     }
-    
+    .shop-details {
+        display: block !important;
+    }
     .new-bill-page .item-count,
     .new-bill-page .mantine-Title-root {
         display: none; 
