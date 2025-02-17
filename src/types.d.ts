@@ -191,9 +191,9 @@ declare global {
     barcode: string;
     mrp: number;
     packetQty: number;
-    packetUnit: number;
+    packetUnit: string;
   }
-  
+
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
