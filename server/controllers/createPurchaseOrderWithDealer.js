@@ -11,17 +11,28 @@ const fileValidation = validateFile({ sizeInMB: 5, fileTypes: ['image/jpeg', 'im
 
 const createPurchaseOrderWithDealer = async (req, res, next) => {
   try {
-    const parsedData = parseStringToJson(req.body.data)
-    
+    const parsedData = parseStringToJson(req.body.data);
+
     const { error } = validateUpsertPODealerRequest.validate(parsedData);
     if (error) {
-      return res.status(400).json({ status: false, message: error.details[0].message });
+      return res
+        .status(400)
+        .json({ status: false, message: error.details[0].message });
     }
 
-    if (req.files && req.files.dealerVisitingCard) {
-      const fileError = fileValidation.validate(req.files.dealerVisitingCard).error;
-      if (fileError) {
-        return res.status(400).json({ status: false, message: fileError.details[0].message });
+    if (req.files?.dealerVisitingCard) {
+      const files = Array.isArray(req.files.dealerVisitingCard)
+        ? req.files.dealerVisitingCard
+        : [req.files.dealerVisitingCard];
+
+      for (const file of files) {
+        const validationResult = fileValidation(file);
+        if (validationResult.error) {
+          return res.status(400).json({
+            status: false,
+            message: validationResult.error.details[0].message,
+          });
+        }
       }
     }
 
@@ -39,18 +50,52 @@ const createPurchaseOrderWithDealer = async (req, res, next) => {
 
     if (dealerId) {
       dealer = await Dealer.findById(dealerId);
-      if (!dealer) return res.status(400).json({ status: false, message: MESSAGES.DEALER_NOT_EXIST });
-      Object.assign(dealer, { dealerName: dealerName || dealer.dealerName, dealerAddress: dealerAddress || dealer.dealerAddress, dealerContactNumber: dealerContactNumber || dealer.dealerContactNumber });
+      if (!dealer) {
+        return res
+          .status(400)
+          .json({ status: false, message: MESSAGES.DEALER_NOT_EXIST });
+      }
+
+      dealer.dealerAddress = dealer.dealerAddress || [];
+      dealer.dealerContactNumber = dealer.dealerContactNumber || [];
+      dealer.dealerVisitingCard = dealer.dealerVisitingCard || [];
+
+      if (dealerAddress && !dealer.dealerAddress.includes(dealerAddress)) {
+        dealer.dealerAddress.push(dealerAddress);
+      }
+
+      if (
+        dealerContactNumber &&
+        !dealer.dealerContactNumber.includes(dealerContactNumber)
+      ) {
+        dealer.dealerContactNumber.push(dealerContactNumber);
+      }
     } else {
-      dealer = new Dealer({ dealerName, dealerAddress, dealerContactNumber });
+      dealer = new Dealer({
+        dealerName,
+        dealerAddress: dealerAddress ? [dealerAddress] : [],
+        dealerContactNumber: dealerContactNumber ? [dealerContactNumber] : [],
+        dealerVisitingCard: [],
+      });
     }
 
-    if (req.files && req.files.dealerVisitingCard) {
-      const { dealerVisitingCard } = req.files;
-      const uploadResult = await uploadToCloudinary(dealerVisitingCard.data, dealerVisitingCard.name);
-      if (uploadResult) {
-        dealer.dealerVisitingCard = { publicId: uploadResult.public_id, secureUrl: uploadResult.secure_url };
+    if (req.files?.dealerVisitingCard) {
+      const uploadedImages = [];
+      const files = Array.isArray(req.files.dealerVisitingCard)
+        ? req.files.dealerVisitingCard
+        : [req.files.dealerVisitingCard];
+
+      for (const file of files) {
+        const uploadResult = await uploadToCloudinary(file.data, file.name);
+        if (uploadResult?.secure_url && uploadResult?.public_id) {
+          uploadedImages.push({
+            publicId: uploadResult.public_id,
+            secureUrl: uploadResult.secure_url,
+          });
+        }
       }
+
+      dealer.dealerVisitingCard.push(...uploadedImages);
     }
 
     await dealer.save();
@@ -59,16 +104,46 @@ const createPurchaseOrderWithDealer = async (req, res, next) => {
 
     if (salesmanId) {
       salesman = await Salesman.findById(salesmanId);
-      if (!salesman) return res.status(400).json({ status: false, message: MESSAGES.SALESMAN_NOT_EXIST });
-      Object.assign(salesman, { salesmanName: salesmanName || salesman.salesmanName, salesmanContactNumber: salesmanContactNumber || salesman.salesmanContactNumber });
+      if (!salesman) {
+        return res
+          .status(400)
+          .json({ status: false, message: MESSAGES.SALESMAN_NOT_EXIST });
+      }
+
+      salesman.salesmanContactNumber = salesman.salesmanContactNumber || [];
+
+      if (
+        salesmanContactNumber &&
+        !salesman.salesmanContactNumber.includes(salesmanContactNumber)
+      ) {
+        salesman.salesmanContactNumber.push(salesmanContactNumber);
+      }
+
+      salesman.dealerId = dealer._id;
     } else {
-      salesman = new Salesman({ salesmanName, salesmanContactNumber, dealerReference: dealer._id });
+      salesman = new Salesman({
+        salesmanName,
+        salesmanContactNumber: salesmanContactNumber
+          ? [salesmanContactNumber]
+          : [],
+        dealerId: dealer._id,
+      });
     }
 
     await salesman.save();
 
-    const newPurchaseOrder = new PurchaseOrder({ dealerId: dealer._id, salesmanId: salesman._id });
-    await newPurchaseOrder.save();
+    const existingPurchaseOrder = await PurchaseOrder.findOne({
+      dealerId: dealer._id,
+      salesmanId: salesman._id,
+    });
+
+    if (!existingPurchaseOrder) {
+      const newPurchaseOrder = new PurchaseOrder({
+        dealerId: dealer._id,
+        salesmanId: salesman._id,
+      });
+      await newPurchaseOrder.save();
+    }
 
     return res.status(200).json({
       status: true,

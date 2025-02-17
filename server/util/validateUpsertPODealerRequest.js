@@ -6,90 +6,82 @@ const validateUpsertPODealerRequest = Joi.object({
   dealerName: Joi.string()
     .trim()
     .when('dealerId', {
-      is: Joi.exist().not(null),
+      is: Joi.exist(),
       then: Joi.optional(),
       otherwise: Joi.required().messages({ 'any.required': 'Dealer name is required when dealerId is not provided' }),
     })
     .custom((value, helpers) => {
-      if (!value || value.trim().length === 0) {
-        return helpers.error('string.invalid');
+      if (value.trim().length === 0) {
+        return helpers.error('string.empty');
       }
       return value;
     })
-    .messages({ 'string.invalid': 'Dealer name cannot be empty or contain only spaces' }),
+    .messages({ 'string.empty': 'Dealer name cannot be empty or contain only spaces' }),
 
- 
-    dealerAddress: Joi.array()
-    .items(
-      Joi.object({
-        address: Joi.string().required().messages({ 'any.required': 'Address is required' }),
-        updatedAt: Joi.date().default(Date.now),
-      }).required()
-    )
-    .min(1)
-    .messages({
-      'array.min': 'At least one dealer address is required',
-    })
+  dealerAddress: Joi.string()
+    .trim()
     .when('dealerId', {
-      is: Joi.exist().not(null),
+      is: Joi.exist(),
       then: Joi.optional(),
       otherwise: Joi.required().messages({ 'any.required': 'Dealer address is required when dealerId is not provided' }),
-    }),
-  
-  
-    dealerContactNumber: Joi.array()
-    .items(
-      Joi.object({
-        contactNumber: Joi.string().required().messages({ 'any.required': 'Contact number is required' }),
-        updatedAt: Joi.date().default(Date.now),
-      }).required()
-    )
-    .min(1)
-    .messages({
-      'array.min': 'At least one dealer contact number is required',
+    })
+    .messages({ 'string.empty': 'Dealer address cannot be empty or contain only spaces' }),
+
+  dealerContactNumber: Joi.string()
+    .trim()
+    .custom((value, helpers) => {
+      const trimmedValue = value.trim(); 
+      if (!trimmedValue.match(/^\d{10}$/)) {
+        return helpers.error('string.pattern.base');
+      }
+      return trimmedValue;
     })
     .when('dealerId', {
-      is: Joi.exist().not(null),
+      is: Joi.exist(),
       then: Joi.optional(),
       otherwise: Joi.required().messages({ 'any.required': 'Dealer contact number is required when dealerId is not provided' }),
+    })
+    .messages({
+      'string.pattern.base': 'Dealer contact number must be exactly 10 digits',
     }),
-  
-
 
   salesmanId: Joi.string().optional(),
 
   salesmanName: Joi.string()
     .trim()
     .when('salesmanId', {
-      is: Joi.exist().not(null),
+      is: Joi.exist(),
       then: Joi.optional(),
       otherwise: Joi.required().messages({ 'any.required': 'Salesman name is required when salesmanId is not provided' }),
     })
     .custom((value, helpers) => {
-      if (!value || value.trim().length === 0) {
-        return helpers.error('string.invalid');
+      if (value.trim().length === 0) {
+        return helpers.error('string.empty');
       }
       return value;
     })
-    .messages({ 'string.invalid': 'Salesman name cannot be empty or contain only spaces' }),
+    .messages({ 'string.empty': 'Salesman name cannot be empty or contain only spaces' }),
 
-    salesmanContactNumber: Joi.array()
-    .items(
-      Joi.object({
-        contactNumber: Joi.string().required().messages({ 'any.required': 'Contact number is required' }),
-        updatedAt: Joi.date().default(Date.now),
-      }).required()
-    )
-    .min(1)
-    .messages({
-      'array.min': 'At least one salesman contact number is required',
+
+  salesmanContactNumber: Joi.string()
+    .trim()
+    .custom((value, helpers) => {
+      const trimmedValue = value.trim();
+      if (!trimmedValue.match(/^\d{10}$/)) {
+        return helpers.error('string.pattern.base');
+      }
+      return trimmedValue;
     })
     .when('salesmanId', {
-      is: Joi.exist().not(null),
+      is: Joi.exist(),
       then: Joi.optional(),
       otherwise: Joi.required().messages({ 'any.required': 'Salesman contact number is required when salesmanId is not provided' }),
+    })
+    .messages({
+      'string.pattern.base': 'Salesman contact number must be exactly 10 digits',
     }),
-  
+
+  dealerVisitingCard: Joi.string().optional(),
 }).unknown(true);
 
 module.exports = { validateUpsertPODealerRequest };
