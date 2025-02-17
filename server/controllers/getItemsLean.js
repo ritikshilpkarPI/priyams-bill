@@ -20,7 +20,9 @@ const getItemsLean = async (req, res, next) => {
       itemCostPricePerUnit: 1,
       itemSellingPricePerUnit: 1,
       slabPricing: 1,
-      itemStockQuantity: 1
+      itemStockQuantity: 1,
+      itemPerUnitQuantity: 1,
+      quantityUnitName: 1
     });
 
     allItemsList.forEach((item) => {

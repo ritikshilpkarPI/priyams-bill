@@ -111,9 +111,11 @@ const OrderForm = ({
   }, [])
 
   const generateBarcode = () => {
-    formOldValuesRef.current = { ...form.values };
+    if(form.values.item_id) {
+      formOldValuesRef.current = { ...form.values };
+      setShowNewItemModal(true);
+    }
     form.setValues(prev => ({ ...prev, barcode: `PSTR_${Date.now().toString().slice(-10)}` }));
-    setShowNewItemModal(true);
   }
 
   const func1 = () => {
@@ -452,7 +454,7 @@ const OrderForm = ({
               ]}
               {...form.getInputProps('unit')}
               name="unit"
-              onChange={(e) => onSkuChange("unit", e.target.value)}
+              onChange={(value) => onSkuChange("unit", value)}
             />
 
             {/* <TextInput
@@ -472,7 +474,7 @@ const OrderForm = ({
                 func3();
               }}
               {...form.getInputProps('inputName')}
-              onChange={(e) => onSkuChange("inputName", e.target.value.toUpperCase().replace(/[^A-Z]/g, ""))}
+              onChange={(e) => onSkuChange("inputName", e.target.value.toUpperCase().replace(/[^A-Z] /g, ""))}
             />
               {
                 form.values.barcode && form.values.inputName && (<Alert color={isNewItemHaveSameSKU ? "red" : "green"} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
@@ -487,7 +489,7 @@ const OrderForm = ({
                     <IconCheck
                      size={20} color="green" style={{ marginRight: '10px' }} 
                     />
-                    Item SKU is new.
+                    Item SKU.
                    </React.Fragment>
                   }
                 </div>
