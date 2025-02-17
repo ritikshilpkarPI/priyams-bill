@@ -11,6 +11,7 @@ const usePurchaseOrder = (history) => {
   const [opened, setOpened] = useState(false);
   const [openPurchaseDrawer, setPurchaseDrawer] = useState(false);
   const [date, setDate] = useState('');
+  const [mfgDate, setMfgDate] = useState('');
   const [expiryQuantity, setExpiryQuantity] = useState(0);
   const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -96,6 +97,11 @@ const usePurchaseOrder = (history) => {
       validate: false,
       slabPrice: [],
       item_id: '',
+      searchBy: 'barcode',
+      search: '',
+      category: '',
+      subCategory: '',
+      featureOrFlavour: '',
     },
     validate: {
       itemQuantity: (value) =>
@@ -112,8 +118,6 @@ const usePurchaseOrder = (history) => {
             : 'MRP should be greater than 0'
           : null,
       // costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
-      category: (value) => (!value ? 'Category is Compulsory' : null),
-      brand: (value) => (!value ? 'Brand name is Compulsory' : null),
     },
   });
   const [purchaseList, setPurchaseList] = useState({
@@ -367,18 +371,27 @@ const usePurchaseOrder = (history) => {
       minimumQuantity: item?.minimumStockQuantity,
       brand: item?.itemBrandName,
       category: item?.itemCategory,
+      subCategory: item?.subCategory,
+      flavourOrFeature: item?.flavourOrFeature,
+      saleTime: item?.saleTime,
       sellingPrice: item?.itemSellingPricePerUnit,
+      returnPolicyAvailable: item?.returnPolicyAvailable,
+      freeItemsAvailable: item?.freeItemsAvailable,
+      returnPolicyRemarks: item?.returnPolicyRemarks,
       mrp: item?.itemMRPperUnit,
       costPrice: item?.itemCostPricePerUnit,
       slabPrice: item?.slabPricing,
-      item_id: String(item._id),
+      item_id: item._id ? String(item._id) : "",
       unit: item?.quantityUnitName,
+      companyName: item?.companyName,
+      itemQuantity: item?.itemPerUnitQuantity,
+      sku: item?.sku
     }));
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
   };
   const handleSelectOrderItems = (item, filteredItemsByBarcode) => {
-    if (filteredItemsByBarcode.length === 1) {
+    // if (filteredItemsByBarcode.length === 1) {
       form.setValues((prev) => ({
         barcode: item?.itemBarcode,
         inputName: item?.itemName,
@@ -391,12 +404,21 @@ const usePurchaseOrder = (history) => {
         mrp: item?.itemMRPperUnit,
         costPrice: item?.itemCostPricePerUnit,
         slabPrice: item?.slabPricing,
-        item_id: String(item?._id),
+        item_id: item?._id ? String(item._id) : "",
         unit: item?.quantityUnitName,
+        subCategory: item?.subCategory,
+        flavourOrFeature: item?.flavourOrFeature,
+        saleTime: item?.saleTime,
+        sellingPrice: item?.itemSellingPricePerUnit,
+        returnPolicyAvailable: item?.returnPolicyAvailable,
+        freeItemsAvailable: item?.freeItemsAvailable,
+        returnPolicyRemarks: item?.returnPolicyRemarks,
+        companyName: item?.companyName,
+        itemQuantity: item?.itemPerUnitQuantity,
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);
-    }
+    // }
   };
   const handlePurchaseDetail = (element, index) => {
     purchaseForm.setValues((prev) => ({
@@ -428,11 +450,9 @@ const usePurchaseOrder = (history) => {
         const { order } = data;
         const { _id } = order;
         offLoader();
-        if (!id) {
-          navigate(`/purchase/${_id}`);
-        } else {
-          getDetails(id);
-        }
+        const purchaseOrderId = _id || id;
+        if(purchaseOrderId) getDetails(purchaseOrderId);
+        if (!id) navigate(`/purchase/${_id}`);
       } catch (err) {
         console.log(err);
         offLoader();
@@ -488,7 +508,6 @@ const usePurchaseOrder = (history) => {
       stockQuantity: item?.stockQuantity,
       currentStock: item?.currentStock,
       minimumQuantity: item?.minimumQuantity,
-      itemQuantity: item?.itemQuantity,
       unit: item?.unit,
       itemRemark: item?.itemRemark,
       sellingPrice: item?.sellingPrice,
@@ -499,6 +518,15 @@ const usePurchaseOrder = (history) => {
       item_id: item?.item_id,
       brand: item?.brand,
       category: item?.category,
+      subCategory: item?.subCategory,
+      flavourOrFeature: item?.flavourOrFeature,
+      saleTime: item?.saleTime,
+      sellingPrice: item?.itemSellingPricePerUnit,
+      returnPolicyAvailable: item?.returnPolicyAvailable,
+      freeItemsAvailable: item?.freeItemsAvailable,
+      returnPolicyRemarks: item?.returnPolicyRemarks,
+      companyName: item?.companyName,
+      itemQuantity: item?.itemQuantity,
     }));
     setSlabs([...item?.slabPrice]);
     setOpened(true);
@@ -564,18 +592,25 @@ const usePurchaseOrder = (history) => {
     setSlabs(slabsArrayCopy.map((slab, idx) => [idx, slab[1], slab[2]]));
   };
   const handleExpiryDate = () => {
-    if (!date && expiryQuantity === 0) {
-      return alert('add Date and expiry quantity ');
+    if (!mfgDate && !date && expiryQuantity === 0) {
+      return alert('add Mfg. Dt., Exp. date and expiry quantity ');
+    }
+    const newMfgDate = new Date(mfgDate)
+    const newExpiryDate = new Date(date)
+    if(newMfgDate.getTime() > newExpiryDate.getTime()) {
+      return alert('Manufacturing date cannot be more than expiry date');
     }
     form.insertListItem('expiryDates', {
-      date: new Date(date).toLocaleDateString('en-US', options),
+      date: newExpiryDate.toLocaleDateString('en-US', options),
       value: expiryQuantity,
+      mfgDate: newMfgDate.toLocaleDateString('en-US', options)
     });
     setDate('');
     setExpiryQuantity(0);
+    setMfgDate('')
   };
   const { barcodeFilteredItem, filteredItemsByBarcode } = useBarcodeSearchItems(
-    form.values.barcode,
+    form.values.searchBy === 'barcode' ? form.values.search : '',
     itemsList
   );
 
@@ -601,6 +636,7 @@ const usePurchaseOrder = (history) => {
   }, [])
   //barcode changing
   useEffect(() => {
+    if(!form.values.search && form.values.searchBy !== 'barcode') return;
     if (id && isNotGetUpdated) {
       getDetails(id);
       setIsNotGetUpdated(false);
@@ -612,7 +648,7 @@ const usePurchaseOrder = (history) => {
       setState({}); // This worked for me
     };
     // eslint-disable-next-line
-  }, [form.values.barcode]);
+  }, [form.values.search]);
 
   useEffect(() => {
     let flag = false;
@@ -629,11 +665,11 @@ const usePurchaseOrder = (history) => {
   }, [purchaseList, purchaseForm]);
 
   useEffect(() => {
-    if(form.values.barcode){
+    if(form.values.search && form.values.searchBy === 'barcode'){
       (async () => {
         setItemLoading(true);
         const fetch = await genericAxios({
-          url: `${API_PATHS.INVENTORY.GET_ITEMS}/${form.values.barcode}`,
+          url: `${API_PATHS.INVENTORY.GET_ITEMS}/${form.values.search}`,
           method: API_METHODS.GET,
           headers: {
             Cookie: '',
@@ -651,13 +687,20 @@ const usePurchaseOrder = (history) => {
           mrp: item?.itemMRPperUnit,
           costPrice: item?.itemCostPricePerUnit,
           slabPrice: item?.slabPricing,
-          item_id: String(item?._id),
+          item_id: item?._id ? String(item._id) : "",
           unit: item?.quantityUnitName,
+          itemQuantity: item?.itemPerUnitQuantity,
+          inputName: item?.itemName,
+          barcode: item?.itemBarcode,
+          companyName: item?.companyName,
+          subCategory: item?.subCategory,
+          flavourOrFeature: item?.flavourOrFeature,
+          saleTime: item?.saleTime,
         }))
         setItemLoading(false);
       })();
     }
-  }, [form.values.barcode])
+  }, [form.values.search])
 
   return {
     form,
@@ -702,7 +745,9 @@ const usePurchaseOrder = (history) => {
     disableDraft,
     itemsList,
     setLoading,
-    itemLoading
+    itemLoading,
+    mfgDate,
+    setMfgDate
   };
 };
 
