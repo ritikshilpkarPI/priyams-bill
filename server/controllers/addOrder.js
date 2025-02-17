@@ -25,7 +25,13 @@ const addOrder = async (req, res,next) => {
 
       if(orders && orders.length){
         orders.forEach((order => {
-          order.sku = getItemSKU(order);
+          order.sku = getItemSKU({
+            itemQuantity: order.itemQuantity,
+            unit: order.unit,
+            itemName: order.inputName,
+            barcode: order.barcode,
+            mrp: order.mrp
+          });
           if(order.expiryDates) {
             order.expiryDates.forEach(expiryDates => {
               order.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);

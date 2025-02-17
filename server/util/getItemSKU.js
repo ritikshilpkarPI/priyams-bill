@@ -1,7 +1,7 @@
 export const getItemSKU = ({
-    packetQty,
-    packetUnit,
+    itemQuantity,
+    unit = "",
     mrp,
-    barcode,
-    itemName
-}) => `${barcode} - ${itemName} - ${packetQty} ${packetUnit} - MRP ${mrp}`.toUpperCase();
+    barcode = "",
+    itemName = ""
+}) => `${barcode.trim()} - ${itemName.trim()} - ${itemQuantity} ${unit.trim()} - MRP ${mrp}`.toUpperCase();

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
 
@@ -12,11 +13,23 @@ const saveInventory = async (req, res, next) => {
     const itemIds = newItems
       .map((item) => item.item_id)
       .filter((id) => mongoose.Types.ObjectId.isValid(id));
-
+      
+    const newItemSkus = newItems.filter((item) => !item.item_id).map(item => item.sku);
     // Fetch all existing items in one go
-    const existingItems = await Item.find({ _id: { $in: itemIds } })
-      .lean()
-      .session(session);
+    const existingItemWithIdPromise =  Item.find({ _id: { $in: itemIds } })
+    .lean()
+    .session(session);
+
+    const existingItemWithSkusPromise = Item.find({ sku: { $in: newItemSkus } }).lean().session(session);
+    
+    const [existingItemsWithIds, existingItemWithSkus] = await Promise.all(
+    [
+      existingItemWithIdPromise, 
+      existingItemWithSkusPromise
+    ]);
+
+
+    const existingItems = [...existingItemsWithIds, ...existingItemWithSkus]; 
 
     // Create a map for quick lookup
     const existingItemsMap = new Map(
@@ -53,6 +66,13 @@ const saveInventory = async (req, res, next) => {
         returnPolicyAvailable: item.returnPolicyAvailable,
         returnPolicyRemark: item.returnPolicyRemark,
         freeItemAvailable: item.freeItemAvailable,
+        sku: getItemSKU({
+          itemQuantity: item?.itemQuantity,
+          unit: item?.unit,
+          mrp: item?.mrp,
+          barcode: item?.barcode,
+          itemName: item?.inputName,
+        })
       };
 
       const oldItem = existingItemsMap.get(item.item_id);

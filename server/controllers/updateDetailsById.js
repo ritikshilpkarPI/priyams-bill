@@ -45,7 +45,13 @@ const updateDetailsById = async (req, res,next) => {
         return {
           ...order,
           expiryDates,
-          sku: getItemSKU(order)
+          sku: getItemSKU({
+            itemQuantity: order.itemQuantity,
+            unit: order.unit,
+            itemName: order.inputName,
+            barcode: order.barcode,
+            mrp: order.mrp
+          })
         }
       }))
     }

@@ -118,8 +118,6 @@ const usePurchaseOrder = (history) => {
             : 'MRP should be greater than 0'
           : null,
       // costPrice: (value) => (form.values.validate ? value > 0 ? null : 'Cost Price should be greater than 0' : null),
-      category: (value) => (!value ? 'Category is Compulsory' : null),
-      brand: (value) => (!value ? 'Brand name is Compulsory' : null),
     },
   });
   const [purchaseList, setPurchaseList] = useState({
@@ -452,11 +450,9 @@ const usePurchaseOrder = (history) => {
         const { order } = data;
         const { _id } = order;
         offLoader();
-        if (!id) {
-          navigate(`/purchase/${_id}`);
-        } else {
-          getDetails(id);
-        }
+        const purchaseOrderId = _id || data?.order?._id;
+        if(purchaseOrderId) getDetails(purchaseOrderId);
+        if (!id) navigate(`/purchase/${_id}`);
       } catch (err) {
         console.log(err);
         offLoader();
@@ -512,7 +508,6 @@ const usePurchaseOrder = (history) => {
       stockQuantity: item?.stockQuantity,
       currentStock: item?.currentStock,
       minimumQuantity: item?.minimumQuantity,
-      itemQuantity: item?.itemPerUnitQuantity,
       unit: item?.unit,
       itemRemark: item?.itemRemark,
       sellingPrice: item?.sellingPrice,
@@ -531,7 +526,7 @@ const usePurchaseOrder = (history) => {
       freeItemsAvailable: item?.freeItemsAvailable,
       returnPolicyRemarks: item?.returnPolicyRemarks,
       companyName: item?.companyName,
-      itemQuantity: item?.itemPerUnitQuantity,
+      itemQuantity: item?.itemQuantity,
     }));
     setSlabs([...item?.slabPrice]);
     setOpened(true);
@@ -695,7 +690,12 @@ const usePurchaseOrder = (history) => {
           item_id: item?._id ? String(item._id) : "",
           unit: item?.quantityUnitName,
           itemQuantity: item?.itemPerUnitQuantity,
-          sku: item?.sku
+          inputName: item?.itemName,
+          barcode: item?.itemBarcode,
+          companyName: item?.companyName,
+          subCategory: item?.subCategory,
+          flavourOrFeature: item?.flavourOrFeature,
+          saleTime: item?.saleTime,
         }))
         setItemLoading(false);
       })();

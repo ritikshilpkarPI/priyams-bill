@@ -129,15 +129,7 @@ declare global {
     barcode: string;
     mrp: number;
     packetQty: number;
-    packetUnit: number;
-  }
-
-  export interface ItemNameSKUProps {
-    itemName: string;
-    barcode: string;
-    mrp: number;
-    packetQty: number;
-    packetUnit: number;
+    packetUnit: string;
   }
 
   type itemsByBarcode = string[] | any
