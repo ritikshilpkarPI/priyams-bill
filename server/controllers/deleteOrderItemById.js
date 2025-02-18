@@ -14,7 +14,6 @@ const deleteOrderItemById = async (req, res,next) => {
         message: 'order deleted successfully',
         success: true,
         order: purchaseOrder,
-        updatedOrder,
       });
     } catch (error) {
       next(error)
