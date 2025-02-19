@@ -25,5 +25,6 @@ export const ExpiredItemList = lazy(()=> import('./ExpiredItemList'))
 export const ReturnAndExchange = lazy(()=> import('./ReturnBill'));
 export const SellDetailsPage = lazy(()=> import('./sellDetailsPage/SellDetailsPage'));
 export const BarcodePrint = lazy(()=> import('./barcodePrint/BarcodePrint'));
-export const Label = lazy(() => import('./Label'))
+export const Label = lazy(() => import('./Label'));
+export const NewPurchaseOrder = lazy(() => import('./newPurchaseOrder/NewPurchaseOrder'));
 
