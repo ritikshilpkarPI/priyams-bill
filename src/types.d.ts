@@ -1,6 +1,7 @@
 import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 import { RefObject } from "react";
+import { NumberValue } from "d3";
 
 declare global {
   export interface UserStateType {
@@ -207,6 +208,45 @@ declare global {
     onSubmit: (dealerFormData: DealerDetailFormType) => void;
   }
 
+  interface PurchasedItemDetailFormType {
+    barcode: string;
+    itemName: string;
+    mrp: number;
+    itemQuantity: number;
+    unit: string,
+    itemRemark: string;
+    sellingPrice: number;
+    costPrice: number;
+    validate: false;
+    item_id: string;
+    brand: string;
+    category: string;
+    subCategory: string;
+    flavourOrFeature: string;
+    companyName: string;
+    saleTime: string;
+    expiryDates: ItemExpiryDateType[];
+    slabPrice: [];
+    stockQuantity: number;
+    returnPolicyAvailable: boolean;
+    freeItemsAvailable: boolean;
+    returnPolicyRemarks: string;
+  }
+
+  interface PurchasedItemDetailFormProps {
+    onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
+  }
+
+  interface ItemExpiryDateType {
+    quantity: number;
+    mfgDate: Date;
+    date: Date;
+  }
+
+  interface ItemExpiryTableProps {
+    expiryDates: ItemExpiryDateType[],
+    onRemove?: any
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
