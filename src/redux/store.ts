@@ -4,6 +4,7 @@ import billReducer from './bill/billSlice';
 import allItemsFeedDataSlice from './allItemsFeedData/allItemsFeedDataSlice';
 import itemsSlice from './items/itemsSlice';
 import dealerDetailFormSlice from './dealerDetailForm/dealerDetailFormSlice';
+import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedItemDetailFormSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     allItemsFeedData: allItemsFeedDataSlice,
     items: itemsSlice,
     dealerDetailForm: dealerDetailFormSlice,
+    purchasedItemDetailForm: purchasedItemDetailFormSlice,
   },
 });
 
