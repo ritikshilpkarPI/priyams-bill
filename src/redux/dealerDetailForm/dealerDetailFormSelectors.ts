@@ -1,0 +1,1 @@
+export const selectDealerDetailForm = (state: RootState) => state.dealerDetailForm;

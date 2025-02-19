@@ -3,13 +3,15 @@ import { configureStore } from '@reduxjs/toolkit';
 import billReducer from './bill/billSlice';
 import allItemsFeedDataSlice from './allItemsFeedData/allItemsFeedDataSlice';
 import itemsSlice from './items/itemsSlice';
+import dealerDetailFormSlice from './dealerDetailForm/dealerDetailFormSlice';
 
 export const store = configureStore({
   reducer: {
     user: userSlice,
     bill: billReducer,
     allItemsFeedData: allItemsFeedDataSlice,
-    items: itemsSlice
+    items: itemsSlice,
+    dealerDetailForm: dealerDetailFormSlice,
   },
 });
 

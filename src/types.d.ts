@@ -194,6 +194,19 @@ declare global {
     packetUnit: string;
   }
 
+  interface DealerDetailFormType {
+    paymentType: 'fully-paid' | 'partially-paid' | 'credit';
+    billAmount: number;
+    procurementSource: 'Walmart' | 'D Mart' | 'City' | 'Distributor';
+    dealerName: string;
+    mobileNumber: string;
+    remarks: string;
+  };
+
+  interface DealerDetailsFormProps {
+    onSubmit: (dealerFormData: DealerDetailFormType) => void;
+  }
+
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
