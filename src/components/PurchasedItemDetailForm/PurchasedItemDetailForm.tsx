@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Joi from 'joi';
 import {
   TextInput,
@@ -14,6 +14,7 @@ import {
   Checkbox,
   Title,
   Badge,
+  Modal,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useSelector, useDispatch } from 'react-redux';
@@ -25,16 +26,26 @@ import { categoriesWithSubcategories } from '../../utils/constants/categoriesWit
 import {  IconPlus } from '@tabler/icons-react';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
+import { QuestionModal } from '../questionModal/QuestionModal';
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit
 }) => {
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
+  const [showSkuModal, setShowSkuModal] = useState(false);
+  const formOldValuesRef = useRef<PurchasedItemDetailFormType | null>(null)
   const defaulValuesExpiryItemForm = {
     mfgDate: null,
     date: null,
     quantity: ''
+  }
+  const skuFields: any = {
+    inputName: "inputName",
+    barcode: "barcode",
+    mrp: "mrp",
+    itemQuantity: "itemQuantity",
+    unit: "unit"
   }
   const [formExpiryDate, setFormExpiryDate] = useState(defaulValuesExpiryItemForm);
   const [errors, setErrors] = useState<any>({});
@@ -89,6 +100,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   })
 
   const onChange = (field: string, value: string | number | boolean) => {
+    if(skuFields[field] && purchasedItemFormData.item_id){
+      formOldValuesRef.current = { ...purchasedItemFormData };
+      setShowSkuModal(true);
+    }
     dispatch(setPurchasedItemDetailForm({
       [field]: value,
     }));
@@ -384,6 +399,21 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         </Button>
         </Box>
       </Flex>
+      <QuestionModal
+        opened={showSkuModal}
+        onClose={()=> setShowSkuModal(false)}
+        question="Any change in SKU fields will create new item. Do you want to continue?
+        SKU Fields: Barcode, Item name, MRP, Packet Amount, Unit"
+        onAgree={()=> {
+          setShowSkuModal(false);
+          dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
+        }}
+        onDisagree={()=> {
+          setShowSkuModal(false);
+          if(!formOldValuesRef.current) return;
+          dispatch(setPurchasedItemDetailForm(formOldValuesRef.current));
+        }}
+      />
     </Flex>
   );
 };

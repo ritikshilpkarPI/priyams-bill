@@ -9,20 +9,21 @@ export const PurchaseDetailFormAlert = () => {
     const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
     const newItemSKU = useMemo(() => getItemSKU({
         barcode: purchasedItemFormData.barcode?.toString()?.trim(),
-        itemName: purchasedItemFormData.itemName?.trim(),
+        itemName: purchasedItemFormData.inputName?.trim() || "",
         mrp: purchasedItemFormData.mrp,
         packetQty: purchasedItemFormData.itemQuantity,
         packetUnit: purchasedItemFormData.unit
       }), [
-        purchasedItemFormData.barcode, purchasedItemFormData.itemName,
+        purchasedItemFormData.barcode, 
+        purchasedItemFormData.inputName,
         purchasedItemFormData.mrp,
         purchasedItemFormData.unit,
-        purchasedItemFormData.itemQuantity
+        purchasedItemFormData.itemQuantity,
       ])
     return    <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }}>
     <Title order={3}>Messages</Title>
     {
-      purchasedItemFormData.itemName && purchasedItemFormData.barcode ?
+      purchasedItemFormData.inputName && purchasedItemFormData.barcode ?
        (    <Alert color="green">
               <IconCheck
                 size={20} color="green" style={{ marginRight: '10px' }} 
