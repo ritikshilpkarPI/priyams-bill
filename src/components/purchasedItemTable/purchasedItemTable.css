@@ -1,0 +1,9 @@
+.purchased-item-table-row:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.purchased-item-table-action-td {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+}

@@ -1,27 +1,30 @@
 import React from 'react'
-import { Badge, Flex, Table, Title } from '@mantine/core';
+import { Badge, Button, Flex, Table, Title } from '@mantine/core';
 import { useSelector } from 'react-redux'
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
+import { IconEdit, IconX } from '@tabler/icons-react';
+import './purchasedItemTable.css';
 
 export const PurchasedItemTable = () => {
   const purchasedItems = useSelector(selectPurchasedItems);
   const rows = purchasedItems?.map(purchasedItem => (
-    <tr key={purchasedItem._id}>
-        <td>{purchasedItem?.barcode}</td>
-        <td>{purchasedItem?.inputName}</td>
-        <td>{purchasedItem?.itemQuantity}</td>
-        <td>{purchasedItem?.unit}</td>
-        <td>{purchasedItem?.mrp}</td>
-        <td>{purchasedItem?.costPrice}</td>
-        <td>{purchasedItem?.sellingPrice}</td>
-        <td>{purchasedItem?.stockQuantity}</td>
-        <td>{purchasedItem?.itemRemark}</td>
+    <tr  key={purchasedItem._id} className='purchased-item-table-row'>
+        <td>{purchasedItem?.barcode || "-"}</td>
+        <td>{purchasedItem?.inputName || "-"}</td>
+        <td>{purchasedItem?.itemQuantity || "-"}</td>
+        <td>{purchasedItem?.unit || "-"}</td>
+        <td>{purchasedItem?.mrp || "-"}</td>
+        <td>{purchasedItem?.costPrice || "-"}</td>
+        <td>{purchasedItem?.sellingPrice || "-"}</td>
+        <td>{purchasedItem?.stockQuantity || "-"}</td>
+        <td>{purchasedItem?.itemRemark || "-"}</td>
         <td>
           {
-            purchasedItem.expiryDates?.length && ( <ItemExpiryTable 
+            purchasedItem.expiryDates?.length > - 0 ? ( <ItemExpiryTable 
               expiryDates={purchasedItem.expiryDates}
             />)
+            : "-"
           }
         </td>
         <td>
@@ -30,6 +33,14 @@ export const PurchasedItemTable = () => {
             New Item
           </Badge>)
           }
+        </td>
+        <td className='purchased-item-table-action-td'>
+          <Button variant='default' leftIcon={<IconEdit cursor="pointer" />}>
+              Edit
+          </Button>
+          <Button variant='default' color="red" leftIcon={<IconX cursor="pointer" />}>
+              Remove
+          </Button>
         </td>
     </tr>
   ))
