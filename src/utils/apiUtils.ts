@@ -161,3 +161,14 @@ export const updatePurchaseOrderItemByIdxAPI =  async (purchaseOrderId: string, 
     return { isError: true, error };
   }
 }
+
+export const getItemByIdAPI = async (itemId: string) => {
+  try {
+    const response = await getAPI({
+      path: `${API_PATHS.ITEMS.GET_ITEM_BY_ID}/${itemId}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}

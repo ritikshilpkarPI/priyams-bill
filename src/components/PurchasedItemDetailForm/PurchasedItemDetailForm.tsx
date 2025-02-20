@@ -24,7 +24,6 @@ import { getFloatNumFromStr } from '../../utils/getFloatNumFromStr';
 import { categoriesWithSubcategories } from '../../utils/constants/categoriesWithSubCategories';
 import {  IconPlus } from '@tabler/icons-react';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
-import { PurchaseDetailFormAlert } from '../purchaseDetailFormAlert/purchaseDetailFormAlert';
 import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
@@ -135,7 +134,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
 
   return (
     <Flex direction="column" gap="16px" mx="sm" mt="lg">
-      <PurchaseDetailFormAlert />
       <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }}>
         <Title order={3} display="flex" sx={{ gap: "8px" }}>
           Form 

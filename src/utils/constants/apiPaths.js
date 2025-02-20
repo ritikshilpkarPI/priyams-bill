@@ -113,6 +113,7 @@ export const API_PATHS = {
     GET_ALL_RIDERS: "/api/riders"
   },
   ITEMS: {
-    GET_ITEMS_SKU: "/api/items/sku"
+    GET_ITEMS_SKU: "/api/items/sku",
+    GET_ITEM_BY_ID: "/api/item"
   }
 };

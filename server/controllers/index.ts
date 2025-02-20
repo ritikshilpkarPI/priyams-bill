@@ -85,6 +85,7 @@ import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
 import getItemsSellDetailsByItemId from "./getItemsSellDetailsByItemId";
 import { getItemsSku } from "./getItemsSku";
+import { getItemById } from "./getItemById";
 
 export {
   getStaff,
@@ -173,5 +174,6 @@ export {
   assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSellDetailsByItemId,
-  getItemsSku
+  getItemsSku,
+  getItemById
 };
