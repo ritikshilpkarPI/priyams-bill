@@ -247,7 +247,9 @@ declare global {
 
   interface ItemExpiryTableProps {
     expiryDates: ItemExpiryDateType[],
-    onRemove?: any
+    onRemove?: any;
+    showActions?: boolean;
+    showTotal?: boolean;
   }
 
   interface PurchaseOrderDataType {

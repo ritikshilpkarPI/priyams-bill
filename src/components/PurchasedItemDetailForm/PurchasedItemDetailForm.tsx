@@ -103,7 +103,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         return acc;
       }, {});
 
-      return setErrors(errorMessages);
+      setErrors(errorMessages);
     }
     onSubmit(purchasedItemFormData);
   }
@@ -359,8 +359,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               </Button>
             </Flex>
             <ItemExpiryTable 
-            expiryDates={purchasedItemFormData.expiryDates}
-            onRemove={(idx: number)=> dispatch(removeItemExpiryDateByIdx(idx))}
+              expiryDates={purchasedItemFormData.expiryDates}
+              onRemove={(idx: number)=> dispatch(removeItemExpiryDateByIdx(idx))}
+              showTotal={true}
+              showActions={true}
             />
           </Box>
         </Flex>

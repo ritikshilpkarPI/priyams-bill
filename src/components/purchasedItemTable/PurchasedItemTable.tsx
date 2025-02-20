@@ -2,6 +2,7 @@ import React from 'react'
 import { Badge, Flex, Table, Title } from '@mantine/core';
 import { useSelector } from 'react-redux'
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
+import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 
 export const PurchasedItemTable = () => {
   const purchasedItems = useSelector(selectPurchasedItems);
@@ -18,13 +19,17 @@ export const PurchasedItemTable = () => {
         <td>{purchasedItem?.itemRemark}</td>
         <td>
           {
+            purchasedItem.expiryDates?.length && ( <ItemExpiryTable 
+              expiryDates={purchasedItem.expiryDates}
+            />)
+          }
+        </td>
+        <td>
+          {
             !purchasedItem.item_id && (<Badge color="green">
             New Item
           </Badge>)
           }
-          <Badge color="red">
-            Shelf Expired
-          </Badge>
         </td>
     </tr>
   ))
@@ -43,6 +48,7 @@ export const PurchasedItemTable = () => {
           <th>SP</th>
           <th>Order Quantity</th>
           <th>Remarks</th>
+          <th>Expiry Summary</th>
           <th>Tags</th>
           <th>Actions</th>
         </tr>
