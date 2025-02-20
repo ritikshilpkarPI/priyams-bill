@@ -73,3 +73,39 @@ export const getItemsSkuAPI = async () => {
     return { isError: true, error };
   }
 }
+
+export const addNewOrderAPI = async (data: any) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.PURCHASE_ORDER.POST_ADD_NEW_ORDER,
+      data
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const updateOrderDetailsAPI = async (data: any) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.PURCHASE_ORDER.POST_UPDATE_DETAILS,
+      data
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const saveOrderAPI = async (purchaseOrderData: any) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.PURCHASE_ORDER.POST_SAVE_ORDER,
+      data: { new_order: purchaseOrderData }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
