@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
-import { deletePurchaseOrderItemByIdAPI, getItemByIdAPI, getPurchaseOrderDetailsAPI, saveOrderAPI, updatePurchaseOrderByIdAPI, updatePurchaseOrderItemByIdxAPI } from '../../utils/apiUtils';
+import { deletePurchaseOrderItemByIdAPI, getItemByIdAPI, getItemsSkuAPI, getPurchaseOrderDetailsAPI, saveOrderAPI, updatePurchaseOrderByIdAPI, updatePurchaseOrderItemByIdxAPI } from '../../utils/apiUtils';
 import { setPurchasedItemDetailForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { PurchasedItemDetailForm } from '../PurchasedItemDetailForm/PurchasedItemDetailForm'
 import { PurchasedItemTable } from '../purchasedItemTable/PurchasedItemTable'
@@ -11,7 +11,7 @@ import { QuestionModal } from '../questionModal/QuestionModal';
 import { ItemSearch } from '../ItemSearch';
 import { Box } from '@mantine/core';
 import { PurchaseDetailFormAlert } from '../purchaseDetailFormAlert/purchaseDetailFormAlert';
-import { getPurchasedItemByItem } from 'src/utils/getPurchasedItemByItem';
+import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
 
 const PurchasedItemPanel = () => {
     const dispatch = useDispatch();
@@ -81,9 +81,9 @@ const PurchasedItemPanel = () => {
        if(response?.data)  dispatch(setPurchaseOrder(response.data))
       }
 
-      useEffect(()=> {
-        getPurchaseOrderDetails();
-      }, [])
+  useEffect(()=> {
+    getPurchaseOrderDetails();
+  }, [])
 
   return (
     <div>

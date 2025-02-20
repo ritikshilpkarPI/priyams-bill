@@ -27,6 +27,7 @@ import {  IconPlus } from '@tabler/icons-react';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
 import { QuestionModal } from '../questionModal/QuestionModal';
+import { getItemSKU } from 'src/utils/getItemSKU';
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit
@@ -99,10 +100,39 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     }),
   })
 
+  const isSkuAlreadyExists = (field: string, value: string) => {
+    const itemSKUData = {
+      barcode: purchasedItemFormData?.barcode?.trim() || "",
+      itemName: purchasedItemFormData?.inputName?.trim() || "",
+      packetQty: purchasedItemFormData?.itemQuantity,
+      packetUnit: purchasedItemFormData.unit,
+      mrp: purchasedItemFormData.mrp
+    }
+    let skuRelatedField = field;
+    switch(field){
+      case "inputName":
+        skuRelatedField = "itemName"; break;
+      case "barcode":
+        skuRelatedField = "barcode"; break;
+      case "itemQuantity":
+        skuRelatedField = "packetQty"; break;
+      case "packetUnit":
+        skuRelatedField = "unit"; break;
+      case "mrp":
+        skuRelatedField = "mrp"; break;
+    }
+    const newItemSKU = getItemSKU({
+      ...itemSKUData,
+      [skuRelatedField]: value?.toString().trim()
+    })
+    const oldItemSKU = getItemSKU(itemSKUData);
+    return newItemSKU === oldItemSKU;
+  }
+
   const onChange = (field: string, value: string | number | boolean) => {
-    if(skuFields[field] && purchasedItemFormData.item_id){
-      formOldValuesRef.current = { ...purchasedItemFormData };
-      setShowSkuModal(true);
+    if(skuFields[field] && purchasedItemFormData.item_id && isSkuAlreadyExists(field, value?.toString())){
+        formOldValuesRef.current = { ...purchasedItemFormData };
+        setShowSkuModal(true);
     }
     dispatch(setPurchasedItemDetailForm({
       [field]: value,
