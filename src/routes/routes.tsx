@@ -209,6 +209,11 @@ export const router = createBrowserRouter(
             path: ROUTES.NEW_PURCHASE_ORDER,
             element: <NewPurchaseOrder />,
             index: true
+          },
+          {
+            path: ROUTES.NEW_PURCHASE_ORDER_BY_ID,
+            element: <NewPurchaseOrder />,
+            index: true
           }
         ]
       },

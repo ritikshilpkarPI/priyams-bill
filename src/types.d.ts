@@ -231,6 +231,8 @@ declare global {
     returnPolicyAvailable: boolean;
     freeItemsAvailable: boolean;
     returnPolicyRemarks: string;
+    _id?: string;
+    inputName?: string;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -246,6 +248,17 @@ declare global {
   interface ItemExpiryTableProps {
     expiryDates: ItemExpiryDateType[],
     onRemove?: any
+  }
+
+  interface PurchaseOrderDataType {
+    isApproved?: boolean;
+    isRejected?: boolean;
+    isDraft?: boolean;
+    isPaid?: boolean;
+    totalPaidAmount?: number;
+    createdAt?: string;
+    _id?: string;
+    purchasedItems?: Array<PurchasedItemDetailFormType>;
   }
 }
 declare module '*.scss' {

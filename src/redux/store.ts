@@ -5,6 +5,7 @@ import allItemsFeedDataSlice from './allItemsFeedData/allItemsFeedDataSlice';
 import itemsSlice from './items/itemsSlice';
 import dealerDetailFormSlice from './dealerDetailForm/dealerDetailFormSlice';
 import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedItemDetailFormSlice';
+import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     items: itemsSlice,
     dealerDetailForm: dealerDetailFormSlice,
     purchasedItemDetailForm: purchasedItemDetailFormSlice,
+    purchaseOrder: purchaseOrderSlice,
   },
 });
 

@@ -109,3 +109,26 @@ export const saveOrderAPI = async (purchaseOrderData: any) => {
     return { isError: true, error };
   }
 }
+
+export const getPurchaseOrderDetailsAPI = async (purchaseOrderId: string) => {
+  try {
+    const response = await getAPI({
+      path: `${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/${purchaseOrderId}`
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const updatePurchaseOrderByIdAPI = async (purchasedItemData: PurchasedItemDetailFormType, id: string) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.PURCHASE_ORDER.POST_UPDATE_SAVED_ORDER}/${id}`,
+      data: { new_order: purchasedItemData }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
