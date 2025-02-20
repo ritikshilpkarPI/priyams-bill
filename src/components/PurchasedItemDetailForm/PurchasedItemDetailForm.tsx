@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import Joi from 'joi';
 import {
   TextInput,
@@ -7,13 +7,11 @@ import {
   Button,
   Grid,
   Col,
-  Container,
   Box,
   Divider,
   Autocomplete,
   Flex,
   Checkbox,
-  Alert,
   Title,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
@@ -23,10 +21,10 @@ import { addItemExpiryDateData, removeItemExpiryDateByIdx, setPurchasedItemDetai
 import { getNumberFromStr } from '../../utils/getNumberFromStr';
 import { getFloatNumFromStr } from '../../utils/getFloatNumFromStr';
 import { categoriesWithSubcategories } from '../../utils/constants/categoriesWithSubCategories';
-import { IconCheck, IconPlus, IconExclamationCircle } from '@tabler/icons-react';
+import {  IconPlus } from '@tabler/icons-react';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
-import { getItemSKU } from '../../utils/getItemSKU';
 import { PurchaseDetailFormAlert } from '../purchaseDetailFormAlert/purchaseDetailFormAlert';
+import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit
@@ -42,10 +40,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const [errors, setErrors] = useState<any>({});
 
   const formValidationSchema = Joi.object({
-    barcode: Joi.string().required().messages({
+    barcode: Joi.string().trim().required().messages({
       'string.empty': 'Barcode is required.'
     }),
-    itemName: Joi.string().required().messages({
+    itemName: Joi.string().trim().required().messages({
       'string.empty': 'Item name is required.',
     }),
     itemQuantity: Joi.number().required().messages({
@@ -58,10 +56,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       'any.required': 'MRP is required.',
       'number.min': 'MRP must be greater than 0.',
     }),
-    companyName: Joi.string().required().messages({
+    companyName: Joi.string().trim().required().messages({
       'string.empty': 'Company Name is required',
     }),
-    brand: Joi.string().required().messages({
+    brand: Joi.string().trim().required().messages({
       'string.empty': 'Brand Name is required',
     }),
     costPrice: Joi.number().min(1).required().messages({
@@ -138,6 +136,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     <Flex direction="column" gap="16px" mx="sm" mt="lg">
       <PurchaseDetailFormAlert />
       <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }}>
+        <Title order={3}>Form</Title>
         <Flex wrap="wrap" direction="row" gap="32px">
           <Box>
           <Divider my="xs" label="Item SKU Details" labelPosition="center" />
@@ -147,7 +146,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               <TextInput
                 label="Barcode"
                 value={purchasedItemFormData.barcode}
-                onChange={(event) => onChange('barcode', event.currentTarget.value)}
+                onChange={(event) => onChange('barcode', event.currentTarget.value.toUpperCase().trim())}
                 required
                 error={errors.barcode}
                 placeholder="Enter barcode"
@@ -158,7 +157,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               <TextInput
                 label="Item Name"
                 value={purchasedItemFormData.itemName}
-                onChange={(event) => onChange('itemName', event.currentTarget.value)}
+                onChange={(event) => onChange('itemName', getStrWithoutSpecChar(event.currentTarget.value.toUpperCase()))}
                 required
                 error={errors.itemName}
                 placeholder="Enter Item name"
@@ -367,7 +366,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         </Flex>
         <Box>
         <Button sx={{ width: "220px" }} onClick={handleSubmit} type="submit" fullWidth mt="lg">
-                Save
+                Add Item
         </Button>
         </Box>
       </Flex>

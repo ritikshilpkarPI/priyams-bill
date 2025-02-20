@@ -1,8 +1,11 @@
 export const getFloatNumFromStr = (value: string) => {
-  console.log(value);
-  const cleanedValue = value.replace(/[^0-9]/g, "");
-  console.log(cleanedValue)
-  const floatValue = parseFloat(cleanedValue);
-  
-  return isNaN(floatValue) ? 0 : floatValue;
-}
+  const firstIndexOfDot = value.indexOf('.');
+  let cleanValue = value.replace(/[^0-9]/g, '');
+  if(firstIndexOfDot > 0) {
+    cleanValue = `${cleanValue.slice(0, firstIndexOfDot)}.${cleanValue.slice(firstIndexOfDot)}`;
+    if(firstIndexOfDot === value.length - 4) {
+      cleanValue = cleanValue.slice(0, value.length - 1);
+    }
+  }
+  return cleanValue;
+};
