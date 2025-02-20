@@ -262,6 +262,19 @@ declare global {
     _id?: string;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
   }
+
+  interface PurchasedItemTableProps {
+    onRemove: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void;
+    onEdit: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void; 
+  }
+
+  interface QuestionModalProps {
+    opened: boolean;
+    onClose: () => void;
+    question: string;
+    onAgree: () => void;
+    onDisagree: () => void;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

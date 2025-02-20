@@ -13,6 +13,7 @@ import {
   Flex,
   Checkbox,
   Title,
+  Badge,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useSelector, useDispatch } from 'react-redux';
@@ -43,7 +44,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     barcode: Joi.string().trim().required().messages({
       'string.empty': 'Barcode is required.'
     }),
-    itemName: Joi.string().trim().required().messages({
+    inputName: Joi.string().trim().required().messages({
       'string.empty': 'Item name is required.',
     }),
     itemQuantity: Joi.number().required().messages({
@@ -136,7 +137,20 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     <Flex direction="column" gap="16px" mx="sm" mt="lg">
       <PurchaseDetailFormAlert />
       <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }}>
-        <Title order={3}>Form</Title>
+        <Title order={3} display="flex" sx={{ gap: "8px" }}>
+          Form 
+          <span>
+          {
+            purchasedItemFormData.item_id ? 
+            (<Badge>
+              This item exists in inventory
+            </Badge>)
+            : (<Badge color="green">
+                You are adding new item
+              </Badge>)
+          }
+          </span>
+        </Title>
         <Flex wrap="wrap" direction="row" gap="32px">
           <Box>
           <Divider my="xs" label="Item SKU Details" labelPosition="center" />
@@ -156,10 +170,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
             <Col span={12}>
               <TextInput
                 label="Item Name"
-                value={purchasedItemFormData.itemName}
-                onChange={(event) => onChange('itemName', getStrWithoutSpecChar(event.currentTarget.value.toUpperCase()))}
+                value={purchasedItemFormData.inputName}
+                onChange={(event) => onChange('inputName', getStrWithoutSpecChar(event.currentTarget.value.toUpperCase()))}
                 required
-                error={errors.itemName}
+                error={errors.inputName}
                 placeholder="Enter Item name"
               />
             </Col>

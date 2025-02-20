@@ -6,9 +6,12 @@ import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { IconEdit, IconX } from '@tabler/icons-react';
 import './purchasedItemTable.css';
 
-export const PurchasedItemTable = () => {
+export const PurchasedItemTable = ({
+  onRemove,
+  onEdit
+}: PurchasedItemTableProps) => {
   const purchasedItems = useSelector(selectPurchasedItems);
-  const rows = purchasedItems?.map(purchasedItem => (
+  const rows = purchasedItems?.map((purchasedItem, idx) => (
     <tr  key={purchasedItem._id} className='purchased-item-table-row'>
         <td>{purchasedItem?.barcode || "-"}</td>
         <td>{purchasedItem?.inputName || "-"}</td>
@@ -35,10 +38,10 @@ export const PurchasedItemTable = () => {
           }
         </td>
         <td className='purchased-item-table-action-td'>
-          <Button variant='default' leftIcon={<IconEdit cursor="pointer" />}>
+          <Button variant='default' leftIcon={<IconEdit cursor="pointer" />} onClick={()=> onEdit(purchasedItem, idx)}>
               Edit
           </Button>
-          <Button variant='default' color="red" leftIcon={<IconX cursor="pointer" />}>
+          <Button variant='default' color="red" leftIcon={<IconX cursor="pointer" />} onClick={()=> onRemove(purchasedItem, idx)}>
               Remove
           </Button>
         </td>
@@ -48,26 +51,26 @@ export const PurchasedItemTable = () => {
     <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }} mx="sm" mt="16px">
       <Title order={3}>Added Items</Title>
       <Table>
-      <thead>
-        <tr>
-          <th>Barcode</th>
-          <th>Item Name</th>
-          <th>Packet Amount</th>
-          <th>Unit</th>
-          <th>MRP</th>
-          <th>CP</th>
-          <th>SP</th>
-          <th>Order Quantity</th>
-          <th>Remarks</th>
-          <th>Expiry Summary</th>
-          <th>Tags</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-          {rows}
-      </tbody>
-    </Table>
+        <thead>
+          <tr>
+            <th>Barcode</th>
+            <th>Item Name</th>
+            <th>Packet Amount</th>
+            <th>Unit</th>
+            <th>MRP</th>
+            <th>CP</th>
+            <th>SP</th>
+            <th>Order Quantity</th>
+            <th>Remarks</th>
+            <th>Expiry Summary</th>
+            <th>Tags</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            {rows}
+        </tbody>
+     </Table>
     </Flex>
   )
 }

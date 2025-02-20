@@ -7,3 +7,6 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+.purchase-item-table-action-item-name {
+    color: green;
+}

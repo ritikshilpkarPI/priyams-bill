@@ -132,3 +132,32 @@ export const updatePurchaseOrderByIdAPI = async (purchasedItemData: PurchasedIte
     return { isError: true, error };
   }
 }
+
+export const deletePurchaseOrderItemByIdAPI = async (purchaseOrderId: string, purchasedItemId: string) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.PURCHASE_ORDER.POST_DELETE_ITEM}/${purchaseOrderId}`,
+      data: {
+        itemId: purchasedItemId
+      }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const updatePurchaseOrderItemByIdxAPI =  async (purchaseOrderId: string, purchasedItemIdx: number, purchaseOrderData: PurchasedItemDetailFormType) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.PURCHASE_ORDER.POST_UPDATE_ORDER_BY_INDEX}/${purchaseOrderId}`,
+      data: {
+        new_order: purchaseOrderData,
+        index: purchasedItemIdx
+      }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
