@@ -330,6 +330,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               value={formExpiryDate.mfgDate}
               onChange={(value) => onExpiryFormDateChange('mfgDate', value)}
               error={errors.mfgDate}
+              withAsterisk
             />
             <DatePicker 
               label="Expiry Date." 
@@ -339,6 +340,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               value={formExpiryDate.date}
               minDate={formExpiryDate.mfgDate || undefined}
               error={errors.date}
+              withAsterisk
             />
             <TextInput
               label="Item Quantity"
