@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: DealerDetailFormType = {
-  paymentType: 'fully-paid',
+  payment: 'Fully Paid',
   billAmount: 0,
   procurementSource: 'Walmart',
   dealerName: '',
-  mobileNumber: '',
-  remarks: '',
+  phoneNumber: '',
+  remark: '',
 };
 
 const dealerDetailFormSlice = createSlice({

@@ -10,20 +10,25 @@ import {
   Col,
   Container,
   Box,
+  Flex,
+  Title,
 } from '@mantine/core';
-import { selectDealerDetailForm } from 'src/redux/dealerDetailForm/dealerDetailFormSelectors';
+import { selectDealerDetailForm } from '../../redux/dealerDetailForm/dealerDetailFormSelectors';
 import { useSelector, useDispatch } from 'react-redux';
-import { setDealerFormData } from 'src/redux/dealerDetailForm/dealerDetailFormSlice';
+import { setDealerFormData } from '../../redux/dealerDetailForm/dealerDetailFormSlice';
+import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
+import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 
-export const DealerDetailForm: React.FC<DealerDetailsFormProps> = ({
-  onSubmit
-}) => {
+export const DealerDetailForm: React.FC = () => {
   const dispatch = useDispatch();
   const dealerFormData = useSelector(selectDealerDetailForm);
+  const purchaseOrder = useSelector(selectPurchaseOrder);
   const [errors, setErrors] = useState<any>({});
+  const [loading, setLoading] = useState(false);
+  const [isDealerDetailsSaved, setIsDealerDetailsSaved] = useState(Boolean(purchaseOrder._id));
 
   const formValidationSchema = Joi.object({
-    paymentType: Joi.string().valid('Fully Paid', 'Partially Paid', 'Credit'),
+    payment: Joi.string().valid('Fully Paid', 'Partially Paid', 'Credit'),
     billAmount: Joi.number().min(1).required().messages({
       'any.required': 'Bill amount is required.',
       'number.min': 'Bill amount must be greater than 0.',
@@ -32,17 +37,52 @@ export const DealerDetailForm: React.FC<DealerDetailsFormProps> = ({
     dealerName: Joi.string().required().messages({
       'string.empty': 'Dealer name is required.',
     }),
-    mobileNumber: Joi.string().pattern(/^\d{10}$/, 'Mobile number').required().messages({
-      'string.empty': 'Mobile number is required.',
-      'string.pattern.name': 'Mobile number must be exactly 10 digits.',
+    phoneNumber: Joi.string().pattern(/^\d{10}$/, 'Phone number').required().messages({
+      'string.empty': 'Phone number is required.',
+      'string.pattern.name': 'Phone number must be exactly 10 digits.',
     }),
-    remarks: Joi.string().optional(),
+    remark: Joi.string().optional(),
   });
 
   const onChange = (field: string, value: string | number) => {
+    setIsDealerDetailsSaved(false);
     dispatch(setDealerFormData({
       [field]: value,
     }));
+  }
+
+  const addNewOrder = async () => {
+    setLoading(true);
+    const response = await addNewOrderAPI({
+      new_order: { purchaseObj: { 
+        ...purchaseOrder, 
+        ...dealerFormData, 
+        orders: purchaseOrder.purchasedItems,
+      } },
+    })
+    setLoading(false);
+    if(response.isError) return;
+    setIsDealerDetailsSaved(true);
+  }
+
+  const updateOrder = async () => {
+    setLoading(true);
+    const response = await updateOrderDetailsAPI({
+      new_order: { 
+        purchaseObj: {
+          details: [],
+          bills: [],
+          orders: purchaseOrder.purchasedItems,
+          ...purchaseOrder, 
+          id: purchaseOrder._id
+        } 
+      },
+      deleteBills: [],
+      uploadedImages: []
+    });
+    setLoading(false);
+    if(response.isError) return;
+    setIsDealerDetailsSaved(true);
   }
 
   const handleSubmit = () => {
@@ -52,16 +92,20 @@ export const DealerDetailForm: React.FC<DealerDetailsFormProps> = ({
       const errorMessages = error.details.reduce((acc: any, err: any) => {
         acc[err.path[0]] = err.message;
         return acc;
-      }, {});
+    }, {});
 
       return setErrors(errorMessages);
     }
-    onSubmit(dealerFormData);
+    if(purchaseOrder._id) return updateOrder();
+    return addNewOrder();
   }
 
   return (
-    <Container size="xs" mt="lg">
-      <Box>
+    <Flex mt="lg" mx="sm" align="center" justify="center" gap="16px" direction="column">
+      <Flex direction="column" gap="16px" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left", width: "fit-content" }}>
+        <Title order={3}>
+           Dealer Details Form
+        </Title>
         <Grid gutter="md">
 
           <Col span={12}>
@@ -77,9 +121,9 @@ export const DealerDetailForm: React.FC<DealerDetailsFormProps> = ({
 
           <Col span={12}>
             <TextInput
-              label="Mobile Number"
-              value={dealerFormData.mobileNumber}
-              onChange={(event) => onChange('mobileNumber', event.currentTarget.value.replace(/[^0-9]/g
+              label="Phone Number"
+              value={dealerFormData.phoneNumber}
+              onChange={(event) => onChange('phoneNumber', event.currentTarget.value.replace(/[^0-9]/g
 , ""))}
               required
               error={errors.mobileNumber}
@@ -104,8 +148,8 @@ export const DealerDetailForm: React.FC<DealerDetailsFormProps> = ({
             <Select
                 label="Payment Type"
                 data={['Fully Paid', 'Partially Paid', 'Credit']}
-                value={dealerFormData.paymentType}
-                onChange={(value) => onChange('paymentType', value!)}
+                value={dealerFormData.payment}
+                onChange={(value) => onChange('payment', value!)}
               />
           </Col>
 
@@ -120,19 +164,19 @@ export const DealerDetailForm: React.FC<DealerDetailsFormProps> = ({
           <Col span={12}>
             <Textarea
               label="Remarks"
-              value={dealerFormData.remarks}
-              onChange={(event) => onChange('remarks', event.currentTarget.value)}
+              value={dealerFormData.remark}
+              onChange={(event) => onChange('remark', event.currentTarget.value)}
               placeholder="Enter any remarks"
             />
           </Col>
 
           <Col span={12}>
-            <Button onClick={handleSubmit} type="submit" fullWidth mt="lg">
-              Save
+            <Button disabled={isDealerDetailsSaved} loading={loading} onClick={handleSubmit} type="submit" fullWidth mt="lg">
+              {isDealerDetailsSaved ? "Saved" : "Save"}
             </Button>
           </Col>
         </Grid>
-      </Box>
-    </Container>
+      </Flex>
+    </Flex>
   );
 };

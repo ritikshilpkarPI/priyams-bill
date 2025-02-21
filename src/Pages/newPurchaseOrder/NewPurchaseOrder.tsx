@@ -5,6 +5,9 @@ import { Tabs } from '@mantine/core';
 import './NewPurchaseOrder.css';
 import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from 'src/components/purchasedItemPanel/PurchasedItemPanel';
+import { getPurchaseOrderDetailsAPI } from 'src/utils/apiUtils';
+import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
+import { setDealerFormData } from 'src/redux/dealerDetailForm/dealerDetailFormSlice';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -29,8 +32,30 @@ const NewPurchaseOrder = () => {
   }
 
   const onPurchasedOrderSubmit = () => {
-
+    
   }
+
+  const getPurchaseOrderDetails = async () => {
+    if(!purchaseOrderId) return;
+    const response = await getPurchaseOrderDetailsAPI(purchaseOrderId);
+    if(response?.isError) return;
+    const data = response?.data;
+    console.log({ response })
+    if(!data) return;
+    dispatch(setPurchaseOrder(data));
+    dispatch(setDealerFormData({
+      payment: data.payment,
+      billAmount: data.billAmount,
+      procurementSource: data.procurementSource,
+      dealerName: data.dealerName,
+      phoneNumber: data.mobileNumber,
+      remark: data.remarks,
+    }));
+  }
+
+  useEffect(()=> {
+    getPurchaseOrderDetails()
+  }, [purchaseOrderId])
 
   return (
     <div style={{ marginTop: "100px", marginBottom: "100px" }}>
@@ -41,7 +66,7 @@ const NewPurchaseOrder = () => {
           <Tabs.Tab value={TAB.paymentDetails}>Payment Details</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value={TAB.dealerDetails}>
-          <DealerDetailForm onSubmit={onPurchasedOrderSubmit}/>
+          <DealerDetailForm />
         </Tabs.Panel>
         <Tabs.Panel value={TAB.itemDetails}>
           <PurchasedItemPanel />

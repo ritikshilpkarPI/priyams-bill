@@ -196,12 +196,12 @@ declare global {
   }
 
   interface DealerDetailFormType {
-    paymentType: 'fully-paid' | 'partially-paid' | 'credit';
+    payment: 'Fully Paid' | 'Partially Paid' | 'Credit';
     billAmount: number;
     procurementSource: 'Walmart' | 'D Mart' | 'City' | 'Distributor';
     dealerName: string;
-    mobileNumber: string;
-    remarks: string;
+    phoneNumber: string;
+    remark: string;
   };
 
   interface DealerDetailsFormProps {

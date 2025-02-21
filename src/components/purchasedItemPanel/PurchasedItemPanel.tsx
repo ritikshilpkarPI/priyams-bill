@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
-import { deletePurchaseOrderItemByIdAPI, getItemByIdAPI, getItemsSkuAPI, getPurchaseOrderDetailsAPI, saveOrderAPI, updatePurchaseOrderByIdAPI, updatePurchaseOrderItemByIdxAPI } from '../../utils/apiUtils';
+import { deletePurchaseOrderItemByIdAPI, getItemByIdAPI, getPurchaseOrderDetailsAPI, saveOrderAPI, updatePurchaseOrderByIdAPI, updatePurchaseOrderItemByIdxAPI } from '../../utils/apiUtils';
 import { setPurchasedItemDetailForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { PurchasedItemDetailForm } from '../PurchasedItemDetailForm/PurchasedItemDetailForm'
 import { PurchasedItemTable } from '../purchasedItemTable/PurchasedItemTable'
@@ -80,10 +80,6 @@ const PurchasedItemPanel = () => {
         const response = await getPurchaseOrderDetailsAPI(purchaseOrderId);
        if(response?.data)  dispatch(setPurchaseOrder(response.data))
       }
-
-  useEffect(()=> {
-    getPurchaseOrderDetails();
-  }, [])
 
   return (
     <div>
