@@ -9,12 +9,12 @@ export const ItemExpiryTable = ({
     showActions,
     showTotal
 }: ItemExpiryTableProps) => {
-  const totalExpiryQuantity = expiryDates.reduce((acc, expiryDate) => acc + Number(expiryDate.quantity || 0), 0);
+  const totalExpiryQuantity = expiryDates.reduce((acc, expiryDate) => acc + Number(expiryDate.value || 0), 0);
   const rows = expiryDates.map((expiryDate, idx) => (
         <tr key={idx}>
           <td>{new Date(expiryDate.mfgDate)?.toLocaleDateString('en-GB')}</td>
           <td>{new Date(expiryDate.date)?.toLocaleDateString('en-GB')}</td>
-          <td>{expiryDate.quantity}</td>
+          <td>{expiryDate.value}</td>
           <td>
             {
               isShelfExpired(expiryDate.mfgDate, expiryDate.date)

@@ -1,2 +1,2 @@
-export const getNumberFromStr = (value: string) => value.replace(/[^0-9]/g
-, "")
+export const getNumberFromStr = (value: string) => Number(value.replace(/[^0-9]/g
+, ""))

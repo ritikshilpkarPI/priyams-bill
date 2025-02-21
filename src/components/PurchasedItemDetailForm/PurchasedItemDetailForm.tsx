@@ -39,7 +39,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const defaulValuesExpiryItemForm = {
     mfgDate: null,
     date: null,
-    quantity: 0,
+    value: 0,
   }
   const skuFields: any = {
     inputName: "inputName",
@@ -84,7 +84,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const expiryDateValidation = yup.object({
     date: yup.date().required('Expiry Date is required.'),
     mfgDate: yup.date().required('Mfg Date is required.'),
-    quantity: yup.number().min(1, 'Qty. should be greater than 0').required('Quantity is required.'),
+    value: yup.number().min(1, 'Qty. should be greater than 0').required('Quantity is required.'),
   }).test('expiry-date-after-mfg-date', 'Expiry Date must be later than Mfg Date.', function(value) {
     const { date, mfgDate } = value;
     if (date <= mfgDate) {
@@ -135,7 +135,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const handleSubmit = async () => {
     try {
       await formValidationSchema.validate(purchasedItemFormData, { abortEarly: false });
-      const totalExpiryQty = purchasedItemFormData.expiryDates?.reduce((total, expiryDate) => (total + (Number(expiryDate.quantity) || 0)), 0);
+      const totalExpiryQty = purchasedItemFormData.expiryDates?.reduce((total, expiryDate) => (total + (Number(expiryDate.value) || 0)), 0);
       console.log({ purchasedItemFormData, totalExpiryQty })
       if(Number(totalExpiryQty) !== Number(purchasedItemFormData.stockQuantity)){
         return setErrors({ stockQuantity: "order quantity and expiry items should be equal" })
@@ -416,10 +416,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               />
               <TextInput
                 label="Item Quantity"
-                value={formExpiryDate.quantity}
+                value={formExpiryDate.value}
                 required
-                error={errors.quantity}
-                onChange={(event) => onExpiryFormDateChange('quantity', getNumberFromStr(event.currentTarget.value))}
+                error={errors.value}
+                onChange={(event) => onExpiryFormDateChange('value', getNumberFromStr(event.currentTarget.value))}
               />
               <Button leftIcon={<IconPlus />} onClick={onAddExpiryDate}>
                 Add

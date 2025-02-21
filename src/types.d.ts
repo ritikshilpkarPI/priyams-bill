@@ -240,7 +240,7 @@ declare global {
   }
 
   interface ItemExpiryDateType {
-    quantity: number;
+    value: number;
     mfgDate: Date;
     date: Date;
   }
