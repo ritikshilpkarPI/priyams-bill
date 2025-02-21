@@ -45,7 +45,6 @@ declare global {
     timePeriod: string; 
     data: soldItemsByDateInterface[];
   }
-
   interface ItemSoldPurchaseOrder {
     orderSequence: string;
     approvalDate: string;
@@ -60,7 +59,6 @@ declare global {
     itemMRP: number;
     soldAfterApproval: number;
     intervals: IntervalInterface[];
-    lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastMonthSold?: number;
     lastThreeMonthSold?: soldItemsByDateInterface[];
@@ -126,7 +124,27 @@ declare global {
     barcode: string;
   }
 
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: string;
+  }
+
   type itemsByBarcode = string[] | any
+  interface StepInterface {
+    label: string;
+    component: React.ReactNode;
+  }
+  interface StepperStateInterface {
+    currentStep: number;
+    stepCompletion: boolean[];
+    steps: StepInterface[];
+  }
+  interface FormStepperProps {
+    steps: StepInterface[];
+  }
   interface IntervalPropInterface {
     startDate: string;
     endDate: string;
