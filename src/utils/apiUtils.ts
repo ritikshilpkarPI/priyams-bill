@@ -172,3 +172,46 @@ export const getItemByIdAPI = async (itemId: string) => {
     return { isError: true, error };
   }
 }
+
+export const savePOPaymentAPI = async (paymentDetails: PaymentDetailType) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.PAYMENT.POST_SAVE_PAYMENT,
+      data: {
+        payment: paymentDetails
+      }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const updatePOPaymentAPI = async (paymentDetails: PaymentDetailType, purchaseOrderId: string, index: number) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.PAYMENT.POST_UPDATE_PAYMENT_BY_ID}/${purchaseOrderId}`,
+      data: {
+        payment: paymentDetails,
+        index
+      }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const deletePaymentByIdAPI = async(id: string, index: number) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.PAYMENT.POST_DELETE_PAYMENT_BY_ID}/${id}`,
+      data: {
+        index
+      }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}

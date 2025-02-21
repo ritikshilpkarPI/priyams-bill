@@ -252,6 +252,13 @@ declare global {
     showTotal?: boolean;
   }
 
+  interface PaymentDetailType {
+    paidAmount: number;
+    paidBy: string;
+    chequeNumber: string;
+    _id?: string;
+  }
+
   interface PurchaseOrderDataType {
     isApproved?: boolean;
     isRejected?: boolean;
@@ -261,11 +268,22 @@ declare global {
     createdAt?: string;
     _id?: string;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
+    purchaseDetails?: Array<PaymentDetailType>
   }
 
   interface PurchasedItemTableProps {
     onRemove: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void;
     onEdit: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void; 
+  }
+
+  interface PaymentDetailTableProps {
+    purchaseOrderId?: string;
+    totalPaidAmount?: number;
+  }
+
+  interface PaymentDetailFormProps {
+    purchaseOrderId?: string;
+    paymentDetailIdx: number;  
   }
 
   interface QuestionModalProps {
@@ -274,6 +292,15 @@ declare global {
     question: string;
     onAgree: () => void;
     onDisagree: () => void;
+  }
+
+  interface CustomNumberInputProps {
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value: number;
+    label?: string;
+    placeholder?: string;
+    error?: string;
+    required?: boolean;
   }
 }
 declare module '*.scss' {

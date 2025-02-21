@@ -8,6 +8,7 @@ import PurchasedItemPanel from 'src/components/purchasedItemPanel/PurchasedItemP
 import { getPurchaseOrderDetailsAPI } from 'src/utils/apiUtils';
 import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
 import { setDealerFormData } from 'src/redux/dealerDetailForm/dealerDetailFormSlice';
+import { PaymentDetailAndBillPanel } from 'src/components/paymentDetailsPanel/PaymentDetailsPanel';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -71,7 +72,9 @@ const NewPurchaseOrder = () => {
         <Tabs.Panel value={TAB.itemDetails}>
           <PurchasedItemPanel />
         </Tabs.Panel>
-        <Tabs.Panel value={TAB.paymentDetails}>Third panel</Tabs.Panel>
+        <Tabs.Panel value={TAB.paymentDetails}>
+          <PaymentDetailAndBillPanel />
+        </Tabs.Panel>
      </Tabs>
     </div>
   )

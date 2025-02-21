@@ -54,10 +54,11 @@ export const DealerDetailForm: React.FC = () => {
   const addNewOrder = async () => {
     setLoading(true);
     const response = await addNewOrderAPI({
-      new_order: { purchaseObj: { 
-        ...purchaseOrder, 
-        ...dealerFormData, 
-        orders: purchaseOrder.purchasedItems,
+      new_order: { 
+        purchaseObj: { 
+          ...purchaseOrder, 
+          ...dealerFormData, 
+          orders: purchaseOrder.purchasedItems,
       } },
     })
     setLoading(false);
@@ -73,7 +74,8 @@ export const DealerDetailForm: React.FC = () => {
           details: [],
           bills: [],
           orders: purchaseOrder.purchasedItems,
-          ...purchaseOrder, 
+          ...purchaseOrder,
+          ...dealerFormData,
           id: purchaseOrder._id
         } 
       },
