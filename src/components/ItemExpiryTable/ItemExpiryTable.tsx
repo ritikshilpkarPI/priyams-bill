@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Button, Table } from '@mantine/core';
+import { Badge, Button, Flex, Table } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
 import { isShelfExpired } from 'src/utils/isShelfExpired';
 
@@ -24,7 +24,7 @@ export const ItemExpiryTable = ({
               : "-"
             }
           </td>
-          {
+            {
             showActions && (
               <td>
                 <Button color="red" leftIcon={<IconX />} onClick={()=> onRemove(idx)}>
@@ -36,28 +36,30 @@ export const ItemExpiryTable = ({
         </tr>
   ));
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Mfg. Date.</th>
-          <th>Exp. Date.</th>
-          <th>Qty.</th>
-          <th>Tags</th>
-          { showActions && (<th>Action</th>) }
-        </tr>
-      </thead>
-      <tbody>
-          {rows}
-          {
-            showTotal && (<tr>
-              <td>Total</td>
-              <td>-</td>
-              <td>{totalExpiryQuantity}</td>
-              { showActions && (<td>-</td>) }
-            </tr>)
-          }
-      </tbody>
-    </Table>
+    <Flex>
+      <Table>
+        <thead>
+          <tr>
+            <th>Mfg. Date.</th>
+            <th>Exp. Date.</th>
+            <th>Qty.</th>
+            <th>Tags</th>
+            { showActions && (<th>Action</th>) }
+          </tr>
+        </thead>
+        <tbody>
+            {rows}
+            {
+              showTotal && (<tr>
+                <td>Total</td>
+                <td>-</td>
+                <td>{totalExpiryQuantity}</td>
+                { showActions && (<td>-</td>) }
+              </tr>)
+            }
+        </tbody>
+     </Table>
+    </Flex>
   )
 }
 

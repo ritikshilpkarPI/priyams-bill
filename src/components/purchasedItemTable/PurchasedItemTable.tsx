@@ -48,7 +48,7 @@ export const PurchasedItemTable = ({
     </tr>
   ))
   return (
-    <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }} mx="sm" mt="16px">
+    <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left", overflow: "scroll" }} mx="sm" mt="16px">
       <Title order={3}>Added Items</Title>
       <Table>
         <thead>

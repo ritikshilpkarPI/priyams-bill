@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import Joi from 'joi';
+import * as yup from 'yup';
 import {
   TextInput,
   Select,
@@ -39,7 +39,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const defaulValuesExpiryItemForm = {
     mfgDate: null,
     date: null,
-    quantity: ''
+    quantity: 0,
   }
   const skuFields: any = {
     inputName: "inputName",
@@ -51,54 +51,47 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const [formExpiryDate, setFormExpiryDate] = useState(defaulValuesExpiryItemForm);
   const [errors, setErrors] = useState<any>({});
 
-  const formValidationSchema = Joi.object({
-    barcode: Joi.string().trim().required().messages({
-      'string.empty': 'Barcode is required.'
-    }),
-    inputName: Joi.string().trim().required().messages({
-      'string.empty': 'Item name is required.',
-    }),
-    itemQuantity: Joi.number().required().messages({
-      'string.empty': 'Packet Quantity quantity is required.',
-    }),
-    unit: Joi.string().required().messages({
-      'string.empty': 'Unit is required.',
-    }),
-    mrp: Joi.number().min(1).required().messages({
-      'any.required': 'MRP is required.',
-      'number.min': 'MRP must be greater than 0.',
-    }),
-    companyName: Joi.string().trim().required().messages({
-      'string.empty': 'Company Name is required',
-    }),
-    brand: Joi.string().trim().required().messages({
-      'string.empty': 'Brand Name is required',
-    }),
-    costPrice: Joi.number().min(1).required().messages({
-      'any.required': 'Cost Price is required.',
-      'number.min': 'Cost Price must be greater than 0.',
-    }),
-    sellingPrice: Joi.number().min(1).required().messages({
-      'any.required': 'Selling Price is required.',
-      'number.min': 'Selling Price must be greater than 0.',
-    }),
-    stockQuantity: Joi.number().min(1).required().messages({
-      'any.required': 'Order Quantity is required.',
-      'number.min': 'Order Quantity must be greater than 0.',
-    }),
+  const formValidationSchema = yup.object({
+    barcode: yup.string().trim().required('Barcode is required.'),
+    inputName: yup.string().trim().required('Item name is required.'),
+    itemQuantity: yup.number().required().min(1, "Packet Qty. must be greater than 0"),
+    unit: yup.string().required('Unit is required.'),
+    mrp: yup.number()
+      .min(1, 'MRP must be greater than 0')
+      .required('MRP is required.')
+      .test('greater-than-selling-price', 'MRP must be greater or equal to SP.', function(value) {
+        const { sellingPrice } = this.parent;
+        return value >= sellingPrice;
+      }),
+    companyName: yup.string().trim().required('Company Name is required.'),
+    brand: yup.string().trim().required('Brand Name is required.'),
+    costPrice: yup.number()
+      .min(1, 'Cost Price must be greater than 0.')
+      .required('Cost Price is required.')
+      .test('greater-than-zero', 'Cost Price must be greater than 0.', value => value > 0),
+    sellingPrice: yup.number()
+      .min(1, 'SP must be greater than 0')
+      .required('Selling Price is required.')
+      .test('greater-than-cost-price', 'SP must be greater or equal to CP.', function(value) {
+        const { costPrice } = this.parent;
+        return value >= costPrice;
+      }),
+    stockQuantity: yup.number()
+      .min(1, 'Order Quantity must be greater than 0.')
+      .required('Order Quantity is required.')
   });
 
-  const expiryDateValidation = Joi.object({
-    date: Joi.date().required().messages({
-      'date.required': 'Mfg Date is required'
-    }),
-    mfgDate: Joi.date().required().messages({
-      'date.required': 'Mfg Date is required'
-    }),
-    quantity: Joi.number().required().messages({
-      'number.required': 'quantity is required'
-    }),
-  })
+  const expiryDateValidation = yup.object({
+    date: yup.date().required('Expiry Date is required.'),
+    mfgDate: yup.date().required('Mfg Date is required.'),
+    quantity: yup.number().min(1, 'Qty. should be greater than 0').required('Quantity is required.'),
+  }).test('expiry-date-after-mfg-date', 'Expiry Date must be later than Mfg Date.', function(value) {
+    const { date, mfgDate } = value;
+    if (date <= mfgDate) {
+      return this.createError({ message: 'Expiry Date must be later than Mfg Date.' });
+    }
+    return true;
+  });
 
   const isSkuAlreadyExists = (field: string, value: string) => {
     const itemSKUData = {
@@ -139,18 +132,28 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     }));
   }
 
-  const handleSubmit = () => {
-    const { error } = formValidationSchema.validate(purchasedItemFormData, { abortEarly: false });
-
-    if (error) {
-      const errorMessages = error.details.reduce((acc: any, err: any) => {
-        acc[err.path[0]] = err.message;
-        return acc;
-      }, {});
-
-      setErrors(errorMessages);
+  const handleSubmit = async () => {
+    try {
+      await formValidationSchema.validate(purchasedItemFormData, { abortEarly: false });
+      const totalExpiryQty = purchasedItemFormData.expiryDates?.reduce((total, expiryDate) => (total + (Number(expiryDate.quantity) || 0)), 0);
+      console.log({ purchasedItemFormData, totalExpiryQty })
+      if(Number(totalExpiryQty) !== Number(purchasedItemFormData.stockQuantity)){
+        return setErrors({ stockQuantity: "order quantity and expiry items should be equal" })
+      }
+      setErrors({});
+      onSubmit(purchasedItemFormData);
+    } catch (error: any) {
+      if (error instanceof yup.ValidationError) {
+        const errorMessages = error.inner.reduce((acc: any, err: yup.ValidationError) => {
+          if (err.path) {
+            acc[err.path] = err.message;
+          }
+          return acc;
+        }, {});
+  
+        setErrors(errorMessages);
+      }
     }
-    onSubmit(purchasedItemFormData);
   }
   
   const onExpiryFormDateChange = (field: string, value: string | number | Date | null) => {
@@ -161,20 +164,25 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     setFormExpiryDate(updatedExpiryDateForm)
   }
 
-  const onAddExpiryDate = () => {
-    const { error } = expiryDateValidation.validate(formExpiryDate, { abortEarly: false });
-
-    if (error) {
-      const errorMessages = error.details.reduce((acc: any, err: any) => {
-        acc[err.path[0]] = err.message;
-        return acc;
-      }, {});
-
-      return setErrors(errorMessages);
+  const onAddExpiryDate = async () => {
+    try {
+      await expiryDateValidation.validate(formExpiryDate, { abortEarly: false });
+      setErrors({});
+      dispatch(addItemExpiryDateData({ ...formExpiryDate }));
+      setFormExpiryDate(defaulValuesExpiryItemForm);
+    } catch (error: any) {
+      console.log({ error })
+      if (error instanceof yup.ValidationError) {
+        const errorMessages = error.inner.reduce((acc: any, err: yup.ValidationError) => {
+          if (err.path) {
+            acc[err.path] = err.message;
+          }
+          return acc;
+        }, {});
+  
+        setErrors(errorMessages);
+      }
     }
-    setErrors({});
-    dispatch(addItemExpiryDateData(formExpiryDate));
-    setFormExpiryDate(defaulValuesExpiryItemForm);
   }
 
   return (
@@ -264,6 +272,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 value={purchasedItemFormData.companyName}
                 required
                 onChange={(event) => onChange('companyName', event.currentTarget.value)}
+                error={errors.companyName}
               />
             </Col>
 
@@ -273,6 +282,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 value={purchasedItemFormData.brand}
                 required
                 onChange={(event) => onChange('brand', event.currentTarget.value)}
+                error={errors.brand}
               />
             </Col>
 
@@ -385,19 +395,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         <Flex>
           <Box>
             <Divider my="xs" label="Add Items Expiry" labelPosition="center" />
-            <Flex gap="16px" align="center">
+            <Flex gap="16px" align="center" wrap="wrap">
               <DatePicker 
                 label="MFG Date." 
                 inputFormat='DD/MM/YY'
                 value={formExpiryDate.mfgDate}
-                onChange={(value) => onExpiryFormDateChange('mfgDate', value)}
+                onChange={(value: Date) => onExpiryFormDateChange('mfgDate', value?.toISOString())}
                 error={errors.mfgDate}
                 withAsterisk
               />
               <DatePicker 
                 label="Expiry Date." 
                 inputFormat='DD/MM/YY' 
-                onChange={(value) => onExpiryFormDateChange('date', value)}
+                onChange={(value: Date) => onExpiryFormDateChange('date', value?.toISOString())}
                 disabled={!formExpiryDate.mfgDate}
                 value={formExpiryDate.date}
                 minDate={formExpiryDate.mfgDate || undefined}
