@@ -194,6 +194,20 @@ declare global {
     packetUnit: string;
   }
 
+  interface ReturnedItemType {
+    itemDetail: mongoose.Types.ObjectId;
+    itemQuantityInBill: number;
+  }
+  
+   interface ReturnItemSchemaType extends Document {
+    originalBillId?: mongoose.Types.ObjectId;
+    returnedItems?: ReturnedItemType[];
+    exchangeBillId?: mongoose.Types.ObjectId;
+    returnDate?: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }
+
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

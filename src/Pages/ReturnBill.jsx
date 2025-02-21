@@ -379,6 +379,18 @@ const ReturnBill = () => {
     // eslint-disable-next-line
   }, [bill]);
 
+  function shouldEnablePayment(totalBillAmount, refundAmount) {
+    
+    if (refundAmount >= totalBillAmount) {
+      
+        return true; 
+    } else {
+       
+        return false; 
+    }
+}
+
+
   return (
     <div>
       <div
@@ -675,7 +687,7 @@ const ReturnBill = () => {
           </Text>
         </div>
       </div>
-      <div>
+    { showReturnItems && <div>
         <div className="billing-container">
           <p style={{ marginBottom: '20px', fontWeight: '700' }}>
             Total Items : {totalItems}
@@ -1135,62 +1147,78 @@ const ReturnBill = () => {
               flexDirection: 'column',
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-              }}
-            >
-              <div
-                className="bill-total"
-                style={{
-                  backgroundColor: 'black',
-                  width: 'fit-content',
-                  padding: '10px',
-                  borderRadius: '10px',
-                }}
-              >
-                <Text
-                  color="red"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                  td="underline"
-                >
-                  New Bill Total:
-                  <h2>
-                    {isNaN(bill.billAmountTotal) ? '' : bill.billAmountTotal}
-                  </h2>
-                </Text>
-              </div>
-              <div
-                className="bill-total"
-                style={{
-                  backgroundColor: 'white',
-                  width: 'fit-content',
-                  padding: '10px',
-                  borderRadius: '10px',
-                }}
-              >
-                <Text
-                  color="red"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                  td="underline"
-                >
-                  {bill.totalRefundAmount > 0
-                    ? 'Refund Amount'
-                    : 'Amount Return'}
-                  :
-                  <h2>
-                    {' '}
-                    {bill.totalRefundAmount > 0
-                      ? bill.totalRefundAmount
-                      : bill.amountReturn}
-                  </h2>
-                </Text>
-              </div>
-            </div>
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+ 
+  <div
+    className="bill-total"
+    style={{
+      backgroundColor: 'white',
+      width: 'fit-content',
+      padding: '15px 20px',
+      borderRadius: '10px',
+      boxShadow: '0px 2px 5px rgba(0,0,0,0.1)',
+    }}
+  >
+    <Text color="red" size="xl" weight={800} className="final-bill-text print-text" td="underline">
+      Bill Refund Total:
+      <h2>{refundAmount > 0 && refundAmount}</h2>
+    </Text>
+  </div>
+
+ 
+  <div
+    className="bill-total"
+    style={{
+      backgroundColor: 'black',
+      color: 'white',
+      width: 'fit-content',
+      padding: '15px 20px',
+      borderRadius: '10px',
+      boxShadow: '0px 2px 5px rgba(0,0,0,0.2)',
+    }}
+  >
+    <Text color="white" size="xl" weight={800} className="final-bill-text print-text" td="underline">
+      New Bill Total:
+      <h2>{!isNaN(bill.billAmountTotal) ? bill.billAmountTotal : ''}</h2>
+    </Text>
+  </div>
+
+ 
+  <div
+    className="bill-total"
+    style={{
+      backgroundColor: 'white',
+      width: 'fit-content',
+      padding: '15px 20px',
+      borderRadius: '10px',
+      boxShadow: '0px 2px 5px rgba(0,0,0,0.1)',
+    }}
+  >
+    <Text color="red" size="xl" weight={800} className="final-bill-text print-text" td="underline">
+      {bill.totalRefundAmount > 0 ? 'Refund Amount' : 'Amount Return'}:
+      <h2>{bill.totalRefundAmount && bill.totalRefundAmount}</h2>
+    </Text>
+  </div>
+
+ 
+  <div
+    className="bill-total"
+    style={{
+      backgroundColor: '#007BFF',
+      color: 'white',
+      width: 'fit-content',
+      padding: '15px 20px',
+      borderRadius: '10px',
+      boxShadow: '0px 2px 5px rgba(0,0,0,0.2)',
+    }}
+  >
+    <Text color="white" size="xl" weight={800} className="final-bill-text print-text" td="underline">
+      Pending Payment:
+      <h2>{Math.max(0, bill.billAmountTotal - refundAmount)}</h2>
+    </Text>
+  </div>
+</div>
+
             <div className="discount-line">
               <Text
                 className="discount-text"
@@ -1246,6 +1274,7 @@ const ReturnBill = () => {
                           cashPay: Number(e.target.value),
                         }))
                       }
+                      disabled={shouldEnablePayment(bill.billAmountTotal, refundAmount)}
                       className="quantity-input"
                       onWheel={(e) => e.target.blur()}
                     />
@@ -1270,6 +1299,7 @@ const ReturnBill = () => {
                           upiPay: Number(e.target.value),
                         }))
                       }
+                      disabled={shouldEnablePayment(bill.billAmountTotal, refundAmount)}
                       className="quantity-input"
                       onWheel={(e) => e.target.blur()}
                     />
@@ -1372,7 +1402,7 @@ const ReturnBill = () => {
             <h2 style={{ color: 'red' }}>Returned Bill</h2>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };
