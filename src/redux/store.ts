@@ -1,7 +1,7 @@
 import userSlice from './user/userSlice';
 import { configureStore } from '@reduxjs/toolkit';
 import billReducer from './bill/billSlice';
-import allItemsFeedDataSlice from './allItemsFeedData/allItemsFeedDataSlice'
+import allItemsFeedDataSlice from './allItemsFeedData/allItemsFeedDataSlice';
 import itemsSlice from './items/itemsSlice';
 import stepperReducer from "./stepper/stepperSlice";
 export const store = configureStore({

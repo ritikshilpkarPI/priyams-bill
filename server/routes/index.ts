@@ -382,7 +382,6 @@ router.post(
   assignOrderToRider
 );
 
-
 router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, getItemsSku);
 
 export default router;
