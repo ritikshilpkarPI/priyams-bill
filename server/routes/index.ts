@@ -384,6 +384,4 @@ router.post(
 
 router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, getItemsSku);
 
-router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, getItemsSku);
-
 export default router;
