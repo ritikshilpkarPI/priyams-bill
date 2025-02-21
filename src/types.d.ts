@@ -203,6 +203,29 @@ declare global {
     sidebarElem: RefObject<HTMLDivElement>;
     liItem: RefObject<HTMLDivElement[]>;
   }
+
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: string;
+  }
+
+  interface ReturnedItemType {
+    itemDetail: mongoose.Types.ObjectId;
+    itemQuantityInBill: number;
+  }
+  
+   interface ReturnItemSchemaType extends Document {
+    originalBillId?: mongoose.Types.ObjectId;
+    returnedItems?: ReturnedItemType[];
+    exchangeBillId?: mongoose.Types.ObjectId;
+    returnDate?: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }
+
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
