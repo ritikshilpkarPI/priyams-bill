@@ -422,7 +422,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 error={errors.value}
                 onChange={(event) => onExpiryFormDateChange('value', getNumberFromStr(event.currentTarget.value))}
               />
-              <Button loading={loading} leftIcon={<IconPlus />} onClick={onAddExpiryDate}>
+              <Button leftIcon={<IconPlus />} onClick={onAddExpiryDate}>
                 Add
               </Button>
             </Flex>
@@ -435,7 +435,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
           </Box>
         </Flex>
         <Box>
-        <Button sx={{ width: "220px" }} onClick={handleSubmit} type="submit" fullWidth mt="lg">
+        <Button loading={loading} sx={{ width: "220px" }} onClick={handleSubmit} type="submit" fullWidth mt="lg">
                 Add Item
         </Button>
         </Box>
