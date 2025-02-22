@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router';
@@ -21,6 +21,8 @@ const PurchasedItemPanel = () => {
     const purchaseOrderId = params?.id;
     const [editItem, setEditItem] = useState<PurchasedItemDetailFormType | null>(null);
     const [removeItem, setRemoveItem] = useState<PurchasedItemDetailFormType | null>(null);
+    const [itemFormLoading, setItemFormLoading] = useState(false);
+    const [removeItemId, setRemoveItemId] = useState('');
     const editItemIdxRef = useRef(-1);
     const resetEditItem = ()=> setEditItem(null);
     const resetRemoveItem = () => setRemoveItem(null);
@@ -31,14 +33,15 @@ const PurchasedItemPanel = () => {
     }
     const onRemove = async () => {
       if(!purchaseOrderId || !removeItem?._id) return;
+      setRemoveItemId(removeItem._id);
       resetRemoveItem();
       const response = await deletePurchaseOrderItemByIdAPI(purchaseOrderId, removeItem._id);
+      setRemoveItemId('');
       if(response.isError) return;
       getPurchaseOrderDetails();
     }
 
     const onItemSelect = async (item: any) => {
-      console.log("here we are")
       const itemDetails = item?.itemDetail;
       if(!itemDetails?._id) return;
       const response = await getItemByIdAPI(itemDetails._id);
@@ -46,16 +49,18 @@ const PurchasedItemPanel = () => {
       dispatch(setPurchasedItemDetailForm(getPurchasedItemByItem(response.item)))
   }
 
-    const onPurchasedOrderSubmit = (purchaseItemDetails: any) => {
-        if(!purchaseOrderId) return onSavePurchaseOrderItem(purchaseItemDetails);
-        if(editItemIdxRef.current >= 0) return onUpdatePurchaseOrderItem(purchaseItemDetails)
-        return onAddPurchaseOrderItem(purchaseItemDetails)
+    const onPurchasedOrderSubmit = async (purchaseItemDetails: any) => {
+        setItemFormLoading(true);
+        if(!purchaseOrderId) await onSavePurchaseOrderItem(purchaseItemDetails);
+        else if(editItemIdxRef.current >= 0) await onUpdatePurchaseOrderItem(purchaseItemDetails)
+        else await onAddPurchaseOrderItem(purchaseItemDetails)
+        setItemFormLoading(false);
       }
     
       const onSavePurchaseOrderItem = async(purchaseItemDetails: PurchasedItemDetailFormType) => {
         const response = await saveOrderAPI(purchaseItemDetails);
         if(response.isError) return;
-        getPurchaseOrderDetails();
+        // getPurchaseOrderDetails();
         navigate(`${location.pathname}/${response?.order._id}${location.search}`)
       }
     
@@ -87,13 +92,14 @@ const PurchasedItemPanel = () => {
         <Box mx="sm" mt="16px">
           <ItemSearch onItemSelect={onItemSelect} />
         </Box>
-        <PurchasedItemDetailForm onSubmit={onPurchasedOrderSubmit} />
+        <PurchasedItemDetailForm loading={itemFormLoading} onSubmit={onPurchasedOrderSubmit} />
           <PurchasedItemTable 
             onEdit={(purchasedItem: PurchasedItemDetailFormType, idx: number)=> {
               setEditItem(purchasedItem);
               editItemIdxRef.current = idx;
             }} 
-            onRemove={(purchasedItem: PurchasedItemDetailFormType)=> setRemoveItem(purchasedItem)} 
+            onRemove={(purchasedItem: PurchasedItemDetailFormType)=> setRemoveItem(purchasedItem)}
+            loadingRemoveItemById={removeItemId} 
            />
            <QuestionModal 
             opened={Boolean(editItem)}

@@ -8,7 +8,8 @@ import './purchasedItemTable.css';
 
 export const PurchasedItemTable = ({
   onRemove,
-  onEdit
+  onEdit,
+  loadingRemoveItemById
 }: PurchasedItemTableProps) => {
   const purchasedItems = useSelector(selectPurchasedItems);
   const rows = purchasedItems?.map((purchasedItem, idx) => (
@@ -38,10 +39,19 @@ export const PurchasedItemTable = ({
           }
         </td>
         <td className='purchased-item-table-action-td'>
-          <Button variant='default' leftIcon={<IconEdit cursor="pointer" />} onClick={()=> onEdit(purchasedItem, idx)}>
+          <Button
+             disabled={Boolean(loadingRemoveItemById)}
+             variant='default' 
+             leftIcon={<IconEdit cursor="pointer" />} 
+             onClick={()=> onEdit(purchasedItem, idx)}>
               Edit
           </Button>
-          <Button variant='default' color="red" leftIcon={<IconX cursor="pointer" />} onClick={()=> onRemove(purchasedItem, idx)}>
+          <Button 
+            loading={purchasedItem._id === loadingRemoveItemById}
+            disabled={Boolean(loadingRemoveItemById && purchasedItem._id !== loadingRemoveItemById)}
+            variant='default' color="red" 
+            leftIcon={<IconX cursor="pointer" />} 
+            onClick={()=> onRemove(purchasedItem, idx)}>
               Remove
           </Button>
         </td>

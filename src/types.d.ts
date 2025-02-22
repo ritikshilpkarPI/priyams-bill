@@ -237,6 +237,7 @@ declare global {
 
   interface PurchasedItemDetailFormProps {
     onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
+    loading?: boolean;
   }
 
   interface ItemExpiryDateType {
@@ -280,6 +281,7 @@ declare global {
   interface PurchasedItemTableProps {
     onRemove: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void;
     onEdit: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void; 
+    loadingRemoveItemById: string;
   }
 
   interface PaymentDetailTableProps {

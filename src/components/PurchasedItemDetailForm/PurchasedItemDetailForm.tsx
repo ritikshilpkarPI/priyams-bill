@@ -30,7 +30,8 @@ import { QuestionModal } from '../questionModal/QuestionModal';
 import { getItemSKU } from 'src/utils/getItemSKU';
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
-  onSubmit
+  onSubmit,
+  loading
 }) => {
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
@@ -421,7 +422,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 error={errors.value}
                 onChange={(event) => onExpiryFormDateChange('value', getNumberFromStr(event.currentTarget.value))}
               />
-              <Button leftIcon={<IconPlus />} onClick={onAddExpiryDate}>
+              <Button loading={loading} leftIcon={<IconPlus />} onClick={onAddExpiryDate}>
                 Add
               </Button>
             </Flex>

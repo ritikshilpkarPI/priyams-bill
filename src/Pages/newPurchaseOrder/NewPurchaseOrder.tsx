@@ -24,18 +24,11 @@ const NewPurchaseOrder = () => {
     paymentDetails: "paymentDetails",
     billUpload: "billUpload"
   }
-  console.log({ tab: searchParams.tab })
   const [activeTab, setActiveTab] = useState<any>(TAB[searchParams.get('tab')] || 'dealerDetails');
-  
-
 
   const onTabChange = (newTab: string) => {
     setActiveTab(newTab);
     navigate(`${location.pathname}?tab=${newTab}`);
-  }
-
-  const onPurchasedOrderSubmit = () => {
-    
   }
 
   const getPurchaseOrderDetails = async () => {
