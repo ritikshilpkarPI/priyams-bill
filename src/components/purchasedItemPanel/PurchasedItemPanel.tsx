@@ -60,7 +60,6 @@ const PurchasedItemPanel = () => {
       const onSavePurchaseOrderItem = async(purchaseItemDetails: PurchasedItemDetailFormType) => {
         const response = await saveOrderAPI(purchaseItemDetails);
         if(response.isError) return;
-        // getPurchaseOrderDetails();
         navigate(`${location.pathname}/${response?.order._id}${location.search}`)
       }
     
@@ -101,7 +100,7 @@ const PurchasedItemPanel = () => {
             onRemove={(purchasedItem: PurchasedItemDetailFormType)=> setRemoveItem(purchasedItem)}
             loadingRemoveItemById={removeItemId} 
            />
-           <QuestionModal 
+           <QuestionModal
             opened={Boolean(editItem)}
             onClose={resetEditItem}
             onAgree={onEdit}
