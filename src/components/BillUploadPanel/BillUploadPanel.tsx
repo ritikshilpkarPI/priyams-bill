@@ -39,8 +39,9 @@ export const BillUploadPanel = () => {
         const response = await addNewOrderAPI({
             new_order: { 
               purchaseObj: { 
+                details: [],
                 ...purchaseOrder, 
-                orders: purchaseOrder.purchasedItems,
+                orders: purchaseOrder.purchasedItems || [],
                 bills
             } },
         })
@@ -60,6 +61,7 @@ export const BillUploadPanel = () => {
          new_order: { 
             purchaseObj: {
               orders: purchaseOrder.purchasedItems,
+              details: [],
               ...purchaseOrder,
               id: purchaseOrder._id,
               bills,
