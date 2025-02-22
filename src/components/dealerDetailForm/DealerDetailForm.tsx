@@ -127,8 +127,8 @@ export const DealerDetailForm: React.FC = () => {
               onChange={(event) => onChange('phoneNumber', event.currentTarget.value.replace(/[^0-9]/g
 , ""))}
               required
-              error={errors.mobileNumber}
-              placeholder="Enter mobile number"
+              error={errors.phoneNumber}
+              placeholder="Enter phone number"
               maxLength={10}
             />
           </Col>
