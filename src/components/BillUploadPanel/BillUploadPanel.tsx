@@ -16,10 +16,11 @@ export const BillUploadPanel = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const purchaseOrder = useSelector(selectPurchaseOrder);
-    const [isFilePreviewLoading, setIsFilePreviewLoading] = useState(false);
+    const [isFileUploading, setIsFileUploading] = useState(false);
+    const [deleteFileId, setDeleteFileId] = useState('');
     const onFileSelect = async (files: Array<File>) => {
         const newFiles: Array<string> = [];
-        setIsFilePreviewLoading(true);
+        setIsFileUploading(true);
         for(let fileIdx = 0; fileIdx < files.length; fileIdx+=1) {
             try {
                 const file = files[fileIdx];
@@ -29,7 +30,7 @@ export const BillUploadPanel = () => {
                 console.error(err);
             }
         }
-        if(newFiles.length === 0) return;
+        if(newFiles.length === 0) return setIsFileUploading(false);
         if(purchaseOrder._id) return updateDetails({ bills: newFiles });
         onNewOrderBillUpload(newFiles)
     }
@@ -43,6 +44,7 @@ export const BillUploadPanel = () => {
                 bills
             } },
         })
+        setIsFileUploading(false)
         if(response.isError) return;
         if(!response.message) return;
         dispatch(setPurchaseOrder(response.message));
@@ -66,10 +68,13 @@ export const BillUploadPanel = () => {
           deleteBills,
           uploadedImages,
        });
+       setIsFileUploading(false);
+       setDeleteFileId('');
        if(response.isError) return;
     }
 
     const onImageDelete = (deleteBillPhoto: CloudFileType) => {
+        setDeleteFileId(deleteBillPhoto.publicId);
         let uploadedImages = purchaseOrder.billPhotos?.filter((billPhoto) => deleteBillPhoto.publicId !== billPhoto.publicId);
         updateDetails({ deleteBills: [deleteBillPhoto], uploadedImages })
     }
@@ -82,7 +87,7 @@ export const BillUploadPanel = () => {
             maxSize={5 * 1024 ** 2}
             mt="16px"
             sx={{ borderColor: "black" }}
-            loading={isFilePreviewLoading}
+            loading={isFileUploading}
             accept={["image/jpeg", "image/png", "image/jpg", "image/webp"]}
             >
             <Flex justify="center" align="center" mih={120} style={{ pointerEvents: 'none' }}>
@@ -101,7 +106,13 @@ export const BillUploadPanel = () => {
         {
             purchaseOrder?.billPhotos?.map((billPhoto) => <Flex key={billPhoto.publicId} align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left", overflow: "scroll"}} mx="sm" mt="16px">
                 <Box>
-                    <Button onClick={()=> onImageDelete(billPhoto)} color="red" leftIcon={<IconTrash size={20} />}>
+                    <Button 
+                        onClick={()=> onImageDelete(billPhoto)}
+                        color="red" 
+                        leftIcon={<IconTrash size={20} />}
+                        loading={deleteFileId === billPhoto.publicId}
+                        disabled={Boolean(deleteFileId !== billPhoto.publicId && deleteFileId)}
+                    >
                         Delete
                     </Button>
                 </Box>
