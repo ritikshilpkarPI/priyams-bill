@@ -259,6 +259,11 @@ declare global {
     _id?: string;
   }
 
+  interface CloudFileType {
+    publicId: string;
+    secureUrl: string;
+  }
+
   interface PurchaseOrderDataType {
     isApproved?: boolean;
     isRejected?: boolean;
@@ -268,7 +273,8 @@ declare global {
     createdAt?: string;
     _id?: string;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
-    purchaseDetails?: Array<PaymentDetailType>
+    purchaseDetails?: Array<PaymentDetailType>;
+    billPhotos?: Array<CloudFileType>; 
   }
 
   interface PurchasedItemTableProps {
@@ -301,6 +307,11 @@ declare global {
     placeholder?: string;
     error?: string;
     required?: boolean;
+  }
+
+  interface FileAndURLType {
+    file: File,
+    previewURL: string;
   }
 }
 declare module '*.scss' {

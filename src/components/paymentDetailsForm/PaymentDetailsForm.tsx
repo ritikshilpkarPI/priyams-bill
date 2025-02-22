@@ -6,8 +6,6 @@ import { useLocation } from "react-router";
 import { useNavigate } from "react-router";
 import { setPurchaseOrder } from "src/redux/purchaseOrder/purchaseOrderSlice";
 import { savePOPaymentAPI, updatePOPaymentAPI } from "src/utils/apiUtils";
-import { formatToTwoDecimals } from "src/utils/formatToTwoDecimals";
-import { getFloatNumFromStr } from "src/utils/getFloatNumFromStr";
 import { getNumberFromStr } from "src/utils/getNumberFromStr";
 import * as yup from "yup";
 import CustomNumberInput from "../customNumberInput/CustomNumberInput";
