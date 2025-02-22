@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Joi from 'joi';
+import * as yup from 'yup';
 import {
   TextInput,
   NumberInput,
@@ -8,8 +8,6 @@ import {
   Button,
   Grid,
   Col,
-  Container,
-  Box,
   Flex,
   Title,
 } from '@mantine/core';
@@ -18,30 +16,29 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setDealerFormData } from '../../redux/dealerDetailForm/dealerDetailFormSlice';
 import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
+import { useLocation, useNavigate } from 'react-router';
 
 export const DealerDetailForm: React.FC = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
   const dealerFormData = useSelector(selectDealerDetailForm);
   const purchaseOrder = useSelector(selectPurchaseOrder);
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
   const [isDealerDetailsSaved, setIsDealerDetailsSaved] = useState(Boolean(purchaseOrder._id));
 
-  const formValidationSchema = Joi.object({
-    payment: Joi.string().valid('Fully Paid', 'Partially Paid', 'Credit'),
-    billAmount: Joi.number().min(1).required().messages({
-      'any.required': 'Bill amount is required.',
-      'number.min': 'Bill amount must be greater than 0.',
-    }),
-    procurementSource: Joi.string().valid('Walmart', 'D Mart', 'City', 'Distributor'),
-    dealerName: Joi.string().required().messages({
-      'string.empty': 'Dealer name is required.',
-    }),
-    phoneNumber: Joi.string().pattern(/^\d{10}$/, 'Phone number').required().messages({
-      'string.empty': 'Phone number is required.',
-      'string.pattern.name': 'Phone number must be exactly 10 digits.',
-    }),
-    remark: Joi.string().optional(),
+  const formValidationSchema = yup.object({
+    payment: yup.string(),
+    billAmount: yup.number()
+      .min(1, 'Bill amount must be greater than 0.')
+      .required('Bill amount is required.'),
+    procurementSource: yup.string(),
+    dealerName: yup.string().required('Dealer name is required.'),
+    phoneNumber: yup.string()
+      .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits.')
+      .required('Phone number is required.'),
+    remark: yup.string().optional(),
   });
 
   const onChange = (field: string, value: string | number) => {
@@ -64,6 +61,7 @@ export const DealerDetailForm: React.FC = () => {
     setLoading(false);
     if(response.isError) return;
     setIsDealerDetailsSaved(true);
+    navigate(`${location.pathname}/${response?.message?._id}?${location.search}`)
   }
 
   const updateOrder = async () => {
@@ -87,19 +85,20 @@ export const DealerDetailForm: React.FC = () => {
     setIsDealerDetailsSaved(true);
   }
 
-  const handleSubmit = () => {
-    const { error } = formValidationSchema.validate(dealerFormData, { abortEarly: false });
-
-    if (error) {
-      const errorMessages = error.details.reduce((acc: any, err: any) => {
-        acc[err.path[0]] = err.message;
+  const handleSubmit = async () => {
+    try {
+      await formValidationSchema.validate(dealerFormData, { abortEarly: false });
+    } catch (error: any) {
+      const errorMessages = error.inner.reduce((acc: any, err: any) => {
+        acc[err.path] = err.message;
         return acc;
-    }, {});
-
+      }, {});
+  
       return setErrors(errorMessages);
     }
-    if(purchaseOrder._id) return updateOrder();
-    return addNewOrder();
+  
+    if (purchaseOrder._id) return updateOrder(); 
+      return addNewOrder();
   }
 
   return (
