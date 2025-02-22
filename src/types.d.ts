@@ -260,8 +260,8 @@ declare global {
   }
 
   interface CloudFileType {
-    publicId: string;
-    secureUrl: string;
+    public_id: string;
+    secure_url: string;
   }
 
   interface PurchaseOrderDataType {

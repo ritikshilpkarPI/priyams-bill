@@ -74,8 +74,8 @@ export const BillUploadPanel = () => {
     }
 
     const onImageDelete = (deleteBillPhoto: CloudFileType) => {
-        setDeleteFileId(deleteBillPhoto.publicId);
-        let uploadedImages = purchaseOrder.billPhotos?.filter((billPhoto) => deleteBillPhoto.publicId !== billPhoto.publicId);
+        setDeleteFileId(deleteBillPhoto.public_id);
+        let uploadedImages = purchaseOrder.billPhotos?.filter((billPhoto) => deleteBillPhoto.public_id !== billPhoto.public_id);
         updateDetails({ deleteBills: [deleteBillPhoto], uploadedImages })
     }
 
@@ -104,14 +104,14 @@ export const BillUploadPanel = () => {
         </Dropzone>
      <Flex wrap="wrap">
         {
-            purchaseOrder?.billPhotos?.map((billPhoto) => <Flex key={billPhoto.publicId} align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left", overflow: "scroll"}} mx="sm" mt="16px">
+            purchaseOrder?.billPhotos?.map((billPhoto) => <Flex key={billPhoto.public_id} align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left", overflow: "scroll"}} mx="sm" mt="16px">
                 <Box>
                     <Button 
                         onClick={()=> onImageDelete(billPhoto)}
                         color="red" 
                         leftIcon={<IconTrash size={20} />}
-                        loading={deleteFileId === billPhoto.publicId}
-                        disabled={Boolean(deleteFileId !== billPhoto.publicId && deleteFileId)}
+                        loading={deleteFileId === billPhoto.public_id}
+                        disabled={Boolean(deleteFileId !== billPhoto.secure_url && deleteFileId)}
                     >
                         Delete
                     </Button>
@@ -119,7 +119,7 @@ export const BillUploadPanel = () => {
                 <Image
                     radius="sm"
                     width={"240px"}
-                    src={billPhoto.secureUrl}
+                    src={billPhoto.secure_url}
                     sx={{ objectFit: "cover", maxWidth: "300px" }}
                 />
             </Flex>)
