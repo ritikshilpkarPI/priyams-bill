@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { setPurchaseOrder } from "src/redux/purchaseOrder/purchaseOrderSlice";
 import { savePOPaymentAPI, updatePOPaymentAPI } from "src/utils/apiUtils";
 import { getNumberFromStr } from "src/utils/getNumberFromStr";
+import { paymentValidation } from "src/utils/validations/paymentDetailFormValidation";
 import * as yup from "yup";
 import CustomNumberInput from "../customNumberInput/CustomNumberInput";
 
@@ -25,15 +26,7 @@ export const PaymentDetailsForm = ({
     const [paymentDetails, setPaymentDetails] = useState(defaultPaymentDetails);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<any>({});
-    const paymentValidation = yup.object({
-        paidBy: yup.string().required('Payment method is required'), 
-        paidAmount: yup.number()
-          .moreThan(0, 'Paid amount must be greater than 0')
-          .required('Paid amount is required'),
-        chequeNumber: yup.string()
-          .notRequired()  
-          .nullable()  
-      });
+   
     const onChange = (field: string, value: string | number) => {
         setPaymentDetails({ ...paymentDetails, [field]: value });
     }

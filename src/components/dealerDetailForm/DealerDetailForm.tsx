@@ -17,6 +17,7 @@ import { setDealerFormData } from '../../redux/dealerDetailForm/dealerDetailForm
 import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import { useLocation, useNavigate } from 'react-router';
+import { dealerFormValidation } from 'src/utils/validations/dealerFormValidation';
 
 export const DealerDetailForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,19 +28,6 @@ export const DealerDetailForm: React.FC = () => {
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
   const [isDealerDetailsSaved, setIsDealerDetailsSaved] = useState(Boolean(purchaseOrder._id));
-
-  const formValidationSchema = yup.object({
-    payment: yup.string(),
-    billAmount: yup.number()
-      .min(1, 'Bill amount must be greater than 0.')
-      .required('Bill amount is required.'),
-    procurementSource: yup.string(),
-    dealerName: yup.string().required('Dealer name is required.'),
-    phoneNumber: yup.string()
-      .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits.')
-      .required('Phone number is required.'),
-    remark: yup.string().optional(),
-  });
 
   const onChange = (field: string, value: string | number) => {
     setIsDealerDetailsSaved(false);
@@ -88,7 +76,7 @@ export const DealerDetailForm: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      await formValidationSchema.validate(dealerFormData, { abortEarly: false });
+      await dealerFormValidation.validate(dealerFormData, { abortEarly: false });
     } catch (error: any) {
       const errorMessages = error.inner.reduce((acc: any, err: any) => {
         acc[err.path] = err.message;

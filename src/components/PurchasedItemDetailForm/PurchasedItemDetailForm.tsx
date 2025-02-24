@@ -28,6 +28,8 @@ import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
 import { QuestionModal } from '../questionModal/QuestionModal';
 import { getItemSKU } from 'src/utils/getItemSKU';
+import { draftItemFormValidation } from 'src/utils/validations/draftItemFormValidation';
+import { itemExpiryFormValidation } from 'src/utils/validations/itemExpiryFormValidation';
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit,
@@ -51,48 +53,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   }
   const [formExpiryDate, setFormExpiryDate] = useState(defaulValuesExpiryItemForm);
   const [errors, setErrors] = useState<any>({});
-
-  const formValidationSchema = yup.object({
-    barcode: yup.string().trim().required('Barcode is required.'),
-    inputName: yup.string().trim().required('Item name is required.'),
-    itemQuantity: yup.number().required().min(1, "Packet Qty. must be greater than 0"),
-    unit: yup.string().required('Unit is required.'),
-    mrp: yup.number()
-      .min(1, 'MRP must be greater than 0')
-      .required('MRP is required.')
-      .test('greater-than-selling-price', 'MRP must be greater or equal to SP.', function(value) {
-        const { sellingPrice } = this.parent;
-        return value >= sellingPrice;
-      }),
-    companyName: yup.string().trim().required('Company Name is required.'),
-    brand: yup.string().trim().required('Brand Name is required.'),
-    costPrice: yup.number()
-      .min(1, 'Cost Price must be greater than 0.')
-      .required('Cost Price is required.')
-      .test('greater-than-zero', 'Cost Price must be greater than 0.', value => value > 0),
-    sellingPrice: yup.number()
-      .min(1, 'SP must be greater than 0')
-      .required('Selling Price is required.')
-      .test('greater-than-cost-price', 'SP must be greater or equal to CP.', function(value) {
-        const { costPrice } = this.parent;
-        return value >= costPrice;
-      }),
-    stockQuantity: yup.number()
-      .min(1, 'Order Quantity must be greater than 0.')
-      .required('Order Quantity is required.')
-  });
-
-  const expiryDateValidation = yup.object({
-    date: yup.date().required('Expiry Date is required.'),
-    mfgDate: yup.date().required('Mfg Date is required.'),
-    value: yup.number().min(1, 'Qty. should be greater than 0').required('Quantity is required.'),
-  }).test('expiry-date-after-mfg-date', 'Expiry Date must be later than Mfg Date.', function(value) {
-    const { date, mfgDate } = value;
-    if (date <= mfgDate) {
-      return this.createError({ message: 'Expiry Date must be later than Mfg Date.' });
-    }
-    return true;
-  });
 
   const isSkuAlreadyExists = (field: string, value: string) => {
     const itemSKUData = {
@@ -135,7 +95,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
 
   const handleSubmit = async () => {
     try {
-      await formValidationSchema.validate(purchasedItemFormData, { abortEarly: false });
+      await draftItemFormValidation.validate(purchasedItemFormData, { abortEarly: false });
       const totalExpiryQty = purchasedItemFormData.expiryDates?.reduce((total, expiryDate) => (total + (Number(expiryDate.value) || 0)), 0);
       console.log({ purchasedItemFormData, totalExpiryQty })
       if(Number(totalExpiryQty) !== Number(purchasedItemFormData.stockQuantity)){
@@ -167,7 +127,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
 
   const onAddExpiryDate = async () => {
     try {
-      await expiryDateValidation.validate(formExpiryDate, { abortEarly: false });
+      await itemExpiryFormValidation.validate(formExpiryDate, { abortEarly: false });
       setErrors({});
       dispatch(addItemExpiryDateData({ ...formExpiryDate }));
       setFormExpiryDate(defaulValuesExpiryItemForm);
