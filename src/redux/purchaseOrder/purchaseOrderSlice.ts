@@ -1,6 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState: PurchaseOrderDataType = {};
+const initialState: PurchaseOrderDataType = {
+  dealerName: '',
+  phoneNumber: '',
+  billAmount: 0,
+  payment: 'Fully Paid',
+  procurementSource: 'Walmart',
+  remark: '',
+  purchasedItems: [],
+  purchaseDetails: [],
+  billPhotos: []
+};
 
 const purchaseOrderSlice = createSlice({
   name: 'purchaseOrder',
@@ -14,11 +24,7 @@ const purchaseOrderSlice = createSlice({
       else state.purchasedItems = [action.payload];
     },
     resetPurchaseOrder: (state) => {
-      Object.assign(state, {
-        purchasedItems: [],
-        purchaseDetails: [],
-        billPhotos: []
-      });
+      Object.assign(state, initialState);
     }
   },
 });

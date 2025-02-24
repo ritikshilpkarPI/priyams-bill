@@ -275,7 +275,13 @@ declare global {
     _id?: string;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
     purchaseDetails?: Array<PaymentDetailType>;
-    billPhotos?: Array<CloudFileType>; 
+    billPhotos?: Array<CloudFileType>;
+    dealerName?: string;
+    phoneNumber?: string;
+    billAmount?: number;
+    payment?: string;
+    procurementSource?: string;
+    remark?: string;
   }
 
   interface PurchasedItemTableProps {
