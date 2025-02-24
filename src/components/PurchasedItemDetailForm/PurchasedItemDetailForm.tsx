@@ -23,13 +23,14 @@ import { addItemExpiryDateData, removeItemExpiryDateByIdx, setPurchasedItemDetai
 import { getNumberFromStr } from '../../utils/getNumberFromStr';
 import { getFloatNumFromStr } from '../../utils/getFloatNumFromStr';
 import { categoriesWithSubcategories } from '../../utils/constants/categoriesWithSubCategories';
-import {  IconPlus } from '@tabler/icons-react';
+import {  IconEdit, IconPlus } from '@tabler/icons-react';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
 import { QuestionModal } from '../questionModal/QuestionModal';
-import { getItemSKU } from 'src/utils/getItemSKU';
-import { draftItemFormValidation } from 'src/utils/validations/draftItemFormValidation';
-import { itemExpiryFormValidation } from 'src/utils/validations/itemExpiryFormValidation';
+import { getItemSKU } from '../../utils/getItemSKU';
+import { draftItemFormValidation } from '../../utils/validations/draftItemFormValidation';
+import { itemExpiryFormValidation } from '../../utils/validations/itemExpiryFormValidation';
+import { generateBarcode } from '../../utils/generateBarcode';
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit,
@@ -146,6 +147,11 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     }
   }
 
+  const onBarcodeGenerate = () => {
+    const newBarcode = generateBarcode();
+    dispatch(setPurchasedItemDetailForm({ barcode: newBarcode }))
+  }
+
   return (
     <Flex direction="column" gap="16px" mx="sm" mt="lg">
       <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }}>
@@ -176,6 +182,9 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 required
                 error={errors.barcode}
                 placeholder="Enter barcode"
+                rightSection={<>
+               <IconEdit onClick={onBarcodeGenerate} cursor="pointer" size={20} color="#228be6" />
+              </>}
               />
             </Col>
 
