@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
+import Joi from 'joi';
 import PurchaseOrder from '../db-models/purchase-order-model';
+import { validateAddPaymentDetailsById } from '../util/validateAddPaymentDetailsById';
 
 export const addPaymentDetailsById = async (
   req: Request,
@@ -7,6 +9,19 @@ export const addPaymentDetailsById = async (
   next: NextFunction
 ) => {
   try {
+    const { error } = validateAddPaymentDetailsById.validate(
+      { purchaseOrderId: req.params.id, payment: req.body.payment },
+      { abortEarly: false }
+    );
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        errors: error.details.map((err) => err.message),
+      });
+    }
+
     const purchaseOrderId = req.params.id;
     const { payment } = req.body;
 
@@ -32,7 +47,7 @@ export const addPaymentDetailsById = async (
       .toFixed(2);
 
     const updatedOrder = await PurchaseOrder.findByIdAndUpdate(
-        purchaseOrderId,
+      purchaseOrderId,
       { purchaseDetails: updatedPurchaseDetails, totalPaidAmount },
       { new: true }
     );
