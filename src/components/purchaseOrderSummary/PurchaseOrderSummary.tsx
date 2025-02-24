@@ -76,11 +76,11 @@ export const PurchaseOrderSummary = () => {
 
       <Flex direction="column" gap="16px">
         <Checkbox
-          label="Dealer dealer form filled successfully"
+          label="Dealer Details"
           checked={isValidDealerDetails}
         />
         <Checkbox
-          label="Item details form filled with validated items"
+          label="Item Details"
           checked={isValidItemDetails}
         />
         <Checkbox
@@ -88,7 +88,7 @@ export const PurchaseOrderSummary = () => {
           checked={isValidPaymentDetails}
         />
         <Checkbox
-          label="Bill Images uploaded"
+          label="Bill Images"
           checked={isBillImagesUploaded}
         />
       </Flex>

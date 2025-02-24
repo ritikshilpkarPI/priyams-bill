@@ -62,7 +62,7 @@ const NewPurchaseOrder = () => {
           <Tabs.Tab color="blue" value={TAB.dealerDetails}>Dealer Details</Tabs.Tab>
           <Tabs.Tab value={TAB.itemDetails}>Item Details</Tabs.Tab>
           <Tabs.Tab value={TAB.paymentDetails}>Payment Details</Tabs.Tab>
-          <Tabs.Tab value={TAB.billUpload}>Bill Upload</Tabs.Tab>
+          <Tabs.Tab value={TAB.billUpload}>Bill Images</Tabs.Tab>
           <Tabs.Tab value={TAB.summary}>Summary & Action</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value={TAB.dealerDetails}>
