@@ -89,7 +89,8 @@ const {
   assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSellDetailsByItemId,
-  getItemsSku
+  getItemsSku,
+  addPaymentDetailsById,
 } = require('../controllers/index');
 
 
@@ -379,5 +380,7 @@ router.post(
 );
 
 router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, getItemsSku);
+
+router.post(`${API_PATHS.PAYMENT.POST_ADD_PAYMENT_DETAILS_BY_ID}/:id`, addPaymentDetailsById);
 
 export default router;
