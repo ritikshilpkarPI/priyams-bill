@@ -4,13 +4,14 @@ import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetail
 import { Tabs, Title } from '@mantine/core';
 import './NewPurchaseOrder.css';
 import { useDispatch } from 'react-redux';
-import PurchasedItemPanel from 'src/components/purchasedItemPanel/PurchasedItemPanel';
-import { getPurchaseOrderDetailsAPI } from 'src/utils/apiUtils';
-import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
-import { setDealerFormData } from 'src/redux/dealerDetailForm/dealerDetailFormSlice';
-import { PaymentDetailAndBillPanel } from 'src/components/paymentDetailsPanel/PaymentDetailsPanel';
-import { BillUploadPanel } from 'src/components/BillUploadPanel/BillUploadPanel';
-import { PurchaseOrderSummary } from 'src/components/purchaseOrderSummary/PurchaseOrderSummary';
+import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
+import { getPurchaseOrderDetailsAPI } from '../../utils/apiUtils';
+import { resetPurchaseOrder, setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
+import { resetDealerForm, setDealerFormData } from '../../redux/dealerDetailForm/dealerDetailFormSlice';
+import { PaymentDetailAndBillPanel } from '../../components/paymentDetailsPanel/PaymentDetailsPanel';
+import { BillUploadPanel } from '../../components/BillUploadPanel/BillUploadPanel';
+import { PurchaseOrderSummary } from '../../components/purchaseOrderSummary/PurchaseOrderSummary';
+import { resetPurchasedItemForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -46,16 +47,23 @@ const NewPurchaseOrder = () => {
       procurementSource: data.procurementSource,
       dealerName: data.dealerName,
       phoneNumber: data.phoneNumber,
-      remark: data.remarks,
+      remark: data.remark,
     }));
   }
 
+  const resetPurchaseOrderForms = () => {
+    dispatch(resetDealerForm());
+    dispatch(resetPurchasedItemForm());
+    dispatch(resetPurchaseOrder());
+  }
+
   useEffect(()=> {
-    getPurchaseOrderDetails()
+    if(purchaseOrderId)  getPurchaseOrderDetails();
+    else resetPurchaseOrderForms();
   }, [purchaseOrderId])
 
   return (
-    <div style={{ marginTop: "100px", marginBottom: "100px" }}>
+    <div style={{ marginTop: "16px", marginBottom: "16px" }}>
       <Title order={2}>Purchase Order</Title>
       <Tabs variant="default" color="black" value={activeTab} onTabChange={onTabChange}>
         <Tabs.List grow>

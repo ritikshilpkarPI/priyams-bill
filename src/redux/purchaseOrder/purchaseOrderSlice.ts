@@ -12,13 +12,21 @@ const purchaseOrderSlice = createSlice({
     addPurchasedItem: (state, action) => {
       if(state?.purchasedItems) state.purchasedItems.push(action.payload);
       else state.purchasedItems = [action.payload];
+    },
+    resetPurchaseOrder: (state) => {
+      Object.assign(state, {
+        purchasedItems: [],
+        purchaseDetails: [],
+        billPhotos: []
+      });
     }
   },
 });
 
 export const {
   setPurchaseOrder,
-  addPurchasedItem
+  addPurchasedItem,
+  resetPurchaseOrder
 } = purchaseOrderSlice.actions;
 
 export default purchaseOrderSlice.reducer;

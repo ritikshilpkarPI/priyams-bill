@@ -16,11 +16,15 @@ const dealerDetailFormSlice = createSlice({
     setDealerFormData: (state, action: PayloadAction<Partial<DealerDetailFormType>>) => {
       Object.assign(state, action.payload);
     },
+    resetDealerForm: (state) => {
+      Object.assign(state, initialState);
+    }
   },
 });
 
 export const {
   setDealerFormData,
+  resetDealerForm
 } = dealerDetailFormSlice.actions;
 
 export default dealerDetailFormSlice.reducer;
