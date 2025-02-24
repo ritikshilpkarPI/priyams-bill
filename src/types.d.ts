@@ -210,7 +210,7 @@ declare global {
 
   interface PurchasedItemDetailFormType {
     barcode: string;
-    itemName: string;
+    inputName: string;
     mrp: number;
     itemQuantity: number;
     unit: string,

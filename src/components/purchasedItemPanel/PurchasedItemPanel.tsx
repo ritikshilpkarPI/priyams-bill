@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { deletePurchaseOrderItemByIdAPI, getItemByIdAPI, getPurchaseOrderDetailsAPI, saveOrderAPI, updatePurchaseOrderByIdAPI, updatePurchaseOrderItemByIdxAPI } from '../../utils/apiUtils';
-import { setPurchasedItemDetailForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
+import { resetPurchasedItemForm, setPurchasedItemDetailForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { PurchasedItemDetailForm } from '../PurchasedItemDetailForm/PurchasedItemDetailForm'
 import { PurchasedItemTable } from '../purchasedItemTable/PurchasedItemTable'
 import { QuestionModal } from '../questionModal/QuestionModal';
@@ -55,7 +55,8 @@ const PurchasedItemPanel = () => {
         else if(editItemIdxRef.current >= 0) await onUpdatePurchaseOrderItem(purchaseItemDetails)
         else await onAddPurchaseOrderItem(purchaseItemDetails)
         setItemFormLoading(false);
-      }
+        dispatch(resetPurchasedItemForm());
+    }
     
       const onSavePurchaseOrderItem = async(purchaseItemDetails: PurchasedItemDetailFormType) => {
         const response = await saveOrderAPI(purchaseItemDetails);

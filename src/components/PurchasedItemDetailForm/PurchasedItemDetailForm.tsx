@@ -19,7 +19,7 @@ import {
 import { DatePicker } from '@mantine/dates';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectPurchasedItemDetailForm } from '../../redux/purchasedItemDetailForm/purchasedItemSelectors';
-import { addItemExpiryDateData, removeItemExpiryDateByIdx, setPurchasedItemDetailForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
+import { addItemExpiryDateData, removeItemExpiryDateByIdx, resetPurchasedItemForm, setPurchasedItemDetailForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { getNumberFromStr } from '../../utils/getNumberFromStr';
 import { getFloatNumFromStr } from '../../utils/getFloatNumFromStr';
 import { categoriesWithSubcategories } from '../../utils/constants/categoriesWithSubCategories';
@@ -408,9 +408,14 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
           </Box>
         </Flex>
         <Box>
-        <Button loading={loading} sx={{ width: "220px" }} onClick={handleSubmit} type="submit" fullWidth mt="lg">
-                Add Item
-        </Button>
+        <Flex gap="16px">
+          <Button loading={loading} sx={{ width: "220px" }} onClick={handleSubmit} type="submit" fullWidth mt="lg">
+                  Add Item
+          </Button>
+          <Button  sx={{ width: "220px" }}  variant='outline' onClick={()=> dispatch(resetPurchasedItemForm())} type="submit" fullWidth mt="lg">
+                  Reset
+          </Button>
+        </Flex>
         </Box>
       </Flex>
       <QuestionModal

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: PurchasedItemDetailFormType = {
     barcode: '',
-    itemName: '',
+    inputName: '',
     mrp: 0,
     itemQuantity: 0,
     unit: 'grams',
@@ -37,6 +37,9 @@ const purchasedItemDetailFormSlice = createSlice({
     },
     removeItemExpiryDateByIdx: (state, action) => {
       state.expiryDates = state.expiryDates.filter((_, idx) => action.payload !== idx);
+    },
+    resetPurchasedItemForm: (state) => {
+      Object.assign(state, initialState);
     }
   },
 });
@@ -44,7 +47,8 @@ const purchasedItemDetailFormSlice = createSlice({
 export const {
   setPurchasedItemDetailForm,
   addItemExpiryDateData,
-  removeItemExpiryDateByIdx
+  removeItemExpiryDateByIdx,
+  resetPurchasedItemForm
 } = purchasedItemDetailFormSlice.actions;
 
 export default purchasedItemDetailFormSlice.reducer;
