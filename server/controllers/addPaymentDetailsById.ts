@@ -40,7 +40,7 @@ export const addPaymentDetailsById = async (
     res.status(200).json({
       message: 'order updated successfully',
       success: true,
-      PurchaseOrder: updatedOrder,
+      purchaseOrder: updatedOrder,
     });
   } catch (error) {
     res.status(400).json({ error });
