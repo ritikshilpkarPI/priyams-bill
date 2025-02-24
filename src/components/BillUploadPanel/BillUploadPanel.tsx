@@ -31,7 +31,7 @@ export const BillUploadPanel = () => {
             }
         }
         if(newFiles.length === 0) return setIsFileUploading(false);
-        if(purchaseOrder._id) return updateDetails({ bills: newFiles });
+        if(purchaseOrder._id) return updateDetails({ bills: newFiles, uploadedImages: purchaseOrder.billPhotos });
         onNewOrderBillUpload(newFiles)
     }
 
