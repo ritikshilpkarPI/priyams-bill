@@ -96,7 +96,7 @@ export const DealerDetailForm: React.FC = () => {
         <Title order={3}>
            Dealer Details Form
         </Title>
-        <Grid gutter="md">
+        <Grid gutter="md" sx={{ maxWidth: "480px" }}>
 
           <Col span={12}>
             <TextInput

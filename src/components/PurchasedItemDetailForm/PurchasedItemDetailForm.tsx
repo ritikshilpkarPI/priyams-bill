@@ -94,8 +94,8 @@ const isNewItemSKUExists = useMemo(()=> itemsSKUList?.find((itemSku: string) => 
         skuRelatedField = "barcode"; break;
       case "itemQuantity":
         skuRelatedField = "packetQty"; break;
-      case "packetUnit":
-        skuRelatedField = "unit"; break;
+      case "unit":
+        skuRelatedField = "packetUnit"; break;
       case "mrp":
         skuRelatedField = "mrp"; break;
     }
