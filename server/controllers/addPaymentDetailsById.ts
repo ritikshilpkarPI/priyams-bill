@@ -31,13 +31,17 @@ export const addPaymentDetailsById = async (
       .reduce((sum, payment) => sum + payment.paidAmount, 0)
       .toFixed(2);
 
-    await purchaseOrder.updateOne(
-      { purchaseDetails: updatedPurchaseDetails, totalPaidAmount },{new:true}
+    const updatedOrder = await PurchaseOrder.findByIdAndUpdate(
+      purchaseId,
+      { purchaseDetails: updatedPurchaseDetails, totalPaidAmount },
+      { new: true }
     );
 
-    res
-      .status(200)
-      .json({ message: 'order updated successfully', success: true, PurchaseOrder: purchaseOrder});
+    res.status(200).json({
+      message: 'order updated successfully',
+      success: true,
+      PurchaseOrder: updatedOrder,
+    });
   } catch (error) {
     res.status(400).json({ error });
   }
