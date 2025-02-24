@@ -1,10 +1,30 @@
-.item-search-container-box {
-  position: relative;
-}
 .order-flex-class {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.order-search-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.shelf-expiry-date-container {
+  border: 1px solid red;
+  padding: 4px;
+  overflow: scroll;
+  margin-bottom: 5px;
+}
+
+.shelf-non-expiry-date-container {
+  border: 1px solid lightgreen;
+  padding: 4px;
+  overflow: scroll;
+  margin-bottom: 5px;
+}
+
+.item-search-container-box {
+  position: relative;
 }
 
 .order-form {

@@ -37,6 +37,7 @@ import {
   SellDetailsPage,
   BarcodePrint,
   Label,
+  CreatePurchaseOrderPage,
 } from '../Pages';
 import App from '../App';
 
@@ -203,7 +204,13 @@ export const router = createBrowserRouter(
             path: ROUTES.BARCODE_PRINT,
             element: <BarcodePrint />,
             index: true,
+          },
+          {
+            path: ROUTES.CREATE_PURCHASE_ORDER,
+            element: <CreatePurchaseOrderPage />,
+            index: true,
           }
+          
         ]
       },
       {

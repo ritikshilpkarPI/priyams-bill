@@ -83,7 +83,8 @@ import expelOrderToRider from './expelOrderToRider';
 import createRzpQRByAmount from './createRzpQRByAmount';
 import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
-import getItemsSellDetailsByItemId from "./getItemsSellDetailsByItemId";
+import getItemsSellDetailsByItemId from './getItemsSellDetailsByItemId';
+import createPurchaseOrderWithDealer from "./createPurchaseOrderWithDealer"
 import { getItemsSku } from "./getItemsSku";
 import { addPaymentDetailsById } from "./addPaymentDetailsById";
 
@@ -174,6 +175,7 @@ export {
   assignOrderToRider,
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSellDetailsByItemId,
+  createPurchaseOrderWithDealer,
   getItemsSku,
   addPaymentDetailsById,
 };

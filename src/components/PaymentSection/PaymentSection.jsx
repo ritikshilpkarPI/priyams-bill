@@ -31,7 +31,8 @@ export const PaymentSection = ({
     if (['e', 'E', '-', '+', '.'].includes(e.key)) {
       e.preventDefault();
     }
-  };  const loading = useSelector(itemsFeedAPILoading);
+  };  
+  const loading = useSelector(itemsFeedAPILoading);
   useEffect(() => {
     setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0);
   }, [cashPay, upiPay, totalAmount]);
