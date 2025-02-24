@@ -75,7 +75,8 @@ export const DealerDetailForm: React.FC = () => {
           ...purchaseOrder,
           ...dealerFormData,
           id: purchaseOrder._id
-        } 
+        },
+        id: purchaseOrder._id,
       },
       deleteBills: [],
       uploadedImages: []

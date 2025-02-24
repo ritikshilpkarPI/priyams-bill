@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
-import { Tabs } from '@mantine/core';
+import { Tabs, Title } from '@mantine/core';
 import './NewPurchaseOrder.css';
 import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from 'src/components/purchasedItemPanel/PurchasedItemPanel';
@@ -55,9 +55,10 @@ const NewPurchaseOrder = () => {
 
   return (
     <div style={{ marginTop: "100px", marginBottom: "100px" }}>
-      <Tabs value={activeTab} onTabChange={onTabChange}>
-        <Tabs.List>
-          <Tabs.Tab value={TAB.dealerDetails}>Dealer and Bill Details</Tabs.Tab>
+      <Title order={2}>Purchase Order</Title>
+      <Tabs variant="default" color="black" value={activeTab} onTabChange={onTabChange}>
+        <Tabs.List grow>
+          <Tabs.Tab color="blue" value={TAB.dealerDetails}>Dealer Details</Tabs.Tab>
           <Tabs.Tab value={TAB.itemDetails}>Item Details</Tabs.Tab>
           <Tabs.Tab value={TAB.paymentDetails}>Payment Details</Tabs.Tab>
           <Tabs.Tab value={TAB.billUpload}>Bill Upload</Tabs.Tab>

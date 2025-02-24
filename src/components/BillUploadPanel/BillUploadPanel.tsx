@@ -65,7 +65,8 @@ export const BillUploadPanel = () => {
               ...purchaseOrder,
               id: purchaseOrder._id,
               bills,
-            } 
+            },
+            id: purchaseOrder._id,
           },
           deleteBills,
           uploadedImages,
@@ -73,6 +74,8 @@ export const BillUploadPanel = () => {
        setIsFileUploading(false);
        setDeleteFileId('');
        if(response.isError) return;
+       if(!response.message) return;
+       dispatch(setPurchaseOrder(response.message))
     }
 
     const onImageDelete = (deleteBillPhoto: CloudFileType) => {
