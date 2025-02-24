@@ -86,6 +86,7 @@ import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchas
 import getItemsSellDetailsByItemId from './getItemsSellDetailsByItemId';
 import createPurchaseOrderWithDealer from "./createPurchaseOrderWithDealer"
 import { getItemsSku } from "./getItemsSku";
+import { addPaymentDetailsById } from "./addPaymentDetailsById";
 
 export {
   getStaff,
@@ -175,5 +176,6 @@ export {
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSellDetailsByItemId,
   createPurchaseOrderWithDealer,
-  getItemsSku
+  getItemsSku,
+  addPaymentDetailsById,
 };
