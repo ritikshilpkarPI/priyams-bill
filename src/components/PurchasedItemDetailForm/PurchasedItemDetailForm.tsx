@@ -85,7 +85,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   }
 
   const onChange = (field: string, value: string | number | boolean) => {
-    if(skuFields[field] && purchasedItemFormData.item_id && isSkuAlreadyExists(field, value?.toString())){
+    if(skuFields[field] && purchasedItemFormData.item_id && !isSkuAlreadyExists(field, value?.toString())){
         formOldValuesRef.current = { ...purchasedItemFormData };
         setShowSkuModal(true);
     }
@@ -98,7 +98,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     try {
       await draftItemFormValidation.validate(purchasedItemFormData, { abortEarly: false });
       const totalExpiryQty = purchasedItemFormData.expiryDates?.reduce((total, expiryDate) => (total + (Number(expiryDate.value) || 0)), 0);
-      console.log({ purchasedItemFormData, totalExpiryQty })
       if(Number(totalExpiryQty) !== Number(purchasedItemFormData.stockQuantity)){
         return setErrors({ stockQuantity: "order quantity and expiry items should be equal" })
       }
@@ -133,7 +132,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       dispatch(addItemExpiryDateData({ ...formExpiryDate }));
       setFormExpiryDate(defaulValuesExpiryItemForm);
     } catch (error: any) {
-      console.log({ error })
       if (error instanceof yup.ValidationError) {
         const errorMessages = error.inner.reduce((acc: any, err: yup.ValidationError) => {
           if (err.path) {
@@ -150,6 +148,12 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const onBarcodeGenerate = () => {
     const newBarcode = generateBarcode();
     dispatch(setPurchasedItemDetailForm({ barcode: newBarcode }))
+  }
+
+  const onSkuModalClose = () => {
+    setShowSkuModal(false);
+    if(!formOldValuesRef.current) return;
+    dispatch(setPurchasedItemDetailForm(formOldValuesRef.current));
   }
 
   return (
@@ -411,18 +415,14 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       </Flex>
       <QuestionModal
         opened={showSkuModal}
-        onClose={()=> setShowSkuModal(false)}
+        onClose={onSkuModalClose}
         question="Any change in SKU fields will create new item. Do you want to continue?
         SKU Fields: Barcode, Item name, MRP, Packet Amount, Unit"
         onAgree={()=> {
           setShowSkuModal(false);
           dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
         }}
-        onDisagree={()=> {
-          setShowSkuModal(false);
-          if(!formOldValuesRef.current) return;
-          dispatch(setPurchasedItemDetailForm(formOldValuesRef.current));
-        }}
+        onDisagree={onSkuModalClose}
       />
     </Flex>
   );
