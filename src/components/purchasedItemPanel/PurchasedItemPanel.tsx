@@ -44,7 +44,9 @@ const PurchasedItemPanel = () => {
     const onItemSelect = async (item: any) => {
       const itemDetails = item?.itemDetail;
       if(!itemDetails?._id) return;
+      setItemFormLoading(true);
       const response = await getItemByIdAPI(itemDetails._id);
+      setItemFormLoading(false);
       if(response.isError) return;
       dispatch(setPurchasedItemDetailForm(getPurchasedItemByItem(response.item)))
   }

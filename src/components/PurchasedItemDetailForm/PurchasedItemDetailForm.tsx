@@ -15,6 +15,7 @@ import {
   Title,
   Badge,
   Modal,
+  LoadingOverlay,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useSelector, useDispatch } from 'react-redux';
@@ -39,7 +40,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
   const [showSkuModal, setShowSkuModal] = useState(false);
-  const formOldValuesRef = useRef<PurchasedItemDetailFormType | null>(null)
+  const formOldValuesRef = useRef<PurchasedItemDetailFormType | null>(null);
   const defaulValuesExpiryItemForm = {
     mfgDate: null,
     date: null,
@@ -146,6 +147,8 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   }
 
   const onBarcodeGenerate = () => {
+    formOldValuesRef.current = { ...purchasedItemFormData };
+    setShowSkuModal(true);
     const newBarcode = generateBarcode();
     dispatch(setPurchasedItemDetailForm({ barcode: newBarcode }))
   }
@@ -157,7 +160,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   }
 
   return (
-    <Flex direction="column" gap="16px" mx="sm" mt="lg">
+    <Flex direction="column" gap="16px" mx="sm" mt="lg" pos="relative">
       <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }}>
         <Title order={3} display="flex" sx={{ gap: "8px" }}>
           Form 
@@ -384,7 +387,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 onChange={(value: Date) => onExpiryFormDateChange('date', value?.toISOString())}
                 disabled={!formExpiryDate.mfgDate}
                 value={formExpiryDate.date}
-                minDate={formExpiryDate.mfgDate || undefined}
+                minDate={formExpiryDate.mfgDate ? new Date(formExpiryDate.mfgDate) : undefined}
                 error={errors.date}
                 withAsterisk
               />
@@ -409,7 +412,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         </Flex>
         <Box>
         <Flex gap="16px">
-          <Button loading={loading} sx={{ width: "220px" }} onClick={handleSubmit} type="submit" fullWidth mt="lg">
+          <Button sx={{ width: "220px" }} onClick={handleSubmit} type="submit" fullWidth mt="lg">
                   Add Item
           </Button>
           <Button  sx={{ width: "220px" }}  variant='outline' onClick={()=> dispatch(resetPurchasedItemForm())} type="submit" fullWidth mt="lg">
@@ -429,6 +432,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         }}
         onDisagree={onSkuModalClose}
       />
+      <LoadingOverlay visible={Boolean(loading)} />
     </Flex>
   );
 };
