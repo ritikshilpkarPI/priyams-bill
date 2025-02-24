@@ -38,7 +38,6 @@ const NewPurchaseOrder = () => {
     const response = await getPurchaseOrderDetailsAPI(purchaseOrderId);
     if(response?.isError) return;
     const data = response?.data;
-    console.log({ response })
     if(!data) return;
     dispatch(setPurchaseOrder(data));
     dispatch(setDealerFormData({
@@ -46,7 +45,7 @@ const NewPurchaseOrder = () => {
       billAmount: data.billAmount,
       procurementSource: data.procurementSource,
       dealerName: data.dealerName,
-      phoneNumber: data.mobileNumber,
+      phoneNumber: data.phoneNumber,
       remark: data.remarks,
     }));
   }
