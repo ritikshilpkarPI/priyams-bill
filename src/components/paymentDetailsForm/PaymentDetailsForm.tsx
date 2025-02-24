@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { setPurchaseOrder } from "src/redux/purchaseOrder/purchaseOrderSlice";
 import { savePOPaymentAPI, updatePOPaymentAPI } from "src/utils/apiUtils";
 import { getNumberFromStr } from "src/utils/getNumberFromStr";
-import { paymentValidation } from "src/utils/validations/paymentDetailFormValidation";
+import { paymentDetailFormValidation } from "src/utils/validations/paymentDetailFormValidation";
 import * as yup from "yup";
 import CustomNumberInput from "../customNumberInput/CustomNumberInput";
 
@@ -52,7 +52,7 @@ export const PaymentDetailsForm = ({
     const onPaymentAdd = async () => {
         try {
             setLoading(true);
-            await paymentValidation.validate(paymentDetails, { abortEarly: false });
+            await paymentDetailFormValidation.validate(paymentDetails, { abortEarly: false });
             if(purchaseOrderId) await updatePayment();
             else await savePayment();
             setPaymentDetails(defaultPaymentDetails);

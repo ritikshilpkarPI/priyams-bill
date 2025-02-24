@@ -1,4 +1,4 @@
-import Yup from "yup";
+import * as Yup from "yup";
 export const draftItemFormValidation = Yup.object({
     barcode: Yup.string().trim().required('Barcode is required.'),
     inputName: Yup.string().trim().required('Item name is required.'),

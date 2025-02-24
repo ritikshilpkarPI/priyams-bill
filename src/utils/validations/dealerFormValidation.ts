@@ -1,4 +1,4 @@
-import Yup from "yup";
+import * as Yup from "yup";
 
 export const dealerFormValidation = Yup.object({
     payment: Yup.string(),

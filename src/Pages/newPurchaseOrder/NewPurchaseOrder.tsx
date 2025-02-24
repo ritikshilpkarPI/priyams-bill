@@ -10,6 +10,7 @@ import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
 import { setDealerFormData } from 'src/redux/dealerDetailForm/dealerDetailFormSlice';
 import { PaymentDetailAndBillPanel } from 'src/components/paymentDetailsPanel/PaymentDetailsPanel';
 import { BillUploadPanel } from 'src/components/BillUploadPanel/BillUploadPanel';
+import { PurchaseOrderSummary } from 'src/components/purchaseOrderSummary/PurchaseOrderSummary';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -22,7 +23,8 @@ const NewPurchaseOrder = () => {
     dealerDetails: "dealerDetails",
     itemDetails: "itemDetails",
     paymentDetails: "paymentDetails",
-    billUpload: "billUpload"
+    billUpload: "billUpload",
+    summary: "summary",
   }
   const [activeTab, setActiveTab] = useState<any>(TAB[searchParams.get('tab')] || 'dealerDetails');
 
@@ -62,6 +64,7 @@ const NewPurchaseOrder = () => {
           <Tabs.Tab value={TAB.itemDetails}>Item Details</Tabs.Tab>
           <Tabs.Tab value={TAB.paymentDetails}>Payment Details</Tabs.Tab>
           <Tabs.Tab value={TAB.billUpload}>Bill Upload</Tabs.Tab>
+          <Tabs.Tab value={TAB.summary}>Summary & Action</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value={TAB.dealerDetails}>
           <DealerDetailForm />
@@ -74,6 +77,9 @@ const NewPurchaseOrder = () => {
         </Tabs.Panel>
         <Tabs.Panel value={TAB.billUpload}>
           <BillUploadPanel />
+        </Tabs.Panel>
+        <Tabs.Panel value={TAB.summary}>
+          <PurchaseOrderSummary />
         </Tabs.Panel>
      </Tabs>
     </div>

@@ -215,3 +215,17 @@ export const deletePaymentByIdAPI = async(id: string, index: number) => {
     return { isError: true, error };
   }
 }
+
+export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
+      data: {
+        id: purchaseOrderId
+      }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}

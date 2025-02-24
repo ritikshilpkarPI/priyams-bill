@@ -1,4 +1,4 @@
-import Yup from "yup";
+import * as Yup from "yup";
 export const itemExpiryFormValidation = Yup.object({
     date: Yup.date().required('Expiry Date is required.'),
     mfgDate: Yup.date().required('Mfg Date is required.'),
