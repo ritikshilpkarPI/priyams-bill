@@ -7,10 +7,10 @@ export const addPaymentDetailsById = async (
   next: NextFunction
 ) => {
   try {
-    const purchaseId = req.params.id;
+    const purchaseOrderId = req.params.id;
     const { payment } = req.body;
 
-    const purchaseOrder = await PurchaseOrder.findById(purchaseId);
+    const purchaseOrder = await PurchaseOrder.findById(purchaseOrderId);
 
     if (!purchaseOrder) {
       return res
@@ -32,7 +32,7 @@ export const addPaymentDetailsById = async (
       .toFixed(2);
 
     const updatedOrder = await PurchaseOrder.findByIdAndUpdate(
-      purchaseId,
+        purchaseOrderId,
       { purchaseDetails: updatedPurchaseDetails, totalPaidAmount },
       { new: true }
     );
