@@ -10,7 +10,6 @@ import { PurchasedItemTable } from '../purchasedItemTable/PurchasedItemTable'
 import { QuestionModal } from '../questionModal/QuestionModal';
 import { ItemSearch } from '../ItemSearch';
 import { Box } from '@mantine/core';
-import { PurchaseDetailFormAlert } from '../purchaseDetailFormAlert/purchaseDetailFormAlert';
 import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
 
 const PurchasedItemPanel = () => {
@@ -90,7 +89,6 @@ const PurchasedItemPanel = () => {
 
   return (
     <div>
-        <Box mx="sm" mt="16px"><PurchaseDetailFormAlert /></Box>
         <Box mx="sm" mt="16px">
           <ItemSearch onItemSelect={onItemSelect} />
         </Box>

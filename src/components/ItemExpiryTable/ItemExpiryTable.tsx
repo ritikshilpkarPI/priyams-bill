@@ -36,7 +36,7 @@ export const ItemExpiryTable = ({
         </tr>
   ));
   return (
-    <Flex>
+    <Flex sx={{ overflow: "scroll", maxWidth: "60vw" }} mt="8px">
       <Table>
         <thead>
           <tr>

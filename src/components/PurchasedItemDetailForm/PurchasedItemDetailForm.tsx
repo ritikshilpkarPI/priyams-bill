@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as yup from 'yup';
 import {
   TextInput,
@@ -14,8 +14,9 @@ import {
   Checkbox,
   Title,
   Badge,
-  Modal,
   LoadingOverlay,
+  Alert,
+  Text,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,7 +25,7 @@ import { addItemExpiryDateData, removeItemExpiryDateByIdx, resetPurchasedItemFor
 import { getNumberFromStr } from '../../utils/getNumberFromStr';
 import { getFloatNumFromStr } from '../../utils/getFloatNumFromStr';
 import { categoriesWithSubcategories } from '../../utils/constants/categoriesWithSubCategories';
-import {  IconEdit, IconPlus } from '@tabler/icons-react';
+import {  IconCheck, IconEdit, IconExclamationCircle, IconPlus } from '@tabler/icons-react';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
 import { QuestionModal } from '../questionModal/QuestionModal';
@@ -32,6 +33,9 @@ import { getItemSKU } from '../../utils/getItemSKU';
 import { draftItemFormValidation } from '../../utils/validations/draftItemFormValidation';
 import { itemExpiryFormValidation } from '../../utils/validations/itemExpiryFormValidation';
 import { generateBarcode } from '../../utils/generateBarcode';
+import { selectItemsSkuList } from '../../redux/items/itemsSelector';
+import { getItemsSkuAPI } from '../../utils/apiUtils';
+import { setItemsData } from '../../redux/items/itemsSlice';
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit,
@@ -40,6 +44,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
   const [showSkuModal, setShowSkuModal] = useState(false);
+  const itemsSKUList = useSelector(selectItemsSkuList);
   const formOldValuesRef = useRef<PurchasedItemDetailFormType | null>(null);
   const defaulValuesExpiryItemForm = {
     mfgDate: null,
@@ -56,7 +61,24 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const [formExpiryDate, setFormExpiryDate] = useState(defaulValuesExpiryItemForm);
   const [errors, setErrors] = useState<any>({});
 
-  const isSkuAlreadyExists = (field: string, value: string) => {
+  const newItemSKU = useMemo(()=> getItemSKU({
+    barcode: purchasedItemFormData.barcode?.toString()?.trim(),
+    itemName: purchasedItemFormData.inputName?.trim() || "",
+    mrp: purchasedItemFormData.mrp,
+    packetQty: purchasedItemFormData.itemQuantity,
+    packetUnit: purchasedItemFormData.unit
+  }), [
+      purchasedItemFormData.barcode, 
+      purchasedItemFormData.inputName,
+      purchasedItemFormData.mrp,
+      purchasedItemFormData.unit,
+      purchasedItemFormData.itemQuantity,
+      purchasedItemFormData.item_id
+  ])
+
+const isNewItemSKUExists = useMemo(()=> itemsSKUList?.find((itemSku: string) => itemSku?.toUpperCase() === newItemSKU?.toUpperCase()), [newItemSKU]);
+
+  const isSameSKU = (field: string, value: string) => {
     const itemSKUData = {
       barcode: purchasedItemFormData?.barcode?.trim() || "",
       itemName: purchasedItemFormData?.inputName?.trim() || "",
@@ -86,7 +108,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   }
 
   const onChange = (field: string, value: string | number | boolean) => {
-    if(skuFields[field] && purchasedItemFormData.item_id && !isSkuAlreadyExists(field, value?.toString())){
+    if(skuFields[field] && purchasedItemFormData.item_id && !isSameSKU(field, value?.toString())){
         formOldValuesRef.current = { ...purchasedItemFormData };
         setShowSkuModal(true);
     }
@@ -161,22 +183,34 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     dispatch(setPurchasedItemDetailForm(formOldValuesRef.current));
   }
 
+  const getItemsSku = async () => {
+    const response = await getItemsSkuAPI();
+    if(!response && response.isError) return;
+    dispatch(setItemsData({ itemsSkuList: response.itemsSku }));
+  }
+
+  useEffect(()=> {
+    getItemsSku();
+  }, [])
+
   return (
     <Flex direction="column" gap="16px" mx="sm" mt="lg" pos="relative">
       <Flex align="left" gap="16px" direction="column" sx={{ border: "1px solid grey", padding: "16px", borderRadius: "8px", textAlign: "left" }}>
         <Title order={3} display="flex" sx={{ gap: "8px" }}>
-          Form 
-          <span>
-          {
-            purchasedItemFormData.item_id ? 
-            (<Badge>
-              This item exists in inventory
-            </Badge>)
-            : (<Badge color="green">
-                You are adding new item
+          <Flex wrap="wrap" gap="4px">
+            Form 
+            <span>
+            {
+              purchasedItemFormData.item_id ? 
+              (<Badge>
+                This item exists in inventory
               </Badge>)
-          }
-          </span>
+              : (<Badge color="green">
+                  You are adding new item
+                </Badge>)
+            }
+            </span>
+          </Flex>
         </Title>
         <Flex wrap="wrap" direction="row" gap="32px">
           <Box>
@@ -237,6 +271,37 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   onChange={(event) => onChange('mrp', getFloatNumFromStr(event.currentTarget.value) || 0)}
                   error={errors.mrp}
               />
+            </Col>
+            <Col span={12}>
+            {
+              purchasedItemFormData.inputName && purchasedItemFormData.barcode ?
+              (    
+                isNewItemSKUExists && !purchasedItemFormData.item_id
+                ? (<Alert color="red">
+                      <IconExclamationCircle
+                        size={20} color="red" style={{ marginRight: '10px' }} 
+                      />
+                      Item with this SKU already exists
+                      <div>{newItemSKU}</div>
+                      <div>SKU: Item Barcode + Item Name + Packet Qty + Unit + MRP + MRP IN DIGITS</div>
+                  </Alert>)
+                : <Alert color="green">
+                      <IconCheck
+                        size={20} color="green" style={{ marginRight: '10px' }} 
+                      />
+                      ITEM SKU
+                      <Text color="green" weight={600}>{newItemSKU}</Text>
+                  </Alert>
+              )
+              : (
+                  <Alert color="yellow">
+                      <IconExclamationCircle
+                        size={20} color="black" style={{ marginRight: '10px' }} 
+                      />
+                      SKU will be generated on adding item name and barcode
+                  </Alert>
+              )
+            }
             </Col>
           </Grid>
           </Box>
