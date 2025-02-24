@@ -147,8 +147,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   }
 
   const onBarcodeGenerate = () => {
-    formOldValuesRef.current = { ...purchasedItemFormData };
-    setShowSkuModal(true);
+    if(purchasedItemFormData.item_id){
+      formOldValuesRef.current = { ...purchasedItemFormData };
+      setShowSkuModal(true);
+    }
     const newBarcode = generateBarcode();
     dispatch(setPurchasedItemDetailForm({ barcode: newBarcode }))
   }
