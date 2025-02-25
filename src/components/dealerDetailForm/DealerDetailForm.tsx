@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import * as yup from 'yup';
 import {
   TextInput,
   NumberInput,
@@ -18,6 +17,7 @@ import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import { useLocation, useNavigate } from 'react-router';
 import { dealerFormValidation } from 'src/utils/validations/dealerFormValidation';
+import { toast } from 'react-toastify';
 
 export const DealerDetailForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,10 +27,8 @@ export const DealerDetailForm: React.FC = () => {
   const purchaseOrder = useSelector(selectPurchaseOrder);
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
-  const [isDealerDetailsSaved, setIsDealerDetailsSaved] = useState(Boolean(purchaseOrder._id));
 
   const onChange = (field: string, value: string | number) => {
-    setIsDealerDetailsSaved(false);
     dispatch(setDealerFormData({
       [field]: value,
     }));
@@ -47,9 +45,9 @@ export const DealerDetailForm: React.FC = () => {
       } },
     })
     setLoading(false);
-    if(response.isError) return;
-    setIsDealerDetailsSaved(true);
-    navigate(`${location.pathname}/${response?.message?._id}?${location.search}`)
+    if(response.isError) return toast.error('unable to save dealer details, please try after some time');;
+    toast.success('dealer details saved successfully');
+    navigate(`${location.pathname}/${response?.message?._id}?tab=itemDetails`)
   }
 
   const updateOrder = async () => {
@@ -70,8 +68,9 @@ export const DealerDetailForm: React.FC = () => {
       uploadedImages: []
     });
     setLoading(false);
-    if(response.isError) return;
-    setIsDealerDetailsSaved(true);
+    if(response.isError) return toast.error('unable to save dealer details, please try after some time');
+    toast.success('dealer details saved successfully');
+    navigate(`${location.pathname}?tab=itemDetails`);
   }
 
   const handleSubmit = async () => {
@@ -161,8 +160,8 @@ export const DealerDetailForm: React.FC = () => {
           </Col>
 
           <Col span={12}>
-            <Button disabled={isDealerDetailsSaved} loading={loading} onClick={handleSubmit} type="submit" fullWidth mt="lg">
-              {isDealerDetailsSaved ? "Saved" : "Save"}
+            <Button loading={loading} onClick={handleSubmit} type="submit" fullWidth mt="lg">
+               Save & Next
             </Button>
           </Col>
         </Grid>

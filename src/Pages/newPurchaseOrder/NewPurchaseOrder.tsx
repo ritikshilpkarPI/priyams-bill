@@ -12,6 +12,7 @@ import { PaymentDetailAndBillPanel } from '../../components/paymentDetailsPanel/
 import { BillUploadPanel } from '../../components/BillUploadPanel/BillUploadPanel';
 import { PurchaseOrderSummary } from '../../components/purchaseOrderSummary/PurchaseOrderSummary';
 import { resetPurchasedItemForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
+import { toast } from "react-toastify";
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -20,6 +21,7 @@ const NewPurchaseOrder = () => {
   const purchaseOrderId = params?.id;
   const dispatch = useDispatch();
   const searchParams: any = new URLSearchParams(location.search);
+  const currentTab = searchParams.get('tab');
   const TAB:any = {
     dealerDetails: "dealerDetails",
     itemDetails: "itemDetails",
@@ -27,7 +29,7 @@ const NewPurchaseOrder = () => {
     billUpload: "billUpload",
     summary: "summary",
   }
-  const [activeTab, setActiveTab] = useState<any>(TAB[searchParams.get('tab')] || 'dealerDetails');
+  const [activeTab, setActiveTab] = useState<any>(TAB[currentTab] || 'dealerDetails');
 
   const onTabChange = (newTab: string) => {
     setActiveTab(newTab);
@@ -37,7 +39,10 @@ const NewPurchaseOrder = () => {
   const getPurchaseOrderDetails = async () => {
     if(!purchaseOrderId) return;
     const response = await getPurchaseOrderDetailsAPI(purchaseOrderId);
-    if(response?.isError) return;
+    if(response?.isError || !response.data) {
+      toast.error('unable to get details of this purchase order, please try again')
+      return;
+    };
     const data = response?.data;
     if(!data) return;
     dispatch(setPurchaseOrder(data));
@@ -61,6 +66,10 @@ const NewPurchaseOrder = () => {
     if(purchaseOrderId)  getPurchaseOrderDetails();
     else resetPurchaseOrderForms();
   }, [purchaseOrderId])
+
+  useEffect(()=> {
+    setActiveTab(TAB[currentTab] || 'dealerDetails');
+  }, [currentTab])
 
   return (
     <div style={{ marginTop: "16px", marginBottom: "16px" }}>
