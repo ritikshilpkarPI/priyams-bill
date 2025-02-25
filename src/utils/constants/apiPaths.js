@@ -82,6 +82,7 @@ export const API_PATHS = {
     POST_UPDATE_SAVED_PAYMENT: '/api/payment/updateSavedPayment',
     POST_UPDATE_PAYMENT_BY_ID: '/api/payment/updatePaymentById',
     POST_DELETE_PAYMENT_BY_ID: '/api/payment/deletePaymentById',
+    POST_ADD_PAYMENT_DETAILS_BY_ID:'/api/payment/addPaymentDetailsById',
   },
   STAFF: {
     GET_STAFF: '/api/staff',
