@@ -17,17 +17,20 @@ export const validateAddPaymentDetailsById = Joi.object({
       'any.required': 'Paid Amount is required',
     }),
     paidBy: Joi.string().required().messages({
+      'string.base': 'Paid By must be a string',
       'string.empty': 'Paid By cannot be empty',
       'any.required': 'Paid By is required',
     }),
     chequeNumber: Joi.when('paidBy', {
       is: Joi.string().valid('CHEQUE').insensitive(),
       then: Joi.string().required().messages({
+        'string.base': 'Cheque Number must be a string',
         'string.empty': 'Cheque Number is required for CHEQUE payment',
         'any.required': 'Cheque Number is required for CHEQUE payment',
       }),
-      otherwise: Joi.string().allow('').optional(),
-
+      otherwise: Joi.string().valid('').messages({
+        'any.only': 'Cheque Number must be empty when Paid By is not CHEQUE',
+      }),
     }),
   }).required(),
-});
+}).options({ convert: false });
