@@ -9,7 +9,10 @@ const objectIdValidation = (value: string, helpers: Joi.CustomHelpers) => {
 };
 
 export const validateAddPaymentDetailsById = Joi.object({
-  purchaseOrderId: Joi.string().custom(objectIdValidation).required(),
+  purchaseOrderId: Joi.string().custom(objectIdValidation).required().messages({
+      'any.required': 'Purchase Order ID is required',
+      'any.custom': 'Invalid Purchase Order ID',
+  }),
   payment: Joi.object({
     paidAmount: Joi.number().greater(0).required().messages({
       'number.base': 'Paid Amount must be a number',
