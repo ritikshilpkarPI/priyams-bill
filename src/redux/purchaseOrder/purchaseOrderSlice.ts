@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: PurchaseOrderDataType = {
+  _id: '',
   dealerName: '',
   phoneNumber: '',
   billAmount: 0,
