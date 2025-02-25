@@ -9,6 +9,7 @@ import { paymentDetailFormValidation } from "../../utils/validations/paymentDeta
 import { draftOrderByIdAPI } from "src/utils/apiUtils";
 import { setPurchaseOrder } from "src/redux/purchaseOrder/purchaseOrderSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 export const PurchaseOrderSummary = () => {
   const dispatch = useDispatch();
@@ -55,9 +56,11 @@ export const PurchaseOrderSummary = () => {
     setLoading(true);
     const response = await draftOrderByIdAPI(purchaseOrder._id);
     setLoading(false);
-    if(response.isError) return;
-    if(response.order) return;
-    dispatch(setPurchaseOrder(response.order));
+    if(response.isError) return toast.error('Unable to draft order, please try again');
+    dispatch(setPurchaseOrder({
+      ...purchaseOrder,
+      isDraft: true
+    }));
  }
 
  useEffect(() => {

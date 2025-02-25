@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 import { useLocation } from "react-router"
 import { useNavigate } from "react-router"
+import { toast } from "react-toastify"
 import { setPurchaseOrder } from "src/redux/purchaseOrder/purchaseOrderSlice"
 import { selectPurchaseOrder } from "../../redux/purchaseOrder/purchaseOrderSelectors"
 import { addNewOrderAPI, updateOrderDetailsAPI } from "../../utils/apiUtils"
@@ -46,8 +47,7 @@ export const BillUploadPanel = () => {
             } },
         })
         setIsFileUploading(false)
-        if(response.isError) return;
-        if(!response.message) return;
+        if(response.isError || !response.message) return toast.error('Unable to upload images, please try again');
         dispatch(setPurchaseOrder(response.message));
         navigate(`${location.pathname}/${response.message._id}?${location.search}`);
     }
@@ -73,8 +73,10 @@ export const BillUploadPanel = () => {
        });
        setIsFileUploading(false);
        setDeleteFileId('');
-       if(response.isError) return;
-       if(!response.message) return;
+       if(response.isError || !response.message){
+        if(deleteBills.length) return toast.error('Unable to delete image, please try again');
+        return  toast.error('Unable to upload images, please try again');
+       }
        dispatch(setPurchaseOrder(response.message))
     }
 
@@ -116,7 +118,7 @@ export const BillUploadPanel = () => {
                         color="red" 
                         leftIcon={<IconTrash size={20} />}
                         loading={deleteFileId === billPhoto.public_id}
-                        disabled={Boolean(deleteFileId !== billPhoto.secure_url && deleteFileId)}
+                        disabled={Boolean(deleteFileId !== billPhoto.public_id && deleteFileId)}
                     >
                         Delete
                     </Button>
