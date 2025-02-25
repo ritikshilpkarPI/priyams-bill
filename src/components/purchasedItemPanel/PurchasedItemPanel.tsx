@@ -11,6 +11,7 @@ import { QuestionModal } from '../questionModal/QuestionModal';
 import { ItemSearch } from '../ItemSearch';
 import { Box } from '@mantine/core';
 import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
+import { toast } from 'react-toastify';
 
 const PurchasedItemPanel = () => {
     const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const PurchasedItemPanel = () => {
       resetRemoveItem();
       const response = await deletePurchaseOrderItemByIdAPI(purchaseOrderId, removeItem._id);
       setRemoveItemId('');
-      if(response.isError) return;
+      if(response.isError) return toast.error('unable to remove this item, please try again after some time');
       getPurchaseOrderDetails();
     }
 
@@ -46,7 +47,7 @@ const PurchasedItemPanel = () => {
       setItemFormLoading(true);
       const response = await getItemByIdAPI(itemDetails._id);
       setItemFormLoading(false);
-      if(response.isError) return;
+      if(response.isError) return toast.error('unable to get item details, please try again');
       dispatch(setPurchasedItemDetailForm(getPurchasedItemByItem(response.item)))
   }
 
@@ -56,35 +57,36 @@ const PurchasedItemPanel = () => {
         else if(editItemIdxRef.current >= 0) await onUpdatePurchaseOrderItem(purchaseItemDetails)
         else await onAddPurchaseOrderItem(purchaseItemDetails)
         setItemFormLoading(false);
-        dispatch(resetPurchasedItemForm());
     }
     
       const onSavePurchaseOrderItem = async(purchaseItemDetails: PurchasedItemDetailFormType) => {
         const response = await saveOrderAPI(purchaseItemDetails);
-        if(response.isError) return;
+        if(response.isError) return toast.error('unable to add item, please try again');
+        dispatch(resetPurchasedItemForm());
         navigate(`${location.pathname}/${response?.order._id}${location.search}`)
       }
     
       const onAddPurchaseOrderItem = async(purchasedItemData: PurchasedItemDetailFormType) => {
         if(!purchaseOrderId) return;
         const response = await updatePurchaseOrderByIdAPI(purchasedItemData, purchaseOrderId);
-        if(response.isError) return;
+        if(response.isError) return toast.error('unable to add item, please try again');
+        dispatch(resetPurchasedItemForm());
         getPurchaseOrderDetails();
       }
   
       const onUpdatePurchaseOrderItem = async(purchasedItemData: PurchasedItemDetailFormType) => {
         if(!purchaseOrderId) return;
         const response = await updatePurchaseOrderItemByIdxAPI(purchaseOrderId, editItemIdxRef.current, purchasedItemData);
-        if(response.isError) return;
+        if(response.isError) return toast.error('unable to update item, please try again');
+        dispatch(resetPurchasedItemForm());
         getPurchaseOrderDetails();
       }
 
       const getPurchaseOrderDetails = async () => {
-    
         if(!purchaseOrderId) return;
-    
         const response = await getPurchaseOrderDetailsAPI(purchaseOrderId);
-       if(response?.data)  dispatch(setPurchaseOrder(response.data))
+        if(response.isError || !response?.data) return toast.error('unable to get item details, please try again');
+        dispatch(setPurchaseOrder(response.data))
       }
 
   return (

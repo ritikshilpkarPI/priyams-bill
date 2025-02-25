@@ -6,6 +6,7 @@ import {  IconX } from '@tabler/icons-react';
 import { deletePaymentByIdAPI } from '../../utils/apiUtils';
 import { useDispatch } from 'react-redux';
 import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
+import { toast } from 'react-toastify';
 
 export const PaymentDetailTable = ({
   purchaseOrderId,
@@ -20,7 +21,7 @@ export const PaymentDetailTable = ({
     setRemovePaymentIdx(index);
     const response = await deletePaymentByIdAPI(purchaseOrderId, index);
     setRemovePaymentIdx(-1);
-    if(response.isError) return;
+    if(response.isError) return toast.error('unable to remove payments, please try again');
     if(!response.order) return;
     dispatch(setPurchaseOrder(response.order));
   }

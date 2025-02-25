@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import { setPurchaseOrder } from "src/redux/purchaseOrder/purchaseOrderSlice";
 import { savePOPaymentAPI, updatePOPaymentAPI } from "src/utils/apiUtils";
 import { getNumberFromStr } from "src/utils/getNumberFromStr";
@@ -33,8 +34,7 @@ export const PaymentDetailsForm = ({
 
     const savePayment = async () => {
        const response = await savePOPaymentAPI(paymentDetails);
-       if(response.isError) return;
-       if(!response.order) return;
+       if(response.isError || !response.order) return toast.error('unable to add payments, please try again');
        dispatch(setPurchaseOrder(response.order))
        navigate(`${location.pathname}/${response.order._id}?${location.search}`)
     }
@@ -42,8 +42,7 @@ export const PaymentDetailsForm = ({
     const updatePayment = async () => {
         if(!purchaseOrderId) return;
         const response = await updatePOPaymentAPI(paymentDetails, purchaseOrderId, paymentDetailIdx);
-        if(response.isError) return;
-        if(!response.order) return;
+        if(response.isError || !response.order) return toast.error('unable to add payments, please try again');
         dispatch(setPurchaseOrder(response.order));
         setPaymentDetails(defaultPaymentDetails);
      }
