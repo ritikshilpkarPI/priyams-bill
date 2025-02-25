@@ -86,11 +86,15 @@ export const BillUploadPanel = () => {
         updateDetails({ deleteBills: [deleteBillPhoto], uploadedImages })
     }
 
+    const onReject = () => {
+        toast.warn('Image should be more than 5MB and in JPEG/JPG/PNG/WEBP format');
+    }
+
     return (
     <Container>
         <Dropzone
             onDrop={onFileSelect}
-            onReject={() => {}}
+            onReject={onReject}
             maxSize={5 * 1024 ** 2}
             mt="16px"
             sx={{ borderColor: "black" }}
