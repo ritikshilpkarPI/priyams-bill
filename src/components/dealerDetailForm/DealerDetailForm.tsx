@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   TextInput,
-  NumberInput,
   Select,
   Textarea,
   Button,
@@ -19,6 +18,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { dealerFormValidation } from '../../utils/validations/dealerFormValidation';
 import { toast } from 'react-toastify';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
+import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 
 export const DealerDetailForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -148,12 +148,11 @@ export const DealerDetailForm: React.FC = () => {
           </Col>
 
           <Col span={12}>
-            <NumberInput
+            <CustomNumberInput
               label="Bill Amount"
               value={dealerFormData.billAmount}
-              onChange={(value) => onChange('billAmount', value || 0)}
+              onChange={(e) => onChange('billAmount', e.currentTarget.value)}
               required
-              min={1}
               placeholder="Enter bill amount"
               error={errors.billAmount}
             />

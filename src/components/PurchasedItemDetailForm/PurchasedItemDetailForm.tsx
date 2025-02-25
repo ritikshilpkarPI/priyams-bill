@@ -26,8 +26,6 @@ import {
   resetPurchasedItemForm,
   setPurchasedItemDetailForm,
 } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
-import { getNumberFromStr } from '../../utils/getNumberFromStr';
-import { getFloatNumFromStr } from '../../utils/getFloatNumFromStr';
 import { categoriesWithSubcategories } from '../../utils/constants/categoriesWithSubCategories';
 import {
   IconCheck,
@@ -46,6 +44,7 @@ import { selectItemsSkuList } from '../../redux/items/itemsSelector';
 import { getItemsSkuAPI } from '../../utils/apiUtils';
 import { setItemsData } from '../../redux/items/itemsSlice';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
+import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 
 export const PurchasedItemDetailForm: React.FC<
   PurchasedItemDetailFormProps
@@ -296,13 +295,13 @@ export const PurchasedItemDetailForm: React.FC<
               </Col>
 
               <Col span={12}>
-                <TextInput
+                <CustomNumberInput
                   label="Packet Qty."
                   value={purchasedItemFormData.itemQuantity}
                   onChange={(event) =>
                     onChange(
                       'itemQuantity',
-                      getNumberFromStr(event.currentTarget.value) || 0
+                      parseInt(event.currentTarget.value) || 0
                     )
                   }
                   required
@@ -322,14 +321,14 @@ export const PurchasedItemDetailForm: React.FC<
               </Col>
 
               <Col span={12}>
-                <TextInput
+                <CustomNumberInput
                   label="M.R.P."
                   value={purchasedItemFormData.mrp}
                   required
                   onChange={(event) =>
                     onChange(
                       'mrp',
-                      getFloatNumFromStr(event.currentTarget.value) || 0
+                      event.currentTarget.value
                     )
                   }
                   error={errors.mrp}
@@ -458,42 +457,42 @@ export const PurchasedItemDetailForm: React.FC<
             />
             <Grid gutter="md" sx={{ width: '240px' }}>
               <Col span={12}>
-                <TextInput
+                <CustomNumberInput
                   label="C.P.(Cost Price)"
                   value={purchasedItemFormData.costPrice}
                   required
                   onChange={(event) =>
                     onChange(
                       'costPrice',
-                      getFloatNumFromStr(event.currentTarget.value) || 0
+                      event.currentTarget.value
                     )
                   }
                   error={errors.costPrice}
                 />
               </Col>
               <Col span={12}>
-                <TextInput
+                <CustomNumberInput
                   label="S.P. (Selling Price)"
                   value={purchasedItemFormData.sellingPrice}
                   required
                   onChange={(event) =>
                     onChange(
                       'sellingPrice',
-                      getFloatNumFromStr(event.currentTarget.value) || 0
+                      event.currentTarget.value
                     )
                   }
                   error={errors.sellingPrice}
                 />
               </Col>
               <Col span={12}>
-                <TextInput
+                <CustomNumberInput
                   label="Order Quantity"
                   value={purchasedItemFormData.stockQuantity}
                   required
                   onChange={(event) =>
                     onChange(
                       'stockQuantity',
-                      getFloatNumFromStr(event.currentTarget.value) || 0
+                      parseInt(event.currentTarget.value)
                     )
                   }
                   error={errors.stockQuantity}
@@ -575,7 +574,7 @@ export const PurchasedItemDetailForm: React.FC<
                 error={errors.date}
                 withAsterisk
               />
-              <TextInput
+              <CustomNumberInput
                 label="Item Quantity"
                 value={formExpiryDate.value}
                 required
@@ -583,7 +582,7 @@ export const PurchasedItemDetailForm: React.FC<
                 onChange={(event) =>
                   onExpiryFormDateChange(
                     'value',
-                    getNumberFromStr(event.currentTarget.value)
+                    parseInt(event.currentTarget.value)
                   )
                 }
               />

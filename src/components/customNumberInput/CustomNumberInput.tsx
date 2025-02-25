@@ -10,7 +10,6 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   required,
 }) => {
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
       <Input.Wrapper error={error} label={label} required={required}>
         <Input
           type="number"
@@ -19,7 +18,6 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
           value={value}
         />
       </Input.Wrapper>
-    </div>
   );
 };
 
