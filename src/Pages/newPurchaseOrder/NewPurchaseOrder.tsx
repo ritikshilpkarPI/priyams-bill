@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
-import { Tabs, Title } from '@mantine/core';
+import { LoadingOverlay, Tabs, Title } from '@mantine/core';
 import './NewPurchaseOrder.css';
 import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
@@ -28,6 +28,7 @@ const NewPurchaseOrder = () => {
   const dispatch = useDispatch();
   const searchParams: URLSearchParams = new URLSearchParams(location.search);
   const currentTab = searchParams.get('tab') || '';
+  const [loading, setLoading] = useState(false);
   const TAB: Record<string, string> = {
     dealerDetails: 'dealerDetails',
     itemDetails: 'itemDetails',
@@ -46,7 +47,9 @@ const NewPurchaseOrder = () => {
 
   const getPurchaseOrderDetails = async () => {
     if (!purchaseOrderId) return;
+    setLoading(true);
     const response = await getPurchaseOrderDetailsAPI(purchaseOrderId);
+    setLoading(false);
     if (response?.isError || !response.data) {
       toast.error(
         'unable to get details of this purchase order, please try again'
@@ -117,6 +120,7 @@ const NewPurchaseOrder = () => {
           <PurchaseOrderSummary />
         </Tabs.Panel>
       </Tabs>
+      <LoadingOverlay visible={loading} />
     </div>
   );
 };
