@@ -58,6 +58,7 @@ export const DealerDetailForm: React.FC = () => {
   };
 
   const updateOrder = async () => {
+    if(!purchaseOrder._id) return;
     setLoading(true);
     const response = await updateOrderDetailsAPI({
       new_order: {
@@ -67,7 +68,6 @@ export const DealerDetailForm: React.FC = () => {
           orders: purchaseOrder.purchasedItems,
           ...purchaseOrder,
           ...dealerFormData,
-          id: purchaseOrder._id,
         },
         id: purchaseOrder._id,
       },

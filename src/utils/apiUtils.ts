@@ -17,7 +17,7 @@ export const getBillingLeanItemsAPI = async () => {
     const response = await getAPI({
       path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
     });
-    
+
     return response.message;
   } catch (err) {
     return { isError: true, err };
@@ -61,106 +61,118 @@ export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
   } catch (error) {
     return { isError: true, error };
   }
-}; 
+};
 
 export const getItemsSkuAPI = async () => {
   try {
     const response = await getAPI({
-      path: API_PATHS.ITEMS.GET_ITEMS_SKU
+      path: API_PATHS.ITEMS.GET_ITEMS_SKU,
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const addNewOrderAPI = async (data: any) => {
+export const addNewOrderAPI = async (data: AddNewOrderAPIArgs) => {
   try {
     const response = await postAPI({
       path: API_PATHS.PURCHASE_ORDER.POST_ADD_NEW_ORDER,
-      data
+      data,
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const updateOrderDetailsAPI = async (data: any) => {
+export const updateOrderDetailsAPI = async (data: UpdateOrderAPIArgs) => {
   try {
     const response = await postAPI({
       path: API_PATHS.PURCHASE_ORDER.POST_UPDATE_DETAILS,
-      data
+      data,
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const saveOrderAPI = async (purchaseOrderData: any) => {
+export const saveOrderAPI = async (
+  purchaseOrderData: PurchaseOrderDataType
+) => {
   try {
     const response = await postAPI({
       path: API_PATHS.PURCHASE_ORDER.POST_SAVE_ORDER,
-      data: { new_order: purchaseOrderData }
+      data: { new_order: purchaseOrderData },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
 export const getPurchaseOrderDetailsAPI = async (purchaseOrderId: string) => {
   try {
     const response = await getAPI({
-      path: `${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/${purchaseOrderId}`
+      path: `${API_PATHS.PURCHASE_ORDER.GET_ORDER_DETAILS}/${purchaseOrderId}`,
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const updatePurchaseOrderByIdAPI = async (purchasedItemData: PurchasedItemDetailFormType, id: string) => {
+export const updatePurchaseOrderByIdAPI = async (
+  purchasedItemData: PurchasedItemDetailFormType,
+  id: string
+) => {
   try {
     const response = await postAPI({
       path: `${API_PATHS.PURCHASE_ORDER.POST_UPDATE_SAVED_ORDER}/${id}`,
-      data: { new_order: purchasedItemData }
+      data: { new_order: purchasedItemData },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const deletePurchaseOrderItemByIdAPI = async (purchaseOrderId: string, purchasedItemId: string) => {
+export const deletePurchaseOrderItemByIdAPI = async (
+  purchaseOrderId: string,
+  purchasedItemId: string
+) => {
   try {
     const response = await postAPI({
       path: `${API_PATHS.PURCHASE_ORDER.POST_DELETE_ITEM}/${purchaseOrderId}`,
       data: {
-        itemId: purchasedItemId
-      }
+        itemId: purchasedItemId,
+      },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const updatePurchaseOrderItemByIdxAPI =  async (purchaseOrderId: string, purchasedItemIdx: number, purchaseOrderData: PurchasedItemDetailFormType) => {
+export const updatePurchaseOrderItemByIdxAPI = async (
+  purchaseOrderId: string,
+  purchasedItemIdx: number,
+  purchaseOrderData: PurchasedItemDetailFormType
+) => {
   try {
     const response = await postAPI({
       path: `${API_PATHS.PURCHASE_ORDER.POST_UPDATE_ORDER_BY_INDEX}/${purchaseOrderId}`,
       data: {
         new_order: purchaseOrderData,
-        index: purchasedItemIdx
-      }
+        index: purchasedItemIdx,
+      },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
 export const getItemByIdAPI = async (itemId: string) => {
   try {
@@ -171,61 +183,65 @@ export const getItemByIdAPI = async (itemId: string) => {
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
 export const savePOPaymentAPI = async (paymentDetails: PaymentDetailType) => {
   try {
     const response = await postAPI({
       path: API_PATHS.PAYMENT.POST_SAVE_PAYMENT,
       data: {
-        payment: paymentDetails
-      }
+        payment: paymentDetails,
+      },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const updatePOPaymentAPI = async (paymentDetails: PaymentDetailType, purchaseOrderId: string, index: number) => {
+export const updatePOPaymentAPI = async (
+  paymentDetails: PaymentDetailType,
+  purchaseOrderId: string,
+  index: number
+) => {
   try {
     const response = await postAPI({
       path: `${API_PATHS.PAYMENT.POST_UPDATE_PAYMENT_BY_ID}/${purchaseOrderId}`,
       data: {
         payment: paymentDetails,
-        index
-      }
+        index,
+      },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const deletePaymentByIdAPI = async(id: string, index: number) => {
+export const deletePaymentByIdAPI = async (id: string, index: number) => {
   try {
     const response = await postAPI({
       path: `${API_PATHS.PAYMENT.POST_DELETE_PAYMENT_BY_ID}/${id}`,
       data: {
-        index
-      }
+        index,
+      },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
 export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
   try {
     const response = await postAPI({
       path: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
       data: {
-        id: purchaseOrderId
-      }
+        id: purchaseOrderId,
+      },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};

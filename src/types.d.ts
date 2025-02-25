@@ -335,6 +335,27 @@ declare global {
     itemBarcode: string;
     itemName: string;
   }
+
+  interface PurchaseObjType extends PurchaseOrderDataType {
+    orders?: Array<PurchasedItemDetailFormType>;
+    bills?: Array<string>;
+    details?: Array<PaymentDetailType>;
+  }
+ 
+  interface AddNewOrderAPIArgs {
+    new_order: {
+      purchaseObj: PurchaseObjType,
+    }
+  }
+
+  interface UpdateOrderAPIArgs {
+    new_order: {
+      purchaseObj: PurchaseObjType,
+      id: string;
+    },
+    deleteBills?: Array<CloudFileType>;
+    uploadedImages?: Array<CloudFileType>;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

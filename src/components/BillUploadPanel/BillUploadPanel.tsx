@@ -63,13 +63,13 @@ export const BillUploadPanel = () => {
     deleteBills = [],
     uploadedImages = [],
   }: UpdateDetailBillUploadArgs) => {
+    if(!purchaseOrder._id) return;
     const response = await updateOrderDetailsAPI({
       new_order: {
         purchaseObj: {
           orders: purchaseOrder.purchasedItems,
           details: [],
           ...purchaseOrder,
-          id: purchaseOrder._id,
           bills,
         },
         id: purchaseOrder._id,
