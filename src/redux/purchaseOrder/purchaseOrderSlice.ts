@@ -9,7 +9,7 @@ const initialState: PurchaseOrderDataType = {
   remark: '',
   purchasedItems: [],
   purchaseDetails: [],
-  billPhotos: []
+  billPhotos: [],
 };
 
 const purchaseOrderSlice = createSlice({
@@ -20,19 +20,16 @@ const purchaseOrderSlice = createSlice({
       Object.assign(state, action.payload);
     },
     addPurchasedItem: (state, action) => {
-      if(state?.purchasedItems) state.purchasedItems.push(action.payload);
+      if (state?.purchasedItems) state.purchasedItems.push(action.payload);
       else state.purchasedItems = [action.payload];
     },
     resetPurchaseOrder: (state) => {
       Object.assign(state, initialState);
-    }
+    },
   },
 });
 
-export const {
-  setPurchaseOrder,
-  addPurchasedItem,
-  resetPurchaseOrder
-} = purchaseOrderSlice.actions;
+export const { setPurchaseOrder, addPurchasedItem, resetPurchaseOrder } =
+  purchaseOrderSlice.actions;
 
 export default purchaseOrderSlice.reducer;

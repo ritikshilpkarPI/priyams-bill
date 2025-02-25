@@ -60,7 +60,7 @@ export const PurchasedItemDetailForm: React.FC<
     date: null,
     value: 0,
   };
-  const skuFields: any = {
+  const skuFields: Record<string, string> = {
     inputName: 'inputName',
     barcode: 'barcode',
     mrp: 'mrp',
@@ -70,7 +70,7 @@ export const PurchasedItemDetailForm: React.FC<
   const [formExpiryDate, setFormExpiryDate] = useState(
     defaulValuesExpiryItemForm
   );
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
   const newItemSKU = useMemo(
     () =>
@@ -168,7 +168,7 @@ export const PurchasedItemDetailForm: React.FC<
       }
       setErrors({});
       onSubmit(purchasedItemFormData);
-    } catch (error: any) {
+    } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
   };
@@ -192,7 +192,7 @@ export const PurchasedItemDetailForm: React.FC<
       setErrors({});
       dispatch(addItemExpiryDateData({ ...formExpiryDate }));
       setFormExpiryDate(defaulValuesExpiryItemForm);
-    } catch (error: any) {
+    } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
   };

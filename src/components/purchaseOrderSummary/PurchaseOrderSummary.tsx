@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Button, Checkbox, Flex, Title } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { dealerFormValidation } from '../../utils/validations/dealerFormValidation';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';

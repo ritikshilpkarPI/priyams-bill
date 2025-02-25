@@ -26,7 +26,7 @@ export const PaymentDetailsForm = ({
   };
   const [paymentDetails, setPaymentDetails] = useState(defaultPaymentDetails);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
   const onChange = (field: string, value: string | number) => {
     setPaymentDetails({ ...paymentDetails, [field]: value });

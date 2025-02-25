@@ -26,7 +26,7 @@ export const DealerDetailForm: React.FC = () => {
   const navigate = useNavigate();
   const dealerFormData = useSelector(selectDealerDetailForm);
   const purchaseOrder = useSelector(selectPurchaseOrder);
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const [loading, setLoading] = useState(false);
 
   const onChange = (field: string, value: string | number) => {
@@ -90,7 +90,7 @@ export const DealerDetailForm: React.FC = () => {
       });
       if (purchaseOrder._id) return updateOrder();
       return addNewOrder();
-    } catch (error: any) {
+    } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
   };

@@ -60,7 +60,7 @@ const PurchasedItemPanel = () => {
     getPurchaseOrderDetails();
   };
 
-  const onItemSelect = async (item: any) => {
+  const onItemSelect = async (item: { itemDetail: BillLeanItemType }) => {
     const itemDetails = item?.itemDetail;
     if (!itemDetails?._id) return;
     setItemFormLoading(true);
@@ -71,7 +71,9 @@ const PurchasedItemPanel = () => {
     dispatch(setPurchasedItemDetailForm(getPurchasedItemByItem(response.item)));
   };
 
-  const onPurchasedOrderSubmit = async (purchaseItemDetails: any) => {
+  const onPurchasedOrderSubmit = async (
+    purchaseItemDetails: PurchasedItemDetailFormType
+  ) => {
     setItemFormLoading(true);
     if (!purchaseOrderId) await onSavePurchaseOrderItem(purchaseItemDetails);
     else if (editItemIdxRef.current >= 0)

@@ -62,7 +62,7 @@ export const BillUploadPanel = () => {
     bills = [],
     deleteBills = [],
     uploadedImages = [],
-  }: any) => {
+  }: UpdateDetailBillUploadArgs) => {
     const response = await updateOrderDetailsAPI({
       new_order: {
         purchaseObj: {

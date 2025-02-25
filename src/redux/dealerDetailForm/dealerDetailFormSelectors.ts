@@ -1,1 +1,2 @@
-export const selectDealerDetailForm = (state: RootState) => state.dealerDetailForm;
+export const selectDealerDetailForm = (state: RootState) =>
+  state.dealerDetailForm;

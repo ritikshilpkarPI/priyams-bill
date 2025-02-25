@@ -321,6 +321,20 @@ declare global {
     file: File,
     previewURL: string;
   }
+
+  interface UpdateDetailBillUploadArgs {
+    bills?: Array<string>;
+    deleteBills?: Array<CloudFileType>;
+    uploadedImages?: Array<CloudFileType>;
+  }
+
+  type YupValidationErrorMapType = Record<string, string>;
+
+  interface BillLeanItemType {
+    _id: string;
+    itemBarcode: string;
+    itemName: string;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

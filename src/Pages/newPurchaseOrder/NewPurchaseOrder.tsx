@@ -26,16 +26,16 @@ const NewPurchaseOrder = () => {
   const params = useParams();
   const purchaseOrderId = params?.id;
   const dispatch = useDispatch();
-  const searchParams: any = new URLSearchParams(location.search);
-  const currentTab = searchParams.get('tab');
-  const TAB: any = {
+  const searchParams: URLSearchParams = new URLSearchParams(location.search);
+  const currentTab = searchParams.get('tab') || '';
+  const TAB: Record<string, string> = {
     dealerDetails: 'dealerDetails',
     itemDetails: 'itemDetails',
     paymentDetails: 'paymentDetails',
     billUpload: 'billUpload',
     summary: 'summary',
   };
-  const [activeTab, setActiveTab] = useState<any>(
+  const [activeTab, setActiveTab] = useState<string>(
     TAB[currentTab] || 'dealerDetails'
   );
 
