@@ -90,6 +90,7 @@ const {
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSellDetailsByItemId,
   getItemsSku,
+  getItemById,
   createPurchaseOrderWithDealer,
   addPaymentDetailsById,
 } = require('../controllers/index');
@@ -383,7 +384,9 @@ router.post(
   assignOrderToRider
 );
 
-router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, getItemsSku);
+router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, isLoggedIn, getItemsSku);
+
+router.get(`${API_PATHS.ITEMS.GET_ITEM_BY_ID}/:id`, isLoggedIn, getItemById);
 
 router.post(`${API_PATHS.PAYMENT.POST_ADD_PAYMENT_DETAILS_BY_ID}/:id`, addPaymentDetailsById);
 

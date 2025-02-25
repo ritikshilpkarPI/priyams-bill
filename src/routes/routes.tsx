@@ -3,10 +3,10 @@ import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import UnAuthorizedRoute from '../components/UnAuthorizedRoute';
 import AdminRoute from '../components/AdminRoute';
-import { ROUTES } from "../utils/constants/routes";
+import { ROUTES } from '../utils/constants/routes';
 import CustomerBill from '../Pages/CustomerBill';
 import PerItemListPurchaseOrder from '../components/IndividualItemListPurchaseOrder';
-import ItemListPurchaseOrderHistory from "../components/ListPurchaseOrderHistory";
+import ItemListPurchaseOrderHistory from '../components/ListPurchaseOrderHistory';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
 import { ItemQuantity } from '../Pages/ItemQuantity';
 
@@ -37,14 +37,14 @@ import {
   SellDetailsPage,
   BarcodePrint,
   Label,
+  NewPurchaseOrder,
   CreatePurchaseOrderPage,
 } from '../Pages';
 import App from '../App';
 
-export const router = createBrowserRouter(
-  [
-    {
-    path: "/",
+export const router = createBrowserRouter([
+  {
+    path: '/',
     element: <App />,
     children: [
       {
@@ -59,8 +59,8 @@ export const router = createBrowserRouter(
             path: ROUTES.REPORT,
             element: <Report />,
             index: true,
-          }
-        ]
+          },
+        ],
       },
       {
         element: <ProtectedRoute />,
@@ -206,11 +206,20 @@ export const router = createBrowserRouter(
             index: true,
           },
           {
+            path: ROUTES.NEW_PURCHASE_ORDER,
+            element: <NewPurchaseOrder />,
+            index: true,
+          },
+          {
+            path: ROUTES.NEW_PURCHASE_ORDER_BY_ID,
+            element: <NewPurchaseOrder />,
+            index: true,
+          },
+          {
             path: ROUTES.CREATE_PURCHASE_ORDER,
             element: <CreatePurchaseOrderPage />,
             index: true,
           }
-          
         ]
       },
       {
@@ -238,7 +247,7 @@ export const router = createBrowserRouter(
         element: <ExpiredItemList />,
         index: true,
       },
-    ]
+    ],
   },
   {
     path: '*',
