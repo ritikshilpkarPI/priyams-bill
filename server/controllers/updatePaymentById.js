@@ -11,7 +11,7 @@ const updatePaymentById = async (req, res,next) => {
       ];
       let totalPaidAmount = 0;
       purchaseDetails.forEach((payment) => {
-        totalPaidAmount = totalPaidAmount + payment.paidAmount;
+        totalPaidAmount = Number(totalPaidAmount) + Number(payment.paidAmount);
       });
       parseFloat(totalPaidAmount).toFixed(2);
       const updatedOrder = await PurchaseOrder.findByIdAndUpdate(purchase_id, {
