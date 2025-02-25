@@ -38,6 +38,7 @@ import {
   BarcodePrint,
   Label,
   NewPurchaseOrder,
+  CreatePurchaseOrderPage,
 } from '../Pages';
 import App from '../App';
 
@@ -214,7 +215,12 @@ export const router = createBrowserRouter([
             element: <NewPurchaseOrder />,
             index: true,
           },
-        ],
+          {
+            path: ROUTES.CREATE_PURCHASE_ORDER,
+            element: <CreatePurchaseOrderPage />,
+            index: true,
+          }
+        ]
       },
       {
         element: <UnAuthorizedRoute />,

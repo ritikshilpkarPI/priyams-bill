@@ -7,9 +7,11 @@ import dealerDetailFormSlice from './dealerDetailForm/dealerDetailFormSlice';
 import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 
+import stepperReducer from "./stepper/stepperSlice";
 export const store = configureStore({
   reducer: {
     user: userSlice,
+    stepper: stepperReducer,
     bill: billReducer,
     allItemsFeedData: allItemsFeedDataSlice,
     items: itemsSlice,
