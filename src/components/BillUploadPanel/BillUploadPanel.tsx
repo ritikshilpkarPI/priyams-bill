@@ -55,7 +55,7 @@ export const BillUploadPanel = () => {
     if (response.isError || !response.message)
       return toast.error('Unable to upload images, please try again');
     dispatch(setPurchaseOrder(response.message));
-    navigate(`${location.pathname}/${response.message._id}?${location.search}`);
+    navigate(`${location.pathname}/${response.message._id}${location.search}`);
   };
 
   const updateDetails = async ({

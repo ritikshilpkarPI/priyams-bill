@@ -37,7 +37,7 @@ export const PaymentDetailsForm = ({
     if (response.isError || !response.order)
       return toast.error('unable to add payments, please try again');
     dispatch(setPurchaseOrder(response.order));
-    navigate(`${location.pathname}/${response.order._id}?${location.search}`);
+    navigate(`${location.pathname}/${response.order._id}${location.search}`);
   };
 
   const updatePayment = async () => {

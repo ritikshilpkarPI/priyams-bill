@@ -112,16 +112,18 @@ export const PurchaseOrderSummary = () => {
         <Checkbox label="Bill Images" checked={isBillImagesUploaded} />
       </Flex>
 
-      <Button
-        mt="xl"
-        color="green"
-        disabled={!enableDraftBtn}
-        sx={{ width: '220px' }}
-        onClick={draftOrder}
-        loading={loading}
-      >
-        {purchaseOrder.isDraft ? 'Drafted' : 'Draft'}
-      </Button>
+      {
+         purchaseOrder._id && <Button
+         mt="xl"
+         color="green"
+         disabled={!enableDraftBtn}
+         sx={{ width: '220px' }}
+         onClick={draftOrder}
+         loading={loading}
+       >
+         {purchaseOrder.isDraft ? 'Drafted' : 'Draft'}
+       </Button>
+      }
     </Flex>
   );
 };
