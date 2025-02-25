@@ -10,6 +10,7 @@ const initialState: PurchaseOrderDataType = {
   purchasedItems: [],
   purchaseDetails: [],
   billPhotos: [],
+  totalPaidAmount: 0,
 };
 
 const purchaseOrderSlice = createSlice({
