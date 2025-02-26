@@ -7,9 +7,9 @@ const { getItemSKU } = require('../util/getItemSKU');
 const addOrder = async (req, res,next) => {
     try {
       const {
-        details,
-        bills,
-        orders,
+        details = [],
+        bills = [],
+        orders = [],
         billAmount,
         remark,
         totalPaidAmount,

@@ -1,113 +1,136 @@
-import React from 'react';
-import {
-  Autocomplete,
-  Container,
-  Paper,
-  Stack,
-  TextInput,
-  Title,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { DatePicker } from '@mantine/dates';
-import './PaymentDetailsForm.css';
+import { Button, Col, Flex, Grid, Select, TextInput } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router';
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
+import { savePOPaymentAPI, updatePOPaymentAPI } from '../../utils/apiUtils';
+import { getNumberFromStr } from '../../utils/getNumberFromStr';
+import { paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
+import CustomNumberInput from '../customNumberInput/CustomNumberInput';
+import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 
-const PaymentDetailsForm = () => {
-  const form = useForm({
-    initialValues: {
-      totalAmount: '',
-      paymentType: '',
-      paidAmount: '',
-      paidMethod: '',
-      pendingAmount: '',
-      nextPaymentDate: null,
-      paymentTypes: ["Fully Paid", "Partially Paid", "Credit"],
-      paidmethods: ["Cash", "UPI", "NEFT"],
-    },
-    validate: {
-      totalAmount: (value, values) =>
-        value && Number(value) === Number(values.paidAmount) + Number(values.pendingAmount)
-          ? null
-          : "Total Amount must be equal to Paid Amount + Pending Amount",
-      paymentType: (value) => (value ? null : "Payment Type is required"),
-      paidAmount: (value, values) => (values.paymentType === "Credit" || value ? null : "Paid Amount is required"),
-      paidMethod: (value) => (value ? null : "Payment Method is required"),
-      pendingAmount: (value) => (value ? null : "Pending Amount is required"),
-    },
-  });
+export const PaymentDetailsForm = ({
+  purchaseOrderId,
+  paymentDetailIdx,
+}: PaymentDetailFormProps) => {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const defaultPaymentDetails = {
+    paidBy: 'UPI',
+    paidAmount: 0,
+    chequeNumber: '',
+  };
+  const [paymentDetails, setPaymentDetails] = useState(defaultPaymentDetails);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<YupValidationErrorMapType>({});
+
+  const onChange = (field: string, value: string | number) => {
+    setPaymentDetails({ ...paymentDetails, [field]: value });
+  };
+
+  const savePayment = async () => {
+    const response = await savePOPaymentAPI(paymentDetails);
+    if (response.isError || !response.order)
+      return toast.error('unable to add payments, please try again');
+    dispatch(setPurchaseOrder(response.order));
+    navigate(`${location.pathname}/${response.order._id}${location.search}`);
+  };
+
+  const updatePayment = async () => {
+    if (!purchaseOrderId) return;
+    const response = await updatePOPaymentAPI(
+      paymentDetails,
+      purchaseOrderId,
+      paymentDetailIdx
+    );
+    if (response.isError || !response.order)
+      return toast.error('unable to add payments, please try again');
+    dispatch(setPurchaseOrder(response.order));
+    setPaymentDetails(defaultPaymentDetails);
+  };
+
+  const onPaymentAdd = async () => {
+    try {
+      setLoading(true);
+      await paymentDetailFormValidation.validate(paymentDetails, {
+        abortEarly: false,
+      });
+      if (purchaseOrderId) await updatePayment();
+      else await savePayment();
+      setPaymentDetails(defaultPaymentDetails);
+    } catch (error) {
+      setErrors(getYupValidationErrorMap(error));
+    }
+    setLoading(false);
+  };
   return (
-    <div>
-      <Container className="payment-details-form-container" size="xs" p="xs">
-        <Paper shadow="sm" p="md" radius="md">
-          <Title order={3} align="center" mb="md">
-            Payment Details
-          </Title>
-          <form>
-            <Stack spacing="md">
-              <TextInput
-                label="Total Amount"
-                placeholder="Enter total amount"
-                withAsterisk
-                {...form.getInputProps("totalAmount")}
-                className="payment-details-form-input"
-              />
-
-              <Autocomplete
-                label="Payment Type"
-                placeholder="Pick payment type"
-                withAsterisk
-                data={form.values.paymentTypes}
-                {...form.getInputProps("paymentType")}
-                className="payment-details-form-input"
-              />
-
-              <TextInput
-                label="Paid Amount"
-                placeholder="Enter paid amount"
-                withAsterisk={form.values.paymentType !== "Credit"}
-                {...form.getInputProps("paidAmount")}
-                className="payment-details-form-input"
-              />
-
-              <Autocomplete
-                label="Paid method"
-                placeholder="Pick payment method"
-                data={form.values.paidmethods}
-                disabled={form.values.paymentType === "Credit"}
-                {...form.getInputProps("paidMethod")}
-                className="payment-details-form-input"
-                withAsterisk = {form.values.paymentType !== "Credit"}
-              />
-
-              <TextInput
-                label="Pending Amount"
-                placeholder="Auto calculated"
-                readOnly
-                value={
-                  form.values.totalAmount
-                    ? (Number(form.values.totalAmount) - Number(form.values.paidAmount)).toString()
-                    : ""
-                }
-                className="payment-details-form-input"
-              />
-
-              <DatePicker
-                label="Next Payment Date"
-                placeholder="Pick date"
-                disabled={
-                  Number(form.values.totalAmount) ===
-                  Number(form.values.paidAmount) + Number(form.values.pendingAmount)
-                }
-                minDate={new Date()}
-                {...form.getInputProps("nextPaymentDate")}
-                className="payment-details-form-input"
-                withAsterisk = {form.values.paymentType !== "Fully Paid"}
-              />
-            </Stack>
-          </form>
-        </Paper>
-      </Container>
-    </div>
+    <Flex
+      align="left"
+      gap="16px"
+      direction="column"
+      sx={{
+        border: '1px solid grey',
+        padding: '16px',
+        borderRadius: '8px',
+        textAlign: 'left',
+        overflow: 'scroll',
+      }}
+      mx="sm"
+      mt="16px"
+    >
+      <Grid gutter="md" sx={{ width: '240px' }}>
+        <Col span={12}>
+          <Select
+            label="Paid By"
+            required
+            error={errors.paidBy}
+            placeholder="Select Paid By"
+            data={['CASH', 'UPI', 'CHEQUE', 'PREPAID', 'NEFT']}
+            value={paymentDetails.paidBy}
+            onChange={(value) => onChange('paidBy', value || '')}
+          />
+        </Col>
+        <Col>
+          <CustomNumberInput
+            label="Paid Amount"
+            required
+            error={errors.paidAmount}
+            placeholder="Enter Paid Amount"
+            value={paymentDetails.paidAmount}
+            onChange={(e) => onChange('paidAmount', Number(e.target.value))}
+          />
+        </Col>
+        <Col>
+          {paymentDetails.paidBy === 'CHEQUE' && (
+            <TextInput
+              label="Cheque Number"
+              required
+              error={errors.chequeNumber}
+              placeholder="Enter Cheque Number"
+              value={paymentDetails.chequeNumber}
+              onChange={(event) =>
+                onChange(
+                  'chequeNumber',
+                  getNumberFromStr(event.currentTarget.value)?.toString()
+                )
+              }
+            />
+          )}
+        </Col>
+        <Col>
+          <Button
+            loading={loading}
+            leftIcon={<IconPlus />}
+            onClick={onPaymentAdd}
+          >
+            Add
+          </Button>
+        </Col>
+      </Grid>
+    </Flex>
   );
 };
-
-export default PaymentDetailsForm;

@@ -83,6 +83,7 @@ export const API_PATHS = {
     POST_UPDATE_SAVED_PAYMENT: '/api/payment/updateSavedPayment',
     POST_UPDATE_PAYMENT_BY_ID: '/api/payment/updatePaymentById',
     POST_DELETE_PAYMENT_BY_ID: '/api/payment/deletePaymentById',
+    POST_ADD_PAYMENT_DETAILS_BY_ID:'/api/payment/addPaymentDetailsById',
   },
   STAFF: {
     GET_STAFF: '/api/staff',
@@ -114,6 +115,7 @@ export const API_PATHS = {
     GET_ALL_RIDERS: "/api/riders"
   },
   ITEMS: {
-    GET_ITEMS_SKU: "/api/items/sku"
+    GET_ITEMS_SKU: "/api/items/sku",
+    GET_ITEM_BY_ID: "/api/item"
   }
 };

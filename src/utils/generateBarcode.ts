@@ -1,0 +1,1 @@
+export const generateBarcode = () => `PSTR_${Date.now().toString().slice(-10)}`

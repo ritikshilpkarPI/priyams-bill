@@ -4,8 +4,8 @@ const savePayment = async (req, res,next) => {
     try {
       const { payment } = req.body;
       const purchaseOrder = await PurchaseOrder.create({
-        purchaseDetails: [payment],
-        totalPaidAmount: payment.paidAmount,
+        purchaseDetails: [{ ...payment, paidAmount: payment.paidAmount?.toFixed(2) }],
+        totalPaidAmount: payment.paidAmount?.toFixed(2),
       });
       res.status(201).send({
         message: 'order added successfully',

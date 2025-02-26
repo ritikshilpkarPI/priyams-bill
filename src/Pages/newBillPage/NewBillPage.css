@@ -30,16 +30,14 @@
     height: auto ;
     display: block;
     margin: 0 auto; 
-    margin-bottom: 0;
 }
 
 .barcode-container svg text {
-    margin-top: 0 !important;
-    text-anchor:middle !important;
+    text-anchor:middle ;
     font-size: 8px !important;
-    letter-spacing: 2px !important ; 
-    font-weight: 100 !important;
-    dominant-baseline:middle !important;
+    letter-spacing: 2px  ; 
+    font-weight: 100 ;
+    dominant-baseline:middle ;
     transform: translate(50%,-20%);
 }
 .shop-details{
