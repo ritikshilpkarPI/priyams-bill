@@ -1,9 +1,5 @@
 const { Bill, ReturnItem, Item } = require('../db-models');
-const {
-  findBillById,
-  calculateFinalItems,
-  getMergedItemMap,
-} = require('./getBillForReturnExchange');
+const { findBillById } = require('./getBillForReturnExchange');
 
 const addNewReturnBill = async (req, res, next) => {
   try {
@@ -21,106 +17,73 @@ const addNewReturnBill = async (req, res, next) => {
       amountReturn,
     } = req.body;
 
-    let originalBillId = id;
-    let existingBill = await findBillById(originalBillId);
-
-    if (!existingBill) {
-      return res.status(400).json({ message: "Bill doesn't exist to apply return or exchange" });
-    }
-
     if (!returnedItems.length) {
       return res.status(400).json({ message: 'Add at least one returning item in the bill' });
     }
 
-    const returnItems = {};
-    returnedItems.forEach(({ itemDetail, itemQuantityInBill }) => {
-      returnItems[itemDetail._id] = itemQuantityInBill;
+    const existingBill = await findBillById(id);
+    if (!existingBill) {
+      return res.status(400).json({ message: "Bill doesn't exist to apply return or exchange" });
+    }
+
+    const returnItemsMap = Object.fromEntries(returnedItems.map(({ itemDetail, itemQuantityInBill }) => [
+      itemDetail._id, itemQuantityInBill
+    ]));
+
+    // Bulk update item stock
+    const bulkStockUpdate = Object.entries(returnItemsMap).map(([itemId, quantity]) => ({
+      updateOne: {
+        filter: { _id: itemId },
+        update: { $inc: { itemStockQuantity: quantity } }
+      }
+    }));
+
+    await Item.bulkWrite(bulkStockUpdate);
+
+    let totalBillProfit = 0, totalNumberOfItems = 0;
+    const itemsExchanged = billItems.map(({ itemDetail, itemQuantityInBill }) => {
+      const { _id, itemSellingPricePerUnit, itemCostPricePerUnit, itemMRPperUnit } = itemDetail;
+      const itemDiscountPerUnit = itemMRPperUnit - itemSellingPricePerUnit;
+      const itemNetProfit = (itemSellingPricePerUnit - itemCostPricePerUnit) * itemQuantityInBill;
+      
+      totalNumberOfItems += itemQuantityInBill;
+      totalBillProfit += itemNetProfit;
+
+      return {
+        itemDetail: { _id, itemSellingPricePerUnit, itemCostPricePerUnit, itemMRPperUnit, itemDiscountPerUnit },
+        itemNetProfit,
+        itemQuantityInBill,
+        itemMRPtotal: itemMRPperUnit * itemQuantityInBill,
+        itemDiscountTotal: itemDiscountPerUnit * itemQuantityInBill,
+        itemSellingPriceTotal: itemSellingPricePerUnit * itemQuantityInBill,
+      };
     });
 
-    await Promise.all(
-      Object.entries(returnItems).map(async ([id, quantity]) => {
-        if (id) {
-          const item = await Item.findById(id);
-          item.itemStockQuantity = (item.itemStockQuantity || 0) + Number(quantity);
-          await item.save();
-        }
-      })
-    );
-
-    let totalBillProfit = 0, totalNumberOfItems = 0, totalNumberOfUniqueItems = billItems.length;
-
-    const itemsExchanged = await Promise.all(
-      billItems.map(async (itemObj) => {
-        const {
-          _id,
-          itemSellingPricePerUnit,
-          itemCostPricePerUnit,
-          itemMRPperUnit,
-          itemStockQuantity,
-          itemDiscountPerUnit = itemMRPperUnit - itemSellingPricePerUnit,
-          ...restItemDetails
-        } = itemObj.itemDetail;
-
-        const orderQuantityInNumber = itemObj.itemQuantityInBill;
-        totalNumberOfItems += orderQuantityInNumber;
-
-        const itemNetProfit =
-          (itemSellingPricePerUnit - itemCostPricePerUnit) * orderQuantityInNumber;
-        totalBillProfit += itemNetProfit;
-
-        if (_id) {
-          const item = await Item.findById(_id);
-          item.itemStockQuantity = (item.itemStockQuantity || 0) - orderQuantityInNumber;
-          await item.save();
-        }
-
-        return {
-          itemDetail: {
-            _id,
-            itemStockQuantity,
-            itemCostPricePerUnit,
-            itemSellingPricePerUnit,
-            itemMRPperUnit,
-            itemDiscountPerUnit,
-            ...restItemDetails,
-          },
-          itemNetProfit,
-          itemQuantityInBill: orderQuantityInNumber,
-          itemMRPtotal: itemMRPperUnit * orderQuantityInNumber,
-          itemDiscountTotal: itemDiscountPerUnit * orderQuantityInNumber,
-          itemSellingPriceTotal: itemSellingPricePerUnit * orderQuantityInNumber,
-        };
-      })
-    );
-
+    // Create new bill with returned items
     const newBill = await Bill.create({
-      customerName: existingBill.customerName,
-      customerPhone: existingBill.customerPhone,
+      ...existingBill.toObject(),
       items: itemsExchanged,
       billMRPTotal,
       billAmountTotal,
       billDiscountTotal,
       totalBillProfit,
-      totalNumberOfUniqueItems,
+      totalNumberOfUniqueItems: billItems.length,
       totalNumberOfItems,
       cashPay,
       upiPay,
       amountReturn,
       refundAmount,
       totalRefundAmount,
-      parentBillId: originalBillId,
+      parentBillId: id,
       billRefund: refundAmount,
     });
 
-    await ReturnItem.create({
-      originalBillId,
-      returnedItems,
-      exchangeBillId: newBill._id,
-    });
+    // Create return item record
+    await ReturnItem.create({ originalBillId: id, returnedItems, exchangeBillId: newBill._id });
 
     res.status(200).json({ message: newBill });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 };

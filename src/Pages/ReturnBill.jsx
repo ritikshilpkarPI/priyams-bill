@@ -8,6 +8,8 @@ import { AppStateContext } from '../AppState/appState.context';
 import { ReactBarcode } from 'react-jsbarcode';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
+import { shouldEnablePayment } from '../utils/shouldEnablePayment';
+import "../CSS/returnBill.css"
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -379,16 +381,6 @@ const ReturnBill = () => {
     // eslint-disable-next-line
   }, [bill]);
 
-  function shouldEnablePayment(totalBillAmount, refundAmount) {
-    
-    if (refundAmount >= totalBillAmount) {
-      
-        return true; 
-    } else {
-       
-        return false; 
-    }
-}
 
 
   return (
@@ -1147,77 +1139,36 @@ const ReturnBill = () => {
               flexDirection: 'column',
             }}
           >
-          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
- 
-  <div
-    className="bill-total"
-    style={{
-      backgroundColor: 'white',
-      width: 'fit-content',
-      padding: '15px 20px',
-      borderRadius: '10px',
-      boxShadow: '0px 2px 5px rgba(0,0,0,0.1)',
-    }}
-  >
+        <div className="bill-summary-container">
+  <div className="bill-total refund-total">
     <Text color="red" size="xl" weight={800} className="final-bill-text print-text" td="underline">
       Bill Refund Total:
       <h2>{refundAmount > 0 && refundAmount}</h2>
     </Text>
   </div>
 
- 
-  <div
-    className="bill-total"
-    style={{
-      backgroundColor: 'black',
-      color: 'white',
-      width: 'fit-content',
-      padding: '15px 20px',
-      borderRadius: '10px',
-      boxShadow: '0px 2px 5px rgba(0,0,0,0.2)',
-    }}
-  >
+  <div className="bill-total new-bill-total">
     <Text color="white" size="xl" weight={800} className="final-bill-text print-text" td="underline">
       New Bill Total:
       <h2>{!isNaN(bill.billAmountTotal) ? bill.billAmountTotal : ''}</h2>
     </Text>
   </div>
 
- 
-  <div
-    className="bill-total"
-    style={{
-      backgroundColor: 'white',
-      width: 'fit-content',
-      padding: '15px 20px',
-      borderRadius: '10px',
-      boxShadow: '0px 2px 5px rgba(0,0,0,0.1)',
-    }}
-  >
+  <div className="bill-total amount-return">
     <Text color="red" size="xl" weight={800} className="final-bill-text print-text" td="underline">
       {bill.totalRefundAmount > 0 ? 'Refund Amount' : 'Amount Return'}:
       <h2>{bill.totalRefundAmount && bill.totalRefundAmount}</h2>
     </Text>
   </div>
 
- 
-  <div
-    className="bill-total"
-    style={{
-      backgroundColor: '#007BFF',
-      color: 'white',
-      width: 'fit-content',
-      padding: '15px 20px',
-      borderRadius: '10px',
-      boxShadow: '0px 2px 5px rgba(0,0,0,0.2)',
-    }}
-  >
+  <div className="bill-total pending-payment">
     <Text color="white" size="xl" weight={800} className="final-bill-text print-text" td="underline">
       Pending Payment:
       <h2>{Math.max(0, bill.billAmountTotal - refundAmount)}</h2>
     </Text>
   </div>
 </div>
+
 
             <div className="discount-line">
               <Text
