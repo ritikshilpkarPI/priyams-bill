@@ -2,13 +2,24 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 
 const draftOrder = async (req, res,next) => {
     try {
-      const { id } = req.body;
+      const { id, userDetail } = req.body;
+      const newStatusHistory =
+        {
+          data: {
+            userId: userDetail.userId,
+            status: userDetail.status,
+            browser: userDetail.browser || "Unknown",
+            os: userDetail.os || "Unknown",
+            ipAddress: userDetail.ipAddress || "Unknown",
+          },
+        }
       const order = await PurchaseOrder.findByIdAndUpdate(
         id,
         {
           isDraft: true,
           isRejected: false,
-          draftTime: Date.now()
+          draftTime: Date.now(),
+          $push: { statusHistory: newStatusHistory },
         },
         { new: true }
       );

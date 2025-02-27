@@ -93,7 +93,19 @@ const purchaseOrderSchema = new mongoose.Schema({
   paidTime: Date,
   rejectTime: Date,
   statusHistory: [
-    { data: Object, createdAt: { type: Date, default: Date.now } },
+    {
+      data: {
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+        status: { type: String },
+        browser: { type: String },
+        os: { type: String },
+        ipAddress: { type: String },
+      },
+      createdAt: { type: Date, default: Date.now },
+    },
   ],
   dealerId: {
     type: mongoose.Schema.Types.ObjectId,

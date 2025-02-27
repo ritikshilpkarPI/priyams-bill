@@ -7,7 +7,7 @@ const saveInventory = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction(); // Start transaction
   try {
-    const { newItems, purchaseOrderId } = req.body;
+    const { newItems, purchaseOrderId, userDetail } = req.body;
 
     // Extract valid item IDs
     const itemIds = newItems
@@ -156,13 +156,24 @@ const saveInventory = async (req, res, next) => {
         success: false,
       });
     }
-
+    
+    const newStatusHistory = {
+      data: {
+        userId: userDetail.userId,
+        status: userDetail.status,
+        browser: userDetail.browser || 'Unknown',
+        os: userDetail.os || 'Unknown',
+        ipAddress: userDetail.ipAddress || 'Unknown',
+      },
+    };
+    
     // If all items are successfully inserted or updated, approve the purchase order
     const order = await PurchaseOrder.findByIdAndUpdate(
       purchaseOrderId,
       {
         isApproved: true,
         approveTime: Date.now(),
+        $push: { statusHistory: newStatusHistory },
       },
       { new: true, session }
     );
