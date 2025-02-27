@@ -36,21 +36,24 @@ const PurchaseListApproval = ({
     }
   };
 
-  const rejectOrder = async (id, index) => {
+  const getUserDetails = async () => {
     const { browser, os, ip } = await getUserDeviceInfo();
+    return {
+      userId: parseJwt(Cookies.get('token')).id,
+      browser: browser,
+      os: os,
+      ipAddress: ip,
+    };
+  };  
+
+  const rejectOrder = async (id, index) => {
     await handleApiCall(
       async () => await genericAxios({
         method: API_METHODS.POST,
         url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
         data: {
           username: parseJwt(Cookies.get('token')).username,
-          userDetail: { 
-            userId: parseJwt(Cookies.get('token')).id,
-            status: "reject",
-            browser: browser,
-            os: os,
-            ipAddress: ip
-          },
+          userDetail: await getUserDetails(),
         },
       }),
       id,
@@ -62,7 +65,6 @@ const PurchaseListApproval = ({
     );
   };
   const approveOrder = async (id, index, list) => {
-    const { browser, os, ip } = await getUserDeviceInfo();    
     await handleApiCall(
       async () => await genericAxios({
         url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
@@ -70,13 +72,7 @@ const PurchaseListApproval = ({
         data: {
           newItems: list.purchasedItems,
           purchaseOrderId: id,
-          userDetail: { 
-            userId: parseJwt(Cookies.get('token')).id,
-            status: "approve",
-            browser: browser,
-            os: os,
-            ipAddress: ip
-          }
+          userDetail: await getUserDetails(),
         },
       }),
       id,
@@ -110,20 +106,13 @@ const PurchaseListApproval = ({
       if (!validate) {
         return;
       }
-      const { browser, os, ip } = await getUserDeviceInfo();  
       await handleApiCall(
         async () => await genericAxios({
           method: API_METHODS.POST,
           url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
           data: { 
             id,
-            userDetail: { 
-              userId: parseJwt(Cookies.get('token')).id,
-              status: "draft",
-              browser: browser,
-              os: os,
-              ipAddress: ip
-            },
+            userDetail: await getUserDetails(),
            },
         }),
         id,

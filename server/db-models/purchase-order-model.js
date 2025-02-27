@@ -103,6 +103,7 @@ const purchaseOrderSchema = new mongoose.Schema({
         browser: { type: String },
         os: { type: String },
         ipAddress: { type: String },
+        referer: { type: String },
       },
       createdAt: { type: Date, default: Date.now },
     },

@@ -1,16 +1,20 @@
+const { APP_ENVIRONMENT } = require('../util/constants/appEnvironment');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const rejectOrder = async (req, res,next) => {
     try {
       const id = req.params.id;
       const { userDetail } = req.body;
+      const referer = req.headers.referer;
+      const status =  APP_ENVIRONMENT.REJECT
       const newStatusHistory =
         {
           data: {
             userId: userDetail.userId,
-            status: userDetail.status,
+            status: status,
             browser: userDetail.browser || "Unknown",
             os: userDetail.os || "Unknown",
             ipAddress: userDetail.ipAddress || "Unknown",
+            referer: referer,
           },
         }
       const order = await PurchaseOrder.findByIdAndUpdate(
