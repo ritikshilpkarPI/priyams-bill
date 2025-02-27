@@ -2,13 +2,15 @@ import mongoose from "mongoose";
 import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
+const { APP_ENVIRONMENT } = require('../util/constants/appEnvironment');
 
 const saveInventory = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction(); // Start transaction
   try {
-    const { newItems, purchaseOrderId } = req.body;
-
+    const { newItems, purchaseOrderId, userDetail } = req.body; 
+    const referer = req.headers.referer;
+    const status  = APP_ENVIRONMENT.APPROVE
     // Extract valid item IDs
     const itemIds = newItems
       .map((item) => item.item_id)
@@ -156,13 +158,25 @@ const saveInventory = async (req, res, next) => {
         success: false,
       });
     }
-
+    
+    const newStatusHistory = {
+      data: {
+        userId: userDetail.userId,
+        status: status,
+        browser: userDetail.browser || 'Unknown',
+        os: userDetail.os || 'Unknown',
+        ipAddress: userDetail.ipAddress || 'Unknown',
+        referer: referer, 
+      },
+    };
+    
     // If all items are successfully inserted or updated, approve the purchase order
     const order = await PurchaseOrder.findByIdAndUpdate(
       purchaseOrderId,
       {
         isApproved: true,
         approveTime: Date.now(),
+        $push: { statusHistory: newStatusHistory },
       },
       { new: true, session }
     );
