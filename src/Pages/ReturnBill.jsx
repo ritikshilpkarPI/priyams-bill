@@ -8,6 +8,8 @@ import { AppStateContext } from '../AppState/appState.context';
 import { ReactBarcode } from 'react-jsbarcode';
 import { v4 as uuidv4 } from 'uuid';
 import { QuantBtn } from './Billing';
+import { shouldEnablePayment } from '../utils/shouldEnablePayment';
+import "../CSS/returnBill.css"
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -379,6 +381,8 @@ const ReturnBill = () => {
     // eslint-disable-next-line
   }, [bill]);
 
+
+
   return (
     <div>
       <div
@@ -675,7 +679,7 @@ const ReturnBill = () => {
           </Text>
         </div>
       </div>
-      <div>
+    { showReturnItems && <div>
         <div className="billing-container">
           <p style={{ marginBottom: '20px', fontWeight: '700' }}>
             Total Items : {totalItems}
@@ -1135,62 +1139,37 @@ const ReturnBill = () => {
               flexDirection: 'column',
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-              }}
-            >
-              <div
-                className="bill-total"
-                style={{
-                  backgroundColor: 'black',
-                  width: 'fit-content',
-                  padding: '10px',
-                  borderRadius: '10px',
-                }}
-              >
-                <Text
-                  color="red"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                  td="underline"
-                >
-                  New Bill Total:
-                  <h2>
-                    {isNaN(bill.billAmountTotal) ? '' : bill.billAmountTotal}
-                  </h2>
-                </Text>
-              </div>
-              <div
-                className="bill-total"
-                style={{
-                  backgroundColor: 'white',
-                  width: 'fit-content',
-                  padding: '10px',
-                  borderRadius: '10px',
-                }}
-              >
-                <Text
-                  color="red"
-                  size="xl"
-                  weight={800}
-                  className="final-bill-text print-text"
-                  td="underline"
-                >
-                  {bill.totalRefundAmount > 0
-                    ? 'Refund Amount'
-                    : 'Amount Return'}
-                  :
-                  <h2>
-                    {' '}
-                    {bill.totalRefundAmount > 0
-                      ? bill.totalRefundAmount
-                      : bill.amountReturn}
-                  </h2>
-                </Text>
-              </div>
-            </div>
+        <div className="bill-summary-container">
+  <div className="bill-total refund-total">
+    <Text color="red" size="xl" weight={800} className="final-bill-text print-text" td="underline">
+      Bill Refund Total:
+      <h2>{refundAmount > 0 && refundAmount}</h2>
+    </Text>
+  </div>
+
+  <div className="bill-total new-bill-total">
+    <Text color="white" size="xl" weight={800} className="final-bill-text print-text" td="underline">
+      New Bill Total:
+      <h2>{!isNaN(bill.billAmountTotal) ? bill.billAmountTotal : ''}</h2>
+    </Text>
+  </div>
+
+  <div className="bill-total amount-return">
+    <Text color="red" size="xl" weight={800} className="final-bill-text print-text" td="underline">
+      {bill.totalRefundAmount > 0 ? 'Refund Amount' : 'Amount Return'}:
+      <h2>{bill.totalRefundAmount && bill.totalRefundAmount}</h2>
+    </Text>
+  </div>
+
+  <div className="bill-total pending-payment">
+    <Text color="white" size="xl" weight={800} className="final-bill-text print-text" td="underline">
+      Pending Payment:
+      <h2>{Math.max(0, bill.billAmountTotal - refundAmount)}</h2>
+    </Text>
+  </div>
+</div>
+
+
             <div className="discount-line">
               <Text
                 className="discount-text"
@@ -1246,6 +1225,7 @@ const ReturnBill = () => {
                           cashPay: Number(e.target.value),
                         }))
                       }
+                      disabled={shouldEnablePayment(bill.billAmountTotal, refundAmount)}
                       className="quantity-input"
                       onWheel={(e) => e.target.blur()}
                     />
@@ -1270,6 +1250,7 @@ const ReturnBill = () => {
                           upiPay: Number(e.target.value),
                         }))
                       }
+                      disabled={shouldEnablePayment(bill.billAmountTotal, refundAmount)}
                       className="quantity-input"
                       onWheel={(e) => e.target.blur()}
                     />
@@ -1372,7 +1353,7 @@ const ReturnBill = () => {
             <h2 style={{ color: 'red' }}>Returned Bill</h2>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };
