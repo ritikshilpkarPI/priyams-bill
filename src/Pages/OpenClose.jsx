@@ -7,6 +7,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
+import "../CSS/openClose.css"
 import { useEffect, useState, useContext } from 'react';
 import { AppStateContext } from '../AppState/appState.context';
 import AddExpense from '../components/AddExpense';
@@ -232,6 +233,7 @@ const OpenClose = () => {
         flexDirection: 'column',
         alignItems: 'center',
       }}
+      className='open-close-page-wrapper'
     >
       <div
         style={{
@@ -461,7 +463,7 @@ const OpenClose = () => {
         All Procedures
       </Title>
 
-      <Table striped highlightOnHover>
+      <Table striped highlightOnHover className='all-procedure-table-conatiner' >
         <thead className="heading">
           <tr>
             <th>
