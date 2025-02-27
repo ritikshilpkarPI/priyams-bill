@@ -95,8 +95,9 @@ export const ItemsBarCode = () => {
                     itemBarcode 
                     ? 
                       <ReactBarcode options={{
-                        height: 35,
-                        width: 4
+                        format: 'code128',
+                        height: 40,
+                        width: 2
                       }} value={itemBarcode} />
                     : "Item Barcode Not Found"
                   }
