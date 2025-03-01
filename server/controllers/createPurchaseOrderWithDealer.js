@@ -8,6 +8,7 @@ const { uploadToCloudinary } = require('../util/image');
 const { MESSAGES } = require('../constants/messages');
 const { validateFile } = require('../util/validateFile');
 const { parseStringToJson } = require('../util/parseStringToJson');
+const { chunkArray } = require('../util/chunkArray');
 
 const fileValidation = validateFile({
   sizeInMB: 5,
@@ -78,25 +79,46 @@ const findOrCreateDealer = async (parsedData) => {
   return dealer;
 };
 
-const uploadDealerVisitingCardImages = async (req) => {
-  const uploadedImages = [];
-  if (req.files?.dealerVisitingCard) {
-    const files = Array.isArray(req.files.dealerVisitingCard)
-      ? req.files.dealerVisitingCard
-      : [req.files.dealerVisitingCard];
 
-    for (const file of files) {
-      const uploadResult = await uploadToCloudinary(file.data, file.name);
-      if (uploadResult?.secure_url && uploadResult?.public_id) {
-        uploadedImages.push({
-          publicId: uploadResult.public_id,
-          secureUrl: uploadResult.secure_url,
-        });
-      }
-    }
+
+const CHUNK_SIZE = 10; 
+
+const uploadDealerVisitingCardImages = async (req) => {
+  if (!req.files?.dealerVisitingCard) return [];
+
+  const files = Array.isArray(req.files.dealerVisitingCard)
+    ? req.files.dealerVisitingCard
+    : [req.files.dealerVisitingCard];
+
+  const uploadedImages = [];
+
+
+  const fileChunks = chunkArray(files, CHUNK_SIZE);
+
+  for (const chunk of fileChunks) {
+    const results = await Promise.all(
+      chunk.map(async (file) => {
+        try {
+          const uploadResult = await uploadToCloudinary(file.data, file.name);
+          if (uploadResult?.secure_url && uploadResult?.public_id) {
+            return {
+              publicId: uploadResult.public_id,
+              secureUrl: uploadResult.secure_url,
+            };
+          }
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        }
+        return null;
+      })
+    );
+
+    uploadedImages.push(...results.filter(Boolean)); 
   }
+
   return uploadedImages;
 };
+
 
 const findOrCreateSalesman = async (parsedData, dealerId) => {
   const { salesmanId, salesmanName, salesmanContactNumber } = parsedData;
