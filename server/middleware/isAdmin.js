@@ -37,6 +37,7 @@ const isLoggedIn = async (req, res, next) => {
     req.body.username = user.username
     next();
   } catch (error) {
+    console.log({error});
     next(error);
   }
 };
