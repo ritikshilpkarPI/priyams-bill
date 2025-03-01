@@ -25,7 +25,13 @@ const isLoggedIn = async (req, res, next) => {
         .send({ message: 'Login first to access this page', success: false });
       return;
     }
+    console.log({
+      token, JWT_SECRET: process.env.JWT_SECRET
+    });
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log({
+      decoded
+    });
    const user = await Staff.findById(decoded.id);
     req.user = user
     req.body.username = user.username

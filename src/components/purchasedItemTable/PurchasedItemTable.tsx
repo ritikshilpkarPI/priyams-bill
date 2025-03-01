@@ -25,7 +25,8 @@ export const PurchasedItemTable = ({
       <td>{purchasedItem?.itemRemark || '-'}</td>
       <td>
         {purchasedItem.expiryDates?.length > -0 ? (
-          <ItemExpiryTable expiryDates={purchasedItem.expiryDates} />
+          <ItemExpiryTable expiryDates={purchasedItem.expiryDates} onRemove={()=> console.log("Function not implemented yet")
+           } />
         ) : (
           '-'
         )}
