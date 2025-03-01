@@ -2,7 +2,9 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 
 const draftOrder = async (req, res,next) => {
     try {
+      console.log("drafting order");
       const { id } = req.body;
+      console.log({id});
       const order = await PurchaseOrder.findByIdAndUpdate(
         id,
         {

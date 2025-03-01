@@ -33,6 +33,7 @@ const isLoggedIn = async (req, res, next) => {
       decoded
     });
    const user = await Staff.findById(decoded.id);
+   console.log({user});
     req.user = user
     req.body.username = user.username
     next();
