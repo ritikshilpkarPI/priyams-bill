@@ -79,9 +79,7 @@ const findOrCreateDealer = async (parsedData) => {
   return dealer;
 };
 
-
-
-const CHUNK_SIZE = 10; 
+const CHUNK_SIZE = 10;
 
 const uploadDealerVisitingCardImages = async (req) => {
   if (!req.files?.dealerVisitingCard) return [];
@@ -91,7 +89,6 @@ const uploadDealerVisitingCardImages = async (req) => {
     : [req.files.dealerVisitingCard];
 
   const uploadedImages = [];
-
 
   const fileChunks = chunkArray(files, CHUNK_SIZE);
 
@@ -107,18 +104,17 @@ const uploadDealerVisitingCardImages = async (req) => {
             };
           }
         } catch (error) {
-          console.error("Error uploading image:", error);
+          console.error('Error uploading image:', error);
         }
         return null;
       })
     );
 
-    uploadedImages.push(...results.filter(Boolean)); 
+    uploadedImages.push(...results.filter(Boolean));
   }
 
   return uploadedImages;
 };
-
 
 const findOrCreateSalesman = async (parsedData, dealerId) => {
   const { salesmanId, salesmanName, salesmanContactNumber } = parsedData;
