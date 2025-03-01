@@ -27,12 +27,10 @@ const draftOrder = async (req, res,next) => {
         },
         { new: true }
       );
-      console.log({order});
       res
         .status(200)
         .send({ message: 'order drafted successfully', success: true, order });
     } catch (error) {
-      console.log({error});
       next(error)
     }
   };
