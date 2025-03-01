@@ -24,12 +24,11 @@ const parseAndValidateRequest = (req, res) => {
   }
   return parsedData;
 };
-
 const validateDealerVisitingCardFiles = (req, res) => {
-  if (req.files?.dealerVisitingCard) {
-    const files = Array.isArray(req.files.dealerVisitingCard)
-      ? req.files.dealerVisitingCard
-      : [req.files.dealerVisitingCard];
+  const { dealerVisitingCard } = req.files ; 
+
+  if (dealerVisitingCard) {
+    const files = Array.isArray(dealerVisitingCard) ? dealerVisitingCard : [dealerVisitingCard];
 
     for (const file of files) {
       const validationResult = fileValidation(file);
@@ -42,8 +41,12 @@ const validateDealerVisitingCardFiles = (req, res) => {
       }
     }
   }
+
   return true;
 };
+
+
+
 
 const findOrCreateDealer = async (parsedData) => {
   const { dealerId, dealerName, dealerAddress, dealerContactNumber } =
