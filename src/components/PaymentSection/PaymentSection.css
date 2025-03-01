@@ -2,6 +2,14 @@
     position: relative;
     width: 100%;
   }
+
+  .text-red {
+    color: red;
+  }
+
+  .text-blue {
+    color: #228be6;
+  }
   
   .payment-input-icon {
     position: absolute;
