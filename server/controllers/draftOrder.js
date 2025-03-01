@@ -6,10 +6,11 @@ const draftOrder = async (req, res,next) => {
       const { id, userDetail } = req.body;
       const referer = req.headers.referer;
       const status =  APP_ENVIRONMENT.DRAFT
+      const user = req.user;
       const newStatusHistory =
         {
           data: {
-            userId: userDetail.userId,
+            userId: user._id,
             status: status,
             browser: userDetail.browser || "Unknown",
             os: userDetail.os || "Unknown",

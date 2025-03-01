@@ -11,6 +11,8 @@ const saveInventory = async (req, res, next) => {
     const { newItems, purchaseOrderId, userDetail } = req.body; 
     const referer = req.headers.referer;
     const status  = APP_ENVIRONMENT.APPROVE
+    const user = req.user;
+    
     // Extract valid item IDs
     const itemIds = newItems
       .map((item) => item.item_id)
@@ -161,7 +163,7 @@ const saveInventory = async (req, res, next) => {
     
     const newStatusHistory = {
       data: {
-        userId: userDetail.userId,
+        userId:  user._id,
         status: status,
         browser: userDetail.browser || 'Unknown',
         os: userDetail.os || 'Unknown',

@@ -39,7 +39,6 @@ const PurchaseListApproval = ({
   const getUserDetails = async () => {
     const { browser, os, ip } = await getUserDeviceInfo();
     return {
-      userId: parseJwt(Cookies.get('token')).id,
       browser: browser,
       os: os,
       ipAddress: ip,
