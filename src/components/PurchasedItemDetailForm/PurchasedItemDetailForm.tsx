@@ -46,19 +46,28 @@ import { setItemsData } from '../../redux/items/itemsSlice';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 
-export const PurchasedItemDetailForm: React.FC<
-  PurchasedItemDetailFormProps
-> = ({ onSubmit, loading }) => {
+
+
+export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
+  onSubmit,
+  loading
+}) => {
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
   const [showSkuModal, setShowSkuModal] = useState(false);
   const itemsSKUList = useSelector(selectItemsSkuList);
   const formOldValuesRef = useRef<PurchasedItemDetailFormType | null>(null);
   const defaulValuesExpiryItemForm = {
-    mfgDate: null,
-    date: null,
+    mfgDate: null as Date | null,
+    date: null as Date | null,
     value: 0,
   };
+
+  const [formExpiryDate, setFormExpiryDate] = useState(defaulValuesExpiryItemForm);
+  const [errors, setErrors] = useState<YupValidationErrorMapType>({});
+
+  const [isEditing, setIsEditing] = useState(false);
+
   const skuFields: Record<string, string> = {
     inputName: 'inputName',
     barcode: 'barcode',
@@ -66,38 +75,29 @@ export const PurchasedItemDetailForm: React.FC<
     itemQuantity: 'itemQuantity',
     unit: 'unit',
   };
-  const [formExpiryDate, setFormExpiryDate] = useState(
-    defaulValuesExpiryItemForm
-  );
-  const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
-  const newItemSKU = useMemo(
-    () =>
-      getItemSKU({
-        barcode: purchasedItemFormData.barcode?.toString()?.trim(),
-        itemName: purchasedItemFormData.inputName?.trim() || '',
-        mrp: purchasedItemFormData.mrp,
-        packetQty: purchasedItemFormData.itemQuantity,
-        packetUnit: purchasedItemFormData.unit,
-      }),
-    [
-      purchasedItemFormData.barcode,
-      purchasedItemFormData.inputName,
-      purchasedItemFormData.mrp,
-      purchasedItemFormData.unit,
-      purchasedItemFormData.itemQuantity,
-      purchasedItemFormData.item_id,
-    ]
-  );
+  const newItemSKU = useMemo(() => {
+    return getItemSKU({
+      barcode: purchasedItemFormData.barcode?.toString()?.trim(),
+      itemName: purchasedItemFormData.inputName?.trim() || '',
+      mrp: purchasedItemFormData.mrp,
+      packetQty: purchasedItemFormData.itemQuantity,
+      packetUnit: purchasedItemFormData.unit,
+    });
+  }, [
+    purchasedItemFormData.barcode,
+    purchasedItemFormData.inputName,
+    purchasedItemFormData.mrp,
+    purchasedItemFormData.unit,
+    purchasedItemFormData.itemQuantity,
+    purchasedItemFormData.item_id,
+  ]);
 
-  const isNewItemSKUExists = useMemo(
-    () =>
-      itemsSKUList?.find(
-        (itemSku: string) =>
-          itemSku?.toUpperCase() === newItemSKU?.toUpperCase()
-      ),
-    [newItemSKU]
-  );
+  const isNewItemSKUExists = useMemo(() => {
+    return itemsSKUList?.some(
+      (itemSku: string) => itemSku?.toUpperCase() === newItemSKU?.toUpperCase()
+    );
+  }, [itemsSKUList, newItemSKU]);
 
   const isSameSKU = (field: string, value: string) => {
     const itemSKUData = {
@@ -151,6 +151,7 @@ export const PurchasedItemDetailForm: React.FC<
 
   const handleSubmit = async () => {
     try {
+      // Validate the purchasedItemFormData
       await draftItemFormValidation.validate(purchasedItemFormData, {
         abortEarly: false,
       });
@@ -158,9 +159,7 @@ export const PurchasedItemDetailForm: React.FC<
         (total, expiryDate) => total + (Number(expiryDate.value) || 0),
         0
       );
-      if (
-        Number(totalExpiryQty) !== Number(purchasedItemFormData.stockQuantity)
-      ) {
+      if (Number(totalExpiryQty) !== Number(purchasedItemFormData.stockQuantity)) {
         return setErrors({
           stockQuantity: 'order quantity and expiry items should be equal',
         });
@@ -172,18 +171,22 @@ export const PurchasedItemDetailForm: React.FC<
     }
   };
 
-  const onExpiryFormDateChange = (
-    field: string,
-    value: string | number | Date | null
-  ) => {
-    const updatedExpiryDateForm = { ...formExpiryDate, [field]: value };
-    if (field === 'mfgDate' && value === null) {
-      updatedExpiryDateForm.date = null;
+  const onExpiryFormDateChange = (field: string, value: string | Date | null) => {
+    let stringVal: string | null = null;
+
+    if (value instanceof Date) {
+      stringVal = value.toISOString();
+    } else if (typeof value === 'string') {
+      stringVal = value;
     }
-    setFormExpiryDate(updatedExpiryDateForm);
+
+    setFormExpiryDate((prev) => ({
+      ...prev,
+      [field]: stringVal,
+    }));
   };
 
-  const onAddExpiryDate = async () => {
+  const onAddOrUpdateExpiryDate = async () => {
     try {
       await itemExpiryFormValidation.validate(formExpiryDate, {
         abortEarly: false,
@@ -191,6 +194,7 @@ export const PurchasedItemDetailForm: React.FC<
       setErrors({});
       dispatch(addItemExpiryDateData({ ...formExpiryDate }));
       setFormExpiryDate(defaulValuesExpiryItemForm);
+      setIsEditing(false);
     } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
@@ -213,13 +217,26 @@ export const PurchasedItemDetailForm: React.FC<
 
   const getItemsSku = async () => {
     const response = await getItemsSkuAPI();
-    if (!response && response.isError) return;
+    if (!response || response.isError) return;
     dispatch(setItemsData({ itemsSkuList: response.itemsSku }));
   };
 
   useEffect(() => {
     getItemsSku();
   }, []);
+
+  const onEditExpiryDate = (idx: number) => {
+    const itemToEdit = purchasedItemFormData.expiryDates[idx];
+    dispatch(removeItemExpiryDateByIdx(idx));
+
+    setFormExpiryDate({
+      mfgDate: itemToEdit.mfgDate ?? null,
+      date: itemToEdit.date ?? null,
+      value: itemToEdit.value,
+    });
+
+    setIsEditing(true);
+  };
 
   return (
     <Flex direction="column" gap="16px" mx="sm" mt="lg" pos="relative">
@@ -255,10 +272,7 @@ export const PurchasedItemDetailForm: React.FC<
                   label="Barcode"
                   value={purchasedItemFormData.barcode}
                   onChange={(event) =>
-                    onChange(
-                      'barcode',
-                      event.currentTarget.value.toUpperCase().trim()
-                    )
+                    onChange('barcode', event.currentTarget.value.toUpperCase().trim())
                   }
                   required
                   error={errors.barcode}
@@ -283,9 +297,7 @@ export const PurchasedItemDetailForm: React.FC<
                   onChange={(event) =>
                     onChange(
                       'inputName',
-                      getStrWithoutSpecChar(
-                        event.currentTarget.value.toUpperCase()
-                      )
+                      getStrWithoutSpecChar(event.currentTarget.value.toUpperCase())
                     )
                   }
                   required
@@ -299,10 +311,7 @@ export const PurchasedItemDetailForm: React.FC<
                   label="Packet Qty."
                   value={purchasedItemFormData.itemQuantity}
                   onChange={(event) =>
-                    onChange(
-                      'itemQuantity',
-                      parseInt(event.currentTarget.value) || 0
-                    )
+                    onChange('itemQuantity', parseInt(event.currentTarget.value) || 0)
                   }
                   required
                   error={errors.itemQuantity}
@@ -325,18 +334,12 @@ export const PurchasedItemDetailForm: React.FC<
                   label="M.R.P."
                   value={purchasedItemFormData.mrp}
                   required
-                  onChange={(event) =>
-                    onChange(
-                      'mrp',
-                      event.currentTarget.value
-                    )
-                  }
+                  onChange={(event) => onChange('mrp', event.currentTarget.value)}
                   error={errors.mrp}
                 />
               </Col>
               <Col span={12}>
-                {purchasedItemFormData.inputName &&
-                purchasedItemFormData.barcode ? (
+                {purchasedItemFormData.inputName && purchasedItemFormData.barcode ? (
                   isNewItemSKUExists && !purchasedItemFormData.item_id ? (
                     <Alert color="red">
                       <IconExclamationCircle
@@ -347,8 +350,7 @@ export const PurchasedItemDetailForm: React.FC<
                       Item with this SKU already exists
                       <div>{newItemSKU}</div>
                       <div>
-                        SKU: Item Barcode + Item Name + Packet Qty + Unit + MRP
-                        + MRP IN DIGITS
+                        SKU: Barcode + Item Name + Packet Qty + Unit + MRP + MRP IN DIGITS
                       </div>
                     </Alert>
                   ) : (
@@ -386,25 +388,19 @@ export const PurchasedItemDetailForm: React.FC<
                   label="Company Name"
                   value={purchasedItemFormData.companyName}
                   required
-                  onChange={(event) =>
-                    onChange('companyName', event.currentTarget.value)
-                  }
+                  onChange={(event) => onChange('companyName', event.currentTarget.value)}
                   error={errors.companyName}
                 />
               </Col>
-
               <Col span={12}>
                 <TextInput
                   label="Brand Name"
                   value={purchasedItemFormData.brand}
                   required
-                  onChange={(event) =>
-                    onChange('brand', event.currentTarget.value)
-                  }
+                  onChange={(event) => onChange('brand', event.currentTarget.value)}
                   error={errors.brand}
                 />
               </Col>
-
               <Col span={12}>
                 <Autocomplete
                   label="Category"
@@ -418,15 +414,12 @@ export const PurchasedItemDetailForm: React.FC<
                   onChange={(value) => onChange('category', value)}
                 />
               </Col>
-
               <Col span={12}>
                 <Autocomplete
                   label="Sub Category"
                   placeholder="Add SubCategory"
                   data={
-                    categoriesWithSubcategories[
-                      purchasedItemFormData.category
-                    ] || []
+                    categoriesWithSubcategories[purchasedItemFormData.category] || []
                   }
                   autoCapitalize="on"
                   limit={Infinity}
@@ -437,7 +430,6 @@ export const PurchasedItemDetailForm: React.FC<
                   disabled={!purchasedItemFormData.category}
                 />
               </Col>
-
               <Col span={12}>
                 <TextInput
                   label="Flavour/Feature"
@@ -450,23 +442,14 @@ export const PurchasedItemDetailForm: React.FC<
             </Grid>
           </Box>
           <Box>
-            <Divider
-              my="xs"
-              label="Item Price Details"
-              labelPosition="center"
-            />
+            <Divider my="xs" label="Item Price Details" labelPosition="center" />
             <Grid gutter="md" sx={{ width: '240px' }}>
               <Col span={12}>
                 <CustomNumberInput
                   label="C.P.(Cost Price)"
                   value={purchasedItemFormData.costPrice}
                   required
-                  onChange={(event) =>
-                    onChange(
-                      'costPrice',
-                      event.currentTarget.value
-                    )
-                  }
+                  onChange={(event) => onChange('costPrice', event.currentTarget.value)}
                   error={errors.costPrice}
                 />
               </Col>
@@ -475,12 +458,7 @@ export const PurchasedItemDetailForm: React.FC<
                   label="S.P. (Selling Price)"
                   value={purchasedItemFormData.sellingPrice}
                   required
-                  onChange={(event) =>
-                    onChange(
-                      'sellingPrice',
-                      event.currentTarget.value
-                    )
-                  }
+                  onChange={(event) => onChange('sellingPrice', event.currentTarget.value)}
                   error={errors.sellingPrice}
                 />
               </Col>
@@ -490,10 +468,7 @@ export const PurchasedItemDetailForm: React.FC<
                   value={purchasedItemFormData.stockQuantity}
                   required
                   onChange={(event) =>
-                    onChange(
-                      'stockQuantity',
-                      parseInt(event.currentTarget.value)
-                    )
+                    onChange('stockQuantity', parseInt(event.currentTarget.value))
                   }
                   error={errors.stockQuantity}
                 />
@@ -507,9 +482,7 @@ export const PurchasedItemDetailForm: React.FC<
                 <Textarea
                   label="Item Remarks"
                   value={purchasedItemFormData.itemRemark}
-                  onChange={(event) =>
-                    onChange('itemRemark', event.currentTarget.value)
-                  }
+                  onChange={(event) => onChange('itemRemark', event.currentTarget.value)}
                 />
               </Col>
               <Col span={12}>
@@ -551,25 +524,21 @@ export const PurchasedItemDetailForm: React.FC<
               <DatePicker
                 label="MFG Date."
                 inputFormat="DD/MM/YY"
-                value={formExpiryDate.mfgDate}
-                onChange={(value: Date) =>
-                  onExpiryFormDateChange('mfgDate', value?.toISOString())
+                value={
+                  formExpiryDate.mfgDate ? new Date(formExpiryDate.mfgDate) : null
                 }
+                onChange={(value: Date) => onExpiryFormDateChange('mfgDate', value)}
                 error={errors.mfgDate}
                 withAsterisk
               />
               <DatePicker
                 label="Expiry Date."
                 inputFormat="DD/MM/YY"
-                onChange={(value: Date) =>
-                  onExpiryFormDateChange('date', value?.toISOString())
-                }
+                onChange={(value: Date) => onExpiryFormDateChange('date', value)}
                 disabled={!formExpiryDate.mfgDate}
-                value={formExpiryDate.date}
+                value={formExpiryDate.date ? new Date(formExpiryDate.date) : null}
                 minDate={
-                  formExpiryDate.mfgDate
-                    ? new Date(formExpiryDate.mfgDate)
-                    : undefined
+                  formExpiryDate.mfgDate ? new Date(formExpiryDate.mfgDate) : undefined
                 }
                 error={errors.date}
                 withAsterisk
@@ -580,21 +549,17 @@ export const PurchasedItemDetailForm: React.FC<
                 required
                 error={errors.value}
                 onChange={(event) =>
-                  onExpiryFormDateChange(
-                    'value',
-                    parseInt(event.currentTarget.value)
-                  )
+                  onExpiryFormDateChange('value', event.currentTarget.value)
                 }
               />
-              <Button leftIcon={<IconPlus />} onClick={onAddExpiryDate}>
-                Add
+              <Button leftIcon={<IconPlus />} onClick={onAddOrUpdateExpiryDate}>
+                {isEditing ? 'Update' : 'Add'}
               </Button>
             </Flex>
             <ItemExpiryTable
               expiryDates={purchasedItemFormData.expiryDates}
-              onRemove={(idx: number) =>
-                dispatch(removeItemExpiryDateByIdx(idx))
-              }
+              onRemove={(idx: number) => dispatch(removeItemExpiryDateByIdx(idx))}
+              onEdit={onEditExpiryDate}
               showTotal={true}
               showActions={true}
             />

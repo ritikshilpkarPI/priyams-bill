@@ -3,11 +3,20 @@ import { Badge, Button, Flex, Table } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
 import { isShelfExpired } from 'src/utils/isShelfExpired';
 
+export interface ItemExpiryTableProps {
+  expiryDates: ItemExpiryDateType[];
+  onRemove: (idx: number) => void;
+  showActions?: boolean;
+  showTotal?: boolean;
+  onEdit?: (idx: number) => void;
+}
+
 export const ItemExpiryTable = ({
   expiryDates,
   onRemove,
   showActions,
   showTotal,
+  onEdit,
 }: ItemExpiryTableProps) => {
   const totalExpiryQuantity = expiryDates.reduce(
     (acc, expiryDate) => acc + Number(expiryDate.value || 0),
@@ -26,7 +35,13 @@ export const ItemExpiryTable = ({
         )}
       </td>
       {showActions && (
-        <td>
+        <td style={{ display: 'flex', gap: '8px' }}>
+          
+          {onEdit && (
+            <Button onClick={() => onEdit(idx)} variant="outline">
+              Edit
+            </Button>
+          )}
           <Button
             color="red"
             leftIcon={<IconX />}
