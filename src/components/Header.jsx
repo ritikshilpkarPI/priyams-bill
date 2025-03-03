@@ -78,6 +78,7 @@ const Header = ({
   }, []);
   
   return (
+    <>
     <div
       className="main-box-container"
       ref={mainContainer}
@@ -166,6 +167,51 @@ const Header = ({
         Logout
       </button>
     </div>
+   
+    <div className="bottom-nav-container">
+        <button className="bottom-nav-billing" onClick={goToBilling}>
+          Billing
+        </button>
+        <div className='bottom-nav-profile-container'>
+          <p className="bottom-nav-profile-avatar">{staffName[0].toUpperCase()}</p>
+          <p className="bottom-nav-profile-name">{staffName}</p>
+        </div>
+        {listItemsData.map((item, index) => {
+          const [itemKey, itemValue] = Object.entries(item)[0];
+          return (
+              <div className="bottom-nav-cart">
+                {itemValue.map((subItem, subIndex) => (
+                  <div className='bottom-nav-link-container' key={subIndex}>
+                    <Link
+                    className='bottom-nav-link'
+                      to={{
+                        pathname: subItem.url,
+                        search:
+                          subItem.url.split('/')[1] === 'approval'
+                            ? `?option=${subItem.name}`
+                            : '',
+                      }}
+                    >
+                      <img
+                        className='bottom-nav-link-img'
+                        src={subItem.icon}
+                        width={35}
+                        height={35}
+                        title={subItem.name}
+                        alt={subItem.name}
+                      />
+                      <div className="bottom-nav-link-p">{subItem.name}</div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+          );
+        })}
+        <button className="bottom-nav-logout" onClick={logoutUser}>
+          Logout
+        </button>
+      </div>
+    </>
   );
 };
 
