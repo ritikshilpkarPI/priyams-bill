@@ -17,11 +17,11 @@ const addNewReturnBill = async (req, res, next) => {
       amountReturn,
     } = req.body;
 
-    if (!returnedItems.length) {
-      return res.status(400).json({ message: 'Add at least one returning item in the bill' });
-    }
+
 
     const existingBill = await findBillById(id);
+    delete existingBill._id;
+
     if (!existingBill) {
       return res.status(400).json({ message: "Bill doesn't exist to apply return or exchange" });
     }
@@ -42,10 +42,10 @@ const addNewReturnBill = async (req, res, next) => {
 
     let totalBillProfit = 0, totalNumberOfItems = 0;
     const itemsExchanged = billItems.map(({ itemDetail, itemQuantityInBill }) => {
-      const { _id, itemSellingPricePerUnit, itemCostPricePerUnit, itemMRPperUnit } = itemDetail;
+      const { _id, itemSellingPricePerUnit = 0, itemCostPricePerUnit = 0, itemMRPperUnit } = itemDetail;
       const itemDiscountPerUnit = itemMRPperUnit - itemSellingPricePerUnit;
       const itemNetProfit = (itemSellingPricePerUnit - itemCostPricePerUnit) * itemQuantityInBill;
-      
+
       totalNumberOfItems += itemQuantityInBill;
       totalBillProfit += itemNetProfit;
 
@@ -61,12 +61,12 @@ const addNewReturnBill = async (req, res, next) => {
 
     // Create new bill with returned items
     const newBill = await Bill.create({
-      ...existingBill.toObject(),
+      ...existingBill,
       items: itemsExchanged,
       billMRPTotal,
       billAmountTotal,
       billDiscountTotal,
-      totalBillProfit,
+      totalBillProfit: totalBillProfit ?? 0,
       totalNumberOfUniqueItems: billItems.length,
       totalNumberOfItems,
       cashPay,
