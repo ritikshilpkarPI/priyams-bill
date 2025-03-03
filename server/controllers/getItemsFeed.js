@@ -19,11 +19,22 @@ const getItemsFeed = async (req, res,next) => {
       };
     }
 
-    const totalCount = await Item.countDocuments(query);
+    const totalCount = await Item.countDocuments(
+      {
+        permanentlyOutOfStock: false,
+        isDeleted: false,
+      },
+      null,
+    );
 
-      
-          // Query to get the paginated items (only apply skip and limit if they are defined)
-    let itemsQuery = Item.find(query).sort({ itemName: 1 });
+    // Query to get the paginated items (only apply skip and limit if they are defined)
+    let itemsQuery = Item.find(
+      {
+        permanentlyOutOfStock: false,
+        isDeleted: false,
+      },
+      null,
+    ).sort({ itemName: 1 });
 
     // Conditionally apply pagination (skip and limit) if provided
     if (typeof skip !== 'undefined' && typeof limit !== 'undefined') {
