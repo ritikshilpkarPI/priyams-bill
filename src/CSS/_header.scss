@@ -31,6 +31,9 @@
   top: 0;
   left: 0;
   z-index: 2;
+  @media (max-width: 600px) {
+    display: none;
+  }
 }
 
 .profileName {
@@ -187,4 +190,66 @@
 
 .logout {
   @include button-style;
+}
+
+.bottom-nav-container{
+  border-top: .1px solid #ddd;
+  display: none;
+  text-decoration: none !important;
+  height: 85px;
+  width: 100vw;
+  background-color: #f5f5f5;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  @media (max-width: 600px) {
+    display: flex; 
+  }
+  align-items: center;
+  gap: 10px;
+  padding: 7px;
+  overflow-x: scroll;
+  z-index: 5;
+
+  .bottom-nav-logout,.bottom-nav-billing{
+    height: 100%;
+    padding: 15px;
+    background-color: black;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .bottom-nav-cart{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #ddd;
+    padding: 7px;
+    border-radius: 5px;
+    height: 100%;
+    .bottom-nav-link-container{
+      height: 100%;
+      .bottom-nav-link{
+        height: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
+        text-decoration: none;
+        .bottom-nav-link-p {
+          font-size: 14px;
+          white-space: nowrap;  
+          text-overflow: ellipsis;
+          overflow: hidden;
+          width: 100px;
+          text-decoration: none !important;
+          color: #000;
+        }
+      }
+    }
+  }
+}
+.bottom-nav-container::-webkit-scrollbar{
+  display: none ;
 }
