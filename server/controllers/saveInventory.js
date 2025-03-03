@@ -165,9 +165,9 @@ const saveInventory = async (req, res, next) => {
       data: {
         userId:  user._id,
         status: status,
-        browser: userDetail? userDetail.browser : "Unknown",
-        os:  userDetail? userDetail.os : "Unknown",
-        ipAddress: userDetail? userDetail.ipAddress : "Unknown",
+        browser: userDetail ? userDetail.browser : "Unknown",
+        os:  userDetail ? userDetail.os : "Unknown",
+        ipAddress: userDetail ? userDetail.ipAddress : "Unknown",
         referer: referer, 
       },
     };
