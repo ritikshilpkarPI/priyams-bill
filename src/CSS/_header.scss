@@ -193,12 +193,12 @@
 }
 
 .bottom-nav-container{
-  border-top: .1px solid #ddd;
+  border-top: .1px solid var(--gray-light);
   display: none;
   text-decoration: none !important;
   height: 85px;
   width: 100vw;
-  background-color: #f5f5f5;
+  background-color:var(--gray-background);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -214,8 +214,8 @@
   .bottom-nav-logout,.bottom-nav-billing{
     height: 100%;
     padding: 15px;
-    background-color: black;
-    color: #fff;
+    background-color: var(--black);
+    color: var(--white);
     border-radius: 5px;
     font-size: 16px;
   }
@@ -223,7 +223,7 @@
     height: 100%;
     padding: 7px;
     border-radius: 5px;
-    background-color: #ddd;
+    background-color: var(--gray-light);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -231,9 +231,9 @@
     .bottom-nav-profile-avatar{
       height: 35px;
       width: 35px;
-      background: #000;
+      background: var( --black);
       border-radius: 50%;
-      color: #fff;
+      color: var(--white);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -245,7 +245,7 @@
       text-overflow: ellipsis;
       overflow: hidden;
       width: 100px;
-      color: #000;
+      color: var(--black);
     }
   }
   
@@ -253,7 +253,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    background-color: #ddd;
+    background-color: var(--gray-light);
     padding: 7px;
     border-radius: 5px;
     height: 100%;
@@ -273,7 +273,7 @@
           overflow: hidden;
           width: 100px;
           text-decoration: none !important;
-          color: #000;
+          color: var(--black);
         }
       }
     }

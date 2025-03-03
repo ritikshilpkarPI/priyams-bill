@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './CSS/index.css';
+import './styles/global.css';
 import reportWebVitals from './reportWebVitals';
 import { AppStateContextProvider } from './AppState/appState.context';
 import { MantineProvider } from '@mantine/core';
