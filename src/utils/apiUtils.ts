@@ -1,5 +1,6 @@
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
+import { getUserDeviceInfo } from './getUserDeviceInfo';
 
 export const getUserDataAPI = async () => {
   try {
@@ -238,6 +239,7 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
       path: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
       data: {
         id: purchaseOrderId,
+        userDetail: await getUserDeviceInfo(),
       },
     });
     return response;

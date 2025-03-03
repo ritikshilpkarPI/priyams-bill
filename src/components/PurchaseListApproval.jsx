@@ -8,6 +8,7 @@ import { parseJwt } from '../utils/cookie';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
+import { getUserDeviceInfo } from 'src/utils/getUserDeviceInfo';
 const PurchaseListApproval = ({
   list,
   index,
@@ -35,6 +36,15 @@ const PurchaseListApproval = ({
     }
   };
 
+  const getUserDetails = async () => {
+    const { browser, os, ip } = await getUserDeviceInfo();
+    return {
+      browser: browser,
+      os: os,
+      ipAddress: ip,
+    };
+  };  
+
   const rejectOrder = async (id, index) => {
     await handleApiCall(
       async () => await genericAxios({
@@ -42,6 +52,7 @@ const PurchaseListApproval = ({
         url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
         data: {
           username: parseJwt(Cookies.get('token')).username,
+          userDetail: await getUserDetails(),
         },
       }),
       id,
@@ -59,7 +70,8 @@ const PurchaseListApproval = ({
         method: API_METHODS.POST,
         data: {
           newItems: list.purchasedItems,
-          purchaseOrderId: id
+          purchaseOrderId: id,
+          userDetail: await getUserDetails(),
         },
       }),
       id,
@@ -97,7 +109,10 @@ const PurchaseListApproval = ({
         async () => await genericAxios({
           method: API_METHODS.POST,
           url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
-          data: { id },
+          data: { 
+            id,
+            userDetail: await getUserDetails(),
+           },
         }),
         id,
         index,
