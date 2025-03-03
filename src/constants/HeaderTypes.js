@@ -1,3 +1,5 @@
+import { ROUTES } from "src/utils/constants/routes";
+
 export const PAGES = {
   Home: 'Home',
   billing: 'Billing',
@@ -60,7 +62,7 @@ export const sidebarListData = [
     PURCHASE: [
       {
         name: 'Purchase Order',
-        url: '/purchase',
+        url: ROUTES.NEW_PURCHASE_ORDER,
         icon: 'images/purchaseorder.svg',
       },
       {

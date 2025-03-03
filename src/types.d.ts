@@ -1,6 +1,7 @@
 import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 import { RefObject } from "react";
+import { NumberValue } from "d3";
 
 declare global {
   export interface UserStateType {
@@ -45,7 +46,6 @@ declare global {
     timePeriod: string; 
     data: soldItemsByDateInterface[];
   }
-
   interface ItemSoldPurchaseOrder {
     orderSequence: string;
     approvalDate: string;
@@ -60,7 +60,6 @@ declare global {
     itemMRP: number;
     soldAfterApproval: number;
     intervals: IntervalInterface[];
-    lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     lastMonthSold?: number;
     lastThreeMonthSold?: soldItemsByDateInterface[];
@@ -126,7 +125,27 @@ declare global {
     barcode: string;
   }
 
+  export interface ItemNameSKUProps {
+    itemName: string;
+    barcode: string;
+    mrp: number;
+    packetQty: number;
+    packetUnit: string;
+  }
+
   type itemsByBarcode = string[] | any
+  interface StepInterface {
+    label: string;
+    component: React.ReactNode;
+  }
+  interface StepperStateInterface {
+    currentStep: number;
+    stepCompletion: boolean[];
+    steps: StepInterface[];
+  }
+  interface FormStepperProps {
+    steps: StepInterface[];
+  }
   interface IntervalPropInterface {
     startDate: string;
     endDate: string;
@@ -194,6 +213,167 @@ declare global {
     packetUnit: string;
   }
 
+  interface DealerDetailFormType {
+    payment: 'Fully Paid' | 'Partially Paid' | 'Credit';
+    billAmount: number;
+    procurementSource: 'Walmart' | 'D Mart' | 'City' | 'Distributor';
+    dealerName: string;
+    phoneNumber: string;
+    remark: string;
+  };
+
+  interface DealerDetailsFormProps {
+    onSubmit: (dealerFormData: DealerDetailFormType) => void;
+  }
+
+  interface PurchasedItemDetailFormType {
+    barcode: string;
+    inputName: string;
+    mrp: number;
+    itemQuantity: number;
+    unit: string,
+    itemRemark: string;
+    sellingPrice: number;
+    costPrice: number;
+    validate: false;
+    item_id: string;
+    brand: string;
+    category: string;
+    subCategory: string;
+    flavourOrFeature: string;
+    companyName: string;
+    saleTime: string;
+    expiryDates: ItemExpiryDateType[];
+    slabPrice: [];
+    stockQuantity: number;
+    returnPolicyAvailable: boolean;
+    freeItemsAvailable: boolean;
+    returnPolicyRemarks: string;
+    _id?: string;
+    inputName?: string;
+  }
+
+  interface PurchasedItemDetailFormProps {
+    onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
+    loading?: boolean;
+  }
+
+  interface ItemExpiryDateType {
+    value: number;
+    mfgDate: Date;
+    date: Date;
+  }
+
+  interface ItemExpiryTableProps {
+    expiryDates: ItemExpiryDateType[],
+    onRemove?: any;
+    showActions?: boolean;
+    showTotal?: boolean;
+  }
+
+  interface PaymentDetailType {
+    paidAmount: number;
+    paidBy: string;
+    chequeNumber: string;
+    _id?: string;
+  }
+
+  interface CloudFileType {
+    public_id: string;
+    secure_url: string;
+  }
+
+  interface PurchaseOrderDataType {
+    isApproved?: boolean;
+    isRejected?: boolean;
+    isDraft?: boolean;
+    isPaid?: boolean;
+    totalPaidAmount?: number;
+    createdAt?: string;
+    _id?: string;
+    purchasedItems?: Array<PurchasedItemDetailFormType>;
+    purchaseDetails?: Array<PaymentDetailType>;
+    billPhotos?: Array<CloudFileType>;
+    dealerName?: string;
+    phoneNumber?: string;
+    billAmount?: number;
+    payment?: string;
+    procurementSource?: string;
+    remark?: string;
+  }
+
+  interface PurchasedItemTableProps {
+    onRemove: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void;
+    onEdit: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void; 
+    loadingRemoveItemById: string;
+  }
+
+  interface PaymentDetailTableProps {
+    purchaseOrderId?: string;
+    totalPaidAmount?: number;
+  }
+
+  interface PaymentDetailFormProps {
+    purchaseOrderId?: string;
+    paymentDetailIdx: number;  
+  }
+
+  interface QuestionModalProps {
+    opened: boolean;
+    onClose: () => void;
+    question: string;
+    onAgree: () => void;
+    onDisagree: () => void;
+  }
+
+  interface CustomNumberInputProps {
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value: number;
+    label?: string;
+    placeholder?: string;
+    error?: string;
+    required?: boolean;
+  }
+
+  interface FileAndURLType {
+    file: File,
+    previewURL: string;
+  }
+
+  interface UpdateDetailBillUploadArgs {
+    bills?: Array<string>;
+    deleteBills?: Array<CloudFileType>;
+    uploadedImages?: Array<CloudFileType>;
+  }
+
+  type YupValidationErrorMapType = Record<string, string>;
+
+  interface BillLeanItemType {
+    _id: string;
+    itemBarcode: string;
+    itemName: string;
+  }
+
+  interface PurchaseObjType extends PurchaseOrderDataType {
+    orders?: Array<PurchasedItemDetailFormType>;
+    bills?: Array<string>;
+    details?: Array<PaymentDetailType>;
+  }
+ 
+  interface AddNewOrderAPIArgs {
+    new_order: {
+      purchaseObj: PurchaseObjType,
+    }
+  }
+
+  interface UpdateOrderAPIArgs {
+    new_order: {
+      purchaseObj: PurchaseObjType,
+      id: string;
+    },
+    deleteBills?: Array<CloudFileType>;
+    uploadedImages?: Array<CloudFileType>;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

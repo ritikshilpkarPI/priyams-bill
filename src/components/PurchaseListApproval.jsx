@@ -152,7 +152,7 @@ const PurchaseListApproval = ({
                     disabled={list.isApproved}
                     className="purchase-list-edit"
                     to={{
-                      pathname: `/purchase/${list._id}`,
+                      pathname: `/new-purchase-order/${list._id}`,
                       state: { isEditedByAdmin: true, id: list._id },
                     }}
                   >

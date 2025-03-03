@@ -15,14 +15,14 @@ const deletePaymentById = async (req, res,next) => {
     totalPaidAmount = Number(
       (Math.round(totalPaidAmount * 100) / 100).toFixed(2)
     );
-    const updatedOrder = await purchaseOrder.updateOne({
+    const updatedOrder = await PurchaseOrder.findByIdAndUpdate(purchase_id, {
       purchaseDetails,
       totalPaidAmount,
-    });
+    }, { new: true });
     res.status(200).send({
       message: 'order deleted successfully',
       success: true,
-      order: purchaseOrder,
+      order: updatedOrder,
       updatedOrder,
     });
   } catch (error) {

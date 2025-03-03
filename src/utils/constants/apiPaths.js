@@ -13,7 +13,8 @@ export const API_PATHS = {
     GET_ORDERS: '/api/purchaseOrder/orders',
     EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
     GET_ITEM_SOLD:'/api/purchaseOrder/itemSold',
-    GET_ITEM_SOLD_BY_ITEMID: "/api/getItemsSellDetailsByItemId"
+    GET_ITEM_SOLD_BY_ITEMID: "/api/getItemsSellDetailsByItemId",
+    POST_DEALER_DETAILS:"/api/purchaseorder/dealer"
   },
   SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {
@@ -114,6 +115,7 @@ export const API_PATHS = {
     GET_ALL_RIDERS: "/api/riders"
   },
   ITEMS: {
-    GET_ITEMS_SKU: "/api/items/sku"
+    GET_ITEMS_SKU: "/api/items/sku",
+    GET_ITEM_BY_ID: "/api/item"
   }
 };

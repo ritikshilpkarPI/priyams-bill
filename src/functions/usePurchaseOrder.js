@@ -385,8 +385,7 @@ const usePurchaseOrder = (history) => {
       unit: item?.quantityUnitName,
       companyName: item?.companyName,
       itemQuantity: item?.itemPerUnitQuantity,
-      sku: item?.sku,
-      search: "",
+      sku: item?.sku
     }));
     setSlabs(form.values.slabPrice);
     setOpenDrawer(false);
@@ -416,7 +415,6 @@ const usePurchaseOrder = (history) => {
         returnPolicyRemarks: item?.returnPolicyRemarks,
         companyName: item?.companyName,
         itemQuantity: item?.itemPerUnitQuantity,
-        search: ""
       }));
       setSlabs(form.values.slabPrice);
       setOpenDrawer(false);

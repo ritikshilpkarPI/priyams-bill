@@ -3,6 +3,10 @@
         width: 60mm;
     }
     
+    .bill-items{
+        width: 60mm;
+    }
+    
     .bill-items-table {
         border: none !important;
         width: auto !important;
