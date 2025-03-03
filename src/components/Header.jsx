@@ -172,6 +172,10 @@ const Header = ({
         <button className="bottom-nav-billing" onClick={goToBilling}>
           Billing
         </button>
+        <div className='bottom-nav-profile-container'>
+          <p className="bottom-nav-profile-avatar">{staffName[0].toUpperCase()}</p>
+          <p className="bottom-nav-profile-name">{staffName}</p>
+        </div>
         {listItemsData.map((item, index) => {
           const [itemKey, itemValue] = Object.entries(item)[0];
           return (

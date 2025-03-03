@@ -219,6 +219,35 @@
     border-radius: 5px;
     font-size: 16px;
   }
+  .bottom-nav-profile-container{
+    height: 100%;
+    padding: 7px;
+    border-radius: 5px;
+    background-color: #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    .bottom-nav-profile-avatar{
+      height: 35px;
+      width: 35px;
+      background: #000;
+      border-radius: 50%;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .bottom-nav-profile-name{
+      font-size: 14px;
+      white-space: nowrap;  
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 100px;
+      color: #000;
+    }
+  }
   
   .bottom-nav-cart{
     display: flex;
