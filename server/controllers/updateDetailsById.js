@@ -71,7 +71,7 @@ const updateDetailsById = async (req, res,next) => {
       minimumQuantity,
       isRejected: false,
     };
-    let order = await PurchaseOrder.findByIdAndUpdate(id, purchaseOrder);
+    let order = await PurchaseOrder.findByIdAndUpdate(id, purchaseOrder, { new: true });
 
     res.status(201).send({ message: order, success: true });
   } catch (error) {

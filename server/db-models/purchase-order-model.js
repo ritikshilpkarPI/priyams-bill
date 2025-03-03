@@ -61,7 +61,7 @@ const purchaseOrderSchema = new mongoose.Schema({
   billAmount: Number,
   remark: String,
   totalPaidAmount: {
-    type: String,
+    type: Number,
     default: 0,
   },
   payment: String,

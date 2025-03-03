@@ -141,6 +141,7 @@
 }
 .barcode-filter-shift {
   position: absolute;
+  top: 100%;
   z-index: 1;
   background-color: white;
 }
@@ -182,4 +183,8 @@
 
 .not-validate {
   background: rgb(239, 216, 216) !important;
+}
+
+.shelf-expired-item-table-row {
+  background-color: crimson !important;
 }

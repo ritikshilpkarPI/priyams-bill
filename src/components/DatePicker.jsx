@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MyDatePicker = ({ setDate, label }) => {
+const MyDatePicker = ({ setDate, date, label }) => {
 
  const [selectedDate, setSelectedDate] = React.useState(new Date());
   const handleDateChange = (event) => {
@@ -24,7 +24,7 @@ const MyDatePicker = ({ setDate, label }) => {
           width: '40px',
         }}
       >
-        {label}
+        { label }
       </label>
       <input
         type="date"

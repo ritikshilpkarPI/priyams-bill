@@ -7,21 +7,21 @@ const updatePaymentById = async (req, res,next) => {
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
       const purchaseDetails = [
         ...purchaseOrder.purchaseDetails.filter((order, i) => i !== index),
-        payment,
+        { ...payment, paidAmount: payment.paidAmount?.toFixed(2) },
       ];
       let totalPaidAmount = 0;
       purchaseDetails.forEach((payment) => {
-        totalPaidAmount = totalPaidAmount + payment.paidAmount;
+        totalPaidAmount = Number(totalPaidAmount) + Number(payment.paidAmount);
       });
-      totalPaidAmount.toFixed(2);
-      const updatedOrder = await purchaseOrder.updateOne({
+      parseFloat(totalPaidAmount).toFixed(2);
+      const updatedOrder = await PurchaseOrder.findByIdAndUpdate(purchase_id, {
         purchaseDetails,
         totalPaidAmount,
-      });
+      },  { new: true });
       res.status(200).send({
         message: 'order updated successfully',
         success: true,
-        order: purchaseOrder,
+        order: updatedOrder,
         updatedOrder,
       });
     } catch (error) {
