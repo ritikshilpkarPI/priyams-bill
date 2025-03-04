@@ -57,7 +57,7 @@ const addNewReturnBill = async (req, res, next) => {
      const bulkItemStockUpdate = Object.entries(itemsMap).map(([itemId, quantity]) => ({
       updateOne: {
         filter: { _id: itemId },
-        update: { $inc: { itemStockQuantity: quantity } }
+        update: { $inc: { itemStockQuantity: -quantity } }
       }
     }));
 
