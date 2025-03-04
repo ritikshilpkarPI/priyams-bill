@@ -1,5 +1,10 @@
 @media print {
-  .barcode-page-header {
+  .barcode-wrapper-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .barcode-page-header, .print-page-button {
     display: none;
   }
 }
@@ -56,7 +61,7 @@
       .price-container {
         display: flex;
         gap: 10px;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         .product-price {
           font-size: 16px;

@@ -91,10 +91,16 @@ export const ItemsBarCode = () => {
             return (
               <div className="item-label">
                 <div>
-                  <ReactBarcode options={{
-                    height: 35,
-                    width: 4
-                  }} value={itemBarcode} />
+                  {
+                    itemBarcode 
+                    ? 
+                      <ReactBarcode options={{
+                        format: 'code128',
+                        height: 40,
+                        width: 2
+                      }} value={itemBarcode} />
+                    : "Item Barcode Not Found"
+                  }
                 </div>
                 <div
                   style={{

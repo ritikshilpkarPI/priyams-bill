@@ -2,32 +2,26 @@ import mongoose from "mongoose";
 import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
+const { APP_ENVIRONMENT } = require('../util/constants/appEnvironment');
 
 const saveInventory = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction(); // Start transaction
   try {
-    const { newItems, purchaseOrderId } = req.body;
-
+    const { newItems, purchaseOrderId, userDetail } = req.body; 
+    const referer = req.headers.referer;
+    const status  = APP_ENVIRONMENT.APPROVE
+    const user = req.user;
+    
     // Extract valid item IDs
     const itemIds = newItems
       .map((item) => item.item_id)
       .filter((id) => mongoose.Types.ObjectId.isValid(id));
       
     const newItemSkus = newItems.filter((item) => !item.item_id).map(item => item.sku);
-    // Fetch all existing items in one go
-    const existingItemWithIdPromise =  Item.find({ _id: { $in: itemIds } })
-    .lean()
-    .session(session);
-
-    const existingItemWithSkusPromise = Item.find({ sku: { $in: newItemSkus } }).lean().session(session);
     
-    const [existingItemsWithIds, existingItemWithSkus] = await Promise.all(
-    [
-      existingItemWithIdPromise, 
-      existingItemWithSkusPromise
-    ]);
-
+    const existingItemsWithIds = await Item.find({ _id: { $in: itemIds } }).lean().session(session);
+    const existingItemWithSkus = await Item.find({ sku: { $in: newItemSkus } }).lean().session(session);
 
     const existingItems = [...existingItemsWithIds, ...existingItemWithSkus]; 
 
@@ -156,13 +150,25 @@ const saveInventory = async (req, res, next) => {
         success: false,
       });
     }
-
+    
+    const newStatusHistory = {
+      data: {
+        userId:  user._id,
+        status: status,
+        browser: userDetail ? userDetail.browser : "Unknown",
+        os:  userDetail ? userDetail.os : "Unknown",
+        ipAddress: userDetail ? userDetail.ipAddress : "Unknown",
+        referer: referer, 
+      },
+    };
+    
     // If all items are successfully inserted or updated, approve the purchase order
     const order = await PurchaseOrder.findByIdAndUpdate(
       purchaseOrderId,
       {
         isApproved: true,
         approveTime: Date.now(),
+        $push: { statusHistory: newStatusHistory },
       },
       { new: true, session }
     );

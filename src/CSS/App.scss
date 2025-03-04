@@ -54,6 +54,15 @@ input[type='number'] {
 .App {
   font-family: sans-serif;
   text-align: center;
+  overflow: scroll;
+  margin-left: 100px;
+  @media print{
+    margin-left: 0;
+  }
+  @media (max-width: 600px) {
+    margin-left: 0;
+    padding-bottom: 85px;
+  }
 
   .home-nav {
     display: flex;
@@ -82,7 +91,7 @@ input[type='number'] {
   background-color: rgb(219, 233, 205);
 }
 .App > div:nth-child(2), .App > .mantine-Table-root, .App > .attendance-wrapper{
-  margin-left: 100px;
+  // margin-left: 100px;
 }
 .App > div:nth-child(2){
   @media print{
