@@ -26,9 +26,14 @@ const addNewReturnBill = async (req, res, next) => {
       return res.status(400).json({ message: "Bill doesn't exist to apply return or exchange" });
     }
 
-    const returnItemsMap = Object.fromEntries(returnedItems.map(({ itemDetail, itemQuantityInBill }) => [
-      itemDetail._id, itemQuantityInBill
-    ]));
+    const returnItemsMap = Object.fromEntries(
+      Object.values(returnedItems).map(({ itemDetail, itemQuantityInBill }) => [
+        itemDetail._id,
+        itemQuantityInBill
+      ])
+    );
+
+
 
     // Bulk update item stock
     const bulkStockUpdate = Object.entries(returnItemsMap).map(([itemId, quantity]) => ({
@@ -39,6 +44,24 @@ const addNewReturnBill = async (req, res, next) => {
     }));
 
     await Item.bulkWrite(bulkStockUpdate);
+
+
+    const itemsMap = Object.fromEntries(
+      billItems.map(({ itemDetail, itemQuantityInBill }) => [
+        itemDetail._id,
+        itemQuantityInBill
+      ])
+    );
+
+     // Bulk update item stock
+     const bulkItemStockUpdate = Object.entries(itemsMap).map(([itemId, quantity]) => ({
+      updateOne: {
+        filter: { _id: itemId },
+        update: { $inc: { itemStockQuantity: quantity } }
+      }
+    }));
+
+    await Item.bulkWrite(bulkItemStockUpdate);
 
     let totalBillProfit = 0, totalNumberOfItems = 0;
     const itemsExchanged = billItems.map(({ itemDetail, itemQuantityInBill }) => {

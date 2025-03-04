@@ -94,7 +94,7 @@ export const PaymentSection = ({
                 min={0}
                 placeholder="0"
                 className="payment-input-with-icon"
-                disabled={loading}
+                disabled={loading || totalAmount <= refundAmount || totalAmount === 0}
               />
             </div>
           </div>
@@ -121,7 +121,7 @@ export const PaymentSection = ({
                 min={0}
                 placeholder="0"
                 className="payment-input-with-icon"
-                disabled={loading}
+                disabled={loading || totalAmount <= refundAmount || totalAmount === 0}
               />
             </div>
           </div>
