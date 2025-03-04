@@ -1,4 +1,4 @@
-export const CONSTANS = Object.freeze({
+export const CONSTANTS = Object.freeze({
     REJECT: "reject",
     APPROVE: "approve",
     DRAFT: "draft",
