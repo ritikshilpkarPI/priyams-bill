@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
-const { CONSTANS } = require('../constants/constans');
+const { CONSTANTS } = require('../constants/constants');
 
 const saveInventory = async (req, res, next) => {
   const session = await mongoose.startSession();
@@ -10,7 +10,7 @@ const saveInventory = async (req, res, next) => {
   try {
     const { newItems, purchaseOrderId, userDetail } = req.body; 
     const referer = req.headers.referer;
-    const status  = CONSTANS.APPROVE
+    const status  = CONSTANTS.APPROVE
     const user = req.user;
     
     // Extract valid item IDs
