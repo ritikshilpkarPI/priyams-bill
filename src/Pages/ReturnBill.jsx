@@ -183,6 +183,7 @@ const ReturnBill = () => {
       ...billState,
     };
     setBill(updateBill);
+    setIsSubmitting(true)
     const createApi = {
       url: API_PATHS.BILLING.POST_RETURN_BILLS,
       method: API_METHODS.POST,
@@ -191,6 +192,7 @@ const ReturnBill = () => {
         billId: newBillId,
         id: existingBill._id,
         refundAmount,
+        returnedItems: returningItems
       },
     };
     localStorage.setItem(
@@ -210,6 +212,7 @@ const ReturnBill = () => {
     setShowReturnItems(false);
     setBillBarcode('');
     resetBillState()
+    setIsSubmitting(false)
   }
 
   const ItemPrice = ({ item, index }) => {
