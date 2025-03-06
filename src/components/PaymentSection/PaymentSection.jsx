@@ -54,7 +54,7 @@ export const PaymentSection = ({
   }, [cashPay, upiPay, totalAmount, refundAmount]);
 
   
-  const amountTobeReturned = totalAmount - refundAmount - ( upiPay + cashPay)
+  const amountTobeReturned = (refundAmount + upiPay + cashPay) - totalAmount;
   
   return (
     <div className="payment-section">
@@ -131,9 +131,9 @@ export const PaymentSection = ({
           </div>
         </div>
 
-        {amountTobeReturned < 0 && (
+        {amountTobeReturned > 0 && (
           <Alert color="orange" mb="md">
-            Return Amount: ₹{Math.abs(amountTobeReturned)}
+            Return Amount: ₹{amountTobeReturned}
           </Alert>
         )}
 
