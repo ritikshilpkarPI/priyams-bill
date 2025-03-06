@@ -52,6 +52,10 @@ export const PaymentSection = ({
       setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0);
     }
   }, [cashPay, upiPay, totalAmount, refundAmount]);
+
+  
+  const amountTobeReturned = (refundAmount + upiPay + cashPay) - totalAmount;
+  
   return (
     <div className="payment-section">
       <Paper p="md" radius="md" withBorder>
@@ -127,9 +131,9 @@ export const PaymentSection = ({
           </div>
         </div>
 
-        {amountReturn > 0 && (
+        {amountTobeReturned > 0 && (
           <Alert color="orange" mb="md">
-            Return Amount: ₹{amountReturn}
+            Return Amount: ₹{amountTobeReturned}
           </Alert>
         )}
 
