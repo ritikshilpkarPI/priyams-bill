@@ -1,11 +1,11 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
-const { APP_ENVIRONMENT } = require('../util/constants/appEnvironment');
+const { CONSTANTS } = require('../constants/constants');
 
 const draftOrder = async (req, res,next) => {
     try {
       const { id, userDetail } = req.body;
       const referer = req.headers.referer;
-      const status =  APP_ENVIRONMENT.DRAFT
+      const status =  CONSTANTS.DRAFT
       const user = req.user;
       const newStatusHistory =
         {
