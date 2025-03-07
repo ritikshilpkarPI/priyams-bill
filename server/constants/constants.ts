@@ -6,6 +6,6 @@ export const CONSTANTS = Object.freeze({
         CREDIT: 'credit',
         PAYMENT: 'payment',
         PAYMENT_TYPES: ['credit', 'partiallypaid', 'fullypaid'] ,
-        PAID_BY: ['upi', 'cheque', 'neft']
+        PAID_BY: ['upi', 'neft']
     }
 })
