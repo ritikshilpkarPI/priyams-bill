@@ -26,7 +26,7 @@ const updatePaymentById = async (req, res, next) => {
       });
     }
 
-    if (!CONSTANTS.UPDATE_PAYMENT_BY_ID.PAYMENT_TYPES.includes(paymentType.toLowerCase())) {
+    if (![ CONSTANTS.CREDIT, CONSTANTS.PARTIALLY_PAID, CONSTANTS.FULLY_PAID ].includes(paymentType.toLowerCase())) {
       return res.status(400).json({
         message: MESSAGES.INVALID_PAYMENT_TYPE,
         success: false
@@ -42,7 +42,7 @@ const updatePaymentById = async (req, res, next) => {
 
     let updatePurchaseDetails = purchaseOrder.purchaseDetails || {};
 
-    if (paymentMethod.toLowerCase() === CONSTANTS.UPDATE_PAYMENT_BY_ID.CREDIT) {
+    if (paymentMethod.toLowerCase() === CONSTANTS.CREDIT) {
       const { creditAmount, payDate } = purchaseData;
       if (!creditAmount || !payDate ) {
         return res
@@ -62,7 +62,7 @@ const updatePaymentById = async (req, res, next) => {
           creditLimitInDays,
         },
       ];
-    } else if (paymentMethod.toLowerCase() === CONSTANTS.UPDATE_PAYMENT_BY_ID.PAYMENT) {
+    } else if (paymentMethod.toLowerCase() === CONSTANTS.PAYMENT) {
       const { paidBy, paidAmount } = purchaseData;
       if (!paidBy || !paidAmount ) {
         return res
@@ -70,7 +70,7 @@ const updatePaymentById = async (req, res, next) => {
         .json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
       }
       if (
-        CONSTANTS.UPDATE_PAYMENT_BY_ID.PAID_BY.includes(paidBy.toLowerCase()) &&
+        [ CONSTANTS.UPI,  CONSTANTS.NEFT ].includes(paidBy.toLowerCase()) &&
         !  req.files
       ) {
         return res
