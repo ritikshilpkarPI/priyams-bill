@@ -40,7 +40,7 @@ const updatePaymentById = async (req, res, next) => {
         .json({ message: MESSAGES.PURCHASE_ORDER_NOT_FOUND, success: false });
     }
 
-    let updatedPurchaseDetails = purchaseOrder.purchaseDetails || {};
+    let updatePurchaseDetails = purchaseOrder.purchaseDetails || {};
 
     if (paymentMethod.toLowerCase() === CONSTANTS.UPDATE_PAYMENT_BY_ID.CREDIT) {
       const { creditAmount, payDate } = purchaseData;
@@ -54,7 +54,7 @@ const updatePaymentById = async (req, res, next) => {
       const endDate = convertDateToIST(new Date()).toISOString();
       const creditLimitInDays = getDaysBetweenDates(startDate, endDate);
       
-      updatedPurchaseDetails.credits = [
+      updatePurchaseDetails.credits = [
         ...purchaseOrder.purchaseDetails.credits,
         {
           creditAmount,
@@ -84,7 +84,7 @@ const updatePaymentById = async (req, res, next) => {
         paymentImgURL = paymentImages ? await uploadMultipleImages(paymentImages) : [];
       }
       
-      updatedPurchaseDetails.payments = [
+      updatePurchaseDetails.payments = [
         ...purchaseOrder.purchaseDetails.payments,
         {
           paidBy,
@@ -94,15 +94,15 @@ const updatePaymentById = async (req, res, next) => {
       ];
     }
 
-    const totalPaidAmount = updatedPurchaseDetails.payments
+    const totalPaidAmount = updatePurchaseDetails.payments
       .reduce((total, payment) => total + Number(payment.paidAmount), 0)
       .toFixed(2);
 
     const updatedOrder = await PurchaseOrder.findByIdAndUpdate(
       purchase_id,
       {
-        'purchaseDetails.credits': updatedPurchaseDetails.credits,
-        'purchaseDetails.payments': updatedPurchaseDetails.payments,
+        'purchaseDetails.credits': updatePurchaseDetails.credits,
+        'purchaseDetails.payments': updatePurchaseDetails.payments,
         'purchaseDetails.totalPayableAmount': totalPayableAmount,
         'purchaseDetails.totalBillAmount': totalBillAmount,
         'purchaseDetails.paymentType': paymentType,
