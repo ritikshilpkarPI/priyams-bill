@@ -1,28 +1,23 @@
-const mongoose = require ('mongoose');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { uploadMultipleImages } = require('../util/image');
 const { parseStringToJson } = require('../util/parseStringToJson');
 const { convertDateToIST } = require('../util/convertDateToIST');
 const { getDaysBetweenDates } = require('../util/getDaysBetweenDates');
 const { MESSAGES } = require('../constants/messages');
+const { CONSTANTS } = require('../constants/constants');
 
 const updatePaymentById = async (req, res, next) => {
   try {
     const purchase_id = req.params.id;
-     if (!mongoose.Types.ObjectId.isValid(purchase_id)){
-      return res
-        .status(404)
-        .json({ message: MESSAGES.INVALID_ID_FORMAT, success: false });
-     }
 
-    const { type, data }  = parseStringToJson(req.body.data);
-    if (!type || !data) {
+    const { paymentMethod, purchaseData }  = parseStringToJson(req.body.data);
+    if (!paymentMethod || !purchaseData) {
       return res
       .status(404)
       .json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
     }
 
-    const { totalPayableAmount, totalBillAmount, paymentType } = data;
+    const { totalPayableAmount, totalBillAmount, paymentType } = purchaseData;
     
     if (!totalPayableAmount || !totalBillAmount || !paymentType) {
       return res.status(400).json({
@@ -31,7 +26,7 @@ const updatePaymentById = async (req, res, next) => {
       });
     }
 
-    if (!['credit', 'partiallypaid', 'fullypaid'].includes(paymentType.toLowerCase())) {
+    if (!CONSTANTS.UPDATE_PAYMENT_BY_ID.PAYMENT_TYPES.includes(paymentType.toLowerCase())) {
       return res.status(400).json({
         message: MESSAGES.INVALID_PAYMENT_TYPE,
         success: false
@@ -47,8 +42,8 @@ const updatePaymentById = async (req, res, next) => {
 
     let updatedPurchaseDetails = purchaseOrder.purchaseDetails || {};
 
-    if (type.toLowerCase() === 'credit') {
-      const { creditAmount, payDate } = data;
+    if (paymentMethod.toLowerCase() === CONSTANTS.UPDATE_PAYMENT_BY_ID.CREDIT) {
+      const { creditAmount, payDate } = purchaseData;
       if (!creditAmount || !payDate ) {
         return res
         .status(404)
@@ -67,15 +62,15 @@ const updatePaymentById = async (req, res, next) => {
           creditLimitInDays,
         },
       ];
-    } else if (type.toLowerCase() === 'payment') {
-      const { paidBy, paidAmount } = data;
+    } else if (paymentMethod.toLowerCase() === CONSTANTS.UPDATE_PAYMENT_BY_ID.PAYMENT) {
+      const { paidBy, paidAmount } = purchaseData;
       if (!paidBy || !paidAmount ) {
         return res
         .status(404)
         .json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
       }
       if (
-        ['upi', 'cheque', 'neft'].includes(paidBy.toLowerCase()) &&
+        CONSTANTS.UPDATE_PAYMENT_BY_ID.PAID_BY.includes(paidBy.toLowerCase()) &&
         !  req.files
       ) {
         return res
