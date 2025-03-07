@@ -40,7 +40,7 @@ const updatePaymentById = async (req, res, next) => {
         .json({ message: MESSAGES.PURCHASE_ORDER_NOT_FOUND, success: false });
     }
 
-    let updatePurchaseDetails = purchaseOrder.purchaseDetails || {};
+    let updatePurchaseDetails = purchaseOrder.purchaseDetails || { credits: [], payments: [] };
 
     if (paymentMethod.toLowerCase() === CONSTANTS.CREDIT) {
       const { creditAmount, payDate } = purchaseData;
@@ -55,7 +55,7 @@ const updatePaymentById = async (req, res, next) => {
       const creditLimitInDays = getDaysBetweenDates(startDate, endDate);
       
       updatePurchaseDetails.credits = [
-        ...purchaseOrder.purchaseDetails.credits,
+        ...updatePurchaseDetails.credits,
         {
           creditAmount,
           payDate,
@@ -85,7 +85,7 @@ const updatePaymentById = async (req, res, next) => {
       }
       
       updatePurchaseDetails.payments = [
-        ...purchaseOrder.purchaseDetails.payments,
+        ...updatePurchaseDetails.payments,
         {
           paidBy,
           paymentImgURL,
