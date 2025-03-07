@@ -1,11 +1,11 @@
-const { APP_ENVIRONMENT } = require('../util/constants/appEnvironment');
+const { CONSTANTS } = require('../constants/constants');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const rejectOrder = async (req, res,next) => {
     try {
       const id = req.params.id;
       const { userDetail } = req.body;
       const referer = req.headers.referer;
-      const status =  APP_ENVIRONMENT.REJECT
+      const status =  CONSTANTS.REJECT
       const user = req.user;      
       const newStatusHistory =
         {
