@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { Button, Checkbox, Flex, Title } from '@mantine/core';
+import { Box, Button, Checkbox, Flex, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { dealerFormValidation } from '../../utils/validations/dealerFormValidation';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
@@ -10,6 +10,7 @@ import { draftOrderByIdAPI } from '../../utils/apiUtils';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import ShareOnWhatsApp from '../shareOnWhatsApp';
 
 export const PurchaseOrderSummary = () => {
   const dispatch = useDispatch();
@@ -86,6 +87,7 @@ export const PurchaseOrderSummary = () => {
     isBillImagesUploaded &&
     !purchaseOrder.isDraft;
   return (
+    <>
     <Flex
       align="left"
       gap="16px"
@@ -124,6 +126,11 @@ export const PurchaseOrderSummary = () => {
          {purchaseOrder.isDraft ? 'Drafted' : 'Draft'}
        </Button>
       }
+      
     </Flex>
+    <Box mt="16px">
+      <ShareOnWhatsApp />
+    </Box>
+    </>
   );
 };

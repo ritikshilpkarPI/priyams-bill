@@ -9,6 +9,7 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
 import { getUserDeviceInfo } from 'src/utils/getUserDeviceInfo';
+import ShareOnWhatsApp from './shareOnWhatsApp';
 const PurchaseListApproval = ({
   list,
   index,
@@ -146,6 +147,9 @@ const PurchaseListApproval = ({
             {new Date(list.createdAt)?.toLocaleDateString('en-US')} {datetext}
           </td>
           <td>{list.remark}</td>
+          <td>
+            <ShareOnWhatsApp id={list._id}/>
+          </td>
           <td>
             {list.isDraft
               ? list.isApproved

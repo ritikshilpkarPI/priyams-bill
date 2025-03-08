@@ -11,6 +11,7 @@ import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { getFileURL } from '../../utils/getFileURL';
+import ShareOnWhatsApp from '../shareOnWhatsApp';
 
 export const BillUploadPanel = () => {
   const dispatch = useDispatch();
@@ -100,6 +101,7 @@ export const BillUploadPanel = () => {
   };
 
   return (
+    <>
     <Container>
       <Dropzone
         onDrop={onFileSelect}
@@ -166,5 +168,9 @@ export const BillUploadPanel = () => {
         ))}
       </Flex>
     </Container>
+    <Box mt="16px">
+      <ShareOnWhatsApp />
+    </Box>
+    </>
   );
 };

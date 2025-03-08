@@ -42,13 +42,13 @@ const PurchaseDetailsApproval = ({
               <th>Procurement Source</th>
               <th>Created At</th>
               <th>Remark</th>
+              <th>Share</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {allPurchaseList
               ?.map((list, index) => {
-                console.log({ list })
                 const isShelfExpired = list?.purchasedItems?.find(purchaseItem => purchaseItem?.expiryDates?.find(expiryDate => expiryDate?.isShelfExpired));
                 return indexDetail >= 0 ? (
                   index === indexDetail ? (

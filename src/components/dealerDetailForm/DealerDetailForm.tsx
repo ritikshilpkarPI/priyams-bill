@@ -19,6 +19,7 @@ import { dealerFormValidation } from '../../utils/validations/dealerFormValidati
 import { toast } from 'react-toastify';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
+import ShareOnWhatsApp from 'src/components/shareOnWhatsApp';
 
 export const DealerDetailForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -94,7 +95,7 @@ export const DealerDetailForm: React.FC = () => {
       setErrors(getYupValidationErrorMap(error));
     }
   };
-
+  
   return (
     <Flex
       mt="lg"
@@ -199,6 +200,8 @@ export const DealerDetailForm: React.FC = () => {
           </Col>
         </Grid>
       </Flex>
+      <ShareOnWhatsApp />
+
     </Flex>
   );
 };

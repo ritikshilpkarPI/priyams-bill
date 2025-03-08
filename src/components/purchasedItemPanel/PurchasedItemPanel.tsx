@@ -22,6 +22,7 @@ import { ItemSearch } from '../ItemSearch';
 import { Box } from '@mantine/core';
 import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
 import { toast } from 'react-toastify';
+import ShareOnWhatsApp from '../shareOnWhatsApp';
 
 const PurchasedItemPanel = () => {
   const dispatch = useDispatch();
@@ -130,7 +131,8 @@ const PurchasedItemPanel = () => {
   };
 
   return (
-    <div>
+    <>
+       <div>
       <Box mx="sm" mt="16px">
         <ItemSearch onItemSelect={onItemSelect} />
       </Box>
@@ -162,7 +164,13 @@ const PurchasedItemPanel = () => {
         onDisagree={resetRemoveItem}
         question={`Do you want to remove item ${removeItem?.inputName || ''} ?`}
       />
+
     </div>
+    <Box mt="16px">
+      <ShareOnWhatsApp />
+    </Box>
+    </>
+ 
   );
 };
 
