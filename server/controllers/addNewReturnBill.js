@@ -1,9 +1,5 @@
-const { Bill, ReturnBill, Item } = require('../db-models');
-const {
-  findBillById,
-  calculateFinalItems,
-  getMergedItemMap,
-} = require('./getBillForReturnExchange');
+const { Bill, ReturnItem, Item } = require('../db-models');
+const { findBillById } = require('./getBillForReturnExchange');
 
 const addNewReturnBill = async (req, res, next) => {
   try {
@@ -21,172 +17,96 @@ const addNewReturnBill = async (req, res, next) => {
       amountReturn,
     } = req.body;
 
-    let originalBillId = id;
-    let existingBill = await findBillById(originalBillId);
+
+
+    const existingBill = await findBillById(id);
+    delete existingBill._id;
 
     if (!existingBill) {
-      const returnBill = await ReturnBill.findById(originalBillId);
-      if (!returnBill) {
-        res.status(400).json({
-          message: "Bill doesn't exist to apply return or exchange",
-        });
-        return;
+      return res.status(400).json({ message: "Bill doesn't exist to apply return or exchange" });
+    }
+
+    const returnItemsMap = Object.fromEntries(
+      Object.values(returnedItems).map(({ itemDetail, itemQuantityInBill }) => [
+        itemDetail._id,
+        itemQuantityInBill
+      ])
+    );
+
+
+
+    // Bulk update item stock
+    const bulkStockUpdate = Object.entries(returnItemsMap).map(([itemId, quantity]) => ({
+      updateOne: {
+        filter: { _id: itemId },
+        update: { $inc: { itemStockQuantity: quantity } }
       }
-      originalBillId = returnBill.billId;
-      existingBill = await findBillById(originalBillId);
-    }
+    }));
 
-    if (!returnedItems.length) {
-      res
-        .status(400)
-        .json({ message: 'Add atleast one returning item in the bill' });
-      return;
-    }
+    await Item.bulkWrite(bulkStockUpdate);
 
-    const returnItems = {};
-    returnedItems.forEach(({ itemDetail, itemQuantityInBill }) => {
-      returnItems[itemDetail._id] = itemQuantityInBill;
+
+    const itemsMap = Object.fromEntries(
+      billItems.map(({ itemDetail, itemQuantityInBill }) => [
+        itemDetail._id,
+        itemQuantityInBill
+      ])
+    );
+
+     // Bulk update item stock
+     const bulkItemStockUpdate = Object.entries(itemsMap).map(([itemId, quantity]) => ({
+      updateOne: {
+        filter: { _id: itemId },
+        update: { $inc: { itemStockQuantity: -quantity } }
+      }
+    }));
+
+    await Item.bulkWrite(bulkItemStockUpdate);
+
+    let totalBillProfit = 0, totalNumberOfItems = 0;
+    const itemsExchanged = billItems.map(({ itemDetail, itemQuantityInBill }) => {
+      const { _id, itemSellingPricePerUnit = 0, itemCostPricePerUnit = 0, itemMRPperUnit } = itemDetail;
+      const itemDiscountPerUnit = itemMRPperUnit - itemSellingPricePerUnit;
+      const itemNetProfit = (itemSellingPricePerUnit - itemCostPricePerUnit) * itemQuantityInBill;
+
+      totalNumberOfItems += itemQuantityInBill;
+      totalBillProfit += itemNetProfit;
+
+      return {
+        itemDetail: { _id, itemSellingPricePerUnit, itemCostPricePerUnit, itemMRPperUnit, itemDiscountPerUnit },
+        itemNetProfit,
+        itemQuantityInBill,
+        itemMRPtotal: itemMRPperUnit * itemQuantityInBill,
+        itemDiscountTotal: itemDiscountPerUnit * itemQuantityInBill,
+        itemSellingPriceTotal: itemSellingPricePerUnit * itemQuantityInBill,
+      };
     });
 
-    const allReturnedItems = [];
-    const allAddedItems = existingBill.items;
-
-    if (
-      existingBill.returnBills &&
-      existingBill.returnBills.length &&
-      existingBill.returnBills.length > 0
-    ) {
-      existingBill.returnBills.forEach(({ itemsReturned, items }) => {
-        allAddedItems.push(...items);
-        allReturnedItems.push(...itemsReturned);
-      });
-    }
-
-    const returnedItemsMap = getMergedItemMap(allReturnedItems);
-    const addedItemsMap = getMergedItemMap(allAddedItems);
-
-    const { items = [] } = calculateFinalItems(
-      Object.values(addedItemsMap),
-      returnedItemsMap
-    );
-
-    if (items.length > 0) {
-      for (let i = 0; i < items.length; i++) {
-        const { itemDetail: itemId, itemQuantityInBill } = items[i] || {};
-        if (returnItems[itemId]) {
-          const returnQuantity = Number(returnItems[itemId]);
-          if (
-            (returnQuantity && returnQuantity > itemQuantityInBill) ||
-            returnQuantity === 0
-          ) {
-            res.status(400).json({
-              message: 'Returning item quantity mismatched',
-            });
-            return;
-          }
-        }
-      }
-    }
-
-    await Promise.all(
-      Object.entries(returnItems).map(async ([id, quantity]) => {
-        if (id) {
-          const item = await Item.findById(id);
-          if (!item.itemStockQuantity) {
-            item.itemStockQuantity = Number(quantity);
-          } else {
-            item.itemStockQuantity += Number(quantity);
-          }
-          await item.save();
-        }
-      })
-    );
-
-    let totalBillProfit = 0,
-      totalNumberOfItems = 0,
-      totalNumberOfUniqueItems = billItems.length;
-
-    const itemsExchanged = await Promise.all(
-      billItems.map(async (itemObj) => {
-        const {
-          _id,
-          itemSellingPricePerUnit,
-          itemCostPricePerUnit,
-          itemMRPperUnit,
-          itemStockQuantity,
-          itemDiscountPerUnit = itemMRPperUnit - itemSellingPricePerUnit,
-          ...restItemDetails
-        } = itemObj.itemDetail;
-
-        const orderQuantityInNumber = itemObj.itemQuantityInBill;
-        totalNumberOfItems += orderQuantityInNumber;
-
-        const itemNetProfit =
-          (itemSellingPricePerUnit - itemCostPricePerUnit) *
-          orderQuantityInNumber;
-        totalBillProfit += itemNetProfit;
-
-        if (_id) {
-          const item = await Item.findById(_id);
-          if (!item.itemStockQuantity) {
-            item.itemStockQuantity = 0;
-          } else {
-            item.itemStockQuantity -= orderQuantityInNumber;
-          }
-          await item.save();
-        }
-
-        const item = {
-          itemDetail: {
-            _id,
-            itemStockQuantity,
-            itemCostPricePerUnit,
-            itemSellingPricePerUnit,
-            itemMRPperUnit,
-            itemDiscountPerUnit,
-            ...restItemDetails,
-          },
-          itemNetProfit,
-          itemQuantityInBill: orderQuantityInNumber,
-          itemMRPtotal: itemMRPperUnit * orderQuantityInNumber,
-          itemDiscountTotal: itemDiscountPerUnit * orderQuantityInNumber,
-          itemSellingPriceTotal:
-            itemSellingPricePerUnit * orderQuantityInNumber,
-        };
-        return item;
-      })
-    );
-
-    const newReturnBill = await ReturnBill.create({
-      customerName: existingBill.customerName,
-      customerPhone: existingBill.customerPhone,
+    // Create new bill with returned items
+    const newBill = await Bill.create({
+      ...existingBill,
       items: itemsExchanged,
-      itemsReturned: returnedItems,
       billMRPTotal,
       billAmountTotal,
       billDiscountTotal,
-      totalBillProfit,
-      totalNumberOfUniqueItems,
+      totalBillProfit: totalBillProfit ?? 0,
+      totalNumberOfUniqueItems: billItems.length,
       totalNumberOfItems,
       cashPay,
       upiPay,
       amountReturn,
       refundAmount,
       totalRefundAmount,
-      billId: originalBillId,
+      parentBillId: id,
+      billRefund: refundAmount,
     });
 
-    await Bill.findByIdAndUpdate(
-      originalBillId,
-      {
-        $push: { returnBills: newReturnBill._id },
-      },
-      { new: true }
-    );
+    // Create return item record
+    await ReturnItem.create({ originalBillId: id, returnedItems, exchangeBillId: newBill._id });
 
-    res.status(200).json({ message: newReturnBill });
+    res.status(200).json({ message: newBill });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 };
