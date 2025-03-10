@@ -11,6 +11,7 @@ import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { getFileURL } from '../../utils/getFileURL';
+import ShareOnWhatsApp from '../shareOnWhatsApp';
 
 export const BillUploadPanel = () => {
   const dispatch = useDispatch();
@@ -99,7 +100,10 @@ export const BillUploadPanel = () => {
     toast.warn('Image should be more than 5MB and in JPEG/JPG/PNG/WEBP format');
   };
 
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
+    <>
     <Container>
       <Dropzone
         onDrop={onFileSelect}
@@ -166,5 +170,10 @@ export const BillUploadPanel = () => {
         ))}
       </Flex>
     </Container>
+    <Box mt="16px">
+      {match && <ShareOnWhatsApp  message={currentUrl}/>}
+      
+    </Box>
+    </>
   );
 };

@@ -9,6 +9,7 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
 import { getUserDeviceInfo } from 'src/utils/getUserDeviceInfo';
+import ShareOnWhatsApp from './shareOnWhatsApp';
 const PurchaseListApproval = ({
   list,
   index,
@@ -131,6 +132,9 @@ const PurchaseListApproval = ({
     const isUserAdmin = isAdmin();
     setIsAdminUser(isUserAdmin)
   }, [])
+  const baseUrl = window.location.origin;
+  const message = `${baseUrl}/new-purchase-order/${list._id}`
+
   return (
     <>
       {list ? (
@@ -146,6 +150,10 @@ const PurchaseListApproval = ({
             {new Date(list.createdAt)?.toLocaleDateString('en-US')} {datetext}
           </td>
           <td>{list.remark}</td>
+          <td>
+             <ShareOnWhatsApp message={message}/>
+           
+          </td>
           <td>
             {list.isDraft
               ? list.isApproved
