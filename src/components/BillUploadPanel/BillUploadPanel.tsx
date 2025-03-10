@@ -100,6 +100,8 @@ export const BillUploadPanel = () => {
     toast.warn('Image should be more than 5MB and in JPEG/JPG/PNG/WEBP format');
   };
 
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
     <>
     <Container>
@@ -169,7 +171,8 @@ export const BillUploadPanel = () => {
       </Flex>
     </Container>
     <Box mt="16px">
-      <ShareOnWhatsApp />
+      {match && <ShareOnWhatsApp  message={currentUrl}/>}
+      
     </Box>
     </>
   );

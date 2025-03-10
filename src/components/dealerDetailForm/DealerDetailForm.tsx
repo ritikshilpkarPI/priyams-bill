@@ -95,7 +95,8 @@ export const DealerDetailForm: React.FC = () => {
       setErrors(getYupValidationErrorMap(error));
     }
   };
-  
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
     <Flex
       mt="lg"
@@ -200,7 +201,10 @@ export const DealerDetailForm: React.FC = () => {
           </Col>
         </Grid>
       </Flex>
-      <ShareOnWhatsApp />
+      {
+        match && <ShareOnWhatsApp message={currentUrl}/>
+      }
+      
 
     </Flex>
   );

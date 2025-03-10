@@ -132,6 +132,9 @@ const PurchaseListApproval = ({
     const isUserAdmin = isAdmin();
     setIsAdminUser(isUserAdmin)
   }, [])
+  const baseUrl = window.location.origin;
+  const message = `${baseUrl}/new-purchase-order/${list._id}`
+
   return (
     <>
       {list ? (
@@ -148,7 +151,8 @@ const PurchaseListApproval = ({
           </td>
           <td>{list.remark}</td>
           <td>
-            <ShareOnWhatsApp id={list._id}/>
+             <ShareOnWhatsApp message={message}/>
+           
           </td>
           <td>
             {list.isDraft

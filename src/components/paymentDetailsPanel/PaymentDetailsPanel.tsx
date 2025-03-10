@@ -8,6 +8,8 @@ import ShareOnWhatsApp from '../shareOnWhatsApp';
 
 export const PaymentDetailAndBillPanel = () => {
   const purchaseOrder = useSelector(selectPurchaseOrder);
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
     <>
      <Flex direction="column">
@@ -21,7 +23,9 @@ export const PaymentDetailAndBillPanel = () => {
       />
     </Flex>
     <Box mt="16px">
-      <ShareOnWhatsApp />
+    {
+        match && <ShareOnWhatsApp message={currentUrl}/>
+      }
     </Box>
      </>
    
