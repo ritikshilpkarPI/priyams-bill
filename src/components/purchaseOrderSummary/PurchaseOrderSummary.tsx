@@ -86,6 +86,8 @@ export const PurchaseOrderSummary = () => {
     isValidPaymentDetails &&
     isBillImagesUploaded &&
     !purchaseOrder.isDraft;
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
     <>
     <Flex
@@ -129,7 +131,9 @@ export const PurchaseOrderSummary = () => {
       
     </Flex>
     <Box mt="16px">
-      <ShareOnWhatsApp />
+    {
+        match && <ShareOnWhatsApp message={currentUrl}/>
+      }
     </Box>
     </>
   );

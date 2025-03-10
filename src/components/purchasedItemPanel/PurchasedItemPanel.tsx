@@ -129,7 +129,8 @@ const PurchasedItemPanel = () => {
       return toast.error('unable to get item details, please try again');
     dispatch(setPurchaseOrder(response.data));
   };
-
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
     <>
        <div>
@@ -167,7 +168,9 @@ const PurchasedItemPanel = () => {
 
     </div>
     <Box mt="16px">
-      <ShareOnWhatsApp />
+    {
+        match && <ShareOnWhatsApp message={currentUrl}/>
+      }
     </Box>
     </>
  
