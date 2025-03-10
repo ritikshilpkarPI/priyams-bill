@@ -9,7 +9,7 @@ const initialState: PurchaseOrderDataType = {
   procurementSource: 'Walmart',
   remark: '',
   purchasedItems: [],
-  purchaseDetails: [],
+  purchaseDetails: {},
   billPhotos: [],
   totalPaidAmount: 0,
 };

@@ -32,41 +32,41 @@ export const PaymentDetailsForm = ({
     setPaymentDetails({ ...paymentDetails, [field]: value });
   };
 
-  const savePayment = async () => {
-    const response = await savePOPaymentAPI(paymentDetails);
-    if (response.isError || !response.order)
-      return toast.error('unable to add payments, please try again');
-    dispatch(setPurchaseOrder(response.order));
-    navigate(`${location.pathname}/${response.order._id}${location.search}`);
-  };
+  // const savePayment = async () => {
+  //   const response = await savePOPaymentAPI(paymentDetails);
+  //   if (response.isError || !response.order)
+  //     return toast.error('unable to add payments, please try again');
+  //   dispatch(setPurchaseOrder(response.order));
+  //   navigate(`${location.pathname}/${response.order._id}${location.search}`);
+  // };
 
-  const updatePayment = async () => {
-    if (!purchaseOrderId) return;
-    const response = await updatePOPaymentAPI(
-      paymentDetails,
-      purchaseOrderId,
-      paymentDetailIdx
-    );
-    if (response.isError || !response.order)
-      return toast.error('unable to add payments, please try again');
-    dispatch(setPurchaseOrder(response.order));
-    setPaymentDetails(defaultPaymentDetails);
-  };
+  // const updatePayment = async () => {
+  //   if (!purchaseOrderId) return;
+  //   const response = await updatePOPaymentAPI(
+  //     paymentDetails,
+  //     purchaseOrderId,
+  //     paymentDetailIdx
+  //   );
+  //   if (response.isError || !response.order)
+  //     return toast.error('unable to add payments, please try again');
+  //   dispatch(setPurchaseOrder(response.order));
+  //   setPaymentDetails(defaultPaymentDetails);
+  // };
 
-  const onPaymentAdd = async () => {
-    try {
-      setLoading(true);
-      await paymentDetailFormValidation.validate(paymentDetails, {
-        abortEarly: false,
-      });
-      if (purchaseOrderId) await updatePayment();
-      else await savePayment();
-      setPaymentDetails(defaultPaymentDetails);
-    } catch (error) {
-      setErrors(getYupValidationErrorMap(error));
-    }
-    setLoading(false);
-  };
+  // const onPaymentAdd = async () => {
+  //   try {
+  //     setLoading(true);
+  //     await paymentDetailFormValidation.validate(paymentDetails, {
+  //       abortEarly: false,
+  //     });
+  //     if (purchaseOrderId) await updatePayment();
+  //     else await savePayment();
+  //     setPaymentDetails(defaultPaymentDetails);
+  //   } catch (error) {
+  //     setErrors(getYupValidationErrorMap(error));
+  //   }
+  //   setLoading(false);
+  // };
   return (
     <Flex
       align="left"
@@ -125,7 +125,7 @@ export const PaymentDetailsForm = ({
           <Button
             loading={loading}
             leftIcon={<IconPlus />}
-            onClick={onPaymentAdd}
+            // onClick={onPaymentAdd}
           >
             Add
           </Button>
