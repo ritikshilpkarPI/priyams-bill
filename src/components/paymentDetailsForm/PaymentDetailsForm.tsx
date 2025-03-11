@@ -57,7 +57,6 @@ export const PaymentDetailsForm = ({
   const onChange = (field: string, value: string | number) => {
     dispatch(setPaymentDetailForm({ ...purchaseDetails, [field]: value }));
   };
-  console.log(purchaseDetails);
 
   const toggleAddCreditForm = async () => {
     try {
@@ -100,8 +99,6 @@ export const PaymentDetailsForm = ({
   const creditsListhandleDelete = (index: number) => {
     dispatch(removeCreditRecord(index));
   };
-  console.log(creditsList);
-  console.log(paymentsList);
 
   return (
     <Flex
