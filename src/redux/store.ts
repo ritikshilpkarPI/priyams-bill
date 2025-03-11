@@ -6,7 +6,7 @@ import itemsSlice from './items/itemsSlice';
 import dealerDetailFormSlice from './dealerDetailForm/dealerDetailFormSlice';
 import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
-
+import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import stepperReducer from "./stepper/stepperSlice";
 export const store = configureStore({
   reducer: {
@@ -18,6 +18,7 @@ export const store = configureStore({
     dealerDetailForm: dealerDetailFormSlice,
     purchasedItemDetailForm: purchasedItemDetailFormSlice,
     purchaseOrder: purchaseOrderSlice,
+    paymentDetailForm: paymentDetailFormSlice,
   },
 });
 

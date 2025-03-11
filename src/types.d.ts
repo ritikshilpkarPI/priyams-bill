@@ -293,17 +293,25 @@ declare global {
   interface paymentsType {
     paymentDate?: string;
     paidBy?: string;
+    paymentImages?: Array<file>;
     paymentImgURL?:Array<{ public_id:string, secure_url:string }>;
     paidAmount?: number;
     createdAt?: Date;
+    chequeNumber?:string;
+    idx?: number;
   }
   interface PaymentDetailType {
     totalPayableAmount?: number;
     totalBillAmount?: number;
     paymentType?: string;
+    addPaymentDetail?:  paymentsType;
+    addCreditDetail?: creditsType;
     credits?:Array<creditsType>;
     payments?:Array<paymentsType>;
-    _id?: string;
+    paymentFormState?:{
+      addCredit?:boolean
+      makePayment?:boolean
+    }
   }
 
   interface CloudFileType {
@@ -401,6 +409,20 @@ declare global {
     },
     deleteBills?: Array<CloudFileType>;
     uploadedImages?: Array<CloudFileType>;
+  }
+  interface PaymentsList {
+    creditAmount?: number;
+    payDate?: string;
+    paymentDate?: string;
+    paidBy?: string;
+    paidAmount?: number;
+    paymentImages?: File[];
+    creditLimitInDays?: number;
+    idx?: number;
+  }
+  interface PaymentDetailsFormCardProps {
+    removePaymentRecord: (index: number) => void;
+    paymentsList: Array<PaymentsList>;
   }
 }
 declare module '*.scss' {
