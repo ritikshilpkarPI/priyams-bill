@@ -11,15 +11,13 @@ import {
 } from '@mantine/core';
 import React from 'react';
 import { IconX } from '@tabler/icons-react';
+import { formatShortDate } from 'src/utils/formatDate';
 
 const PaymentDetailsFormCard = ({
   removePaymentRecord,
   paymentsList,
 }: PaymentDetailsFormCardProps) => {
   
-  const handleDelete = (index: number) => {
-    removePaymentRecord(index);
-  };
 
   return (
     <Flex
@@ -63,7 +61,6 @@ const PaymentDetailsFormCard = ({
               variant="filled"
               size={25}
               radius="xl"
-              onClick={() => handleDelete(index)}
               sx={{
                 position: 'absolute',
                 top: '8px',
@@ -74,7 +71,7 @@ const PaymentDetailsFormCard = ({
             </ActionIcon>
             {payment.paymentDate && (
               <Text weight={600} size="md" color="dark">
-                Payment Date: {payment.paymentDate}
+                Payment Date: {formatShortDate(payment.paymentDate)}
               </Text>
             )}
 
@@ -93,24 +90,20 @@ const PaymentDetailsFormCard = ({
               </Text>
             )}
 
-            {Array.isArray(payment.paymentImages) &&
-              payment.paymentImages.length > 0 && (
+            {Array.isArray(payment.paymentImgURL) &&
+              payment.paymentImgURL.length > 0 && (
                 <Group mt="sm" spacing="xs">
-                  {payment.paymentImages.map((file, imgIndex) => {
-                    if (file instanceof File) {
-                      const imageUrl = URL.createObjectURL(file);
+                  {payment.paymentImgURL.map((file, imgIndex) => {
                       return (
                         <Image
                           key={imgIndex}
-                          src={imageUrl}
+                          src={file.secure_url}
                           width={50}
                           height={50}
                           radius="sm"
-                          alt={file.name}
                           sx={{ border: '1px solid #ddd' }}
                         />
                       );
-                    }
                     return null;
                   })}
                 </Group>
@@ -128,7 +121,7 @@ const PaymentDetailsFormCard = ({
               </Text>
             )}
 
-            {payment.creditLimitInDays && (
+            { payment.creditLimitInDays && (
               <Text weight={600} size="md" color="dark">
                 Credit Limit In Days: <b>{payment.creditLimitInDays}</b>
               </Text>
