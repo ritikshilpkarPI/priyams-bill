@@ -162,15 +162,6 @@ export const DealerDetailForm: React.FC = () => {
 
           <Col span={12}>
             <Select
-              label="Payment Type"
-              data={['Fully Paid', 'Partially Paid', 'Credit']}
-              value={dealerFormData.payment}
-              onChange={(value) => onChange('payment', value!)}
-            />
-          </Col>
-
-          <Col span={12}>
-            <Select
               label="Procurement Source"
               data={['Walmart', 'D Mart', 'City', 'Distributor']}
               value={dealerFormData.procurementSource}
