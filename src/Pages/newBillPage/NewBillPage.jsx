@@ -70,7 +70,7 @@ const NewBillPage = () => {
       }
 
       const billData = { ...billState };
-      localStorage.setItem(`bill-${billData.billId}`, JSON.stringify(billData));
+      localStorage.setItem(`bill-${billData.billId}`, JSON.stringify({...billData, billCreatedAt: new Date().toISOString(),}));
       saveBillToDatabase(billData);
       window.print()
 
