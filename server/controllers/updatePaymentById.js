@@ -81,7 +81,8 @@ const updatePaymentById = async (req, res, next) => {
       let paymentImgURL;
       if(req.files){
         const { paymentImages } = req.files;
-        paymentImgURL = paymentImages ? await uploadMultipleImages(paymentImages) : [];
+        const imagesArray = Array.isArray(paymentImages) ? paymentImages : [paymentImages];
+        paymentImgURL = paymentImages ? await uploadMultipleImages(imagesArray) : [];
       }
       
       updatePurchaseDetails.payments = [

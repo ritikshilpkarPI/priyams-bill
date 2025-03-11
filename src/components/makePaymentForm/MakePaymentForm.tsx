@@ -32,6 +32,7 @@ import {
   selectPaymentsState,
 } from 'src/redux/paymentDetailForm/paymentDetailFormSelectors';
 import { addPaymentDetailValidation } from 'src/utils/validations/paymentDetailFormValidation';
+import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
 const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const paymentDetail = useSelector(selectMakePaymentFormState) || {};
   const paymentsList = useSelector(selectPaymentsState) || [];
+  const purchaseDetails = useSelector(selectPaymentDetailForm) || [];
   const { paidBy } = paymentDetail;
   const takeImages = paidBy === CONSTANTS.UPI || paidBy === CONSTANTS.NEFT;
 
@@ -48,21 +50,44 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
     dispatch(setMakePaymentForm({ ...paymentDetail, [field]: value }));
   };
 
-  const addPaymentHandler = async () => {
+  const updatePayment = async () => {
+    if (!purchaseOrderId) return;
+    setLoading(true);
+    const paymentDetails = {
+      totalPayableAmount: purchaseDetails.totalPayableAmount,
+      totalBillAmount: purchaseDetails.totalBillAmount,
+      paymentType: purchaseDetails.paymentType,
+      paidBy: purchaseDetails.addPaymentDetail?.paidBy || '',
+      paidAmount: purchaseDetails.addPaymentDetail?.paidAmount || 0,
+    };
+    const paymentImages = paymentDetail.paymentImages;
+    const response = await updatePOPaymentAPI(
+      paymentDetails,
+      CONSTANTS.PAYMENT,
+      purchaseOrderId,
+      paymentImages
+    );
+    if (response.isError)
+      return toast.error(
+        'unable to save payment details, please try after some time'
+      );
+    dispatch(setPurchaseOrder(response.order));
+    dispatch(resetMakePaymentForm());
+    setLoading(false);
+    toast.success('payment details saved successfully');
+  };
+
+  const onSubmit = async () => {
     try {
       await addPaymentDetailValidation.validate(paymentDetail, {
         abortEarly: false,
       });
-      const index = (paymentsList?.length ?? 0) + 1;
-      dispatch(setAddPayment({ ...paymentDetail, idx: index }));
-      dispatch(resetMakePaymentForm());
+      if (purchaseOrderId) return updatePayment();
       setErrors({});
     } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
   };
-
-  const onSubmit = () => {};
 
   return (
     <Flex
@@ -141,7 +166,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
               Save
             </Button>
           </div>
-          <div style={{ padding: '8px' }}>
+          {/* <div style={{ padding: '8px' }}>
             <Button
               leftIcon={<IconPlus />}
               loading={loading}
@@ -149,7 +174,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
             >
               add
             </Button>
-          </div>
+          </div> */}
         </div>
       </Grid>
     </Flex>

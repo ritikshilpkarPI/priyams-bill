@@ -10,7 +10,7 @@ const initialState: PaymentDetailType = {
     },
     addPaymentDetail: {
         paymentDate: new Date().toLocaleDateString(),
-        paidBy: 'UPI',
+        paidBy: 'upi',
         paidAmount: 0,
         paymentImages: [],
         idx: 0
