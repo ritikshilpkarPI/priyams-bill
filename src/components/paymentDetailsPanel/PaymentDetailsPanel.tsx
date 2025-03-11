@@ -15,7 +15,7 @@ export const PaymentDetailAndBillPanel = () => {
      <Flex direction="column">
       <PaymentDetailsForm
         purchaseOrderId={purchaseOrder?._id}
-        paymentDetailIdx={(purchaseOrder?.purchaseDetails?.length || 0) + 2}
+        // paymentDetailIdx={(purchaseOrder?.purchaseDetails?.length || 0) + 2}
       />
       <PaymentDetailTable
         purchaseOrderId={purchaseOrder?._id}

@@ -213,6 +213,20 @@ declare global {
     packetUnit: string;
   }
 
+  interface ReturnedItemType {
+    itemDetail: mongoose.Types.ObjectId;
+    itemQuantityInBill: number;
+  }
+  
+   interface ReturnItemSchemaType extends Document {
+    originalBillId?: mongoose.Types.ObjectId;
+    returnedItems?: ReturnedItemType[];
+    exchangeBillId?: mongoose.Types.ObjectId;
+    returnDate?: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }
+
   interface DealerDetailFormType {
     payment: 'Fully Paid' | 'Partially Paid' | 'Credit';
     billAmount: number;
@@ -270,11 +284,25 @@ declare global {
     showActions?: boolean;
     showTotal?: boolean;
   }
-
+  interface creditsType {
+    creditAmount?: number;
+    payDate?: string;
+    creditLimitInDays?: number;
+    createdAt?: Date;
+  }
+  interface paymentsType {
+    paymentDate?: string;
+    paidBy?: string;
+    paymentImgURL?:Array<{ public_id:string, secure_url:string }>;
+    paidAmount?: number;
+    createdAt?: Date;
+  }
   interface PaymentDetailType {
-    paidAmount: number;
-    paidBy: string;
-    chequeNumber: string;
+    totalPayableAmount?: number;
+    totalBillAmount?: number;
+    paymentType?: string;
+    credits?:Array<creditsType>;
+    payments?:Array<paymentsType>;
     _id?: string;
   }
 
@@ -292,7 +320,7 @@ declare global {
     createdAt?: string;
     _id?: string;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
-    purchaseDetails?: Array<PaymentDetailType>;
+    purchaseDetails?: PaymentDetailType;
     billPhotos?: Array<CloudFileType>;
     dealerName?: string;
     phoneNumber?: string;
@@ -315,7 +343,7 @@ declare global {
 
   interface PaymentDetailFormProps {
     purchaseOrderId?: string;
-    paymentDetailIdx: number;  
+    paymentDetailIdx?: number;  
   }
 
   interface QuestionModalProps {

@@ -1,0 +1,33 @@
+.bill-summary-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .bill-total {
+    width: fit-content;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .refund-total {
+    background-color: white;
+  }
+  
+  .new-bill-total {
+    background-color: black;
+    color: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .amount-return {
+    background-color: white;
+  }
+  
+  .pending-payment {
+    background-color: #007BFF;
+    color: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
