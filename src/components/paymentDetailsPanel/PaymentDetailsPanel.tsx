@@ -3,8 +3,6 @@ import { Box, Flex } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { PaymentDetailsForm } from '../paymentDetailsForm/PaymentDetailsForm';
-import { PaymentDetailTable } from '../paymentDetailTable/PaymentDetailTable';
-import { AddCreditForm } from '../addCreditForm/AddCreditForm';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
 
 export const PaymentDetailAndBillPanel = () => {
