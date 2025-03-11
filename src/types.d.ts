@@ -417,6 +417,7 @@ declare global {
     paidBy?: string;
     paidAmount?: number;
     paymentImages?: File[];
+    paymentImgURL?:Array<{ public_id:string, secure_url:string }>;
     creditLimitInDays?: number;
     idx?: number;
   }

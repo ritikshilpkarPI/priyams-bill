@@ -32,6 +32,7 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   const navigate = useNavigate();
   const creditDetail = useSelector(selectAddCreditFormState) || {};
   const creditsList = useSelector(selectCreditsState) || [];
+  const purchaseDetails = useSelector(selectPaymentDetailForm) || [];
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
@@ -39,21 +40,42 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
     dispatch(setAddCreditForm({ ...creditDetail, [field]: value }));
   };
 
-  const addCreditHandler = async () => {
+  const updateCredit = async () => {
+    if (!purchaseOrderId) return;
+    setLoading(true);
+    const paymentDetails = {
+      totalPayableAmount: purchaseDetails.totalPayableAmount,
+      totalBillAmount: purchaseDetails.totalBillAmount,
+      paymentType: purchaseDetails.paymentType,
+      creditAmount: creditDetail.creditAmount,
+      payDate: creditDetail.payDate,
+    };
+
+    const response = await updatePOPaymentAPI(
+      paymentDetails,
+      CONSTANTS.CREDIT,
+      purchaseOrderId
+    );
+    if (response.isError || !response.order)
+      return toast.error(
+        'unable to save credit details, please try again some time'
+      );
+    dispatch(setPurchaseOrder(response.order));
+    setLoading(false);
+    toast.success('credit details saved successfully');
+  };
+
+  const onSubmit = async () => {
     try {
       await addCreditDetailValidation.validate(creditDetail, {
         abortEarly: false,
       });
-      const index = (creditsList?.length ?? 0) + 1;
-      dispatch(setAddCredit({ ...creditDetail, idx: index }));
-      dispatch(resetAddCreditForm());
+      if (purchaseOrderId) return updateCredit();
       setErrors({});
     } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
   };
-
-  const onSubmit = () => {};
 
   return (
     <Flex
@@ -109,15 +131,6 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
             <div>
               <Button loading={loading} onClick={onSubmit}>
                 Save
-              </Button>
-            </div>
-            <div>
-              <Button
-                leftIcon={<IconPlus />}
-                loading={loading}
-                onClick={addCreditHandler}
-              >
-                add
               </Button>
             </div>
           </div>

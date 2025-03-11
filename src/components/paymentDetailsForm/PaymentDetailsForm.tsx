@@ -10,7 +10,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router';
@@ -38,6 +38,7 @@ import {
   setPaymentFormState,
 } from 'src/redux/paymentDetailForm/paymentDetailFormSlice';
 import { CONSTANTS } from 'src/constants/constants';
+import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 // import './PaymentDetailsForm.css';
 export const PaymentDetailsForm = ({
   purchaseOrderId,
@@ -49,10 +50,36 @@ export const PaymentDetailsForm = ({
 
   const purchaseDetails = useSelector(selectPaymentDetailForm) || {};
   const paymentFormState = useSelector(selectPaymentFormState);
-  const paymentsList = useSelector(selectPaymentsState) || [];
-  const creditsList = useSelector(selectCreditsState) || [];
+ 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
+  
+  const purchaseOrder = useSelector(selectPurchaseOrder) || {};
+
+  const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
+  const creditsList = purchaseOrder.purchaseDetails?.credits || [];
+
+  const setDefaultPurchaseDetails = () => {
+    if (!purchaseOrder || !purchaseOrder.purchaseDetails) return;
+
+    const totalBillAmount =
+      purchaseOrder.purchaseDetails.totalBillAmount ??
+      purchaseDetails?.totalBillAmount;
+    const totalPayableAmount =
+      purchaseOrder.purchaseDetails.totalPayableAmount ??
+      purchaseDetails?.totalPayableAmount;
+    const paymentType =
+      purchaseOrder.purchaseDetails.paymentType ?? purchaseDetails?.paymentType;
+
+    dispatch(
+      setPaymentDetailForm({
+        ...purchaseDetails,
+        totalBillAmount,
+        totalPayableAmount,
+        paymentType,
+      })
+    );
+  };
 
   const onChange = (field: string, value: string | number) => {
     dispatch(setPaymentDetailForm({ ...purchaseDetails, [field]: value }));
@@ -99,6 +126,11 @@ export const PaymentDetailsForm = ({
   const creditsListhandleDelete = (index: number) => {
     dispatch(removeCreditRecord(index));
   };
+
+  useEffect(() => {
+    setDefaultPurchaseDetails();
+  }, [purchaseOrder]);
+  
 
   return (
     <Flex
@@ -180,9 +212,10 @@ export const PaymentDetailsForm = ({
         )}
       </Flex>
       <Flex display="row" sx={{ width: '100%', flexWrap: 'wrap' }} gap="10px">
-        {paymentFormState?.makePayment && (
+        {paymentFormState?.makePayment &&
+         purchaseDetails.paymentType?.toLowerCase() !== CONSTANTS.CREDIT &&  (
           <Box>
-            <MakePaymentForm />
+            <MakePaymentForm purchaseOrderId={purchaseOrderId} />
             {paymentsList.length > 0 && (
               <PaymentDetailsFormCard
                 paymentsList={paymentsList}
@@ -192,9 +225,9 @@ export const PaymentDetailsForm = ({
           </Box>
         )}
         {paymentFormState?.addCredit &&
-          purchaseDetails.paymentType?.toLowerCase() !== 'fully paid' && (
+          purchaseDetails.paymentType?.toLowerCase() !== CONSTANTS.FULLY_PAID && (
             <Box>
-              <AddCreditForm />
+              <AddCreditForm purchaseOrderId={purchaseOrderId} />
               {creditsList.length > 0 && (
                 <PaymentDetailsFormCard
                   paymentsList={creditsList}

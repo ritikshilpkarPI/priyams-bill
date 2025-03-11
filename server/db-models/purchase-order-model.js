@@ -43,15 +43,15 @@ const purchaseOrderSchema = new mongoose.Schema({
     },
   ],
   purchaseDetails: {
-    totalPayableAmount: { type: Number, required: true },
-    totalBillAmount: { type: Number, required: true },
-    paymentType: { type: String,  required: true },
+    totalPayableAmount: Number,
+    totalBillAmount: Number,
+    paymentType: String,
 
     credits: [
       {
-        creditAmount: { type: Number, required: true },
-        payDate: { type: String, required: true }, 
-        creditLimitInDays: { type: Number, required: true }, 
+        creditAmount: Number,
+        payDate: String, 
+        creditLimitInDays: Number,
         createdAt: { type: Date, default: Date.now },
       },
     ],
@@ -59,12 +59,12 @@ const purchaseOrderSchema = new mongoose.Schema({
     payments: [
       {
         paymentDate: { type: Date, default: Date.now },
-        paidBy: { type: String, required: true },
+        paidBy: String,
         paymentImgURL: [{
           public_id: String,
           secure_url: String,
         }],
-        paidAmount: { type: Number, required: true },
+        paidAmount: Number,
         createdAt: { type: Date, default: Date.now },
       },
     ],
