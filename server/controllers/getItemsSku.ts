@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import purchaseOrderModel from "../db-models/purchase-order-model";
 import { Item } from "../db-models/item-model";
 
 export const getItemsSku = async (req: Request, res: Response) => {

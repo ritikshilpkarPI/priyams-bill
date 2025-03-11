@@ -36,6 +36,7 @@ import {
   SellDetailsPage,
   BarcodePrint,
   Label,
+  CreatePurchaseOrderPage,
 } from '../Pages';
 import { Fragment } from 'react';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
@@ -101,6 +102,7 @@ const StoreRoutes = () => {
             <Route exact path="/returnAndExchange" component={ReturnAndExchange} />
             <Route exact path="/sellDetailsPage/:purchaseOrderId" component={SellDetailsPage} />
             <Route exact path="/barcodePrint" component={BarcodePrint} />
+            <Route exact path="/createPurchaseOrderPage" component={CreatePurchaseOrderPage} />
                   {/* </ProtectedComponent> */}
           </ProtectedRoutes>
         </Fragment>

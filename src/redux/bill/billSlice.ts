@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { generateRandomKey } from 'src/utils/generateRandomKey';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -15,7 +16,7 @@ const initialState: BillState = {
   cashPay: 0,
   upiPay: 0,
   amountReturn: 0,
-  billId: `${uuidv4()}-${Date.now()}`,
+  billId: `${Date.now()}${generateRandomKey(4)}`,
 };
 
 const billSlice = createSlice({

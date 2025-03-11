@@ -1,0 +1,12 @@
+.open-close-page-wrapper{
+    height: 100vh;
+    overflow: auto;
+
+    .right-side-opening-container{
+        overflow-x: auto;
+    }
+    .all-procedure-table-conatiner{
+        overflow-x: auto;
+        margin: auto;
+    }
+}

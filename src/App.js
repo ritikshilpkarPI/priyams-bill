@@ -6,6 +6,7 @@ import { genericAxios } from './utils/genericAxiosMethod';
 import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from './utils/fetchBillingLeanItems';
 import { Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const dispatch = useDispatch();
@@ -63,7 +64,7 @@ function App() {
     setValue,
   } = AppFunction();
 
-  const devBg = process.env.NODE_ENV !== 'production' ? 'indianred' : 'none';
+  const devBg = process.env.NODE_ENV !== 'production' ? 'none' : 'none';
   console.log("Test Prod")
 
   return (
@@ -79,6 +80,7 @@ function App() {
           />
       )}
       <Outlet />
+      <ToastContainer />
       {/* <QRComp /> */}
     </div>
   );

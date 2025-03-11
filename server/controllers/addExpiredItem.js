@@ -14,10 +14,9 @@ const updateItem = async (id, totalItems) => {
       }
   
       const newStockQuantity = item.itemStockQuantity - totalItemsNumber;
-  
-      // removed check for newStockQuantity < 0 for now, will add back later
-      if (isNaN(newStockQuantity)) {
-        throw new Error('New stock quantity is invalid');
+
+      if (isNaN(newStockQuantity) || newStockQuantity < 0) {
+        throw new Error('New stock quantity is invalid or below 0');
       }
   
       item.itemStockQuantity = newStockQuantity;

@@ -70,7 +70,7 @@ const NewBillPage = () => {
       }
 
       const billData = { ...billState };
-      localStorage.setItem(`bill-${billData.billId}`, JSON.stringify(billData));
+      localStorage.setItem(`bill-${billData.billId}`, JSON.stringify({...billData, billCreatedAt: new Date().toISOString(),}));
       saveBillToDatabase(billData);
       window.print()
 
@@ -147,9 +147,10 @@ const NewBillPage = () => {
                 <ReactBarcode
                   value={billState.billId}
                   options={{
-                    height: 40,
+                    height: 20,
                     width: 1.1,
                     margin: 0,
+                    padding: 0
                   }}
                 />
               </div>

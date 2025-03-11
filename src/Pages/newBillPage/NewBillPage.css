@@ -33,8 +33,12 @@
 }
 
 .barcode-container svg text {
-    font-size: 16px !important; 
-   
+    text-anchor:middle ;
+    font-size: 8px !important;
+    letter-spacing: 2px  ; 
+    font-weight: 100 ;
+    dominant-baseline:middle ;
+    transform: translate(50%,-20%);
 }
 .shop-details{
     display: none;
@@ -65,7 +69,7 @@
     }
 
     .new-bill-page {
-        width: 60mm;
+        width: 70mm;
         margin: 0 auto;
         font-size: 12px;
     }

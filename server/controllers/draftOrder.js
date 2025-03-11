@@ -1,14 +1,30 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const { CONSTANTS } = require('../constants/constants');
 
 const draftOrder = async (req, res,next) => {
     try {
-      const { id } = req.body;
+      const { id, userDetail } = req.body;
+      const referer = req.headers.referer;
+      const status =  CONSTANTS.DRAFT
+      const user = req.user;
+      const newStatusHistory =
+        {
+          data: {
+            userId: user._id,
+            status: status,
+            browser: userDetail ? userDetail.browser : "Unknown",
+            os:  userDetail ? userDetail.os : "Unknown",
+            ipAddress: userDetail ? userDetail.ipAddress : "Unknown",
+            referer: referer,
+          },
+        }
       const order = await PurchaseOrder.findByIdAndUpdate(
         id,
         {
           isDraft: true,
           isRejected: false,
-          draftTime: Date.now()
+          draftTime: Date.now(),
+          $push: { statusHistory: newStatusHistory },
         },
         { new: true }
       );
