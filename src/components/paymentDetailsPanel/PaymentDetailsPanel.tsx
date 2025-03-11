@@ -3,7 +3,6 @@ import { Box, Flex } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { PaymentDetailsForm } from '../paymentDetailsForm/PaymentDetailsForm';
-import { PaymentDetailTable } from '../paymentDetailTable/PaymentDetailTable';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
 
 export const PaymentDetailAndBillPanel = () => {
@@ -15,11 +14,6 @@ export const PaymentDetailAndBillPanel = () => {
      <Flex direction="column">
       <PaymentDetailsForm
         purchaseOrderId={purchaseOrder?._id}
-        // paymentDetailIdx={(purchaseOrder?.purchaseDetails?.length || 0) + 2}
-      />
-      <PaymentDetailTable
-        purchaseOrderId={purchaseOrder?._id}
-        totalPaidAmount={purchaseOrder?.totalPaidAmount || 0}
       />
     </Flex>
     <Box mt="16px">
