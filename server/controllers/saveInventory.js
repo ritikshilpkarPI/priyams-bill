@@ -119,10 +119,34 @@ const saveInventory = async (req, res, next) => {
     let bulkWriteResult = {};
     if (bulkOperations.length > 0) {
       bulkWriteResult = await Item.bulkWrite(bulkOperations, { session });
-      console.log({bulkWriteResult});
-      
+      console.log({ bulkWriteResult });
+    }
+    const insertedIds = bulkWriteResult.insertedIds
+      ? Object.values(bulkWriteResult.insertedIds)
+      : [];
+
+    const newlyInsertedItems = await Item.find({ _id: { $in: insertedIds } })
+      .select('sku _id')
+      .lean()
+      .session(session);
+
+    const skuToIdArray = newlyInsertedItems.map((item) => ({
+      sku: item.sku,
+      id: item._id,
+    }));
+
+    const purchaseOrderItemBulkUpdates = skuToIdArray.map(({ sku, id }) => ({
+      updateOne: {
+        filter: { _id: purchaseOrderId, 'purchasedItems.sku': sku },
+        update: { $set: { 'purchasedItems.$.item_id': id } },
+      },
+    }));
+
+    if (purchaseOrderItemBulkUpdates.length > 0) {
+      await PurchaseOrder.bulkWrite(purchaseOrderItemBulkUpdates, { session });
     }
 
+    
     // Identify failed items
     failedItems = newItems.filter(
       (item) =>
