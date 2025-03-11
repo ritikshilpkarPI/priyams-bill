@@ -1298,20 +1298,18 @@ const ItemsList = () => {
             Show POs
           </Button>
         </td>
-        <ProtectedComponent role={access.ADD_ITEM_IMAGES}>
-          <td>
-            <Group position="center">
-              <Button
-                onClick={() => {
-                  setIndex(index);
-                  open();
-                }}
-              >
-                Item Images {images.length ? `- (${images.length})` : ''}
-              </Button>
-            </Group>
-          </td>
-        </ProtectedComponent>
+        <td>
+          <Group position="center">
+            <Button
+              onClick={() => {
+                setIndex(index);
+                open();
+              }}
+            >
+              Item Images {images.length ? `- (${images.length})` : ''}
+            </Button>
+          </Group>
+        </td>
       </tr>
     );
   };
