@@ -29,14 +29,18 @@ const BillSchema = new mongoose.Schema(
     cashPay: { type: Number },
     upiPay: { type: Number },
     isUpiAmtPaid: { type: Boolean },
-    rzpPaymentId: { type: String }, 
+    rzpPaymentId: { type: String },
     amountReturn: { type: Number },
     createdAt: { type: Date, default: Date.now },
     updated: { type: Array, default: Date.now },
-    returnBills: [{
-      type: Schema.Types.ObjectId,
-      ref: 'ReturnBill'
-    }]
+    returnBills: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'ReturnBill',
+      },
+    ],
+    parentBillId: { type: String },
+    billRefund: { type: String },
   },
   {
     timestamps: true,
