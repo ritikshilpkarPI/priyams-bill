@@ -47,10 +47,7 @@ export const PurchaseOrderSummary = () => {
     purchaseOrder: PurchaseOrderDataType
   ) => {
     try {
-      const paymentDetailsValidation = Yup.array().of(
-        paymentDetailFormValidation
-      );
-      await paymentDetailsValidation.validate(purchaseOrder.purchaseDetails);
+      await paymentDetailFormValidation.validate(purchaseOrder.purchaseDetails);
       setIsValidPaymentDetails(true);
       return true;
     } catch (err) {

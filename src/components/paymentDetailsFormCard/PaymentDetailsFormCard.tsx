@@ -8,6 +8,7 @@ import {
   Image,
   Button,
   ActionIcon,
+  Box,
 } from '@mantine/core';
 import React from 'react';
 import { IconX } from '@tabler/icons-react';
@@ -16,29 +17,33 @@ import { formatShortDate } from 'src/utils/formatDate';
 const PaymentDetailsFormCard = ({
   removePaymentRecord,
   paymentsList,
+  title
 }: PaymentDetailsFormCardProps) => {
   
 
   return (
     <Flex
-      align="left"
       gap="16px"
       direction="column"
       sx={{
-        maxHeight: '500px',
-        width: '350px',
-        border: '1px solid grey',
+        border: '0.5px solid #D4D4D4',
         padding: '16px',
-        borderRadius: '8px',
-        textAlign: 'left',
-        overflow: 'scroll',
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
+        borderRadius: '4px',
       }}
-      mx="sm"
-      mt="16px"
     >
+      <Text><Badge color="green" size="lg" radius="md">{title} list</Badge></Text>
+      <Box
+        sx={{
+          maxHeight: '60vh',
+          width: '100%',
+          borderRadius: '8px',
+          overflow: 'scroll',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+        }}
+      >
+
       {paymentsList.map((payment, index) => (
         <Card
           key={index}
@@ -71,7 +76,7 @@ const PaymentDetailsFormCard = ({
             </ActionIcon>
             {payment.paymentDate && (
               <Text weight={600} size="md" color="dark">
-                Payment Date: {formatShortDate(payment.paymentDate)}
+                Payment Date: <b>{formatShortDate(payment.paymentDate)}</b>
               </Text>
             )}
 
@@ -101,7 +106,6 @@ const PaymentDetailsFormCard = ({
                           width={50}
                           height={50}
                           radius="sm"
-                          sx={{ border: '1px solid #ddd' }}
                         />
                       );
                     return null;
@@ -111,7 +115,7 @@ const PaymentDetailsFormCard = ({
 
             {payment.payDate && (
               <Text weight={600} size="md" color="dark">
-                Pay Date: <b>{payment.payDate}</b>
+                Pay Date: <b>{formatShortDate(payment.payDate)}</b>
               </Text>
             )}
 
@@ -121,7 +125,7 @@ const PaymentDetailsFormCard = ({
               </Text>
             )}
 
-            { payment.creditLimitInDays && (
+            { payment.creditLimitInDays !== null && payment.creditLimitInDays !== undefined && (
               <Text weight={600} size="md" color="dark">
                 Credit Limit In Days: <b>{payment.creditLimitInDays}</b>
               </Text>
@@ -129,6 +133,8 @@ const PaymentDetailsFormCard = ({
           </Flex>
         </Card>
       ))}
+      </Box>
+
     </Flex>
   );
 };

@@ -8,8 +8,8 @@ const getDaysBetweenDates = (
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
       return 0;
     }
-  
-    return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  const days =  Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    return Math.abs(days)
   };
   
   export { getDaysBetweenDates };

@@ -34,12 +34,14 @@ import {
 import {
   removeCreditRecord,
   removePaymentRecord,
+  resetPaymentDetailForm,
   setPaymentDetailForm,
   setPaymentFormState,
 } from 'src/redux/paymentDetailForm/paymentDetailFormSlice';
 import { CONSTANTS } from 'src/constants/constants';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 // import './PaymentDetailsForm.css';
+import { useMediaQuery } from '@mantine/hooks';
 export const PaymentDetailsForm = ({
   purchaseOrderId,
   paymentDetailIdx,
@@ -48,12 +50,14 @@ export const PaymentDetailsForm = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
+
   const purchaseDetails = useSelector(selectPaymentDetailForm) || {};
   const paymentFormState = useSelector(selectPaymentFormState);
- 
+
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
-  
+
   const purchaseOrder = useSelector(selectPurchaseOrder) || {};
 
   const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
@@ -128,115 +132,123 @@ export const PaymentDetailsForm = ({
   };
 
   useEffect(() => {
-    setDefaultPurchaseDetails();
+    if (purchaseOrderId) {
+      setDefaultPurchaseDetails();
+    } else {
+      dispatch(resetPaymentDetailForm());
+    }
   }, [purchaseOrder]);
-  
 
   return (
     <Flex
-      align="left"
       gap="16px"
       direction="column"
-      justify="space-around"
       sx={{
         border: '1px solid grey',
         padding: '16px',
         borderRadius: '8px',
         textAlign: 'left',
         overflow: 'scroll',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
       }}
       mx="sm"
       mt="16px"
     >
-      <Flex
-        // justify="left"
-        sx={{ flexWrap: 'wrap' }}
-        gap="20px"
-        mx="sm"
-      >
-        <CustomNumberInput
-          label="Total Bill Amount"
-          required
-          error={errors.totalBillAmount}
-          placeholder="Enter Total Bill Amount"
-          value={purchaseDetails.totalBillAmount ?? 0}
-          onChange={(e) => onChange('totalBillAmount', Number(e.target.value))}
-        />
+        <Grid columns={12} sx={{ width: '100%' }}>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <CustomNumberInput
+              label="Total Bill Amount"
+              required
+              error={errors.totalBillAmount}
+              placeholder="Enter Total Bill Amount"
+              value={purchaseDetails.totalBillAmount ?? 0}
+              onChange={(e) =>
+                onChange('totalBillAmount', Number(e.target.value))
+              }
+            />
+          </Grid.Col>
 
-        <CustomNumberInput
-          label="Total Payable Amount"
-          required
-          error={errors.totalPayableAmount}
-          placeholder="Enter Total Payable Amount"
-          value={purchaseDetails.totalPayableAmount ?? 0}
-          onChange={(e) =>
-            onChange('totalPayableAmount', Number(e.target.value))
-          }
-        />
-        <Select
-          label="Payment Type"
-          error={errors.paymentType}
-          data={[
-            CONSTANTS.FULLY_PAID,
-            CONSTANTS.PARTIALLY_PAID,
-            CONSTANTS.CREDIT,
-          ]}
-          value={purchaseDetails.paymentType}
-          onChange={(value) => onChange('paymentType', value!)}
-        />
-      </Flex>
-      <Flex display="row" sx={{ width: '100%', flexWrap: 'wrap' }} gap="16px">
-        {purchaseDetails.paymentType?.toLowerCase() !== 'credit' && (
-          <Box mx="sm" sx={{ width: '350px' }}>
-            <div>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <CustomNumberInput
+              label="Total Payable Amount"
+              required
+              error={errors.totalPayableAmount}
+              placeholder="Enter Total Payable Amount"
+              value={purchaseDetails.totalPayableAmount ?? 0}
+              onChange={(e) =>
+                onChange('totalPayableAmount', Number(e.target.value))
+              }
+            />
+          </Grid.Col>
+
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <Select
+              label="Payment Type"
+              error={errors.paymentType}
+              data={[
+                CONSTANTS.FULLY_PAID,
+                CONSTANTS.PARTIALLY_PAID,
+                CONSTANTS.CREDIT,
+              ]}
+              value={purchaseDetails.paymentType}
+              onChange={(value) => onChange('paymentType', value!)}
+              sx={{ width: '100%' }}
+            />
+          </Grid.Col>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
               <Button
+                w={'100%'}
                 variant={paymentFormState?.makePayment ? 'filled' : 'light'}
                 onClick={() => toggleMakePaymentForm()}
               >
                 Make Payment
               </Button>
-            </div>
-          </Box>
-        )}
-        {purchaseDetails.paymentType?.toLowerCase() !== 'fully paid' && (
-          <Box mx="sm" sx={{ width: '350px' }}>
-            <div>
+          </Grid.Col>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
               <Button
+                w={'100%'}
                 variant={paymentFormState?.addCredit ? 'filled' : 'light'}
                 onClick={() => toggleAddCreditForm()}
               >
                 Add Credit
               </Button>
-            </div>
-          </Box>
-        )}
-      </Flex>
-      <Flex display="row" sx={{ width: '100%', flexWrap: 'wrap' }} gap="10px">
-        {paymentFormState?.makePayment &&
-         purchaseDetails.paymentType?.toLowerCase() !== CONSTANTS.CREDIT &&  (
-          <Box>
-            <MakePaymentForm purchaseOrderId={purchaseOrderId} />
-            {paymentsList.length > 0 && (
-              <PaymentDetailsFormCard
-                paymentsList={paymentsList}
-                removePaymentRecord={paymentsListhandleDelete}
-              />
-            )}
-          </Box>
-        )}
-        {paymentFormState?.addCredit &&
-          purchaseDetails.paymentType?.toLowerCase() !== CONSTANTS.FULLY_PAID && (
-            <Box>
-              <AddCreditForm purchaseOrderId={purchaseOrderId} />
+          </Grid.Col>
+        </Grid>
+        <Grid columns={12} sx={{ width: '100%' }}>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+              {paymentFormState?.makePayment && (
+                <MakePaymentForm purchaseOrderId={purchaseOrderId} />
+              )}
+          </Grid.Col>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+              {paymentFormState?.addCredit && (
+                <AddCreditForm purchaseOrderId={purchaseOrderId} />
+              )}
+          </Grid.Col>
+        </Grid>
+        <Grid columns={12} sx={{ width: '100%' }}>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+              {paymentsList.length > 0 && (
+                <PaymentDetailsFormCard
+                  paymentsList={paymentsList}
+                  removePaymentRecord={paymentsListhandleDelete}
+                  title={CONSTANTS.PAYMENT}
+                />
+              )}
+          </Grid.Col>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            
               {creditsList.length > 0 && (
                 <PaymentDetailsFormCard
                   paymentsList={creditsList}
                   removePaymentRecord={creditsListhandleDelete}
+                  title={CONSTANTS.CREDIT}
                 />
               )}
-            </Box>
-          )}
-      </Flex>
+          </Grid.Col>
+        </Grid>
     </Flex>
   );
 };

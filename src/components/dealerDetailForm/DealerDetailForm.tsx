@@ -64,7 +64,7 @@ export const DealerDetailForm: React.FC = () => {
     const response = await updateOrderDetailsAPI({
       new_order: {
         purchaseObj: {
-          details: [],
+          details: purchaseOrder.purchaseDetails || {},
           bills: [],
           orders: purchaseOrder.purchasedItems,
           ...purchaseOrder,
