@@ -36,6 +36,8 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
+  const currentDate = new Date().toISOString().split('T')[0];
+
   const onChange = (field: string, value: string | number) => {
     dispatch(setAddCreditForm({ ...creditDetail, [field]: value }));
   };
@@ -60,6 +62,7 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
       return toast.error(
         'unable to save credit details, please try again some time'
       );
+    dispatch(resetAddCreditForm());
     dispatch(setPurchaseOrder(response.order));
     setLoading(false);
     toast.success('credit details saved successfully');
@@ -79,32 +82,35 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
 
   return (
     <Flex
-      align="left"
-      gap="16px"
       direction="column"
+      // gap="16px"
       sx={{
-        width: '350px',
-        border: '1px solid grey',
+        border: '0.5px solid #D4D4D4',
         padding: '16px',
-        borderRadius: '8px',
+        borderRadius: '4px',
+        overflow: 'hidden',
         textAlign: 'left',
-        overflow: 'scroll',
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
       }}
-      mx="sm"
-      mt="16px"
     >
-      <Flex align="center" gap="10px">
-        <Text>Form</Text>
-        <Badge color="green">You are adding new cradit</Badge>
-      </Flex>
-      <Grid gutter="md" sx={{ width: '240px' }}>
-        <Col span={12}>
+      <Grid columns={12}>
+        <Col>
+          <Badge color="green" size="lg">
+            You are adding new credit
+          </Badge>
+        </Col>
+        {(purchaseDetails.paymentType === CONSTANTS.PARTIALLY_PAID ||
+          purchaseDetails.paymentType === CONSTANTS.CREDIT) && (
+          <Col>
+            <Badge color="red" size="xs" mt={'10px'}>
+              Required
+            </Badge>
+          </Col>
+        )}
+        <Col>
           <Input.Wrapper error={errors.payDate} label="Pay Date" required>
             <Input
               type="date"
+              min={currentDate}
               onChange={(e) => onChange('payDate', e.target.value)}
             />
           </Input.Wrapper>
@@ -119,21 +125,10 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
             onChange={(e) => onChange('creditAmount', Number(e.target.value))}
           />
         </Col>
-
         <Col>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-            }}
-          >
-            <div>
-              <Button loading={loading} onClick={onSubmit}>
-                Save
-              </Button>
-            </div>
-          </div>
+          <Button w={'100%'} loading={loading} onClick={onSubmit}>
+            Save
+          </Button>
         </Col>
       </Grid>
     </Flex>

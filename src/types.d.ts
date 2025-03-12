@@ -393,7 +393,7 @@ declare global {
   interface PurchaseObjType extends PurchaseOrderDataType {
     orders?: Array<PurchasedItemDetailFormType>;
     bills?: Array<string>;
-    details?: Array<PaymentDetailType>;
+    details?: PaymentDetailType;
   }
  
   interface AddNewOrderAPIArgs {
@@ -424,6 +424,7 @@ declare global {
   interface PaymentDetailsFormCardProps {
     removePaymentRecord: (index: number) => void;
     paymentsList: Array<PaymentsList>;
+    title: string
   }
 }
 declare module '*.scss' {

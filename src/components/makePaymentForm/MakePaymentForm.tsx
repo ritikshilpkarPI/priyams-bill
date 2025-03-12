@@ -8,6 +8,7 @@ import {
   Text,
   FileInput,
   Badge,
+  Image,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -71,8 +72,8 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
       return toast.error(
         'unable to save payment details, please try after some time'
       );
-    dispatch(setPurchaseOrder(response.order));
     dispatch(resetMakePaymentForm());
+    dispatch(setPurchaseOrder(response.order));
     setLoading(false);
     toast.success('payment details saved successfully');
   };
@@ -91,32 +92,34 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
 
   return (
     <Flex
-      align="left"
       gap="16px"
       direction="column"
       sx={{
-        width: '350px',
-        border: '1px solid grey',
+        border: '0.5px solid #D4D4D4',
         padding: '16px',
-        borderRadius: '8px',
+        borderRadius: '4px',
+        overflow: 'hidden',
         textAlign: 'left',
-        overflow: 'scroll',
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
       }}
-      mx="sm"
-      mt="16px"
     >
-      <Flex align="center" gap="10px">
-        <Text>Form</Text>
-        <Badge color="green">You are adding new payment</Badge>
-      </Flex>
-      <Grid gutter="md" sx={{ width: '240px' }}>
+      <Grid columns={12}>
+        <Col>
+          <Badge color="green" size="lg">
+            You are adding new payment
+          </Badge>
+        </Col>
+        {(purchaseDetails.paymentType === CONSTANTS.PARTIALLY_PAID ||
+          purchaseDetails.paymentType === CONSTANTS.FULLY_PAID) && (
+          <Col>
+            <Badge color="red" size="xs">
+              Required
+            </Badge>
+          </Col>
+        )}
         <Col span={12}>
           <strong>Date: {new Date().toDateString()}</strong>
         </Col>
-        <Col span={12}>
+        <Col>
           <Select
             label="Paid By"
             required
@@ -154,28 +157,38 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
             />
           </Col>
         )}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <div style={{ padding: '8px' }}>
-            <Button loading={loading} onClick={onSubmit}>
-              Save
-            </Button>
-          </div>
-          {/* <div style={{ padding: '8px' }}>
-            <Button
-              leftIcon={<IconPlus />}
-              loading={loading}
-              onClick={addPaymentHandler}
+        {(paymentDetail.paymentImages?.length ?? 0) > 0 && (
+          <Col>
+            <Flex
+              sx={{
+                overflowX: 'scroll',
+                gap: '8px',
+                padding: '8px',
+                '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+              }}
             >
-              add
-            </Button>
-          </div> */}
-        </div>
+              {(paymentDetail.paymentImages || []).map((file, index) => {
+                const imageUrl = URL.createObjectURL(file);
+                return (
+                  <Image
+                    key={index}
+                    src={imageUrl}
+                    width={50}
+                    height={50}
+                    radius="sm"
+                  />
+                );
+              })}
+            </Flex>
+          </Col>
+        )}
+        <Col>
+          <Button loading={loading} onClick={onSubmit} w={'100%'}>
+            Save
+          </Button>
+        </Col>
       </Grid>
     </Flex>
   );
