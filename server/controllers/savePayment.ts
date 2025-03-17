@@ -15,20 +15,12 @@ export const savePayment = async (
 ) => {
   try {
     const { paymentMethod, purchaseData } = parseStringToJson(req.body.data);
+    const { totalPayableAmount, totalBillAmount, paymentType } = purchaseData;
 
-    if (!paymentMethod || !purchaseData) {
+    if (!paymentMethod || !purchaseData || !totalPayableAmount || !totalBillAmount || !paymentType) {
       return res
         .status(404)
         .json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
-    }
-
-    const { totalPayableAmount, totalBillAmount, paymentType } = purchaseData;
-
-    if (!totalPayableAmount || !totalBillAmount || !paymentType) {
-      return res.status(400).json({
-        message: MESSAGES.MISSING_REQUIRED_FIELDS,
-        success: false,
-      });
     }
 
     if (
@@ -57,7 +49,7 @@ export const savePayment = async (
       if (!creditAmount || !payDate) {
         return res
           .status(404)
-          .json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
+          .json({ message: MESSAGES.CREDIT_AMOUNT_AND_PAY_DATE_REQUIRED, success: false });
       }
 
       const startDate = convertDateToIST(payDate).toISOString();
@@ -74,7 +66,7 @@ export const savePayment = async (
       if (!paidBy || !paidAmount) {
         return res
           .status(404)
-          .json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
+          .json({ message: MESSAGES.PAID_BY_AND_PAID_AMOUNT_REQUIRED, success: false });
       }
       if (
         [CONSTANTS.UPI, CONSTANTS.NEFT].includes(paidBy.toLowerCase()) &&
