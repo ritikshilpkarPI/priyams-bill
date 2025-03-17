@@ -78,15 +78,14 @@ export const savePayment = async (
       }
 
       let paymentImgURL;
-      if (req.files) {
-        const { paymentImages } = req.files;
+        const files = req.files
+        const paymentImages  = files?.paymentImages;
         const imagesArray = Array.isArray(paymentImages)
           ? paymentImages
           : [paymentImages];
         paymentImgURL = paymentImages
           ? await uploadMultipleImages(imagesArray)
           : [];
-      }
       purchaseDetails?.payments?.push({
         paidBy,
         paymentImgURL,
