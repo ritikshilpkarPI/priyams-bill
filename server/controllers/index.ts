@@ -41,7 +41,7 @@ import permanentlyOutOfStock from './permanentlyOutOfStock';
 import rejectOrder from './rejectOrder';
 import saveInventory from './saveInventory';
 import saveOrder from './saveOrder';
-import savePayment from './savePayment';
+import {savePayment} from './savePayment';
 import sendAllExpense from './sendAllExpense';
 import sendDayExpenses from './sendDayExpenses';
 import sendMessage from './sendMessage';
