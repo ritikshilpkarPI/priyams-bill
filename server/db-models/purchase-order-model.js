@@ -22,6 +22,7 @@ const purchaseOrderSchema = new mongoose.Schema({
       subCategory: String,
       flavourOrFeature: String,
       freeItemsAvailable: Boolean,
+      freeItemsRemarks: String,
       returnPolicyAvailable: Boolean,
       returnPolicyRemarks: String,
       companyName: String,

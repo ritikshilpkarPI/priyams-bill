@@ -238,6 +238,8 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     setIsEditing(true);
   };
 
+  console.log(purchasedItemFormData);
+
   return (
     <Flex direction="column" gap="16px" mx="sm" mt="lg" pos="relative">
       <Flex
@@ -486,21 +488,36 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 />
               </Col>
               <Col span={12}>
-                <Checkbox
-                  label="Is free items available?"
-                  checked={purchasedItemFormData.freeItemsAvailable}
-                  onChange={(event) =>
-                    onChange('freeItemsAvailable', event.target.checked)
-                  }
+                 <Select
+                  label="Is Free Items Available?"
+                  value={purchasedItemFormData.freeItemsAvailable ? "true" : "false"}
+                  data={[
+                    { value: "true", label: "Yes" },
+                    { value: "false", label: "No" }
+                  ]}
+                  onChange={(value) => onChange("freeItemsAvailable", value === "true")}
                 />
               </Col>
+              { purchasedItemFormData.freeItemsAvailable &&
+                <Col span={12}>
+                  <Textarea
+                    label="Free Items Remarks"
+                    value={purchasedItemFormData.freeItemsRemarks}
+                    onChange={(event) =>
+                      onChange('freeItemsRemarks', event.currentTarget.value)
+                    }
+                    />
+                </Col>
+              }
               <Col span={12}>
-                <Checkbox
-                  label="Is return policy available?"
-                  checked={purchasedItemFormData.returnPolicyAvailable}
-                  onChange={(event) =>
-                    onChange('returnPolicyAvailable', event.target.checked)
-                  }
+                  <Select
+                  label="Is Return Policy Available?"
+                  value={purchasedItemFormData.returnPolicyAvailable ? "true" : "false"}
+                  data={[
+                    { value: "true", label: "Yes" },
+                    { value: "false", label: "No" }
+                  ]}
+                  onChange={(value) => onChange("returnPolicyAvailable", value === "true")}
                 />
               </Col>
               {purchasedItemFormData.returnPolicyAvailable && (
