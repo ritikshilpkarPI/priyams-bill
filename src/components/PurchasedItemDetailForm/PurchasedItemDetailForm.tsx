@@ -238,8 +238,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     setIsEditing(true);
   };
 
-  console.log(purchasedItemFormData);
-
   return (
     <Flex direction="column" gap="16px" mx="sm" mt="lg" pos="relative">
       <Flex
