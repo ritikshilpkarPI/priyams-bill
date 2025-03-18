@@ -8,4 +8,6 @@ export const CONSTANTS = Object.freeze({
     FULLY_PAID: "fully paid",
     NEFT: "neft",
     UPI: "upi",
+    CASH: "cash",
+    PREPAID: "prepaid"
 })

@@ -42,16 +42,33 @@ const purchaseOrderSchema = new mongoose.Schema({
       slabPrice: [],
     },
   ],
-  purchaseDetails: [
-    {
-      paidAmount: {
-        type: Number,
-        default: 0,
+  purchaseDetails: {
+    totalPayableAmount: Number,
+    totalBillAmount: Number,
+    paymentType: String,
+
+    credits: [
+      {
+        creditAmount: Number,
+        payDate: String, 
+        creditLimitInDays: Number,
+        createdAt: { type: Date, default: Date.now },
       },
-      paidBy: String,
-      chequeNumber: String,
-    },
-  ],
+    ],
+
+    payments: [
+      {
+        paymentDate: { type: Date, default: Date.now },
+        paidBy: String,
+        paymentImgURL: [{
+          public_id: String,
+          secure_url: String,
+        }],
+        paidAmount: Number,
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+  },
   billPhotos: [
     {
       public_id: String,

@@ -64,7 +64,7 @@ export const DealerDetailForm: React.FC = () => {
     const response = await updateOrderDetailsAPI({
       new_order: {
         purchaseObj: {
-          details: [],
+          details: purchaseOrder.purchaseDetails || {},
           bills: [],
           orders: purchaseOrder.purchasedItems,
           ...purchaseOrder,
@@ -157,15 +157,6 @@ export const DealerDetailForm: React.FC = () => {
               required
               placeholder="Enter bill amount"
               error={errors.billAmount}
-            />
-          </Col>
-
-          <Col span={12}>
-            <Select
-              label="Payment Type"
-              data={['Fully Paid', 'Partially Paid', 'Credit']}
-              value={dealerFormData.payment}
-              onChange={(value) => onChange('payment', value!)}
             />
           </Col>
 

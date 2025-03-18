@@ -1,6 +1,16 @@
-import { Button, Col, Flex, Grid, Select, TextInput } from '@mantine/core';
+import {
+  Badge,
+  Box,
+  Button,
+  Col,
+  Flex,
+  Grid,
+  Select,
+  Text,
+  TextInput,
+} from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router';
@@ -11,7 +21,27 @@ import { getNumberFromStr } from '../../utils/getNumberFromStr';
 import { paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
-
+import { AddCreditForm } from '../addCreditForm/AddCreditForm';
+import MakePaymentForm from '../makePaymentForm/MakePaymentForm';
+import PaymentDetailsFormCard from '../paymentDetailsFormCard/PaymentDetailsFormCard';
+import { useSelector } from 'react-redux';
+import {
+  selectCreditsState,
+  selectPaymentDetailForm,
+  selectPaymentFormState,
+  selectPaymentsState,
+} from 'src/redux/paymentDetailForm/paymentDetailFormSelectors';
+import {
+  removeCreditRecord,
+  removePaymentRecord,
+  resetPaymentDetailForm,
+  setPaymentDetailForm,
+  setPaymentFormState,
+} from 'src/redux/paymentDetailForm/paymentDetailFormSlice';
+import { CONSTANTS } from 'src/constants/constants';
+import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
+// import './PaymentDetailsForm.css';
+import { useMediaQuery } from '@mantine/hooks';
 export const PaymentDetailsForm = ({
   purchaseOrderId,
   paymentDetailIdx,
@@ -19,57 +49,98 @@ export const PaymentDetailsForm = ({
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const defaultPaymentDetails = {
-    paidBy: 'UPI',
-    paidAmount: 0,
-    chequeNumber: '',
-  };
-  const [paymentDetails, setPaymentDetails] = useState(defaultPaymentDetails);
+
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
+
+  const purchaseDetails = useSelector(selectPaymentDetailForm) || {};
+  const paymentFormState = useSelector(selectPaymentFormState);
+
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
-  const onChange = (field: string, value: string | number) => {
-    setPaymentDetails({ ...paymentDetails, [field]: value });
-  };
+  const purchaseOrder = useSelector(selectPurchaseOrder) || {};
 
-  const savePayment = async () => {
-    const response = await savePOPaymentAPI(paymentDetails);
-    if (response.isError || !response.order)
-      return toast.error('unable to add payments, please try again');
-    dispatch(setPurchaseOrder(response.order));
-    navigate(`${location.pathname}/${response.order._id}${location.search}`);
-  };
+  const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
+  const creditsList = purchaseOrder.purchaseDetails?.credits || [];
 
-  const updatePayment = async () => {
-    if (!purchaseOrderId) return;
-    const response = await updatePOPaymentAPI(
-      paymentDetails,
-      purchaseOrderId,
-      paymentDetailIdx
+  const setDefaultPurchaseDetails = () => {
+    if (!purchaseOrder || !purchaseOrder.purchaseDetails) return;
+
+    const totalBillAmount =
+      purchaseOrder.purchaseDetails.totalBillAmount ??
+      purchaseDetails?.totalBillAmount;
+    const totalPayableAmount =
+      purchaseOrder.purchaseDetails.totalPayableAmount ??
+      purchaseDetails?.totalPayableAmount;
+    const paymentType =
+      purchaseOrder.purchaseDetails.paymentType ?? purchaseDetails?.paymentType;
+
+    dispatch(
+      setPaymentDetailForm({
+        ...purchaseDetails,
+        totalBillAmount,
+        totalPayableAmount,
+        paymentType,
+      })
     );
-    if (response.isError || !response.order)
-      return toast.error('unable to add payments, please try again');
-    dispatch(setPurchaseOrder(response.order));
-    setPaymentDetails(defaultPaymentDetails);
   };
 
-  const onPaymentAdd = async () => {
+  const onChange = (field: string, value: string | number) => {
+    dispatch(setPaymentDetailForm({ ...purchaseDetails, [field]: value }));
+  };
+
+  const toggleAddCreditForm = async () => {
     try {
-      setLoading(true);
-      await paymentDetailFormValidation.validate(paymentDetails, {
+      await paymentDetailFormValidation.validate(purchaseDetails, {
         abortEarly: false,
       });
-      if (purchaseOrderId) await updatePayment();
-      else await savePayment();
-      setPaymentDetails(defaultPaymentDetails);
+      dispatch(
+        setPaymentFormState({
+          ...paymentFormState,
+          addCredit: !paymentFormState?.addCredit,
+        })
+      );
+      setErrors({});
     } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
-    setLoading(false);
   };
+
+  const toggleMakePaymentForm = async () => {
+    try {
+      await paymentDetailFormValidation.validate(purchaseDetails, {
+        abortEarly: false,
+      });
+      dispatch(
+        setPaymentFormState({
+          ...paymentFormState,
+          makePayment: !paymentFormState?.makePayment,
+        })
+      );
+      setErrors({});
+    } catch (error) {
+      setErrors(getYupValidationErrorMap(error));
+    }
+  };
+
+  const paymentsListhandleDelete = (index: number) => {
+    dispatch(removePaymentRecord(index));
+  };
+
+  const creditsListhandleDelete = (index: number) => {
+    dispatch(removeCreditRecord(index));
+  };
+
+  useEffect(() => {
+    if (purchaseOrderId) {
+      setDefaultPurchaseDetails();
+    } else {
+      dispatch(resetPaymentDetailForm());
+    }
+  }, [purchaseOrder]);
+
   return (
     <Flex
-      align="left"
       gap="16px"
       direction="column"
       sx={{
@@ -78,59 +149,106 @@ export const PaymentDetailsForm = ({
         borderRadius: '8px',
         textAlign: 'left',
         overflow: 'scroll',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
       }}
       mx="sm"
       mt="16px"
     >
-      <Grid gutter="md" sx={{ width: '240px' }}>
-        <Col span={12}>
-          <Select
-            label="Paid By"
-            required
-            error={errors.paidBy}
-            placeholder="Select Paid By"
-            data={['CASH', 'UPI', 'CHEQUE', 'PREPAID', 'NEFT']}
-            value={paymentDetails.paidBy}
-            onChange={(value) => onChange('paidBy', value || '')}
-          />
-        </Col>
-        <Col>
-          <CustomNumberInput
-            label="Paid Amount"
-            required
-            error={errors.paidAmount}
-            placeholder="Enter Paid Amount"
-            value={paymentDetails.paidAmount}
-            onChange={(e) => onChange('paidAmount', Number(e.target.value))}
-          />
-        </Col>
-        <Col>
-          {paymentDetails.paidBy === 'CHEQUE' && (
-            <TextInput
-              label="Cheque Number"
+        <Grid columns={12} sx={{ width: '100%' }}>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <CustomNumberInput
+              label="Total Bill Amount"
               required
-              error={errors.chequeNumber}
-              placeholder="Enter Cheque Number"
-              value={paymentDetails.chequeNumber}
-              onChange={(event) =>
-                onChange(
-                  'chequeNumber',
-                  getNumberFromStr(event.currentTarget.value)?.toString()
-                )
+              error={errors.totalBillAmount}
+              placeholder="Enter Total Bill Amount"
+              value={purchaseDetails.totalBillAmount ?? 0}
+              onChange={(e) =>
+                onChange('totalBillAmount', Number(e.target.value))
               }
             />
-          )}
-        </Col>
-        <Col>
-          <Button
-            loading={loading}
-            leftIcon={<IconPlus />}
-            onClick={onPaymentAdd}
-          >
-            Add
-          </Button>
-        </Col>
-      </Grid>
+          </Grid.Col>
+
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <CustomNumberInput
+              label="Total Payable Amount"
+              required
+              error={errors.totalPayableAmount}
+              placeholder="Enter Total Payable Amount"
+              value={purchaseDetails.totalPayableAmount ?? 0}
+              onChange={(e) =>
+                onChange('totalPayableAmount', Number(e.target.value))
+              }
+            />
+          </Grid.Col>
+
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <Select
+              label="Payment Type"
+              error={errors.paymentType}
+              data={[
+                CONSTANTS.FULLY_PAID,
+                CONSTANTS.PARTIALLY_PAID,
+                CONSTANTS.CREDIT,
+              ]}
+              value={purchaseDetails.paymentType}
+              onChange={(value) => onChange('paymentType', value!)}
+              sx={{ width: '100%' }}
+            />
+          </Grid.Col>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+              <Button
+                w={'100%'}
+                variant={paymentFormState?.makePayment ? 'filled' : 'light'}
+                onClick={() => toggleMakePaymentForm()}
+              >
+                Make Payment
+              </Button>
+          </Grid.Col>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+              <Button
+                w={'100%'}
+                variant={paymentFormState?.addCredit ? 'filled' : 'light'}
+                onClick={() => toggleAddCreditForm()}
+              >
+                Add Credit
+              </Button>
+          </Grid.Col>
+        </Grid>
+        <Grid columns={12} sx={{ width: '100%' }}>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+              {paymentFormState?.makePayment && (
+                <MakePaymentForm purchaseOrderId={purchaseOrderId} />
+              )}
+          </Grid.Col>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+              {paymentFormState?.addCredit && (
+                <AddCreditForm purchaseOrderId={purchaseOrderId} />
+              )}
+          </Grid.Col>
+        </Grid>
+        <Grid columns={12} sx={{ width: '100%' }}>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+              {paymentsList.length > 0 && (
+                <PaymentDetailsFormCard
+                  paymentsList={paymentsList}
+                  removePaymentRecord={paymentsListhandleDelete}
+                  title={CONSTANTS.PAYMENT}
+                />
+              )}
+          </Grid.Col>
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            
+              {creditsList.length > 0 && (
+                <PaymentDetailsFormCard
+                  paymentsList={creditsList}
+                  removePaymentRecord={creditsListhandleDelete}
+                  title={CONSTANTS.CREDIT}
+                />
+              )}
+          </Grid.Col>
+        </Grid>
     </Flex>
   );
 };

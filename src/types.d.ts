@@ -284,12 +284,34 @@ declare global {
     showActions?: boolean;
     showTotal?: boolean;
   }
-
+  interface creditsType {
+    creditAmount?: number;
+    payDate?: string;
+    creditLimitInDays?: number;
+    createdAt?: Date;
+  }
+  interface paymentsType {
+    paymentDate?: string;
+    paidBy?: string;
+    paymentImages?: Array<file>;
+    paymentImgURL?:Array<{ public_id:string, secure_url:string }>;
+    paidAmount?: number;
+    createdAt?: Date;
+    chequeNumber?:string;
+    idx?: number;
+  }
   interface PaymentDetailType {
-    paidAmount: number;
-    paidBy: string;
-    chequeNumber: string;
-    _id?: string;
+    totalPayableAmount?: number;
+    totalBillAmount?: number;
+    paymentType?: string;
+    addPaymentDetail?:  paymentsType;
+    addCreditDetail?: creditsType;
+    credits?:Array<creditsType>;
+    payments?:Array<paymentsType>;
+    paymentFormState?:{
+      addCredit?:boolean
+      makePayment?:boolean
+    }
   }
 
   interface CloudFileType {
@@ -306,7 +328,7 @@ declare global {
     createdAt?: string;
     _id?: string;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
-    purchaseDetails?: Array<PaymentDetailType>;
+    purchaseDetails?: PaymentDetailType;
     billPhotos?: Array<CloudFileType>;
     dealerName?: string;
     phoneNumber?: string;
@@ -329,7 +351,7 @@ declare global {
 
   interface PaymentDetailFormProps {
     purchaseOrderId?: string;
-    paymentDetailIdx: number;  
+    paymentDetailIdx?: number;  
   }
 
   interface QuestionModalProps {
@@ -371,7 +393,7 @@ declare global {
   interface PurchaseObjType extends PurchaseOrderDataType {
     orders?: Array<PurchasedItemDetailFormType>;
     bills?: Array<string>;
-    details?: Array<PaymentDetailType>;
+    details?: PaymentDetailType;
   }
  
   interface AddNewOrderAPIArgs {
@@ -387,6 +409,22 @@ declare global {
     },
     deleteBills?: Array<CloudFileType>;
     uploadedImages?: Array<CloudFileType>;
+  }
+  interface PaymentsList {
+    creditAmount?: number;
+    payDate?: string;
+    paymentDate?: string;
+    paidBy?: string;
+    paidAmount?: number;
+    paymentImages?: File[];
+    paymentImgURL?:Array<{ public_id:string, secure_url:string }>;
+    creditLimitInDays?: number;
+    idx?: number;
+  }
+  interface PaymentDetailsFormCardProps {
+    removePaymentRecord: (index: number) => void;
+    paymentsList: Array<PaymentsList>;
+    title: string
   }
 }
 declare module '*.scss' {
