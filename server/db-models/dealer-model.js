@@ -6,21 +6,10 @@ const DealerSchema = new Schema(
     dealerName: {
       type: String,
     },
-    dealerAddress: [
-      {
-        address: { type: String },
-        updatedAt: { type: Date, default: Date.now },
-      },
-    ],
-    dealerContactNumber: [
-      {
-        contactNumber: { type: String },
-        updatedAt: { type: Date, default: Date.now },
-      },
-    ],
-    dealerVisitingCard: [
-      { publicId: { type: String }, secureUrl: { type: String } },
-    ],
+    dealerAddress: [{ type: String }],
+    dealerContactNumber: [{ type: String }],
+    dealerVisitingCard: [{ publicId: String, secureUrl: String }],
+
   },
   {
     timestamps: true,

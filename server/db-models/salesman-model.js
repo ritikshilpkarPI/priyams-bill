@@ -7,12 +7,7 @@ const SalesmanSchema = new Schema(
       type: String,
       required: false, 
     },
-    salesmanContactNumber: [
-      {
-        contactNumber: { type: String }, 
-        updatedAt: { type: Date, default: Date.now }, 
-      },
-    ],
+    salesmanContactNumber: [{ type: String }], 
     dealerId: {
       type: Schema.Types.ObjectId,
       ref: 'Dealer',

@@ -27,25 +27,25 @@ export const PaymentDetailTable = ({
     dispatch(setPurchaseOrder(response.order));
   };
 
-  const rows = paymentDetails?.map((paymenrDetail, idx) => (
-    <tr key={paymenrDetail._id} className="purchased-item-table-row">
-      <td>{paymenrDetail?.paidBy || '-'}</td>
-      <td>{paymenrDetail?.paidAmount || '-'}</td>
-      <td>{paymenrDetail?.chequeNumber || '-'}</td>
-      <td className="purchased-item-table-action-td">
-        <Button
-          loading={idx === removePaymentIdx}
-          disabled={idx !== removePaymentIdx && removePaymentIdx >= 0}
-          variant="default"
-          color="red"
-          leftIcon={<IconX cursor="pointer" />}
-          onClick={() => deletePayment(idx)}
-        >
-          Remove
-        </Button>
-      </td>
-    </tr>
-  ));
+  // const rows = paymentDetails?.map((paymenrDetail, idx) => (
+  //   <tr key={paymenrDetail._id} className="purchased-item-table-row">
+  //     <td>{paymenrDetail?.paidBy || '-'}</td>
+  //     <td>{paymenrDetail?.paidAmount || '-'}</td>
+  //     <td>{paymenrDetail?.chequeNumber || '-'}</td>
+  //     <td className="purchased-item-table-action-td">
+  //       <Button
+  //         loading={idx === removePaymentIdx}
+  //         disabled={idx !== removePaymentIdx && removePaymentIdx >= 0}
+  //         variant="default"
+  //         color="red"
+  //         leftIcon={<IconX cursor="pointer" />}
+  //         onClick={() => deletePayment(idx)}
+  //       >
+  //         Remove
+  //       </Button>
+  //     </td>
+  //   </tr>
+  // ));
   return (
     <Flex
       align="left"
@@ -72,7 +72,7 @@ export const PaymentDetailTable = ({
           </tr>
         </thead>
         <tbody>
-          {rows}
+          {/* {rows} */}
           <tr>
             <td>Total</td>
             <td style={{ color: 'green' }}>{totalPaidAmount}</td>

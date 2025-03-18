@@ -13,6 +13,11 @@ const MESSAGES = Object.freeze({
   SALESMAN_NOT_EXIST: "Salesman with provided ID does not exist",
   DEALER_NOT_EXIST: 'Dealer with provided ID does not exist.',
   DEALER_AND_SALESMAN_DATA_SAVE_SUCCESSFULLY:'Dealer and Salesman details saved successfully.',
+  INVALID_PAYMENT_TYPE: "Invalid paymentType. Allowed values: Credit, PartiallyPaid, FullyPaid",
+  PAYMENT_IMAGES_REQUIRED: "PaymentImages is required",
+  ORDER_UPDATED_SUCCESSFULLY: "Order updated successfully",
+  CREDIT_AMOUNT_AND_PAY_DATE_REQUIRED: "creditAmount and payDate are required",
+  PAID_BY_AND_PAID_AMOUNT_REQUIRED:"paidBy and paidAmount are required"
 });
 
 module.exports = { MESSAGES };
