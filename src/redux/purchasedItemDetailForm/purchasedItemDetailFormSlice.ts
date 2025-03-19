@@ -22,6 +22,7 @@ const initialState: PurchasedItemDetailFormType = {
   stockQuantity: 0,
   returnPolicyAvailable: false,
   freeItemsAvailable: false,
+  freeItemsRemarks: '',
   returnPolicyRemarks: '',
 };
 
