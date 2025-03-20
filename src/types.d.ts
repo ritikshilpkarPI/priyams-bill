@@ -71,6 +71,7 @@ declare global {
     currentDate?: string;
     lastThreeMonthDate?: string;
     lastYearDate?: string;
+    isPODetailsPage?: boolean;
   }
 
   interface CategorySchemaType {
