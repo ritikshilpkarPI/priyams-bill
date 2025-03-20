@@ -265,6 +265,7 @@ declare global {
     returnPolicyRemarks: string;
     _id?: string;
     inputName?: string;
+    freeItemsRemarks?: string;
   }
 
   interface PurchasedItemDetailFormProps {
