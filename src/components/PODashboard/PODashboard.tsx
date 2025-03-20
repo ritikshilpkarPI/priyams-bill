@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Card, Grid, Text } from '@mantine/core';
-import styles from './Dashboard.module.css';
+import styles from './PODashboard.module.css';
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 
 const Dashboard: React.FC = () => {

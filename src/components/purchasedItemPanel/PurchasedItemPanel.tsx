@@ -24,7 +24,7 @@ import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
 import { toast } from 'react-toastify';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
 import Accordion from '../accordion/Accordion';
-import Dashboard from '../ dashboard/Dashboard';
+import Dashboard from '../PODashboard/PODashboard';
 
 const PurchasedItemPanel = () => {
   const dispatch = useDispatch();
