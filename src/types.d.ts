@@ -426,6 +426,11 @@ declare global {
     paymentsList: Array<PaymentsList>;
     title: string
   }
+
+  interface AccordionProps {
+    title: string;
+    children: ReactNode;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
