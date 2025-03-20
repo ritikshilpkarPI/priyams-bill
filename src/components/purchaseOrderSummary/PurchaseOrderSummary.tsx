@@ -11,6 +11,12 @@ import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
+import { genericAxios } from 'src/utils/genericAxiosMethod';
+import { API_PATHS } from 'src/utils/constants/apiPaths';
+import { API_METHODS } from 'src/utils/constants/apiMethods';
+import { getUserDetails } from 'src/utils/getUserDeviceInfo';
+import { parseJwt } from 'src/utils/cookie';
+import Cookies from 'js-cookie';
 
 export const PurchaseOrderSummary = () => {
   const dispatch = useDispatch();
@@ -19,7 +25,7 @@ export const PurchaseOrderSummary = () => {
   const [isValidItemDetails, setIsValidItemDetails] = useState(false);
   const [isValidPaymentDetails, setIsValidPaymentDetails] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [approveLoading, setApproveLoading] = useState(false);
   const validateDealerDetails = async (
     purchaseOrder: PurchaseOrderDataType
   ) => {
@@ -85,6 +91,32 @@ export const PurchaseOrderSummary = () => {
     !purchaseOrder.isDraft;
   const currentUrl = window.location.href;
   const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
+  const approveOrder = async (id: string, list: PurchaseOrderDataType) => {
+    try {
+      setApproveLoading(true);
+      const response = await genericAxios({
+        url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
+        method: API_METHODS.POST,
+        data: {
+          newItems: list.purchasedItems,
+          purchaseOrderId: id,
+          userDetail: await getUserDetails(),
+        },
+      });
+      setApproveLoading(false);
+      if ('status' in response && response.status === 200) {
+        dispatch(setPurchaseOrder({ ...purchaseOrder, isApproved: true }));
+        toast.success('Order approved successfully');
+      } else {
+        toast.error('Something went wrong, unable to approve order');
+      }
+    } catch (error) {
+      console.error('Approval Error:', error);
+      toast.error('Something went wrong, unable to approve order');
+    }
+  };
+  
+  
   return (
     <>
     <Flex
@@ -113,9 +145,9 @@ export const PurchaseOrderSummary = () => {
         <Checkbox label="Bill Images" checked={isBillImagesUploaded} />
       </Flex>
 
+      <Flex gap="16px" mt="xl">
       {
          purchaseOrder._id && <Button
-         mt="xl"
          color="green"
          disabled={!enableDraftBtn}
          sx={{ width: '220px' }}
@@ -125,6 +157,20 @@ export const PurchaseOrderSummary = () => {
          {purchaseOrder.isDraft ? 'Drafted' : 'Draft'}
        </Button>
       }
+
+          {purchaseOrder.isDraft &&
+            parseJwt(Cookies.get('token')).role === 'admin' && (
+              <Button
+                disabled={purchaseOrder.isApproved}
+                className="approve-btn"
+                loading={approveLoading}
+                onClick={() => approveOrder(purchaseOrder._id!, purchaseOrder)}
+                sx={{ width: '220px' }}
+              >
+                Approve
+              </Button>
+            )}
+        </Flex>
       
     </Flex>
     <Box mt="16px">

@@ -32,3 +32,11 @@ function getPlatformFromUserAgent() {
   if (userAgent.includes("iPhone") || userAgent.includes("iPad")) return "iOS";
   return "Unknown";
 }
+ export const getUserDetails = async () => {
+      const { browser, os, ip } = await getUserDeviceInfo();
+      return {
+        browser: browser,
+        os: os,
+        ipAddress: ip,
+      };
+ }
