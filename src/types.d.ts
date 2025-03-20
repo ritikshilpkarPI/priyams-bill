@@ -427,6 +427,10 @@ declare global {
     paymentsList: Array<PaymentsList>;
     title: string
   }
+  interface PaymentDetailsCardProps {
+    payment: PaymentsList;
+    index: number
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

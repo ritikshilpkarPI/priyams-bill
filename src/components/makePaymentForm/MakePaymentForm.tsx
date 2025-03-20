@@ -66,12 +66,14 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
       paymentDetails,
       CONSTANTS.PAYMENT,
       purchaseOrderId,
-      paymentImages
+      paymentImages 
     );
-    if (response.isError)
+    if (response.isError){
+      setLoading(false);
       return toast.error(
         'unable to save payment details, please try after some time'
       );
+    }
     dispatch(resetMakePaymentForm());
     dispatch(setPurchaseOrder(response.order));
     setLoading(false);
