@@ -33,12 +33,9 @@
 .sell-details-table-tbody-tr-td {
     font-size: 14px;
     font-weight: 400;
-    background-color: #F1F1F2;
-}
-
-.po-details-table > tbody > tr > td {
     background: #fff;
 }
+
 
 .sell-details-table-line-graph {
     width: 300px;
