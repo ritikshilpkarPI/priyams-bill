@@ -17,6 +17,8 @@ import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { getUserDetails } from 'src/utils/getUserDeviceInfo';
 import { parseJwt } from 'src/utils/cookie';
 import Cookies from 'js-cookie';
+import ProtectedComponent from '../ProtectedComponent';
+import access from 'src/access';
 
 export const PurchaseOrderSummary = () => {
   const dispatch = useDispatch();
@@ -157,9 +159,10 @@ export const PurchaseOrderSummary = () => {
          {purchaseOrder.isDraft ? 'Drafted' : 'Draft'}
        </Button>
       }
-
+      
           {purchaseOrder.isDraft &&
-            parseJwt(Cookies.get('token')).role === 'admin' && (
+           
+            <ProtectedComponent role={access.APPROVED_PURCHASE_ORDER} >
               <Button
                 disabled={purchaseOrder.isApproved}
                 className="approve-btn"
@@ -169,7 +172,8 @@ export const PurchaseOrderSummary = () => {
               >
                 Approve
               </Button>
-            )}
+              </ProtectedComponent> 
+            }
         </Flex>
       
     </Flex>
