@@ -20,6 +20,7 @@ const access = {
   DELETE_BILL_ROW: ['admin'],
   OPEN_CLOSE_TABLE: ['admin'],
   PAY_PURCHASE_ORDER: ['admin'],
+  APPROVED_PURCHASE_ORDER: ['admin'],
 };
 
 export default access;

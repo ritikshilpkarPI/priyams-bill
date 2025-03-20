@@ -8,7 +8,7 @@ import { parseJwt } from '../utils/cookie';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
-import { getUserDeviceInfo } from 'src/utils/getUserDeviceInfo';
+import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
 import ShareOnWhatsApp from './shareOnWhatsApp';
 const PurchaseListApproval = ({
   list,
@@ -36,15 +36,7 @@ const PurchaseListApproval = ({
       if (callback) callback();
     }
   };
-
-  const getUserDetails = async () => {
-    const { browser, os, ip } = await getUserDeviceInfo();
-    return {
-      browser: browser,
-      os: os,
-      ipAddress: ip,
-    };
-  };  
+ 
 
   const rejectOrder = async (id, index) => {
     await handleApiCall(
