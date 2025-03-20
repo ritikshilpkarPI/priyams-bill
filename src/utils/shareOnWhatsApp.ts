@@ -1,6 +1,5 @@
 export const shareOnWhatsApp = (message: string, phoneNumber: string) => {
     if (!phoneNumber) {
-      console.error("Phone number is required to share on WhatsApp");
       return;
     }
   
