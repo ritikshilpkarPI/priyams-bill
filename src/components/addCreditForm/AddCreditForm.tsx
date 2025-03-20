@@ -58,10 +58,12 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
       CONSTANTS.CREDIT,
       purchaseOrderId
     );
-    if (response.isError || !response.order)
+    if (response.isError || !response.order){
+      setLoading(false);
       return toast.error(
         'unable to save credit details, please try again some time'
       );
+    }
     dispatch(resetAddCreditForm());
     dispatch(setPurchaseOrder(response.order));
     setLoading(false);
