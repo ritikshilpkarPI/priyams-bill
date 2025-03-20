@@ -4,7 +4,7 @@ import { Card, Grid, Text } from '@mantine/core';
 import styles from './PODashboard.module.css';
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 
-const Dashboard: React.FC = () => {
+const PurchaseOrderDashboard: React.FC = () => {
   const purchasedItems = useSelector(selectPurchasedItems);
 
   const metrics = useMemo(() => {
@@ -124,4 +124,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default PurchaseOrderDashboard;

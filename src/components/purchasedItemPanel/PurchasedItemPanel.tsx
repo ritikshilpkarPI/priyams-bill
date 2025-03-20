@@ -24,7 +24,7 @@ import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
 import { toast } from 'react-toastify';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
 import Accordion from '../accordion/Accordion';
-import Dashboard from '../PODashboard/PODashboard';
+import PurchaseOrderDashboard from '../PODashboard/PODashboard';
 
 const PurchasedItemPanel = () => {
   const dispatch = useDispatch();
@@ -146,7 +146,7 @@ const PurchasedItemPanel = () => {
 
     <div className="item-details-tab">
       <Accordion title="Dashboard">
-        <Dashboard />
+        <PurchaseOrderDashboard />
       </Accordion>
     
     </div>
