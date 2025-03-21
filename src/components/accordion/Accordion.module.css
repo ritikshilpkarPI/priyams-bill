@@ -1,0 +1,40 @@
+
+
+.accordion {
+    border: 1px solid #454141;
+    border-radius: 10px;
+    margin: 1rem 0.8rem;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  
+  .accordionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+  }
+  
+  .accordionTitle {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .accordionToggle {
+    font-size: 1.5rem;
+    color: #666;
+    user-select: none;
+  }
+  
+  .accordionContentWrapper {
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .accordionContent {
+    padding: 1rem;
+  }
+  
