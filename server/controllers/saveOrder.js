@@ -26,7 +26,7 @@ const saveOrder = async (req, res ) => {
         expiryDates.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
       })
     }
-    const newItemCost = new_order.costPrice * new_order.itemQuantity;
+    const newItemCost = new_order.costPrice * new_order.stockQuantity;
     const purchaseOrder = await PurchaseOrder.create({
       purchasedItems: [{
         ...new_order,
