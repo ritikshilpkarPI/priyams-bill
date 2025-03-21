@@ -46,6 +46,7 @@ import { getItemsSkuAPI } from '../../utils/apiUtils';
 import { setItemsData } from '../../redux/items/itemsSlice';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
+import { radioGroupConfig, skuModalQuestion, YES } from 'src/constants/purchaseOrderConstants';
 
 
 
@@ -609,25 +610,25 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       <QuestionModal
         opened={showSkuModal}
         onClose={onSkuModalClose}
-        question="Any change in SKU fields will create new item. Do you want to continue?
-        SKU Fields: Barcode, Item name, MRP, Packet Amount, Unit"
+        question={skuModalQuestion}
         onAgree={() => {
           setShowSkuModal(false);
-          if (updateChoice === 'yes') {
+          if (updateChoice === YES) {
             dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
           }
         }}
         onDisagree={onSkuModalClose}
         children={
           <Radio.Group
-          label="Do you want to update the existing item details?"
-          name="updateItemDetails"
-          value={updateChoice}
-          onChange={(val) => setUpdateChoice(val)}
-        >
-          <Radio value="yes" label="Yes, update existing" />
-          <Radio value="no" label="No, create new" />
-        </Radio.Group>
+        label={radioGroupConfig.label}
+        name={radioGroupConfig.name}
+        value={updateChoice}
+        onChange={(val) => setUpdateChoice(val)}
+      >
+        {radioGroupConfig.options.map((option) => (
+          <Radio key={option.value} value={option.value} label={option.label} />
+        ))}
+      </Radio.Group>
         }
       />
       <LoadingOverlay visible={Boolean(loading)} />

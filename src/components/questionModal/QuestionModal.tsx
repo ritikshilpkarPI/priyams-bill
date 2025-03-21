@@ -24,8 +24,8 @@ export const QuestionModal = ({
         </Flex>}
 
         <Flex justify="space-between" gap="16px" sx={{ width: '100%' }}>
-        <Button onClick={onAgree}>Yes</Button>
-        <Button onClick={onDisagree}>No</Button>
+        <Button onClick={onAgree}>Change</Button>
+        <Button onClick={onDisagree}>Cancel</Button>
         </Flex>
       </Flex>
     </Modal>
