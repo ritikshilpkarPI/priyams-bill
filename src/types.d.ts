@@ -362,6 +362,7 @@ declare global {
     question: string;
     onAgree: () => void;
     onDisagree: () => void;
+    children?: React.ReactNode;
   }
 
   interface CustomNumberInputProps {

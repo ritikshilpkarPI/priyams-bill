@@ -16,6 +16,7 @@ import {
   LoadingOverlay,
   Alert,
   Text,
+  Radio,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useSelector, useDispatch } from 'react-redux';
@@ -67,6 +68,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
   const [isEditing, setIsEditing] = useState(false);
+  const [updateChoice, setUpdateChoice] = useState<string>()
 
   const skuFields: Record<string, string> = {
     inputName: 'inputName',
@@ -611,9 +613,22 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         SKU Fields: Barcode, Item name, MRP, Packet Amount, Unit"
         onAgree={() => {
           setShowSkuModal(false);
-          dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
+          if (updateChoice === 'yes') {
+            dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
+          }
         }}
         onDisagree={onSkuModalClose}
+        children={
+          <Radio.Group
+          label="Do you want to update the existing item details?"
+          name="updateItemDetails"
+          value={updateChoice}
+          onChange={(val) => setUpdateChoice(val)}
+        >
+          <Radio value="yes" label="Yes, update existing" />
+          <Radio value="no" label="No, create new" />
+        </Radio.Group>
+        }
       />
       <LoadingOverlay visible={Boolean(loading)} />
     </Flex>
