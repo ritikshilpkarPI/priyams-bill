@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 export const itemExpiryFormValidation = Yup.object({
+  itemHasExpiry: Yup.boolean().required('Product Has Expiry Date is required.'),
   date: Yup.date().required('Expiry Date is required.'),
   mfgDate: Yup.date().required('Mfg Date is required.'),
   value: Yup.number()

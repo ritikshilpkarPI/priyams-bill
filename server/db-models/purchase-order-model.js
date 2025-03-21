@@ -38,6 +38,7 @@ const purchaseOrderSchema = new mongoose.Schema({
           value: Number,
           mfgDate: Date,
           isShelfExpired: Boolean,
+          itemHasExpiry: Boolean,
         },
       ],
       slabPrice: [],

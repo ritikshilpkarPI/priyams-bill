@@ -275,6 +275,7 @@ declare global {
   }
 
   interface ItemExpiryDateType {
+    itemHasExpiry: boolean
     value: number;
     mfgDate: Date;
     date: Date;

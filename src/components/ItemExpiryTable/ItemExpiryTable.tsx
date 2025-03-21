@@ -24,6 +24,7 @@ export const ItemExpiryTable = ({
   );
   const rows = expiryDates.map((expiryDate, idx) => (
     <tr key={idx}>
+      <td>{expiryDate.itemHasExpiry ? 'Yes' : 'No'}</td>
       <td>{new Date(expiryDate.mfgDate)?.toLocaleDateString('en-GB')}</td>
       <td>{new Date(expiryDate.date)?.toLocaleDateString('en-GB')}</td>
       <td>{expiryDate.value}</td>
@@ -54,10 +55,23 @@ export const ItemExpiryTable = ({
     </tr>
   ));
   return (
-    <Flex sx={{ overflow: 'scroll', maxWidth: '60vw' }} mt="8px">
+    <Flex
+      sx={{
+        border: '0.5px solid #D4D4D4',
+        borderRadius:'4px',
+        padding: "5px",
+        overflow: 'scroll',
+        maxWidth: '60vw',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+      }}
+      mt="8px"
+    >
       <Table>
         <thead>
           <tr>
+            <th>Has Expiry</th>
             <th>Mfg. Date.</th>
             <th>Exp. Date.</th>
             <th>Qty.</th>
