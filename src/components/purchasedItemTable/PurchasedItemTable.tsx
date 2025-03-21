@@ -107,6 +107,7 @@ export const PurchasedItemTable = ({
       <td>{purchasedItem?.sellingPrice || '-'}</td>
       <td>{purchasedItem?.stockQuantity || '-'}</td>
       <td>{purchasedItem?.itemRemark || '-'}</td>
+      <td>{purchasedItem?.itemHasExpiry !== null? purchasedItem?.itemHasExpiry? "Yes" : "No" : "-"}</td>
       <td>
         {purchasedItem.expiryDates?.length > -0 ? (
           <ItemExpiryTable
@@ -184,6 +185,7 @@ export const PurchasedItemTable = ({
             <th>SP</th>
             <th>Order Quantity</th>
             <th>Remarks</th>
+            <th>Has Expiry</th>
             <th>Expiry Summary</th>
             <th>Tags</th>
             <th>Actions</th>

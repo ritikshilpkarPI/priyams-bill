@@ -267,6 +267,7 @@ declare global {
     _id?: string;
     inputName?: string;
     freeItemsRemarks?: string;
+    itemHasExpiry?: boolean | null;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -275,7 +276,6 @@ declare global {
   }
 
   interface ItemExpiryDateType {
-    itemHasExpiry: boolean
     value: number;
     mfgDate: Date;
     date: Date;
@@ -429,10 +429,6 @@ declare global {
     paymentsList: Array<PaymentsList>;
     title: string
   }
-  interface PaymentDetailsCardProps {
-    payment: PaymentsList;
-    index: number
-  }
 
   interface AccordionProps {
     title: string;
@@ -447,6 +443,10 @@ declare global {
     suffix?: string;
   }
   
+  interface PaymentDetailsCardProps {
+    payment: PaymentsList;
+    index: number
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

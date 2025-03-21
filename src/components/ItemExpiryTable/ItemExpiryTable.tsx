@@ -24,7 +24,6 @@ export const ItemExpiryTable = ({
   );
   const rows = expiryDates.map((expiryDate, idx) => (
     <tr key={idx}>
-      <td>{expiryDate.itemHasExpiry ? 'Yes' : 'No'}</td>
       <td>{new Date(expiryDate.mfgDate)?.toLocaleDateString('en-GB')}</td>
       <td>{new Date(expiryDate.date)?.toLocaleDateString('en-GB')}</td>
       <td>{expiryDate.value}</td>
@@ -71,7 +70,6 @@ export const ItemExpiryTable = ({
       <Table>
         <thead>
           <tr>
-            <th>Has Expiry</th>
             <th>Mfg. Date.</th>
             <th>Exp. Date.</th>
             <th>Qty.</th>
