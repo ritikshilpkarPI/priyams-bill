@@ -72,7 +72,7 @@ const PurchaseOrderDashboard: React.FC = () => {
         <Grid.Col span={4}>
           <MetricCard
             title="Total Profit Margin (%)"
-            value={totalProfitMargin.toFixed(2)}
+            value={(totalProfitMargin/uniqueItemsSet.size).toFixed(2)}
             suffix="%"
           />
         </Grid.Col>
