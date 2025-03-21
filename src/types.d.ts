@@ -428,6 +428,20 @@ declare global {
     paymentsList: Array<PaymentsList>;
     title: string
   }
+
+  interface AccordionProps {
+    title: string;
+    children: ReactNode;
+  }
+
+
+  interface MetricCardProps {
+    title: string;
+    value: string | number;
+    prefix?: string;
+    suffix?: string;
+  }
+  
   interface PaymentDetailsCardProps {
     payment: PaymentsList;
     index: number
