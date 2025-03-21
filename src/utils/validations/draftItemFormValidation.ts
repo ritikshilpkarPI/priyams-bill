@@ -41,4 +41,5 @@ export const draftItemFormValidation = Yup.object({
   stockQuantity: Yup.number()
     .min(1, 'Order Quantity must be greater or 1.')
     .required('Order Quantity is required.'),
+  itemHasExpiry: Yup.boolean().required('Product Has Expiry Date is required.'),
 });

@@ -267,6 +267,7 @@ declare global {
     _id?: string;
     inputName?: string;
     freeItemsRemarks?: string;
+    itemHasExpiry?: boolean | null;
   }
 
   interface PurchasedItemDetailFormProps {

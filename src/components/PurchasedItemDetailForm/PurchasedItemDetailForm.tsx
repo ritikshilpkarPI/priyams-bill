@@ -174,7 +174,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     }
   };
 
-  const onExpiryFormDateChange = (field: string, value: string | Date | null) => {
+  const onExpiryFormDateChange = (field: string, value: string | Date | null ) => {
     let stringVal: string | null = null;
 
     if (value instanceof Date) {
@@ -532,6 +532,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   />
                 </Col>
               )}
+              <Col>
+                <Select
+                  label="Product Has Expiry Date"
+                  value={ purchasedItemFormData.itemHasExpiry === null? "" : purchasedItemFormData.itemHasExpiry ? 'true' : 'false'}
+                  data={[
+                      { value: 'false', label: 'No' },
+                      { value: 'true', label: 'Yes' },
+                  ]}
+                  error={errors.itemHasExpiry}
+                  onChange={(value) => onChange('itemHasExpiry', value === 'true')}
+                  withAsterisk
+                />               
+              </Col>
             </Grid>
           </Box>
         </Flex>

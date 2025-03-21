@@ -32,6 +32,7 @@ const purchaseOrderSchema = new mongoose.Schema({
         secure_url: String
       },
       createdAt: { type: Date, default: Date.now },
+      itemHasExpiry: { type: Boolean, default: null },
       expiryDates: [
         {
           date: Date,
