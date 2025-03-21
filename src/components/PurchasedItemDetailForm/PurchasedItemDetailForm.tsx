@@ -58,7 +58,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const itemsSKUList = useSelector(selectItemsSkuList);
   const formOldValuesRef = useRef<PurchasedItemDetailFormType | null>(null);
   const defaulValuesExpiryItemForm = {
-    itemHasExpiry: null as boolean | null,
     mfgDate: null as Date | null,
     date: null as Date | null,
     value: 0,
@@ -172,12 +171,12 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     }
   };
 
-  const onExpiryFormDateChange = (field: string, value: string | Date | null | boolean) => {
-    let stringVal: string |boolean | null = null;
+  const onExpiryFormDateChange = (field: string, value: string | Date | null ) => {
+    let stringVal: string | null = null;
 
     if (value instanceof Date) {
       stringVal = value.toISOString();
-    } else if (typeof value === 'string' || typeof value === 'boolean') {
+    } else if (typeof value === 'string') {
       stringVal = value;
     }
 
@@ -231,7 +230,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     dispatch(removeItemExpiryDateByIdx(idx));
 
     setFormExpiryDate({
-      itemHasExpiry: itemToEdit.itemHasExpiry ?? null,
       mfgDate: itemToEdit.mfgDate ?? null,
       date: itemToEdit.date ?? null,
       value: itemToEdit.value,
@@ -531,6 +529,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   />
                 </Col>
               )}
+              <Col>
+                <Select
+                  label="Product Has Expiry Date"
+                  value={ purchasedItemFormData.itemHasExpiry === null? "" : purchasedItemFormData.itemHasExpiry ? 'true' : 'false'}
+                  data={[
+                      { value: 'false', label: 'No' },
+                      { value: 'true', label: 'Yes' },
+                  ]}
+                  error={errors.itemHasExpiry}
+                  onChange={(value) => onChange('itemHasExpiry', value === 'true')}
+                  withAsterisk
+                />               
+              </Col>
             </Grid>
           </Box>
         </Flex>
@@ -538,18 +549,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
           <Box>
             <Divider my="xs" label="Add Items Expiry" labelPosition="center" />
             <Flex gap="16px" align="center" wrap="wrap">
-              <Select
-                sx={{ maxWidth: '184px' }}
-                label="Product Has Expiry Date"
-                value={ formExpiryDate.itemHasExpiry === null? "" : formExpiryDate.itemHasExpiry ? 'true' : 'false'}
-                data={[
-                    { value: 'false', label: 'No' },
-                    { value: 'true', label: 'Yes' },
-                ]}
-                error={errors.itemHasExpiry}
-                onChange={(value) => onExpiryFormDateChange('itemHasExpiry', value === 'true')}
-                withAsterisk
-              />            
               <DatePicker
                 label="MFG Date."
                 inputFormat="DD/MM/YY"

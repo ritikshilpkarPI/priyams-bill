@@ -267,6 +267,7 @@ declare global {
     _id?: string;
     inputName?: string;
     freeItemsRemarks?: string;
+    itemHasExpiry?: boolean | null;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -275,7 +276,6 @@ declare global {
   }
 
   interface ItemExpiryDateType {
-    itemHasExpiry: boolean
     value: number;
     mfgDate: Date;
     date: Date;
