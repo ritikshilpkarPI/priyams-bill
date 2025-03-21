@@ -131,7 +131,7 @@ const PurchaseListApproval = ({
     <>
       {list ? (
         <>
-          <td>{allPurchaseList.length - index}</td>
+          <td>{ index + 1}</td>
           <td>{list.dealerName}</td>
           <td>{list.phoneNumber}</td>
           <td>{list.payment}</td>

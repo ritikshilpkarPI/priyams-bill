@@ -13,6 +13,8 @@ const PurchaseDetailsApproval = ({
   getOrders,
 }) => {
   const [indexDetail, setIndexDetail] = useState(-1);
+  
+  
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
@@ -78,7 +80,7 @@ const PurchaseDetailsApproval = ({
                   </tr>
                 );
               })
-              .reverse()}
+             }
           </tbody>
         </Table>
       )}
