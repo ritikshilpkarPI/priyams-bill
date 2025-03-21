@@ -140,7 +140,7 @@ export const PaymentDetailsForm = ({
       dispatch(resetPaymentDetailForm());
     }
   }, [purchaseOrder]);
-  const ShowRemark =
+  const showRemark =
   purchaseDetails?.totalPayableAmount !==purchaseDetails?.totalBillAmount ||
   purchaseDetails?.totalBillAmount !== purchaseOrder.purchaseDetails?.totalItemsCost ||
   purchaseDetails?.totalPayableAmount !== purchaseOrder.purchaseDetails?.totalItemsCost;
@@ -216,7 +216,7 @@ export const PaymentDetailsForm = ({
             />
           </Grid.Col>
           {
-            ShowRemark &&  <Grid.Col span={isSmallScreen ? 12 : 4}>
+            showRemark &&  <Grid.Col span={isSmallScreen ? 12 : 4}>
             <Textarea
               label="Remark"
               value={purchaseDetails.remark ?? ''}
