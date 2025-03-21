@@ -47,6 +47,8 @@ const purchaseOrderSchema = new mongoose.Schema({
     totalPayableAmount: Number,
     totalBillAmount: Number,
     paymentType: String,
+    totalItemsCost: Number,
+    remark: String,
 
     credits: [
       {

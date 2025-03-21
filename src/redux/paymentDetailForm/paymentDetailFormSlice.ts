@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const initialState: PaymentDetailType = {
     totalBillAmount: 0,
     totalPayableAmount: 0,
+    totalItemsCost:0,
+    remark:"",
     paymentType: 'fully paid',
     addCreditDetail: {
         creditAmount: 0,

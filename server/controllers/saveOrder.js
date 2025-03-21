@@ -26,11 +26,15 @@ const saveOrder = async (req, res ) => {
         expiryDates.isShelfExpired = isShelfExpired(expiryDates.mfgDate, expiryDates.date);
       })
     }
+    const newItemCost = new_order.costPrice * new_order.itemQuantity;
     const purchaseOrder = await PurchaseOrder.create({
       purchasedItems: [{
         ...new_order,
         sku: itemSKU
       }],
+      purchaseDetails: {
+        totalItemsCost: newItemCost, 
+      },
     });
     res.status(201).send({
       message: 'order added successfully',

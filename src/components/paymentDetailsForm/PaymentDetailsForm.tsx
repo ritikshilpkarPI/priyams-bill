@@ -7,6 +7,7 @@ import {
   Grid,
   Select,
   Text,
+  Textarea,
   TextInput,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
@@ -59,6 +60,7 @@ export const PaymentDetailsForm = ({
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
   const purchaseOrder = useSelector(selectPurchaseOrder) || {};
+  
 
   const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
   const creditsList = purchaseOrder.purchaseDetails?.credits || [];
@@ -138,6 +140,11 @@ export const PaymentDetailsForm = ({
       dispatch(resetPaymentDetailForm());
     }
   }, [purchaseOrder]);
+  const showRemark =
+  purchaseDetails?.totalPayableAmount !==purchaseDetails?.totalBillAmount ||
+  purchaseDetails?.totalBillAmount !== purchaseOrder.purchaseDetails?.totalItemsCost ||
+  purchaseDetails?.totalPayableAmount !== purchaseOrder.purchaseDetails?.totalItemsCost;
+
 
   return (
     <Flex
@@ -197,7 +204,30 @@ export const PaymentDetailsForm = ({
               sx={{ width: '100%' }}
             />
           </Grid.Col>
-          <Grid.Col span={isSmallScreen ? 12 : 4}>
+          
+        </Grid>
+        <Grid columns={12} sx={{ width: '100%' }}>
+        <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <TextInput
+              label="Total Items Cost"
+              disabled={true}
+              value={purchaseOrder.purchaseDetails?.totalItemsCost || 0}
+              sx={{ width: '100%' }}
+            />
+          </Grid.Col>
+          {
+            showRemark &&  <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <Textarea
+              label="Remark"
+              value={purchaseDetails.remark ?? ''}
+              onChange={(e) => onChange('remark', e.target.value)}
+              sx={{ width: '100%' }}
+            />
+          </Grid.Col>
+          }
+        </Grid>
+        <Grid columns={12} sx={{ width: '100%' }}>
+        <Grid.Col span={isSmallScreen ? 12 : 4}>
               <Button
                 w={'100%'}
                 variant={paymentFormState?.makePayment ? 'filled' : 'light'}

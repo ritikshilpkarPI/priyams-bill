@@ -14,11 +14,18 @@ const updateOrderByIndex = async (req, res,next) => {
           mrp: new_order.mrp
        });
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
+      const totalItemsCost = purchaseOrder.purchasedItems.reduce((total, item) => {
+        return total + (item.costPrice * item.itemQuantity);
+      }, 0);
+      
       const purchasedItems = [
         ...purchaseOrder.purchasedItems.filter((order, i) => i !== index),
         new_order,
       ];
-      const updatedOrder = await purchaseOrder.updateOne({ purchasedItems });
+      const updatedOrder = await purchaseOrder.updateOne({ purchasedItems, purchaseDetails :{
+        ...purchaseOrder.purchaseDetails,
+        totalItemsCost,
+      } });
       res.status(200).send({
         message: 'order updated successfully',
         success: true,

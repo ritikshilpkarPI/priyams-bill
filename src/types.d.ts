@@ -306,6 +306,8 @@ declare global {
     totalPayableAmount?: number;
     totalBillAmount?: number;
     paymentType?: string;
+    totalItemsCost?: number;
+    remark?: string;
     addPaymentDetail?:  paymentsType;
     addCreditDetail?: creditsType;
     credits?:Array<creditsType>;
