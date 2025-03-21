@@ -362,6 +362,8 @@ declare global {
     question: string;
     onAgree: () => void;
     onDisagree: () => void;
+    children?: React.ReactNode;
+    isChangeCTADisabled?: boolean;
   }
 
   interface CustomNumberInputProps {
