@@ -431,6 +431,15 @@ declare global {
     title: string;
     children: ReactNode;
   }
+
+
+  interface MetricCardProps {
+    title: string;
+    value: string | number;
+    prefix?: string;
+    suffix?: string;
+  }
+  
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
