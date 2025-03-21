@@ -11,6 +11,7 @@ import { getDateBeforeMonths } from 'src/utils/getDateBeforeMonths';
 import { convertDateToISO } from 'src/utils/convertDateToISO';
 import { convertMonthDates } from 'src/utils/convertMonthDates';
 import { formatSoldItemsByDate } from 'src/utils/formatSoldItemsByDate';
+import { CONSTANTS } from '../../constants/constants';
 
 export const PurchasedItemTable = ({
   onRemove,
@@ -107,7 +108,7 @@ export const PurchasedItemTable = ({
       <td>{purchasedItem?.sellingPrice || '-'}</td>
       <td>{purchasedItem?.stockQuantity || '-'}</td>
       <td>{purchasedItem?.itemRemark || '-'}</td>
-      <td>{purchasedItem?.itemHasExpiry !== null? purchasedItem?.itemHasExpiry? "Yes" : "No" : "-"}</td>
+      <td>{purchasedItem?.itemHasExpiry !== null? purchasedItem?.itemHasExpiry? CONSTANTS.YES : CONSTANTS.NO : "-"}</td>
       <td>
         {purchasedItem.expiryDates?.length > -0 ? (
           <ItemExpiryTable
