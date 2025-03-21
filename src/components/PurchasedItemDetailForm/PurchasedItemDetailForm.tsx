@@ -618,6 +618,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
           }
         }}
         onDisagree={onSkuModalClose}
+        isChangeCTADisabled={!Boolean(updateChoice)}
         children={
           <Radio.Group
         label={radioGroupConfig.label}
