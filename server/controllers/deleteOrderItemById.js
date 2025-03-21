@@ -9,6 +9,12 @@ const deleteOrderItemById = async (req, res,next) => {
         (order) => order._id.toString() !== itemId
       );
       purchaseOrder.purchasedItems = purchasedItems;
+      const itemToRemove = purchaseOrder.purchasedItems.find(
+        (order) => order._id.toString() === itemId
+      );
+      const itemTotalCost = (itemToRemove.costPrice || 0) * (itemToRemove.stockQuantity || 0);
+
+      purchaseOrder.purchaseDetails.totalItemsCost -= itemTotalCost;
       await purchaseOrder.save();
       res.status(200).send({
         message: 'order deleted successfully',
