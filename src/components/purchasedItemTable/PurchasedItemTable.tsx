@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, Flex, Table, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { IconEdit, IconX } from '@tabler/icons-react';
 import './purchasedItemTable.css';
+import { SellDetailsTable } from '../sellDetailsTable/SellDetailsTable';
+import { getItemsSellDetailsByPurchaseOrderIdAPI } from 'src/utils/apiUtils';
+import { getDateBeforeMonths } from 'src/utils/getDateBeforeMonths';
+import { convertDateToISO } from 'src/utils/convertDateToISO';
+import { convertMonthDates } from 'src/utils/convertMonthDates';
+import { formatSoldItemsByDate } from 'src/utils/formatSoldItemsByDate';
 
 export const PurchasedItemTable = ({
   onRemove,
@@ -12,6 +18,84 @@ export const PurchasedItemTable = ({
   loadingRemoveItemById,
 }: PurchasedItemTableProps) => {
   const purchasedItems = useSelector(selectPurchasedItems);
+
+  const [tableData, setTableData] = useState<ItemSoldInterface[]>([]);
+
+  const lastOneMonthDate = getDateBeforeMonths(1);
+  const lastThreeMonthDate = getDateBeforeMonths(3);
+  const lastYearDate = getDateBeforeMonths(12);
+  const currentDate = convertDateToISO(new Date());
+
+  const updateTableData = (
+    tableData: ItemSoldInterface[]
+  ): ItemSoldInterface[] => {
+    return tableData.map((data) => {
+      const lastMonthData = data.intervals
+        .find((interval) => interval.startDate === lastOneMonthDate)
+        ?.data?.reduce((sum, data) => sum + data.value, 0);
+
+      const lastThreeMonthData = data.intervals.find(
+        (interval) => interval.startDate === lastThreeMonthDate
+      )?.data;
+
+      const lastYearData = data.intervals.find(
+        (interval) => interval.startDate === lastYearDate
+      )?.data;
+
+      return {
+        ...data,
+        lastMonthSold: lastMonthData,
+        lastYearSold: lastYearData ? convertMonthDates(lastYearData) : [],
+        lastThreeMonthSold: lastThreeMonthData
+          ? formatSoldItemsByDate(lastThreeMonthData)
+          : [],
+      };
+    });
+  };
+
+  const purchaseOrderId =
+    typeof window !== 'undefined' && window.location.pathname.split('/')[2];
+
+  const fetchSellDetails = async (
+    intervals: IntervalPropInterface[],
+    purchaseOrderId: string
+  ) => {
+    try {
+      const response = await getItemsSellDetailsByPurchaseOrderIdAPI(
+        purchaseOrderId,
+        intervals
+      );
+      const updatedResponse = updateTableData(response?.data);
+      setTableData(updatedResponse);
+
+      return response?.isError ? null : response.data;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const getDateRange = (months: number) => {
+    const endDate = new Date(); 
+    const startDate = new Date();
+    startDate.setMonth(startDate.getMonth() - months);
+
+    return {
+      startDate: startDate.toISOString().split('T')[0], 
+      endDate: endDate.toISOString().split('T')[0],
+    };
+  };
+
+  useEffect(() => {
+    const data = fetchSellDetails(
+      [
+        { ...getDateRange(12), timePeriod: 'monthly' },
+        { ...getDateRange(3), timePeriod: 'weekly' },
+        { ...getDateRange(1), timePeriod: 'monthly' }, 
+      ],
+      purchaseOrderId || ''
+    );
+  }, []);
+
   const rows = purchasedItems?.map((purchasedItem, idx) => (
     <tr key={purchasedItem._id} className="purchased-item-table-row">
       <td>{purchasedItem?.barcode || '-'}</td>
@@ -25,8 +109,10 @@ export const PurchasedItemTable = ({
       <td>{purchasedItem?.itemRemark || '-'}</td>
       <td>
         {purchasedItem.expiryDates?.length > -0 ? (
-          <ItemExpiryTable expiryDates={purchasedItem.expiryDates} onRemove={()=> console.log("Function not implemented yet")
-           } />
+          <ItemExpiryTable
+            expiryDates={purchasedItem.expiryDates}
+            onRemove={() => console.log('Function not implemented yet')}
+          />
         ) : (
           '-'
         )}
@@ -53,6 +139,20 @@ export const PurchasedItemTable = ({
         >
           Remove
         </Button>
+      </td>
+      <td>
+        {tableData?.length > 0 &&
+          tableData.some((item) => item.itemId === purchasedItem.item_id) && (
+            <SellDetailsTable
+              tableData={tableData.filter(
+                (item) => item.itemId === purchasedItem.item_id
+              )}
+              currentDate={currentDate}
+              lastThreeMonthDate={lastThreeMonthDate}
+              lastYearDate={lastYearDate}
+              isPODetailsPage={true}
+            />
+          )}
       </td>
     </tr>
   ));
@@ -87,6 +187,7 @@ export const PurchasedItemTable = ({
             <th>Expiry Summary</th>
             <th>Tags</th>
             <th>Actions</th>
+           {tableData?.length > 0 && <th>Sell details</th>}
           </tr>
         </thead>
         <tbody>{rows}</tbody>
