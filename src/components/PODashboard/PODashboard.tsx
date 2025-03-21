@@ -19,14 +19,14 @@ const PurchaseOrderDashboard: React.FC = () => {
   let itemsWithShortExpiry = 0;
 
   purchasedItems?.forEach((item) => {
-    const quantity = item.itemQuantity || 0;
-    const cp = item.costPrice || 0;
-    const sp = item.sellingPrice || 0;
+    const itemOrderQuantity = item.stockQuantity || 0;
+    const itemCostPrice = item.costPrice || 0;
+    const itemSellingPrice = item.sellingPrice || 0;
 
-    totalBillAmount += cp * quantity;
+    totalBillAmount += itemCostPrice * itemOrderQuantity;
 
-    if (cp > 0) {
-      const profitMargin = ((sp - cp) / cp) * 100;
+    if (itemCostPrice > 0) {
+      const profitMargin = ((itemSellingPrice - itemCostPrice) / itemCostPrice) * 100;
       totalProfitMargin += profitMargin;
     }
 
