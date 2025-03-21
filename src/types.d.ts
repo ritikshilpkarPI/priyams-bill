@@ -364,6 +364,8 @@ declare global {
     question: string;
     onAgree: () => void;
     onDisagree: () => void;
+    children?: React.ReactNode;
+    isChangeCTADisabled?: boolean;
   }
 
   interface CustomNumberInputProps {
@@ -430,6 +432,10 @@ declare global {
     paymentsList: Array<PaymentsList>;
     title: string
   }
+  interface PaymentDetailsCardProps {
+    payment: PaymentsList;
+    index: number
+  }
 
   interface AccordionProps {
     title: string;
@@ -444,10 +450,6 @@ declare global {
     suffix?: string;
   }
   
-  interface PaymentDetailsCardProps {
-    payment: PaymentsList;
-    index: number
-  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
