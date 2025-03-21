@@ -16,6 +16,7 @@ import {
   LoadingOverlay,
   Alert,
   Text,
+  Radio,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useSelector, useDispatch } from 'react-redux';
@@ -45,6 +46,7 @@ import { getItemsSkuAPI } from '../../utils/apiUtils';
 import { setItemsData } from '../../redux/items/itemsSlice';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
+import { radioGroupConfig, skuModalQuestion, YES } from 'src/constants/purchaseOrderConstants';
 
 
 
@@ -67,6 +69,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
   const [isEditing, setIsEditing] = useState(false);
+  const [updateChoice, setUpdateChoice] = useState<string>()
 
   const skuFields: Record<string, string> = {
     inputName: 'inputName',
@@ -607,13 +610,26 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       <QuestionModal
         opened={showSkuModal}
         onClose={onSkuModalClose}
-        question="Any change in SKU fields will create new item. Do you want to continue?
-        SKU Fields: Barcode, Item name, MRP, Packet Amount, Unit"
+        question={skuModalQuestion}
         onAgree={() => {
           setShowSkuModal(false);
-          dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
+          if (updateChoice === YES) {
+            dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
+          }
         }}
         onDisagree={onSkuModalClose}
+        children={
+          <Radio.Group
+        label={radioGroupConfig.label}
+        name={radioGroupConfig.name}
+        value={updateChoice}
+        onChange={(val) => setUpdateChoice(val)}
+      >
+        {radioGroupConfig.options.map((option) => (
+          <Radio key={option.value} value={option.value} label={option.label} />
+        ))}
+      </Radio.Group>
+        }
       />
       <LoadingOverlay visible={Boolean(loading)} />
     </Flex>
