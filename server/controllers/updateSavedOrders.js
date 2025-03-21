@@ -21,12 +21,18 @@ const updateSavedOrders = async (req, res, next) => {
       }))
     }
     const purchaseOrder = await PurchaseOrder.findById(id);
+    const newItemCost = new_order.costPrice * new_order.itemQuantity;
     const updatedOrder = await purchaseOrder.updateOne({
       purchasedItems: [...purchaseOrder.purchasedItems, {
         ...new_order,
         expiryDates: updatedExpiryDates,
         sku: itemSKU
       }],
+      purchaseDetails:{
+        ...purchaseOrder.purchaseDetails,
+        totalItemsCost: (purchaseOrder.purchaseDetails?.totalItemsCost || 0) + newItemCost,
+      
+      }
     });
     res.status(200).send({
       message: 'order added successfully',

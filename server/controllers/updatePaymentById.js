@@ -17,7 +17,7 @@ const updatePaymentById = async (req, res, next) => {
       .json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
     }
 
-    const { totalPayableAmount, totalBillAmount, paymentType } = purchaseData;
+    const { totalPayableAmount, totalBillAmount, paymentType, remark } = purchaseData;
     
     if (!totalPayableAmount || !totalBillAmount || !paymentType) {
       return res.status(400).json({
@@ -107,6 +107,7 @@ const updatePaymentById = async (req, res, next) => {
         'purchaseDetails.totalPayableAmount': totalPayableAmount,
         'purchaseDetails.totalBillAmount': totalBillAmount,
         'purchaseDetails.paymentType': paymentType,
+        'purchaseDetails.remark': remark,
         totalPaidAmount,
       },
       { new: true }
