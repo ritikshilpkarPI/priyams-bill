@@ -71,6 +71,7 @@ declare global {
     currentDate?: string;
     lastThreeMonthDate?: string;
     lastYearDate?: string;
+    isPODetailsPage?: boolean;
   }
 
   interface CategorySchemaType {
@@ -265,6 +266,7 @@ declare global {
     returnPolicyRemarks: string;
     _id?: string;
     inputName?: string;
+    freeItemsRemarks?: string;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -440,6 +442,10 @@ declare global {
     suffix?: string;
   }
   
+  interface PaymentDetailsCardProps {
+    payment: PaymentsList;
+    index: number
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
