@@ -21,7 +21,7 @@ const updateSavedOrders = async (req, res, next) => {
       }))
     }
     const purchaseOrder = await PurchaseOrder.findById(id);
-    const newItemCost = new_order.costPrice * new_order.itemQuantity;
+    const newItemCost = new_order.costPrice * new_order.stockQuantity;
     const updatedOrder = await purchaseOrder.updateOne({
       purchasedItems: [...purchaseOrder.purchasedItems, {
         ...new_order,
