@@ -1,3 +1,9 @@
+@media (max-width: 800px) {
+    .bill-items{
+        display: none;
+    }
+}
+
 @media print {
     .bill-items{
         width: 60mm;

@@ -105,7 +105,7 @@ const calculateItemPrice = (item, quantity) => {
     return (
       <div className="item-search">
         <Paper p="md" radius="md" withBorder mb="md">
-          <Text size="lg" weight={500} mb="md">Search Items</Text>
+          <Text size="lg" weight={500} mb="md" className="item-search-label">Search Items</Text>
   
           <Input
             placeholder="Enter item name or barcode"
@@ -153,6 +153,13 @@ const calculateItemPrice = (item, quantity) => {
             </Text>
           )}
         </Paper>
+        <style>{`
+          @media (max-width: 480px) {
+            .item-search-label {
+              display: none;
+            }
+          }
+        `}</style>
       </div>
     );
   };
