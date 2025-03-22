@@ -25,7 +25,7 @@ import { BillItemsCardView } from "../../components/BillItemsCardView/BillItemsC
 const NewBillPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [itemsDataCount, setItemsDataCount] = useState(0);
-  const [enableTableView, setEnableTableView] = useState(true);
+  const [enableTableView, setEnableTableView] = useState(window.innerWidth > 800);
   const {
     billState,
     updateBillItems,
@@ -48,12 +48,11 @@ const NewBillPage = () => {
      }, [itemsFeedData]);
 
   const handleTableViewState = ()=>setEnableTableView(window.innerWidth > 800);
+
   useEffect(() => {
-    const resize = "resize";
-    setEnableTableView(window.innerWidth > 800);
-    window.addEventListener(resize, handleTableViewState);
+    window.addEventListener("resize", handleTableViewState);
     return () => {
-      window.removeEventListener(resize, handleTableViewState);
+      window.removeEventListener("resize", handleTableViewState);
     };
   }, []);
 

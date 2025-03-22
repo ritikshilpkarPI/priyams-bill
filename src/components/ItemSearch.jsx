@@ -154,7 +154,7 @@ const calculateItemPrice = (item, quantity) => {
           )}
         </Paper>
         <style>{`
-          @media (max-width: 480px) {
+          @media (max-width: 680px) {
             .item-search-label {
               display: none;
             }

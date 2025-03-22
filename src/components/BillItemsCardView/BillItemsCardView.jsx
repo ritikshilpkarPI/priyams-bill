@@ -10,6 +10,7 @@ import { roundNumber } from '../../../src/utils/roundNumber';
 import { Cross } from 'src/icons/Cross';
 import { useState } from 'react';
 import { Caret } from 'src/icons/Caret';
+import { SlabPricingTable } from '../SlabPricingTable/SlabPricingTable';
 
 export const BillItemsCardView = ({ items, onRemoveItem, bill, setBill }) => {
   const calculateItemPrice = (slabPricing, quantity, defaultPrice) => {
@@ -102,7 +103,7 @@ const ItemCard = ({
             )}
           </Flex>
           {openSlabPricing && (
-            <SlabTable slabPricing={item?.itemDetail?.slabPricing} />
+            <SlabPricingTable data={item?.itemDetail?.slabPricing} />
           )}
         </Flex>
         <Flex
@@ -155,28 +156,3 @@ const ItemCard = ({
     </Card>
   );
 };
-
-const SlabTable = ({ slabPricing = [] }) => (
-  <table className="slab-table" width="100px">
-    <thead>
-      <tr>
-        <th>Qty</th>
-        <th>Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      {slabPricing?.map((slabs, idx, arr) => {
-        return (
-          <tr key={idx}>
-            <td>
-              {`${slabs[1]}  ${
-                arr[idx + 1] ? `- ${arr[idx + 1][1] - 1}` : '+'
-              }`}
-            </td>
-            <td className="price-align">{slabs[2]}</td>
-          </tr>
-        );
-      })}
-    </tbody>
-  </table>
-);

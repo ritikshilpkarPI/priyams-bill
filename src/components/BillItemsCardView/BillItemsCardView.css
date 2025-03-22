@@ -12,33 +12,6 @@
   transform: rotate(180deg);
 }
 
-.slab-table {
-  font-size: 16px;
-  border-collapse: collapse;
-  margin-top: 5px;
-  width: 100px;
-}
-
-.slab-table td,
-th {
-  padding: 5px 6px;
-  text-align: left;
-  font-size: 12px;
-}
-
-.slab-table thead tr {
-  background-color: #2ba3e3;
-  color: #ffff;
-}
-
-.slab-table tbody tr:nth-child(odd) {
-  background-color: #d4d1d1;
-}
-
-.slab-table tbody tr:nth-child(even) {
-  background-color: #f5f5f5;
-}
-
 .bill-items-card-view-quantity-input{
     width: 60px;
     text-align: center;
