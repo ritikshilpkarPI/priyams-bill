@@ -15,12 +15,11 @@ const updateOrderByIndex = async (req, res,next) => {
        });
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
       
-      const purchasedItems = [
-        ...purchaseOrder.purchasedItems.filter((order, i) => i !== index),
-        new_order,
-      ];
-      purchaseOrder.purchasedItems= purchasedItems
-
+      if ( index >= 0 && index < purchaseOrder.purchasedItems.length) {
+        purchaseOrder.purchasedItems[index] = new_order;
+    } else {
+        purchaseOrder.purchasedItems.push(new_order);
+    }
       const totalItemsCost = purchaseOrder.purchasedItems.reduce((total, item) => {
           return total + (item.costPrice * item.stockQuantity);
       }, 0);
