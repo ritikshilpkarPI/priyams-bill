@@ -52,8 +52,17 @@ th {
     font-size: 18px;
 }
 
-@media (min-width: 800px) {
-    .bill-items-card-view {
-        display: none;
-    }
+.card-view-item-name{
+  font-size: 12px;
+}
+
+.remove-item-button-wrapper{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.item-card-main-container{
+  overflow: visible;
 }
