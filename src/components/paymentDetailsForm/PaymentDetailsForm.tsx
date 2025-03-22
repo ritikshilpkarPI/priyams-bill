@@ -211,7 +211,7 @@ export const PaymentDetailsForm = ({
             <TextInput
               label="Total Items Cost"
               disabled={true}
-              value={purchaseOrder.purchaseDetails?.totalItemsCost || 0}
+              value={(purchaseOrder.purchaseDetails?.totalItemsCost?.toFixed(2)) || 0}
               sx={{ width: '100%' }}
             />
           </Grid.Col>
