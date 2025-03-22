@@ -58,6 +58,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
       totalPayableAmount: purchaseDetails.totalPayableAmount,
       totalBillAmount: purchaseDetails.totalBillAmount,
       paymentType: purchaseDetails.paymentType,
+      remark:purchaseDetails.remark,
       paidBy: purchaseDetails.addPaymentDetail?.paidBy || '',
       paidAmount: purchaseDetails.addPaymentDetail?.paidAmount || 0,
     };
