@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Box, Button, Checkbox, Flex, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { dealerFormValidation } from '../../utils/validations/dealerFormValidation';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { draftItemFormValidation } from '../../utils/validations/draftItemFormValidation';
-import { paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
+import { PaymentCoverageComplete, paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
 import { draftOrderByIdAPI } from '../../utils/apiUtils';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { useDispatch } from 'react-redux';
@@ -15,8 +15,6 @@ import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { getUserDetails } from 'src/utils/getUserDeviceInfo';
-import { parseJwt } from 'src/utils/cookie';
-import Cookies from 'js-cookie';
 import ProtectedComponent from '../ProtectedComponent';
 import access from 'src/access';
 
@@ -56,6 +54,7 @@ export const PurchaseOrderSummary = () => {
   ) => {
     try {
       await paymentDetailFormValidation.validate(purchaseOrder.purchaseDetails);
+      await PaymentCoverageComplete.validate(purchaseOrder.purchaseDetails);
       setIsValidPaymentDetails(true);
       return true;
     } catch (err) {
