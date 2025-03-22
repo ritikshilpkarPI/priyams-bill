@@ -126,7 +126,6 @@ const NewBillPage = () => {
             onClick={resetBillState}
             disabled={loading}
           >
-            {/* Refresh Bill */}
             <Reset color='#fff'/>
           </Button>
         </h2>
