@@ -77,8 +77,6 @@ const PurchasedItemPanel = () => {
   const onPurchasedOrderSubmit = async (
     purchaseItemDetails: PurchasedItemDetailFormType
   ) => {
-    console.log({editItemIdxRef});
-    
     setItemFormLoading(true);
     if (!purchaseOrderId) await onSavePurchaseOrderItem(purchaseItemDetails);
     else if (editItemIdxRef.current >= 0)
