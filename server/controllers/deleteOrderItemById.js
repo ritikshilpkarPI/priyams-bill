@@ -5,17 +5,20 @@ const deleteOrderItemById = async (req, res,next) => {
       const purchase_id = req.params.id;
       const { itemId } = req.body;
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
-      const purchasedItems = purchaseOrder.purchasedItems.filter(
-        (order) => order._id.toString() !== itemId
-      );
-      purchaseOrder.purchasedItems = purchasedItems;
-      const itemToRemove = purchaseOrder.purchasedItems.find(
-        (order) => order._id.toString() === itemId
-      );
-      const itemTotalCost = (itemToRemove.costPrice || 0) * (itemToRemove.stockQuantity || 0);
 
-      purchaseOrder.purchaseDetails.totalItemsCost -= itemTotalCost;
-      await purchaseOrder.save();
+        const itemToRemove = purchaseOrder.purchasedItems.find(
+            (order) => order._id.toString() === itemId
+        );
+
+        const itemTotalCost = (itemToRemove.costPrice || 0) * (itemToRemove.stockQuantity || 0);
+
+        purchaseOrder.purchasedItems = purchaseOrder.purchasedItems.filter(
+            (order) => order._id.toString() !== itemId
+        );
+
+        purchaseOrder.purchaseDetails.totalItemsCost -= itemTotalCost;
+
+        await purchaseOrder.save();
       res.status(200).send({
         message: 'order deleted successfully',
         success: true,
