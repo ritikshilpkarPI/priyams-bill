@@ -21,7 +21,7 @@ import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 import ShareOnWhatsApp from 'src/components/shareOnWhatsApp';
 
-export const DealerDetailForm: React.FC = () => {
+export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -129,6 +129,7 @@ export const DealerDetailForm: React.FC = () => {
               required
               error={errors.dealerName}
               placeholder="Enter dealer name"
+              disabled={isApprovedPO}
             />
           </Col>
 
@@ -146,6 +147,7 @@ export const DealerDetailForm: React.FC = () => {
               error={errors.phoneNumber}
               placeholder="Enter phone number"
               maxLength={10}
+              disabled={isApprovedPO}
             />
           </Col>
 
@@ -157,6 +159,7 @@ export const DealerDetailForm: React.FC = () => {
               required
               placeholder="Enter bill amount"
               error={errors.billAmount}
+              disabled={isApprovedPO}
             />
           </Col>
 
@@ -166,6 +169,7 @@ export const DealerDetailForm: React.FC = () => {
               data={['Walmart', 'D Mart', 'City', 'Distributor']}
               value={dealerFormData.procurementSource}
               onChange={(value) => onChange('procurementSource', value!)}
+              disabled={isApprovedPO}
             />
           </Col>
           <Col span={12}>
@@ -176,6 +180,7 @@ export const DealerDetailForm: React.FC = () => {
                 onChange('remark', event.currentTarget.value)
               }
               placeholder="Enter any remarks"
+              disabled={isApprovedPO}
             />
           </Col>
 
@@ -186,6 +191,7 @@ export const DealerDetailForm: React.FC = () => {
               type="submit"
               fullWidth
               mt="lg"
+              disabled={isApprovedPO}
             >
               Save & Next
             </Button>
