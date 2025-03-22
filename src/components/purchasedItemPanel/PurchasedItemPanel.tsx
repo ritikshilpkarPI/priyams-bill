@@ -77,6 +77,8 @@ const PurchasedItemPanel = () => {
   const onPurchasedOrderSubmit = async (
     purchaseItemDetails: PurchasedItemDetailFormType
   ) => {
+    console.log({editItemIdxRef});
+    
     setItemFormLoading(true);
     if (!purchaseOrderId) await onSavePurchaseOrderItem(purchaseItemDetails);
     else if (editItemIdxRef.current >= 0)
@@ -120,6 +122,7 @@ const PurchasedItemPanel = () => {
     );
     if (response.isError)
       return toast.error('unable to update item, please try again');
+    editItemIdxRef.current = -1;
     dispatch(resetPurchasedItemForm());
     getPurchaseOrderDetails();
   };
