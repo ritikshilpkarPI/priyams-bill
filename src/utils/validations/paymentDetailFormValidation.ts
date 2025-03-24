@@ -15,7 +15,7 @@ export const paymentDetailFormValidation = Yup.object().shape({
   remark: Yup.string().test(
     'remarks-required-if-amounts-differ',
     'Remarks are required when bill or payable amount doesn’t match total items cost.',
-    function (value) {
+    function () {
       const { totalBillAmount, totalPayableAmount, totalItemsCost } = this.parent;
       
       const isMismatch = (
@@ -23,7 +23,9 @@ export const paymentDetailFormValidation = Yup.object().shape({
         totalPayableAmount !== totalItemsCost
       );
 
-      if (isMismatch && !value?.trim()) {
+      if (isMismatch) {
+        console.log({totalBillAmount, totalPayableAmount, totalItemsCost},"dfef");
+        
         return false;
       }
 
