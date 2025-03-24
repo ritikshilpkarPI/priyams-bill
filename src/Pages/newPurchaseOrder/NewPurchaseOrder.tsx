@@ -163,7 +163,7 @@ const NewPurchaseOrder = () => {
             />
           </Tabs.Tab>
           <Tabs.Tab value={TAB.paymentDetails}>
-            {' '}
+           
             <TabChip
               label="Payment Details"
               isValid={isValidPaymentDetails}
@@ -173,7 +173,7 @@ const NewPurchaseOrder = () => {
             />
           </Tabs.Tab>
           <Tabs.Tab value={TAB.billUpload}>
-            {' '}
+           
             <TabChip
               label="Bill Images"
               isValid={isBillImagesUploaded}
@@ -183,7 +183,7 @@ const NewPurchaseOrder = () => {
             />
           </Tabs.Tab>
           <Tabs.Tab value={TAB.summary}>
-            {' '}
+           
             <TabChip
               label="Summary & Action"
               isValid={
