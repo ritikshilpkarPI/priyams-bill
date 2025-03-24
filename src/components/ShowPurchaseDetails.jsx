@@ -5,30 +5,30 @@ const ShowPurchaseDetails = ({
   handlePurchaseDetail,
   deletePurchaseDetail,
 }) => {
-  const rows = purchaseList.details.map((element, index) => (
-    <tr key={index + 1}>
-      <td>{element.paidAmount}</td>
-      <td>{element.paidBy}</td>
-      <td>{element.chequeNumber}</td>
-      <td>
-        <Button onClick={() => handlePurchaseDetail(element, index)}>
-          Edit
-        </Button>
-      </td>
-      <td>
-        <Button
-          style={{ backgroundColor: '#F03E3E' }}
-          onClick={() => deletePurchaseDetail(index)}
-        >
-          Delete
-        </Button>
-      </td>
-    </tr>
-  ));
+  // const rows = purchaseList.details.map((element, index) => (
+  //   <tr key={index + 1}>
+  //     <td>{element.paidAmount}</td>
+  //     <td>{element.paidBy}</td>
+  //     <td>{element.chequeNumber}</td>
+  //     <td>
+  //       <Button onClick={() => handlePurchaseDetail(element, index)}>
+  //         Edit
+  //       </Button>
+  //     </td>
+  //     <td>
+  //       <Button
+  //         style={{ backgroundColor: '#F03E3E' }}
+  //         onClick={() => deletePurchaseDetail(index)}
+  //       >
+  //         Delete
+  //       </Button>
+  //     </td>
+  //   </tr>
+  // ));
 
   return (
     <div>
-      {purchaseList.details.length ? (
+      {/* {purchaseList.details.length ? (
         <>
           <h3 style={{ margin: '2vmin' }}>Purchase Detail List</h3>
           <Table
@@ -56,7 +56,7 @@ const ShowPurchaseDetails = ({
         </>
       ) : (
         <></>
-      )}
+      )} */}
     </div>
   );
 };
