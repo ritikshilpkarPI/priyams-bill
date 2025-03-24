@@ -105,8 +105,8 @@ const NewPurchaseOrder = () => {
 
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
-      <Title order={2}>Purchase Order</Title>
-      <Group spacing="lg" position='center' style={{ marginTop: '16px', marginBottom: '16px' , }}>
+        <Title order={2}>Purchase Order</Title>
+        <Group spacing="lg" position='center' style={{ marginTop: '16px', marginBottom: '16px' , }}>
         <TabChip
           label="Dealer Details"
           isValid={isValidDealerDetails}
