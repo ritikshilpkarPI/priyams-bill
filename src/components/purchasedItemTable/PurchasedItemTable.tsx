@@ -17,6 +17,7 @@ export const PurchasedItemTable = ({
   onRemove,
   onEdit,
   loadingRemoveItemById,
+  isApprovedPO
 }: PurchasedItemTableProps) => {
   const purchasedItems = useSelector(selectPurchasedItems);
 
@@ -122,7 +123,7 @@ export const PurchasedItemTable = ({
       <td>{!purchasedItem.item_id && <Badge color="green">New Item</Badge>}</td>
       <td className="purchased-item-table-action-td">
         <Button
-          disabled={Boolean(loadingRemoveItemById)}
+          disabled={Boolean(loadingRemoveItemById) || isApprovedPO}
           variant="default"
           leftIcon={<IconEdit cursor="pointer" />}
           onClick={() => onEdit(purchasedItem, idx)}
@@ -133,7 +134,7 @@ export const PurchasedItemTable = ({
           loading={purchasedItem._id === loadingRemoveItemById}
           disabled={Boolean(
             loadingRemoveItemById && purchasedItem._id !== loadingRemoveItemById
-          )}
+          ) || isApprovedPO}
           variant="default"
           color="red"
           leftIcon={<IconX cursor="pointer" />}

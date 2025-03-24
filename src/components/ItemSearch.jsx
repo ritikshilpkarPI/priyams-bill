@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
 import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 
-export const ItemSearch = ({ onItemSelect }) => {
+export const ItemSearch = ({ onItemSelect, isApprovedPO }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [itemsData, setItemsData] = useState([]);
@@ -114,7 +114,7 @@ const calculateItemPrice = (item, quantity) => {
             onChange={(e) => handleSearch(e.target.value)}
             rightSection={loading ? <Loader size="sm" /> : null}
             mb="sm"
-            disabled={loading}
+            disabled={loading || isApprovedPO}
 
           />
   

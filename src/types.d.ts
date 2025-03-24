@@ -273,6 +273,7 @@ declare global {
   interface PurchasedItemDetailFormProps {
     onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
     loading?: boolean;
+    isApprovedPO?: boolean;
   }
 
   interface ItemExpiryDateType {
@@ -347,6 +348,7 @@ declare global {
     onRemove: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void;
     onEdit: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void; 
     loadingRemoveItemById: string;
+    isApprovedPO?: boolean;
   }
 
   interface PaymentDetailTableProps {
@@ -376,6 +378,7 @@ declare global {
     placeholder?: string;
     error?: string;
     required?: boolean;
+    disabled?: boolean;
   }
 
   interface FileAndURLType {
@@ -450,6 +453,9 @@ declare global {
   interface PaymentDetailsCardProps {
     payment: PaymentsList;
     index: number
+  }
+  interface PurchaseOrderProps {
+    isApprovedPO?: boolean;
   }
 }
 declare module '*.scss' {
