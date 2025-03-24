@@ -128,6 +128,7 @@ const getAllItemsTrendReport = async (startDate, lastDate) => {
         totalQuantitysum: {
           $sum: '$items.itemQuantityInBill',
         },
+        itemBarcode: { $first: '$items.itemBarcode' }
       },
     },
   ]);
