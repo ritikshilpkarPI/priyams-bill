@@ -109,45 +109,71 @@ const NewPurchaseOrder = () => {
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
         <Title order={2}>Purchase Order</Title>
-        <Group spacing="lg" position='center' style={{ marginTop: '16px', marginBottom: '16px' , }}>
-        <TabChip
-          label="Dealer Details"
-          isValid={isValidDealerDetails}
-          tabKey="dealerDetails"
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-        />
-        <TabChip
-          label="Item Details"
-          isValid={isValidItemDetails}
-          tabKey="itemDetails"
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-        />
-        <TabChip
-          label="Payment Details"
-          isValid={isValidPaymentDetails}
-          tabKey="paymentDetails"
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-        />
-        <TabChip
-          label="Bill Images"
-          isValid={isBillImagesUploaded}
-          tabKey="billUpload"
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-        />
-         <TabChip
-          label="Summary & Action"
-          isValid={isValidDealerDetails && isValidItemDetails && isValidPaymentDetails && isBillImagesUploaded}
-          tabKey="summary"
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-        />
-       
         
-      </Group>
+      <Tabs
+        variant="default"
+        color="black"
+        value={activeTab}
+        onTabChange={onTabChange}
+      >
+        <Tabs.List grow>
+          <Tabs.Tab color="blue" value={TAB.dealerDetails}>
+            <TabChip
+              label="Dealer Details"
+              isValid={isValidDealerDetails}
+              tabKey={TAB.dealerDetails}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value={TAB.itemDetails}>
+            <TabChip
+              label="Item Details"
+              isValid={isValidItemDetails}
+              tabKey={TAB.itemDetails}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value={TAB.paymentDetails}>
+            {' '}
+            <TabChip
+              label="Payment Details"
+              isValid={isValidPaymentDetails}
+              tabKey={TAB.paymentDetails}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value={TAB.billUpload}>
+            {' '}
+            <TabChip
+              label="Bill Images"
+              isValid={isBillImagesUploaded}
+              tabKey={TAB.billUpload}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value={TAB.summary}>
+            {' '}
+            <TabChip
+              label="Summary & Action"
+              isValid={
+                isValidDealerDetails &&
+                isValidItemDetails &&
+                isValidPaymentDetails &&
+                isBillImagesUploaded
+              }
+              tabKey={TAB.summary}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
+        </Tabs.List>
+      </Tabs>
+
+
 
       <Tabs value={activeTab}>
         <Tabs.Panel value={TAB.dealerDetails}>
