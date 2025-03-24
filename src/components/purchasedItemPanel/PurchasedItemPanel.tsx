@@ -19,11 +19,10 @@ import { PurchasedItemDetailForm } from '../PurchasedItemDetailForm/PurchasedIte
 import { PurchasedItemTable } from '../purchasedItemTable/PurchasedItemTable';
 import { QuestionModal } from '../questionModal/QuestionModal';
 import { ItemSearch } from '../ItemSearch';
-import { Box } from '@mantine/core';
+import { Box, Flex, Accordion } from '@mantine/core';
 import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
 import { toast } from 'react-toastify';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
-import Accordion from '../accordion/Accordion';
 import PurchaseOrderDashboard from '../PODashboard/PODashboard';
 
 const PurchasedItemPanel = () => {
@@ -134,50 +133,62 @@ const PurchasedItemPanel = () => {
   const currentUrl = window.location.href;
   const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
-    <>
-      <div>
-        <Box mx="sm" mt="16px">
-          <ItemSearch onItemSelect={onItemSelect} />
-        </Box>
-        <PurchasedItemDetailForm
-          loading={itemFormLoading}
-          onSubmit={onPurchasedOrderSubmit}
-        />
+    <Flex direction="column" gap="sm" p="sm" sx={{ position: 'relative' }}>
+      <Box mx="sm" mt="16px">
+        <ItemSearch onItemSelect={onItemSelect} />
+      </Box>
 
-    <div className="item-details-tab">
-      <Accordion title="Dashboard">
-        <PurchaseOrderDashboard />
+      <Accordion mx="sm" radius="md" variant="contained">
+        <Accordion.Item value="Item Detail Form">
+          <Accordion.Control>Item Detail Form</Accordion.Control>
+          <Accordion.Panel>
+            <PurchasedItemDetailForm
+              loading={itemFormLoading}
+              onSubmit={onPurchasedOrderSubmit}
+            />
+          </Accordion.Panel>
+        </Accordion.Item>
       </Accordion>
-    
-    </div>
 
-        <PurchasedItemTable
-          onEdit={(purchasedItem: PurchasedItemDetailFormType, idx: number) => {
-            setEditItem(purchasedItem);
-            editItemIdxRef.current = idx;
-          }}
-          onRemove={(purchasedItem: PurchasedItemDetailFormType) =>
-            setRemoveItem(purchasedItem)
-          }
-          loadingRemoveItemById={removeItemId}
-        />
-        <QuestionModal
-          opened={Boolean(editItem)}
-          onClose={resetEditItem}
-          onAgree={onEdit}
-          onDisagree={resetEditItem}
-          question={`Do you want to edit item ${editItem?.inputName || ''} ?`}
-        />
-        <QuestionModal
-          opened={Boolean(removeItem)}
-          onClose={resetRemoveItem}
-          onAgree={onRemove}
-          onDisagree={resetRemoveItem}
-          question={`Do you want to remove item ${removeItem?.inputName || ''} ?`}
-        />
-      </div>
+      <Accordion mx="sm"  mt="16px" radius="md" variant="contained">
+        <Accordion.Item value="Dashboard">
+          <Accordion.Control>Dashboard</Accordion.Control>
+          <Accordion.Panel>
+            <PurchaseOrderDashboard />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
+
+      <PurchasedItemTable
+        onEdit={(purchasedItem: PurchasedItemDetailFormType, idx: number) => {
+          setEditItem(purchasedItem);
+          editItemIdxRef.current = idx;
+        }}
+        onRemove={(purchasedItem: PurchasedItemDetailFormType) =>
+          setRemoveItem(purchasedItem)
+        }
+        loadingRemoveItemById={removeItemId}
+      />
+
+      <QuestionModal
+        opened={Boolean(editItem)}
+        onClose={resetEditItem}
+        onAgree={onEdit}
+        onDisagree={resetEditItem}
+        question={`Do you want to edit item ${editItem?.inputName || ''} ?`}
+      />
+
+      <QuestionModal
+        opened={Boolean(removeItem)}
+        onClose={resetRemoveItem}
+        onAgree={onRemove}
+        onDisagree={resetRemoveItem}
+        question={`Do you want to remove item ${removeItem?.inputName || ''} ?`}
+      />
+
       <Box mt="16px">{match && <ShareOnWhatsApp message={currentUrl} />}</Box>
-    </>
+
+    </Flex>
   );
 };
 

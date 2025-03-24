@@ -33,6 +33,7 @@ import {
   IconEdit,
   IconExclamationCircle,
   IconPlus,
+  IconSquareRoundedPercentage,
 } from '@tabler/icons-react';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
@@ -241,18 +242,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     setIsEditing(true);
   };
 
+  const profitMargin = (
+    ((Number(purchasedItemFormData.sellingPrice) -
+      Number(purchasedItemFormData.costPrice)) /
+      Number(purchasedItemFormData.costPrice)) *
+    100
+  ).toFixed(2);
+
   return (
-    <Flex direction="column" gap="16px" mx="sm" mt="lg" pos="relative">
+    <Flex direction="column" gap="16px" pos="relative">
       <Flex
         align="left"
         gap="16px"
         direction="column"
-        sx={{
-          border: '1px solid grey',
-          padding: '16px',
-          borderRadius: '8px',
-          textAlign: 'left',
-        }}
       >
         <Title order={3} display="flex" sx={{ gap: '8px' }}>
           <Flex wrap="wrap" gap="4px">
@@ -463,6 +465,18 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('sellingPrice', event.currentTarget.value)}
                   error={errors.sellingPrice}
+                />
+              </Col>
+              <Col>
+                <TextInput
+                  label={
+                    <>
+                      Profit Margin{' '}
+                      <IconSquareRoundedPercentage color="red" size={18} />
+                    </>
+                  }
+                  value={`${Number(profitMargin) ? profitMargin : 0}`}
+                  disabled
                 />
               </Col>
               <Col span={12}>
