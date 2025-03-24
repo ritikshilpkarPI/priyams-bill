@@ -25,7 +25,7 @@ import { toast } from 'react-toastify';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
 import PurchaseOrderDashboard from '../PODashboard/PODashboard';
 
-const PurchasedItemPanel = () => {
+const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -119,6 +119,7 @@ const PurchasedItemPanel = () => {
     );
     if (response.isError)
       return toast.error('unable to update item, please try again');
+    editItemIdxRef.current = -1;
     dispatch(resetPurchasedItemForm());
     getPurchaseOrderDetails();
   };
@@ -135,7 +136,7 @@ const PurchasedItemPanel = () => {
   return (
     <Flex direction="column" gap="sm" p="sm" sx={{ position: 'relative' }}>
       <Box mx="sm" mt="16px">
-        <ItemSearch onItemSelect={onItemSelect} />
+        <ItemSearch onItemSelect={onItemSelect}  isApprovedPO={isApprovedPO}  />
       </Box>
 
       <Accordion mx="sm" radius="md" variant="contained">
