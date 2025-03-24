@@ -26,7 +26,7 @@ import ShareOnWhatsApp from '../shareOnWhatsApp';
 import Accordion from '../accordion/Accordion';
 import PurchaseOrderDashboard from '../PODashboard/PODashboard';
 
-const PurchasedItemPanel = () => {
+const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -120,6 +120,7 @@ const PurchasedItemPanel = () => {
     );
     if (response.isError)
       return toast.error('unable to update item, please try again');
+    editItemIdxRef.current = -1;
     dispatch(resetPurchasedItemForm());
     getPurchaseOrderDetails();
   };
@@ -137,11 +138,12 @@ const PurchasedItemPanel = () => {
     <>
       <div>
         <Box mx="sm" mt="16px">
-          <ItemSearch onItemSelect={onItemSelect} />
+          <ItemSearch onItemSelect={onItemSelect} isApprovedPO={isApprovedPO} />
         </Box>
         <PurchasedItemDetailForm
           loading={itemFormLoading}
           onSubmit={onPurchasedOrderSubmit}
+          isApprovedPO={isApprovedPO}
         />
 
     <div className="item-details-tab">
@@ -160,6 +162,7 @@ const PurchasedItemPanel = () => {
             setRemoveItem(purchasedItem)
           }
           loadingRemoveItemById={removeItemId}
+          isApprovedPO={isApprovedPO}
         />
         <QuestionModal
           opened={Boolean(editItem)}

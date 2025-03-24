@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
-import { Chip, Group, LoadingOverlay, Tabs, Title } from '@mantine/core';
+import {  Flex, Chip, Group, LoadingOverlay, Tabs, Title } from '@mantine/core';
 import './NewPurchaseOrder.css';
 import { useDispatch, useSelector } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
@@ -19,12 +19,14 @@ import { BillUploadPanel } from '../../components/BillUploadPanel/BillUploadPane
 import { PurchaseOrderSummary } from '../../components/purchaseOrderSummary/PurchaseOrderSummary';
 import { resetPurchasedItemForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { toast } from 'react-toastify';
+import { selectPurchaseOrderStatusInfo } from '../../redux/purchaseOrder/purchaseOrderSelectors';
+import { purchaseOrderStatus as purchaseOrderStatusConst } from '../../utils/constants/purchaseOrderStatus';
+import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import {
   validateDealerDetails,
   validateItemDetails,
   validatePaymentDetails,
 } from 'src/utils/purchaseOrderValidations';
-import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import { TAB, TabChip, TabKey } from 'src/components/TabChip';
 
 
@@ -41,12 +43,34 @@ const NewPurchaseOrder = () => {
   const activeTabInitial = currentTab && currentTab in TAB ? TAB[currentTab] : TAB.dealerDetails;
 
   const [loading, setLoading] = useState(false);
+  const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
+  const purchaseOrderStatus = (() => {
+    const { isApproved, isRejected, isDraft } = purchaseOrderStatusInfo;
+    const { approved, drafted, rejected, saved } = purchaseOrderStatusConst;
+    let label, color;
+    if (isDraft && isApproved) {
+      label = approved;
+      color = 'teal';
+    } else if (isDraft && isRejected) {
+      label = rejected;
+      color = 'red';
+    } else if (isDraft && !isApproved) {
+      label = drafted;
+      color = 'yellow';
+    } else if (isDraft === false && isApproved === false) {
+      label = saved;
+      color = 'orange';
+    }
+    return { label, color };
+  })();
+  const purchaseOrder = useSelector(selectPurchaseOrder);
+  const { isApproved = false} = purchaseOrder;
+
   const [isValidDealerDetails, setIsValidDealerDetails] = useState(false);
   const [isValidItemDetails, setIsValidItemDetails] = useState(false);
   const [isValidPaymentDetails, setIsValidPaymentDetails] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(activeTabInitial);
 
-  const purchaseOrder = useSelector(selectPurchaseOrder);
   const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length);
   const onTabChange = (newTab: TabKey) => {
     setActiveTab(TAB[newTab]);
@@ -105,7 +129,14 @@ const NewPurchaseOrder = () => {
 
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
-      <Title order={2}>Purchase Order</Title>
+       <Flex className='purchase-order-title-wrapper' columnGap={30} wrap={'wrap'} align={'center'} justify={'center'}>
+        <Title order={2}>Purchase Order</Title>
+        {purchaseOrderStatus.label && (
+          <Chip defaultChecked color={purchaseOrderStatus.color}>
+            {purchaseOrderStatus.label}
+          </Chip>
+        )}
+      </Flex>
       <Group spacing="lg" position='center' style={{ marginTop: '16px', marginBottom: '16px' , }}>
         <TabChip
           label="Dealer Details"
@@ -148,16 +179,16 @@ const NewPurchaseOrder = () => {
 
       <Tabs value={activeTab}>
         <Tabs.Panel value={TAB.dealerDetails}>
-          <DealerDetailForm />
+        <DealerDetailForm isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.itemDetails}>
-          <PurchasedItemPanel />
+          <PurchasedItemPanel  isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.paymentDetails}>
           <PaymentDetailAndBillPanel />
         </Tabs.Panel>
         <Tabs.Panel value={TAB.billUpload}>
-          <BillUploadPanel />
+          <BillUploadPanel  isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.summary}>
           <PurchaseOrderSummary />
