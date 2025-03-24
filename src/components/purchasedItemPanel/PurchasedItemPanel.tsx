@@ -25,7 +25,7 @@ import { toast } from 'react-toastify';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
 import PurchaseOrderDashboard from '../PODashboard/PODashboard';
 
-const PurchasedItemPanel = () => {
+const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -135,7 +135,7 @@ const PurchasedItemPanel = () => {
   return (
     <Flex direction="column" gap="sm" p="sm" sx={{ position: 'relative' }}>
       <Box mx="sm" mt="16px">
-        <ItemSearch onItemSelect={onItemSelect} />
+        <ItemSearch onItemSelect={onItemSelect} isApprovedPO={isApprovedPO} />
       </Box>
 
       <Accordion mx="sm" radius="md" variant="contained">
@@ -145,6 +145,7 @@ const PurchasedItemPanel = () => {
             <PurchasedItemDetailForm
               loading={itemFormLoading}
               onSubmit={onPurchasedOrderSubmit}
+              isApprovedPO={isApprovedPO}
             />
           </Accordion.Panel>
         </Accordion.Item>
@@ -168,6 +169,7 @@ const PurchasedItemPanel = () => {
           setRemoveItem(purchasedItem)
         }
         loadingRemoveItemById={removeItemId}
+        isApprovedPO={isApprovedPO}
       />
 
       <QuestionModal

@@ -53,7 +53,8 @@ import { radioGroupConfig, skuModalQuestion, YES } from 'src/constants/purchaseO
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit,
-  loading
+  loading,
+  isApprovedPO
 }) => {
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
@@ -292,6 +293,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                       />
                     </>
                   }
+                  disabled={isApprovedPO}
                 />
               </Col>
 
@@ -308,6 +310,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   error={errors.inputName}
                   placeholder="Enter Item name"
+                  disabled={isApprovedPO}
                 />
               </Col>
 
@@ -321,6 +324,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   error={errors.itemQuantity}
                   placeholder="Enter Packet Quantity"
+                  disabled={isApprovedPO}
                 />
               </Col>
 
@@ -331,6 +335,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   value={purchasedItemFormData.unit}
                   required
                   onChange={(value) => onChange('unit', value!)}
+                  disabled={isApprovedPO}
                 />
               </Col>
 
@@ -341,6 +346,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('mrp', event.currentTarget.value)}
                   error={errors.mrp}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -395,6 +401,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('companyName', event.currentTarget.value)}
                   error={errors.companyName}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -404,6 +411,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('brand', event.currentTarget.value)}
                   error={errors.brand}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -417,6 +425,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   sx={{ width: '100%' }}
                   value={purchasedItemFormData.category}
                   onChange={(value) => onChange('category', value)}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -432,7 +441,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   sx={{ width: '100%' }}
                   value={purchasedItemFormData.subCategory}
                   onChange={(value) => onChange('subCategory', value)}
-                  disabled={!purchasedItemFormData.category}
+                  disabled={!purchasedItemFormData.category || isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -442,6 +451,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   onChange={(event) =>
                     onChange('flavourOrFeature', event.currentTarget.value)
                   }
+                  disabled={isApprovedPO}
                 />
               </Col>
             </Grid>
@@ -456,6 +466,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('costPrice', event.currentTarget.value)}
                   error={errors.costPrice}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -465,6 +476,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('sellingPrice', event.currentTarget.value)}
                   error={errors.sellingPrice}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col>
@@ -488,6 +500,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                     onChange('stockQuantity', parseInt(event.currentTarget.value))
                   }
                   error={errors.stockQuantity}
+                  disabled={isApprovedPO}
                 />
               </Col>
             </Grid>
@@ -500,6 +513,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   label="Item Remarks"
                   value={purchasedItemFormData.itemRemark}
                   onChange={(event) => onChange('itemRemark', event.currentTarget.value)}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -511,6 +525,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                     { value: "false", label: "No" }
                   ]}
                   onChange={(value) => onChange("freeItemsAvailable", value === "true")}
+                  disabled={isApprovedPO}
                 />
               </Col>
               { purchasedItemFormData.freeItemsAvailable &&
@@ -521,6 +536,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                     onChange={(event) =>
                       onChange('freeItemsRemarks', event.currentTarget.value)
                     }
+                    disabled={isApprovedPO}
                     />
                 </Col>
               }
@@ -533,6 +549,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                     { value: "false", label: "No" }
                   ]}
                   onChange={(value) => onChange("returnPolicyAvailable", value === "true")}
+                  disabled={isApprovedPO}
                 />
               </Col>
               {purchasedItemFormData.returnPolicyAvailable && (
@@ -543,6 +560,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                     onChange={(event) =>
                       onChange('returnPolicyRemarks', event.currentTarget.value)
                     }
+                    disabled={isApprovedPO}
                   />
                 </Col>
               )}
@@ -557,6 +575,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   error={errors.itemHasExpiry}
                   onChange={(value) => onChange('itemHasExpiry', value === 'true')}
                   withAsterisk
+                  disabled={isApprovedPO}
                 />               
               </Col>
             </Grid>
@@ -564,7 +583,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         </Flex>
         <Flex>
           <Box>
-            <Divider my="xs" label="Add Items Expiry" labelPosition="center" />
+            <Divider my="xs" label="Add Items Expiry" labelPosition="center"/>
             <Flex gap="16px" align="center" wrap="wrap">
               <DatePicker
                 label="MFG Date."
@@ -575,6 +594,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 onChange={(value: Date) => onExpiryFormDateChange('mfgDate', value)}
                 error={errors.mfgDate}
                 withAsterisk
+                disabled={isApprovedPO}
               />
               <DatePicker
                 label="Expiry Date."
@@ -587,6 +607,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 }
                 error={errors.date}
                 withAsterisk
+                aria-disabled={isApprovedPO}
               />
               <CustomNumberInput
                 label="Item Quantity"
@@ -596,8 +617,9 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 onChange={(event) =>
                   onExpiryFormDateChange('value', event.currentTarget.value)
                 }
+                disabled={isApprovedPO}
               />
-              <Button leftIcon={<IconPlus />} onClick={onAddOrUpdateExpiryDate}>
+              <Button leftIcon={<IconPlus />} onClick={onAddOrUpdateExpiryDate} disabled={isApprovedPO}>
                 {isEditing ? 'Update' : 'Add'}
               </Button>
             </Flex>
@@ -618,6 +640,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               type="submit"
               fullWidth
               mt="lg"
+              disabled={isApprovedPO}
             >
               Add Item
             </Button>
@@ -628,6 +651,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               type="submit"
               fullWidth
               mt="lg"
+              disabled={isApprovedPO}
             >
               Reset
             </Button>

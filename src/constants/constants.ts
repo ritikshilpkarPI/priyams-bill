@@ -12,4 +12,7 @@ export const CONSTANTS = Object.freeze({
     PREPAID: "prepaid",
     YES: "Yes",
     NO: "No",
+    NO_IMAGE_AVAILABLE:'No Image Available',
+    NO_PAYMENTS_AVAILABLE:'No Payments Available',
+    NO_CREDITS_AVAILABLE:'No Credits Available',
 })

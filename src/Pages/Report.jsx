@@ -15,11 +15,16 @@ import { API_METHODS } from '../utils/constants/apiMethods';
 
 const Report = () => {
   const [dateRange, setDateRange] = useState();
-  const [timeRange, setTimeRange] = useState();
+  const [timeRange, setTimeRange] = useState([
+    new Date().setHours(0, 0, 0, 0),
+    new Date().setHours(23, 59, 59, 999)
+  ]);
   const [selectedFilter, setSelectedFilter] = useState('');
   const [reportResult, setReportResult] = useState({});
   const [showItemInput, setShowItemInput] = useState(false);
   const [itemName, setItemName] = useState('');
+  const [csvData, setCsvData] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
   const filterNameObj = {
     totalProfit: 'totalProfitSum',
@@ -30,21 +35,71 @@ const Report = () => {
     allItemsBillingTrend: 'allItemsBillingTrend',
   };
 
+   const handleDownloadCSV = () => {
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit'
+      })
+      .replace(/,/g, '')  // Remove commas
+      .replace(/ /g, '-'); // 30-Dec-23 format
+    };
+    const startDate = dateRange?.[0] ? 
+    formatDate(dateRange[0]) : 
+    'start-date';
+    const fileName = `${startDate}_${selectedFilter}.csv`
+    .replace(/ /g, '-')
+    .toLowerCase();
+     const csvContent = [
+       ['Item Name', 'Barcode', 'Quantity', 'MRP', 'Total Amount', 'Discount'],
+       ...csvData.map(item => [
+         item.name,
+         item.barcode,
+         item.quantity,
+         item.mrp,
+         item.amount,
+         item.discount
+       ])
+     ].map(e => e.join(',')).join('\n');
+ 
+     const blob = new Blob([csvContent], { type: 'text/csv' });
+     const url = window.URL.createObjectURL(blob);
+     const a = document.createElement('a');
+     a.href = url;
+     a.download = fileName;
+     a.click();
+     window.URL.revokeObjectURL(url);
+   };
+
   const findResult = async () => {
+    setLoading(true)
     const result = await genericAxios({
       url: `${API_PATHS.REPORT.POST_GET_DATE_RANGE_REPORT}/${selectedFilter}`,
       method: API_METHODS.POST,
       data: {
         startDate: new Date(dateRange[0]),
         lastDate: new Date(dateRange[1]),
-        startTime: timeRange[0].toUTCString(),
-        lastTime: timeRange[1].toUTCString(),
+        startTime: new Date(timeRange[0]).toUTCString(),
+        lastTime: new Date(timeRange[1]).toUTCString(),
         itemName: itemName,
       },
       headers: {
         Cookie: '',
       },
     });
+    setLoading(false)
+    if(result.data?.report) {
+       setCsvData(result.data.report.map(item => ({
+         name: item.items[0]?.itemDetail?.itemName,
+         barcode: item.items[0]?.itemDetail?.itemBarcode,
+         quantity: item.totalQuantitysum,
+         mrp: item.totalMRPsum?.toFixed(2),
+         amount: item.totalAmountSum?.toFixed(2),
+         discount: item.totalDiscountSum?.toFixed(2)
+       })));
+     }
     if(result.error)return
     setReportResult(result.data);
   };
@@ -64,14 +119,14 @@ const Report = () => {
           value={dateRange}
           onChange={setDateRange}
         />
-        <TimeRangeInput
+        {/* <TimeRangeInput
           style={{ width: '350px' }}
           format="12"
           label="Time Range"
           value={timeRange}
           onChange={setTimeRange}
           clearable
-        />
+        /> */}
       </div>
       <div style={{ display: 'flex', gap: '50px', paddingBottom: '10px' }}>
         <Select
@@ -101,7 +156,14 @@ const Report = () => {
           <></>
         )}
       </div>
-      <Button onClick={findResult}>Show Result</Button>
+      <Button onClick={findResult} loading={isLoading}>Show Result</Button>
+      <Button 
+         onClick={handleDownloadCSV} 
+         disabled={!reportResult?.report?.length}
+         style={{ marginLeft: '10px' }}
+       >
+         Download CSV
+       </Button>
       <div>
         {reportResult?.report?.length !== 0 ? (
           JSON.stringify(reportResult) !== '{}' ? (
@@ -143,6 +205,7 @@ const showBillTable = (reportResult) => (
         <th>
           <Text align="center">Item Name</Text>
         </th>
+        <th><Text align="center">Barcode</Text></th>
         <th>
           <Text align="center">Quantity</Text>
         </th>
@@ -200,6 +263,12 @@ const TableRow = ({ itemBill, idx, filterName }) => {
           <Text color="black" weight={500}>
             {itemBill.items[0]?.itemDetail?.itemName ||
               itemBill.items.itemDetail?.itemName}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {itemBill.items[0]?.itemDetail?.itemBarcode ||
+              itemBill.items.itemDetail?.itemBarcode}
           </Text>
         </td>
         <td>
