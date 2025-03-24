@@ -83,7 +83,7 @@ export const PaymentDetailsForm = ({
 
   const toggleAddCreditForm = async () => {
     try {
-      await paymentDetailFormValidation.validate(purchaseDetails, {
+      await paymentDetailFormValidation.validate({...purchaseDetails, totalItemsCost}, {
         abortEarly: false,
       });
       dispatch(
