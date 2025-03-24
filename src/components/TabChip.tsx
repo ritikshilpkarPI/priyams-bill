@@ -9,6 +9,7 @@ export const TAB: Record<string, string> = {
 };
 
 export type TabKey = keyof typeof TAB;
+
 interface TabChipProps {
   label: string;
   isValid: boolean;
@@ -26,9 +27,11 @@ export const TabChip: React.FC<TabChipProps> = ({
 }) => {
   return (
     <Chip
-      checked={true}
-      color={isValid ? 'green' : 'yellow'}
+      checked={isValid} 
+      variant="outline"
       size="md"
+      color={isValid ? 'green' : 'yellow'} 
+     
       onClick={() => onTabChange(tabKey)}
     >
       {label}
