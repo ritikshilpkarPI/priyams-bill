@@ -1,4 +1,7 @@
 const { Bill } = require('../db-models/bill-model');
+const PurchaseOrder = require('../db-models/purchase-order-model');
+
+
 
 const getTotalAmountReport = async (startDate, lastDate) => {
   const totalAmountReport = await Bill.aggregate([
@@ -142,6 +145,45 @@ const getAllItemsTrendReport = async (startDate, lastDate) => {
   return allItemsBillingTrend;
 };
 
+const getPurchasedItemsReport = async (startDate, lastDate) => {
+  return await PurchaseOrder.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+        isApproved: true,
+        isRejected: false
+      }
+    },
+    { $unwind: '$purchasedItems' },
+    {
+      $group: {
+        _id: '$purchasedItems.barcode',
+        itemName: { $first: '$purchasedItems.inputName' },
+        totalStock: { $sum: '$purchasedItems.stockQuantity' },
+        mrp: { $first: '$purchasedItems.mrp' },
+        costPrice: { $first: '$purchasedItems.costPrice' },
+        purchaseDates: { $push: '$createdAt' },
+        suppliers: { $push: '$procurementSource' },
+        purchaseOrderIds: { $push: '$_id' }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        barcode: '$_id',
+        itemName: 1,
+        totalStock: 1,
+        mrp: 1,
+        costPrice: 1,
+        lastPurchaseDate: { $max: '$purchaseDates' },
+        firstPurchaseDate: { $min: '$purchaseDates' },
+        totalOrders: { $size: '$purchaseOrderIds' },
+        suppliers: { $setUnion: ['$suppliers'] } // Get unique suppliers
+      }
+    }
+  ]);
+};
+
 const filterFunctionsObj = {
   totalAmount: getTotalAmountReport,
   totalProfit: getTotalProfitReport,
@@ -149,6 +191,7 @@ const filterFunctionsObj = {
   totalMRP: getTotalMRPReport,
   itemBillingTrend: getItemTrendReport,
   allItemsBillingTrend: getAllItemsTrendReport,
+  purchasedItems: getPurchasedItemsReport,
 };
 
 const getDateRangeReport = async (req, res,next) => {
