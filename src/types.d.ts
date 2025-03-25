@@ -160,6 +160,7 @@ declare global {
       itemBarcode: string;
       itemStockQuantity: number;
       slabPricing?: [number, number, number][];
+      itemImageUrl?: string;
     };
     itemQuantityInBill: number;
   }

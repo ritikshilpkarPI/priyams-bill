@@ -1,19 +1,27 @@
-import {
-  Text,
-  Button,
-  Card,
-  Flex,
-  Image,
-} from '@mantine/core';
+import { Text, Button, Card, Flex, Image } from '@mantine/core';
 import './BillItemsCardView.css';
-import { roundNumber } from '../../../src/utils/roundNumber';
+import { roundNumber } from '../../utils/roundNumber';
 import { Cross } from 'src/icons/Cross';
 import { useState } from 'react';
 import { Caret } from 'src/icons/Caret';
 import { SlabPricingTable } from '../SlabPricingTable/SlabPricingTable';
 
-export const BillItemsCardView = ({ items, onRemoveItem, bill, setBill }) => {
-  const calculateItemPrice = (slabPricing, quantity, defaultPrice) => {
+export const BillItemsCardView = ({
+  items,
+  onRemoveItem,
+  bill,
+  setBill,
+}: {
+  items: BillItem[];
+  onRemoveItem: (id: string) => {};
+  bill: BillState;
+  setBill: (bill: BillState) => void;
+}) => {
+  const calculateItemPrice = (
+    slabPricing: number[][] | undefined,
+    quantity: number,
+    defaultPrice: number
+  ) => {
     if (!slabPricing || slabPricing.length === 0) {
       return defaultPrice;
     }
@@ -25,7 +33,7 @@ export const BillItemsCardView = ({ items, onRemoveItem, bill, setBill }) => {
     return applicableSlab ? applicableSlab[2] : defaultPrice;
   };
 
-  const handleQuantityChange = (item, idx, newQuantity) => {
+  const handleQuantityChange = (idx: number, newQuantity: number) => {
     const updatedItems = [...bill.billItems];
     const updatedItem = {
       ...updatedItems[idx],
@@ -66,14 +74,19 @@ export const BillItemsCardView = ({ items, onRemoveItem, bill, setBill }) => {
 };
 
 const ItemCard = ({
-  item = {},
+  item,
   onQuantityChange = () => {},
   index,
-  removeItem,
+  removeItem = () => {},
+}: {
+  item: BillItem;
+  onQuantityChange: (idx: number, newQuantity: number) => void;
+  index: number;
+  removeItem: () => void;
 }) => {
   const [openSlabPricing, setOpenSlabPricing] = useState(false);
-  const onChange = (quantity) => {
-    onQuantityChange(item, index, Number(quantity));
+  const onChange = (quantity: number) => {
+    onQuantityChange(index, Number(quantity));
   };
   return (
     <Card w="100%" withBorder p={0} className="item-card-main-container">
@@ -94,16 +107,17 @@ const ItemCard = ({
             <strong className="card-view-item-price">
               {item.itemDetail.itemSellingPricePerUnit}
             </strong>
-            {item?.itemDetail?.slabPricing?.length > 0 && (
-              <span onClick={() => setOpenSlabPricing(!openSlabPricing)}>
-                <Caret
-                  className={`slab-caret-icon ${openSlabPricing && 'slab-caret-icon-rotate'}`}
-                />
-              </span>
-            )}
+            {item?.itemDetail?.slabPricing?.length &&
+              item?.itemDetail?.slabPricing?.length > 0 && (
+                <span onClick={() => setOpenSlabPricing(!openSlabPricing)}>
+                  <Caret
+                    className={`slab-caret-icon ${openSlabPricing && 'slab-caret-icon-rotate'}`}
+                  />
+                </span>
+              )}
           </Flex>
           {openSlabPricing && (
-            <SlabPricingTable data={item?.itemDetail?.slabPricing} />
+            <SlabPricingTable slabList={item?.itemDetail?.slabPricing || []} />
           )}
         </Flex>
         <Flex
@@ -132,7 +146,7 @@ const ItemCard = ({
                 type="number"
                 className="bill-items-card-view-quantity-input"
                 value={item.itemQuantityInBill}
-                onChange={(e) => onChange(e.target.value)}
+                onChange={(e) => onChange(Number(e.target.value))}
                 min={0}
               />
               <Button

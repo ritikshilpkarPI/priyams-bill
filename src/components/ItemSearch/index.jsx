@@ -10,6 +10,7 @@ import {
 import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
 import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
+import "./ItemSearch.css";
 
 export const ItemSearch = ({ onItemSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -153,13 +154,6 @@ const calculateItemPrice = (item, quantity) => {
             </Text>
           )}
         </Paper>
-        <style>{`
-          @media (max-width: 680px) {
-            .item-search-label {
-              display: none;
-            }
-          }
-        `}</style>
       </div>
     );
   };
