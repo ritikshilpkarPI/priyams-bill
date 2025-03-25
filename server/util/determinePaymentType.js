@@ -1,7 +1,5 @@
 const { CONSTANTS } = require('../constants/constants');
 
-const { CONSTANTS } = require('../constants/constants');
-
 const calculateTotals = (credits, payments) => {
   const totalCredit = credits.reduce((sum, c) => sum + Number(c.creditAmount), 0);
   const totalPaid = payments.reduce((sum, p) => sum + Number(p.paidAmount), 0);
