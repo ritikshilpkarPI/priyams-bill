@@ -33,16 +33,16 @@ const NewPurchaseOrder = () => {
   const [loading, setLoading] = useState(false);
   const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
   const purchaseOrderStatus = (() => {
-    const { isApproved, isRejected, isDraft } = purchaseOrderStatusInfo;
+    const { isApproved, isRejected, isDraft } = purchaseOrderStatusInfo || {};
     const { approved, drafted, rejected, saved } = purchaseOrderStatusConst;
     let label, color;
-    if (isDraft && isApproved) {
+    if (isDraft && isApproved && !isRejected) {
       label = approved;
       color = 'teal';
-    } else if (isDraft && isRejected) {
+    } else if (isDraft && !isApproved && isRejected) {
       label = rejected;
       color = 'red';
-    } else if (isDraft && !isApproved) {
+    } else if (isDraft && !isApproved && !isRejected) {
       label = drafted;
       color = 'yellow';
     } else if (isDraft === false && isApproved === false) {
