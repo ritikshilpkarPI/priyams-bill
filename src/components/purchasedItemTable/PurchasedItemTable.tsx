@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, Flex, Table, Title } from '@mantine/core';
+import { Badge, Box, Button, Flex, Table, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
@@ -169,33 +169,51 @@ export const PurchasedItemTable = ({
         padding: '16px',
         borderRadius: '8px',
         textAlign: 'left',
-        overflow: 'scroll',
       }}
       mx="sm"
       mt="16px"
     >
       <Title order={3}>Added Items</Title>
-      <Table>
-        <thead>
-          <tr>
-            <th>Barcode</th>
-            <th>Item Name</th>
-            <th>Packet Amount</th>
-            <th>Unit</th>
-            <th>MRP</th>
-            <th>CP</th>
-            <th>SP</th>
-            <th>Order Quantity</th>
-            <th>Remarks</th>
-            <th>Has Expiry</th>
-            <th>Expiry Summary</th>
-            <th>Tags</th>
-            <th>Actions</th>
-           {tableData?.length > 0 && <th>Sell details</th>}
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </Table>
+      <Box
+        sx={{
+          maxHeight: '70vh',
+          overflow: 'scroll',
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          border: '0.5px solid #ddd',
+          borderRadius: "6px",
+        }}
+      >
+        <Table withColumnBorders striped withBorder>
+          <thead
+            style={{
+              position: 'sticky',
+              top: 0,
+              background: 'white',
+              zIndex: 1,
+            }}
+          >
+            <tr>
+              <th>Barcode</th>
+              <th>Item Name</th>
+              <th>Packet Amount</th>
+              <th>Unit</th>
+              <th>MRP</th>
+              <th>CP</th>
+              <th>SP</th>
+              <th>Order Quantity</th>
+              <th>Remarks</th>
+              <th>Has Expiry</th>
+              <th>Expiry Summary</th>
+              <th>Tags</th>
+              <th>Actions</th>
+              {tableData?.length > 0 && <th>Sell details</th>}
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      </Box>
     </Flex>
   );
 };
