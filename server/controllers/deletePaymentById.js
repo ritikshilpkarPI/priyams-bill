@@ -1,6 +1,7 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { CONSTANTS } = require('../constants/constants');
 const { MESSAGES } = require('../constants/messages');
+const { deleteImages } = require('../util/image');
 
 const deletePaymentById = async (req, res, next) => {
   try {
@@ -46,6 +47,12 @@ const deletePaymentById = async (req, res, next) => {
         });
       }
       const initialLength = purchaseOrder.purchaseDetails.payments.length;
+      const payment = purchaseOrder.purchaseDetails.payments.find(
+        (payment) => payment._id.toString() === paymentId
+      );
+      if (payment.paymentImgURL.length) {
+        await deleteImages(payment.paymentImgURL);
+      }
       purchaseOrder.purchaseDetails.payments.pull({ _id: paymentId });
       if (purchaseOrder.purchaseDetails.payments.length === initialLength) {
         return res.status(400).json({
