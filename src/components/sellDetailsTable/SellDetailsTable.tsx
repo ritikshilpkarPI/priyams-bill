@@ -5,20 +5,23 @@ import './SellDetailsTable.css';
 import { LastPurchaseOrdersTable } from '../../components/lastPurchaseOrdersTable/LastPurchaseOrdersTable';
 
 export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
-  tableData, currentDate, lastThreeMonthDate, lastYearDate
+  tableData, currentDate, lastThreeMonthDate, lastYearDate, isPODetailsPage=false
 }) => {
   return (
     <div className="sell-details-table-component">
       {tableData.length > 0 ? (
         <div className="sell-details-table-container">
-          <table className="sell-details-table">
+          <table className={`sell-details-table ${isPODetailsPage ? 'po-details-table' : ''}`}>
             <thead className="sell-details-table-thead">
               <tr className="sell-details-table-thead-tr">
-                <th className="sell-details-table-thead-tr-th">Name</th>
+              {!isPODetailsPage && <>  <th className="sell-details-table-thead-tr-th">Name</th>
                 <th className="sell-details-table-thead-tr-th">MRP</th>
                 <th className="sell-details-table-thead-tr-th">
                   Sold After Approval
                 </th>
+                </>
+                }
+                
                 <th className="sell-details-table-thead-tr-th">
                   Last Month Sold
                 </th>
@@ -37,7 +40,7 @@ export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
               {tableData.length > 0 &&
                 tableData.map((item, index) => (
                   <tr className="sell-details-table-tbody-tr" key={index}>
-                    <td className="sell-details-table-tbody-tr-td">
+                 { !isPODetailsPage &&  <> <td className="sell-details-table-tbody-tr-td">
                       {item.itemName || 'N/A'}
                     </td>
                     <td className="sell-details-table-tbody-tr-td">
@@ -46,6 +49,9 @@ export const SellDetailsTable: React.FC<SellDetailsTableProps> = ({
                     <td className="sell-details-table-tbody-tr-td">
                       {item.soldAfterApproval}
                     </td>
+                    </>
+                    }
+                   
                     <td className="sell-details-table-tbody-tr-td">
                       {item.lastMonthSold}
                     </td>

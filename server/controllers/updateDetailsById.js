@@ -58,7 +58,7 @@ const updateDetailsById = async (req, res,next) => {
 
     const purchaseOrder = {
       purchasedItems: [...orders],
-      purchaseDetails: [...details],
+      purchaseDetails: details,
       isDraft,
       billPhotos,
       billAmount,

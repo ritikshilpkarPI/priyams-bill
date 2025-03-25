@@ -41,7 +41,7 @@ import permanentlyOutOfStock from './permanentlyOutOfStock';
 import rejectOrder from './rejectOrder';
 import saveInventory from './saveInventory';
 import saveOrder from './saveOrder';
-import savePayment from './savePayment';
+import {savePayment} from './savePayment';
 import sendAllExpense from './sendAllExpense';
 import sendDayExpenses from './sendDayExpenses';
 import sendMessage from './sendMessage';
@@ -51,7 +51,6 @@ import updateExpense from './updateExpense';
 import updateOrderByIndex from './updateOrderByIndex';
 import updatePaymentById from './updatePaymentById';
 import updateSavedOrders from './updateSavedOrders';
-import updateSavedPayment from './updateSavedPayment';
 import updateStaff from './updateStaff';
 import userDetails from './userDetails';
 import getCustomerBill from './getCustomerBill';
@@ -143,7 +142,6 @@ export {
   updateOrderByIndex,
   updatePaymentById,
   updateSavedOrders,
-  updateSavedPayment,
   updateStaff,
   userDetails,
   getCustomerBill,

@@ -1,7 +1,6 @@
 import * as Yup from 'yup';
 
 export const dealerFormValidation = Yup.object({
-  payment: Yup.string(),
   billAmount: Yup.number()
     .min(1, 'Bill amount must be greater than 0.')
     .required('Bill amount is required.'),

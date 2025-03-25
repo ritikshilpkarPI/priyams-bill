@@ -1,7 +1,7 @@
 import { Box, Button, Container, Flex, Image, Text } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { IconTrash } from '@tabler/icons-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -11,8 +11,9 @@ import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { getFileURL } from '../../utils/getFileURL';
+import ShareOnWhatsApp from '../shareOnWhatsApp';
 
-export const BillUploadPanel = () => {
+export const BillUploadPanel: React.FC<PurchaseOrderProps> = ({isApprovedPO}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,7 +45,7 @@ export const BillUploadPanel = () => {
     const response = await addNewOrderAPI({
       new_order: {
         purchaseObj: {
-          details: [],
+          details: {},
           ...purchaseOrder,
           orders: purchaseOrder.purchasedItems || [],
           bills,
@@ -68,7 +69,7 @@ export const BillUploadPanel = () => {
       new_order: {
         purchaseObj: {
           orders: purchaseOrder.purchasedItems,
-          details: [],
+          details: purchaseOrder.purchaseDetails || {},
           ...purchaseOrder,
           bills,
         },
@@ -99,7 +100,10 @@ export const BillUploadPanel = () => {
     toast.warn('Image should be more than 5MB and in JPEG/JPG/PNG/WEBP format');
   };
 
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
+    <>
     <Container>
       <Dropzone
         onDrop={onFileSelect}
@@ -109,6 +113,7 @@ export const BillUploadPanel = () => {
         sx={{ borderColor: 'black' }}
         loading={isFileUploading}
         accept={['image/jpeg', 'image/png', 'image/jpg', 'image/webp']}
+        disabled={isApprovedPO}
       >
         <Flex
           justify="center"
@@ -150,7 +155,7 @@ export const BillUploadPanel = () => {
                 leftIcon={<IconTrash size={20} />}
                 loading={deleteFileId === billPhoto.public_id}
                 disabled={Boolean(
-                  deleteFileId !== billPhoto.public_id && deleteFileId
+                  deleteFileId !== billPhoto.public_id && deleteFileId || isApprovedPO
                 )}
               >
                 Delete
@@ -166,5 +171,10 @@ export const BillUploadPanel = () => {
         ))}
       </Flex>
     </Container>
+    <Box mt="16px">
+      {match && <ShareOnWhatsApp  message={currentUrl}/>}
+      
+    </Box>
+    </>
   );
 };

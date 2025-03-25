@@ -19,11 +19,13 @@ import { PurchasedItemDetailForm } from '../PurchasedItemDetailForm/PurchasedIte
 import { PurchasedItemTable } from '../purchasedItemTable/PurchasedItemTable';
 import { QuestionModal } from '../questionModal/QuestionModal';
 import { ItemSearch } from '../ItemSearch';
-import { Box } from '@mantine/core';
+import { Box, Flex, Accordion } from '@mantine/core';
 import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
 import { toast } from 'react-toastify';
+import ShareOnWhatsApp from '../shareOnWhatsApp';
+import PurchaseOrderDashboard from '../PODashboard/PODashboard';
 
-const PurchasedItemPanel = () => {
+const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -117,6 +119,7 @@ const PurchasedItemPanel = () => {
     );
     if (response.isError)
       return toast.error('unable to update item, please try again');
+    editItemIdxRef.current = -1;
     dispatch(resetPurchasedItemForm());
     getPurchaseOrderDetails();
   };
@@ -128,16 +131,36 @@ const PurchasedItemPanel = () => {
       return toast.error('unable to get item details, please try again');
     dispatch(setPurchaseOrder(response.data));
   };
-
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
-    <div>
+    <Flex direction="column" gap="sm" p="sm" sx={{ position: 'relative' }}>
       <Box mx="sm" mt="16px">
-        <ItemSearch onItemSelect={onItemSelect} />
+        <ItemSearch onItemSelect={onItemSelect} isApprovedPO={isApprovedPO} />
       </Box>
-      <PurchasedItemDetailForm
-        loading={itemFormLoading}
-        onSubmit={onPurchasedOrderSubmit}
-      />
+
+      <Accordion mx="sm" radius="md" variant="contained">
+        <Accordion.Item value="Item Detail Form">
+          <Accordion.Control>Item Detail Form</Accordion.Control>
+          <Accordion.Panel>
+            <PurchasedItemDetailForm
+              loading={itemFormLoading}
+              onSubmit={onPurchasedOrderSubmit}
+              isApprovedPO={isApprovedPO}
+            />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
+
+      <Accordion mx="sm"  mt="16px" radius="md" variant="contained">
+        <Accordion.Item value="Dashboard">
+          <Accordion.Control>Dashboard</Accordion.Control>
+          <Accordion.Panel>
+            <PurchaseOrderDashboard />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
+
       <PurchasedItemTable
         onEdit={(purchasedItem: PurchasedItemDetailFormType, idx: number) => {
           setEditItem(purchasedItem);
@@ -147,7 +170,9 @@ const PurchasedItemPanel = () => {
           setRemoveItem(purchasedItem)
         }
         loadingRemoveItemById={removeItemId}
+        isApprovedPO={isApprovedPO}
       />
+
       <QuestionModal
         opened={Boolean(editItem)}
         onClose={resetEditItem}
@@ -155,6 +180,7 @@ const PurchasedItemPanel = () => {
         onDisagree={resetEditItem}
         question={`Do you want to edit item ${editItem?.inputName || ''} ?`}
       />
+
       <QuestionModal
         opened={Boolean(removeItem)}
         onClose={resetRemoveItem}
@@ -162,7 +188,10 @@ const PurchasedItemPanel = () => {
         onDisagree={resetRemoveItem}
         question={`Do you want to remove item ${removeItem?.inputName || ''} ?`}
       />
-    </div>
+
+      <Box mt="16px">{match && <ShareOnWhatsApp message={currentUrl} />}</Box>
+
+    </Flex>
   );
 };
 

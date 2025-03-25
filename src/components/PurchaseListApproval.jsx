@@ -1,14 +1,15 @@
 import { Button } from '@mantine/core';
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { parseJwt } from '../utils/cookie';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
-import { getUserDeviceInfo } from 'src/utils/getUserDeviceInfo';
+import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
+import ShareOnWhatsApp from './shareOnWhatsApp';
 const PurchaseListApproval = ({
   list,
   index,
@@ -35,15 +36,7 @@ const PurchaseListApproval = ({
       if (callback) callback();
     }
   };
-
-  const getUserDetails = async () => {
-    const { browser, os, ip } = await getUserDeviceInfo();
-    return {
-      browser: browser,
-      os: os,
-      ipAddress: ip,
-    };
-  };  
+ 
 
   const rejectOrder = async (id, index) => {
     await handleApiCall(
@@ -131,21 +124,30 @@ const PurchaseListApproval = ({
     const isUserAdmin = isAdmin();
     setIsAdminUser(isUserAdmin)
   }, [])
+  const baseUrl = window.location.origin;
+  const message = `${baseUrl}/new-purchase-order/${list._id}`
+
+  const navigate = useNavigate();
+
   return (
     <>
       {list ? (
         <>
-          <td>{allPurchaseList.length - index}</td>
+          <td>{ index + 1}</td>
           <td>{list.dealerName}</td>
           <td>{list.phoneNumber}</td>
           <td>{list.payment}</td>
-          <td>{list.billAmount}</td>
+          <td>{list?.purchaseDetails?.totalBillAmount}</td>
           <td>{list.totalPaidAmount}</td>
           <td>{list.procurementSource}</td>
           <td>
             {new Date(list.createdAt)?.toLocaleDateString('en-US')} {datetext}
           </td>
           <td>{list.remark}</td>
+          <td>
+             <ShareOnWhatsApp message={message}/>
+           
+          </td>
           <td>
             {list.isDraft
               ? list.isApproved
@@ -159,7 +161,10 @@ const PurchaseListApproval = ({
             <>
               {list.isApproved ? (
                 <td>
-                  <Button onClick={() => setIndexDetail(index)}>Details</Button>
+                  <Button 
+                  onClick={()=> navigate(`/new-purchase-order/${list._id}`, { state: { isApprovedPO: true, id: list._id } })}
+                  >Details</Button>
+
                 </td>
               ) : (
                 <td>

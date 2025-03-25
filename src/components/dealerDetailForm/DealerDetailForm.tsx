@@ -19,8 +19,9 @@ import { dealerFormValidation } from '../../utils/validations/dealerFormValidati
 import { toast } from 'react-toastify';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
+import ShareOnWhatsApp from 'src/components/shareOnWhatsApp';
 
-export const DealerDetailForm: React.FC = () => {
+export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export const DealerDetailForm: React.FC = () => {
     const response = await updateOrderDetailsAPI({
       new_order: {
         purchaseObj: {
-          details: [],
+          details: purchaseOrder.purchaseDetails || {},
           bills: [],
           orders: purchaseOrder.purchasedItems,
           ...purchaseOrder,
@@ -94,7 +95,8 @@ export const DealerDetailForm: React.FC = () => {
       setErrors(getYupValidationErrorMap(error));
     }
   };
-
+  const currentUrl = window.location.href;
+  const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
     <Flex
       mt="lg"
@@ -127,6 +129,7 @@ export const DealerDetailForm: React.FC = () => {
               required
               error={errors.dealerName}
               placeholder="Enter dealer name"
+              disabled={isApprovedPO}
             />
           </Col>
 
@@ -144,6 +147,7 @@ export const DealerDetailForm: React.FC = () => {
               error={errors.phoneNumber}
               placeholder="Enter phone number"
               maxLength={10}
+              disabled={isApprovedPO}
             />
           </Col>
 
@@ -155,15 +159,7 @@ export const DealerDetailForm: React.FC = () => {
               required
               placeholder="Enter bill amount"
               error={errors.billAmount}
-            />
-          </Col>
-
-          <Col span={12}>
-            <Select
-              label="Payment Type"
-              data={['Fully Paid', 'Partially Paid', 'Credit']}
-              value={dealerFormData.payment}
-              onChange={(value) => onChange('payment', value!)}
+              disabled={isApprovedPO}
             />
           </Col>
 
@@ -173,6 +169,7 @@ export const DealerDetailForm: React.FC = () => {
               data={['Walmart', 'D Mart', 'City', 'Distributor']}
               value={dealerFormData.procurementSource}
               onChange={(value) => onChange('procurementSource', value!)}
+              disabled={isApprovedPO}
             />
           </Col>
           <Col span={12}>
@@ -183,6 +180,7 @@ export const DealerDetailForm: React.FC = () => {
                 onChange('remark', event.currentTarget.value)
               }
               placeholder="Enter any remarks"
+              disabled={isApprovedPO}
             />
           </Col>
 
@@ -193,12 +191,18 @@ export const DealerDetailForm: React.FC = () => {
               type="submit"
               fullWidth
               mt="lg"
+              disabled={isApprovedPO}
             >
               Save & Next
             </Button>
           </Col>
         </Grid>
       </Flex>
+      {
+        match && <ShareOnWhatsApp message={currentUrl}/>
+      }
+      
+
     </Flex>
   );
 };

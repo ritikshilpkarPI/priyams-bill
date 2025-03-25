@@ -1,34 +1,84 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const { CONSTANTS } = require('../constants/constants');
+const { MESSAGES } = require('../constants/messages');
+const { deleteImages } = require('../util/image');
 
-const deletePaymentById = async (req, res,next) => {
+const deletePaymentById = async (req, res, next) => {
   try {
     const purchase_id = req.params.id;
-    const { index } = req.body;
+    const { paymentMethod, paymentId } = req.body;
+
+    if (!paymentMethod || !paymentId) {
+      return res.status(400).json({
+        message: MESSAGES.MISSING_REQUIRED_FIELDS,
+        success: false,
+      });
+    }
+
     const purchaseOrder = await PurchaseOrder.findById(purchase_id);
-    const purchaseDetails = purchaseOrder.purchaseDetails.filter(
-      (detail, i) => i !== index
-    );
-    let totalPaidAmount = 0;
-    purchaseDetails.forEach((payment) => {
-      totalPaidAmount = totalPaidAmount + payment.paidAmount;
-    });
-    totalPaidAmount = Number(
-      (Math.round(totalPaidAmount * 100) / 100).toFixed(2)
-    );
-    const updatedOrder = await PurchaseOrder.findByIdAndUpdate(purchase_id, {
-      purchaseDetails,
-      totalPaidAmount,
-    }, { new: true });
+    if (!purchaseOrder) {
+      return res.status(404).json({
+        message: MESSAGES.PURCHASE_ORDER_NOT_FOUND,
+        success: false,
+      });
+    }
+
+    if (paymentMethod.toLowerCase() === CONSTANTS.CREDIT) {
+      if (!purchaseOrder.purchaseDetails?.credits?.length) {
+        return res.status(400).json({
+          message: MESSAGES.NO_CREDITS_FOUND,
+          success: false,
+        });
+      }
+      const initialLength = purchaseOrder.purchaseDetails.credits.length;
+
+      purchaseOrder.purchaseDetails.credits.pull({ _id: paymentId });
+      if (purchaseOrder.purchaseDetails.credits.length === initialLength) {
+        return res.status(400).json({
+          message: MESSAGES.CREDIT_NOT_FOUND,
+          success: false,
+        });
+      }
+    } else if (paymentMethod.toLowerCase() === CONSTANTS.PAYMENT) {
+      if (!purchaseOrder.purchaseDetails?.payments?.length) {
+        return res.status(400).json({
+          message: MESSAGES.NO_PAYMENTS_FOUND,
+          success: false,
+        });
+      }
+      const initialLength = purchaseOrder.purchaseDetails.payments.length;
+      const payment = purchaseOrder.purchaseDetails.payments.find(
+        (payment) => payment._id.toString() === paymentId
+      );
+      if (payment.paymentImgURL.length) {
+        await deleteImages(payment.paymentImgURL);
+      }
+      purchaseOrder.purchaseDetails.payments.pull({ _id: paymentId });
+      if (purchaseOrder.purchaseDetails.payments.length === initialLength) {
+        return res.status(400).json({
+          message: MESSAGES.PAYMENT_NOT_FOUND,
+          success: false,
+        });
+      }
+    }
+
+    const totalPaidAmount = purchaseOrder.purchaseDetails?.payments
+    ?.reduce((sum, payment) => sum + (payment.paidAmount || 0), 0)
+    .toFixed(2);
+
+    purchaseOrder.totalPaidAmount = Number(totalPaidAmount);
+
+    await purchaseOrder.save();
+
     res.status(200).send({
-      message: 'order deleted successfully',
+      message: MESSAGES.PAYMENT_DELETED_SUCCESSFULLY,
       success: true,
-      order: updatedOrder,
-      updatedOrder,
+      order: purchaseOrder,
+      purchaseOrder,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
 
 module.exports = deletePaymentById;

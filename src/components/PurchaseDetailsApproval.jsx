@@ -13,6 +13,8 @@ const PurchaseDetailsApproval = ({
   getOrders,
 }) => {
   const [indexDetail, setIndexDetail] = useState(-1);
+  
+  
   return (
     <div className="purchase-approval">
       <h3>Purchase Details, approval required</h3>
@@ -37,18 +39,18 @@ const PurchaseDetailsApproval = ({
               <th>Dealer Name</th>
               <th>Phone Number</th>
               <th>Payment</th>
-              <th>Bill Amount</th>
+              <th>Total Bill Amount</th>
               <th>Paid Amount</th>
               <th>Procurement Source</th>
               <th>Created At</th>
               <th>Remark</th>
+              <th>Share</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {allPurchaseList
               ?.map((list, index) => {
-                console.log({ list })
                 const isShelfExpired = list?.purchasedItems?.find(purchaseItem => purchaseItem?.expiryDates?.find(expiryDate => expiryDate?.isShelfExpired));
                 return indexDetail >= 0 ? (
                   index === indexDetail ? (
@@ -78,7 +80,7 @@ const PurchaseDetailsApproval = ({
                   </tr>
                 );
               })
-              .reverse()}
+             }
           </tbody>
         </Table>
       )}
