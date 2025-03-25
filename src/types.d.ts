@@ -430,9 +430,10 @@ declare global {
     paymentImgURL?:Array<{ public_id:string, secure_url:string }>;
     creditLimitInDays?: number;
     idx?: number;
+    _id?: string;
   }
   interface PaymentDetailsFormCardProps {
-    removePaymentRecord: (index: number) => void;
+    removePaymentRecord: (paymentId: string) => Promise<{ isError: boolean, error?:string }>;
     paymentsList: Array<PaymentsList>;
     title: string
   }
@@ -452,7 +453,8 @@ declare global {
   
   interface PaymentDetailsCardProps {
     payment: PaymentsList;
-    index: number
+    index: number;
+    removePaymentRecord: (paymentId: string) => Promise<{isError: boolean, error?:string}>;
   }
   interface PurchaseOrderProps {
     isApprovedPO?: boolean;
