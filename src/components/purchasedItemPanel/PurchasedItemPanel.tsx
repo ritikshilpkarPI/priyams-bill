@@ -136,7 +136,7 @@ const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
   return (
     <Flex direction="column" gap="sm" p="sm" sx={{ position: 'relative' }}>
       <Box mx="sm" mt="16px">
-        <ItemSearch onItemSelect={onItemSelect}  isApprovedPO={isApprovedPO}  />
+        <ItemSearch onItemSelect={onItemSelect} isApprovedPO={isApprovedPO} />
       </Box>
 
       <Accordion mx="sm" radius="md" variant="contained">
@@ -146,6 +146,7 @@ const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
             <PurchasedItemDetailForm
               loading={itemFormLoading}
               onSubmit={onPurchasedOrderSubmit}
+              isApprovedPO={isApprovedPO}
             />
           </Accordion.Panel>
         </Accordion.Item>
@@ -169,6 +170,7 @@ const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
           setRemoveItem(purchasedItem)
         }
         loadingRemoveItemById={removeItemId}
+        isApprovedPO={isApprovedPO}
       />
 
       <QuestionModal
