@@ -202,16 +202,29 @@ export const savePOPaymentAPI = async (paymentDetails: PaymentDetailType) => {
 
 export const updatePOPaymentAPI = async (
   paymentDetails: PaymentDetailType,
+  paymentMethod: string,
   purchaseOrderId: string,
-  index: number
+  paymentImages?: File[],
+  index?: number,
 ) => {
   try {
+    const formData = new FormData();
+
+    formData.append('data', JSON.stringify({
+      paymentMethod,
+      purchaseData: paymentDetails,
+    }));
+
+    if (paymentImages?.length) {
+      paymentImages.forEach((image) => {
+        formData.append('paymentImages', image);
+      });
+    }
+
     const response = await postAPI({
       path: `${API_PATHS.PAYMENT.POST_UPDATE_PAYMENT_BY_ID}/${purchaseOrderId}`,
-      data: {
-        payment: paymentDetails,
-        index,
-      },
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
     });
     return response;
   } catch (error) {
@@ -219,12 +232,17 @@ export const updatePOPaymentAPI = async (
   }
 };
 
-export const deletePaymentByIdAPI = async (id: string, index: number) => {
+export const deletePaymentByIdAPI = async (
+  purchaseOrderId: string,
+  paymentMethod: string,
+  paymentId: string,
+) => {
   try {
     const response = await postAPI({
-      path: `${API_PATHS.PAYMENT.POST_DELETE_PAYMENT_BY_ID}/${id}`,
+      path: `${API_PATHS.PAYMENT.POST_DELETE_PAYMENT_BY_ID}/${purchaseOrderId}`,
       data: {
-        index,
+        paymentMethod,
+        paymentId,        
       },
     });
     return response;

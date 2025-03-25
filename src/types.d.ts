@@ -71,6 +71,7 @@ declare global {
     currentDate?: string;
     lastThreeMonthDate?: string;
     lastYearDate?: string;
+    isPODetailsPage?: boolean;
   }
 
   interface CategorySchemaType {
@@ -214,6 +215,20 @@ declare global {
     packetUnit: string;
   }
 
+  interface ReturnedItemType {
+    itemDetail: mongoose.Types.ObjectId;
+    itemQuantityInBill: number;
+  }
+  
+   interface ReturnItemSchemaType extends Document {
+    originalBillId?: mongoose.Types.ObjectId;
+    returnedItems?: ReturnedItemType[];
+    exchangeBillId?: mongoose.Types.ObjectId;
+    returnDate?: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }
+
   interface DealerDetailFormType {
     payment: 'Fully Paid' | 'Partially Paid' | 'Credit';
     billAmount: number;
@@ -252,11 +267,14 @@ declare global {
     returnPolicyRemarks: string;
     _id?: string;
     inputName?: string;
+    freeItemsRemarks?: string;
+    itemHasExpiry?: boolean | null;
   }
 
   interface PurchasedItemDetailFormProps {
     onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
     loading?: boolean;
+    isApprovedPO?: boolean;
   }
 
   interface ItemExpiryDateType {
@@ -271,12 +289,36 @@ declare global {
     showActions?: boolean;
     showTotal?: boolean;
   }
-
+  interface creditsType {
+    creditAmount?: number;
+    payDate?: string;
+    creditLimitInDays?: number;
+    createdAt?: Date;
+  }
+  interface paymentsType {
+    paymentDate?: string;
+    paidBy?: string;
+    paymentImages?: Array<file>;
+    paymentImgURL?:Array<{ public_id:string, secure_url:string }>;
+    paidAmount?: number;
+    createdAt?: Date;
+    chequeNumber?:string;
+    idx?: number;
+  }
   interface PaymentDetailType {
-    paidAmount: number;
-    paidBy: string;
-    chequeNumber: string;
-    _id?: string;
+    totalPayableAmount?: number;
+    totalBillAmount?: number;
+    paymentType?: string;
+    totalItemsCost?: number;
+    remark?: string;
+    addPaymentDetail?:  paymentsType;
+    addCreditDetail?: creditsType;
+    credits?:Array<creditsType>;
+    payments?:Array<paymentsType>;
+    paymentFormState?:{
+      addCredit?:boolean
+      makePayment?:boolean
+    }
   }
 
   interface CloudFileType {
@@ -293,7 +335,7 @@ declare global {
     createdAt?: string;
     _id?: string;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
-    purchaseDetails?: Array<PaymentDetailType>;
+    purchaseDetails?: PaymentDetailType;
     billPhotos?: Array<CloudFileType>;
     dealerName?: string;
     phoneNumber?: string;
@@ -307,6 +349,7 @@ declare global {
     onRemove: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void;
     onEdit: (purchasedItem: PurchasedItemDetailFormType, idx: number) => void; 
     loadingRemoveItemById: string;
+    isApprovedPO?: boolean;
   }
 
   interface PaymentDetailTableProps {
@@ -316,7 +359,7 @@ declare global {
 
   interface PaymentDetailFormProps {
     purchaseOrderId?: string;
-    paymentDetailIdx: number;  
+    paymentDetailIdx?: number;  
   }
 
   interface QuestionModalProps {
@@ -325,6 +368,8 @@ declare global {
     question: string;
     onAgree: () => void;
     onDisagree: () => void;
+    children?: React.ReactNode;
+    isChangeCTADisabled?: boolean;
   }
 
   interface CustomNumberInputProps {
@@ -334,6 +379,7 @@ declare global {
     placeholder?: string;
     error?: string;
     required?: boolean;
+    disabled?: boolean;
   }
 
   interface FileAndURLType {
@@ -358,7 +404,7 @@ declare global {
   interface PurchaseObjType extends PurchaseOrderDataType {
     orders?: Array<PurchasedItemDetailFormType>;
     bills?: Array<string>;
-    details?: Array<PaymentDetailType>;
+    details?: PaymentDetailType;
   }
  
   interface AddNewOrderAPIArgs {
@@ -374,6 +420,45 @@ declare global {
     },
     deleteBills?: Array<CloudFileType>;
     uploadedImages?: Array<CloudFileType>;
+  }
+  interface PaymentsList {
+    creditAmount?: number;
+    payDate?: string;
+    paymentDate?: string;
+    paidBy?: string;
+    paidAmount?: number;
+    paymentImages?: File[];
+    paymentImgURL?:Array<{ public_id:string, secure_url:string }>;
+    creditLimitInDays?: number;
+    idx?: number;
+    _id?: string;
+  }
+  interface PaymentDetailsFormCardProps {
+    removePaymentRecord: (paymentId: string) => Promise<{ isError: boolean, error?:string }>;
+    paymentsList: Array<PaymentsList>;
+    title: string
+  }
+
+  interface AccordionProps {
+    title: string;
+    children: ReactNode;
+  }
+
+
+  interface MetricCardProps {
+    title: string;
+    value: string | number;
+    prefix?: string;
+    suffix?: string;
+  }
+  
+  interface PaymentDetailsCardProps {
+    payment: PaymentsList;
+    index: number;
+    removePaymentRecord: (paymentId: string) => Promise<{isError: boolean, error?:string}>;
+  }
+  interface PurchaseOrderProps {
+    isApprovedPO?: boolean;
   }
 }
 declare module '*.scss' {

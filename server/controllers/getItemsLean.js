@@ -10,6 +10,7 @@ const getItemsLean = async (req, res, next) => {
       {
         permanentlyOutOfStock: false,
         isDeleted: false,
+        temporaryDeleted: { $exists: false },
       },
       null,
       { sort: { itemName: 1 } }
@@ -17,7 +18,6 @@ const getItemsLean = async (req, res, next) => {
       itemBarcode: 1,
       itemName: 1,
       itemMRPperUnit: 1,
-      itemCostPricePerUnit: 1,
       itemSellingPricePerUnit: 1,
       slabPricing: 1,
       itemStockQuantity: 1,

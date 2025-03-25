@@ -8,6 +8,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   error,
   label,
   required,
+  disabled
 }) => {
   return (
       <Input.Wrapper error={error} label={label} required={required}>
@@ -16,6 +17,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
           onChange={onChange}
           placeholder={placeholder}
           value={value}
+          disabled={disabled}
         />
       </Input.Wrapper>
   );

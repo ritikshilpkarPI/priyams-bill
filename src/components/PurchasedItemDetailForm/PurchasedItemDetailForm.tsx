@@ -16,6 +16,7 @@ import {
   LoadingOverlay,
   Alert,
   Text,
+  Radio,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useSelector, useDispatch } from 'react-redux';
@@ -32,6 +33,7 @@ import {
   IconEdit,
   IconExclamationCircle,
   IconPlus,
+  IconSquareRoundedPercentage,
 } from '@tabler/icons-react';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
 import { getStrWithoutSpecChar } from '../../utils/getStrWithoutSpecChar';
@@ -45,12 +47,14 @@ import { getItemsSkuAPI } from '../../utils/apiUtils';
 import { setItemsData } from '../../redux/items/itemsSlice';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
+import { radioGroupConfig, skuModalQuestion, YES } from 'src/constants/purchaseOrderConstants';
 
 
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit,
-  loading
+  loading,
+  isApprovedPO
 }) => {
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
@@ -67,6 +71,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
   const [isEditing, setIsEditing] = useState(false);
+  const [updateChoice, setUpdateChoice] = useState<string>()
 
   const skuFields: Record<string, string> = {
     inputName: 'inputName',
@@ -171,7 +176,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     }
   };
 
-  const onExpiryFormDateChange = (field: string, value: string | Date | null) => {
+  const onExpiryFormDateChange = (field: string, value: string | Date | null ) => {
     let stringVal: string | null = null;
 
     if (value instanceof Date) {
@@ -238,18 +243,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     setIsEditing(true);
   };
 
+  const profitMargin = (
+    ((Number(purchasedItemFormData.sellingPrice) -
+      Number(purchasedItemFormData.costPrice)) /
+      Number(purchasedItemFormData.costPrice)) *
+    100
+  ).toFixed(2);
+
   return (
-    <Flex direction="column" gap="16px" mx="sm" mt="lg" pos="relative">
+    <Flex direction="column" gap="16px" pos="relative">
       <Flex
         align="left"
         gap="16px"
         direction="column"
-        sx={{
-          border: '1px solid grey',
-          padding: '16px',
-          borderRadius: '8px',
-          textAlign: 'left',
-        }}
       >
         <Title order={3} display="flex" sx={{ gap: '8px' }}>
           <Flex wrap="wrap" gap="4px">
@@ -287,6 +293,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                       />
                     </>
                   }
+                  disabled={isApprovedPO}
                 />
               </Col>
 
@@ -303,6 +310,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   error={errors.inputName}
                   placeholder="Enter Item name"
+                  disabled={isApprovedPO}
                 />
               </Col>
 
@@ -316,6 +324,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   error={errors.itemQuantity}
                   placeholder="Enter Packet Quantity"
+                  disabled={isApprovedPO}
                 />
               </Col>
 
@@ -326,6 +335,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   value={purchasedItemFormData.unit}
                   required
                   onChange={(value) => onChange('unit', value!)}
+                  disabled={isApprovedPO}
                 />
               </Col>
 
@@ -336,6 +346,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('mrp', event.currentTarget.value)}
                   error={errors.mrp}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -390,6 +401,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('companyName', event.currentTarget.value)}
                   error={errors.companyName}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -399,6 +411,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('brand', event.currentTarget.value)}
                   error={errors.brand}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -412,6 +425,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   sx={{ width: '100%' }}
                   value={purchasedItemFormData.category}
                   onChange={(value) => onChange('category', value)}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -427,7 +441,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   sx={{ width: '100%' }}
                   value={purchasedItemFormData.subCategory}
                   onChange={(value) => onChange('subCategory', value)}
-                  disabled={!purchasedItemFormData.category}
+                  disabled={!purchasedItemFormData.category || isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -437,6 +451,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   onChange={(event) =>
                     onChange('flavourOrFeature', event.currentTarget.value)
                   }
+                  disabled={isApprovedPO}
                 />
               </Col>
             </Grid>
@@ -451,6 +466,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('costPrice', event.currentTarget.value)}
                   error={errors.costPrice}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
@@ -460,6 +476,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   required
                   onChange={(event) => onChange('sellingPrice', event.currentTarget.value)}
                   error={errors.sellingPrice}
+                  disabled={isApprovedPO}
+                />
+              </Col>
+              <Col>
+                <TextInput
+                  label={
+                    <>
+                      Profit Margin{' '}
+                      <IconSquareRoundedPercentage color="red" size={18} />
+                    </>
+                  }
+                  value={`${Number(profitMargin) ? profitMargin : 0}`}
+                  disabled
                 />
               </Col>
               <Col span={12}>
@@ -471,6 +500,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                     onChange('stockQuantity', parseInt(event.currentTarget.value))
                   }
                   error={errors.stockQuantity}
+                  disabled={isApprovedPO}
                 />
               </Col>
             </Grid>
@@ -483,24 +513,43 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   label="Item Remarks"
                   value={purchasedItemFormData.itemRemark}
                   onChange={(event) => onChange('itemRemark', event.currentTarget.value)}
+                  disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
-                <Checkbox
-                  label="Is free items available?"
-                  checked={purchasedItemFormData.freeItemsAvailable}
-                  onChange={(event) =>
-                    onChange('freeItemsAvailable', event.target.checked)
-                  }
+                 <Select
+                  label="Is Free Items Available?"
+                  value={purchasedItemFormData.freeItemsAvailable ? "true" : "false"}
+                  data={[
+                    { value: "true", label: "Yes" },
+                    { value: "false", label: "No" }
+                  ]}
+                  onChange={(value) => onChange("freeItemsAvailable", value === "true")}
+                  disabled={isApprovedPO}
                 />
               </Col>
+              { purchasedItemFormData.freeItemsAvailable &&
+                <Col span={12}>
+                  <Textarea
+                    label="Free Items Remarks"
+                    value={purchasedItemFormData.freeItemsRemarks}
+                    onChange={(event) =>
+                      onChange('freeItemsRemarks', event.currentTarget.value)
+                    }
+                    disabled={isApprovedPO}
+                    />
+                </Col>
+              }
               <Col span={12}>
-                <Checkbox
-                  label="Is return policy available?"
-                  checked={purchasedItemFormData.returnPolicyAvailable}
-                  onChange={(event) =>
-                    onChange('returnPolicyAvailable', event.target.checked)
-                  }
+                  <Select
+                  label="Is Return Policy Available?"
+                  value={purchasedItemFormData.returnPolicyAvailable ? "true" : "false"}
+                  data={[
+                    { value: "true", label: "Yes" },
+                    { value: "false", label: "No" }
+                  ]}
+                  onChange={(value) => onChange("returnPolicyAvailable", value === "true")}
+                  disabled={isApprovedPO}
                 />
               </Col>
               {purchasedItemFormData.returnPolicyAvailable && (
@@ -511,15 +560,30 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                     onChange={(event) =>
                       onChange('returnPolicyRemarks', event.currentTarget.value)
                     }
+                    disabled={isApprovedPO}
                   />
                 </Col>
               )}
+              <Col>
+                <Select
+                  label="Product Has Expiry Date"
+                  value={ purchasedItemFormData.itemHasExpiry === null? "" : purchasedItemFormData.itemHasExpiry ? 'true' : 'false'}
+                  data={[
+                      { value: 'false', label: 'No' },
+                      { value: 'true', label: 'Yes' },
+                  ]}
+                  error={errors.itemHasExpiry}
+                  onChange={(value) => onChange('itemHasExpiry', value === 'true')}
+                  withAsterisk
+                  disabled={isApprovedPO}
+                />               
+              </Col>
             </Grid>
           </Box>
         </Flex>
         <Flex>
           <Box>
-            <Divider my="xs" label="Add Items Expiry" labelPosition="center" />
+            <Divider my="xs" label="Add Items Expiry" labelPosition="center"/>
             <Flex gap="16px" align="center" wrap="wrap">
               <DatePicker
                 label="MFG Date."
@@ -530,6 +594,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 onChange={(value: Date) => onExpiryFormDateChange('mfgDate', value)}
                 error={errors.mfgDate}
                 withAsterisk
+                disabled={isApprovedPO}
               />
               <DatePicker
                 label="Expiry Date."
@@ -542,6 +607,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 }
                 error={errors.date}
                 withAsterisk
+                aria-disabled={isApprovedPO}
               />
               <CustomNumberInput
                 label="Item Quantity"
@@ -551,8 +617,9 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                 onChange={(event) =>
                   onExpiryFormDateChange('value', event.currentTarget.value)
                 }
+                disabled={isApprovedPO}
               />
-              <Button leftIcon={<IconPlus />} onClick={onAddOrUpdateExpiryDate}>
+              <Button leftIcon={<IconPlus />} onClick={onAddOrUpdateExpiryDate} disabled={isApprovedPO}>
                 {isEditing ? 'Update' : 'Add'}
               </Button>
             </Flex>
@@ -573,6 +640,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               type="submit"
               fullWidth
               mt="lg"
+              disabled={isApprovedPO}
             >
               Add Item
             </Button>
@@ -583,6 +651,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               type="submit"
               fullWidth
               mt="lg"
+              disabled={isApprovedPO}
             >
               Reset
             </Button>
@@ -592,13 +661,27 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       <QuestionModal
         opened={showSkuModal}
         onClose={onSkuModalClose}
-        question="Any change in SKU fields will create new item. Do you want to continue?
-        SKU Fields: Barcode, Item name, MRP, Packet Amount, Unit"
+        question={skuModalQuestion}
         onAgree={() => {
           setShowSkuModal(false);
-          dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
+          if (updateChoice === YES) {
+            dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
+          }
         }}
         onDisagree={onSkuModalClose}
+        isChangeCTADisabled={!Boolean(updateChoice)}
+        children={
+          <Radio.Group
+        label={radioGroupConfig.label}
+        name={radioGroupConfig.name}
+        value={updateChoice}
+        onChange={(val) => setUpdateChoice(val)}
+      >
+        {radioGroupConfig.options.map((option) => (
+          <Radio key={option.value} value={option.value} label={option.label} />
+        ))}
+      </Radio.Group>
+        }
       />
       <LoadingOverlay visible={Boolean(loading)} />
     </Flex>

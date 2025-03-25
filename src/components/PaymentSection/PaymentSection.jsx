@@ -18,7 +18,8 @@ export const PaymentSection = ({
   totalAmount,
   onPaymentChange,
   onSubmit,
-  isLoading
+  isLoading,
+  refundAmount = 0,
 }) => {
   const [saveBillButtonDisabled, setSaveBillButtonDisabled] = useState(false);
   const handlePaymentInputChange = (e, field) => {
@@ -33,9 +34,28 @@ export const PaymentSection = ({
     }
   };  
   const loading = useSelector(itemsFeedAPILoading);
+
+    // Determine display label and value based on refund and total amount:
+  const { displayLabel, displayValue, className } = (() => {
+    if (totalAmount < refundAmount) {
+      return { displayLabel: "Refund Amount", displayValue: refundAmount - totalAmount, className: "text-red" };
+    } else {
+      return { displayLabel: "Total Amount", displayValue: totalAmount - refundAmount , className: "text-blue"};
+    }
+  })();
+
   useEffect(() => {
-    setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0);
-  }, [cashPay, upiPay, totalAmount]);
+    // If a refund is provided, always enable the save button.
+    if (refundAmount > 0) {
+      setSaveBillButtonDisabled(false);
+    } else {
+      setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0);
+    }
+  }, [cashPay, upiPay, totalAmount, refundAmount]);
+
+  
+  const amountTobeReturned = (refundAmount + upiPay + cashPay) - totalAmount;
+  
   return (
     <div className="payment-section">
       <Paper p="md" radius="md" withBorder>
@@ -50,8 +70,8 @@ export const PaymentSection = ({
             color="blue"
             className="amount-display-text"
           >
-            <span className="amount-label">Total Amount:</span>
-            <span className="amount-value">₹{totalAmount}</span>
+            <span className={`amount-label ${className}`}>{displayLabel}:</span>
+            <span className={`amount-value ${className}`}>₹{displayValue}</span>
           </Text>
         </div>
 
@@ -78,7 +98,7 @@ export const PaymentSection = ({
                 min={0}
                 placeholder="0"
                 className="payment-input-with-icon"
-                disabled={loading}
+                disabled={loading || totalAmount <= refundAmount || totalAmount === 0}
               />
             </div>
           </div>
@@ -105,15 +125,15 @@ export const PaymentSection = ({
                 min={0}
                 placeholder="0"
                 className="payment-input-with-icon"
-                disabled={loading}
+                disabled={loading || totalAmount <= refundAmount || totalAmount === 0}
               />
             </div>
           </div>
         </div>
 
-        {amountReturn > 0 && (
+        {amountTobeReturned > 0 && (
           <Alert color="orange" mb="md">
-            Return Amount: ₹{amountReturn}
+            Return Amount: ₹{amountTobeReturned}
           </Alert>
         )}
 
