@@ -1,16 +1,11 @@
 import {
-  Badge,
-  Box,
   Button,
-  Col,
   Flex,
   Grid,
   Select,
-  Text,
   Textarea,
   TextInput,
 } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -47,21 +42,19 @@ export const PaymentDetailsForm = ({
   purchaseOrderId,
   paymentDetailIdx,
 }: PaymentDetailFormProps) => {
-  const location = useLocation();
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   const purchaseDetails = useSelector(selectPaymentDetailForm) || {};
   const paymentFormState = useSelector(selectPaymentFormState);
 
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
   const purchaseOrder = useSelector(selectPurchaseOrder) || {};
   
-
+  const totalItemsCost = parseFloat(purchaseOrder.purchaseDetails?.totalItemsCost?.toFixed(2) ?? '');
   const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
   const creditsList = purchaseOrder.purchaseDetails?.credits || [];
 
@@ -93,7 +86,7 @@ export const PaymentDetailsForm = ({
 
   const toggleAddCreditForm = async () => {
     try {
-      await paymentDetailFormValidation.validate(purchaseDetails, {
+      await paymentDetailFormValidation.validate({...purchaseDetails, totalItemsCost}, {
         abortEarly: false,
       });
       dispatch(
@@ -110,7 +103,7 @@ export const PaymentDetailsForm = ({
 
   const toggleMakePaymentForm = async () => {
     try {
-      await paymentDetailFormValidation.validate(purchaseDetails, {
+      await paymentDetailFormValidation.validate({...purchaseDetails, totalItemsCost}, {
         abortEarly: false,
       });
       dispatch(
@@ -156,7 +149,13 @@ export const PaymentDetailsForm = ({
   purchaseDetails?.totalPayableAmount !==purchaseDetails?.totalBillAmount ||
   purchaseDetails?.totalBillAmount !== purchaseOrder.purchaseDetails?.totalItemsCost ||
   purchaseDetails?.totalPayableAmount !== purchaseOrder.purchaseDetails?.totalItemsCost;
+  
+  const {
+    totalBillAmount,
+    totalPayableAmount,
+  } = purchaseDetails;
 
+  const isRemarkRequired = ((totalBillAmount !== totalItemsCost) || (totalPayableAmount !== totalItemsCost));
 
   return (
     <Flex
@@ -234,6 +233,8 @@ export const PaymentDetailsForm = ({
               value={purchaseDetails.remark ?? ''}
               onChange={(e) => onChange('remark', e.target.value)}
               sx={{ width: '100%' }}
+              required={ isRemarkRequired }
+              error={ errors.remark }
             />
           </Grid.Col>
           }
