@@ -212,7 +212,7 @@ const saveInventory = async (req, res, next) => {
 };
 
 // Optimized helper function to merge expiry dates
-const mergeExpiryDates = (oldDates, newDates) => {
+const mergeExpiryDates = (oldDates = [], newDates = []) => {
   const dateMap = new Map();
 
   [...oldDates, ...newDates].forEach(({ date, value }) => {
