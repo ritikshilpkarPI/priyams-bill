@@ -137,7 +137,7 @@ const PurchaseListApproval = ({
           <td>{list.dealerName}</td>
           <td>{list.phoneNumber}</td>
           <td>{list.payment}</td>
-          <td>{list.billAmount}</td>
+          <td>{list?.purchaseDetails?.totalBillAmount}</td>
           <td>{list.totalPaidAmount}</td>
           <td>{list.procurementSource}</td>
           <td>
