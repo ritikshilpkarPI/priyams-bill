@@ -42,7 +42,7 @@ const addOrder = async (req, res,next) => {
   
       const purchaseOrder = {
         purchasedItems: [...orders],
-        purchaseDetails: [...details],
+        purchaseDetails: {},
         billPhotos,
         isDraft,
         billAmount,
