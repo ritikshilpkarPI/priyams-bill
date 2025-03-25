@@ -99,7 +99,7 @@ export const PurchasedItemTable = ({
   }, []);
 
   const rows = purchasedItems?.map((purchasedItem, idx) => (
-    <tr key={purchasedItem._id} className="purchased-item-table-row">
+    <tr key={`${purchasedItem._id}_${idx}`} className="purchased-item-table-row">
       <td>{purchasedItem?.barcode || '-'}</td>
       <td>{purchasedItem?.inputName || '-'}</td>
       <td>{purchasedItem?.itemQuantity || '-'}</td>

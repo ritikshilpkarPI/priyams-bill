@@ -12,7 +12,7 @@ const PurchaseOrderDashboard: React.FC = () => {
 
   let totalBillAmount = 0;
   let totalProfitMargin = 0;
-  const uniqueItemsSet = new Set<string>();
+  let uniqueItemsCount = 0;
   let existingItemsCount = 0;
   let newItemsCount = 0;
   let itemsWithManuAndExpiry = 0;
@@ -28,9 +28,7 @@ const PurchaseOrderDashboard: React.FC = () => {
     if (itemCostPrice > 0) {
       const profitMargin = ((itemSellingPrice - itemCostPrice) / itemCostPrice) * 100;
       totalProfitMargin += profitMargin;
-    }
-
-    uniqueItemsSet.add(item._id ?? '');
+    }    
 
     if (item.item_id) {
       existingItemsCount++;
@@ -57,6 +55,7 @@ const PurchaseOrderDashboard: React.FC = () => {
       }
     }
   });
+  uniqueItemsCount = existingItemsCount + newItemsCount
 
   return (
     <div className={styles.dashboard}>
@@ -72,14 +71,14 @@ const PurchaseOrderDashboard: React.FC = () => {
         <Grid.Col span={4}>
           <MetricCard
             title="Total Profit Margin (%)"
-            value={(totalProfitMargin/uniqueItemsSet.size).toFixed(2)}
+            value={(totalProfitMargin/uniqueItemsCount).toFixed(2)}
             suffix="%"
           />
         </Grid.Col>
         <Grid.Col span={4}>
           <MetricCard
             title="Unique Items"
-            value={uniqueItemsSet.size}
+            value={uniqueItemsCount}
           />
         </Grid.Col>
         <Grid.Col span={4}>
