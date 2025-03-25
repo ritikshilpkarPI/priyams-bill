@@ -3,7 +3,6 @@ import { Button, Flex, Table, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { selectPaymentDetails } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { IconX } from '@tabler/icons-react';
-import { deletePaymentByIdAPI } from '../../utils/apiUtils';
 import { useDispatch } from 'react-redux';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { toast } from 'react-toastify';
@@ -16,16 +15,6 @@ export const PaymentDetailTable = ({
   const paymentDetails = useSelector(selectPaymentDetails);
   const [removePaymentIdx, setRemovePaymentIdx] = useState(-1);
 
-  const deletePayment = async (index: number) => {
-    if (!purchaseOrderId) return;
-    setRemovePaymentIdx(index);
-    const response = await deletePaymentByIdAPI(purchaseOrderId, index);
-    setRemovePaymentIdx(-1);
-    if (response.isError)
-      return toast.error('unable to remove payments, please try again');
-    if (!response.order) return;
-    dispatch(setPurchaseOrder(response.order));
-  };
 
   // const rows = paymentDetails?.map((paymenrDetail, idx) => (
   //   <tr key={paymenrDetail._id} className="purchased-item-table-row">

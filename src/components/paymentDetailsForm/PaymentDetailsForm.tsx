@@ -17,7 +17,7 @@ import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
-import { savePOPaymentAPI, updatePOPaymentAPI } from '../../utils/apiUtils';
+import { deletePaymentByIdAPI, savePOPaymentAPI, updatePOPaymentAPI } from '../../utils/apiUtils';
 import { getNumberFromStr } from '../../utils/getNumberFromStr';
 import { paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
@@ -125,12 +125,24 @@ export const PaymentDetailsForm = ({
     }
   };
 
-  const paymentsListhandleDelete = (index: number) => {
-    dispatch(removePaymentRecord(index));
+  const paymentsListhandleDelete = async (paymentId: string): Promise<{ isError: boolean, error?:string }> => {
+    if (!purchaseOrderId) return { isError: true, error:"purchaseOrderId not found, please try after some time" };
+    const response = await deletePaymentByIdAPI(purchaseOrderId, CONSTANTS.PAYMENT, paymentId);    
+    if (response.isError) {
+      return { isError: true, error:'unable to delete payment, please try after some time' };
+    }
+    dispatch(setPurchaseOrder(response.order));
+    return { isError: false }; 
   };
 
-  const creditsListhandleDelete = (index: number) => {
-    dispatch(removeCreditRecord(index));
+  const creditsListhandleDelete = async (paymentId: string): Promise<{ isError: boolean, error?:string }> => {
+    if (!purchaseOrderId) return { isError: true, error:"purchaseOrderId not found, please try after some time" };
+    const response = await deletePaymentByIdAPI(purchaseOrderId, CONSTANTS.CREDIT, paymentId);    
+    if (response.isError) {
+      return { isError: true, error:'unable to delete payment, please try after some time' };
+    }
+    dispatch(setPurchaseOrder(response.order));
+    return { isError: false }; 
   };
 
   useEffect(() => {
