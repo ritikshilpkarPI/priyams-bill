@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
 import { Chip, Group, LoadingOverlay, Tabs, Title } from '@mantine/core';
 import './NewPurchaseOrder.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
 import { getPurchaseOrderDetailsAPI } from '../../utils/apiUtils';
 import {
@@ -19,12 +19,13 @@ import { BillUploadPanel } from '../../components/BillUploadPanel/BillUploadPane
 import { PurchaseOrderSummary } from '../../components/purchaseOrderSummary/PurchaseOrderSummary';
 import { resetPurchasedItemForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import {
   validateDealerDetails,
   validateItemDetails,
   validatePaymentDetails,
 } from 'src/utils/purchaseOrderValidations';
-import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import { TAB, TabChip, TabKey } from 'src/components/TabChip';
 
 
@@ -41,12 +42,14 @@ const NewPurchaseOrder = () => {
   const activeTabInitial = currentTab && currentTab in TAB ? TAB[currentTab] : TAB.dealerDetails;
 
   const [loading, setLoading] = useState(false);
+  const purchaseOrder = useSelector(selectPurchaseOrder);
+  const { isApproved = false} = purchaseOrder;
+
   const [isValidDealerDetails, setIsValidDealerDetails] = useState(false);
   const [isValidItemDetails, setIsValidItemDetails] = useState(false);
   const [isValidPaymentDetails, setIsValidPaymentDetails] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(activeTabInitial);
 
-  const purchaseOrder = useSelector(selectPurchaseOrder);
   const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length);
   const onTabChange = (newTab: TabKey) => {
     setActiveTab(TAB[newTab]);
@@ -148,16 +151,16 @@ const NewPurchaseOrder = () => {
 
       <Tabs value={activeTab}>
         <Tabs.Panel value={TAB.dealerDetails}>
-          <DealerDetailForm />
+          <DealerDetailForm isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.itemDetails}>
-          <PurchasedItemPanel />
+          <PurchasedItemPanel  isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.paymentDetails}>
           <PaymentDetailAndBillPanel />
         </Tabs.Panel>
         <Tabs.Panel value={TAB.billUpload}>
-          <BillUploadPanel />
+          <BillUploadPanel  isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.summary}>
           <PurchaseOrderSummary />

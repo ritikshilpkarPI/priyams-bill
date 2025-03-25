@@ -83,9 +83,8 @@ const saveInventory = async (req, res, next) => {
             ? (oldItemCost * oldStock + newItemCost * newStock) / totalStock
             : 0;
 
-        let newTotalStock = oldStock + newStock;
         let newTotalItemQuantity =
-          itemDetails.itemPerUnitQuantity + oldItem.itemPerUnitQuantity;
+          itemDetails.itemPerUnitQuantity;
 
         let newUseByDate = mergeExpiryDates(
           oldItem.useByDate,
@@ -98,7 +97,7 @@ const saveInventory = async (req, res, next) => {
             ? 0
             : parseFloat(newCostPrice.toFixed(2)),
           useByDate: newUseByDate,
-          itemStockQuantity: newTotalStock,
+          itemStockQuantity: totalStock,
           itemPerUnitQuantity: newTotalItemQuantity,
         };
 

@@ -13,13 +13,29 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: '2-digit'
+  })
+  .replace(/,/g, '')  // Remove commas
+  .replace(/ /g, '-'); // 30-Dec-23 format
+};
+
 const Report = () => {
   const [dateRange, setDateRange] = useState();
-  const [timeRange, setTimeRange] = useState();
+  const [timeRange, setTimeRange] = useState([
+    new Date().setHours(0, 0, 0, 0),
+    new Date().setHours(23, 59, 59, 999)
+  ]);
   const [selectedFilter, setSelectedFilter] = useState('');
   const [reportResult, setReportResult] = useState({});
   const [showItemInput, setShowItemInput] = useState(false);
   const [itemName, setItemName] = useState('');
+  const [csvData, setCsvData] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
   const filterNameObj = {
     totalProfit: 'totalProfitSum',
@@ -28,30 +44,108 @@ const Report = () => {
     totalDiscount: 'totalDiscountSum',
     itemBillingTrend: 'itemBillingTrend',
     allItemsBillingTrend: 'allItemsBillingTrend',
+    purchasedItems: 'purchasedItems',
   };
 
+   const handleDownloadCSV = () => {
+    let csvContent;
+    const startDate = dateRange?.[0] ? 
+    formatDate(dateRange[0]) : 
+    'start-date';
+    const fileName = `${startDate}_${selectedFilter}.csv`
+    .replace(/ /g, '-')
+    .toLowerCase();
+
+    if(selectedFilter === 'purchasedItems') {
+      // For purchased items filter
+      const csvRows = [
+        ['Barcode', 'Item Name', 'Total Purchased', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase'],
+        ...reportResult.report.map(item => [
+          item.barcode,
+          item.itemName,
+          item.totalStock,
+          item.mrp?.toFixed(2),
+          item.costPrice?.toFixed(2),
+          item.suppliers.join(', '),
+          formatDate(item.firstPurchaseDate),
+          formatDate(item.lastPurchaseDate)
+        ])
+      ];
+      csvContent = csvRows.map(row => row.join(',')).join('\n');
+    } else {
+      // For other filters
+      const csvRows = [
+        ['Item Name', 'Barcode', 'Quantity', 'MRP', 'Total Amount', 'Discount'],
+        ...csvData.map(item => [
+          item.name,
+          item.barcode,
+          item.quantity,
+          item.mrp,
+          item.amount,
+          item.discount
+        ])
+      ];
+      csvContent = csvRows.map(row => row.join(',')).join('\n');
+    }
+     const blob = new Blob([csvContent], { type: 'text/csv' });
+     const url = window.URL.createObjectURL(blob);
+     const a = document.createElement('a');
+     a.href = url;
+     a.download = fileName;
+     a.click();
+     window.URL.revokeObjectURL(url);
+   };
+
   const findResult = async () => {
+    setLoading(true)
     const result = await genericAxios({
       url: `${API_PATHS.REPORT.POST_GET_DATE_RANGE_REPORT}/${selectedFilter}`,
       method: API_METHODS.POST,
       data: {
         startDate: new Date(dateRange[0]),
         lastDate: new Date(dateRange[1]),
-        startTime: timeRange[0].toUTCString(),
-        lastTime: timeRange[1].toUTCString(),
+        startTime: new Date(timeRange[0]).toUTCString(),
+        lastTime: new Date(timeRange[1]).toUTCString(),
         itemName: itemName,
       },
       headers: {
         Cookie: '',
       },
     });
+    setLoading(false)
+    if(result.data?.report) {
+      setCsvData(
+        selectedFilter === 'purchasedItems'
+          ? result.data.report.map(item => ({
+              name: item.itemName,
+              barcode: item.barcode,
+              quantity: item.totalStock,
+              mrp: item.mrp,
+              costPrice: item.costPrice,
+              suppliers: item.suppliers,
+              firstPurchase: item.firstPurchaseDate,
+              lastPurchase: item.lastPurchaseDate
+            }))
+          : result.data.report.map(item => ({
+              // Existing mapping for other filters
+              name: item.items[0]?.itemDetail?.itemName,
+              barcode: item.items[0]?.itemDetail?.itemBarcode,
+              quantity: item.totalQuantitysum,
+              mrp: item.totalMRPsum?.toFixed(2),
+              amount: item.totalAmountSum?.toFixed(2),
+              discount: item.totalDiscountSum?.toFixed(2)
+            }))
+      );
+     }
     if(result.error)return
     setReportResult(result.data);
   };
 
   const handleFilterOption = (e) => {
     setSelectedFilter(e);
-    e === 'itemBillingTrend' ? setShowItemInput(true) : setShowItemInput(false);
+    setReportResult({}); // Clear previous results
+    setCsvData([]); // Clear CSV data
+    setShowItemInput(e === 'itemBillingTrend');
   };
 
   return (
@@ -64,14 +158,14 @@ const Report = () => {
           value={dateRange}
           onChange={setDateRange}
         />
-        <TimeRangeInput
+        {/* <TimeRangeInput
           style={{ width: '350px' }}
           format="12"
           label="Time Range"
           value={timeRange}
           onChange={setTimeRange}
           clearable
-        />
+        /> */}
       </div>
       <div style={{ display: 'flex', gap: '50px', paddingBottom: '10px' }}>
         <Select
@@ -85,6 +179,7 @@ const Report = () => {
             { value: 'totalAmount', label: 'Total Amount sum' },
             { value: 'totalMRP', label: 'Total MRP sum' },
             { value: 'totalDiscount', label: 'Total Discount sum' },
+            { value: 'purchasedItems', label: 'All Items Purchase Trend' },
           ]}
           value={selectedFilter}
           onChange={(e) => handleFilterOption(e)}
@@ -101,13 +196,21 @@ const Report = () => {
           <></>
         )}
       </div>
-      <Button onClick={findResult}>Show Result</Button>
+      <Button onClick={findResult} loading={isLoading}>Show Result</Button>
+      <Button 
+         onClick={handleDownloadCSV} 
+         disabled={!reportResult?.report?.length}
+         style={{ marginLeft: '10px' }}
+       >
+         Download CSV
+       </Button>
       <div>
         {reportResult?.report?.length !== 0 ? (
           JSON.stringify(reportResult) !== '{}' ? (
             reportResult?.filterType === 'itemBillingTrend' ||
-            reportResult?.filterType === 'allItemsBillingTrend' ? (
-              showBillTable(reportResult)
+            reportResult?.filterType === 'allItemsBillingTrend' ||
+            reportResult?.filterType === 'purchasedItems' ? (
+              showBillTable(reportResult, selectedFilter)
             ) : (
               <>
                 <Title>
@@ -133,50 +236,82 @@ const Report = () => {
   );
 };
 
-const showBillTable = (reportResult) => (
+const showBillTable = (reportResult, selectedFilter) => (
   <Table striped highlightOnHover>
     <thead className="heading">
+    {selectedFilter === 'purchasedItems' ? (
       <tr>
-        <th>
-          <Text align="center">Sl. No.</Text>
-        </th>
-        <th>
-          <Text align="center">Item Name</Text>
-        </th>
-        <th>
-          <Text align="center">Quantity</Text>
-        </th>
-        <th>
-          <Text align="center">Item MRP per unit</Text>
-        </th>
-        <th>
-          <Text align="center">Bill MRP Total Amount</Text>
-        </th>
-        <th>
-          <Text align="center">Bill Total Amount</Text>
-        </th>
-        <th>
-          <Text align="center">Bill Discount</Text>
-        </th>
-        {reportResult.filterType === 'itemBillingTrend' ? (
-          <th>
-            <Text align="center">Bill date</Text>
-          </th>
-        ) : (
-          <></>
-        )}
+        <th>Sl No.</th>
+        <th>Barcode</th>
+        <th>Item Name</th>
+        <th>Total Purchased</th>
+        <th>MRP</th>
+        <th>Cost Price</th>
+        <th>Suppliers</th>
+        <th>First Purchase</th>
+        <th>Last Purchase</th>
       </tr>
+    ) : (
+      // Existing header logic
+          <tr>
+            <th>
+              <Text align="center">Sl. No.</Text>
+            </th>
+            <th>
+              <Text align="center">Item Name</Text>
+            </th>
+            <th><Text align="center">Barcode</Text></th>
+            <th>
+              <Text align="center">Quantity</Text>
+            </th>
+            <th>
+              <Text align="center">Item MRP per unit</Text>
+            </th>
+            <th>
+              <Text align="center">Bill MRP Total Amount</Text>
+            </th>
+            <th>
+              <Text align="center">Bill Total Amount</Text>
+            </th>
+            <th>
+              <Text align="center">Bill Discount</Text>
+            </th>
+            {reportResult.filterType === 'itemBillingTrend' ? (
+              <th>
+                <Text align="center">Bill date</Text>
+              </th>
+            ) : (
+              <></>
+            )}
+          </tr>
+    )}
     </thead>
     <tbody className="body">
       {reportResult.report?.map((item, idx) => {
-        return (
-          <TableRow
-            key={`${item}$${idx}`}
-            itemBill={item}
-            idx={idx}
-            filterName={reportResult.filterType}
-          />
-        );
+        if(selectedFilter === 'purchasedItems') {
+            return (
+              <tr key={idx}>
+                <td>{idx + 1}</td>
+                <td>{item.barcode}</td>
+                <td>{item.itemName}</td>
+                <td>{item.totalStock}</td>
+                <td>{item.mrp?.toFixed(2)}</td>
+                <td>{item.costPrice?.toFixed(2)}</td>
+                <td>{item.suppliers.join(', ')}</td>
+                <td>{formatDate(item.firstPurchaseDate)}</td>
+                <td>{formatDate(item.lastPurchaseDate)}</td>
+              </tr>
+            )
+        } else {
+          return (
+            <TableRow
+              key={`${item}$${idx}`}
+              itemBill={item}
+              idx={idx}
+              filterName={reportResult.filterType}
+            />
+          );
+        }
       })}
     </tbody>
   </Table>
@@ -184,6 +319,8 @@ const showBillTable = (reportResult) => (
 
 const TableRow = ({ itemBill, idx, filterName }) => {
   const [open, setOpen] = useState(false);
+  const firstItem = itemBill?.items?.[0]?.itemDetail || {};
+
   return (
     <>
       <tr
@@ -199,12 +336,18 @@ const TableRow = ({ itemBill, idx, filterName }) => {
         <td>
           <Text color="black" weight={500}>
             {itemBill.items[0]?.itemDetail?.itemName ||
-              itemBill.items.itemDetail?.itemName}
+              itemBill.items.itemDetail?.itemName || "N/A"}
           </Text>
         </td>
         <td>
           <Text color="black" weight={500}>
-            {itemBill.items?.itemQuantityInBill || itemBill['totalQuantitysum']}
+            {itemBill.items[0]?.itemDetail?.itemBarcode ||
+              itemBill.items.itemDetail?.itemBarcode || "N/A"}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {itemBill.items?.itemQuantityInBill || itemBill['totalQuantitysum'] || 0}
           </Text>
         </td>
         <td>
