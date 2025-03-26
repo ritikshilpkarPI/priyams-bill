@@ -69,6 +69,7 @@ export const PaymentDetailsForm = ({
       purchaseDetails?.totalPayableAmount;
     const paymentType =
       purchaseOrder.purchaseDetails.paymentType ?? purchaseDetails?.paymentType;
+    const remark = purchaseOrder.purchaseDetails.remark;
 
     dispatch(
       setPaymentDetailForm({
@@ -76,6 +77,7 @@ export const PaymentDetailsForm = ({
         totalBillAmount,
         totalPayableAmount,
         paymentType,
+        remark
       })
     );
   };
