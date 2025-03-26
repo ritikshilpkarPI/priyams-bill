@@ -88,6 +88,7 @@ const ItemCard = ({
   const onChange = (quantity: number) => {
     onQuantityChange(index, Number(quantity));
   };
+  const hasSlabPricing = (item?.itemDetail?.slabPricing?.length ?? 0) > 0;
   return (
     <Card w="100%" withBorder p={0} className="item-card-main-container">
       <span className="remove-item-button-wrapper" onClick={removeItem}>
@@ -107,14 +108,13 @@ const ItemCard = ({
             <strong className="card-view-item-price">
               {item.itemDetail.itemSellingPricePerUnit}
             </strong>
-            {item?.itemDetail?.slabPricing?.length &&
-              item?.itemDetail?.slabPricing?.length > 0 && (
-                <span onClick={() => setOpenSlabPricing(!openSlabPricing)}>
-                  <Caret
-                    className={`slab-caret-icon ${openSlabPricing && 'slab-caret-icon-rotate'}`}
-                  />
-                </span>
-              )}
+            {hasSlabPricing && (
+              <span onClick={() => setOpenSlabPricing(!openSlabPricing)}>
+                <Caret
+                  className={`slab-caret-icon ${openSlabPricing && 'slab-caret-icon-rotate'}`}
+                />
+              </span>
+            )}
           </Flex>
           {openSlabPricing && (
             <SlabPricingTable slabList={item?.itemDetail?.slabPricing || []} />
