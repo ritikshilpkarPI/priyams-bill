@@ -28,20 +28,6 @@ export const PurchaseOrderSummary = () => {
   const [loading, setLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
  
-
-  const validatePaymentDetails = async (
-    purchaseOrder: PurchaseOrderDataType
-  ) => {
-    try {
-      await paymentDetailFormValidation.validate(purchaseOrder.purchaseDetails);
-      await PaymentCoverageComplete.validate(purchaseOrder.purchaseDetails);
-      setIsValidPaymentDetails(true);
-      return true;
-    } catch (err) {
-      return false;
-    }
-  };
-
   const draftOrder = async () => {
     if (!purchaseOrder?._id) return;
     setLoading(true);
