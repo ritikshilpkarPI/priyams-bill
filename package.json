@@ -43,6 +43,7 @@
     "@mantine/modals": "^5.10.5",
     "@mantine/notifications": "^5.10.5",
     "@reduxjs/toolkit": "^2.5.1",
+    "@tabler/icons": "^3.31.0",
     "@tabler/icons-react": "^3.29.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
