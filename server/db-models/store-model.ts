@@ -20,7 +20,7 @@ const StoreSchema: Schema<StoreType> = new Schema({
   storePincode: { type: String},
   storeContacts: { type: [String]},
   storeNumber: { type: Number, unique: true },
-  // storeCode will be generated as "PSTR_{storeNumber}_{storePincode}"
+  // storeCode will be generated as "pstr_{storeNumber}_{storePincode}"
   storeCode: { type: String, unique: true },
   storeCollectionName: { type: String },
 });
@@ -32,8 +32,8 @@ StoreSchema.pre<StoreType>("save", async function (next) {
       const maxStore = await Model.findOne({}).sort({ storeNumber: -1 }).exec();
       this.storeNumber = maxStore ? maxStore.storeNumber + 1 : 1;
     }
-    // Generate storeCode as: PSTR_{storeNumber}_{storePincode}
-    this.storeCode = `PSTR_${this.storeNumber}_${this.storePincode}`;
+    // Generate storeCode as: pstr_{storeNumber}_{storePincode}
+    this.storeCode = `pstr_${this.storeNumber}_${this.storePincode}`;
     // Generate storeCollectionName as storeCode in lowercase
     this.storeCollectionName = this.storeCode.toLowerCase();
   }
