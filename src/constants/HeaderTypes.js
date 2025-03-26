@@ -58,6 +58,7 @@ export const sidebarListData = [
         url: '/barcodePrint',
         icon: 'images/barcode.svg',
       },
+      { name: 'Stores Inventory Management', url: '/storeInventoryManagement', icon: 'images/store.svg' }
     ],
   },
   {
@@ -127,6 +128,5 @@ export const sidebarListData = [
     ORDERS: [
       { name: 'User Orders', url: '/orders', icon: 'images/purchaseorder.svg' },
     ],
-  },
-  { STORES: [{ name: 'Stores Inventory', url: '/storeInventory', icon: 'images/store.svg' }] },
+  }
 ];

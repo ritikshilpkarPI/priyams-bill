@@ -35,5 +35,5 @@ export const ROUTES = Object.freeze({
     NEW_PURCHASE_ORDER: "/new-purchase-order",
     NEW_PURCHASE_ORDER_BY_ID: "/new-purchase-order/:id",
     CREATE_PURCHASE_ORDER: "/createPurchaseOrderPage",
-    STORE_INVENTORY: "/storeInventory",
+    STORE_INVENTORY: "/storeInventoryManagement",
 })

@@ -104,9 +104,10 @@ const StoreRoutes = () => {
             <Route exact path="/sellDetailsPage/:purchaseOrderId" component={SellDetailsPage} />
             <Route exact path="/barcodePrint" component={BarcodePrint} />
             <Route exact path="/createPurchaseOrderPage" component={CreatePurchaseOrderPage} />
-            <Route exact path="/storeInventory" component={StoreInventory} />
 
-                  {/* </ProtectedComponent> */}
+            <ProtectedComponent role={access.STORE_INVENTORY_MANAGEMENT}>
+            <Route exact path="/storeInventoryManagement" component={StoreInventory} />
+            </ProtectedComponent>
           </ProtectedRoutes>
         </Fragment>
       </Switch>

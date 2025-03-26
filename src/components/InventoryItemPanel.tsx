@@ -30,13 +30,13 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({ items, o
                 <NumberInput
                   value={item.quantityToAdd}
                   onChange={(value) => onQuantityChange(item.itemDetail._id, value || 0)}
-                  min={1}
+                  min={0}
                 />
               </td>
               <td>
                 <ActionIcon color="red" onClick={() => onRemoveItem(item.itemDetail._id)}>
-                  {/* Replace with an actual icon if available */}
-                  <Text size="sm">trash</Text>
+                  
+                  <Text size="sm">Remove</Text>
                 </ActionIcon>
               </td>
             </tr>
