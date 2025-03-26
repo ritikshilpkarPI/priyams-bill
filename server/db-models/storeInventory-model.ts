@@ -27,7 +27,7 @@ const StoreInventoryItemSchema: Schema = new Schema({
  * @param collectionName - The name of the collection (typically storeCode.toLowerCase())
  */
 export const getStoreInventoryModel = (collectionName: string) => {
-  const modelName = `StoreInventory_${collectionName}`;
+  const modelName = `pstr_${collectionName}`;
   // Return the model if already registered, otherwise create a new one.
   if (mongoose.models[modelName]) {
     return mongoose.models[modelName] as mongoose.Model<StoreInventoryItemType>;
