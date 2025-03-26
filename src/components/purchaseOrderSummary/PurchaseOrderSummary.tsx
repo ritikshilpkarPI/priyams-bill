@@ -30,9 +30,6 @@ export const PurchaseOrderSummary = () => {
   const [loading, setLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
  
-
-
-
   const draftOrder = async () => {
     if (!purchaseOrder?._id) return;
     setLoading(true);
