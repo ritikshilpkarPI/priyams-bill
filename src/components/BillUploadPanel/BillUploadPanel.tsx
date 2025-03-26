@@ -1,7 +1,7 @@
 import { Box, Button, Container, Flex, Image, Text } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { IconTrash } from '@tabler/icons-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -13,7 +13,7 @@ import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { getFileURL } from '../../utils/getFileURL';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
 
-export const BillUploadPanel = () => {
+export const BillUploadPanel: React.FC<PurchaseOrderProps> = ({isApprovedPO}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -113,6 +113,7 @@ export const BillUploadPanel = () => {
         sx={{ borderColor: 'black' }}
         loading={isFileUploading}
         accept={['image/jpeg', 'image/png', 'image/jpg', 'image/webp']}
+        disabled={isApprovedPO}
       >
         <Flex
           justify="center"
@@ -154,7 +155,7 @@ export const BillUploadPanel = () => {
                 leftIcon={<IconTrash size={20} />}
                 loading={deleteFileId === billPhoto.public_id}
                 disabled={Boolean(
-                  deleteFileId !== billPhoto.public_id && deleteFileId
+                  deleteFileId !== billPhoto.public_id && deleteFileId || isApprovedPO
                 )}
               >
                 Delete

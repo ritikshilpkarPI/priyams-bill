@@ -56,7 +56,6 @@ const {
   updateOrderByIndex,
   updatePaymentById,
   updateSavedOrders,
-  updateSavedPayment,
   updateStaff,
   userDetails,
   getUserOrders,
@@ -165,11 +164,6 @@ router.put(
 );
 
 router.post(API_PATHS.PAYMENT.POST_SAVE_PAYMENT, isLoggedIn, savePayment);
-router.post(
-  `${API_PATHS.PAYMENT.POST_UPDATE_SAVED_PAYMENT}/:id`,
-  isLoggedIn,
-  updateSavedPayment
-);
 router.post(
   `${API_PATHS.PAYMENT.POST_DELETE_PAYMENT_BY_ID}/:id`,
   isLoggedIn,

@@ -11,16 +11,18 @@ import {
   Text,
   TextInput,
   Tooltip,
+  LoadingOverlay,
 } from '@mantine/core';
 import { IconBrandWhatsapp, IconX } from '@tabler/icons-react';
 import React, { useState } from 'react';
 import { formatShortDate } from 'src/utils/formatDate';
 import { shareOnWhatsApp } from 'src/utils/shareOnWhatsApp';
+import { toast } from 'react-toastify';
 
-const PaymentDetailsCard = ({ payment, index }: PaymentDetailsCardProps) => {
+const PaymentDetailsCard = ({ payment, index, removePaymentRecord }: PaymentDetailsCardProps) => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [phoneNumberError, setPhoneNumberError] = useState<string>('');
-
+  const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [isShared, setIsShared] = useState(false);
 
@@ -49,6 +51,18 @@ const PaymentDetailsCard = ({ payment, index }: PaymentDetailsCardProps) => {
     }
   };
 
+  const deletePayment = async () => {
+    if (!payment._id) return;
+    setLoading(true);
+    const response = await removePaymentRecord(payment._id);
+    if (response.isError) {
+      setLoading(false);
+      return toast.error(response.error);
+    }
+    setLoading(false);
+    toast.success('payment delete successfully');
+  };
+
   return (
     <Card
       key={index}
@@ -63,22 +77,27 @@ const PaymentDetailsCard = ({ payment, index }: PaymentDetailsCardProps) => {
         backgroundColor: 'white',
         border: '1px solid #ddd',
         boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+        overflow: 'hidden',
       }}
     >
+      <LoadingOverlay zIndex={1} visible={loading} />
       <Flex direction="column" gap="sm">
-        <ActionIcon
-          color="red"
-          variant="filled"
-          size={25}
-          radius="xl"
-          sx={{
-            position: 'absolute',
-            top: '8px',
-            right: '8px',
-          }}
-        >
-          <IconX size={18} />
-        </ActionIcon>
+        <Tooltip color="red" label="Delete Payment">
+          <ActionIcon
+            color="red"
+            variant="filled"
+            size={25}
+            radius="xl"
+            sx={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+            }}
+            onClick={() => deletePayment()}
+          >
+            <IconX size={18} />
+          </ActionIcon>
+        </Tooltip>
         {payment.paymentDate && (
           <Text weight={600} size="md" color="dark">
             Payment Date: <b>{formatShortDate(payment.paymentDate)}</b>
