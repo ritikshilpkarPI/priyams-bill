@@ -1,40 +1,54 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Title, Button, Group, Paper } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store'; 
 import { ItemSearch } from 'src/components/ItemSearch';
 import { StoreSelect } from 'src/components/StoreSelect';
 import { InventoryItemPanel } from 'src/components/InventoryItemPanel';
+import {
+  setSelectedStore,
+  addInventoryItem,
+  updateInventoryItemQuantity,
+  removeInventoryItem,
+  resetStoreInventory,
+} from 'src/redux/storeInventoryManagement/storeInventoryManagementSlice';
 
+const StoreInventoryManagement: React.FC = () => {
+  const dispatch = useDispatch();
+  const selectedStoreId = useSelector(
+    (state: RootState) => state.storeInventoryManagement.selectedStoreId
+  );
+  const inventoryItems = useSelector(
+    (state: RootState) => state.storeInventoryManagement.inventoryItems
+  );
 
-const StoreInventory: React.FC = () => {
-  const [selectedStoreId, setSelectedStoreId] = useState<string>('');
-  const [inventoryItems, setInventoryItems] = useState<any[]>([]);
-
+  // For demonstration, a static list of stores is provided.
   const stores: Store[] = [
     { id: 'store1', name: 'Main Store' },
     { id: 'store2', name: 'Outlet Store' },
   ];
 
+  const handleStoreChange = (storeId: string) => {
+    dispatch(setSelectedStore(storeId));
+  };
+
   const handleItemSelect = (item: any) => {
-    if (inventoryItems.find(invItem => invItem.itemDetail._id === item.itemDetail._id)) {        
+    // Check if item already exists in the inventory items
+    if (inventoryItems.find((invItem) => invItem.itemDetail._id === item.itemDetail._id)) {
       showNotification({ message: 'Item already added', color: 'yellow' });
       return;
     }
     const newItem: StoreInventoryItem = { ...item, quantityToAdd: 1 };
-    setInventoryItems([...inventoryItems, newItem]);
+    dispatch(addInventoryItem(newItem));
   };
 
   const handleQuantityChange = (itemId: string, quantity: number) => {
-    setInventoryItems(
-      inventoryItems.map((item) =>
-        item.itemDetail._id === itemId ? { ...item, quantityToAdd: quantity } : item
-      )
-    );
+    dispatch(updateInventoryItemQuantity({ itemId, quantity }));
   };
 
   const handleRemoveItem = (itemId: string) => {
-    setInventoryItems(inventoryItems.filter((item) => item._id !== itemId));
+    dispatch(removeInventoryItem(itemId));
   };
 
   const handleSubmit = () => {
@@ -46,24 +60,29 @@ const StoreInventory: React.FC = () => {
       showNotification({ message: 'Please add at least one item', color: 'red' });
       return;
     }
+    // Build the form payload to submit
     const formData: StoreInventoryForm = {
       storeId: selectedStoreId,
       items: inventoryItems,
     };
     console.log('Submitting Store Inventory:', formData);
     showNotification({ message: 'Inventory updated successfully', color: 'green' });
+    // Reset the form after submission
+    dispatch(resetStoreInventory());
   };
 
   return (
     <Paper p="md" radius="md" withBorder style={{ margin: '16px' }}>
-      <Title order={2} mb="md">Store Inventory Management</Title>
-      <StoreSelect stores={stores} value={selectedStoreId} onChange={setSelectedStoreId} />
+      <Title order={2} mb="md">
+        Store Inventory Management
+      </Title>
+      <StoreSelect stores={stores} value={selectedStoreId} onChange={handleStoreChange} />
       <ItemSearch onItemSelect={handleItemSelect} isApprovedPO={undefined} />
       {inventoryItems.length > 0 && (
-        <InventoryItemPanel 
-          items={inventoryItems} 
-          onQuantityChange={handleQuantityChange} 
-          onRemoveItem={handleRemoveItem} 
+        <InventoryItemPanel
+          items={inventoryItems}
+          onQuantityChange={handleQuantityChange}
+          onRemoveItem={handleRemoveItem}
         />
       )}
       <Group position="right" mt="md">
@@ -73,4 +92,4 @@ const StoreInventory: React.FC = () => {
   );
 };
 
-export default StoreInventory;
+export default StoreInventoryManagement;

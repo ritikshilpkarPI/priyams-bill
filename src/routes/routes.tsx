@@ -39,7 +39,7 @@ import {
   Label,
   NewPurchaseOrder,
   CreatePurchaseOrderPage,
-  StoreInventory,
+  StoreInventoryManagement,
 } from '../Pages';
 import App from '../App';
 
@@ -250,7 +250,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.STORE_INVENTORY,
-        element: <StoreInventory />,
+        element: <StoreInventoryManagement />,
         index: true,
       }
     ],
