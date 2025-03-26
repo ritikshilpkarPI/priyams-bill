@@ -142,11 +142,7 @@ export const PaymentDetailsForm = ({
       dispatch(resetPaymentDetailForm());
     }
   }, [purchaseOrder]);
-  const showRemark =
-  purchaseDetails?.totalPayableAmount !==purchaseDetails?.totalBillAmount ||
-  purchaseDetails?.totalBillAmount !== purchaseOrder.purchaseDetails?.totalItemsCost ||
-  purchaseDetails?.totalPayableAmount !== purchaseOrder.purchaseDetails?.totalItemsCost;
-  
+
   const {
     totalBillAmount,
     totalPayableAmount,
@@ -210,6 +206,7 @@ export const PaymentDetailsForm = ({
               value={purchaseDetails.paymentType}
               onChange={(value) => onChange('paymentType', value!)}
               sx={{ width: '100%' }}
+              disabled={true}
             />
           </Grid.Col>
           
@@ -224,7 +221,7 @@ export const PaymentDetailsForm = ({
             />
           </Grid.Col>
           {
-            showRemark &&  <Grid.Col span={isSmallScreen ? 12 : 4}>
+            isRemarkRequired &&  <Grid.Col span={isSmallScreen ? 12 : 4}>
             <Textarea
               label="Remark"
               value={purchaseDetails.remark ?? ''}
