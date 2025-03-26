@@ -15,7 +15,7 @@ export const paymentDetailFormValidation = Yup.object().shape({
   remark: Yup.string().test(
     'remarks-required-if-amounts-differ',
     'Remarks are required when bill or payable amount doesn’t match total items cost.',
-    function () {
+    function (value) {
       const { totalBillAmount, totalPayableAmount, totalItemsCost } = this.parent;
       
       const isMismatch = (
@@ -23,9 +23,7 @@ export const paymentDetailFormValidation = Yup.object().shape({
         totalPayableAmount !== totalItemsCost
       );
 
-      if (isMismatch) {
-        console.log({totalBillAmount, totalPayableAmount, totalItemsCost},"dfef");
-        
+      if (isMismatch && !value?.trim()) {        
         return false;
       }
 
@@ -94,7 +92,6 @@ export const PaymentCoverageComplete = Yup.object().shape({
       const totalPayments = payments.reduce((sum: number, p: paymentsType) => sum + (p?.paidAmount || 0), 0);
       const totalCredits = credits.reduce((sum: number, c: creditsType) => sum + (c?.creditAmount || 0), 0);
       const totalAmountCovered = totalPayments + totalCredits;
-      console.log({ totalPayableAmount, totalAmountCovered});
       
       // Enforce that checkbox can only be true when condition is met
       if (totalAmountCovered < totalPayableAmount) {
