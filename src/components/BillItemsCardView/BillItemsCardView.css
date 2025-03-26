@@ -1,0 +1,42 @@
+.bill-items-card-view{
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.slab-caret-icon {
+  transform: rotate(0deg);
+  transition: transform 0.3s;
+}
+
+.slab-caret-icon-rotate {
+  transform: rotate(180deg);
+}
+
+.bill-items-card-view-quantity-input{
+    width: 60px;
+    text-align: center;
+    padding: 4px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+}
+
+.card-view-item-price{
+    font-size: 18px;
+}
+
+.card-view-item-name{
+  font-size: 12px;
+}
+
+.remove-item-button-wrapper{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.item-card-main-container{
+  overflow: visible;
+}
