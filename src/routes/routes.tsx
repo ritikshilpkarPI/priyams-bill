@@ -39,6 +39,7 @@ import {
   Label,
   NewPurchaseOrder,
   CreatePurchaseOrderPage,
+  StoreInventoryManagement,
 } from '../Pages';
 import App from '../App';
 
@@ -247,6 +248,11 @@ export const router = createBrowserRouter([
         element: <ExpiredItemList />,
         index: true,
       },
+      {
+        path: ROUTES.STORE_INVENTORY,
+        element: <StoreInventoryManagement />,
+        index: true,
+      }
     ],
   },
   {

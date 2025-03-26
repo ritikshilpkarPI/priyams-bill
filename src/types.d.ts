@@ -459,6 +459,30 @@ declare global {
   interface PurchaseOrderProps {
     isApprovedPO?: boolean;
   }
+
+  interface WarehouseItem {
+    _id: string;
+    itemName: string;
+    itemBarcode: string;
+    itemMRPperUnit: number;
+    itemSellingPricePerUnit: number;
+    itemStockQuantity: number;
+    slabPricing?: [number, number, number][];
+  }
+
+  interface StoreInventoryItem extends WarehouseItem {
+    quantityToAdd: number;
+  }
+
+  interface Store {
+    id: string;
+    name: string;
+  }
+
+  interface StoreInventoryForm {
+    storeId: string;
+    items: StoreInventoryItem[];
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

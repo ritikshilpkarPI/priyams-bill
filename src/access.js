@@ -21,6 +21,7 @@ const access = {
   OPEN_CLOSE_TABLE: ['admin'],
   PAY_PURCHASE_ORDER: ['admin'],
   APPROVED_PURCHASE_ORDER: ['admin'],
+  STORE_INVENTORY_MANAGEMENT: ['admin'],
 };
 
 export default access;
