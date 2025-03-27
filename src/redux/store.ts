@@ -8,6 +8,8 @@ import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedIte
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import stepperReducer from "./stepper/stepperSlice";
+import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
+
 export const store = configureStore({
   reducer: {
     user: userSlice,
@@ -19,6 +21,7 @@ export const store = configureStore({
     purchasedItemDetailForm: purchasedItemDetailFormSlice,
     purchaseOrder: purchaseOrderSlice,
     paymentDetailForm: paymentDetailFormSlice,
+    storeInventoryManagement: storeInventoryManagement,
   },
 });
 

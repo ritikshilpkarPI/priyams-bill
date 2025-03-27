@@ -51,7 +51,6 @@ import updateExpense from './updateExpense';
 import updateOrderByIndex from './updateOrderByIndex';
 import updatePaymentById from './updatePaymentById';
 import updateSavedOrders from './updateSavedOrders';
-import updateSavedPayment from './updateSavedPayment';
 import updateStaff from './updateStaff';
 import userDetails from './userDetails';
 import getCustomerBill from './getCustomerBill';
@@ -143,7 +142,6 @@ export {
   updateOrderByIndex,
   updatePaymentById,
   updateSavedOrders,
-  updateSavedPayment,
   updateStaff,
   userDetails,
   getCustomerBill,

@@ -7,6 +7,7 @@ import {
   Grid,
   Select,
   Text,
+  Textarea,
   TextInput,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
@@ -16,7 +17,7 @@ import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
-import { savePOPaymentAPI, updatePOPaymentAPI } from '../../utils/apiUtils';
+import { deletePaymentByIdAPI, savePOPaymentAPI, updatePOPaymentAPI } from '../../utils/apiUtils';
 import { getNumberFromStr } from '../../utils/getNumberFromStr';
 import { paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
@@ -59,6 +60,7 @@ export const PaymentDetailsForm = ({
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
 
   const purchaseOrder = useSelector(selectPurchaseOrder) || {};
+  
 
   const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
   const creditsList = purchaseOrder.purchaseDetails?.credits || [];
@@ -123,12 +125,24 @@ export const PaymentDetailsForm = ({
     }
   };
 
-  const paymentsListhandleDelete = (index: number) => {
-    dispatch(removePaymentRecord(index));
+  const paymentsListhandleDelete = async (paymentId: string): Promise<{ isError: boolean, error?:string }> => {
+    if (!purchaseOrderId) return { isError: true, error:"purchaseOrderId not found, please try after some time" };
+    const response = await deletePaymentByIdAPI(purchaseOrderId, CONSTANTS.PAYMENT, paymentId);    
+    if (response.isError) {
+      return { isError: true, error:'unable to delete payment, please try after some time' };
+    }
+    dispatch(setPurchaseOrder(response.order));
+    return { isError: false }; 
   };
 
-  const creditsListhandleDelete = (index: number) => {
-    dispatch(removeCreditRecord(index));
+  const creditsListhandleDelete = async (paymentId: string): Promise<{ isError: boolean, error?:string }> => {
+    if (!purchaseOrderId) return { isError: true, error:"purchaseOrderId not found, please try after some time" };
+    const response = await deletePaymentByIdAPI(purchaseOrderId, CONSTANTS.CREDIT, paymentId);    
+    if (response.isError) {
+      return { isError: true, error:'unable to delete payment, please try after some time' };
+    }
+    dispatch(setPurchaseOrder(response.order));
+    return { isError: false }; 
   };
 
   useEffect(() => {
@@ -138,6 +152,11 @@ export const PaymentDetailsForm = ({
       dispatch(resetPaymentDetailForm());
     }
   }, [purchaseOrder]);
+  const showRemark =
+  purchaseDetails?.totalPayableAmount !==purchaseDetails?.totalBillAmount ||
+  purchaseDetails?.totalBillAmount !== purchaseOrder.purchaseDetails?.totalItemsCost ||
+  purchaseDetails?.totalPayableAmount !== purchaseOrder.purchaseDetails?.totalItemsCost;
+
 
   return (
     <Flex
@@ -197,7 +216,30 @@ export const PaymentDetailsForm = ({
               sx={{ width: '100%' }}
             />
           </Grid.Col>
-          <Grid.Col span={isSmallScreen ? 12 : 4}>
+          
+        </Grid>
+        <Grid columns={12} sx={{ width: '100%' }}>
+        <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <TextInput
+              label="Total Items Cost"
+              disabled={true}
+              value={(purchaseOrder.purchaseDetails?.totalItemsCost?.toFixed(2)) || 0}
+              sx={{ width: '100%' }}
+            />
+          </Grid.Col>
+          {
+            showRemark &&  <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <Textarea
+              label="Remark"
+              value={purchaseDetails.remark ?? ''}
+              onChange={(e) => onChange('remark', e.target.value)}
+              sx={{ width: '100%' }}
+            />
+          </Grid.Col>
+          }
+        </Grid>
+        <Grid columns={12} sx={{ width: '100%' }}>
+        <Grid.Col span={isSmallScreen ? 12 : 4}>
               <Button
                 w={'100%'}
                 variant={paymentFormState?.makePayment ? 'filled' : 'light'}

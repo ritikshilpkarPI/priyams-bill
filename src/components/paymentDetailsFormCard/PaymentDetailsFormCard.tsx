@@ -47,6 +47,7 @@ const PaymentDetailsFormCard = ({
         <PaymentDetailsCard
           payment = {payment}
           index = {index}
+          removePaymentRecord = {removePaymentRecord}
         />
       ))}
       </Box>

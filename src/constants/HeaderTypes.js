@@ -1,4 +1,4 @@
-import { ROUTES } from "src/utils/constants/routes";
+import { ROUTES } from 'src/utils/constants/routes';
 
 export const PAGES = {
   Home: 'Home',
@@ -15,7 +15,7 @@ export const PAGES = {
   approval: 'Approval',
   expiredItems: 'Expired Items',
   label: 'Label',
-  orders: 'User Orders'
+  orders: 'User Orders',
 };
 
 export const sidebarListData = [
@@ -28,27 +28,54 @@ export const sidebarListData = [
         icon: 'images/shortage.svg',
       },
       { name: 'Item Labels', url: '/label', icon: 'images/label.svg' },
-      { name: 'Item Barcode ', url: '/itemsBarcode', icon: 'images/barcode.svg' },
-      {name: 'Move Item To Cart', url: '/moveToCart', icon: 'images/purchaseorder.svg'},
+      {
+        name: 'Item Barcode ',
+        url: '/itemsBarcode',
+        icon: 'images/barcode.svg',
+      },
+      {
+        name: 'Move Item To Cart',
+        url: '/moveToCart',
+        icon: 'images/purchaseorder.svg',
+      },
       {
         name: 'Expiry Alert',
         url: '/expiredItems',
         icon: 'images/expired.svg',
       },
-      {name: 'Add Expired Item', url:'/addExpiredItem', icon: 'images/addExpiredIcon.svg'},
-      {name: 'Expired Items', url:'/expiredItemList', icon: 'images/expireIcon.svg'},
-      {name: 'Barcode Prints', url:'/barcodePrint', icon: 'images/barcode.svg'},
-
-
+      {
+        name: 'Add Expired Item',
+        url: '/addExpiredItem',
+        icon: 'images/addExpiredIcon.svg',
+      },
+      {
+        name: 'Expired Items',
+        url: '/expiredItemList',
+        icon: 'images/expireIcon.svg',
+      },
+      {
+        name: 'Barcode Prints',
+        url: '/barcodePrint',
+        icon: 'images/barcode.svg',
+      },
+      { name: 'Store Inventory Management', url: '/storeInventoryManagement', icon: 'images/inventory-management.svg' }
     ],
   },
   {
     BILL: [
       { name: 'All Bills', url: '/allBill', icon: 'images/bill.svg' },
-      { name: 'Return & Exchange', url: '/returnAndExchange', icon: 'images/returnBill.svg' },
+      {
+        name: 'Return & Exchange',
+        url: '/returnAndExchange',
+        icon: 'images/returnBill.svg',
+      },
       { name: 'Day Bills', url: '/dayBill', icon: 'images/dailybills.svg' },
       { name: 'Reports', url: '/report', icon: 'images/report.svg' },
-      { name: 'New Billing Page', url: '/newBilling', icon: 'images/report.svg' },
+      {
+        name: 'New Billing Page',
+        url: '/newBilling',
+        icon: 'images/report.svg',
+      },
     ],
   },
   {
@@ -99,7 +126,7 @@ export const sidebarListData = [
   },
   {
     ORDERS: [
-      {name: 'User Orders', url: '/orders', icon: 'images/purchaseorder.svg'}
-    ]
+      { name: 'User Orders', url: '/orders', icon: 'images/purchaseorder.svg' },
+    ],
   }
 ];

@@ -39,7 +39,7 @@ const PurchaseDetailsApproval = ({
               <th>Dealer Name</th>
               <th>Phone Number</th>
               <th>Payment</th>
-              <th>Bill Amount</th>
+              <th>Total Bill Amount</th>
               <th>Paid Amount</th>
               <th>Procurement Source</th>
               <th>Created At</th>

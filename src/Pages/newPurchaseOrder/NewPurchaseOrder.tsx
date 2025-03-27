@@ -19,6 +19,7 @@ import { BillUploadPanel } from '../../components/BillUploadPanel/BillUploadPane
 import { PurchaseOrderSummary } from '../../components/purchaseOrderSummary/PurchaseOrderSummary';
 import { resetPurchasedItemForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { toast } from 'react-toastify';
+import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import { selectPurchaseOrderStatusInfo } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { purchaseOrderStatus as purchaseOrderStatusConst } from '../../utils/constants/purchaseOrderStatus';
 
@@ -31,6 +32,9 @@ const NewPurchaseOrder = () => {
   const searchParams: URLSearchParams = new URLSearchParams(location.search);
   const currentTab = searchParams.get('tab') || '';
   const [loading, setLoading] = useState(false);
+  const purchaseOrder = useSelector(selectPurchaseOrder);
+  const { isApproved = false} = purchaseOrder;
+
   const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
   const purchaseOrderStatus = (() => {
     const { isApproved, isRejected, isDraft } = purchaseOrderStatusInfo || {};
@@ -135,16 +139,16 @@ const NewPurchaseOrder = () => {
           <Tabs.Tab value={TAB.summary}>Summary & Action</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value={TAB.dealerDetails}>
-          <DealerDetailForm />
+          <DealerDetailForm isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.itemDetails}>
-          <PurchasedItemPanel />
+          <PurchasedItemPanel  isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.paymentDetails}>
           <PaymentDetailAndBillPanel />
         </Tabs.Panel>
         <Tabs.Panel value={TAB.billUpload}>
-          <BillUploadPanel />
+          <BillUploadPanel  isApprovedPO={isApproved}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.summary}>
           <PurchaseOrderSummary />

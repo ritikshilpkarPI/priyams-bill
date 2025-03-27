@@ -20,3 +20,30 @@
     payments?: Array<paymentsType>;
   }
 
+  export interface StockChangeHistoryType {
+    quantity: number;
+    dateTime: Date;
+    user: mongoose.Types.ObjectId;
+    changeType: ChangeType;
+    changedFrom: ChangedFrom;
+  }
+  
+  export interface StoreInventoryItemType extends Document {
+    itemId: mongoose.Types.ObjectId;
+    itemQuantityInStore: number;
+    itemStockChangeHistory: StockChangeHistoryType[];
+  }
+
+
+  export interface StoreType extends Document {
+    storeAddress: {
+      addressText: string;
+      locality: string;
+    };
+    storePincode: string;
+    storeContacts: string[];
+    storeCode: string;
+    storeNumber: number;
+    storeCollectionName: string;
+  }
+
