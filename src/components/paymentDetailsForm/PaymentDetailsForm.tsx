@@ -17,7 +17,7 @@ import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
-import { deletePaymentByIdAPI, savePOPaymentAPI, updatePOPaymentAPI } from '../../utils/apiUtils';
+import { deletePaymentByIdAPI, } from '../../utils/apiUtils';
 import { getNumberFromStr } from '../../utils/getNumberFromStr';
 import { paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
