@@ -52,6 +52,7 @@ export const API_PATHS = {
     GET_ITEMS_CATEGORY_LIST: '/api/inventory/getItemsCategoryList',
     GET_ITEMS_WITH_NO_IMAGES: '/api/inventory/getItemsWithNoImages',
     GET_ITEMS_LEAN_FOR_BILLING: '/api/inventory/getItemsLeanForBilling',
+    POST_TRANSFER_STOCK_TO_STORE: '/api/inventory/transferStockToStore',
   },
   AUTH: {
     POST_LOGIN: '/api/auth/login',

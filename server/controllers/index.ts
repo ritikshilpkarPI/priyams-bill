@@ -87,6 +87,7 @@ import createPurchaseOrderWithDealer from "./createPurchaseOrderWithDealer"
 import { getItemsSku } from "./getItemsSku";
 import { getItemById } from "./getItemById";
 import { addPaymentDetailsById } from "./addPaymentDetailsById";
+import { transferStockToStore } from "./transferStockToStore"
 
 export {
   getStaff,
@@ -178,4 +179,5 @@ export {
   createPurchaseOrderWithDealer,
   getItemsSku,
   addPaymentDetailsById,
+  transferStockToStore,
 };

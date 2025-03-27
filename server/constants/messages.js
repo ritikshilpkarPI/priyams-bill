@@ -23,6 +23,8 @@ const MESSAGES = Object.freeze({
   CREDIT_NOT_FOUND: "Cridit not found",
   PAYMENT_NOT_FOUND: "Payment not found",
   PAYMENT_DELETED_SUCCESSFULLY: "Payment deleted successfully",
+  STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
+  INSUFFICIENT_STOCK:"Insufficient stock",
 });
 
 module.exports = { MESSAGES };
