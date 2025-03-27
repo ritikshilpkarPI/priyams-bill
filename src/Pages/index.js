@@ -17,4 +17,5 @@ export const SellDetailsPage = lazy(()=> import('./sellDetailsPage/SellDetailsPa
 export const BarcodePrint = lazy(()=> import('./barcodePrint/BarcodePrint'));
 export const Label = lazy(() => import('./Label'));
 export const NewPurchaseOrder = lazy(() => import('./newPurchaseOrder/NewPurchaseOrder'));
+export const StoreInventoryManagement = lazy(() => import('./storeInventoryManagement/StoreInventoryManagement'));
 

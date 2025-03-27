@@ -6,6 +6,8 @@ import dealerDetailFormSlice from './dealerDetailForm/dealerDetailFormSlice';
 import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
+import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
+
 export const store = configureStore({
   reducer: {
     bill: billReducer,
@@ -15,6 +17,7 @@ export const store = configureStore({
     purchasedItemDetailForm: purchasedItemDetailFormSlice,
     purchaseOrder: purchaseOrderSlice,
     paymentDetailForm: paymentDetailFormSlice,
+    storeInventoryManagement: storeInventoryManagement,
   },
 });
 

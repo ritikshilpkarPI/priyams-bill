@@ -20,4 +20,5 @@ export const routes = {
   unpaidPurchaseOrder:"./unpaidPurchaseOrder",
   payPurchaseOrderBill:"/payPurchaseOrderBill",
   addExpiredItem:'/addExpiredItem',
+  storeInventory:'/storeInventory',
 };
