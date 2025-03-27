@@ -64,7 +64,7 @@ const NewPurchaseOrder = () => {
     return { label, color };
   })();
   const purchaseOrder = useSelector(selectPurchaseOrder);
-  const { isApproved = false} = purchaseOrder;
+  const { isApproved } = purchaseOrder;
   const [isApprovedPO, setIsApprovedPO] = useState(isApproved);
 
   const [isValidDealerDetails, setIsValidDealerDetails] = useState(false);
@@ -130,6 +130,10 @@ const NewPurchaseOrder = () => {
   useEffect(() => {
     setActiveTab(activeTabInitial);
   }, [currentTab]);
+
+  useEffect(() => {
+    setIsApprovedPO(isApproved);
+  },[isApproved])
 
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
