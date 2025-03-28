@@ -18,11 +18,14 @@ import { useSelector } from "react-redux";
 import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
 import { ReactBarcode } from 'react-jsbarcode';
+import { Reset } from 'src/icons/Reset';
+import { BillItemsCardView } from "../../components/BillItemsCardView/BillItemsCardView"
 
 
 const NewBillPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [itemsDataCount, setItemsDataCount] = useState(0);
+  const [enableTableView, setEnableTableView] = useState(window.innerWidth > 800);
   const {
     billState,
     updateBillItems,
@@ -43,6 +46,16 @@ const NewBillPage = () => {
       setItemsDataCount(itemsFeedData.totalItemsCount); 
     }
      }, [itemsFeedData]);
+
+  const handleTableViewState = ()=>setEnableTableView(window.innerWidth > 800);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleTableViewState);
+    return () => {
+      window.removeEventListener("resize", handleTableViewState);
+    };
+  }, []);
+
   const saveBillToDatabase = async (billData) => {
     try {
       const response = await saveOrCacheBillAPI(billData);
@@ -112,27 +125,38 @@ const NewBillPage = () => {
             onClick={resetBillState}
             disabled={loading}
           >
-            Refresh Bill
+            <Reset color='#fff'/>
           </Button>
         </h2>
 
         <Grid className="items-payments-grid">
-          <Grid.Col span={8}>
+          <Grid.Col span={8} className="items-payments-grid-section">
             <ItemSearch
               onItemSelect={(item) => {
                 updateBillItems([item, ...billState.billItems]);
               }}
             />
-            <BillItems
-              items={billState.billItems}
-              onRemoveItem={handleRemoveItem}
-              bill={billState}
-              setBill={(newBill) => {
-                updateBillItems(newBill.billItems);
-              }}
-            />
+            {enableTableView ? (
+              <BillItems
+                items={billState.billItems}
+                onRemoveItem={handleRemoveItem}
+                bill={billState}
+                setBill={(newBill) => {
+                  updateBillItems(newBill.billItems);
+                }}
+              />
+            ) : (
+              <BillItemsCardView
+                items={billState.billItems}
+                onRemoveItem={handleRemoveItem}
+                bill={billState}
+                setBill={(newBill) => {
+                  updateBillItems(newBill.billItems);
+                }}
+              />
+            )}
           </Grid.Col>
-          <Grid.Col span={4}>
+          <Grid.Col span={4} className="items-payments-grid-section">
             <PaymentSection
               cashPay={billState.cashPay}
               upiPay={billState.upiPay}
