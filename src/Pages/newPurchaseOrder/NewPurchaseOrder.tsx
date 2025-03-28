@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
 import {  Flex, Chip, Group, LoadingOverlay, Tabs, Title } from '@mantine/core';
 import './NewPurchaseOrder.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
 import { getPurchaseOrderDetailsAPI } from '../../utils/apiUtils';
 import {
@@ -28,6 +28,7 @@ import {
   validatePaymentDetails,
 } from 'src/utils/purchaseOrderValidations';
 import { TAB, TabChip, TabKey } from 'src/components/TabChip';
+import { useSelector } from 'react-redux';
 
 
 
