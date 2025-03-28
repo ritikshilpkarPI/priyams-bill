@@ -41,7 +41,7 @@ const handleSearch = (value) => {
     return;
   }
 
-  const isBarcode = /^\d+$/.test(value); 
+  const isBarcode = /^(PSTR_\d+|\d+)$/.test(value);
   let results = [];
 
   if (isBarcode) {
