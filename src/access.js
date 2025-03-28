@@ -22,6 +22,7 @@ const access = {
   PAY_PURCHASE_ORDER: ['admin'],
   ADD_ITEM_IMAGES: ['admin'],
   APPROVED_PURCHASE_ORDER: ['admin'],
+  REJECTED_PURCHASE_ORDER: ['admin'],
   STORE_INVENTORY_MANAGEMENT: ['admin'],
 };
 
