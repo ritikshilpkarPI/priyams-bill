@@ -43,6 +43,19 @@
 .shop-details{
     display: none;
 }
+
+@media (max-width: 680px) {
+    .items-payments-grid {
+        display: flex;
+        flex-direction: column;
+    }
+    .items-payments-grid-section,
+    .items-payments-grid-section{
+        max-width: 100%;
+        text-align: start;
+    }
+}
+
 @media print {
 
     body * {
