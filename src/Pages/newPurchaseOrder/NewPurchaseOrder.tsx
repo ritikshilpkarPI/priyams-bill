@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
-import { LoadingOverlay, Tabs, Title } from '@mantine/core';
+import { Chip, Group, LoadingOverlay, Tabs, Title } from '@mantine/core';
 import './NewPurchaseOrder.css';
 import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
@@ -21,6 +21,14 @@ import { resetPurchasedItemForm } from '../../redux/purchasedItemDetailForm/purc
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
+import {
+  validateDealerDetails,
+  validateItemDetails,
+  validatePaymentDetails,
+} from 'src/utils/purchaseOrderValidations';
+import { TAB, TabChip, TabKey } from 'src/components/TabChip';
+
+
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -28,25 +36,23 @@ const NewPurchaseOrder = () => {
   const params = useParams();
   const purchaseOrderId = params?.id;
   const dispatch = useDispatch();
-  const searchParams: URLSearchParams = new URLSearchParams(location.search);
-  const currentTab = searchParams.get('tab') || '';
+  const searchParams = new URLSearchParams(location.search);
+  
+  const currentTab = searchParams.get('tab')  || "";
+  const activeTabInitial = currentTab && currentTab in TAB ? TAB[currentTab] : TAB.dealerDetails;
+
   const [loading, setLoading] = useState(false);
   const purchaseOrder = useSelector(selectPurchaseOrder);
   const { isApproved = false} = purchaseOrder;
 
-  const TAB: Record<string, string> = {
-    dealerDetails: 'dealerDetails',
-    itemDetails: 'itemDetails',
-    paymentDetails: 'paymentDetails',
-    billUpload: 'billUpload',
-    summary: 'summary',
-  };
-  const [activeTab, setActiveTab] = useState<string>(
-    TAB[currentTab] || 'dealerDetails'
-  );
+  const [isValidDealerDetails, setIsValidDealerDetails] = useState(false);
+  const [isValidItemDetails, setIsValidItemDetails] = useState(false);
+  const [isValidPaymentDetails, setIsValidPaymentDetails] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>(activeTabInitial);
 
-  const onTabChange = (newTab: string) => {
-    setActiveTab(newTab);
+  const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length);
+  const onTabChange = (newTab: TabKey) => {
+    setActiveTab(TAB[newTab]);
     navigate(`${location.pathname}?tab=${newTab}`);
   };
 
@@ -56,9 +62,7 @@ const NewPurchaseOrder = () => {
     const response = await getPurchaseOrderDetailsAPI(purchaseOrderId);
     setLoading(false);
     if (response?.isError || !response.data) {
-      toast.error(
-        'unable to get details of this purchase order, please try again'
-      );
+      toast.error('Unable to get details of this purchase order, please try again');
       return;
     }
     const data = response?.data;
@@ -88,12 +92,24 @@ const NewPurchaseOrder = () => {
   }, [purchaseOrderId]);
 
   useEffect(() => {
-    setActiveTab(TAB[currentTab] || 'dealerDetails');
+    const validateForms = async () => {
+      setIsValidDealerDetails(await validateDealerDetails(purchaseOrder));
+      setIsValidItemDetails(await validateItemDetails(purchaseOrder));
+      setIsValidPaymentDetails(await validatePaymentDetails(purchaseOrder));
+    };
+  
+    validateForms();
+  }, [purchaseOrder]);
+  
+
+  useEffect(() => {
+    setActiveTab(activeTabInitial);
   }, [currentTab]);
 
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
-      <Title order={2}>Purchase Order</Title>
+        <Title order={2}>Purchase Order</Title>
+        
       <Tabs
         variant="default"
         color="black"
@@ -102,13 +118,64 @@ const NewPurchaseOrder = () => {
       >
         <Tabs.List grow>
           <Tabs.Tab color="blue" value={TAB.dealerDetails}>
-            Dealer Details
+            <TabChip
+              label="Dealer Details"
+              isValid={isValidDealerDetails}
+              tabKey={TAB.dealerDetails}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
           </Tabs.Tab>
-          <Tabs.Tab value={TAB.itemDetails}>Item Details</Tabs.Tab>
-          <Tabs.Tab value={TAB.paymentDetails}>Payment Details</Tabs.Tab>
-          <Tabs.Tab value={TAB.billUpload}>Bill Images</Tabs.Tab>
-          <Tabs.Tab value={TAB.summary}>Summary & Action</Tabs.Tab>
+          <Tabs.Tab value={TAB.itemDetails}>
+            <TabChip
+              label="Item Details"
+              isValid={isValidItemDetails}
+              tabKey={TAB.itemDetails}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value={TAB.paymentDetails}>
+           
+            <TabChip
+              label="Payment Details"
+              isValid={isValidPaymentDetails}
+              tabKey={TAB.paymentDetails}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value={TAB.billUpload}>
+           
+            <TabChip
+              label="Bill Images"
+              isValid={isBillImagesUploaded}
+              tabKey={TAB.billUpload}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value={TAB.summary}>
+           
+            <TabChip
+              label="Summary & Action"
+              isValid={
+                isValidDealerDetails &&
+                isValidItemDetails &&
+                isValidPaymentDetails &&
+                isBillImagesUploaded
+              }
+              tabKey={TAB.summary}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
         </Tabs.List>
+      </Tabs>
+
+
+
+      <Tabs value={activeTab}>
         <Tabs.Panel value={TAB.dealerDetails}>
           <DealerDetailForm isApprovedPO={isApproved}/>
         </Tabs.Panel>
