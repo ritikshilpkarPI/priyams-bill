@@ -8,15 +8,12 @@ import {
   Grid 
 } from '@mantine/core';
 import { useContext, useEffect, useRef, useState } from 'react';
-import BillNarrator from '../components/BillNarrator';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { AppStateContext } from '../AppState/appState.context';
 import { ReactBarcode } from 'react-jsbarcode';
 import { v4 as uuidv4 } from 'uuid';
-import { QuantBtn } from './Billing';
-import { shouldEnablePayment } from '../utils/shouldEnablePayment';
 import "../CSS/returnBill.css";
 import "../Pages/newBillPage/NewBillPage.css";
 
@@ -27,7 +24,6 @@ import { BillItems } from '../components/BillItems/BillItems';
 import { PaymentSection } from '../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
 import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
-import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
