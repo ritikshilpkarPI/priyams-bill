@@ -12,6 +12,9 @@ const initialState: PurchaseOrderDataType = {
   purchaseDetails: {},
   billPhotos: [],
   totalPaidAmount: 0,
+  isApproved: undefined,
+  isDraft: undefined,
+  isRejected: undefined,
 };
 
 const purchaseOrderSlice = createSlice({

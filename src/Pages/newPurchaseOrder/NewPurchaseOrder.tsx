@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
-import { Chip, Group, LoadingOverlay, Tabs, Title } from '@mantine/core';
+import { Chip, Group, Flex, LoadingOverlay, Tabs, Title } from '@mantine/core';
 import './NewPurchaseOrder.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
 import { getPurchaseOrderDetailsAPI } from '../../utils/apiUtils';
 import {
@@ -19,7 +19,6 @@ import { BillUploadPanel } from '../../components/BillUploadPanel/BillUploadPane
 import { PurchaseOrderSummary } from '../../components/purchaseOrderSummary/PurchaseOrderSummary';
 import { resetPurchasedItemForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import {
   validateDealerDetails,
@@ -27,8 +26,8 @@ import {
   validatePaymentDetails,
 } from 'src/utils/purchaseOrderValidations';
 import { TAB, TabChip, TabKey } from 'src/components/TabChip';
-
-
+import { selectPurchaseOrderStatusInfo } from '../../redux/purchaseOrder/purchaseOrderSelectors';
+import { purchaseOrderStatus as purchaseOrderStatusConst } from '../../utils/constants/purchaseOrderStatus';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -44,6 +43,27 @@ const NewPurchaseOrder = () => {
   const [loading, setLoading] = useState(false);
   const purchaseOrder = useSelector(selectPurchaseOrder);
   const { isApproved = false} = purchaseOrder;
+
+  const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
+  const purchaseOrderStatus = (() => {
+    const { isApproved, isRejected, isDraft } = purchaseOrderStatusInfo || {};
+    const { approved, drafted, rejected, saved } = purchaseOrderStatusConst;
+    let label, color;
+    if (isDraft && isApproved && !isRejected) {
+      label = approved;
+      color = 'teal';
+    } else if (isDraft && !isApproved && isRejected) {
+      label = rejected;
+      color = 'red';
+    } else if (isDraft && !isApproved && !isRejected) {
+      label = drafted;
+      color = 'yellow';
+    } else if (isDraft === false && isApproved === false) {
+      label = saved;
+      color = 'orange';
+    }
+    return { label, color };
+  })();
 
   const [isValidDealerDetails, setIsValidDealerDetails] = useState(false);
   const [isValidItemDetails, setIsValidItemDetails] = useState(false);
@@ -108,7 +128,14 @@ const NewPurchaseOrder = () => {
 
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
-        <Title order={2}>Purchase Order</Title>
+      <Flex className='purchase-order-title-wrapper' columnGap={30} wrap={'wrap'} align={'center'} justify={'center'}>
+          <Title order={2}>Purchase Order</Title>
+        {purchaseOrderStatus.label && (
+          <Chip defaultChecked color={purchaseOrderStatus.color}>
+            {purchaseOrderStatus.label}
+          </Chip>
+        )}
+      </Flex>
         
       <Tabs
         variant="default"
