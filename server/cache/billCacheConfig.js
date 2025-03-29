@@ -20,13 +20,7 @@ const setToBillsCache = (uniqueId, data) => {
   }
 };
 
-const getFromBillsCacheById = (uniqueId) => {
-  try {
-    return billsCache.get(uniqueId);
-  } catch (error) {
-    console.error(`Cannot get Bill Cache for id - ${uniqueId}`, error);
-  }
-};
+;
 
 const deleteBillFromBillCacheById = (uniqueId) => {
   try {
@@ -36,17 +30,8 @@ const deleteBillFromBillCacheById = (uniqueId) => {
   }
 };
 
-const getAllCachedBills = () => {
-  const billCacheList = [];
-  billsCache.forEach((value, key) => {
-    billCacheList.push({ cacheId: key, value });
-  });
-  return billCacheList;
-};
 
 module.exports = {
   setToBillsCache,
-  getFromBillsCacheById,
   deleteBillFromBillCacheById,
-  getAllCachedBills,
 };

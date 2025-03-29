@@ -6,31 +6,20 @@ import AdminRoute from '../components/AdminRoute';
 import { ROUTES } from '../utils/constants/routes';
 import CustomerBill from '../Pages/CustomerBill';
 import PerItemListPurchaseOrder from '../components/IndividualItemListPurchaseOrder';
-import ItemListPurchaseOrderHistory from '../components/ListPurchaseOrderHistory';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
-import { ItemQuantity } from '../Pages/ItemQuantity';
 
 import {
-  Home,
   BillFeed,
   DayWiseBillFeed,
-  EditBill,
   ItemsList,
   OpenClose,
-  StockQuantity,
   Report,
   Login,
-  PurchaseOrder,
-  Attendance,
   Approval,
   ExpiredItems,
   Orders,
   OrderStatusDetail,
   NewBillingPage,
-  PaidPOs,
-  UnpaidPOs,
-  UnpaidPurchaseOrder,
-  PayPurchaseOrderBill,
   AddExpiredItem,
   ExpiredItemList,
   ReturnAndExchange,
@@ -38,7 +27,6 @@ import {
   BarcodePrint,
   Label,
   NewPurchaseOrder,
-  CreatePurchaseOrderPage,
   StoreInventoryManagement,
 } from '../Pages';
 import App from '../App';
@@ -91,46 +79,16 @@ export const router = createBrowserRouter([
             element: <PerItemListPurchaseOrder />,
             index: true,
           },
-          {
-            path: ROUTES.PURCHASE_ORDER_ITEMS_BY_ID,
-            element: <ItemListPurchaseOrderHistory />,
-            index: true,
-          },
-          {
-            path: ROUTES.ATTENDANCE,
-            element: <Attendance />,
-            index: true,
-          },
-          {
-            path: ROUTES.STOCK_QUANTITY,
-            element: <StockQuantity />,
-            index: true,
-          },
+          
+          
+          
           {
             path: ROUTES.ALL_BILL,
             element: <BillFeed />,
             index: true,
           },
-          {
-            path: ROUTES.PURCHASE_ORDER,
-            element: <PurchaseOrder />,
-            index: true,
-          },
-          {
-            path: ROUTES.PURCHASE_ORDER_BY_ID,
-            element: <PurchaseOrder />,
-            index: true,
-          },
-          {
-            path: ROUTES.PURCHASE_ORDER_BY_ID,
-            element: <PurchaseOrder />,
-            index: true,
-          },
-          {
-            path: ROUTES.EDIT_BILL_BY_ID,
-            element: <EditBill />,
-            index: true,
-          },
+          
+         
           {
             path: ROUTES.APPROVAL,
             element: <Approval />,
@@ -166,31 +124,10 @@ export const router = createBrowserRouter([
             element: <ItemsBarCode />,
             index: true,
           },
-          {
-            path: ROUTES.MOVE_TO_CART,
-            element: <ItemQuantity />,
-            index: true,
-          },
-          {
-            path: ROUTES.PAID_PO,
-            element: <PaidPOs />,
-            index: true,
-          },
-          {
-            path: ROUTES.UNPAID_PO,
-            element: <UnpaidPOs />,
-            index: true,
-          },
-          {
-            path: ROUTES.PURCHASE_ORDER_BILL_BY_ID,
-            element: <UnpaidPurchaseOrder />,
-            index: true,
-          },
-          {
-            path: ROUTES.PAY_PURCHASE_ORDER_BILL,
-            element: <PayPurchaseOrderBill />,
-            index: true,
-          },
+          
+          
+         
+          
           {
             path: ROUTES.RETURN_AND_EXCHANGE,
             element: <ReturnAndExchange />,
@@ -216,11 +153,7 @@ export const router = createBrowserRouter([
             element: <NewPurchaseOrder />,
             index: true,
           },
-          {
-            path: ROUTES.CREATE_PURCHASE_ORDER,
-            element: <CreatePurchaseOrderPage />,
-            index: true,
-          }
+         
         ]
       },
       {
