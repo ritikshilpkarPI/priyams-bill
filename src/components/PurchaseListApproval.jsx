@@ -10,6 +10,7 @@ import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
 import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
 import ShareOnWhatsApp from './shareOnWhatsApp';
+import { useLocation } from 'react-router';
 const PurchaseListApproval = ({
   list,
   index,
@@ -18,7 +19,10 @@ const PurchaseListApproval = ({
   getOrders,
 }) => {
   const [loadingState, setLoadingState] = useState({});
-  const [isAdminUser, setIsAdminUser] = useState(false)
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const option = query.get('option').split(" ")[0];
 
   const setLoading = (id, state, buttonName) => {
     setLoadingState({ [id]: state, btnName: buttonName });
@@ -128,6 +132,7 @@ const PurchaseListApproval = ({
   const message = `${baseUrl}/new-purchase-order/${list._id}`
 
   const navigate = useNavigate();
+  const isSavedApprovedPage = !['approved', 'saved'].includes(option.trim().toLowerCase());
 
   return (
     <>
@@ -147,15 +152,6 @@ const PurchaseListApproval = ({
           <td>
              <ShareOnWhatsApp message={message}/>
            
-          </td>
-          <td>
-            {list.isDraft
-              ? list.isApproved
-                ? 'Approved'
-                : 'Drafted'
-              : list.isRejected
-                ? 'Rejected'
-                : 'Saved'}
           </td>
           {parseJwt(Cookies.get('token')).role === 'admin' ? (
             <>
@@ -180,7 +176,7 @@ const PurchaseListApproval = ({
                   </Link>
                 </td>
               )}
-              {list.isDraft ? (
+              {(list.isDraft && isSavedApprovedPage ) ? (
                 <td>
                   <Button
                     disabled={loadingState[list._id] || list.isRejected || list.isApproved}
@@ -203,7 +199,7 @@ const PurchaseListApproval = ({
                   </Button>
                 </td>
               )}
-              <td>
+              {(isSavedApprovedPage) && <td>
                 <Button
                   disabled={loadingState[list._id] || list.isApproved || list.isRejected || !list.isDraft}
                   className="reject-btn"
@@ -212,7 +208,7 @@ const PurchaseListApproval = ({
                 >
                   Reject
                 </Button>
-              </td>
+              </td>}
             </>
           ) : (
             <>

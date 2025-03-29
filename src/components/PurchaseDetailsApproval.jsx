@@ -6,18 +6,23 @@ import '../CSS/purchaseApproval.css';
 import ShowPurchaseOrderTable from './ShowPurchaseOrderTable';
 import ShowOrderDetailTable from './ShowOrderDetailTable';
 import BillUploaderDetails from './BillUploaderDetails';
+import { useLocation } from 'react-router';
 
 const PurchaseDetailsApproval = ({
   allPurchaseList,
   setAllPurchaseList,
   getOrders,
 }) => {
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const option = query.get('option');
+  
   const [indexDetail, setIndexDetail] = useState(-1);
   
   
   return (
     <div className="purchase-approval">
-      <h3>Purchase Details, approval required</h3>
+      <h3>{option}</h3>
       {/* permanently removed */}
       {/* <Select
         style={{ width: "200px", margin: "2vmin auto" }}
@@ -45,7 +50,6 @@ const PurchaseDetailsApproval = ({
               <th>Created At</th>
               <th>Remark</th>
               <th>Share</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>
