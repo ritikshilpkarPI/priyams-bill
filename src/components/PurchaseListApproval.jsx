@@ -1,4 +1,4 @@
-import { Button } from '@mantine/core';
+import { Avatar, Button } from '@mantine/core';
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
 import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
 import ShareOnWhatsApp from './shareOnWhatsApp';
+import { IconCheck } from '@tabler/icons-react';
 const PurchaseListApproval = ({
   list,
   index,
@@ -133,7 +134,15 @@ const PurchaseListApproval = ({
     <>
       {list ? (
         <>
-          <td>{ index + 1}</td>
+          <td>
+            <div className='serial-number-paid-icon-container'>
+            {`${index + 1}.`}
+                {list.purchaseDetails.totalPayableAmount === list.totalPaidAmount &&
+                <Avatar className='paid-check-icon-container'  radius="xl" color={'green'} size="md">
+                    <IconCheck size={12} color="white" />
+                </Avatar>}
+            </div>
+          </td>
           <td>{list.dealerName}</td>
           <td>{list.phoneNumber}</td>
           <td>{list.payment}</td>
