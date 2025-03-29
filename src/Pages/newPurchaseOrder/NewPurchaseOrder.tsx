@@ -44,9 +44,6 @@ const NewPurchaseOrder = () => {
   const activeTabInitial = currentTab && currentTab in TAB ? TAB[currentTab] : TAB.dealerDetails;
 
   const [loading, setLoading] = useState(false);
-  const purchaseOrder = useSelector(selectPurchaseOrder);
-  const { isApproved = false} = purchaseOrder;
-
   const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
   const purchaseOrderStatus = (() => {
     const { isApproved, isRejected, isDraft } = purchaseOrderStatusInfo || {};

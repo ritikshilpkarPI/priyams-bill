@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Box, Button, Checkbox, Flex, Textarea, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
+import { dealerFormValidation } from '../../utils/validations/dealerFormValidation';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { draftItemFormValidation } from '../../utils/validations/draftItemFormValidation';
 import { PaymentCoverageComplete, paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
