@@ -126,6 +126,7 @@ const purchaseOrderSchema = new mongoose.Schema({
         os: { type: String },
         ipAddress: { type: String },
         referer: { type: String },
+        rejectMessage: { type: String },
       },
       createdAt: { type: Date, default: Date.now },
     },
