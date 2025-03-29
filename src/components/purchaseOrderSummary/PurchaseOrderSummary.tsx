@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
-import * as Yup from 'yup';
 import { Box, Button, Checkbox, Flex, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
-import { dealerFormValidation } from '../../utils/validations/dealerFormValidation';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
-import { draftItemFormValidation } from '../../utils/validations/draftItemFormValidation';
-import { PaymentCoverageComplete, paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
 import { draftOrderByIdAPI } from '../../utils/apiUtils';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { useDispatch } from 'react-redux';
@@ -27,20 +23,6 @@ export const PurchaseOrderSummary = () => {
   const [isValidPaymentDetails, setIsValidPaymentDetails] = useState(false);
   const [loading, setLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
- 
-
-  const validatePaymentDetails = async (
-    purchaseOrder: PurchaseOrderDataType
-  ) => {
-    try {
-      await paymentDetailFormValidation.validate(purchaseOrder.purchaseDetails);
-      await PaymentCoverageComplete.validate(purchaseOrder.purchaseDetails);
-      setIsValidPaymentDetails(true);
-      return true;
-    } catch (err) {
-      return false;
-    }
-  };
 
   const draftOrder = async () => {
     if (!purchaseOrder?._id) return;

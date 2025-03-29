@@ -10,6 +10,7 @@ import {
 import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
 import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
+import "./ItemSearch.css";
 
 export const ItemSearch = ({ onItemSelect, isApprovedPO }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -40,7 +41,7 @@ const handleSearch = (value) => {
     return;
   }
 
-  const isBarcode = /^\d+$/.test(value); 
+  const isBarcode = /^(PSTR_[0-9A-Za-z]+|\d+)$/.test(value);
   let results = [];
 
   if (isBarcode) {
@@ -105,7 +106,7 @@ const calculateItemPrice = (item, quantity) => {
     return (
       <div className="item-search">
         <Paper p="md" radius="md" withBorder mb="md">
-          <Text size="lg" weight={500} mb="md">Search Items</Text>
+          <Text size="lg" weight={500} mb="md" className="item-search-label">Search Items</Text>
   
           <Input
             placeholder="Enter item name or barcode"
