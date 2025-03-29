@@ -51,6 +51,7 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
       paymentType: purchaseDetails.paymentType,
       creditAmount: creditDetail.creditAmount,
       payDate: creditDetail.payDate,
+      remark:purchaseDetails.remark,
     };
 
     const response = await updatePOPaymentAPI(

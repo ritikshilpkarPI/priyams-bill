@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
+import { useEffect, useState } from 'react';
 import { Box, Button, Checkbox, Flex, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
-import { dealerFormValidation } from '../../utils/validations/dealerFormValidation';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
-import { draftItemFormValidation } from '../../utils/validations/draftItemFormValidation';
-import { paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
 import { draftOrderByIdAPI } from '../../utils/apiUtils';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { useDispatch } from 'react-redux';
@@ -15,8 +11,6 @@ import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { getUserDetails } from 'src/utils/getUserDeviceInfo';
-import { parseJwt } from 'src/utils/cookie';
-import Cookies from 'js-cookie';
 import ProtectedComponent from '../ProtectedComponent';
 import access from 'src/access';
 import { validateDealerDetails, validateItemDetails, validatePaymentDetails } from 'src/utils/purchaseOrderValidations';
@@ -29,7 +23,7 @@ export const PurchaseOrderSummary = () => {
   const [isValidPaymentDetails, setIsValidPaymentDetails] = useState(false);
   const [loading, setLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
- 
+
   const draftOrder = async () => {
     if (!purchaseOrder?._id) return;
     setLoading(true);

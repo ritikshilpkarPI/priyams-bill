@@ -43,6 +43,5 @@ const billSlice = createSlice({
   },
 });
 
-export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState,   setBill,
-} = billSlice.actions;
+export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState,setBill } = billSlice.actions;
 export default billSlice.reducer;
