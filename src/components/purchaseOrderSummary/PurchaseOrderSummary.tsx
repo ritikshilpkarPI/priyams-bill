@@ -15,7 +15,7 @@ import { genericAxios } from 'src/utils/genericAxiosMethod';
 import { API_PATHS } from 'src/utils/constants/apiPaths';
 import { API_METHODS } from 'src/utils/constants/apiMethods';
 import { getUserDetails } from 'src/utils/getUserDeviceInfo';
-import { parseJwt } from 'src/utils/cookie';
+import { parseJwt } from '../../utils/cookie';
 import Cookies from 'js-cookie';
 import ProtectedComponent from '../ProtectedComponent';
 import access from 'src/access';
