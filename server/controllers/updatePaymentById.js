@@ -5,6 +5,7 @@ const { convertDateToIST } = require('../util/convertDateToIST');
 const { getDaysBetweenDates } = require('../util/getDaysBetweenDates');
 const { MESSAGES } = require('../constants/messages');
 const { CONSTANTS } = require('../constants/constants');
+const { determinePaymentType } = require('../util/determinePaymentType');
 
 const updatePaymentById = async (req, res, next) => {
   try {
@@ -99,6 +100,12 @@ const updatePaymentById = async (req, res, next) => {
       .reduce((total, payment) => total + Number(payment.paidAmount), 0)
       .toFixed(2);
 
+      const autoPaymentType = determinePaymentType(
+        updatePurchaseDetails.credits,
+        updatePurchaseDetails.payments,
+        totalPayableAmount
+      );
+
     const updatedOrder = await PurchaseOrder.findByIdAndUpdate(
       purchase_id,
       {
@@ -106,7 +113,7 @@ const updatePaymentById = async (req, res, next) => {
         'purchaseDetails.payments': updatePurchaseDetails.payments,
         'purchaseDetails.totalPayableAmount': totalPayableAmount,
         'purchaseDetails.totalBillAmount': totalBillAmount,
-        'purchaseDetails.paymentType': paymentType,
+        'purchaseDetails.paymentType': autoPaymentType,
         'purchaseDetails.remark': remark,
         totalPaidAmount,
       },
