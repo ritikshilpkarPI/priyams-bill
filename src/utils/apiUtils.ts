@@ -234,3 +234,18 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
     return { isError: true, error };
   }
 };
+
+export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[])=>{
+  try {
+    const response = await postAPI({
+      path: API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,
+      data:{
+        items,
+        collectionName:selectedStoreId,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
