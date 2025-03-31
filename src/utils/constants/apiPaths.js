@@ -117,5 +117,8 @@ export const API_PATHS = {
   ITEMS: {
     GET_ITEMS_SKU: "/api/items/sku",
     GET_ITEM_BY_ID: "/api/item"
-  }
+  },
+  STORE: {
+    GET_ALL_STORES: "/api/store",
+  },
 };
