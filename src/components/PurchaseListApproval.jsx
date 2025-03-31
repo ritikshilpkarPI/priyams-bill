@@ -10,7 +10,7 @@ import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
 import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
 import ShareOnWhatsApp from './shareOnWhatsApp';
-import { IconCheck } from '@tabler/icons-react';
+import { PaidChip } from "../components/paidChip";
 const PurchaseListApproval = ({
   list,
   index,
@@ -138,9 +138,7 @@ const PurchaseListApproval = ({
             <div className='serial-number-paid-icon-container'>
             {`${index + 1}.`}
                 {list.purchaseDetails.totalPayableAmount === list.totalPaidAmount &&
-                <Avatar className='paid-check-icon-container'  radius="xl" color={'green'} size="md">
-                    <IconCheck size={12} color="white" />
-                </Avatar>}
+                <PaidChip/>}
             </div>
           </td>
           <td>{list.dealerName}</td>
