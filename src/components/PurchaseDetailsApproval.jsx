@@ -6,23 +6,20 @@ import '../CSS/purchaseApproval.css';
 import ShowPurchaseOrderTable from './ShowPurchaseOrderTable';
 import ShowOrderDetailTable from './ShowOrderDetailTable';
 import BillUploaderDetails from './BillUploaderDetails';
-import { useLocation } from 'react-router';
-import { getQueryOption } from 'src/utils/getQuery';
+import { useQueryParam } from 'src/utils/getQuery';
+import { CustomChip } from './customChip';
 const PurchaseDetailsApproval = ({
   allPurchaseList,
   setAllPurchaseList,
   getOrders,
 }) => {
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const option = getQueryOption(query, 'option');
-  
+  const option = useQueryParam('option');
   const [indexDetail, setIndexDetail] = useState(-1);
   
   
   return (
     <div className="purchase-approval">
-      <h3>{option}</h3>
+      <CustomChip labelClassName={"custom-chip-label"} label={option} variant={"light"}/>
       {/* permanently removed */}
       {/* <Select
         style={{ width: "200px", margin: "2vmin auto" }}

@@ -47,3 +47,8 @@
   text-decoration: none;
   white-space: nowrap;  
 }
+
+.custom-chip-label{
+  font-size: 22px;
+  font-weight: 600;
+}
