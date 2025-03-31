@@ -10,8 +10,7 @@ import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
 import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
 import ShareOnWhatsApp from './shareOnWhatsApp';
-import { useLocation } from 'react-router';
-import { getQueryOption } from 'src/utils/getQuery';
+import { useQueryParam } from 'src/utils/getQuery';
 const PurchaseListApproval = ({
   list,
   index,
@@ -21,9 +20,7 @@ const PurchaseListApproval = ({
 }) => {
   const [loadingState, setLoadingState] = useState({});
   const [isAdminUser, setIsAdminUser] = useState(false);
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const option = getQueryOption(query, 'option')?.split(" ")[0];
+  const option = useQueryParam('option')?.split(" ")[0];
 
   const setLoading = (id, state, buttonName) => {
     setLoadingState({ [id]: state, btnName: buttonName });
