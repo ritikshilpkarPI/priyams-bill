@@ -19,7 +19,7 @@ const PurchaseDetailsApproval = ({
   
   return (
     <div className="purchase-approval">
-      <CustomChip labelClassName={"custom-chip-label"} label={option} variant={"light"}/>
+      <CustomChip labelClassName={"custom-chip-label"} label={option}/>
       {/* permanently removed */}
       {/* <Select
         style={{ width: "200px", margin: "2vmin auto" }}
