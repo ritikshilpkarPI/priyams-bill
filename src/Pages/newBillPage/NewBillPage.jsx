@@ -16,7 +16,6 @@ import { BillItems } from '../../components/BillItems/BillItems';
 import { PaymentSection } from '../../components/PaymentSection/PaymentSection';
 import { useSelector } from "react-redux";
 import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
-import { fixedToTwoDecimalPlace } from 'src/utils/fixedToTwoDecimalPlace';
 import { ReactBarcode } from 'react-jsbarcode';
 import { Reset } from 'src/icons/Reset';
 import { BillItemsCardView } from "../../components/BillItemsCardView/BillItemsCardView"

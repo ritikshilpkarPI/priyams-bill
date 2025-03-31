@@ -3,9 +3,6 @@ import PurchaseListApproval from './PurchaseListApproval';
 import { Button, Table } from '@mantine/core';
 import '../CSS/purchaseApproval.css';
 
-import ShowPurchaseOrderTable from './ShowPurchaseOrderTable';
-import ShowOrderDetailTable from './ShowOrderDetailTable';
-import BillUploaderDetails from './BillUploaderDetails';
 
 const PurchaseDetailsApproval = ({
   allPurchaseList,
@@ -14,6 +11,7 @@ const PurchaseDetailsApproval = ({
 }) => {
   const [indexDetail, setIndexDetail] = useState(-1);
   
+  console.log({indexDetail});
   
   return (
     <div className="purchase-approval">
@@ -84,20 +82,7 @@ const PurchaseDetailsApproval = ({
           </tbody>
         </Table>
       )}
-      {indexDetail >= 0 ? (
-        <>
-          <div className="closebtn">
-            <Button onClick={() => setIndexDetail(-1)}>Close</Button>
-          </div>
-          <ShowPurchaseOrderTable purchaseList={allPurchaseList[indexDetail]} />
-          <ShowOrderDetailTable purchaseList={allPurchaseList[indexDetail]} />
-          <BillUploaderDetails
-            cloudBills={allPurchaseList[indexDetail]['billPhotos']}
-          />
-        </>
-      ) : (
-        <></>
-      )}
+      
     </div>
   );
 };
