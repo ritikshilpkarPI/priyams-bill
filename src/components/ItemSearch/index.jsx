@@ -5,14 +5,15 @@ import {
     Input,
     Button,
     Loader,
-    Group
+    Group,
+    Badge
   } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
 import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 import "./ItemSearch.css";
 
-export const ItemSearch = ({ onItemSelect, isApprovedPO }) => {
+export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [itemsData, setItemsData] = useState([]);
@@ -153,6 +154,9 @@ const calculateItemPrice = (item, quantity) => {
               No items found
             </Text>
           )}
+          {error.length>0 &&
+          <Badge mt={10} color="red" size="xs">{error}</Badge>
+          }
         </Paper>
       </div>
     );
