@@ -25,6 +25,7 @@ const initialState: PurchasedItemDetailFormType = {
   freeItemsRemarks: '',
   returnPolicyRemarks: '',
   itemHasExpiry: null as boolean | null,
+  profitPercentage: 0,
 };
 
 const purchasedItemDetailFormSlice = createSlice({

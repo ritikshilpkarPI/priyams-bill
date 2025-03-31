@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface StoreInventoryState {
-  selectedStoreId: string;
-  inventoryItems: any[];
-}
 
 const initialState: StoreInventoryState = {
   selectedStoreId: '',
