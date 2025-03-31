@@ -133,7 +133,7 @@ const PurchaseListApproval = ({
 
   const navigate = useNavigate();
   const isSavedApprovedPage = !['approved', 'saved'].includes(option.trim().toLowerCase());
-
+console.log(option.trim().toLowerCase() ==='approved')
   return (
     <>
       {list ? (
@@ -188,7 +188,7 @@ const PurchaseListApproval = ({
                   </Button>
                 </td>
               ) : (
-                <td>
+                <>{ !(option.trim().toLowerCase() ==='approved') && <td>
                   <Button
                     disabled={loadingState[list._id] || list.isRejected || list.isApproved}
                     className="approve-btn"
@@ -197,7 +197,7 @@ const PurchaseListApproval = ({
                   >
                     Draft
                   </Button>
-                </td>
+                </td>}</>
               )}
               {(isSavedApprovedPage) && <td>
                 <Button
@@ -223,7 +223,7 @@ const PurchaseListApproval = ({
                   Edit
                 </Link>
               </td>
-              <td>
+              { !(option.trim().toLowerCase() ==='approved') && <td>
                 <Button
                   disabled={loadingState[list._id] || list.isRejected}
                   className="approve-btn"
@@ -232,7 +232,7 @@ const PurchaseListApproval = ({
                 >
                   Draft
                 </Button>
-              </td>
+              </td>}
             </>
           )}
           {isAdminUser && list.isDraft &&
