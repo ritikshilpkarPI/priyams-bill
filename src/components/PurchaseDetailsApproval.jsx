@@ -7,7 +7,7 @@ import ShowPurchaseOrderTable from './ShowPurchaseOrderTable';
 import ShowOrderDetailTable from './ShowOrderDetailTable';
 import BillUploaderDetails from './BillUploaderDetails';
 import { useLocation } from 'react-router';
-
+import { getQueryOption } from 'src/utils/getQuery';
 const PurchaseDetailsApproval = ({
   allPurchaseList,
   setAllPurchaseList,
@@ -15,7 +15,7 @@ const PurchaseDetailsApproval = ({
 }) => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const option = query.get('option');
+  const option = getQueryOption(query, 'option');
   
   const [indexDetail, setIndexDetail] = useState(-1);
   
