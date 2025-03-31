@@ -11,6 +11,7 @@ import { isAdmin } from '../utils/isAdmin';
 import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
 import ShareOnWhatsApp from './shareOnWhatsApp';
 import { useLocation } from 'react-router';
+import { getQueryOption } from 'src/utils/getQuery';
 const PurchaseListApproval = ({
   list,
   index,
@@ -22,7 +23,7 @@ const PurchaseListApproval = ({
   const [isAdminUser, setIsAdminUser] = useState(false);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const option = query.get('option').split(" ")[0];
+  const option = getQueryOption(query, 'option')?.split(" ")[0];
 
   const setLoading = (id, state, buttonName) => {
     setLoadingState({ [id]: state, btnName: buttonName });
@@ -133,7 +134,7 @@ const PurchaseListApproval = ({
 
   const navigate = useNavigate();
   const isSavedApprovedPage = !['approved', 'saved'].includes(option.trim().toLowerCase());
-console.log(option.trim().toLowerCase() ==='approved')
+  const isApprovedPO = option.trim().toLowerCase() ==='approved';
   return (
     <>
       {list ? (
@@ -188,7 +189,7 @@ console.log(option.trim().toLowerCase() ==='approved')
                   </Button>
                 </td>
               ) : (
-                <>{ !(option.trim().toLowerCase() ==='approved') && <td>
+                <>{ !(isApprovedPO) && <td>
                   <Button
                     disabled={loadingState[list._id] || list.isRejected || list.isApproved}
                     className="approve-btn"
@@ -223,7 +224,7 @@ console.log(option.trim().toLowerCase() ==='approved')
                   Edit
                 </Link>
               </td>
-              { !(option.trim().toLowerCase() ==='approved') && <td>
+              { !(isApprovedPO) && <td>
                 <Button
                   disabled={loadingState[list._id] || list.isRejected}
                   className="approve-btn"
