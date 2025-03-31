@@ -42,6 +42,7 @@ const purchaseOrderSchema = new mongoose.Schema({
         },
       ],
       slabPrice: [],
+      profitPercentage: { type: Number},
     },
   ],
   purchaseDetails: {
