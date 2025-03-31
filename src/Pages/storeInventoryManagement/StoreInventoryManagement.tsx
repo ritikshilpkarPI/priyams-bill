@@ -79,6 +79,7 @@ const StoreInventoryManagement: React.FC = () => {
     dispatch(resetStoreInventory());
   };
 
+  
   return (
     <Paper p="md" radius="md" withBorder style={{ margin: '16px' }}>
       <Title order={2} mb="md">Store Inventory Management</Title>

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface StoreInventoryState {
   selectedStoreId: string;
   inventoryItems: any[];
-  stores: string[];
+  stores: Store[];
 }
 
 const initialState: StoreInventoryState = {
@@ -16,7 +16,7 @@ const storeInventorySlice = createSlice({
   name: 'storeInventory',
   initialState,
   reducers: {
-    setStores: (state, action: PayloadAction<string[]>) => {
+    setStores: (state, action: PayloadAction<Store[]>) => {
       state.stores = action.payload;
     },
     setSelectedStore: (state, action: PayloadAction<string>) => {
