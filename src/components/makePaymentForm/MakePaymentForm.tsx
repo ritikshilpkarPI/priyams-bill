@@ -4,17 +4,12 @@ import {
   Flex,
   Grid,
   Select,
-  TextInput,
-  Text,
   FileInput,
   Badge,
   Image,
 } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router';
-import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import {
   resetMakePaymentForm,
@@ -34,19 +29,21 @@ import {
 } from 'src/redux/paymentDetailForm/paymentDetailFormSelectors';
 import { addPaymentDetailValidation } from 'src/utils/validations/paymentDetailFormValidation';
 import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
+import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
-  const location = useLocation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const paymentDetail = useSelector(selectMakePaymentFormState) || {};
-  const paymentsList = useSelector(selectPaymentsState) || [];
   const purchaseDetails = useSelector(selectPaymentDetailForm) || [];
+  const purchaseOrder = useSelector(selectPurchaseOrder) || {};
+
   const { paidBy } = paymentDetail;
   const takeImages = paidBy === CONSTANTS.UPI || paidBy === CONSTANTS.NEFT;
 
+  const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
+    
   const onChange = (field: string, value: string | number | File[]) => {
     dispatch(setMakePaymentForm({ ...paymentDetail, [field]: value }));
   };
@@ -83,7 +80,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
 
   const onSubmit = async () => {
     try {
-      await addPaymentDetailValidation.validate(paymentDetail, {
+      await addPaymentDetailValidation.validate({...paymentDetail, totalPayableAmount: purchaseDetails.totalPayableAmount, paymentsList}, {
         abortEarly: false,
       });
       if (purchaseOrderId) return updatePayment();

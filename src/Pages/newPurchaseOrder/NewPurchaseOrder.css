@@ -1,0 +1,6 @@
+@media (max-width: 680px) {
+    .purchase-order-title-wrapper{
+        flex-direction: column;
+        row-gap: 5px;
+    }
+}

@@ -4,43 +4,79 @@ const { uploadImages, deleteImages } = require('../util/image');
 const { isShelfExpired } = require('../util/isShelfExpired');
 const { getItemSKU } = require('../util/getItemSKU');
 
-const updateDetailsById = async (req, res,next) => {
+const updateDetailsById = async (req, res, next) => {
   try {
-    const {
-      details,
-      bills,
-      orders,
-      billAmount,
-      remark,
-      totalPaidAmount,
-      payment,
-      procurementSource,
-      dealerName,
-      phoneNumber,
-      minimumQuantity,
-    } = req.body.new_order.purchaseObj;
-    const isDraft = req.body.new_order.isDraft;
-    const id = req.body.new_order.id;
-    //ALREADY UPLOADED IMAGES
-    const uploadedImages = req.body.uploadedImages;
-    const delImages = req.body.deleteBills;
+    const { purchaseObj, isDraft, id } = req.body.new_order || {};
 
-    //DELETING IMAGES FROM CLOUDINARY
-    await deleteImages(delImages);
+    if (!id) {
+      return res.status(400).json({ message: 'ID is required', success: false });
+    }
+    if (!purchaseObj) {
+      return res.status(400).json({ message: 'Purchase object is required', success: false });
+    }
 
-    let billPhotos = [];
-    billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
-    billPhotos = [...billPhotos, ...uploadedImages];
+    const existingOrder = await PurchaseOrder.findById(id);
+    if (!existingOrder) {
+      return res.status(404).json({ message: 'Purchase order not found', success: false });
+    }
 
-    let updatedOrders = orders;
-    if(orders && orders.length){
-      updatedOrders = orders.map(((order) => {
+    const updateFields = { isRejected: false };
+
+    const simpleFields = [
+      { reqKey: 'details', dbKey: 'purchaseDetails' },
+      { reqKey: 'billAmount', dbKey: 'billAmount' },
+      { reqKey: 'remark', dbKey: 'remark' },
+      { reqKey: 'totalPaidAmount', dbKey: 'totalPaidAmount' },
+      { reqKey: 'payment', dbKey: 'payment' },
+      { reqKey: 'procurementSource', dbKey: 'procurementSource' },
+      { reqKey: 'dealerName', dbKey: 'dealerName' },
+      { reqKey: 'phoneNumber', dbKey: 'phoneNumber' },
+      { reqKey: 'minimumQuantity', dbKey: 'minimumQuantity' },
+    ];
+
+    simpleFields.forEach(({ reqKey, dbKey }) => {
+      if (purchaseObj[reqKey] !== undefined) {
+        updateFields[dbKey] = purchaseObj[reqKey];
+      }
+    });
+
+    if (isDraft !== undefined) {
+      updateFields.isDraft = isDraft;
+    }
+
+    const bills = purchaseObj.bills;
+    const uploadedImages = req.body.uploadedImages || [];
+    const delImages = req.body.deleteBills || [];
+
+    if (
+      (Array.isArray(bills) && bills.length > 0) ||
+      uploadedImages.length > 0 ||
+      (Array.isArray(delImages) && delImages.length > 0)
+    ) {
+      if (delImages.length > 0) {
+        await deleteImages(delImages);
+      }
+
+      let billPhotos = [];
+      if (Array.isArray(bills) && bills.length > 0) {
+        const uploadedBillPhotos = await uploadImages(bills, clodinaryFoldersPath.bill);
+        billPhotos = uploadedBillPhotos;
+      }
+      if (uploadedImages.length > 0) {
+        billPhotos = [...billPhotos, ...uploadedImages];
+      }
+      updateFields.billPhotos = billPhotos;
+    }
+
+    const orders = purchaseObj.orders;
+    if (Array.isArray(orders) && orders.length > 0) {
+      updateFields.purchasedItems = orders.map(order => {
         let expiryDates = order.expiryDates;
-        if(order.expiryDates) {
-          expiryDates = order.expiryDates.map(expiryDates => ({
-            ...expiryDates,
-            isShelfExpired: isShelfExpired(expiryDates.mfgDate, expiryDates.date)
-          }))
+        if (Array.isArray(expiryDates) && expiryDates.length > 0) {
+          expiryDates = expiryDates.map(expiry => ({
+            ...expiry,
+            isShelfExpired: isShelfExpired(expiry.mfgDate, expiry.date),
+          }));
         }
         return {
           ...order,
@@ -50,34 +86,22 @@ const updateDetailsById = async (req, res,next) => {
             unit: order.unit,
             itemName: order.inputName,
             barcode: order.barcode,
-            mrp: order.mrp
-          })
-        }
-      }))
+            mrp: order.mrp,
+          }),
+        };
+      });
     }
 
-    const purchaseOrder = {
-      purchasedItems: [...orders],
-      purchaseDetails: details,
-      isDraft,
-      billPhotos,
-      billAmount,
-      remark,
-      totalPaidAmount,
-      payment,
-      procurementSource,
-      dealerName,
-      phoneNumber,
-      minimumQuantity,
-      isRejected: false,
-    };
-    let order = await PurchaseOrder.findByIdAndUpdate(id, purchaseOrder, { new: true });
+    const updatedOrder = await PurchaseOrder.findByIdAndUpdate(
+      id,
+      { $set: updateFields },
+      { new: true }
+    );
 
-    res.status(201).send({ message: order, success: true });
+    res.status(200).json({ message: updatedOrder, success: true });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
 
 module.exports = updateDetailsById;
