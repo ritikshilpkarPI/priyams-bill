@@ -11,14 +11,19 @@ import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
 import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 import "./ItemSearch.css";
+import { getItemsSkuAPI } from "src/utils/apiUtils";
+import { selectItemsSkuList } from "src/redux/items/itemsSelector";
+import { useDispatch } from "react-redux";
+import { setItemsData } from "src/redux/items/itemsSlice";
 
 export const ItemSearch = ({ onItemSelect, isApprovedPO }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [itemsData, setItemsData] = useState([]);
+    const [itemsData, setItemData] = useState([]);
     const itemsFeedData = useSelector(selectItemsFeedData);
     const loading = useSelector(itemsFeedAPILoading);
     const inputRef = useRef(null); 
+    const dispatch = useDispatch();
     useEffect(() => {
       if (inputRef.current && !loading) {
         inputRef.current.focus(); 
@@ -29,7 +34,7 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO }) => {
     useEffect(() => {
       if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
       } else {
-        setItemsData(itemsFeedData);
+        setItemData(itemsFeedData);
       }
     }, [itemsFeedData]);
 
@@ -101,6 +106,25 @@ const calculateItemPrice = (item, quantity) => {
         } 
       }, 100);
     };
+
+
+    const getItemsSku = async () => {
+        const response = await getItemsSkuAPI();
+    
+        if(!response && response.isError) return;
+        dispatch(setItemsData({ itemsSkuList: response.itemsSku }));
+      }
+    
+      useEffect(() => {
+        getItemsSku();
+      }, []);
+
+      const itemsSkuList = useSelector(selectItemsSkuList);
+      const getItemSKUByBarcodeAndName = (barcode, itemName) => {
+        const item = itemsSkuList.find(sku => sku.includes(barcode) && sku.includes(itemName));  
+        return item || null;
+    }
+    
    
     
     return (
@@ -113,9 +137,9 @@ const calculateItemPrice = (item, quantity) => {
             ref={inputRef}
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
-            rightSection={loading ? <Loader size="sm" /> : null}
+            rightSection={(loading || !itemsSkuList) ? <Loader size="sm" /> : null}
             mb="sm"
-            disabled={loading || isApprovedPO}
+            disabled={loading || isApprovedPO || !itemsSkuList}
 
           />
   
@@ -130,7 +154,9 @@ const calculateItemPrice = (item, quantity) => {
                   mb="xs"
                 >
                   <div style={{ textAlign: 'left', width: '100%' }}>
-                    <Text>{item.itemName}</Text>
+                    <Text>
+                      {getItemSKUByBarcodeAndName(item.itemBarcode, item.itemName) || item.itemName}
+                      </Text>
                     <Group spacing="xs">
                       <Text size="sm" color="dimmed">
                         MRP: ₹{item.itemMRPperUnit}
