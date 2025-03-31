@@ -269,7 +269,7 @@ declare global {
     inputName?: string;
     freeItemsRemarks?: string;
     itemHasExpiry?: boolean | null;
-    profitPercentage?: number;
+    profitPercentage: number;
   }
 
   interface PurchasedItemDetailFormProps {
