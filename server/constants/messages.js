@@ -16,6 +16,10 @@ const MESSAGES = Object.freeze({
   PAYMENT_DELETED_SUCCESSFULLY: "Payment deleted successfully",
   STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
   INSUFFICIENT_STOCK:"Insufficient stock",
+  LAT_LONG_REQUIRED: 'Latitude and longitude are required',
+  PINCODE_FETCH_FAILED: 'Failed to retrieve pincode',
+  STORE_NOT_FOUND: 'No store found for this pincode',
+  INTERNAL_SERVER_ERROR: 'Internal server error',
 });
 
 module.exports = { MESSAGES };
