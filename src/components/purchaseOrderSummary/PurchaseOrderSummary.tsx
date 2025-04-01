@@ -106,6 +106,7 @@ export const PurchaseOrderSummary = () => {
           rejectMessage: rejectMessage,
         },
       });
+      dispatch(setPurchaseOrder({ ...purchaseOrder, isDraft: false }));
       setRejectLoading(false);
       setShowRejectMessage(false);
       setRejectMessage('');
