@@ -45,6 +45,7 @@ const NewPurchaseOrder = () => {
   const [loading, setLoading] = useState(false);
   const purchaseOrder = useSelector(selectPurchaseOrder);
   const { isApproved = false} = purchaseOrder;
+  const [isApprovedPO, setIsApprovedPO] = useState(isApproved);
 
   const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
   const purchaseOrderStatus = (() => {
