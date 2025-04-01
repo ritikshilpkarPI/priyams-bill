@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Title,
   Button,
@@ -21,8 +21,9 @@ import {
   updateInventoryItemQuantity,
   removeInventoryItem,
   resetStoreInventory,
+  setStores,
 } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
-import { transferStockToStoreAPI } from '../../utils/apiUtils';
+import { getAllStoresAPI, transferStockToStoreAPI } from '../../utils/apiUtils';
 import { useMediaQuery } from '@mantine/hooks';
 import { StoreInventoryManagementValidation } from '../../utils/validations/StoreInventoryManagementValidation';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
@@ -44,11 +45,27 @@ const StoreInventoryManagement: React.FC = () => {
     (state: RootState) => state.storeInventoryManagement.inventoryItems
   );
 
-  // For demonstration, a static list of stores is provided.
-  const stores: Store[] = [
-    { id: 'pstr_1_462022', name: 'Main Store' },
-    { id: 'store2', name: 'Outlet Store' },
-  ];
+  const stores = useSelector(
+    (state: RootState) => state.storeInventoryManagement.stores
+  );
+
+ 
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        const res = await getAllStoresAPI();
+        if (!res.stores) {
+          showNotification({ message: 'No stores found', color: 'red' });
+          return;
+        }  
+        dispatch(setStores(res.stores));
+      } catch (error) {
+        showNotification({ message: 'Failed to load stores', color: 'red' });
+      }
+    };
+
+    fetchStores();
+  }, [dispatch]);
 
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const [loading, setLoading] = useState(false);

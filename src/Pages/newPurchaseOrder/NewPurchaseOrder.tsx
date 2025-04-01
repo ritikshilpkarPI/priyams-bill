@@ -31,7 +31,6 @@ import { TAB, TabChip, TabKey } from 'src/components/TabChip';
 import { useSelector } from 'react-redux';
 
 
-
 const NewPurchaseOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -44,6 +43,9 @@ const NewPurchaseOrder = () => {
   const activeTabInitial = currentTab && currentTab in TAB ? TAB[currentTab] : TAB.dealerDetails;
 
   const [loading, setLoading] = useState(false);
+  const purchaseOrder = useSelector(selectPurchaseOrder);
+  const { isApproved = false} = purchaseOrder;
+
   const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
   const purchaseOrderStatus = (() => {
     const { isApproved, isRejected, isDraft } = purchaseOrderStatusInfo || {};
@@ -64,8 +66,6 @@ const NewPurchaseOrder = () => {
     }
     return { label, color };
   })();
-  const purchaseOrder = useSelector(selectPurchaseOrder);
-  const { isApproved } = purchaseOrder;
   const [isApprovedPO, setIsApprovedPO] = useState(isApproved);
 
   const [isValidDealerDetails, setIsValidDealerDetails] = useState(false);
