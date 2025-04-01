@@ -234,3 +234,14 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
     return { isError: true, error };
   }
 };
+
+export const getAllStoresAPI = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STORE.GET_ALL_STORES,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
