@@ -72,6 +72,7 @@ export const API_PATHS = {
     POST_DELETE_PAYMENT_BY_ID: '/api/payment/deletePaymentById',
   },
   STAFF: {
+    GET_STAFFS: '/api/staffs',
     GET_STAFF: '/api/staff',
     POST_STAFF: '/api/staff',
   },
