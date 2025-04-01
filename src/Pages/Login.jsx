@@ -28,25 +28,41 @@ const Login = () => {
 
   const loginUser = async (e) => {
     e.preventDefault();
-
     if (!username || !password) {
       setErrorMsg("Username or password can't be blank");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      const payload = { username: username.toLowerCase(), password };
+      const storedPincode = localStorage.getItem('userPincode');
+  
+      const payload = {
+        username: username.toLowerCase(),
+        password,
+        ...(storedPincode
+          ? { pincode: storedPincode }
+          : { latitude: "23.2510348", longitude: "77.465958" } ),
+      };
+  
       const response = await genericAxios({
         url: API_PATHS.AUTH.POST_LOGIN,
         method: API_METHODS.POST,
         data: payload,
         headers: { Cookie: '' },
       });
-
+  
+  
+      if (!storedPincode && response?.data?.pincode) {
+        localStorage.setItem('userPincode', response.data.pincode);
+      }
+  
+      if (!storedPincode && response?.data?.storeData) {
+        localStorage.setItem('storeData', JSON.stringify(response.data.storeData));
+      }
+  
       const errorMessage = response?.error?.response?.data?.error?.message;
-
       if (response.error) {
         if (errorMessage === "Username doesn't exist") {
           setErrorMsg('Invalid username');
@@ -63,7 +79,7 @@ const Login = () => {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="login-card">
       <form onSubmit={loginUser}>
