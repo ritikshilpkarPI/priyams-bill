@@ -22,8 +22,8 @@ const inventoryItemCategory = [
 const ItemSchema = new mongoose.Schema(
   {
     itemName: { type: String, required: true, trim: true },
-    itemBarcode: { type: String },
-    sku: { type: String },
+    itemBarcode: { type: String, required: true },
+    sku: { type: String, required: true, unique: true },
     itemStockQuantity: { type: Number, default: 0 },
     minimumStockQuantity: { type: Number, default: 1 },
     itemMRPperUnit: { type: Number, required: true, default: 0 },
@@ -56,9 +56,9 @@ const ItemSchema = new mongoose.Schema(
         },
       },
     ],
-    quantityUnitName: { type: String },
+    quantityUnitName: { type: String, required: true },
     gstPercentage: { type: Number },
-    itemPerUnitQuantity: { type: Number, default: 0 },
+    itemPerUnitQuantity: { type: Number, default: 0, required: true },
     images: [
       {
         public_id: { type: String, required: true },
