@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Paper, Text, Input, Button, Loader, Group } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { fuzzySearch } from 'src/utils/searchUtils';
 import {
@@ -9,7 +8,6 @@ import {
     Button,
     Loader,
     Group,
-    Badge
   } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { fuzzySearch } from "src/utils/searchUtils";
