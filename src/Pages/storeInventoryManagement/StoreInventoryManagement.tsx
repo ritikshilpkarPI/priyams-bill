@@ -111,6 +111,7 @@ const StoreInventoryManagement: React.FC = () => {
     const items = convertToItemsArray();
     const response = await transferStockToStoreAPI(selectedStoreId, items);
     if (response.isError){
+      setLoading(false);
       return toast.error(
               'unable to update store, please try again some time'
             );
