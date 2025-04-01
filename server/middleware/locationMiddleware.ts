@@ -33,7 +33,7 @@ const locationMiddleware = async (req: Request, res: Response, next: NextFunctio
         next(); 
     } catch (error) {
         console.error('Error in location middleware:', error);
-        res.status(500).json({ error: MESSAGES.INTERNAL_SERVER_ERROR });
+        next(error);
     }
 };
 
