@@ -58,6 +58,7 @@ const {
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSku,
   getItemById,
+  getAllStores,
   transferStockToStore,
 } = require('../controllers/index');
 
@@ -256,6 +257,8 @@ router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, isLoggedIn, getItemsSku);
 
 router.get(`${API_PATHS.ITEMS.GET_ITEM_BY_ID}/:id`, isLoggedIn, getItemById);
 
+
+router.get(API_PATHS.STORE.GET_ALL_STORES, isLoggedIn, getAllStores);
 
 router.post(API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,isLoggedIn, transferStockToStore);
 

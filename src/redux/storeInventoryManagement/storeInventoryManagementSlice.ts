@@ -1,15 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface StoreInventoryState {
+  selectedStoreId: string;
+  inventoryItems: any[];
+  stores: Store[];
+}
 
 const initialState: StoreInventoryState = {
   selectedStoreId: '',
   inventoryItems: [],
+  stores: [],
 };
 
 const storeInventorySlice = createSlice({
   name: 'storeInventory',
   initialState,
   reducers: {
+    setStores: (state, action: PayloadAction<Store[]>) => {
+      state.stores = action.payload;
+    },
     setSelectedStore: (state, action: PayloadAction<string>) => {
       state.selectedStoreId = action.payload;
     },
@@ -41,6 +50,7 @@ const storeInventorySlice = createSlice({
 });
 
 export const {
+  setStores,
   setSelectedStore,
   addInventoryItem,
   updateInventoryItemQuantity,

@@ -53,6 +53,7 @@ import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
 import { getItemsSku } from "./getItemsSku";
 import { getItemById } from "./getItemById";
+import { getAllStores } from  "./getAllStores"
 import { transferStockToStore } from "./transferStockToStore"
 
 export {
@@ -111,5 +112,6 @@ export {
   getItemsSellDetailsByPurchaseOrderId,
   getItemById,
   getItemsSku,
+  getAllStores,
   transferStockToStore,
 };
