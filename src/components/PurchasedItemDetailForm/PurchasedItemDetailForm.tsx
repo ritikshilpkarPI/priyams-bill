@@ -100,7 +100,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
 
   const isNewItemSKUExists = useMemo(() => {
     return itemsSKUList?.some(
-      (itemSku: string) => itemSku?.toUpperCase() === newItemSKU?.toUpperCase()
+      (itemSku: {sku: string, _id: string}) => itemSku?.sku.toUpperCase() === newItemSKU?.toUpperCase()
     );
   }, [itemsSKUList, newItemSKU]);
 
