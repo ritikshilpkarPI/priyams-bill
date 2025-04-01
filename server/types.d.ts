@@ -47,6 +47,11 @@
     storeCollectionName: string;
   }
 
+export  interface AddressComponent {
+    long_name: string;
+    short_name: string;
+    types: string[];
+}
   export type AuthenticatedRequest = {
     user?: {
       _id: ObjectId;
