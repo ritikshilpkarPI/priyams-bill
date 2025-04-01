@@ -3,19 +3,21 @@ import PurchaseListApproval from './PurchaseListApproval';
 import { Button, Table } from '@mantine/core';
 import '../CSS/purchaseApproval.css';
 
-
+import { useQueryParam } from 'src/utils/getQuery';
+import { CustomChip } from './customChip';
 const PurchaseDetailsApproval = ({
   allPurchaseList,
   setAllPurchaseList,
   getOrders,
 }) => {
+  const option = useQueryParam('option');
   const [indexDetail, setIndexDetail] = useState(-1);
   
   console.log({indexDetail});
   
   return (
     <div className="purchase-approval">
-      <h3>Purchase Details, approval required</h3>
+      <CustomChip labelClassName={"custom-chip-label"} label={option}/>
       {/* permanently removed */}
       {/* <Select
         style={{ width: "200px", margin: "2vmin auto" }}
@@ -43,7 +45,6 @@ const PurchaseDetailsApproval = ({
               <th>Created At</th>
               <th>Remark</th>
               <th>Share</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>

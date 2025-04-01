@@ -3,8 +3,6 @@ import * as Yup from 'yup';
 import { Box, Button, Checkbox, Flex, Textarea, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
-import { draftItemFormValidation } from '../../utils/validations/draftItemFormValidation';
-import { PaymentCoverageComplete, paymentDetailFormValidation } from '../../utils/validations/paymentDetailFormValidation';
 import { draftOrderByIdAPI } from '../../utils/apiUtils';
 import { setPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSlice';
 import { useDispatch } from 'react-redux';

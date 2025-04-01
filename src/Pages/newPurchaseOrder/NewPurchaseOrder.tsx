@@ -31,7 +31,6 @@ import { TAB, TabChip, TabKey } from 'src/components/TabChip';
 import { useSelector } from 'react-redux';
 
 
-
 const NewPurchaseOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -68,8 +67,6 @@ const NewPurchaseOrder = () => {
     }
     return { label, color };
   })();
-  const purchaseOrder = useSelector(selectPurchaseOrder);
-  const { isApproved } = purchaseOrder;
   const [isApprovedPO, setIsApprovedPO] = useState(isApproved);
 
   const [isValidDealerDetails, setIsValidDealerDetails] = useState(false);
@@ -154,10 +151,6 @@ const NewPurchaseOrder = () => {
           </Chip>
         )}
       </Flex>
-=========
-        <Title order={2}>Purchase Order</Title>
-        
->>>>>>>>> Temporary merge branch 2
       <Tabs
         variant="default"
         color="black"

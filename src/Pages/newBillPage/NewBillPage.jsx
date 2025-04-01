@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   Container,
   Grid,
-  Paper,
   Button,
-  Title,
 } from '@mantine/core';
 import "./NewBillPage.css"
 import {
