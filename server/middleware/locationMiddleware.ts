@@ -22,7 +22,7 @@ const locationMiddleware = async (req: Request, res: Response, next: NextFunctio
             pincode = pincodeObj?.long_name;
 
             if (!pincode) {
-                return res.status(500).json({ error: MESSAGES.PINCODE_FETCH_FAILED });
+                return res.status(400).json({ error: MESSAGES.PINCODE_FETCH_FAILED });
             }
 
             req.body.fetchedPincode = pincode;
