@@ -53,6 +53,7 @@ import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
 import { getItemsSku } from "./getItemsSku";
 import { getItemById } from "./getItemById";
+import { getAllStores } from  "./getAllStores"
 
 export {
   addBulkItems,
@@ -110,4 +111,5 @@ export {
   getItemsSellDetailsByPurchaseOrderId,
   getItemById,
   getItemsSku,
+  getAllStores
 };

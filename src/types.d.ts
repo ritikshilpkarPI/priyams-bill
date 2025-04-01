@@ -206,6 +206,7 @@ declare global {
     inputName?: string;
     freeItemsRemarks?: string;
     itemHasExpiry?: boolean | null;
+    profitPercentage: number;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -406,6 +407,7 @@ declare global {
   interface Store {
     id: string;
     name: string;
+    code: string;
   }
 
   interface StoreInventoryForm {

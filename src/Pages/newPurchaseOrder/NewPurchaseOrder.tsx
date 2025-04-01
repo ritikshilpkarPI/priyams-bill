@@ -130,6 +130,10 @@ const NewPurchaseOrder = () => {
     setActiveTab(activeTabInitial);
   }, [currentTab]);
 
+  useEffect(() => {
+    setIsApprovedPO(isApproved);
+},[isApproved])
+
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
       <Flex className='purchase-order-title-wrapper' columnGap={30} wrap={'wrap'} align={'center'} justify={'center'}>

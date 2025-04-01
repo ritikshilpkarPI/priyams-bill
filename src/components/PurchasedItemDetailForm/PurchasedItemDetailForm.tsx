@@ -100,7 +100,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
 
   const isNewItemSKUExists = useMemo(() => {
     return itemsSKUList?.some(
-      (itemSku: string) => itemSku?.toUpperCase() === newItemSKU?.toUpperCase()
+      (itemSku: {sku: string, _id: string}) => itemSku?.sku.toUpperCase() === newItemSKU?.toUpperCase()
     );
   }, [itemsSKUList, newItemSKU]);
 
@@ -249,6 +249,15 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       Number(purchasedItemFormData.costPrice)) *
     100
   ).toFixed(2);
+
+  useEffect(() => {
+    dispatch(setPurchasedItemDetailForm({ 
+      profitPercentage: Number(profitMargin) 
+    }));
+  },[
+    purchasedItemFormData.sellingPrice, 
+    purchasedItemFormData.costPrice
+  ]);
 
   return (
     <Flex direction="column" gap="16px" pos="relative">
