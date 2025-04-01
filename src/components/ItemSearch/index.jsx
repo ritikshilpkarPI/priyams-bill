@@ -2,27 +2,21 @@ import { useEffect, useRef, useState } from 'react';
 import { Paper, Text, Input, Button, Loader, Group } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { fuzzySearch } from 'src/utils/searchUtils';
-import {
-    Paper,
-    Text,
-    Input,
-    Button,
-    Loader,
-    Group,
-    Badge
-  } from '@mantine/core';
-import { useSelector } from "react-redux";
-import { fuzzySearch } from "src/utils/searchUtils";
 import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 import "./ItemSearch.css";
+import { setItemsData } from 'src/redux/items/itemsSlice';
+import { getItemsSkuAPI } from 'src/utils/apiUtils';
+import { selectItemsSkuList } from 'src/redux/items/itemsSelector';
+import { useDispatch } from 'react-redux';
 
 export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [itemsData, setItemsData] = useState([]);
+    const [itemsData, setItemData] = useState([]);
     const itemsFeedData = useSelector(selectItemsFeedData);
     const loading = useSelector(itemsFeedAPILoading);
     const inputRef = useRef(null); 
+    const dispatch = useDispatch();
     useEffect(() => {
       if (inputRef.current && !loading) {
         inputRef.current.focus(); 
@@ -33,16 +27,10 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
     useEffect(() => {
       if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
       } else {
-        setItemsData(itemsFeedData);
+        setItemData(itemsFeedData);
       }
     }, [itemsFeedData]);
 
-  useEffect(() => {
-    if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
-    } else {
-      setItemData(itemsFeedData);
-    }
-  }, [itemsFeedData]);
 
   const handleSearch = (value) => {
     setSearchTerm(value);
