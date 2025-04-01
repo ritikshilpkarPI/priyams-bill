@@ -107,6 +107,7 @@ export const PurchasedItemTable = ({
       <td>{purchasedItem?.mrp || '-'}</td>
       <td>{purchasedItem?.costPrice || '-'}</td>
       <td>{purchasedItem?.sellingPrice || '-'}</td>
+      <td>{purchasedItem?.profitPercentage || '-'}</td>
       <td>{purchasedItem?.stockQuantity || '-'}</td>
       <td>{purchasedItem?.itemRemark || '-'}</td>
       <td>{purchasedItem?.itemHasExpiry !== null? purchasedItem?.itemHasExpiry? CONSTANTS.YES : CONSTANTS.NO : "-"}</td>
@@ -202,6 +203,7 @@ export const PurchasedItemTable = ({
               <th>MRP</th>
               <th>CP</th>
               <th>SP</th>
+              <th>Profit %</th>
               <th>Order Quantity</th>
               <th>Remarks</th>
               <th>Has Expiry</th>
