@@ -11,7 +11,6 @@ export const PAGES = {
   stockquantity: 'Shortage Items',
   report: 'Report',
   purchase: 'Purchase',
-  attendance: 'Attendance',
   approval: 'Approval',
   expiredItems: 'Expired Items',
   label: 'Label',
@@ -22,22 +21,9 @@ export const sidebarListData = [
   {
     ITEM: [
       { name: 'Inventory', url: '/inventory', icon: 'images/inventory.svg' },
-      {
-        name: 'Shortage Items',
-        url: '/stockquantity',
-        icon: 'images/shortage.svg',
-      },
+      
       { name: 'Item Labels', url: '/label', icon: 'images/label.svg' },
-      {
-        name: 'Item Barcode ',
-        url: '/itemsBarcode',
-        icon: 'images/barcode.svg',
-      },
-      {
-        name: 'Move Item To Cart',
-        url: '/moveToCart',
-        icon: 'images/purchaseorder.svg',
-      },
+      { name: 'Item Barcode ', url: '/itemsBarcode', icon: 'images/barcode.svg' },
       {
         name: 'Expiry Alert',
         url: '/expiredItems',
@@ -71,18 +57,11 @@ export const sidebarListData = [
       },
       { name: 'Day Bills', url: '/dayBill', icon: 'images/dailybills.svg' },
       { name: 'Reports', url: '/report', icon: 'images/report.svg' },
-      {
-        name: 'New Billing Page',
-        url: '/newBilling',
-        icon: 'images/report.svg',
-      },
     ],
   },
   {
     STAFF: [
       { name: 'Open Close', url: '/openClose', icon: 'images/openclose.svg' },
-      { name: 'Attendance', url: '/attendance', icon: 'images/attendance.svg' },
-      { name: 'Profile (New)', url: '/', icon: 'images/profile.svg' },
     ],
   },
   {
@@ -112,16 +91,7 @@ export const sidebarListData = [
         url: '/approval',
         icon: 'images/rejectpurchaseorder.svg',
       },
-      {
-        name: 'Paid POs',
-        url: '/paidPOs',
-        icon: 'images/billPaid.svg',
-      },
-      {
-        name: 'Unpaid POs',
-        url: '/unpaidPOs',
-        icon: 'images/billUnpaid.svg',
-      },
+      
     ],
   },
   {
