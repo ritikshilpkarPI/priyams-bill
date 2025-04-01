@@ -22,7 +22,7 @@
 
   export interface StockChangeHistoryType {
     quantity: number;
-    dateTime: Date;
+    dateTime?: Date;
     user: mongoose.Types.ObjectId;
     changeType: ChangeType;
     changedFrom: ChangedFrom;
@@ -47,6 +47,14 @@
     storeCollectionName: string;
   }
 
+  export type AuthenticatedRequest = {
+    user?: {
+      _id: ObjectId;
+      name: string;
+      username: string;
+      role: string;
+    };
+  };
 export  interface AddressComponent {
     long_name: string;
     short_name: string;

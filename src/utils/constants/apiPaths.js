@@ -41,6 +41,7 @@ export const API_PATHS = {
     POST_ADD_BULK_ITEMS: '/api/inventory/addbulkitems',
     PUT_EDIT_ITEM_BY_ID: '/api/inventory/editItemById',
     GET_ITEMS_LEAN_FOR_BILLING: '/api/inventory/getItemsLeanForBilling',
+    POST_TRANSFER_STOCK_TO_STORE: '/api/inventory/transferStockToStore',
   },
   AUTH: {
     POST_LOGIN: '/api/auth/login',
@@ -96,5 +97,8 @@ export const API_PATHS = {
   ITEMS: {
     GET_ITEMS_SKU: "/api/items/sku",
     GET_ITEM_BY_ID: "/api/item"
-  }
+  },
+  STORE: {
+    GET_ALL_STORES: "/api/store",
+  },
 };
