@@ -2,36 +2,35 @@ import { useEffect, useRef, useState } from 'react';
 import { Paper, Text, Input, Button, Loader, Group } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { fuzzySearch } from 'src/utils/searchUtils';
-import {
-  itemsFeedAPILoading,
-  selectItemsFeedData,
-} from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
-import './ItemSearch.css';
+import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
+import "./ItemSearch.css";
+import { setItemsData } from 'src/redux/items/itemsSlice';
 import { getItemsSkuAPI } from 'src/utils/apiUtils';
 import { selectItemsSkuList } from 'src/redux/items/itemsSelector';
 import { useDispatch } from 'react-redux';
-import { setItemsData } from 'src/redux/items/itemsSlice';
 
-export const ItemSearch = ({ onItemSelect, isApprovedPO }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [itemsData, setItemData] = useState([]);
-  const itemsFeedData = useSelector(selectItemsFeedData);
-  const loading = useSelector(itemsFeedAPILoading);
-  const inputRef = useRef(null);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (inputRef.current && !loading) {
-      inputRef.current.focus();
-    }
-  }, [loading]);
+export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [itemsData, setItemData] = useState([]);
+    const itemsFeedData = useSelector(selectItemsFeedData);
+    const loading = useSelector(itemsFeedAPILoading);
+    const inputRef = useRef(null); 
+    const dispatch = useDispatch();
+    useEffect(() => {
+      if (inputRef.current && !loading) {
+        inputRef.current.focus(); 
+      }
+    }, [loading]); 
+    
+    
+    useEffect(() => {
+      if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
+      } else {
+        setItemData(itemsFeedData);
+      }
+    }, [itemsFeedData]);
 
-  useEffect(() => {
-    if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
-    } else {
-      setItemData(itemsFeedData);
-    }
-  }, [itemsFeedData]);
 
   const handleSearch = (value) => {
     setSearchTerm(value);
