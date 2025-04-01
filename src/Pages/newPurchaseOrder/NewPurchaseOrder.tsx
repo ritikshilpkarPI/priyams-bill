@@ -45,7 +45,6 @@ const NewPurchaseOrder = () => {
   const [loading, setLoading] = useState(false);
   const purchaseOrder = useSelector(selectPurchaseOrder);
   const { isApproved = false} = purchaseOrder;
-  const [isApprovedPO, setIsApprovedPO] = useState(isApproved);
 
   const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
   const purchaseOrderStatus = (() => {
@@ -112,10 +111,6 @@ const NewPurchaseOrder = () => {
 
   useEffect(() => {
     if (purchaseOrderId) getPurchaseOrderDetails();
-    else {
-      resetPurchaseOrderForms();
-      setIsApprovedPO(false);
-    }
     else {
       resetPurchaseOrderForms();
       setIsApprovedPO(false);
@@ -219,17 +214,14 @@ const NewPurchaseOrder = () => {
       <Tabs value={activeTab}>
         <Tabs.Panel value={TAB.dealerDetails}>
           <DealerDetailForm isApprovedPO={isApprovedPO}/>
-          <DealerDetailForm isApprovedPO={isApprovedPO}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.itemDetails}>
-          <PurchasedItemPanel  isApprovedPO={isApprovedPO}/>
           <PurchasedItemPanel  isApprovedPO={isApprovedPO}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.paymentDetails}>
           <PaymentDetailAndBillPanel />
         </Tabs.Panel>
         <Tabs.Panel value={TAB.billUpload}>
-          <BillUploadPanel  isApprovedPO={isApprovedPO}/>
           <BillUploadPanel  isApprovedPO={isApprovedPO}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.summary}>
