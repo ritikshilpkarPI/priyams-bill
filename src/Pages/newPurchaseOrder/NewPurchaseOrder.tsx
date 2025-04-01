@@ -44,6 +44,10 @@ const NewPurchaseOrder = () => {
   const activeTabInitial = currentTab && currentTab in TAB ? TAB[currentTab] : TAB.dealerDetails;
 
   const [loading, setLoading] = useState(false);
+  const purchaseOrder = useSelector(selectPurchaseOrder);
+  const { isApproved = false} = purchaseOrder;
+  const [isApprovedPO, setIsApprovedPO] = useState(isApproved);
+
   const purchaseOrderStatusInfo = useSelector(selectPurchaseOrderStatusInfo);
   const purchaseOrderStatus = (() => {
     const { isApproved, isRejected, isDraft } = purchaseOrderStatusInfo || {};
@@ -115,6 +119,10 @@ const NewPurchaseOrder = () => {
       resetPurchaseOrderForms();
       setIsApprovedPO(false);
     }
+    else {
+      resetPurchaseOrderForms();
+      setIsApprovedPO(false);
+    }
   }, [purchaseOrderId]);
 
   useEffect(() => {
@@ -146,6 +154,10 @@ const NewPurchaseOrder = () => {
           </Chip>
         )}
       </Flex>
+=========
+        <Title order={2}>Purchase Order</Title>
+        
+>>>>>>>>> Temporary merge branch 2
       <Tabs
         variant="default"
         color="black"
@@ -214,14 +226,17 @@ const NewPurchaseOrder = () => {
       <Tabs value={activeTab}>
         <Tabs.Panel value={TAB.dealerDetails}>
           <DealerDetailForm isApprovedPO={isApprovedPO}/>
+          <DealerDetailForm isApprovedPO={isApprovedPO}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.itemDetails}>
+          <PurchasedItemPanel  isApprovedPO={isApprovedPO}/>
           <PurchasedItemPanel  isApprovedPO={isApprovedPO}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.paymentDetails}>
           <PaymentDetailAndBillPanel />
         </Tabs.Panel>
         <Tabs.Panel value={TAB.billUpload}>
+          <BillUploadPanel  isApprovedPO={isApprovedPO}/>
           <BillUploadPanel  isApprovedPO={isApprovedPO}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.summary}>

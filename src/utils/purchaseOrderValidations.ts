@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { dealerFormValidation } from './validations/dealerFormValidation';
 import { draftItemFormValidation } from './validations/draftItemFormValidation';
 import { PaymentCoverageComplete, paymentDetailFormValidation } from './validations/paymentDetailFormValidation';
+import { PaymentCoverageComplete, paymentDetailFormValidation } from './validations/paymentDetailFormValidation';
 
 
 export const validateDealerDetails = async (purchaseOrder: PurchaseOrderDataType) => {
