@@ -13,13 +13,9 @@ export const API_PATHS = {
     GET_ORDERS: '/api/purchaseOrder/orders',
     EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
     GET_ITEM_SOLD:'/api/purchaseOrder/itemSold',
-    GET_ITEM_SOLD_BY_ITEMID: "/api/getItemsSellDetailsByItemId",
-    POST_DEALER_DETAILS:"/api/purchaseorder/dealer"
   },
   SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {
-    GET_MONTHLY_ATTENDANCE: '/api/attendance/monthlyAttendance',
-    POST_MARK_ABSENT: '/api/attendance/markAbsent',
     POST_DAILY_ATTENDANCE_ARRIVAL: '/api/attendance/dailyAttendanceArrival',
     POST_DAILY_ATTENDANCE_LEAVING: '/api/attendance/dailyAttendanceLeaving',
     POST_DAILY_ATTENDANCE: '/api/attendance/dailyAttendance',
@@ -28,10 +24,7 @@ export const API_PATHS = {
     GET_BILL_FEED: '/api/billing/getBillFeed',
     DELETE_BILL: '/api/billing/deleteBill',
     POST_SEND_MESSAGE: '/api/billing/sendMessage',
-    GET_EDIT_BILL: '/api/billing/getEditBill',
-    PUT_EDIT_BILL: '/api/billing/editBill',
     POST_NEW_BILL: '/api/billing/newBill',
-    GET_USER_DETAILS: '/api/billing/userDetails',
     GET_ALL_DAILY_BILLS: '/api/billing/allDailyBills',
     GET_CUSTOMER_BILL: '/api/billing/getCustomerBill',
     SAVE_OR_CACHE_BILL: '/api/billing/saveOrCacheBill',
@@ -40,7 +33,6 @@ export const API_PATHS = {
     GET_BILL: '/api/billing/getBill',
   },
   INVENTORY: {
-    GET_ITEMS_FOR_PURCHASE_ORDER: '/api/inventory/getItemsWithSelection',
     POST_ADD_NEW_ITEM: '/api/inventory/addNewItem',
     POST_FILTER_EXPIRY_DATES: '/api/inventory/filterExpiryDates',
     POST_SAVE_INVENTORY: '/api/inventory/saveInventory',
@@ -48,9 +40,6 @@ export const API_PATHS = {
     POST_SOFT_DELETE_ITEM: '/api/inventory/softDeleteItem',
     POST_ADD_BULK_ITEMS: '/api/inventory/addbulkitems',
     PUT_EDIT_ITEM_BY_ID: '/api/inventory/editItemById',
-    GET_PERMANENTLY_OUT_OF_STOCK: '/api/inventory/permanentlyOutOfStock',
-    GET_ITEMS_CATEGORY_LIST: '/api/inventory/getItemsCategoryList',
-    GET_ITEMS_WITH_NO_IMAGES: '/api/inventory/getItemsWithNoImages',
     GET_ITEMS_LEAN_FOR_BILLING: '/api/inventory/getItemsLeanForBilling',
   },
   AUTH: {
@@ -58,7 +47,6 @@ export const API_PATHS = {
     GET_LOGOUT: '/api/auth/logout',
   },
   OPENCLOSE: {
-    GET_ALL_PROCEDURE: '/api/openClose/getAllProcedure',
     GET_DAY_WISE_PROCEDURE: '/api/openClose/getDayWiseProcedure',
     POST_NEW_PROCEDURE_OPEN: '/api/openClose/newProcedure/open',
     PUT_EDIT_PROCEDURE_OPEN: '/api/openClose/editProcedure/open',
@@ -76,20 +64,16 @@ export const API_PATHS = {
   },
   APPROVAL: {
     POST_REJECT_ORDER: '/api/approval/rejectOrder',
-    POST_APPROVE_ORDER: '/api/approval/approveOrder',
   },
   PAYMENT: {
-    POST_SAVE_PAYMENT: '/api/payment/savePayment',
     POST_UPDATE_SAVED_PAYMENT: '/api/payment/updateSavedPayment',
     POST_UPDATE_PAYMENT_BY_ID: '/api/payment/updatePaymentById',
     POST_DELETE_PAYMENT_BY_ID: '/api/payment/deletePaymentById',
-    POST_ADD_PAYMENT_DETAILS_BY_ID:'/api/payment/addPaymentDetailsById',
   },
   STAFF: {
+    GET_STAFFS: '/api/staffs',
     GET_STAFF: '/api/staff',
     POST_STAFF: '/api/staff',
-    PUT_STAFF: '/api/staff',
-    DELETE_STAFF: '/api/staff',
   },
   ORDERS: {
     GET_USER_ORDERS: '/api/online/orders',
@@ -98,9 +82,7 @@ export const API_PATHS = {
     EXPEL_ORDER_TO_RIDER:"/api/expelOrderToRider",
     ASSIGN_ORDER_TO_RIDER: "/api/order/assign-rider"
   },
-  PSTORE_CART: {
-    POST_ITEMS_DATA_TO_CART: '/api/cart'
-  },
+  
   GOOGLE_IMAGE: {
     URL: "/api/purchaseOrder/getProductImage"
   },
@@ -108,14 +90,15 @@ export const API_PATHS = {
     ADD_EXPIRED_ITEM: "/api/addexpiredItem",
     GET_EXPIRED_ITEMS: "/api/getExpiredItems"
   },
-  RAZORPAY: {
-    QR: "/api/razorpay/qr"
-  },
+ 
   RIDER:{
     GET_ALL_RIDERS: "/api/riders"
   },
   ITEMS: {
     GET_ITEMS_SKU: "/api/items/sku",
     GET_ITEM_BY_ID: "/api/item"
-  }
+  },
+  STORE: {
+    GET_ALL_STORES: "/api/store",
+  },
 };
