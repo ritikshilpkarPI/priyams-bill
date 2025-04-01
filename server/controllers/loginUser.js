@@ -3,7 +3,8 @@ const Staff = require('../db-models/staff-model');
 
 const loginUser = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, storeData, pincode } = req.body;
+    
     if (!username || !password) {
       throw new NotFound('Please provide email and password');
     }
@@ -23,6 +24,8 @@ const loginUser = async (req, res, next) => {
     };
     res.status(200).cookie('token', token, options).json({
       success: true,
+      storeData: storeData,
+      pincode: pincode 
     });
   } catch (error) {
     next(error);
