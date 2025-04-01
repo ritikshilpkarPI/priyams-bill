@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { Paper, Text, Input, Button, Loader, Group } from '@mantine/core';
-import { useSelector } from 'react-redux';
-import { fuzzySearch } from 'src/utils/searchUtils';
+import {
+    Paper,
+    Text,
+    Input,
+    Button,
+    Loader,
+    Group,
+  } from '@mantine/core';
+import { useSelector } from "react-redux";
+import { fuzzySearch } from "src/utils/searchUtils";
 import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 import "./ItemSearch.css";
 import { setItemsData } from 'src/redux/items/itemsSlice';
