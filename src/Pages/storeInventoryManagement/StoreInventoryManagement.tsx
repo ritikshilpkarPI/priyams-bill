@@ -1,21 +1,43 @@
-import React from 'react';
-import { Title, Button, Group, Paper } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import {
+  Title,
+  Button,
+  Group,
+  Paper,
+  Box,
+  Flex,
+  Grid,
+  Text,
+} from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/redux/store'; 
-import { ItemSearch } from 'src/components/ItemSearch';
-import { StoreSelect } from 'src/components/StoreSelect';
-import { InventoryItemPanel } from 'src/components/InventoryItemPanel';
+import { RootState } from '../../redux/store';
+import { ItemSearch } from '../../components/ItemSearch';
+import { StoreSelect } from '../../components/StoreSelect';
+import { InventoryItemPanel } from '../../components/InventoryItemPanel';
 import {
   setSelectedStore,
   addInventoryItem,
   updateInventoryItemQuantity,
   removeInventoryItem,
   resetStoreInventory,
-} from 'src/redux/storeInventoryManagement/storeInventoryManagementSlice';
+  setStores,
+} from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
+import { getAllStoresAPI, transferStockToStoreAPI } from '../../utils/apiUtils';
+import { useMediaQuery } from '@mantine/hooks';
+import { StoreInventoryManagementValidation } from '../../utils/validations/StoreInventoryManagementValidation';
+import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
+import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
+import { AppDispatch } from '../../redux/store';
+import { toast } from 'react-toastify';
 
 const StoreInventoryManagement: React.FC = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>()
+  const storeInventory = useSelector(
+    (state: RootState) => state.storeInventoryManagement
+  );
+
   const selectedStoreId = useSelector(
     (state: RootState) => state.storeInventoryManagement.selectedStoreId
   );
@@ -23,19 +45,42 @@ const StoreInventoryManagement: React.FC = () => {
     (state: RootState) => state.storeInventoryManagement.inventoryItems
   );
 
-  // For demonstration, a static list of stores is provided.
-  const stores: Store[] = [
-    { id: 'store1', name: 'Main Store' },
-    { id: 'store2', name: 'Outlet Store' },
-  ];
+  const stores = useSelector(
+    (state: RootState) => state.storeInventoryManagement.stores
+  );
+
+ 
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        const res = await getAllStoresAPI();
+        if (!res.stores) {
+          showNotification({ message: 'No stores found', color: 'red' });
+          return;
+        }  
+        dispatch(setStores(res.stores));
+      } catch (error) {
+        showNotification({ message: 'Failed to load stores', color: 'red' });
+      }
+    };
+
+    fetchStores();
+  }, [dispatch]);
+
+  const [errors, setErrors] = useState<YupValidationErrorMapType>({});
+  const [loading, setLoading] = useState(false);
 
   const handleStoreChange = (storeId: string) => {
     dispatch(setSelectedStore(storeId));
   };
 
-  const handleItemSelect = (item: any) => {
+  const handleItemSelect = (item: ItemWithQuantity) => {
     // Check if item already exists in the inventory items
-    if (inventoryItems.find((invItem) => invItem.itemDetail._id === item.itemDetail._id)) {
+    if (
+      inventoryItems.find(
+        (invItem) => invItem.itemDetail._id === item.itemDetail._id
+      )
+    ) {
       showNotification({ message: 'Item already added', color: 'yellow' });
       return;
     }
@@ -50,45 +95,105 @@ const StoreInventoryManagement: React.FC = () => {
   const handleRemoveItem = (itemId: string) => {
     dispatch(removeInventoryItem(itemId));
   };
-
-  const handleSubmit = () => {
-    if (!selectedStoreId) {
-      showNotification({ message: 'Please select a store', color: 'red' });
-      return;
+  const convertToItemsArray = () => {
+    const itemsArray = [];
+    for (const item of inventoryItems) {
+      itemsArray.push({
+        itemId: item.itemDetail._id,
+        quantity: item.quantityToAdd,
+      });
     }
-    if (inventoryItems.length === 0) {
-      showNotification({ message: 'Please add at least one item', color: 'red' });
-      return;
-    }
-    // Build the form payload to submit
-    const formData: StoreInventoryForm = {
-      storeId: selectedStoreId,
-      items: inventoryItems,
-    };
-    console.log('Submitting Store Inventory:', formData);
-    showNotification({ message: 'Inventory updated successfully', color: 'green' });
-    // Reset the form after submission
-    dispatch(resetStoreInventory());
+    return itemsArray;
   };
 
+  const updateStore = async ()=>{
+    setLoading(true);
+    const items = convertToItemsArray();
+    const response = await transferStockToStoreAPI(selectedStoreId, items);
+    if (response.isError){
+      return toast.error(
+              'unable to update store, please try again some time'
+            );
+    }
+    dispatch(resetStoreInventory());
+    dispatch(fetchBillingLeanItems())
+    setLoading(false);
+    toast.success('store update successfully');
+  }
+  
+  const handleSubmit = async () => {
+    try {
+      await StoreInventoryManagementValidation.validate(storeInventory, {
+        abortEarly: false,
+      })
+      setErrors({});
+      await updateStore()
+      // dispatch(resetStoreInventory());
+      // dispatch(fetchBillingLeanItems())
+    } catch (error) {
+      setErrors(getYupValidationErrorMap(error));
+    }
+  };
+
+  const isSmallScreen = useMediaQuery('(max-width: 768px)'); 
+
   return (
-    <Paper p="md" radius="md" withBorder style={{ margin: '16px' }}>
-      <Title order={2} mb="md">
-        Store Inventory Management
-      </Title>
-      <StoreSelect stores={stores} value={selectedStoreId} onChange={handleStoreChange} />
-      <ItemSearch onItemSelect={handleItemSelect} isApprovedPO={undefined} />
-      {inventoryItems.length > 0 && (
-        <InventoryItemPanel
-          items={inventoryItems}
-          onQuantityChange={handleQuantityChange}
-          onRemoveItem={handleRemoveItem}
-        />
-      )}
-      <Group position="right" mt="md">
-        <Button onClick={handleSubmit}>Transfer Inventory</Button>
-      </Group>
-    </Paper>
+    <Flex
+      gap="16px"
+      direction="column"
+      sx={{
+        border: '1px solid grey',
+        padding: '16px',
+        borderRadius: '8px',
+        overflow: 'scroll',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+      }}
+      mx="sm"
+      mt="16px"
+    >
+      <Grid columns={12} sx={{ width: '100%' }}>
+        <Grid.Col span={12}>
+          <Title order={2} mb="md">
+            Store Inventory Management
+          </Title>
+        </Grid.Col>
+
+        <Grid.Col span={12}>
+          <ItemSearch
+            onItemSelect={handleItemSelect}
+            isApprovedPO={undefined}
+            error={errors.inventoryItems}
+          />
+        </Grid.Col>
+
+        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
+          <StoreSelect
+            stores={stores}
+            value={selectedStoreId}
+            onChange={handleStoreChange}
+            error={errors.selectedStoreId}
+          />
+        </Grid.Col>
+
+        <Grid.Col span={12}>
+          {inventoryItems.length > 0 && (
+            <InventoryItemPanel
+              items={inventoryItems}
+              onQuantityChange={handleQuantityChange}
+              onRemoveItem={handleRemoveItem}
+            />
+          )}
+        </Grid.Col>
+
+        <Grid.Col span={isSmallScreen ? 12 : 4}>
+          <Button loading={loading} w="100%" onClick={handleSubmit}>
+            Transfer Inventory
+          </Button>
+        </Grid.Col>
+      </Grid>
+    </Flex>
   );
 };
 
