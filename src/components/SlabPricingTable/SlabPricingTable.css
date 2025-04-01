@@ -1,0 +1,25 @@
+.slab-table {
+  font-size: 16px;
+  border-collapse: collapse;
+  margin-top: 5px;
+  width: 100px;
+}
+
+.slab-table-cell {
+  padding: 5px 6px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.slab-table-heading-row {
+  background-color: #2ba3e3;
+  color: #ffff;
+}
+
+.slab-table-body-row:nth-child(odd) {
+  background-color: #d4d1d1;
+}
+
+.slab-table-body-row:nth-child(even) {
+  background-color: #f5f5f5;
+}

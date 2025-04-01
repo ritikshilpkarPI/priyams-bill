@@ -34,18 +34,9 @@ const isLoggedIn = async (req, res, next) => {
     next(error);
   }
 };
-const customRole = (roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      res.status(403).json({ error: 'You are not allowed for this resource' });
-      return;
-    }
-    next();
-  };
-};
+
 
 module.exports = {
   isAdmin,
   isLoggedIn,
-  customRole,
 };
