@@ -67,7 +67,6 @@ const NewPurchaseOrder = () => {
     }
     return { label, color };
   })();
-  const [isApprovedPO, setIsApprovedPO] = useState(isApproved);
 
   const [isValidDealerDetails, setIsValidDealerDetails] = useState(false);
   const [isValidItemDetails, setIsValidItemDetails] = useState(false);
