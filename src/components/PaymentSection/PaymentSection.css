@@ -80,7 +80,7 @@
    
     }
 
-    .cash-input, .upi-input {
+    .cash-input, .upi-input, .staff-input {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -89,7 +89,7 @@
         font-size: 14px ;
     }
 
-    .cash-paid-text, .upi-paid-text {
+    .cash-paid-text, .upi-paid-text, .staff-paid-text {
         width: 100% ;
         text-align: left;
         display: flex;
