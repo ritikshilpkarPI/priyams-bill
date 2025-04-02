@@ -20,6 +20,7 @@ const MESSAGES = Object.freeze({
   INTERNAL_SERVER_ERROR: 'Internal server error',
   STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
   INSUFFICIENT_STOCK:"Insufficient stock",
+  PINCODE_REQUIRED: "Pincode is required",
 });
 
 module.exports = { MESSAGES };
