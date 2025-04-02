@@ -64,7 +64,6 @@ const addItemsToStoreInventory = async () => {
     }));
 
     await StoreInventoryModel.insertMany(inventoryItems);
-    console.log(`Initialized inventory for store: ${store.collectionName}`);
 
     console.log("Inventory setup completed successfully.");
   } catch (error) {
