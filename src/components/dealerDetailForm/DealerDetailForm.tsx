@@ -151,17 +151,6 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
             />
           </Col>
 
-          <Col span={12}>
-            <CustomNumberInput
-              label="Bill Amount"
-              value={dealerFormData.billAmount}
-              onChange={(e) => onChange('billAmount', e.currentTarget.value)}
-              required
-              placeholder="Enter bill amount"
-              error={errors.billAmount}
-              disabled={isApprovedPO}
-            />
-          </Col>
 
           <Col span={12}>
             <Select
