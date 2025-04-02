@@ -10,6 +10,7 @@ import '../CSS/purchaseApproval.css';
 import { isAdmin } from '../utils/isAdmin';
 import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
 import ShareOnWhatsApp from './shareOnWhatsApp';
+import { useQueryParam } from 'src/utils/getQuery';
 const PurchaseListApproval = ({
   list,
   index,
@@ -18,7 +19,8 @@ const PurchaseListApproval = ({
   getOrders,
 }) => {
   const [loadingState, setLoadingState] = useState({});
-  const [isAdminUser, setIsAdminUser] = useState(false)
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const option = useQueryParam('option')?.split(" ")[0];
 
   const setLoading = (id, state, buttonName) => {
     setLoadingState({ [id]: state, btnName: buttonName });
@@ -128,7 +130,8 @@ const PurchaseListApproval = ({
   const message = `${baseUrl}/new-purchase-order/${list._id}`
 
   const navigate = useNavigate();
-
+  const isSavedApprovedPage = !['approved', 'saved'].includes(option.trim().toLowerCase());
+  const isApprovedPO = option.trim().toLowerCase() ==='approved';
   return (
     <>
       {list ? (
@@ -147,15 +150,6 @@ const PurchaseListApproval = ({
           <td>
              <ShareOnWhatsApp message={message}/>
            
-          </td>
-          <td>
-            {list.isDraft
-              ? list.isApproved
-                ? 'Approved'
-                : 'Drafted'
-              : list.isRejected
-                ? 'Rejected'
-                : 'Saved'}
           </td>
           {parseJwt(Cookies.get('token')).role === 'admin' ? (
             <>
@@ -180,7 +174,7 @@ const PurchaseListApproval = ({
                   </Link>
                 </td>
               )}
-              {list.isDraft ? (
+              {(list.isDraft && isSavedApprovedPage ) ? (
                 <td>
                   <Button
                     disabled={loadingState[list._id] || list.isRejected || list.isApproved}
@@ -192,7 +186,7 @@ const PurchaseListApproval = ({
                   </Button>
                 </td>
               ) : (
-                <td>
+                <>{ !(isApprovedPO) && <td>
                   <Button
                     disabled={loadingState[list._id] || list.isRejected || list.isApproved}
                     className="approve-btn"
@@ -201,9 +195,9 @@ const PurchaseListApproval = ({
                   >
                     Draft
                   </Button>
-                </td>
+                </td>}</>
               )}
-              <td>
+              {(isSavedApprovedPage) && <td>
                 <Button
                   disabled={loadingState[list._id] || list.isApproved || list.isRejected || !list.isDraft}
                   className="reject-btn"
@@ -212,7 +206,7 @@ const PurchaseListApproval = ({
                 >
                   Reject
                 </Button>
-              </td>
+              </td>}
             </>
           ) : (
             <>
@@ -227,7 +221,7 @@ const PurchaseListApproval = ({
                   Edit
                 </Link>
               </td>
-              <td>
+              { !(isApprovedPO) && <td>
                 <Button
                   disabled={loadingState[list._id] || list.isRejected}
                   className="approve-btn"
@@ -236,7 +230,7 @@ const PurchaseListApproval = ({
                 >
                   Draft
                 </Button>
-              </td>
+              </td>}
             </>
           )}
           {isAdminUser && list.isDraft &&

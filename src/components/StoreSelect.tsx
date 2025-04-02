@@ -1,15 +1,18 @@
 import React from 'react';
 import { Select } from '@mantine/core';
 
-
 interface StoreSelectProps {
-  stores: Store[];
+  stores: Store[]; 
   value: string;
+  error?: string;
   onChange: (storeId: string) => void;
 }
 
-export const StoreSelect: React.FC<StoreSelectProps> = ({ stores, value, onChange }) => {
-  const data = stores.map((store) => ({ value: store.id, label: store.name }));
+export const StoreSelect: React.FC<StoreSelectProps> = ({ stores, value, onChange, error }) => {
+  const data = stores.map((store) => ({
+    value: store.code,
+    label: store.code + ' - ' + store.name,
+  }));
   return (
     <Select
       label="Select Store"
@@ -17,6 +20,7 @@ export const StoreSelect: React.FC<StoreSelectProps> = ({ stores, value, onChang
       data={data}
       value={value}
       onChange={(val) => onChange(val || '')}
+      error={error}
     />
   );
 };
