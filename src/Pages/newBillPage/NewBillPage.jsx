@@ -3,9 +3,7 @@ import { useDispatch } from 'react-redux';
 import {
   Container,
   Grid,
-  Paper,
   Button,
-  Title,
 } from '@mantine/core';
 import "./NewBillPage.css"
 import {
