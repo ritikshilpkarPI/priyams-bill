@@ -53,8 +53,9 @@ import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
 import { getItemsSku } from "./getItemsSku";
 import { getItemById } from "./getItemById";
-import { getAllStores } from  "./getAllStores"
 import { transferStockToStore } from "./transferStockToStore"
+import { getAllStores } from  "./getAllStores"
+import { getAllStaffs } from "./getAllStaffs";
 
 export {
   addBulkItems,
@@ -112,6 +113,7 @@ export {
   getItemsSellDetailsByPurchaseOrderId,
   getItemById,
   getItemsSku,
-  getAllStores,
+  getAllStaffs,
   transferStockToStore,
+  getAllStores
 };

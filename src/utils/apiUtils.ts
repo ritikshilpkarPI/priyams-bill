@@ -236,17 +236,6 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
   }
 };
 
-export const getAllStoresAPI = async () => {
-  try {
-    const response = await getAPI({
-      path: API_PATHS.STORE.GET_ALL_STORES,
-    });    
-    return response;
-  } catch (error) {
-    return { isError: true, error };
-  }
-}
-
 export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[])=>{
   try {
     const response = await postAPI({
@@ -261,3 +250,14 @@ export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[
     return { isError: true, error };
   }
 }
+
+export const getAllStoresAPI = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STORE.GET_ALL_STORES,
+    });   
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
