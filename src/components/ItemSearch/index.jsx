@@ -173,9 +173,6 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
             No items found
           </Text>
         )}
-        {error.length>0 &&
-          <Badge mt={10} color="red" size="xs">{error}</Badge>
-        }
       </Paper>
     </div>
   );
