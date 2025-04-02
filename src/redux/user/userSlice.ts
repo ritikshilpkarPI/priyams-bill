@@ -1,15 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: UserStateType = {
-    
+  isGeolocationPermissionGranted: false,
+  userDeviceLocation: {},
 };
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setGeolocationPermissionGranted: (state,action) => {
+      state.isGeolocationPermissionGranted = action.payload;
+    },
+    setUserDeviceLocation: (state,action: PayloadAction<DeviceLocationType>) => {
+      state.userDeviceLocation = action.payload;
+    },
+  },
 });
 
-export const {} = userSlice.actions;
+export const { 
+  setGeolocationPermissionGranted,
+  setUserDeviceLocation,
+ } = userSlice.actions;
 
 export default userSlice.reducer;
