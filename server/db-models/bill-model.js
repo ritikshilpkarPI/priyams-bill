@@ -42,6 +42,10 @@ const BillSchema = new mongoose.Schema(
     ],
     parentBillId: { type: String },
     billRefund: { type: String },
+    staffId:{
+      type: Schema.Types.ObjectId,
+      ref: 'staff',
+    },
   },
   {
     timestamps: true,

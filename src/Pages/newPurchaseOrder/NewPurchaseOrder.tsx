@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
-import {  Flex, Chip, Group, LoadingOverlay, Tabs, Title } from '@mantine/core';
+import {  Flex, Chip, Group, LoadingOverlay, Tabs, Title, Badge } from '@mantine/core';
 import './NewPurchaseOrder.css';
 import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
@@ -30,6 +30,7 @@ import {
 import { TAB, TabChip, TabKey } from 'src/components/TabChip';
 import { useSelector } from 'react-redux';
 
+import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -78,6 +79,8 @@ const NewPurchaseOrder = () => {
     setActiveTab(TAB[newTab]);
     navigate(`${location.pathname}?tab=${newTab}`);
   };
+
+  const purchasedItems = useSelector(selectPurchasedItems);
 
   const getPurchaseOrderDetails = async () => {
     if (!purchaseOrderId) return;
@@ -163,13 +166,22 @@ const NewPurchaseOrder = () => {
             />
           </Tabs.Tab>
           <Tabs.Tab value={TAB.itemDetails}>
-            <TabChip
-              label="Item Details"
-              isValid={isValidItemDetails}
-              tabKey={TAB.itemDetails}
-              activeTab={activeTab}
-              onTabChange={onTabChange}
-            />
+            <Flex align="center" gap="xs">
+              <TabChip
+                label="Item Details"
+                isValid={isValidItemDetails}
+                tabKey={TAB.itemDetails}
+                activeTab={activeTab}
+                onTabChange={onTabChange}
+              />
+              <Badge
+                variant="outline"
+                color={purchasedItems?.length ? 'green' : 'red'}
+                size="xl"
+              >
+                {purchasedItems?.length ? purchasedItems?.length : '0'}
+              </Badge>
+            </Flex>
           </Tabs.Tab>
           <Tabs.Tab value={TAB.paymentDetails}>
            
