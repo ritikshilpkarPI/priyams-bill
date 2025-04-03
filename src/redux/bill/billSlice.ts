@@ -40,11 +40,11 @@ const billSlice = createSlice({
     resetBillState: (state) => {
       Object.assign(state, initialState, { billId: `${uuidv4()}-${Date.now()}` });
     },
-    updateStaff: (state, action:PayloadAction<string>) => {
+    updateStaffInBill: (state, action:PayloadAction<string>) => {
       state.staffId = action.payload;
     }
   },
 });
 
-export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState,setBill, updateStaff } = billSlice.actions;
+export const { updateBillItems, updateCustomerInfo, updatePayment, resetBillState,setBill, updateStaffInBill } = billSlice.actions;
 export default billSlice.reducer;
