@@ -20,8 +20,8 @@ const formatDate = (dateString) => {
     month: 'short',
     year: '2-digit'
   })
-  .replace(/,/g, '')  // Remove commas
-  .replace(/ /g, '-'); // 30-Dec-23 format
+    .replace(/,/g, '')  // Remove commas
+    .replace(/ /g, '-'); // 30-Dec-23 format
 };
 
 const Report = () => {
@@ -34,7 +34,6 @@ const Report = () => {
   const [reportResult, setReportResult] = useState({});
   const [showItemInput, setShowItemInput] = useState(false);
   const [itemName, setItemName] = useState('');
-  const [csvData, setCsvData] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
   const filterNameObj = {
@@ -47,16 +46,20 @@ const Report = () => {
     purchasedItems: 'purchasedItems',
   };
 
-   const handleDownloadCSV = () => {
-    let csvContent;
-    const startDate = dateRange?.[0] ? 
-    formatDate(dateRange[0]) : 
-    'start-date';
-    const fileName = `${startDate}_${selectedFilter}.csv`
-    .replace(/ /g, '-')
-    .toLowerCase();
+  const filterHasCSV = reportResult?.filterType === 'itemBillingTrend' ||
+    reportResult?.filterType === 'allItemsBillingTrend' ||
+    reportResult?.filterType === 'purchasedItems'
 
-    if(selectedFilter === 'purchasedItems') {
+  const handleDownloadCSV = () => {
+    let csvContent;
+    const startDate = dateRange?.[0] ?
+      formatDate(dateRange[0]) :
+      'start-date';
+    const fileName = `${startDate}_${selectedFilter}.csv`
+      .replace(/ /g, '-')
+      .toLowerCase();
+
+    if (selectedFilter === 'purchasedItems') {
       // For purchased items filter
       const csvRows = [
         ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase'],
@@ -78,25 +81,25 @@ const Report = () => {
       // For other filters
       const csvRows = [
         ['Item Name', 'Barcode', 'Quantity', 'MRP', 'Total Amount', 'Discount'],
-        ...csvData.map(item => [
-          item.name,
-          item.barcode,
-          item.quantity,
-          item.mrp,
-          item.amount,
-          item.discount
-        ])
+        ...reportResult.report.map(item => ([
+          item.items[0]?.itemDetail?.itemName,
+          item.items[0]?.itemDetail?.itemBarcode,
+          item.totalQuantitysum,
+          item.totalMRPsum?.toFixed(2),
+          item.totalAmountSum?.toFixed(2),
+          item.totalDiscountSum?.toFixed(2)
+        ]))
       ];
       csvContent = csvRows.map(row => row.join(',')).join('\n');
     }
-     const blob = new Blob([csvContent], { type: 'text/csv' });
-     const url = window.URL.createObjectURL(blob);
-     const a = document.createElement('a');
-     a.href = url;
-     a.download = fileName;
-     a.click();
-     window.URL.revokeObjectURL(url);
-   };
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
   const findResult = async () => {
     setLoading(true)
@@ -115,38 +118,13 @@ const Report = () => {
       },
     });
     setLoading(false)
-    if(result.data?.report) {
-      setCsvData(
-        selectedFilter === 'purchasedItems'
-          ? result.data.report.map(item => ({
-              name: item.itemName,
-              barcode: item.barcode,
-              quantity: item.totalStock,
-              mrp: item.mrp,
-              costPrice: item.costPrice,
-              suppliers: item.suppliers,
-              firstPurchase: item.firstPurchaseDate,
-              lastPurchase: item.lastPurchaseDate
-            }))
-          : result.data.report.map(item => ({
-              // Existing mapping for other filters
-              name: item.items[0]?.itemDetail?.itemName,
-              barcode: item.items[0]?.itemDetail?.itemBarcode,
-              quantity: item.totalQuantitysum,
-              mrp: item.totalMRPsum?.toFixed(2),
-              amount: item.totalAmountSum?.toFixed(2),
-              discount: item.totalDiscountSum?.toFixed(2)
-            }))
-      );
-     }
-    if(result.error)return setLoading(false);
+    if (result.error) return setLoading(false);
     setReportResult(result.data);
   };
 
   const handleFilterOption = (e) => {
     setSelectedFilter(e);
     setReportResult({}); // Clear previous results
-    setCsvData([]); // Clear CSV data
     setShowItemInput(e === 'itemBillingTrend');
   };
 
@@ -205,19 +183,17 @@ const Report = () => {
       >
         Show Result
       </Button>
-      <Button 
-         onClick={handleDownloadCSV} 
-         disabled={!reportResult?.report?.length}
-         style={{ marginLeft: '10px' }}
-       >
-         Download CSV
-       </Button>
+      <Button
+        onClick={handleDownloadCSV}
+        disabled={!reportResult?.report?.length}
+        style={{ marginLeft: '10px' }}
+      >
+        Download CSV
+      </Button>
       <div>
         {reportResult?.report?.length !== 0 ? (
           JSON.stringify(reportResult) !== '{}' ? (
-            reportResult?.filterType === 'itemBillingTrend' ||
-            reportResult?.filterType === 'allItemsBillingTrend' ||
-            reportResult?.filterType === 'purchasedItems' ? (
+            filterHasCSV ? (
               showBillTable(reportResult, selectedFilter)
             ) : (
               <>
@@ -247,73 +223,73 @@ const Report = () => {
 const showBillTable = (reportResult, selectedFilter) => (
   <Table striped highlightOnHover>
     <thead className="heading">
-    {selectedFilter === 'purchasedItems' ? (
-      <tr>
-        <th>Sl No.</th>
-        <th>Barcode</th>
-        <th>Item Name</th>
-        <th>Total Purchased</th>
-        <th>Pkt. Amt</th>
+      {selectedFilter === 'purchasedItems' ? (
+        <tr>
+          <th>Sl No.</th>
+          <th>Barcode</th>
+          <th>Item Name</th>
+          <th>Total Purchased</th>
+          <th>Pkt. Amt</th>
         <th>Pkt. Unit</th>
         <th>MRP</th>
-        <th>Cost Price</th>
-        <th>Suppliers</th>
-        <th>First Purchase</th>
-        <th>Last Purchase</th>
-      </tr>
-    ) : (
-      // Existing header logic
-          <tr>
+          <th>Cost Price</th>
+          <th>Suppliers</th>
+          <th>First Purchase</th>
+          <th>Last Purchase</th>
+        </tr>
+      ) : (
+        // Existing header logic
+        <tr>
+          <th>
+            <Text align="center">Sl. No.</Text>
+          </th>
+          <th>
+            <Text align="center">Item Name</Text>
+          </th>
+          <th><Text align="center">Barcode</Text></th>
+          <th>
+            <Text align="center">Quantity</Text>
+          </th>
+          <th>
+            <Text align="center">Item MRP per unit</Text>
+          </th>
+          <th>
+            <Text align="center">Bill MRP Total Amount</Text>
+          </th>
+          <th>
+            <Text align="center">Bill Total Amount</Text>
+          </th>
+          <th>
+            <Text align="center">Bill Discount</Text>
+          </th>
+          {reportResult.filterType === 'itemBillingTrend' ? (
             <th>
-              <Text align="center">Sl. No.</Text>
+              <Text align="center">Bill date</Text>
             </th>
-            <th>
-              <Text align="center">Item Name</Text>
-            </th>
-            <th><Text align="center">Barcode</Text></th>
-            <th>
-              <Text align="center">Quantity</Text>
-            </th>
-            <th>
-              <Text align="center">Item MRP per unit</Text>
-            </th>
-            <th>
-              <Text align="center">Bill MRP Total Amount</Text>
-            </th>
-            <th>
-              <Text align="center">Bill Total Amount</Text>
-            </th>
-            <th>
-              <Text align="center">Bill Discount</Text>
-            </th>
-            {reportResult.filterType === 'itemBillingTrend' ? (
-              <th>
-                <Text align="center">Bill date</Text>
-              </th>
-            ) : (
-              <></>
-            )}
-          </tr>
-    )}
+          ) : (
+            <></>
+          )}
+        </tr>
+      )}
     </thead>
     <tbody className="body">
       {reportResult.report?.map((item, idx) => {
-        if(selectedFilter === 'purchasedItems') {
-            return (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                <td>{item.barcode}</td>
-                <td>{item.itemName}</td>
-                <td>{item.totalStock}</td>
-                <td>{item?.itemQuantity}</td>
-                <td>{item?.unit}</td>
-                <td>{item.mrp?.toFixed(2)}</td>
-                <td>{item.costPrice?.toFixed(2)}</td>
-                <td>{item.suppliers.join(', ')}</td>
-                <td>{formatDate(item.firstPurchaseDate)}</td>
-                <td>{formatDate(item.lastPurchaseDate)}</td>
-              </tr>
-            )
+        if (selectedFilter === 'purchasedItems') {
+          return (
+            <tr key={idx}>
+              <td>{idx + 1}</td>
+              <td>{item.barcode}</td>
+              <td>{item.itemName}</td>
+              <td>{item.totalStock}</td>
+              <td>{item?.itemQuantity}</td>
+              <td>{item?.unit}</td>
+              <td>{item.mrp?.toFixed(2)}</td>
+              <td>{item.costPrice?.toFixed(2)}</td>
+              <td>{item.suppliers.join(', ')}</td>
+              <td>{formatDate(item.firstPurchaseDate)}</td>
+              <td>{formatDate(item.lastPurchaseDate)}</td>
+            </tr>
+          )
         } else {
           return (
             <TableRow
