@@ -3,29 +3,15 @@ import { Suspense, useEffect } from 'react';
 import AppFunction from './functions/AppFunction';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from './utils/fetchBillingLeanItems';
 import { Outlet } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import {
-  checkGeolocationPermissionGranted,
-  getDeviceLocation,
-} from './utils/getDeviceLocationPoints';
-import { GeolocationToggle } from './components/GeolocationPermission/GeolocationPermission';
-import {
-  setGeolocationPermissionGranted,
-  setUserDeviceLocation,
-} from './redux/user/userSlice';
-import {
-  selectDeviceLocation,
-  selectGeolocationPermission,
-} from './redux/user/userSelectors';
+import { ToastContainer } from 'react-toastify';
+import useGeolocationPermission from './hooks/useGeoLocationPermission';
 
 function App() {
   const dispatch = useDispatch();
-  const isGeolocationPermissionGranted = useSelector(
-    selectGeolocationPermission
-  );
+  const { isGeolocationPermissionGranted, GeoLocationPermission } = useGeolocationPermission();
   useEffect(() => {
     dispatch(fetchBillingLeanItems());
   }, []);
@@ -83,30 +69,6 @@ function App() {
   const devBg = process.env.NODE_ENV !== 'production' ? 'none' : 'none';
   console.log("Test Prod")
 
-  useEffect(() => {
-    checkGeolocationPermissionGranted()
-      .then((val) => {
-        dispatch(setGeolocationPermissionGranted(val));
-      })
-      .catch((error) => {
-        console.error('Geolocation permission denied', error);
-        toast.error(error?.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (isGeolocationPermissionGranted) {
-      getDeviceLocation()
-        .then((position) => {
-          dispatch(setUserDeviceLocation(position));
-        })
-        .catch((error) => {
-          console.error('Geolocation error', error);
-          toast.error(error?.message);
-        });
-    }
-  }, [isGeolocationPermissionGranted]);
-
   return (
     <div className="App" style={{ backgroundColor: devBg }}>
       {staffUserName && isGeolocationPermissionGranted && (
@@ -120,7 +82,7 @@ function App() {
         />
       )}
       <Suspense fallback={<p>Loading...</p>}>
-        {isGeolocationPermissionGranted ? <Outlet /> : <GeolocationToggle />}
+        {isGeolocationPermissionGranted ? <Outlet /> : <GeoLocationPermission />}
       </Suspense>
       <ToastContainer />
       {/* <QRComp /> */}

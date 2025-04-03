@@ -34,7 +34,7 @@ export const apiCall = async <T = any, R = any>({
   headers,
 }: ApiCallParams<T>): Promise<R> => {
   try {
-    const storedLocation = JSON.parse(localStorage.getItem('location') || '{}');
+    const storedLocation = JSON.parse(localStorage.getItem('storeLocation') || '{}');
     const params = {
       ...storedLocation,
     };

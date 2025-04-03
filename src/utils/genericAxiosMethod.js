@@ -9,7 +9,7 @@ export const genericAxios = async ({
   },
 }) => {
   try {
-    const storedLocation = JSON.parse(localStorage.getItem('location') || '{}');
+    const storedLocation = JSON.parse(localStorage.getItem('storeLocation') || '{}');
     const updatedParams = {
       ...params,
       ...storedLocation,
