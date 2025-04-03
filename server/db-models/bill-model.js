@@ -33,6 +33,7 @@ const BillSchema = new mongoose.Schema(
     amountReturn: { type: Number },
     createdAt: { type: Date, default: Date.now },
     updated: { type: Array, default: Date.now },
+    storeId: { type: Schema.Types.ObjectId, ref: "Store", required: true },
     returnBills: [
       {
         type: Schema.Types.ObjectId,

@@ -1,5 +1,4 @@
 const { Bill } = require('../db-models/bill-model');
-const { Item } = require('../db-models/item-model');
 const { UnSavedBill } = require('../db-models/unSavedBill-model');
 
 const { v4: uuidv4 } = require('uuid');
@@ -8,6 +7,7 @@ const {
   deleteBillFromBillCacheById,
 } = require('../cache/billCacheConfig');
 const { SentMessageToDiscord } = require('../util');
+const { getStoreInventoryModel } = require('../db-models/storeInventory-model');
 
 const saveOrCacheBill = async (req, res) => {
   const {
@@ -22,7 +22,8 @@ const saveOrCacheBill = async (req, res) => {
     amountReturn,
     billId,
     rzpPaymentId,
-    isUpiAmtPaid
+    isUpiAmtPaid,
+    storeData
   } = req.body;
   const newBillData = {
     customerName,
@@ -36,8 +37,10 @@ const saveOrCacheBill = async (req, res) => {
     slug: billId,
     amountReturn,
     rzpPaymentId,
-    isUpiAmtPaid
+    isUpiAmtPaid,
+    storeId: storeData._id,
   };
+  
   let isBillSaved, billBarcode, isDuplicate = false;
   
   if(!billId) return res.status(400).json({ msg: 'Bill Id slug is required'});
@@ -51,7 +54,7 @@ const saveOrCacheBill = async (req, res) => {
       isDuplicate = true;
       return;
     }
-    const billSaved = await saveBill(newBillData, billId, maxAttemptToSaveInDB);
+    const billSaved = await saveBill(newBillData, billId,storeData, maxAttemptToSaveInDB);
     isBillSaved = billSaved.isBillSaved;
     billBarcode = billSaved.billBarcode;
   } catch (error) {
@@ -90,6 +93,7 @@ const saveOrCacheBill = async (req, res) => {
 const saveBill = async (
   newBillData,
   billId,
+  storeData,
   maxAttemptToSaveInDB,
   currentAttempt = 0
 ) => {
@@ -108,6 +112,8 @@ const saveBill = async (
         upiPay,
         amountReturn,
       } = newBillData;
+      const { collectionName } = storeData;
+      const StoreInventoryModel = getStoreInventoryModel(collectionName);
       let totalNumberOfUniqueItems = billItems.length,
         totalNumberOfItems = 0,
         totalBillProfit = 0;
@@ -135,13 +141,18 @@ const saveBill = async (
           let item;
           if (_id) {
             try {
-              item = await Item.findById(_id);
+              item =await StoreInventoryModel.findOne({ itemId: _id });
+
               if (item) {
-                item.itemStockQuantity = Math.max(
-                  0,
-                  (item.itemStockQuantity || 0) - orderQuantityInNumber
-                );
-                await item.save();
+                item.itemQuantityInStore -= orderQuantityInNumber; 
+                item.itemStockChangeHistory.push({
+                    quantity: orderQuantityInNumber, 
+                    dateTime: new Date(),
+                    changeType: "REMOVE",
+                    changedFrom: "WAREHOUSE",
+                  });
+                    await item.save();
+                  
               }
             } catch (error) {
               SentMessageToDiscord(JSON.stringify(error))
@@ -184,12 +195,14 @@ const saveBill = async (
         cashPay,
         upiPay,
         amountReturn,
+        storeId:storeData._id
       });
       return { isBillSaved: true, billBarcode: newBill._id };
     } catch (error) {
       return await saveBill(
         newBillData,
         billId,
+        storeData,
         maxAttemptToSaveInDB,
         currentAttempt + 1
       );
