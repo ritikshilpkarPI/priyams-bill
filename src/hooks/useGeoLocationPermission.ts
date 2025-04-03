@@ -7,7 +7,7 @@ import {
   setUserDeviceLocation,
 } from '../redux/user/userSlice';
 import { getGeoLocation } from '../utils/getGeoLocation';
-import { GeoLocationPermission } from '../components/geoLocationPermission/GeoLocationPermission';
+import { GeoLocationPermission } from 'src/components/GeolocationPermission/GeolocationPermission';
 import { checkGeolocationPermission } from 'src/utils/checkGeolocationPermission';
 
 const useGeolocationPermission = () => {
