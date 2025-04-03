@@ -1,13 +1,33 @@
+const { getStoreInventoryModel } = require('../db-models/storeInventory-model');
 const { Item } = require('../db-models/item-model');
+const { StoreModel } = require('../db-models/store-model');
+const { MESSAGES } = require('../constants/messages');
 
 const getItemsLean = async (req, res, next) => {
   try {
+    const { pincode } = req.query;
+
+    if (!pincode) {
+      return res.status(400).json({ error: MESSAGES.PINCODE_REQUIRED });
+    }
+
+    const store = await StoreModel.findOne({ pincode });
+    if (!store) {
+      return res.status(404).json({ error: MESSAGES.STORE_NOT_FOUND });
+    }
+
+    const StoreInventoryModel = getStoreInventoryModel(store.collectionName);
+
+    const inventoryData = await StoreInventoryModel.find({});
+
+    const itemIds = inventoryData.map((inv) => inv.itemId);
     const itemsBarCodeMap = {};
     const itemNamesList = [];
     const itemBarCodesList = [];
     const itemsNameMap = {};
     const allItemsList = await Item.find(
       {
+        _id: { $in: itemIds },
         permanentlyOutOfStock: false,
         isDeleted: false,
         temporaryDeleted: { $exists: false },

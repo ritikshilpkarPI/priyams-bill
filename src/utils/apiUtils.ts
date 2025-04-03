@@ -6,8 +6,9 @@ import { getUserDeviceInfo } from './getUserDeviceInfo';
 
 export const getBillingLeanItemsAPI = async () => {
   try {
+    const pincode = localStorage.getItem('userPincode');
     const response = await getAPI({
-      path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
     });
 
     return response.message;
@@ -229,6 +230,32 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
         userDetail: await getUserDeviceInfo(),
       },
     });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[])=>{
+  try {
+    const response = await postAPI({
+      path: API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,
+      data:{
+        items,
+        collectionName:selectedStoreId,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const getAllStoresAPI = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STORE.GET_ALL_STORES,
+    });   
     return response;
   } catch (error) {
     return { isError: true, error };

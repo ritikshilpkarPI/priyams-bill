@@ -5,6 +5,8 @@ import { NumberValue } from "d3";
 
 declare global {
   export interface UserStateType {
+    isGeolocationPermissionGranted: boolean;
+    userDeviceLocation?: DeviceLocationType;
   }
 
   export type RootState = ReturnType<typeof store.getState>;
@@ -206,6 +208,7 @@ declare global {
     inputName?: string;
     freeItemsRemarks?: string;
     itemHasExpiry?: boolean | null;
+    profitPercentage: number;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -390,12 +393,12 @@ declare global {
   }
 
   interface WarehouseItem {
-    _id: string;
-    itemName: string;
-    itemBarcode: string;
-    itemMRPperUnit: number;
-    itemSellingPricePerUnit: number;
-    itemStockQuantity: number;
+    _id?: string;
+    itemName?: string;
+    itemBarcode?: string;
+    itemMRPperUnit?: number;
+    itemSellingPricePerUnit?: number;
+    itemStockQuantity?: number;
     slabPricing?: [number, number, number][];
   }
 
@@ -406,11 +409,24 @@ declare global {
   interface Store {
     id: string;
     name: string;
+    code: string;
   }
 
   interface StoreInventoryForm {
     storeId: string;
     items: StoreInventoryItem[];
+  }
+  interface StoreInventoryState {
+    selectedStoreId: string;
+    inventoryItems: any[];
+  }
+  interface ItemWithQuantity {
+    itemDetail: WarehouseItem;
+    itemQuantityInBill: number;
+  }
+  interface DeviceLocationType {
+    latitude?: number;
+    longitude?: number;
   }
 }
 declare module '*.scss' {

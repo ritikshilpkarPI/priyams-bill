@@ -7,9 +7,11 @@ import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedIte
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
+import userSlice from './user/userSlice';
 
 export const store = configureStore({
   reducer: {
+    user: userSlice,
     bill: billReducer,
     allItemsFeedData: allItemsFeedDataSlice,
     items: itemsSlice,

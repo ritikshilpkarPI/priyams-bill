@@ -1,6 +1,7 @@
 import express from "express";
 import { isAdmin, isLoggedIn } from '../middleware/isAdmin';
 import { API_PATHS } from '../../src/utils/constants/apiPaths';
+import locationMiddleware from "../middleware/locationMiddleware";
 const router = express.Router();
 const {
   addBulkItems,
@@ -58,6 +59,9 @@ const {
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSku,
   getItemById,
+  getAllStaffs,
+  transferStockToStore,
+  getAllStores
 } = require('../controllers/index');
 
 
@@ -190,7 +194,7 @@ router.post(
 );
 
 
-router.post(API_PATHS.AUTH.POST_LOGIN, loginUser);
+router.post(API_PATHS.AUTH.POST_LOGIN,locationMiddleware, loginUser);
 router.get(API_PATHS.AUTH.GET_LOGOUT, isLoggedIn, logoutUser);
 
 router.post(
@@ -255,5 +259,10 @@ router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, isLoggedIn, getItemsSku);
 
 router.get(`${API_PATHS.ITEMS.GET_ITEM_BY_ID}/:id`, isLoggedIn, getItemById);
 
+router.get(API_PATHS.STAFF.GET_STAFFS, isLoggedIn, getAllStaffs);
+
+router.post(API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,isLoggedIn, transferStockToStore);
+
+router.get(API_PATHS.STORE.GET_ALL_STORES, isLoggedIn, getAllStores);
 
 export default router;

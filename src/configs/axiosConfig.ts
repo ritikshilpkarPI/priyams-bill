@@ -34,11 +34,16 @@ export const apiCall = async <T = any, R = any>({
   headers,
 }: ApiCallParams<T>): Promise<R> => {
   try {
+    const storedLocation = JSON.parse(localStorage.getItem('storeLocation') || '{}');
+    const params = {
+      ...storedLocation,
+    };
     const config: AxiosRequestConfig = {
       method,
       url: path,
       data,
       headers: getHeaders(headers),
+      params
     };
     const response: AxiosResponse<R> = await apiClient(config);
     return response.data;
