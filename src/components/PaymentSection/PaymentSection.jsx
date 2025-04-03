@@ -50,10 +50,15 @@ export const PaymentSection = ({
 
   useEffect(() => {
     // If a refund is provided, always enable the save button.
-    if (refundAmount > 0) {
+    const isRefund = refundAmount > 0;
+    const isTotalNotPaid = totalAmount > (cashPay + upiPay);
+    const isTotalNotValid = totalAmount === 0;
+    const isStaffSelected = Boolean(staffId);
+    const shouldDisableButton = isTotalNotPaid || isTotalNotValid || !isStaffSelected
+    if ( isRefund ) {
       setSaveBillButtonDisabled(false);
     } else {
-      setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0 || !staffId);
+      setSaveBillButtonDisabled(shouldDisableButton);
     }
   }, [cashPay, upiPay, totalAmount, refundAmount, staffId]);
 
