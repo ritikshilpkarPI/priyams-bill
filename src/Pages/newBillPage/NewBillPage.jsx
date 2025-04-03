@@ -18,7 +18,7 @@ import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeed
 import { ReactBarcode } from 'react-jsbarcode';
 import { Reset } from 'src/icons/Reset';
 import { BillItemsCardView } from "../../components/BillItemsCardView/BillItemsCardView"
-import { updateStaff } from 'src/redux/bill/billSlice';
+import { updateStaffInBill } from 'src/redux/bill/billSlice';
 
 
 const NewBillPage = () => {
@@ -103,7 +103,7 @@ const NewBillPage = () => {
   })}`
  
   const handleStaffChange = (value) => {    
-    dispatch(updateStaff(value))
+    dispatch(updateStaffInBill(value))
   };
 
   const totalSaveOnBill = (billState.billMRPTotal - billState.billAmountTotal).toFixed(2)
@@ -164,7 +164,7 @@ const NewBillPage = () => {
             <PaymentSection
               cashPay={billState.cashPay}
               upiPay={billState.upiPay}
-              staffId={billState?.staffId?? ""}
+              staffId={billState?.staffId ?? ""}
               amountReturn={billState.amountReturn}
               totalAmount={billState.billAmountTotal}
               onPaymentChange={updatePayment}
