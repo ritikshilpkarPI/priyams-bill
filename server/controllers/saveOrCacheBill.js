@@ -146,13 +146,8 @@ const saveBill = async (
 
               if (item) {
                 item.itemQuantityInStore -= orderQuantityInNumber; 
-                item.itemStockChangeHistory.push({
-                    quantity: orderQuantityInNumber, 
-                    dateTime: new Date(),
-                    changeType: "REMOVE",
-                    changedFrom: "WAREHOUSE",
-                  });
-                    await item.save();
+                
+                await item.save();
                   
               }
             } catch (error) {
