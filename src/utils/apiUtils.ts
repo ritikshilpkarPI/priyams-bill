@@ -6,8 +6,9 @@ import { getUserDeviceInfo } from './getUserDeviceInfo';
 
 export const getBillingLeanItemsAPI = async () => {
   try {
+    const pincode = localStorage.getItem('userPincode');
     const response = await getAPI({
-      path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
     });
 
     return response.message;
