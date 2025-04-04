@@ -55,6 +55,7 @@ import { getItemsSku } from "./getItemsSku";
 import { getItemById } from "./getItemById";
 import { getAllStores } from  "./getAllStores"
 import { transferStockToStore } from "./transferStockToStore"
+import { getAllStaffs } from "./getAllStaffs"
 
 export {
   addBulkItems,
@@ -114,4 +115,5 @@ export {
   getItemsSku,
   getAllStores,
   transferStockToStore,
+  getAllStaffs,
 };

@@ -7,6 +7,7 @@ import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedIte
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
+import staffSlice from "./staffList/StaffSlice";
 import userSlice from './user/userSlice';
 
 export const store = configureStore({
@@ -20,6 +21,7 @@ export const store = configureStore({
     purchaseOrder: purchaseOrderSlice,
     paymentDetailForm: paymentDetailFormSlice,
     storeInventoryManagement: storeInventoryManagement,
+    staffs: staffSlice,
   },
 });
 

@@ -22,7 +22,8 @@ const saveOrCacheBill = async (req, res) => {
     amountReturn,
     billId,
     rzpPaymentId,
-    isUpiAmtPaid
+    isUpiAmtPaid,
+    staffId,
   } = req.body;
   const newBillData = {
     customerName,
@@ -36,7 +37,8 @@ const saveOrCacheBill = async (req, res) => {
     slug: billId,
     amountReturn,
     rzpPaymentId,
-    isUpiAmtPaid
+    isUpiAmtPaid,
+    staffId,
   };
   let isBillSaved, billBarcode, isDuplicate = false;
   
@@ -107,6 +109,7 @@ const saveBill = async (
         cashPay,
         upiPay,
         amountReturn,
+        staffId,
       } = newBillData;
       let totalNumberOfUniqueItems = billItems.length,
         totalNumberOfItems = 0,
@@ -184,6 +187,7 @@ const saveBill = async (
         cashPay,
         upiPay,
         amountReturn,
+        staffId,
       });
       return { isBillSaved: true, billBarcode: newBill._id };
     } catch (error) {
