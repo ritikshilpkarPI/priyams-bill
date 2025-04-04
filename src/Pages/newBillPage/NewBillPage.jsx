@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Container,
   Grid,
@@ -19,9 +20,11 @@ import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeed
 import { ReactBarcode } from 'react-jsbarcode';
 import { Reset } from 'src/icons/Reset';
 import { BillItemsCardView } from "../../components/BillItemsCardView/BillItemsCardView"
+import { updateStaffInBill } from 'src/redux/bill/billSlice';
 
 
 const NewBillPage = () => {
+  const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [itemsDataCount, setItemsDataCount] = useState(0);
   const [enableTableView, setEnableTableView] = useState(window.innerWidth > 800);
@@ -100,6 +103,10 @@ const NewBillPage = () => {
     month: 'long',
     day: 'numeric',
   })}`
+ 
+  const handleStaffChange = (value) => {    
+    dispatch(updateStaffInBill(value))
+  };
 
   const totalSaveOnBill = (billState.billMRPTotal - billState.billAmountTotal).toFixed(2)
   return (
@@ -159,11 +166,13 @@ const NewBillPage = () => {
             <PaymentSection
               cashPay={billState.cashPay}
               upiPay={billState.upiPay}
+              staffId={billState?.staffId ?? ""}
               amountReturn={billState.amountReturn}
               totalAmount={billState.billAmountTotal}
               onPaymentChange={updatePayment}
               onSubmit={handlePaymentSubmit}
               isLoading={isSubmitting}
+              handleStaffChange={handleStaffChange}
             />
             {billState.billId && (
               <div className="barcode-container">

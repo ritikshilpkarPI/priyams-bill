@@ -88,6 +88,9 @@
         font-weight: normal ;
         font-size: 14px ;
     }
+    .staff-input{
+        display: none;
+    }
 
     .cash-paid-text, .upi-paid-text {
         width: 100% ;

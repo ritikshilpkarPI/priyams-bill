@@ -172,7 +172,7 @@ export const PurchaseOrderSummary = () => {
             </ProtectedComponent>
           )}
 
-          {purchaseOrder.isDraft && (
+          {purchaseOrder.isDraft && !purchaseOrder.isApproved && (
             <ProtectedComponent role={access.REJECTED_PURCHASE_ORDER}>
               <Button
                 className="reject-btn"
