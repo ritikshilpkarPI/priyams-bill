@@ -4,12 +4,14 @@ import {
   Button,
   Alert,
   Input,
+  Box,
 } from '@mantine/core';
 import './PaymentSection.css'
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { itemsFeedAPILoading } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import StaffSelectDropdown from '../staffSelectDropdown/StaffSelectDropdown';
 
 export const PaymentSection = ({
   cashPay,
@@ -20,6 +22,8 @@ export const PaymentSection = ({
   onSubmit,
   isLoading,
   refundAmount = 0,
+  handleStaffChange,
+  staffId,
 }) => {
   const [saveBillButtonDisabled, setSaveBillButtonDisabled] = useState(false);
   const handlePaymentInputChange = (e, field) => {
@@ -46,12 +50,17 @@ export const PaymentSection = ({
 
   useEffect(() => {
     // If a refund is provided, always enable the save button.
-    if (refundAmount > 0) {
+    const isRefund = refundAmount > 0;
+    const isTotalNotPaid = totalAmount > (cashPay + upiPay);
+    const isTotalNotValid = totalAmount === 0;
+    const isStaffSelected = Boolean(staffId);
+    const shouldDisableButton = isTotalNotPaid || isTotalNotValid || !isStaffSelected
+    if ( isRefund ) {
       setSaveBillButtonDisabled(false);
     } else {
-      setSaveBillButtonDisabled(totalAmount > (cashPay + upiPay) || totalAmount === 0);
+      setSaveBillButtonDisabled(shouldDisableButton);
     }
-  }, [cashPay, upiPay, totalAmount, refundAmount]);
+  }, [cashPay, upiPay, totalAmount, refundAmount, staffId]);
 
   
   const amountTobeReturned = (refundAmount + upiPay + cashPay) - totalAmount;
@@ -129,6 +138,16 @@ export const PaymentSection = ({
               />
             </div>
           </div>
+          <Box mb="sm" className='staff-input'>
+            <Text size="lg" weight={700} mb="md" className="staff-paid-text">
+              Staff Name
+            </Text>
+            <StaffSelectDropdown 
+              onChange={(value) => handleStaffChange(value)}
+              selectedStaffId={staffId}
+              disabled={loading || totalAmount <= refundAmount || totalAmount === 0}
+            />
+          </Box>
         </div>
 
         {amountTobeReturned > 0 && (

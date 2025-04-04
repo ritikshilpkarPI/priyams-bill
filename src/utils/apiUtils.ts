@@ -19,9 +19,13 @@ export const getBillingLeanItemsAPI = async () => {
 
 export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
   try {
+    const storeData = localStorage.getItem('storeData');
+    const parsedStoreData = storeData ? JSON.parse(storeData) : null;
+    const requestData = { ...data, storeData:parsedStoreData };
+
     const response = await postAPI({
       path: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
-      data,
+      data: requestData,
     });
     return response;
   } catch (err) {
@@ -261,6 +265,16 @@ export const getAllStoresAPI = async () => {
     return { isError: true, error };
   }
 };
+export const getAllStaffsAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STAFF.GET_STAFFS,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
 
 export const getAllDealersAPI = async ()=>{
   try {
