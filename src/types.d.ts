@@ -284,6 +284,7 @@ declare global {
     payment?: string;
     procurementSource?: string;
     remark?: string;
+    dateOnBill?: Date | null;
   }
 
   interface PurchasedItemTableProps {
