@@ -1,6 +1,8 @@
+import { toast } from 'react-toastify';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import { getUserDeviceInfo } from './getUserDeviceInfo';
+import MESSAGES from './constants/messages';
 
 
 
@@ -20,9 +22,12 @@ export const getBillingLeanItemsAPI = async () => {
 export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
   try {
     const storeData = localStorage.getItem('storeData');
+    if (!storeData) {
+      return toast.error(MESSAGES.STOREDATA_IS_REQUIRED); // Show toast
+    }
     const parsedStoreData = storeData ? JSON.parse(storeData) : null;
     const requestData = { ...data, storeData:parsedStoreData };
-
+   
     const response = await postAPI({
       path: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
       data: requestData,
