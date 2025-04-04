@@ -316,3 +316,37 @@ export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (disp
     dispatch(setLoading(false));
   }
 };
+
+export const getAllDealersAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.DEALER.GET_ALL_DEALERS,
+    });   
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const addNewDealerAPI = async (
+  dealerName: string,
+  dealerNumber: number,
+  dealerBrands: string[] = [],
+  dealerCompanies: string[] = []
+) => {
+  
+  try {
+    const response = await postAPI({
+      path: API_PATHS.DEALER.ADD_NEW_DEALER,
+      data: {
+        dealerName,
+        dealerNumber,
+        dealerBrands,
+        dealerCompanies,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};

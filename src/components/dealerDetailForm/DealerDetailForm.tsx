@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TextInput,
   Select,
@@ -8,11 +8,12 @@ import {
   Col,
   Flex,
   Title,
+  Autocomplete,
 } from '@mantine/core';
 import { selectDealerDetailForm } from '../../redux/dealerDetailForm/dealerDetailFormSelectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDealerFormData } from '../../redux/dealerDetailForm/dealerDetailFormSlice';
-import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
+import { addNewOrderAPI, getAllDealersAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { useLocation, useNavigate } from 'react-router';
 import { dealerFormValidation } from '../../utils/validations/dealerFormValidation';
@@ -20,6 +21,8 @@ import { toast } from 'react-toastify';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 import ShareOnWhatsApp from 'src/components/shareOnWhatsApp';
+import { setDealers, setDealerId, setDealersLoading } from 'src/redux/dealerlist/dealerSlice';
+import { selectDealerLoading, selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 
 export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) => {
   const dispatch = useDispatch();
@@ -29,6 +32,7 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
   const purchaseOrder = useSelector(selectPurchaseOrder);
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const [loading, setLoading] = useState(false);
+  const [isExistingDealer, setIsExistingDealer] = useState(false)
 
   const onChange = (field: string, value: string | number) => {
     dispatch(
@@ -57,6 +61,37 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
     toast.success('dealer details saved successfully');
     navigate(`${location.pathname}/${response?.message?._id}?tab=itemDetails`);
   };
+
+  const getDealers = async ()=>{
+    try {
+      dispatch(setDealersLoading(true))
+      const response = await getAllDealersAPI()
+      dispatch(setDealers(response?.dealers))
+      dispatch(setDealersLoading(false))
+    } catch (error) {
+      dispatch(setDealersLoading(false))
+    }
+  }
+
+  const dealers = useSelector(selectDealers);    
+  const dealersLoading = useSelector(selectDealerLoading);    
+  
+  useEffect(()=>{
+    getDealers()
+  },[])
+
+  useEffect(()=>{
+    const foundDealer = dealers.find((dealer) => dealer.dealerName === dealerFormData.dealerName.trim().replace(/\s+/g, ' '));
+    if(foundDealer && foundDealer._id){
+      dispatch(setDealerId(foundDealer._id))
+      setIsExistingDealer(true)
+      onChange('phoneNumber', foundDealer.dealerNumber)
+    }else{
+      setIsExistingDealer(false)
+      dispatch(setDealerId(""))
+      onChange('phoneNumber', "")
+    }
+  },[dealerFormData])
 
   const updateOrder = async () => {
     if(!purchaseOrder._id) return;
@@ -120,16 +155,19 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
         <Title order={3}>Dealer Details Form</Title>
         <Grid gutter="md" sx={{ maxWidth: '480px' }}>
           <Col span={12}>
-            <TextInput
+            <Autocomplete
               label="Dealer Name"
               value={dealerFormData.dealerName}
-              onChange={(event) =>
-                onChange('dealerName', event.currentTarget.value)
+              onChange={(value) =>
+                onChange('dealerName', value)  
               }
               required
               error={errors.dealerName}
               placeholder="Enter dealer name"
-              disabled={isApprovedPO}
+              data={dealers
+                .filter((dealer) => dealer.dealerName?.length)
+                .map((dealer) => dealer.dealerName)} 
+              disabled={isApprovedPO || dealersLoading}
             />
           </Col>
 
@@ -143,11 +181,11 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
                   event.currentTarget.value.replace(/[^0-9]/g, '')
                 )
               }
-              required
+              required = {!isExistingDealer}
               error={errors.phoneNumber}
               placeholder="Enter phone number"
               maxLength={10}
-              disabled={isApprovedPO}
+              disabled={isApprovedPO || isExistingDealer}
             />
           </Col>
 
