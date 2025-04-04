@@ -23,7 +23,7 @@ export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
   try {
     const storeData = localStorage.getItem('storeData');
     if (!storeData) {
-      return toast.error(MESSAGES.STOREDATA_IS_REQUIRED); // Show toast
+      return toast.error(MESSAGES.STOREDATA_IS_REQUIRED); 
     }
     const parsedStoreData = storeData ? JSON.parse(storeData) : null;
     const requestData = { ...data, storeData:parsedStoreData };
