@@ -282,10 +282,3 @@
 .bottom-nav-container::-webkit-scrollbar{
   display: none ;
 }
-
-// hide nav container on print
-@media print {
-  .bottom-nav-container {
-    display: none;
-  }
-}
