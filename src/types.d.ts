@@ -422,6 +422,47 @@ declare global {
     itemDetail: WarehouseItem;
     itemQuantityInBill: number;
   }
+  interface ExpiredItem {
+    itemName: string;
+    itemBarcode: string;
+    itemMRPperUnit: number;
+    itemCostPricePerUnit: number;
+    itemSellingPricePerUnit: number;
+    mfgDate: string;
+    expiryDate: string;
+    expiryQuantity: number;
+  }
+  
+  interface ExpiredItemsState {
+    items: ExpiredItem[];
+    isLoading: boolean;
+  }
+
+  type Order = 'asc' | 'desc';
+
+  interface Column {
+    label: string;
+    key: string;
+    sortable?: boolean;
+    render?: (row: any) => React.ReactNode;
+  }
+  
+  interface ReusableTableProps {
+    columns: Column[];
+    data: any[];
+    isLoading: boolean;
+    order: 'asc' | 'desc';
+    orderBy: string;
+    onSort: (columnKey: string) => void;
+    page: number;
+    rowsPerPage: number;
+    onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
+    onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    rowCount: number;
+    paginationMode?: 'client' | 'server'; // 👈 Add this line if you want to support both modes
+  }
+  
+  
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
