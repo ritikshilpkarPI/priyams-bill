@@ -1,20 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface Dealer {
-  _id?: string;
-  dealerName: string;
-  dealerBrands: string[];
-  dealerCompanies: string[];
-  dealerNumber: number;
-}
-
-interface DealerState {
-  dealers: Dealer[];
-  loading: boolean;
-  error: string | null;
-  selectedDealerId?: string;
-}
-
 const initialState: DealerState = {
   dealers: [],
   loading: false,

@@ -505,6 +505,19 @@ declare global {
     expiryDate: string;
     expiryQuantity: number;
   }
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
+  }
   
   interface ExpiredItemsState {
     items: ExpiredItem[];
