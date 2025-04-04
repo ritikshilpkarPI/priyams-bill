@@ -160,6 +160,8 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         _id: '$purchasedItems.barcode',
         itemName: { $first: '$purchasedItems.inputName' },
         totalStock: { $sum: '$purchasedItems.stockQuantity' },
+        itemQuantity: { $sum: '$purchasedItems.itemQuantity' },
+        unit: { $first: '$purchasedItems.unit' },
         mrp: { $first: '$purchasedItems.mrp' },
         costPrice: { $first: '$purchasedItems.costPrice' },
         purchaseDates: { $push: '$createdAt' },
@@ -178,7 +180,9 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         lastPurchaseDate: { $max: '$purchaseDates' },
         firstPurchaseDate: { $min: '$purchaseDates' },
         totalOrders: { $size: '$purchaseOrderIds' },
-        suppliers: { $setUnion: ['$suppliers'] } // Get unique suppliers
+        suppliers: { $setUnion: ['$suppliers'] }, // Get unique suppliers
+        itemQuantity: 1,
+        unit: 1
       }
     }
   ]);

@@ -1,13 +1,16 @@
+import { toast } from 'react-toastify';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import { getUserDeviceInfo } from './getUserDeviceInfo';
+import MESSAGES from './constants/messages';
 
 
 
 export const getBillingLeanItemsAPI = async () => {
   try {
+    const pincode = localStorage.getItem('userPincode');
     const response = await getAPI({
-      path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
     });
 
     return response.message;
@@ -18,9 +21,16 @@ export const getBillingLeanItemsAPI = async () => {
 
 export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
   try {
+    const storeData = localStorage.getItem('storeData');
+    if (!storeData) {
+      return toast.error(MESSAGES.STOREDATA_IS_REQUIRED); 
+    }
+    const parsedStoreData = storeData ? JSON.parse(storeData) : null;
+    const requestData = { ...data, storeData:parsedStoreData };
+   
     const response = await postAPI({
       path: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
-      data,
+      data: requestData,
     });
     return response;
   } catch (err) {
@@ -235,17 +245,6 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
   }
 };
 
-export const getAllStoresAPI = async () => {
-  try {
-    const response = await getAPI({
-      path: API_PATHS.STORE.GET_ALL_STORES,
-    });    
-    return response;
-  } catch (error) {
-    return { isError: true, error };
-  }
-}
-
 export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[])=>{
   try {
     const response = await postAPI({
@@ -254,6 +253,27 @@ export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[
         items,
         collectionName:selectedStoreId,
       },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const getAllStoresAPI = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STORE.GET_ALL_STORES,
+    });   
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+export const getAllStaffsAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STAFF.GET_STAFFS,
     });
     return response;
   } catch (error) {

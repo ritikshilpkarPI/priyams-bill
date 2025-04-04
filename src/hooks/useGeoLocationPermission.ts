@@ -7,8 +7,8 @@ import {
   setUserDeviceLocation,
 } from '../redux/user/userSlice';
 import { getGeoLocation } from '../utils/getGeoLocation';
-import { GeoLocationPermission } from '../components/geoLocationPermission/GeoLocationPermission';
 import { checkGeolocationPermission } from 'src/utils/checkGeolocationPermission';
+import { GeoLocationPermission } from '../components/GeolocationPermission/GeolocationPermission';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router';
 

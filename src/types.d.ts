@@ -139,6 +139,7 @@ declare global {
     upiPay: number;
     amountReturn: number;
     billId: string;
+    staffId: string;
   }
   interface SearchItem {
     _id: string;
@@ -283,6 +284,7 @@ declare global {
     payment?: string;
     procurementSource?: string;
     remark?: string;
+    dateOnBill?: Date | null;
   }
 
   interface PurchasedItemTableProps {
@@ -427,6 +429,23 @@ declare global {
   interface DeviceLocationType {
     latitude?: number;
     longitude?: number;
+  }
+  interface StaffInterface {
+    _id?: string;
+    name?: string;
+    username?: string;
+    role?: string;
+  }
+  interface StaffSliceInterface {
+    staffs: Staff[]; 
+    loading: boolean;
+  } 
+  interface StaffSelectDropdownInterface {
+    error?: string;
+    onChange: (value: string) => void; 
+    label?: string;
+    selectedStaffId?: string;
+    disabled?:boolean;
   }
 }
 declare module '*.scss' {

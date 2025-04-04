@@ -126,9 +126,11 @@ const ReturnBill = () => {
 
   const getAllLeanItems = async () => {
     try {
+      const pincode = localStorage.getItem('userPincode');
+
       setLoaderDisplay(true);
       const response = await genericAxios({
-        url: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+        url:`${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
         method: API_METHODS.GET,
       });
       if (response.error) return;
