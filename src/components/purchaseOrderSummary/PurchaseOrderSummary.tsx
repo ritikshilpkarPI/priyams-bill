@@ -59,7 +59,7 @@ export const PurchaseOrderSummary = () => {
     validateForms();
   }, [purchaseOrder]);
 
-  const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length);
+  const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length && purchaseOrder.dateOnBill);
   const enableDraftBtn =
     isValidDealerDetails &&
     isValidItemDetails &&

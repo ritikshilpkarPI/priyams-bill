@@ -91,7 +91,10 @@ const updateDetailsById = async (req, res, next) => {
         };
       });
     }
-
+    
+    if (purchaseObj?.dateOnBill) {
+      updateFields.dateOnBill = purchaseObj.dateOnBill;
+    }
     const updatedOrder = await PurchaseOrder.findByIdAndUpdate(
       id,
       { $set: updateFields },

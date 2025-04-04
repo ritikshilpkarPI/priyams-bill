@@ -139,6 +139,9 @@ const purchaseOrderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Salesman', 
   },
+  dateOnBill: {
+    type: Date
+  },
 });
 
 
