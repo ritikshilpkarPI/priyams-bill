@@ -9,9 +9,7 @@ declare global {
 
   export type RootState = ReturnType<typeof store.getState>;
 
-  export interface EnvironmentInterface {
-    REACT_APP_API_BASE_URL: string;
-  }
+ 
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export interface ApiCallParams<T = any> {
@@ -25,10 +23,7 @@ declare global {
     billId?: string;
   }
 
-  export interface CreateRzpQRAPIDataType {
-    amountInRs: number;
-    id: string;
-  }
+  
 
   interface soldItemsByDateInterface {
     date: string;
@@ -74,36 +69,9 @@ declare global {
     isPODetailsPage?: boolean;
   }
 
-  interface CategorySchemaType {
-    name: string;
-  }
-
-  interface SubCategorySchemaType {
-    name: string;
-    categoryId: ObjectId;
-  }
-
-  interface BrandSchemaType {
-    name: string;
-    companyId: ObjectId;
-  }
-
-  interface CompanySchemaType {
-    name: string;
-  }
-  interface SalesmanSchemaInterface {
-    salesmanName?: string;
-    salesmanContactNumber?: { contactNumber: string; updatedAt: Date }[];
-    dealerId?: mongoose.Types.ObjectId; 
-  }
-  interface SalesmanModelInterface extends Document, SalesmanSchemaInterface {}
-  interface DealerSchemaInterface {
-    dealerName?: string; 
-    dealerAddress?: { address: string; updatedAt: Date }[];
-    dealerContactNumber?: { contactNumber: string; updatedAt: Date }[]; 
-    dealerVisitingCard?: {  publicId: String , secureUrltype: String }; 
-  }
-  interface DealerModelInterface extends Document, DealerSchemaInterface {}
+ 
+ 
+  
   interface PaymentDetailsSchemaInterface {
     paymentType?: 'Cash' | 'Cheque' | 'UPI' | 'NEFT'; 
     paymentAmount?: number; 
@@ -112,7 +80,6 @@ declare global {
     paymentRemarks?: string; 
     paymentProofImage?: {  publicId: String , secureUrltype: String }; 
   }
-  interface PaymentDetailsModelInterface extends Document, PaymentDetailsSchemaInterface {}
   interface LastPurchaseOrderTableProps {
     lastPurchaseOrders: ItemSoldPurchaseOrder[];
     isDropdown?: boolean;
@@ -134,19 +101,8 @@ declare global {
     packetUnit: string;
   }
 
-  type itemsByBarcode = string[] | any
-  interface StepInterface {
-    label: string;
-    component: React.ReactNode;
-  }
-  interface StepperStateInterface {
-    currentStep: number;
-    stepCompletion: boolean[];
-    steps: StepInterface[];
-  }
-  interface FormStepperProps {
-    steps: StepInterface[];
-  }
+ 
+ 
   interface IntervalPropInterface {
     startDate: string;
     endDate: string;
@@ -207,27 +163,10 @@ declare global {
     liItem: RefObject<HTMLDivElement[]>;
   }
 
-  export interface ItemNameSKUProps {
-    itemName: string;
-    barcode: string;
-    mrp: number;
-    packetQty: number;
-    packetUnit: string;
-  }
-
-  interface ReturnedItemType {
-    itemDetail: mongoose.Types.ObjectId;
-    itemQuantityInBill: number;
-  }
+ 
+ 
   
-   interface ReturnItemSchemaType extends Document {
-    originalBillId?: mongoose.Types.ObjectId;
-    returnedItems?: ReturnedItemType[];
-    exchangeBillId?: mongoose.Types.ObjectId;
-    returnDate?: Date;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }
+   
 
   interface DealerDetailFormType {
     payment: 'Fully Paid' | 'Partially Paid' | 'Credit';
@@ -238,9 +177,7 @@ declare global {
     remark: string;
   };
 
-  interface DealerDetailsFormProps {
-    onSubmit: (dealerFormData: DealerDetailFormType) => void;
-  }
+  
 
   interface PurchasedItemDetailFormType {
     barcode: string;
@@ -269,6 +206,7 @@ declare global {
     inputName?: string;
     freeItemsRemarks?: string;
     itemHasExpiry?: boolean | null;
+    profitPercentage: number;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -352,10 +290,7 @@ declare global {
     isApprovedPO?: boolean;
   }
 
-  interface PaymentDetailTableProps {
-    purchaseOrderId?: string;
-    totalPaidAmount?: number;
-  }
+ 
 
   interface PaymentDetailFormProps {
     purchaseOrderId?: string;
@@ -382,10 +317,7 @@ declare global {
     disabled?: boolean;
   }
 
-  interface FileAndURLType {
-    file: File,
-    previewURL: string;
-  }
+
 
   interface UpdateDetailBillUploadArgs {
     bills?: Array<string>;
@@ -439,10 +371,7 @@ declare global {
     title: string
   }
 
-  interface AccordionProps {
-    title: string;
-    children: ReactNode;
-  }
+
 
 
   interface MetricCardProps {
@@ -462,12 +391,12 @@ declare global {
   }
 
   interface WarehouseItem {
-    _id: string;
-    itemName: string;
-    itemBarcode: string;
-    itemMRPperUnit: number;
-    itemSellingPricePerUnit: number;
-    itemStockQuantity: number;
+    _id?: string;
+    itemName?: string;
+    itemBarcode?: string;
+    itemMRPperUnit?: number;
+    itemSellingPricePerUnit?: number;
+    itemStockQuantity?: number;
     slabPricing?: [number, number, number][];
   }
 
@@ -478,11 +407,20 @@ declare global {
   interface Store {
     id: string;
     name: string;
+    code: string;
   }
 
   interface StoreInventoryForm {
     storeId: string;
     items: StoreInventoryItem[];
+  }
+  interface StoreInventoryState {
+    selectedStoreId: string;
+    inventoryItems: any[];
+  }
+  interface ItemWithQuantity {
+    itemDetail: WarehouseItem;
+    itemQuantityInBill: number;
   }
 }
 declare module '*.scss' {

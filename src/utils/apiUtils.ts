@@ -2,16 +2,7 @@ import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import { getUserDeviceInfo } from './getUserDeviceInfo';
 
-export const getUserDataAPI = async () => {
-  try {
-    const response = await getAPI({
-      path: API_PATHS.BILLING.GET_USER_DETAILS,
-    });
-    return response;
-  } catch (err) {
-    return { isError: true, err };
-  }
-};
+
 
 export const getBillingLeanItemsAPI = async () => {
   try {
@@ -37,17 +28,7 @@ export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
   }
 };
 
-export const createRzpQrCodeAPI = async (data: CreateRzpQRAPIDataType) => {
-  try {
-    const response = await postAPI({
-      path: API_PATHS.RAZORPAY.QR,
-      data,
-    });
-    return response;
-  } catch (err) {
-    return { isError: true, err };
-  }
-};
+
 
 export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
   purchaseOrderId: string,
@@ -186,19 +167,7 @@ export const getItemByIdAPI = async (itemId: string) => {
   }
 };
 
-export const savePOPaymentAPI = async (paymentDetails: PaymentDetailType) => {
-  try {
-    const response = await postAPI({
-      path: API_PATHS.PAYMENT.POST_SAVE_PAYMENT,
-      data: {
-        payment: paymentDetails,
-      },
-    });
-    return response;
-  } catch (error) {
-    return { isError: true, error };
-  }
-};
+
 
 export const updatePOPaymentAPI = async (
   paymentDetails: PaymentDetailType,
@@ -265,3 +234,29 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
     return { isError: true, error };
   }
 };
+
+export const getAllStoresAPI = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STORE.GET_ALL_STORES,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[])=>{
+  try {
+    const response = await postAPI({
+      path: API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,
+      data:{
+        items,
+        collectionName:selectedStoreId,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}

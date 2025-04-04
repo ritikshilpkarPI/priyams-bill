@@ -3,7 +3,7 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 const rejectOrder = async (req, res,next) => {
     try {
       const id = req.params.id;
-      const { userDetail } = req.body;
+      const { userDetail, rejectMessage = '' } = req.body;
       const referer = req.headers.referer;
       const status =  CONSTANTS.REJECT
       const user = req.user;      
@@ -16,12 +16,12 @@ const rejectOrder = async (req, res,next) => {
             os:  userDetail ? userDetail.os : "Unknown",
             ipAddress: userDetail ? userDetail.ipAddress : "Unknown",
             referer: referer,
+            rejectMessage: rejectMessage,
           },
         }
       const order = await PurchaseOrder.findByIdAndUpdate(
         id,
         {
-          isRejected: true,
           isDraft: false,
           rejectTime: Date.now(),
           $push: { statusHistory: newStatusHistory },
