@@ -8,7 +8,6 @@ import { fetchBillingLeanItems } from './utils/fetchBillingLeanItems';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import useGeolocationPermission from './hooks/useGeoLocationPermission';
-import Cookies from 'js-cookie';
 
 function App() {
   const dispatch = useDispatch();
@@ -69,16 +68,6 @@ function App() {
 
   const devBg = process.env.NODE_ENV !== 'production' ? 'none' : 'none';
   console.log("Test Prod")
-
-  useEffect(()=>{
-    if(Cookies.get('token')){
-      const storeData = localStorage.getItem("storeData");
-      const pincode = localStorage.getItem("pincode");
-      if(!storeData && !pincode){
-        logoutUser();
-      }
-    }
-  },[])
 
   return (
     <div className="App" style={{ backgroundColor: devBg }}>
