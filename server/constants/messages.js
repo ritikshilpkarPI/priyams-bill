@@ -23,6 +23,7 @@ const MESSAGES = Object.freeze({
   DEALER_CREATED_SUCCESSFULLY: 'Dealer created successfully',
   COMPANY_CREATED_SUCCESSFULLY: 'Company created successfully',
   BRAND_CREATED_SUCCESSFULLY: 'Brand created successfully',
+  UNABLE_TO_CREATE_DEALER: 'Unable to create dealer',
 });
 
 module.exports = { MESSAGES };

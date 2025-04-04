@@ -102,4 +102,8 @@ export const API_PATHS = {
   STORE: {
     GET_ALL_STORES: "/api/store",
   },
+  DEALER: {
+    GET_ALL_DEALERS: "/api/dealer",
+    ADD_NEW_DEALER: "/api/addNewDealer",
+  },
 };
