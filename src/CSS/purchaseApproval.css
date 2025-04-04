@@ -53,3 +53,17 @@
   font-weight: 600;
   margin: 5px 0;
 }
+.serial-number-paid-icon-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+}
+.paid-check-icon-container{
+  height: 24px;
+  width: 24px;
+  min-width: 24px;
+}
+.paid-check-icon-container :first-child{
+  background-color: #40c057;
+}
