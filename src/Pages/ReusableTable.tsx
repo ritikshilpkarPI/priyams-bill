@@ -5,7 +5,7 @@ import {
   GridToolbar,
   GridRenderCellParams,
 } from '@mui/x-data-grid';
-import { Paper, CircularProgress } from '@mui/material';
+import { Paper, CircularProgress, Box } from '@mui/material';
 
 const ReusableTable: React.FC<ReusableTableProps> = ({
   columns,
@@ -22,6 +22,7 @@ const ReusableTable: React.FC<ReusableTableProps> = ({
     field: col.key,
     headerName: col.label,
     sortable: col.sortable ?? true,
+    minWidth: 150, 
     flex: 1,
     renderCell: col.render
       ? (params: GridRenderCellParams<any, any>) => col.render?.(params.row)
@@ -33,29 +34,36 @@ const ReusableTable: React.FC<ReusableTableProps> = ({
       {isLoading ? (
         <CircularProgress sx={{ m: 2 }} />
       ) : (
-        <DataGrid
-          columns={gridColumns}
-          rows={data}
-          getRowId={(row) =>
-            row.id || row._id || row.key || JSON.stringify(row)
-          }
-          rowCount={paginationMode === 'server' ? (rowCount ?? 0) : data.length}
-          paginationMode={paginationMode}
-          paginationModel={{
-            pageSize: rowsPerPage,
-            page: page,
-          }}
-          onPaginationModelChange={({ page, pageSize }) => {
-            onPageChange?.(null, page);
-            onRowsPerPageChange?.({
-              target: { value: String(pageSize) },
-            } as React.ChangeEvent<HTMLInputElement>);
-          }}
-          pageSizeOptions={[5, 10, 20, 50, 100]}
-          checkboxSelection
-          disableRowSelectionOnClick
-          slots={{ toolbar: GridToolbar }}
-        />
+        <Box sx={{ width: '100%', overflowX: 'auto' }}>
+          <Box sx={{ minWidth: `${columns.length * 150}px` }}> 
+            <DataGrid
+              autoHeight
+              columns={gridColumns}
+              rows={data}
+              getRowId={(row) =>
+                row.id || row._id || row.key || JSON.stringify(row)
+              }
+              rowCount={
+                paginationMode === 'server' ? rowCount ?? 0 : data.length
+              }
+              paginationMode={paginationMode}
+              paginationModel={{
+                pageSize: rowsPerPage,
+                page: page,
+              }}
+              onPaginationModelChange={({ page, pageSize }) => {
+                onPageChange?.(null, page);
+                onRowsPerPageChange?.({
+                  target: { value: String(pageSize) },
+                } as React.ChangeEvent<HTMLInputElement>);
+              }}
+              pageSizeOptions={[5, 10, 20, 50, 100]}
+              checkboxSelection
+              disableRowSelectionOnClick
+              slots={{ toolbar: GridToolbar }}
+            />
+          </Box>
+        </Box>
       )}
     </Paper>
   );
