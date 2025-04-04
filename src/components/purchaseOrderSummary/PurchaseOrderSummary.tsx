@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Box, Button, Checkbox, Flex, Textarea, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
@@ -59,7 +59,7 @@ export const PurchaseOrderSummary = () => {
     validateForms();
   }, [purchaseOrder]);
 
-  const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length);
+  const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length && purchaseOrder.dateOnBill);
   const enableDraftBtn =
     isValidDealerDetails &&
     isValidItemDetails &&
@@ -172,7 +172,7 @@ export const PurchaseOrderSummary = () => {
             </ProtectedComponent>
           )}
 
-          {purchaseOrder.isDraft && (
+          {purchaseOrder.isDraft && !purchaseOrder.isApproved && (
             <ProtectedComponent role={access.REJECTED_PURCHASE_ORDER}>
               <Button
                 className="reject-btn"

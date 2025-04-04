@@ -19,8 +19,10 @@ export const ItemsBarCode = () => {
   useEffect(() => {
     (async () => {
       setIsLoading(true);
+      const pincode = localStorage.getItem('userPincode');
+
       const response = await genericAxios({
-        url: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+        url: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
         method: API_METHODS.GET,
       });
       setItemApiData({ ...response.data.message });
