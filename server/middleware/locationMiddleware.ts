@@ -38,7 +38,7 @@ const locationMiddleware = async (
         next(); 
     } catch (error) {
         console.error('Error in location middleware:', error);
-        next(error);
+        next(error); 
     }
 };
 

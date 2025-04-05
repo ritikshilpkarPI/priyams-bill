@@ -1,5 +1,5 @@
 import './CSS/App.scss';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import AppFunction from './functions/AppFunction';
 import Header from './components/Header';
 import { genericAxios } from './utils/genericAxiosMethod';
@@ -7,9 +7,11 @@ import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from './utils/fetchBillingLeanItems';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import useGeolocationPermission from './hooks/useGeoLocationPermission';
 
 function App() {
   const dispatch = useDispatch();
+  const { isGeolocationPermissionGranted, GeoLocationPermission } = useGeolocationPermission();
   useEffect(() => {
     dispatch(fetchBillingLeanItems());
   }, []);
@@ -69,17 +71,19 @@ function App() {
 
   return (
     <div className="App" style={{ backgroundColor: devBg }}>
-        {staffUserName && (
-          <Header
-            staffName={staffName}
-            staffUserName={staffUserName}
-            showBill={showBill}
-            setValue={setValue}
-            value={value}
-            logoutUser={logoutUser}
-          />
+      {staffUserName && isGeolocationPermissionGranted && (
+        <Header
+          staffName={staffName}
+          staffUserName={staffUserName}
+          showBill={showBill}
+          setValue={setValue}
+          value={value}
+          logoutUser={logoutUser}
+        />
       )}
-      <Outlet />
+      <Suspense fallback={<p>Loading...</p>}>
+        {isGeolocationPermissionGranted ? <Outlet /> : <GeoLocationPermission />}
+      </Suspense>
       <ToastContainer />
       {/* <QRComp /> */}
     </div>
