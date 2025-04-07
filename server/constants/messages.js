@@ -18,8 +18,7 @@ const MESSAGES = Object.freeze({
   PINCODE_FETCH_FAILED: 'Failed to retrieve pincode',
   STORE_NOT_FOUND: 'No store found for this pincode',
   INTERNAL_SERVER_ERROR: 'Internal server error',
-  STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
-  INSUFFICIENT_STOCK:"Insufficient stock",
+  NO_STAFF_FOUND: "No staff found for this storeId"
 });
 
 module.exports = { MESSAGES };
