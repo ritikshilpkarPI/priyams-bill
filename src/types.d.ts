@@ -266,7 +266,23 @@ declare global {
     public_id: string;
     secure_url: string;
   }
-
+  export interface StatusHistoryDataType {
+    userId?: string;
+    status?: 'draft' | 'reject' | 'approve'; 
+    browser?: string;
+    os?: string;
+    ipAddress?: string;
+    referer?: string;
+    rejectMessage?: string;
+  }
+  
+  export interface StatusHistoryItemType {
+    _id: string;
+    createdAt: string;
+    data?: StatusHistoryDataType;
+  }
+  
+  
   interface PurchaseOrderDataType {
     isApproved?: boolean;
     isRejected?: boolean;
@@ -284,6 +300,8 @@ declare global {
     payment?: string;
     procurementSource?: string;
     remark?: string;
+    dateOnBill?: Date | null;
+    statusHistory?: StatusHistoryItemType[];
   }
 
   interface PurchasedItemTableProps {
