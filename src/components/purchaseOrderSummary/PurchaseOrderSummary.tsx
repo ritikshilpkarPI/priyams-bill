@@ -121,6 +121,8 @@ export const PurchaseOrderSummary = () => {
 
   const rejectionRemarks = purchaseOrder?.statusHistory?.filter(
     (item) => item?.data?.rejectMessage
+  )?.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   ) || [];
   
 
