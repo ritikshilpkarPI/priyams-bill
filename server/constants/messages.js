@@ -23,6 +23,7 @@ const MESSAGES = Object.freeze({
   DEALER_CREATED_SUCCESSFULLY: 'Dealer created successfully',
   COMPANY_CREATED_SUCCESSFULLY: 'Company created successfully',
   BRAND_CREATED_SUCCESSFULLY: 'Brand created successfully',
+  NO_STAFF_FOUND: "No staff found for this storeId"
 });
 
 module.exports = { MESSAGES };
