@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { Box, Button, Checkbox, Flex, Textarea, Title } from '@mantine/core';
+import { Box, Button, Card, Checkbox, Flex, Textarea, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { draftOrderByIdAPI } from '../../utils/apiUtils';
@@ -97,7 +97,7 @@ export const PurchaseOrderSummary = () => {
     setRejectLoading(true);
 
     try {
-      await genericAxios({
+      const response = await genericAxios({
         method: API_METHODS.POST,
         url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
         data: {
@@ -106,7 +106,9 @@ export const PurchaseOrderSummary = () => {
           rejectMessage: rejectMessage,
         },
       });
-      dispatch(setPurchaseOrder({ ...purchaseOrder, isDraft: false }));
+      const updatedStatusHistory = 'data' in response && response.data?.order?.statusHistory;
+
+      dispatch(setPurchaseOrder({ ...purchaseOrder, isDraft: false,statusHistory: updatedStatusHistory || purchaseOrder.statusHistory, }));
       setRejectLoading(false);
       setShowRejectMessage(false);
       setRejectMessage('');
@@ -116,6 +118,12 @@ export const PurchaseOrderSummary = () => {
       toast.error('Something went wrong, unable to reject order');
     }
   };
+
+  const rejectionRemarks = purchaseOrder?.statusHistory?.filter(
+    (item) => item?.data?.rejectMessage
+  ) || [];
+  
+
 
   return (
     <>
@@ -144,6 +152,32 @@ export const PurchaseOrderSummary = () => {
           <Checkbox label="Payment Details" checked={isValidPaymentDetails} />
           <Checkbox label="Bill Images" checked={isBillImagesUploaded} />
         </Flex>
+        {rejectionRemarks.length > 0 && (
+          <Box mt="md">
+            <Title order={5} mb="xs">
+              Rejection Remarks
+            </Title>
+            <Flex direction="column" gap="sm">
+              {rejectionRemarks.map((remark, index) => (
+                <Card
+                  key={index}
+                  shadow="sm"
+                  withBorder
+                  sx={{
+                    width: 'fit-content',
+                  }}
+                >
+                  <Box>
+                    <strong>Remark:</strong> {remark.data?.rejectMessage}
+                    <br />
+                    <strong>Rejected At:</strong>{' '}
+                    {new Date(remark.createdAt).toLocaleString()}
+                  </Box>
+                </Card>
+              ))}
+            </Flex>
+          </Box>
+        )}
 
         <Flex gap="16px" mt="xl">
           {purchaseOrder._id && (
