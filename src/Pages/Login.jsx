@@ -6,6 +6,7 @@ import { Loader } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { useNavigate } from 'react-router';
+import { setGeolocationPermissionGranted } from 'src/redux/user/userSlice';
 
 
 
@@ -37,13 +38,14 @@ const Login = () => {
   
     try {
       const storedPincode = localStorage.getItem('userPincode');
-  
+      const savedStoreLocation = localStorage.getItem('storeLocation');
+      const storeLocation = savedStoreLocation ? JSON.parse(savedStoreLocation) : {};
       const payload = {
         username: username.toLowerCase(),
         password,
         ...(storedPincode
           ? { pincode: storedPincode }
-          : { latitude: "23.2510348", longitude: "77.465958" } ),
+          : storeLocation ),
       };
   
       const response = await genericAxios({
@@ -68,6 +70,12 @@ const Login = () => {
           setErrorMsg('Invalid username');
         } else if (errorMessage === "Password doesn't exist") {
           setErrorMsg('Incorrect password');
+        } else if (
+          response?.error?.response?.data?.error ===
+          'Latitude and longitude are required'
+        ) {
+          setErrorMsg('Enable GeoLocation before login');
+          dispatch(setGeolocationPermissionGranted(false));
         } else {
           setErrorMsg('Login failed. Please try again.');
         }
