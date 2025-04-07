@@ -37,13 +37,14 @@ const Login = () => {
   
     try {
       const storedPincode = localStorage.getItem('userPincode');
-  
+      const savedStoreLocation = localStorage.getItem('storeLocation');
+      const storeLocation = savedStoreLocation ? JSON.parse(savedStoreLocation) : {};
       const payload = {
         username: username.toLowerCase(),
         password,
         ...(storedPincode
           ? { pincode: storedPincode }
-          : { latitude: "23.2510348", longitude: "77.465958" } ),
+          : storeLocation ),
       };
   
       const response = await genericAxios({
