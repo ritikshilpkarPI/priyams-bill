@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import { Paper, CircularProgress, Box } from '@mui/material';
 
-const ReusableTable: React.FC<ReusableTableProps> = ({
+const DataTable: React.FC<DataTableProps> = ({
   columns,
   data,
   isLoading,
@@ -69,4 +69,4 @@ const ReusableTable: React.FC<ReusableTableProps> = ({
   );
 };
 
-export default ReusableTable;
+export default DataTable;

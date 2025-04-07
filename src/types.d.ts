@@ -461,6 +461,12 @@ declare global {
   interface ExpiredItemsState {
     items: ExpiredItem[];
     isLoading: boolean;
+    startDate: Date;
+    endDate: Date;
+    order: 'asc' | 'desc';
+    orderBy: string;
+    page: number;
+    rowsPerPage: number;
   }
 
   type Order = 'asc' | 'desc';
@@ -472,7 +478,7 @@ declare global {
     render?: (row: any) => React.ReactNode;
   }
   
-  interface ReusableTableProps {
+  interface DataTableProps {
     columns: Column[];
     data: any[];
     isLoading: boolean;

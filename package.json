@@ -79,7 +79,6 @@
     "cross-env": "^7.0.3",
     "cuid": "^3.0.0",
     "d3": "^7.9.0",
-    "date-fns": "^2.29.3",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "embla-carousel-react": "^7.0.0",
