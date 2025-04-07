@@ -271,6 +271,8 @@ export const getAllStaffsAPI = async ()=>{
     return { isError: true, error };
   }
 }
+
+
 export const getAllStaffsByStoreIdAPI = async ()=>{
   try {
     
@@ -289,6 +291,7 @@ export const getAllStaffsByStoreIdAPI = async ()=>{
     
     return response;
   } catch (error) {
+    
     return { isError: true, error };
   }
 }
