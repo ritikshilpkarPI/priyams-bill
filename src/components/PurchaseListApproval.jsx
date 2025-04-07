@@ -11,7 +11,6 @@ import { isAdmin } from '../utils/isAdmin';
 import { getUserDetails, getUserDeviceInfo } from '../utils/getUserDeviceInfo';
 import ShareOnWhatsApp from './shareOnWhatsApp';
 import { useQueryParam } from 'src/utils/getQuery';
-import { IconCheck } from '@tabler/icons-react';
 import { PaidChip } from "../components/paidChip";
 const PurchaseListApproval = ({
   list,
