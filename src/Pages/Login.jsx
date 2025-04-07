@@ -6,6 +6,7 @@ import { Loader } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { useNavigate } from 'react-router';
+import { setGeolocationPermissionGranted } from 'src/redux/user/userSlice';
 
 
 
@@ -69,6 +70,12 @@ const Login = () => {
           setErrorMsg('Invalid username');
         } else if (errorMessage === "Password doesn't exist") {
           setErrorMsg('Incorrect password');
+        } else if (
+          response?.error?.response?.data?.error ===
+          'Latitude and longitude are required'
+        ) {
+          setErrorMsg('Enable GeoLocation before login');
+          dispatch(setGeolocationPermissionGranted(false));
         } else {
           setErrorMsg('Login failed. Please try again.');
         }
