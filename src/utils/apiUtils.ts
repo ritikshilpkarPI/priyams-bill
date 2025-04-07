@@ -282,6 +282,30 @@ export const getAllStaffsAPI = async ()=>{
     return { isError: true, error };
   }
 }
+
+
+export const getAllStaffsByStoreIdAPI = async ()=>{
+  try {
+    
+    const storedStoreDataString = localStorage.getItem('storeData');
+
+    if (!storedStoreDataString) {
+      throw new Error(MESSAGES.NO_STORE_DATA_FOUND_IN_LOCAL_STORAGE)
+    }
+
+    const storeData = JSON.parse(storedStoreDataString);
+    const storeId = storeData._id;
+
+    const response = await getAPI({
+      path: `${API_PATHS.STAFF.GET_STAFFS}/${storeId}`,
+    });
+    
+    return response;
+  } catch (error) {
+    
+    return { isError: true, error };
+  }
+}
 export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
   dispatch(setLoading(true));
 
