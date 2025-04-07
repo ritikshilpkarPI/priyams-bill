@@ -67,14 +67,14 @@ const ExpiredItemTable: React.FC = () => {
     dispatch(setRowsPerPage(parseInt(e.target.value.toString(), 10)));
   };
   const columns = ExpiredItemTableConstants.COLUMNS.map((col) => {
-    if (col.key === 'manufacturingDate') {
+    if (col.key === ExpiredItemTableConstants.MANUFACTURING_DATE) {
       return {
         ...col,
         render: (row: ExpiredItem) =>
           row.mfgDate ? formatShortDate(row.mfgDate) : 'N/A',
       };
     }
-    if (col.key === 'expiryDate') {
+    if (col.key === ExpiredItemTableConstants.EXPIRY_DATE) {
       return {
         ...col,
         render: (row: ExpiredItem) =>
