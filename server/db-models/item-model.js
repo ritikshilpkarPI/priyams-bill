@@ -68,7 +68,25 @@ const ItemSchema = new mongoose.Schema(
     companyName: { type: String, trim: true },
     subCategory: { type: String },
     flavourOrFeature: { type: String, trim: true }, 
-    shelfLife: { type: String }, 
+    shelfLife: { type: String },
+    itemShelfDate:{
+      expiryDates: [
+        {
+          date: {
+            type: Date,
+          },
+          value: {
+            type: Number,
+          },
+          mfgDate: {
+            type: Date,
+          },
+          isShelfExpired: { 
+            type: Boolean
+          }
+        },
+      ],
+    } ,
     expiryDates: [
       {
         date: {

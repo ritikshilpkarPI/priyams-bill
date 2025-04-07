@@ -38,6 +38,7 @@ const Login = () => {
   
     try {
       const storedPincode = localStorage.getItem('userPincode');
+      const storedData = localStorage.getItem('storeData');
       const savedStoreLocation = localStorage.getItem('storeLocation');
       const storeLocation = savedStoreLocation ? JSON.parse(savedStoreLocation) : {};
       const payload = {
@@ -60,7 +61,7 @@ const Login = () => {
         localStorage.setItem('userPincode', response.data.pincode);
       }
   
-      if (!storedPincode && response?.data?.storeData) {
+      if (!storedData && response?.data?.storeData) {
         localStorage.setItem('storeData', JSON.stringify(response.data.storeData));
       }
   
