@@ -60,3 +60,19 @@ export  interface AddressComponent {
     short_name: string;
     types: string[];
 }
+
+  export interface CompanyType extends Document {
+    companyName: string;
+  }
+  
+  export interface BrandType extends Document {
+    brandName: string;
+    companyId: Types.ObjectId;
+  }
+  
+  export interface DealerType extends Document {
+    dealerName: string;
+    dealerBrands: Types.ObjectId[];
+    dealerCompanies: Types.ObjectId[];
+    dealerNumber: number;
+  }
