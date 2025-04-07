@@ -1,8 +1,10 @@
 import { toast } from 'react-toastify';
+import { setExpiredItems, setLoading } from 'src/redux/expiredItems/expiredItemsSlice';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import { getUserDeviceInfo } from './getUserDeviceInfo';
 import MESSAGES from './constants/messages';
+import { AppDispatch } from 'src/redux/store';
 
 
 
@@ -280,6 +282,51 @@ export const getAllStaffsAPI = async ()=>{
     return { isError: true, error };
   }
 }
+
+
+export const getAllStaffsByStoreIdAPI = async ()=>{
+  try {
+    
+    const storedStoreDataString = localStorage.getItem('storeData');
+
+    if (!storedStoreDataString) {
+      throw new Error(MESSAGES.NO_STORE_DATA_FOUND_IN_LOCAL_STORAGE)
+    }
+
+    const storeData = JSON.parse(storedStoreDataString);
+    const storeId = storeData._id;
+
+    const response = await getAPI({
+      path: `${API_PATHS.STAFF.GET_STAFFS}/${storeId}`,
+    });
+    
+    return response;
+  } catch (error) {
+    
+    return { isError: true, error };
+  }
+}
+export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
+  dispatch(setLoading(true));
+
+  try {
+    const response = await postAPI({
+      path: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
+      data: {
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      },
+    });
+    
+
+    dispatch(setExpiredItems(response?.message?.expiredItems || [] ));
+  } catch (err) {
+    console.log('Error fetching expired items', err);
+    dispatch(setExpiredItems([]));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
 
 export const getAllDealersAPI = async ()=>{
   try {

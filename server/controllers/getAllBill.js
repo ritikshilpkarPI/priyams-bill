@@ -2,7 +2,11 @@ const { Bill } = require('../db-models/bill-model');
 
 const getAllBill = async (req, res, next) => {
   try {
-    const allBill = await Bill.find()
+    const { storeId } = req.query;
+    
+    const allBill = await Bill.find({
+      ...(storeId && { storeId }),
+    })
       .populate({
         path: 'items',
         populate: {

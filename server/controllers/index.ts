@@ -56,6 +56,7 @@ import { getItemById } from "./getItemById";
 import { transferStockToStore } from "./transferStockToStore"
 import { getAllStores } from  "./getAllStores"
 import { getAllStaffs } from "./getAllStaffs";
+import {getStaffByStoreId} from "./getStaffByStoreId"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 
@@ -117,7 +118,8 @@ export {
   getItemsSku,
   getAllStaffs,
   transferStockToStore,
-  getAllStores, 
+  getAllStores,
+  getStaffByStoreId, 
   getAllDealers,
   addNewDealer,
 
