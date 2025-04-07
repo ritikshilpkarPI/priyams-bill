@@ -76,6 +76,9 @@ const Header = ({
   useEffect(() => {
     toggleSidebar(false, { inputElem, profile, mainContainer, sidebarElem, liItem }); 
   }, []);
+  const storeData = JSON.parse(localStorage.getItem('storeData') || '{}');
+  const { pincode , name , number } = storeData;
+
   
   return (
     <>
@@ -98,15 +101,13 @@ const Header = ({
       </div>
 
       {/* Search Input */}
-      <input
-        type="text"
-        ref={inputElem}
-        name="search"
-        id="search-input"
-        placeholder="Search"
-        value={inputText}
-        onChange={(e) => setInputValue(e)}
-      />
+      <div className="store-info" ref={inputElem}>
+       <p>{name}</p>
+       <p>{number}</p>
+       <p>{pincode}</p>
+      </div>
+     
+
 
       {/* Billing Button */}
       <button className="billing" onClick={goToBilling}>
