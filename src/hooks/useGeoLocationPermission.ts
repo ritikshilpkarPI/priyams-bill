@@ -9,9 +9,12 @@ import {
 import { getGeoLocation } from '../utils/getGeoLocation';
 import { checkGeolocationPermission } from 'src/utils/checkGeolocationPermission';
 import { GeoLocationPermission } from '../components/GeolocationPermission/GeolocationPermission';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router';
 
 const useGeolocationPermission = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const isGeolocationPermissionGranted = useSelector(
     selectGeolocationPermission
   );
@@ -42,6 +45,15 @@ const useGeolocationPermission = () => {
           toast.error(error?.message);
         }
       }
+    };
+
+    if(Cookies.get('token')){
+      const storeData = localStorage.getItem("storeData");
+      const pincode = localStorage.getItem("pincode");
+      if(!storeData && !pincode){
+        Cookies.remove('token');
+        navigate("/login");
+      };
     };
 
     fetchDeviceLocation();
