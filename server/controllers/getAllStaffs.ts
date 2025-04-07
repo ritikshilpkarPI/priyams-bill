@@ -7,7 +7,7 @@ export const getAllStaffs = async (
   next: NextFunction
 ) => {
   try {
-    const staffs = await Staff.find();
+    const staffs = await Staff.find().select('-password');;
     res.status(200).send({
       success: true,
       data: staffs,

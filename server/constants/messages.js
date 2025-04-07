@@ -20,6 +20,9 @@ const MESSAGES = Object.freeze({
   PINCODE_FETCH_FAILED: 'Failed to retrieve pincode',
   STORE_NOT_FOUND: 'No store found for this pincode',
   INTERNAL_SERVER_ERROR: 'Internal server error',
+  DEALER_CREATED_SUCCESSFULLY: 'Dealer created successfully',
+  COMPANY_CREATED_SUCCESSFULLY: 'Company created successfully',
+  BRAND_CREATED_SUCCESSFULLY: 'Brand created successfully',
   NO_STAFF_FOUND: "No staff found for this storeId"
 });
 
