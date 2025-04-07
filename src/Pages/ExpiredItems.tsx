@@ -85,7 +85,7 @@ const ExpiredItemTable: React.FC = () => {
   });
   return (
     <Box className="expired-items-card">
-      <Typography variant="h6">Expired Items</Typography>
+      <Typography variant="h5" sx={{fontWeight:600}} >Expired Items</Typography>
 
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <div className="date-picker-container">
