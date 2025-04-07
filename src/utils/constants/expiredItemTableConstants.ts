@@ -1,4 +1,6 @@
 export const ExpiredItemTableConstants = Object.freeze({
+  MANUFACTURING_DATE: 'manufacturingDate',
+  EXPIRY_DATE: 'expiryDate',
   COLUMNS: [
     { label: 'Item Name', key: 'itemName', sortable: true },
     { label: 'Barcode', key: 'itemBarcode', sortable: true },
