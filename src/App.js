@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from './utils/fetchBillingLeanItems';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+const defaultTheme = createTheme(); 
 
 function App() {
   const dispatch = useDispatch();
@@ -68,6 +70,7 @@ function App() {
   console.log("Test Prod")
 
   return (
+    <ThemeProvider theme={defaultTheme}>
     <div className="App" style={{ backgroundColor: devBg }}>
         {staffUserName && (
           <Header
@@ -83,6 +86,7 @@ function App() {
       <ToastContainer />
       {/* <QRComp /> */}
     </div>
+    </ThemeProvider>
   );
 }
 
