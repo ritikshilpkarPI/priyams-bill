@@ -3,29 +3,10 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 const { clodinaryFoldersPath } = require('../util/constant');
 const { isShelfExpired } = require('../util/isShelfExpired');
 const { getItemSKU } = require('../util/getItemSKU');
-const { DealerModel } = require('../db-models/dealer-model');
 const { MESSAGES } = require ('../constants/messages');
+const { createNewDealer } = require('../util/createNewDealer');
 
-const createNewDealer = async (
-  dealerName,
-  dealerNumber,
-  dealerBrands = [],
-  dealerCompanies = []
-) => {
-  try {
-    const newDealer = await DealerModel.create({
-      dealerName,
-      dealerBrands,
-      dealerCompanies,
-      dealerNumber,
-    });
-    return newDealer;
-  } catch (error) {
-    return res
-      .status(404)
-      .json({ message: MESSAGES.UNABLE_TO_CREATE_DEALER, success: false });
-  }
-};
+
 
 const addOrder = async (req, res,next) => {
     try {
@@ -41,17 +22,26 @@ const addOrder = async (req, res,next) => {
         dealerName,
         phoneNumber,
         minimumQuantity,
+        dealerId,
       } = req.body.new_order.purchaseObj;
       const isDraft = req.body.new_order.isDraft;
   
       let billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
+      let dealer_ID
 
-      let dealer = await DealerModel.findOne({ dealerName });
-
-      if (!dealer) {
+      if (!dealerId) {
         const formattedDealerName = dealerName.toUpperCase();
         const formattedPhoneNumber = Number(phoneNumber);
-        dealer = await createNewDealer(formattedDealerName, formattedPhoneNumber);
+        const response = await createNewDealer(formattedDealerName, formattedPhoneNumber);
+        if (response.success === false){
+          return res
+          .status(404)
+          .json({ message: MESSAGES.UNABLE_TO_CREATE_DEALER, success: false });
+        }  
+
+        dealer_ID = response.dealer._id
+      }else{
+        dealer_ID = dealerId
       }
 
       if(orders && orders.length){
@@ -81,10 +71,10 @@ const addOrder = async (req, res,next) => {
         totalPaidAmount,
         payment,
         procurementSource,
-        dealerName: dealer?.dealerName,
-        phoneNumber: dealer?.dealerNumber,
+        dealerName,
+        phoneNumber,
         minimumQuantity,
-        dealerId: dealer?._id,
+        dealerId: dealer_ID,
       };
       if(isDraft){
         purchaseOrder.draftTime = Date.now();
