@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { MESSAGES } from '../constants/messages';
 import { AddressComponent } from 'server/types';
 
 const olaApiKey = process.env.OLA_API_KEY;
@@ -21,9 +22,9 @@ export const getPincodeFromCoordinates = async (
       }
     }
 
-    throw new Error('No valid pincode found in Ola API response');
+    throw new Error(MESSAGES.NO_VALID_PINCODE_FOUND);
   } catch (error) {
     console.error('Error fetching pincode from Ola API:', error);
-    throw new Error('Failed to fetch pincode from coordinates');
+    throw new Error(MESSAGES.PINCODE_FETCH_FAILED);;
   }
 };
