@@ -1,5 +1,6 @@
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
+import MESSAGES from './constants/messages';
 import { getUserDeviceInfo } from './getUserDeviceInfo';
 
 
