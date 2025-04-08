@@ -8,7 +8,6 @@ import {
   Col,
   Flex,
   Title,
-  Autocomplete,
 } from '@mantine/core';
 import { selectDealerDetailForm } from '../../redux/dealerDetailForm/dealerDetailFormSelectors';
 import { useSelector, useDispatch } from 'react-redux';
@@ -23,6 +22,7 @@ import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 import ShareOnWhatsApp from 'src/components/shareOnWhatsApp';
 import { setDealers, setDealerId, setDealersLoading } from 'src/redux/dealerlist/dealerSlice';
 import { selectDealerLoading, selectDealers } from 'src/redux/dealerlist/dealerSelectors';
+import { Autocomplete, TextField } from '@mui/material';
 
 export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) => {
   const dispatch = useDispatch();
@@ -79,19 +79,16 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
   useEffect(()=>{
     getDealers()
   },[])
-
   useEffect(()=>{
-    const foundDealer = dealers.find((dealer) => dealer.dealerName === dealerFormData.dealerName.trim().replace(/\s+/g, ' '));
+    setIsExistingDealer(false) 
+    const foundDealer = dealers.find((dealer) => dealer._id === dealerFormData.dealerId);
     if(foundDealer && foundDealer._id){
+      console.log("foundDealer");
       dispatch(setDealerId(foundDealer._id))
       setIsExistingDealer(true)
       onChange('phoneNumber', foundDealer.dealerNumber)
-    }else{
-      setIsExistingDealer(false)
-      dispatch(setDealerId(""))
-      onChange('phoneNumber', "")
     }
-  },[dealerFormData])
+  },[dealers, dealerFormData])
 
   const updateOrder = async () => {
     if(!purchaseOrder._id) return;
@@ -132,6 +129,14 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
   };
   const currentUrl = window.location.href;
   const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
+
+  const dealersList: DealerOption[] = dealers
+  .filter((dealer) => dealer.dealerName?.length)
+  .map((dealer) => ({
+    value: dealer._id || '',
+    label: dealer.dealerName,
+  }));
+
   return (
     <Flex
       mt="lg"
@@ -156,18 +161,40 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
         <Grid gutter="md" sx={{ maxWidth: '480px' }}>
           <Col span={12}>
             <Autocomplete
-              label="Dealer Name"
-              value={dealerFormData.dealerName}
-              onChange={(value) =>
-                onChange('dealerName', value)  
+              freeSolo
+              value={
+                dealersList.find(
+                  (dealer) => dealer.value === dealerFormData.dealerId
+                ) || (dealerFormData.dealerName ? { value: '', label: dealerFormData.dealerName } : null)
               }
-              required
-              error={errors.dealerName}
-              placeholder="Enter dealer name"
-              data={dealers
-                .filter((dealer) => dealer.dealerName?.length)
-                .map((dealer) => dealer.dealerName)} 
-              disabled={isApprovedPO || dealersLoading}
+              onChange={(event, newValue) => {
+
+                if (typeof newValue === 'string') {
+                  onChange('dealerId', '');
+                  onChange('dealerName', newValue.toLocaleUpperCase());
+                } else if (newValue && typeof newValue === 'object') {
+                  onChange('dealerName', newValue.label.toLocaleUpperCase());
+                  onChange('dealerId', newValue.value);
+                } else {
+                  onChange('dealerId', '');
+                  onChange('dealerName', '');
+                }
+              }}
+              inputValue={dealerFormData.dealerName}
+              onInputChange={(event, value) => {
+                onChange('dealerName', value.toLocaleUpperCase());
+              }}
+              options={dealersList}
+              getOptionLabel={(option) =>
+                typeof option === 'string' ? option : option.label
+              }
+              isOptionEqualToValue={(option, value) =>
+                option.value === value?.value
+              }
+              sx={{ width: "100%"}}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Dealer" />
+              )}
             />
           </Col>
 

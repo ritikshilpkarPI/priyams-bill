@@ -178,6 +178,7 @@ declare global {
     dealerName: string;
     phoneNumber: string;
     remark: string;
+    dealerId: string;
   };
 
   
@@ -524,6 +525,10 @@ declare global {
     error: string | null;
     selectedDealerId?: string;
   }
+  type DealerOption = {
+    value: string;
+    label: string;
+  };
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
