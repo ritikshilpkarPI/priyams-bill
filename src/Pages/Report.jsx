@@ -62,11 +62,13 @@ const Report = () => {
     if (selectedFilter === 'purchasedItems') {
       // For purchased items filter
       const csvRows = [
-        ['Barcode', 'Item Name', 'Total Purchased', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase'],
+        ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase'],
         ...reportResult.report.map(item => [
           item.barcode,
           item.itemName,
           item.totalStock,
+          item.itemQuantity,
+          item.unit,
           item.mrp?.toFixed(2),
           item.costPrice?.toFixed(2),
           item.suppliers.join(', '),
@@ -116,7 +118,7 @@ const Report = () => {
       },
     });
     setLoading(false)
-    if (result.error) return
+    if (result.error) return setLoading(false);
     setReportResult(result.data);
   };
 
@@ -174,7 +176,13 @@ const Report = () => {
           <></>
         )}
       </div>
-      <Button onClick={findResult} loading={isLoading}>Show Result</Button>
+      <Button 
+        onClick={findResult} 
+        loading={isLoading} 
+        disabled={(!dateRange?.at(0) || !dateRange?.at(1) || !selectedFilter)}
+      >
+        Show Result
+      </Button>
       <Button
         onClick={handleDownloadCSV}
         disabled={!reportResult?.report?.length}
@@ -221,6 +229,8 @@ const showBillTable = (reportResult, selectedFilter) => (
           <th>Barcode</th>
           <th>Item Name</th>
           <th>Total Purchased</th>
+          <th>Pkt. Amt</th>
+          <th>Pkt. Unit</th>
           <th>MRP</th>
           <th>Cost Price</th>
           <th>Suppliers</th>
@@ -271,6 +281,8 @@ const showBillTable = (reportResult, selectedFilter) => (
               <td>{item.barcode}</td>
               <td>{item.itemName}</td>
               <td>{item.totalStock}</td>
+              <td>{item?.itemQuantity}</td>
+              <td>{item?.unit}</td>
               <td>{item.mrp?.toFixed(2)}</td>
               <td>{item.costPrice?.toFixed(2)}</td>
               <td>{item.suppliers.join(', ')}</td>
