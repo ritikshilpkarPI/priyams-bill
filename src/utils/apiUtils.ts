@@ -262,7 +262,17 @@ export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[
     return { isError: true, error };
   }
 }
-export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
+
+export const getAllStaffsAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STAFF.GET_STAFFS,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
   dispatch(setLoading(true));
 
   try {
