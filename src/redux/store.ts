@@ -24,7 +24,7 @@ export const store = configureStore({
     paymentDetailForm: paymentDetailFormSlice,
     storeInventoryManagement: storeInventoryManagement,
     staffs: staffSlice,
-    expiredItems: expiredItemsSlice
+    expiredItems: expiredItemsSlice,
     brands: brandSlice,
     company: companySlice,
   },
