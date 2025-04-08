@@ -6,10 +6,10 @@ import { AppDispatch } from 'src/redux/store';
 
 
 
-export const getBillingLeanItemsAPI = async (selectedStoreId?: string) => {
+export const getBillingLeanItemsAPI = async () => {
   try {
     const response = await getAPI({
-      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}/?storeId=${selectedStoreId}`,  
+      path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,  
     });
 
     return response.message;

@@ -7,19 +7,15 @@ import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from './utils/fetchBillingLeanItems';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { useSelector } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 const defaultTheme = createTheme(); 
 
 function App() {
   const dispatch = useDispatch();
 
-const selectedStoreId = useSelector(
-    (state) => state.storeInventoryManagement.selectedStoreId
-  );
   useEffect(() => {
-    dispatch(fetchBillingLeanItems(selectedStoreId));
-  }, [selectedStoreId]);
+    dispatch(fetchBillingLeanItems());
+  }, []);
   useEffect(() => {
     const timeOut = 36_00_000;
     async function saveBills() {
