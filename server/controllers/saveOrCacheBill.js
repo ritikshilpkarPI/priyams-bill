@@ -23,6 +23,7 @@ const saveOrCacheBill = async (req, res) => {
     billId,
     rzpPaymentId,
     isUpiAmtPaid,
+    staffId,
     storeData
   } = req.body;
   const newBillData = {
@@ -38,6 +39,7 @@ const saveOrCacheBill = async (req, res) => {
     amountReturn,
     rzpPaymentId,
     isUpiAmtPaid,
+    staffId,
     storeId: storeData._id,
   };
   
@@ -191,6 +193,7 @@ const saveBill = async (
         cashPay,
         upiPay,
         amountReturn,
+        staffId,
         storeId:storeData._id
       });
       return { isBillSaved: true, billBarcode: newBill._id };
