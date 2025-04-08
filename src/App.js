@@ -8,6 +8,8 @@ import { fetchBillingLeanItems } from './utils/fetchBillingLeanItems';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+const defaultTheme = createTheme(); 
 
 function App() {
   const dispatch = useDispatch();
@@ -73,6 +75,7 @@ const selectedStoreId = useSelector(
   console.log("Test Prod")
 
   return (
+    <ThemeProvider theme={defaultTheme}>
     <div className="App" style={{ backgroundColor: devBg }}>
         {staffUserName && (
           <Header
@@ -88,6 +91,7 @@ const selectedStoreId = useSelector(
       <ToastContainer />
       {/* <QRComp /> */}
     </div>
+    </ThemeProvider>
   );
 }
 

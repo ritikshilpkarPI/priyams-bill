@@ -1,6 +1,8 @@
+import { setExpiredItems, setLoading } from 'src/redux/expiredItems/expiredItemsSlice';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import { getUserDeviceInfo } from './getUserDeviceInfo';
+import { AppDispatch } from 'src/redux/store';
 
 
 
@@ -271,3 +273,24 @@ export const getAllStaffsAPI = async ()=>{
     return { isError: true, error };
   }
 }
+export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
+  dispatch(setLoading(true));
+
+  try {
+    const response = await postAPI({
+      path: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
+      data: {
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      },
+    });
+    
+
+    dispatch(setExpiredItems(response?.message?.expiredItems || [] ));
+  } catch (err) {
+    console.log('Error fetching expired items', err);
+    dispatch(setExpiredItems([]));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
