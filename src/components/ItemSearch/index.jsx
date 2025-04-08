@@ -94,6 +94,8 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
         itemStockQuantity: item.itemStockQuantity,
         slabPricing: item.slabPricing,
         itemQtyInStore: item.itemQtyInStore,
+        itemShelfDate: item.itemShelfDate,
+
       },
       itemQuantityInBill: 1
     });
