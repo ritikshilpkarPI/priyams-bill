@@ -272,7 +272,8 @@ export const getAllStaffsAPI = async ()=>{
   } catch (error) {
     return { isError: true, error };
   }
-}export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
+}
+export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
   dispatch(setLoading(true));
 
   try {
