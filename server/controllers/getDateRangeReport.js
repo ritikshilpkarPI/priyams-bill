@@ -191,7 +191,6 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         itemQuantity: 1,
         unit: 1,
         expiryDates: 1,
-
       }
     }
   ]);

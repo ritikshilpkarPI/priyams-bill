@@ -25,6 +25,8 @@ const MESSAGES = Object.freeze({
   BRAND_CREATED_SUCCESSFULLY: 'Brand created successfully',
   NO_STAFF_FOUND: "No staff found for this storeId",
   UNABLE_TO_CREATE_DEALER: 'Unable to create dealer',
+  NO_VALID_PINCODE_FOUND: 'No valid pincode found in Ola API response',
+  PINCODE_FETCH_FAILED: 'Failed to fetch pincode from coordinates'
 });
 
 module.exports = { MESSAGES };
