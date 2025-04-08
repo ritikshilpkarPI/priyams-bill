@@ -7,6 +7,7 @@ import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedIte
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
+import staffSlice from "./staffList/StaffSlice";
 import brandSlice from "./brands/brandSlice"
 import companySlice from "./companys/companySlice"
 export const store = configureStore({
@@ -19,6 +20,7 @@ export const store = configureStore({
     purchaseOrder: purchaseOrderSlice,
     paymentDetailForm: paymentDetailFormSlice,
     storeInventoryManagement: storeInventoryManagement,
+    staffs: staffSlice,
     brands: brandSlice,
     company: companySlice,
   },
