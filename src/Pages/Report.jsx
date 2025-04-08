@@ -59,30 +59,32 @@ const Report = () => {
       .replace(/ /g, '-')
       .toLowerCase();
 
-      if (selectedFilter === 'purchasedItems') {
-        const csvRows = [
-          ['Barcode', 'Item Name', 'Total Purchased', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase', 'Expiry Dates', 'Mfg Dates', 'Qty per Batch'],
-          ...reportResult.report.map(item => {
+    if (selectedFilter === 'purchasedItems') {
+      // For purchased items filter
+      const csvRows = [
+        ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase', 'Expiry Date(s)', 'Mfg Date(s)', 'Qty per Batch'],
+        ...reportResult.report.map(item => {
             const expiryDates = `"${item.expiryDates.map(ed => formatDate(ed.date)).join('\n')}"`;
             const mfgDates = `"${item.expiryDates.map(ed => formatDate(ed.mfgDate)).join('\n')}"`;
             const batchQtys = `"${item.expiryDates.map(ed => `${ed.value} pcs`).join('\n')}"`;
-            return [
-              item.barcode,
-              item.itemName,
-              item.totalStock,
-              item.mrp?.toFixed(2),
-              item.costPrice?.toFixed(2),
-              item.suppliers.join(', '),
-              formatDate(item.firstPurchaseDate),
-              formatDate(item.lastPurchaseDate),
-              expiryDates,
-              mfgDates,
-              batchQtys
-            ];
-          })
-        ];
-        csvContent = csvRows.map(row => row.join(',')).join('\n');
-      } else {
+          return [
+          item.barcode,
+          item.itemName,
+          item.totalStock,
+          item.itemQuantity,
+          item.unit,
+          item.mrp?.toFixed(2),
+          item.costPrice?.toFixed(2),
+          item.suppliers.join(', '),
+          formatDate(item.firstPurchaseDate),
+          formatDate(item.lastPurchaseDate),
+          expiryDates,
+          mfgDates,
+          batchQtys
+        ]})
+      ];
+      csvContent = csvRows.map(row => row.join(',')).join('\n');
+    } else {
       // For other filters
       const csvRows = [
         ['Item Name', 'Barcode', 'Quantity', 'MRP', 'Total Amount', 'Discount'],
@@ -123,7 +125,7 @@ const Report = () => {
       },
     });
     setLoading(false)
-    if (result.error) return
+    if (result.error) return setLoading(false);
     setReportResult(result.data);
   };
 
@@ -181,7 +183,13 @@ const Report = () => {
           <></>
         )}
       </div>
-      <Button onClick={findResult} loading={isLoading}>Show Result</Button>
+      <Button 
+        onClick={findResult} 
+        loading={isLoading} 
+        disabled={(!dateRange?.at(0) || !dateRange?.at(1) || !selectedFilter)}
+      >
+        Show Result
+      </Button>
       <Button
         onClick={handleDownloadCSV}
         disabled={!reportResult?.report?.length}
@@ -228,6 +236,8 @@ const showBillTable = (reportResult, selectedFilter) => (
           <th>Barcode</th>
           <th>Item Name</th>
           <th>Total Purchased</th>
+          <th>Pkt. Amt</th>
+          <th>Pkt. Unit</th>
           <th>MRP</th>
           <th>Cost Price</th>
           <th>Suppliers</th>
@@ -282,6 +292,8 @@ const showBillTable = (reportResult, selectedFilter) => (
               <td>{item.barcode}</td>
               <td>{item.itemName}</td>
               <td>{item.totalStock}</td>
+              <td>{item?.itemQuantity}</td>
+              <td>{item?.unit}</td>
               <td>{item.mrp?.toFixed(2)}</td>
               <td>{item.costPrice?.toFixed(2)}</td>
               <td>{item.suppliers.join(', ')}</td>
