@@ -264,7 +264,23 @@ declare global {
     public_id: string;
     secure_url: string;
   }
-
+  export interface StatusHistoryDataType {
+    userId?: string;
+    status?: 'draft' | 'reject' | 'approve'; 
+    browser?: string;
+    os?: string;
+    ipAddress?: string;
+    referer?: string;
+    rejectMessage?: string;
+  }
+  
+  export interface StatusHistoryItemType {
+    _id: string;
+    createdAt: string;
+    data?: StatusHistoryDataType;
+  }
+  
+  
   interface PurchaseOrderDataType {
     isApproved?: boolean;
     isRejected?: boolean;
@@ -282,6 +298,8 @@ declare global {
     payment?: string;
     procurementSource?: string;
     remark?: string;
+    dateOnBill?: Date | null;
+    statusHistory?: StatusHistoryItemType[];
   }
 
   interface PurchasedItemTableProps {
@@ -440,6 +458,53 @@ declare global {
     selectedStaffId?: string;
     disabled?:boolean;
   }
+  interface ExpiredItem {
+    itemName: string;
+    itemBarcode: string;
+    itemMRPperUnit: number;
+    itemCostPricePerUnit: number;
+    itemSellingPricePerUnit: number;
+    mfgDate: string;
+    expiryDate: string;
+    expiryQuantity: number;
+  }
+  
+  interface ExpiredItemsState {
+    items: ExpiredItem[];
+    isLoading: boolean;
+    startDate: Date;
+    endDate: Date;
+    order: 'asc' | 'desc';
+    orderBy: string;
+    page: number;
+    rowsPerPage: number;
+  }
+
+  type Order = 'asc' | 'desc';
+
+  interface Column {
+    label: string;
+    key: string;
+    sortable?: boolean;
+    render?: (row: any) => React.ReactNode;
+  }
+  
+  interface DataTableProps {
+    columns: Column[];
+    data: any[];
+    isLoading: boolean;
+    order: 'asc' | 'desc';
+    orderBy: string;
+    onSort: (columnKey: string) => void;
+    page: number;
+    rowsPerPage: number;
+    onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
+    onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    rowCount: number;
+    paginationMode?: 'client' | 'server'; // 👈 Add this line if you want to support both modes
+  }
+  
+  
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
