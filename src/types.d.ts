@@ -4,9 +4,16 @@ import { RefObject } from "react";
 import { NumberValue } from "d3";
 
 declare global {
+
+  interface StoreDataType {
+    name: string;
+    number: string;
+    pincode: string;
+  };
   export interface UserStateType {
     isGeolocationPermissionGranted: boolean;
     userDeviceLocation?: DeviceLocationType;
+    storeData: StoreDataType;
   }
 
   export type RootState = ReturnType<typeof store.getState>;

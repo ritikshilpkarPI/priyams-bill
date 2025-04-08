@@ -3,6 +3,7 @@ import { sidebarListData } from '../constants/HeaderTypes';
 import { Link, useNavigate } from 'react-router-dom';
 import '../CSS/_header.scss';
 import { toggleSidebar } from 'src/utils/toggleSidebar';
+import { useSelector } from 'react-redux';
 
 const handleToggle = (id) => {
   let toggledElement = document.getElementById(`linkContainer${id}`);
@@ -76,8 +77,8 @@ const Header = ({
   useEffect(() => {
     toggleSidebar(false, { inputElem, profile, mainContainer, sidebarElem, liItem }); 
   }, []);
-  const storeData = JSON.parse(localStorage.getItem('storeData') || '{}');
-  const { pincode , name , number } = storeData;
+  const storeData = useSelector((state) => state.user.storeData);
+  const { pincode, name, number } = storeData || {};
 
   
   return (
