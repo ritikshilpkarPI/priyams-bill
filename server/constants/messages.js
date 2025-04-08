@@ -14,12 +14,16 @@ const MESSAGES = Object.freeze({
   CREDIT_NOT_FOUND: "Cridit not found",
   PAYMENT_NOT_FOUND: "Payment not found",
   PAYMENT_DELETED_SUCCESSFULLY: "Payment deleted successfully",
+  STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
+  INSUFFICIENT_STOCK:"Insufficient stock",
   LAT_LONG_REQUIRED: 'Latitude and longitude are required',
   PINCODE_FETCH_FAILED: 'Failed to retrieve pincode',
   STORE_NOT_FOUND: 'No store found for this pincode',
   INTERNAL_SERVER_ERROR: 'Internal server error',
-  STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
-  INSUFFICIENT_STOCK:"Insufficient stock",
+  DEALER_CREATED_SUCCESSFULLY: 'Dealer created successfully',
+  COMPANY_CREATED_SUCCESSFULLY: 'Company created successfully',
+  BRAND_CREATED_SUCCESSFULLY: 'Brand created successfully',
+  NO_STAFF_FOUND: "No staff found for this storeId"
 });
 
 module.exports = { MESSAGES };

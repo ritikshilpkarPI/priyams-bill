@@ -20,6 +20,10 @@ const staffSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  storeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Store', 
+  },
 });
 staffSchema.methods.getJwtToken = function () {
   return jwt.sign(
