@@ -62,8 +62,12 @@ const Report = () => {
     if (selectedFilter === 'purchasedItems') {
       // For purchased items filter
       const csvRows = [
-        ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase'],
-        ...reportResult.report.map(item => [
+        ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase', 'Expiry Date(s)', 'Mfg Date(s)', 'Qty per Batch'],
+        ...reportResult.report.map(item => {
+            const expiryDates = `"${item.expiryDates.map(ed => formatDate(ed.date)).join('\n')}"`;
+            const mfgDates = `"${item.expiryDates.map(ed => formatDate(ed.mfgDate)).join('\n')}"`;
+            const batchQtys = `"${item.expiryDates.map(ed => `${ed.value} pcs`).join('\n')}"`;
+          return [
           item.barcode,
           item.itemName,
           item.totalStock,
@@ -73,8 +77,11 @@ const Report = () => {
           item.costPrice?.toFixed(2),
           item.suppliers.join(', '),
           formatDate(item.firstPurchaseDate),
-          formatDate(item.lastPurchaseDate)
-        ])
+          formatDate(item.lastPurchaseDate),
+          expiryDates,
+          mfgDates,
+          batchQtys
+        ]})
       ];
       csvContent = csvRows.map(row => row.join(',')).join('\n');
     } else {
@@ -236,6 +243,10 @@ const showBillTable = (reportResult, selectedFilter) => (
           <th>Suppliers</th>
           <th>First Purchase</th>
           <th>Last Purchase</th>
+          <th style={{ minWidth: '120px' }}>Expiry Date(s)</th>
+         <th style={{ minWidth: '120px' }}>Mfg Date(s)</th>
+          <th style={{ minWidth: '80px' }}>Qty per Batch</th>
+
         </tr>
       ) : (
         // Existing header logic
@@ -288,6 +299,23 @@ const showBillTable = (reportResult, selectedFilter) => (
               <td>{item.suppliers.join(', ')}</td>
               <td>{formatDate(item.firstPurchaseDate)}</td>
               <td>{formatDate(item.lastPurchaseDate)}</td>
+              <td>
+  {item?.expiryDates?.map((ed, i) => (
+    <div key={i}>
+      <strong>{formatDate(ed?.date)}</strong>
+    </div>
+  ))}
+</td>
+<td>
+  {item.expiryDates.map((ed, i) => (
+    <div key={i}>{formatDate(ed?.mfgDate)}</div>
+  ))}
+</td>
+<td>
+    {item.expiryDates.map((ed, i) => (
+      <div key={i}>{ed?.value} pcs</div>
+    ))}
+  </td>
             </tr>
           )
         } else {

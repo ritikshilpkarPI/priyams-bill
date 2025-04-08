@@ -151,10 +151,16 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
       $match: {
         createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
         isApproved: true,
-        isRejected: false
-      }
+        isRejected: false,
+      },
     },
     { $unwind: '$purchasedItems' },
+    {
+      $unwind: {
+        path: '$purchasedItems.expiryDates',
+        preserveNullAndEmptyArrays: true, 
+      },
+    },
     {
       $group: {
         _id: '$purchasedItems.barcode',
@@ -164,10 +170,11 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         unit: { $first: '$purchasedItems.unit' },
         mrp: { $first: '$purchasedItems.mrp' },
         costPrice: { $first: '$purchasedItems.costPrice' },
-        purchaseDates: { $push: '$createdAt' },
-        suppliers: { $push: '$procurementSource' },
-        purchaseOrderIds: { $push: '$_id' }
-      }
+        purchaseDates: { $addToSet: '$createdAt' },
+        suppliers: { $addToSet: '$procurementSource' },
+        purchaseOrderIds: { $addToSet: '$_id' },
+        expiryDates: { $addToSet: '$purchasedItems.expiryDates' },
+      },
     },
     {
       $project: {
@@ -182,7 +189,8 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         totalOrders: { $size: '$purchaseOrderIds' },
         suppliers: { $setUnion: ['$suppliers'] }, // Get unique suppliers
         itemQuantity: 1,
-        unit: 1
+        unit: 1,
+        expiryDates: 1,
       }
     }
   ]);
