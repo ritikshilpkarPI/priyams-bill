@@ -1,5 +1,6 @@
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
+import MESSAGES from './constants/messages';
 import { getUserDeviceInfo } from './getUserDeviceInfo';
 
 
@@ -269,6 +270,30 @@ export const getAllStaffsAPI = async ()=>{
     });
     return response;
   } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+
+export const getAllStaffsByStoreIdAPI = async ()=>{
+  try {
+    
+    const storedStoreDataString = localStorage.getItem('storeData');
+
+    if (!storedStoreDataString) {
+      throw new Error(MESSAGES.NO_STORE_DATA_FOUND_IN_LOCAL_STORAGE)
+    }
+
+    const storeData = JSON.parse(storedStoreDataString);
+    const storeId = storeData._id;
+
+    const response = await getAPI({
+      path: `${API_PATHS.STAFF.GET_STAFFS}/${storeId}`,
+    });
+    
+    return response;
+  } catch (error) {
+    
     return { isError: true, error };
   }
 }
