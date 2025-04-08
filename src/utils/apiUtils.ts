@@ -4,10 +4,10 @@ import { getUserDeviceInfo } from './getUserDeviceInfo';
 
 
 
-export const getBillingLeanItemsAPI = async () => {
+export const getBillingLeanItemsAPI = async (selectedStoreId?: string) => {
   try {
     const response = await getAPI({
-      path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}/?storeId=${selectedStoreId}`,  
     });
 
     return response.message;

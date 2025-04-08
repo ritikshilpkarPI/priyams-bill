@@ -9,8 +9,9 @@ interface InventoryItemPanelProps {
       itemName: string;
       itemBarcode: string;
       itemStockQuantity: number;
+      itemQtyInStore: number;
     };
-    quantityToAdd: number;
+    quantityToAdd: number; 
   }[];
   onQuantityChange: (itemId: string, quantity: number) => void;
   onRemoveItem: (itemId: string) => void;
@@ -36,7 +37,8 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({ items, o
           <tr>
             <th>Item Name</th>
             <th>Barcode</th>
-            <th>Current Stock</th>
+            <th>Qty WH</th>
+            <th>Qty Store</th>
             <th>Quantity to Add</th>
             <th>Action</th>
           </tr>
@@ -47,6 +49,9 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({ items, o
               <td>{itemDetail.itemName}</td>
               <td>{itemDetail.itemBarcode}</td>
               <td>{itemDetail.itemStockQuantity}</td>
+              <td>
+                <Text>{itemDetail?.itemQtyInStore}</Text>
+              </td>
               <td>
                 <CustomNumberInput
                   required

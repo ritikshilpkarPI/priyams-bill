@@ -1,11 +1,28 @@
+const { getStoreInventoryModel } = require('../db-models/storeInventory-model');
 const { Item } = require('../db-models/item-model');
+const { StoreModel } = require('../db-models/store-model');
 
 const getItemsLean = async (req, res, next) => {
+  const { storeId } = req.query;
+
+  const store = await StoreModel.findOne({code: storeId});
+  
   try {
-    const itemsBarCodeMap = {};
-    const itemNamesList = [];
-    const itemBarCodesList = [];
-    const itemsNameMap = {};
+    const collectionName = store?.collectionName;
+
+
+    const storeCollection = getStoreInventoryModel(collectionName);
+
+
+    const storeItems = await storeCollection.find({}); 
+
+
+    const storeItemQtyMap = {};
+    storeItems.forEach((entry) => {
+      if (entry.itemId && entry.itemQuantityInStore != null) {
+        storeItemQtyMap[entry.itemId] = entry.itemQuantityInStore || 0;
+      }
+    });   
     const allItemsList = await Item.find(
       {
         permanentlyOutOfStock: false,
@@ -22,19 +39,33 @@ const getItemsLean = async (req, res, next) => {
       slabPricing: 1,
       itemStockQuantity: 1,
       itemPerUnitQuantity: 1,
-      quantityUnitName: 1
+      quantityUnitName: 1,
     });
 
+   
+    const itemsBarCodeMap = {};
+    const itemNamesList = [];
+    const itemBarCodesList = [];
+    const itemsNameMap = {};
+
     allItemsList.forEach((item) => {
+  
+      const itemQty = storeItemQtyMap[item._id] || 0;
+
+      const itemWithQty = {
+        ...item.toObject(),
+        itemQtyInStore: itemQty,
+      };
+
       itemNamesList.push(item.itemName);
-      itemsNameMap[item.itemName] = item;
+      itemsNameMap[item.itemName] = itemWithQty;
+
       if (item.itemBarcode) {
         itemBarCodesList.push(item.itemBarcode);
-        if (itemsBarCodeMap[item.itemBarcode]) {
-          itemsBarCodeMap[item.itemBarcode].push(item);
-        } else {
-          itemsBarCodeMap[item.itemBarcode] = [item];
+        if (!itemsBarCodeMap[item.itemBarcode]) {
+          itemsBarCodeMap[item.itemBarcode] = [];
         }
+        itemsBarCodeMap[item.itemBarcode].push(itemWithQty);
       }
     });
 
