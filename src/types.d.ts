@@ -5,6 +5,8 @@ import { NumberValue } from "d3";
 
 declare global {
   export interface UserStateType {
+    isGeolocationPermissionGranted: boolean;
+    userDeviceLocation?: DeviceLocationType;
   }
 
   export type RootState = ReturnType<typeof store.getState>;
@@ -439,6 +441,10 @@ declare global {
     label?: string;
     selectedStaffId?: string;
     disabled?:boolean;
+  }
+  interface DeviceLocationType {
+    latitude?: number;
+    longitude?: number;
   }
 }
 declare module '*.scss' {
