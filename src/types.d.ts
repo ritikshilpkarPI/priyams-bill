@@ -425,6 +425,10 @@ declare global {
     itemDetail: WarehouseItem;
     itemQuantityInBill: number;
   }
+  interface DeviceLocationType {
+    latitude?: number;
+    longitude?: number;
+  }
   interface StaffInterface {
     _id?: string;
     name?: string;
@@ -441,10 +445,6 @@ declare global {
     label?: string;
     selectedStaffId?: string;
     disabled?:boolean;
-  }
-  interface DeviceLocationType {
-    latitude?: number;
-    longitude?: number;
   }
 }
 declare module '*.scss' {

@@ -7,8 +7,8 @@ import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedIte
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
-import staffSlice from "./staffList/StaffSlice";
 import userSlice from './user/userSlice';
+import staffSlice from "./staffList/StaffSlice";
 
 export const store = configureStore({
   reducer: {
