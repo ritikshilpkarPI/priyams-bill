@@ -24,6 +24,8 @@ const MESSAGES = Object.freeze({
   COMPANY_CREATED_SUCCESSFULLY: 'Company created successfully',
   BRAND_CREATED_SUCCESSFULLY: 'Brand created successfully',
   NO_STAFF_FOUND: "No staff found for this storeId",
+  NO_VALID_PINCODE_FOUND: 'No valid pincode found in Ola API response',
+  PINCODE_FETCH_FAILED: 'Failed to fetch pincode from coordinates',
   SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY: "Something went wrong while creating brand/company"
 });
 

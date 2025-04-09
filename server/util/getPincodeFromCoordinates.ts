@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { MESSAGES } from '../constants/messages';
 import { AddressComponent } from 'server/types';
 
 const olaApiKey = process.env.OLA_API_KEY;
 
 export const getPincodeFromCoordinates = async (
-  latitude: number,
-  longitude: number
-): Promise<string | null> => {
+  latitude: string,
+  longitude: string
+): Promise<string> => {
   try {
     const response = await axios.get(
       `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${latitude},${longitude}&api_key=${olaApiKey}`
@@ -21,9 +22,9 @@ export const getPincodeFromCoordinates = async (
       }
     }
 
-    return null;
+    throw new Error(MESSAGES.NO_VALID_PINCODE_FOUND);
   } catch (error) {
     console.error('Error fetching pincode from Ola API:', error);
-    return null;
+    throw new Error(MESSAGES.PINCODE_FETCH_FAILED);;
   }
 };
