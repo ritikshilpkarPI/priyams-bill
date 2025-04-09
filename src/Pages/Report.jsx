@@ -272,7 +272,7 @@ const showBillTable = (reportResult, selectedFilter) => (
           </th>
           <th>
             <Text align="center">Bill Discount</Text>
-          </th>
+          </th> 
           {reportResult.filterType === 'itemBillingTrend' ? (
             <th>
               <Text align="center">Bill date</Text>
@@ -280,6 +280,9 @@ const showBillTable = (reportResult, selectedFilter) => (
           ) : (
             <></>
           )}
+          <th>
+            <Text align="center">Bill Created By</Text>
+          </th>
         </tr>
       )}
     </thead>
@@ -395,6 +398,11 @@ const TableRow = ({ itemBill, idx, filterName }) => {
             {filterName === 'itemBillingTrend'
               ? new Date(itemBill['createdAt'])?.toLocaleString()
               : ''}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={700}>
+            {itemBill?.staffId?.name || itemBill?.staffId?.username || "N/A"}
           </Text>
         </td>
       </tr>
