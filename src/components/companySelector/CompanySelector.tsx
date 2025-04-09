@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
-import { Autocomplete } from '@mantine/core';
+import { Autocomplete, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setCompanies,
-  setLoading,
-} from '../../redux/companys/companySlice';
+import { setCompanies, setLoading } from '../../redux/companys/companySlice';
 import { getAllCompaniesAPI } from '../../utils/apiUtils';
 import {
   selectCompanys,
@@ -30,34 +27,47 @@ const CompanySelector: React.FC<CompanySelectorProps> = ({
       const response = await getAllCompaniesAPI();
 
       if (!response.isError) {
-        const filtered = response.filter(
-          (company: { companyName: string }) => Boolean(company.companyName)
+        const filtered = response.filter((company: { companyName: string }) =>
+          Boolean(company.companyName)
         );
         dispatch(setCompanies(filtered));
       }
     } catch {
       dispatch(setLoading(false));
-
     } finally {
       dispatch(setLoading(false));
     }
   };
 
   useEffect(() => {
-    fetchCompanies();
+    requestAnimationFrame(() => {
+      fetchCompanies();
+    });
   }, []);
 
   return (
     <Autocomplete
-      w="100%"
-      label={label}
-      value={value}
-      onChange={onChange}
-      data={companies.map((company) => company.companyName)}
-      required={required}
+      size="small"
+      freeSolo
       disabled={disabled || loading}
-      error={error}
-      placeholder={placeholder}
+      value={value}
+      options={companies.map((company) => company.companyName)}
+      onInputChange={(event, newInputValue) => {
+        onChange?.(newInputValue);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          placeholder={placeholder}
+          required={required}
+          error={Boolean(error)}
+          helperText={error}
+          sx={{
+            backgroundColor: 'white',
+          }}
+        />
+      )}
     />
   );
 };

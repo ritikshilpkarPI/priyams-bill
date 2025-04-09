@@ -1,8 +1,7 @@
 const { getItemSKU } = require('../util/getItemSKU');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { MESSAGES } = require ('../constants/messages');
-const { BrandModel } = require ('../db-models/brand-model');
-const { CompanyModel } = require ('../db-models/company-model');
+const { createBrandAndCompany } = require('../util/createBrandAndCompany');
 
 const updateOrderByIndex = async (req, res,next) => {
     try {
@@ -11,24 +10,19 @@ const updateOrderByIndex = async (req, res,next) => {
 
       if (!new_order.brand || !new_order.companyName)
         return res.status(400).json({ error: MESSAGES.MISSING_REQUIRED_FIELDS });
+
+      const { success } = await createBrandAndCompany(
+        new_order.companyName,
+        new_order.brand
+      );
   
-      let company = await CompanyModel.findOne({
-        companyName: new_order.companyName,
-      });
-  
-      if (!company) {
-        company = await CompanyModel.create({
-          companyName: new_order.companyName,
-        });
-      }
-  
-      let brand = await BrandModel.findOne({ brandName: new_order.brand });
-  
-      if (!brand) {
-        brand = await BrandModel.create({
-          brandName: new_order.brand,
-          companyId: company._id,
-        });
+      if (!success) {
+        return res
+          .status(404)
+          .json({
+            message: MESSAGES.SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY,
+            success: false,
+          });
       }
 
       new_order.sku = getItemSKU(
