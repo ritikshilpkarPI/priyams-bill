@@ -32,8 +32,14 @@ const saveInventory = async (req, res, next) => {
 
     let bulkOperations = [];
     let failedItems = [];
-
     newItems.forEach((item) => {
+      const newShelfDates = (item.expiryDates || []).map((exp, idx) => ({
+        expiryDate: new Date(exp.date),
+        quantity: exp.value,
+        manufacturingDate: new Date(item.manufacturingDates?.[idx]?.date || null),
+        purchaseOrderId: purchaseOrderId,
+        entryDate: new Date(),
+      }));
       const itemDetails = {
         itemName: item.inputName,
         itemBarcode: item.barcode,
@@ -51,10 +57,7 @@ const saveInventory = async (req, res, next) => {
         companyName: item.companyName,
         subCategory: item.subCategory,
         flavourOrFeature: item.flavourOrFeature,
-        itemShelfDate: {
-          expiryDates: item.expiryDates,
-          manufacturingDates: item.manufacturingDates,
-        },
+        itemShelfDates: newShelfDates, 
         shelfLife: item.shelfLife,
         saleTime: item.saleTime,
         returnPolicyAvailable: item.returnPolicyAvailable,
@@ -100,11 +103,11 @@ const saveInventory = async (req, res, next) => {
           itemStockQuantity: totalStock,
           itemPerUnitQuantity: newTotalItemQuantity,
         };
-
+        const { itemShelfDates, ...restItemUpdate } = new_Item_Update;
         bulkOperations.push({
           updateOne: {
             filter: { _id: item.item_id },
-            update: { $set: new_Item_Update },
+            update: { $set: restItemUpdate, $push: { itemShelfDates: { $each: newShelfDates } }, },
           },
         });
       } else {
