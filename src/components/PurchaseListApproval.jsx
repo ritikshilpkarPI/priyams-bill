@@ -183,7 +183,7 @@ const PurchaseListApproval = ({
                 </td>
               )}
               {(list.isDraft && isSavedApprovedPage ) ? (
-                <td>
+                (!list.isDraft) && <td>
                   <Button
                     disabled={loadingState[list._id] || list.isRejected || list.isApproved}
                     className="approve-btn"
@@ -205,16 +205,17 @@ const PurchaseListApproval = ({
                   </Button>
                 </td>}</>
               )}
-              {(isSavedApprovedPage) && <td>
+              {(isSavedApprovedPage) && 
+              ((!list.isDraft) && <td>
                 <Button
-                  disabled={loadingState[list._id] || list.isApproved || list.isRejected || !list.isDraft}
+                  disabled={loadingState[list._id] || list.isApproved || list.isRejected || list.isDraft}
                   className="reject-btn"
                   loading={loadingState[list._id] && loadingState.btnName === 'reject'}
                   onClick={() => rejectOrder(list._id, index)}
                 >
                   Reject
                 </Button>
-              </td>}
+              </td>)}
             </>
           ) : (
             <>
@@ -241,7 +242,7 @@ const PurchaseListApproval = ({
               </td>}
             </>
           )}
-          {isAdminUser && list.isDraft &&
+          {isAdminUser && list.isApproved &&
             <td>
               <Link
                 className="purchase-list-details-button"
