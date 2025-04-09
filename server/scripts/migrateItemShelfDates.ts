@@ -30,7 +30,7 @@ const migrateItemShelfDates = async () => {
     await connectToDB();
     const unsetResult = await Item.updateMany({}, { $unset: { itemShelfDate: 1 } });
     console.log(`Removed 'itemShelfDate' from ${unsetResult.modifiedCount} items`);
-
+    
 
     const approvedOrders = await PurchaseOrder.find({ isApproved: true});
 
@@ -55,6 +55,7 @@ const migrateItemShelfDates = async () => {
               update: {
                 $push: {
                   itemShelfDates: {
+                    _id: new mongoose.Types.ObjectId(),
                     manufacturingDate: new Date(mfgDate),
                     expiryDate: new Date(expiryDate),
                     quantity,
