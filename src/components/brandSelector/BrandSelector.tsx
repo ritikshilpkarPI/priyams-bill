@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Autocomplete } from '@mantine/core';
+import { Autocomplete, TextField } from '@mui/material';
 import { getAllBrandsAPI } from '../../utils/apiUtils';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBrands, setLoading } from '../../redux/brands/brandSlice';
@@ -40,28 +40,42 @@ const BrandSelector: React.FC<BrandSelectorProps> = ({
         dispatch(setBrands(validBrands));
       }
     } catch {
-        dispatch(setLoading(false));
-    } 
-    finally {
-        dispatch(setLoading(false));
+       dispatch(setLoading(false));
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   useEffect(() => {
-    fetchBrands();
-  }, []);
+    requestAnimationFrame(() => {
+      fetchBrands();
+    });
+  }, []);  
 
   return (
     <Autocomplete
-      w="100%"
-      label={label}
-      value={value}
-      required={required}
-      onChange={onChange}
-      data={brands.map((brand) => brand.brandName)}
+      size = "small"
+      fullWidth
+      freeSolo
       disabled={disabled || loading}
-      error={error}
-      placeholder={placeholder}
+      value={value}
+      options={brands.map((brand) => brand.brandName)}
+      onInputChange={(event, newInputValue) => {        
+        onChange?.(newInputValue);
+      }}
+      renderInput={(params) => (
+        <TextField
+        {...params}
+        label={label}
+        placeholder={placeholder}
+        required={required}
+        error = {Boolean(error)}
+        helperText={error}
+        sx={{
+          backgroundColor: 'white',
+        }}
+        />
+      )}
     />
   );
 };

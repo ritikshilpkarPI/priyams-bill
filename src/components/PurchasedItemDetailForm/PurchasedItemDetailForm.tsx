@@ -415,14 +415,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   error={errors.companyName}
                   disabled={isApprovedPO}
                 />
-                {/* <TextInput
-                  label="Company Name"
-                  value={purchasedItemFormData.companyName}
-                  required
-                  onChange={(event) => onChange('companyName', event.currentTarget.value)}
-                  error={errors.companyName}
-                  disabled={isApprovedPO}
-                /> */}
               </Col>
               <Col span={12}>
                 <BrandSelector
@@ -434,14 +426,6 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   error={errors.brand}
                   disabled={isApprovedPO}
                 />
-                {/* <TextInput
-                  label="Brand Name"
-                  value={purchasedItemFormData.brand}
-                  required
-                  onChange={(event) => onChange('brand', event.currentTarget.value)}
-                  error={errors.brand}
-                  disabled={isApprovedPO}
-                /> */}
               </Col>
               <Col span={12}>
                 <Autocomplete
