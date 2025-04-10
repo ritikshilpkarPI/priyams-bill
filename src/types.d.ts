@@ -185,6 +185,7 @@ declare global {
     dealerName: string;
     phoneNumber: string;
     remark: string;
+    dealerId: string;
   };
 
   
@@ -555,6 +556,23 @@ declare global {
     required?: boolean;
     error?: string;
     disabled?: boolean; 
+  };
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
+  }
+  type DealerOption = {
+    value: string;
+    label: string;
   };
 }
 declare module '*.scss' {

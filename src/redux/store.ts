@@ -12,6 +12,8 @@ import staffSlice from "./staffList/StaffSlice";
 import expiredItemsSlice from './expiredItems/expiredItemsSlice'
 import brandSlice from "./brands/brandSlice"
 import companySlice from "./companys/companySlice"
+import dealerSlice from './dealerlist/dealerSlice';
+
 export const store = configureStore({
   reducer: {
     user: userSlice,
@@ -27,6 +29,7 @@ export const store = configureStore({
     expiredItems: expiredItemsSlice,
     brands: brandSlice,
     company: companySlice,
+    dealer: dealerSlice,
   },
 });
 
