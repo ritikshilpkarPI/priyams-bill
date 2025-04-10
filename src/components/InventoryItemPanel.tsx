@@ -72,9 +72,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
           </tr>
         </thead>
         <tbody>
-          {items.map(({ itemDetail, quantityToAdd }) => {
-            console.log({itemDetail});
-            
+          {items.map(({ itemDetail, quantityToAdd }) => {            
             const shelfList = itemDetail.itemShelfDates || [];
 
             return (
