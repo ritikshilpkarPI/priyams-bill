@@ -37,27 +37,40 @@ const queryMongoDB = async (callBack: ()=>Promise<void>) => {
     process.exit();
   }
 };
-
+/**
+ *  Insert companies and brands from item collection
+ *  And then update items with mapped companyId and brandId
+ */
 const insertBrandAndCompanyFromItems = async () => {
   try {
     const items = await Item.find(
-      { itemBrandName: { $ne: null }, companyName: { $ne: null } },
+      {
+        $or: [
+          { itemBrandName: { $ne: null } },
+          { companyName: { $ne: null } },
+        ],
+      },
       'itemBrandName companyName'
     );
 
-    const brandCompanyMap = new Map<string, { brand: string; company: string }>();
+    const brandSet = new Set<string>();
+    const brandCompanyPairs: { brand: string; company?: string }[] = [];
     const companySet = new Set<string>();
 
     for (const item of items) {
       const brand = item.itemBrandName?.trim();
       const company = item.companyName?.trim();
-      if (brand && company) {
-        brandCompanyMap.set(`${brand}_${company}`, { brand, company });
+
+      if (brand) {
+        brandSet.add(brand);
+        brandCompanyPairs.push({ brand, company });
+      }
+      if (company) {
         companySet.add(company);
       }
     }
 
-    // Fetch existing companies
+    // Fetch and insert companies
     const existingCompanies = await CompanyModel.find({
       companyName: { $in: Array.from(companySet) },
     });
@@ -77,24 +90,56 @@ const insertBrandAndCompanyFromItems = async () => {
       console.log(`Inserted company: ${company.companyName}`);
     }
 
-    // Fetch existing brands
-    const allBrandNames = Array.from(brandCompanyMap.values()).map((b) => b.brand);
+    // Fetch and insert brands
     const existingBrands = await BrandModel.find({
-      brandName: { $in: allBrandNames },
+      brandName: { $in: Array.from(brandSet) },
     });
-    const existingBrandSet = new Set(existingBrands.map((b) => b.brandName));
 
-    // Insert missing brands
-    const newBrands = Array.from(brandCompanyMap.values())
-      .filter(({ brand }) => !existingBrandSet.has(brand))
+    const brandMap = new Map<string, mongoose.Types.ObjectId>();
+    for (const brand of existingBrands) {
+      brandMap.set(brand.brandName, brand._id);
+    }
+
+    const newBrands = brandCompanyPairs
+      .filter(({ brand }) => !brandMap.has(brand))
       .map(({ brand, company }) => ({
         brandName: brand,
-        companyId: companyMap.get(company),
+        ...(company ? {companyId: companyMap.get(company)} : {}),
       }));
 
-    if (newBrands.length > 0) {
-      await BrandModel.insertMany(newBrands, { ordered: false });
-      newBrands.forEach((b) => console.log(`Inserted brand: ${b.brandName}`));
+    const insertedBrands = await BrandModel.insertMany(newBrands, { ordered: false });
+    for (const brand of insertedBrands) {
+      brandMap.set(brand.brandName, brand._id);
+      console.log(`Inserted brand: ${brand.brandName}`);
+    }
+
+    // Bulk update items
+    const bulkUpdates = [];
+
+    for (const item of items) {
+      const brand = item.itemBrandName?.trim();
+      const company = item.companyName?.trim();
+
+      const brandId = brand ? brandMap.get(brand) : undefined;
+      const companyId = company ? companyMap.get(company) : undefined;
+
+      const updateFields: any = {};
+      if (brandId) updateFields.brandId = brandId;
+      if (companyId) updateFields.companyId = companyId;
+
+      if (Object.keys(updateFields).length > 0) {
+        bulkUpdates.push({
+          updateOne: {
+            filter: { _id: item._id },
+            update: { $set: updateFields },
+          },
+        });
+      }
+    }
+
+    if (bulkUpdates.length > 0) {
+      await Item.bulkWrite(bulkUpdates);
+      console.log(`Bulk updated ${bulkUpdates.length} items.`);
     }
 
     console.log('Process completed.');
@@ -102,6 +147,7 @@ const insertBrandAndCompanyFromItems = async () => {
     console.error('Error:', error);
   }
 };
+
 
 const generateBrandsAndCompaniesCsvs = async () => {
   try {

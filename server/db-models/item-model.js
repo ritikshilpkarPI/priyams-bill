@@ -92,6 +92,8 @@ const ItemSchema = new mongoose.Schema(
     },
     returnPolicyRemarks: { type: String }, 
     freeItemsAvailable: { type: Boolean, default: false },
+    companyId: { type: mongoose.Types.ObjectId, ref: 'Company'},
+    brandId: { type: mongoose.Types.ObjectId, ref: 'Brand'}
   },
   { strict: false, timestamps: true }
 );
