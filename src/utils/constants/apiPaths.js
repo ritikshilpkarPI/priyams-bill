@@ -103,4 +103,14 @@ export const API_PATHS = {
   STORE: {
     GET_ALL_STORES: "/api/store",
   },
+  COMPANY:{
+    GET_ALL_COMPANY: "/api/getAllCompany"
+  },
+  BRAND:{
+    GET_ALL_BRAND: "/api/getAllBrand"
+  },
+  DEALER: {
+    GET_ALL_DEALERS: "/api/dealer",
+    ADD_NEW_DEALER: "/api/addNewDealer",
+  },
 };

@@ -1,15 +1,18 @@
+import { toast } from 'react-toastify';
 import { setExpiredItems, setLoading } from 'src/redux/expiredItems/expiredItemsSlice';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import { getUserDeviceInfo } from './getUserDeviceInfo';
+import MESSAGES from './constants/messages';
 import { AppDispatch } from 'src/redux/store';
 
 
 
 export const getBillingLeanItemsAPI = async () => {
   try {
+    const pincode = localStorage.getItem('userPincode');
     const response = await getAPI({
-      path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
     });
 
     return response.message;
@@ -20,9 +23,16 @@ export const getBillingLeanItemsAPI = async () => {
 
 export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
   try {
+    const storeData = localStorage.getItem('storeData');
+    if (!storeData) {
+      return toast.error(MESSAGES.STOREDATA_IS_REQUIRED); 
+    }
+    const parsedStoreData = storeData ? JSON.parse(storeData) : null;
+    const requestData = { ...data, storeData:parsedStoreData };
+   
     const response = await postAPI({
       path: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
-      data,
+      data: requestData,
     });
     return response;
   } catch (err) {
@@ -237,17 +247,6 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
   }
 };
 
-export const getAllStoresAPI = async () => {
-  try {
-    const response = await getAPI({
-      path: API_PATHS.STORE.GET_ALL_STORES,
-    });    
-    return response;
-  } catch (error) {
-    return { isError: true, error };
-  }
-}
-
 export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[])=>{
   try {
     const response = await postAPI({
@@ -263,6 +262,16 @@ export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[
   }
 }
 
+export const getAllStoresAPI = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STORE.GET_ALL_STORES,
+    });   
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
 export const getAllStaffsAPI = async ()=>{
   try {
     const response = await getAPI({
@@ -270,6 +279,30 @@ export const getAllStaffsAPI = async ()=>{
     });
     return response;
   } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+
+export const getAllStaffsByStoreIdAPI = async ()=>{
+  try {
+    
+    const storedStoreDataString = localStorage.getItem('storeData');
+
+    if (!storedStoreDataString) {
+      throw new Error(MESSAGES.NO_STORE_DATA_FOUND_IN_LOCAL_STORAGE)
+    }
+
+    const storeData = JSON.parse(storedStoreDataString);
+    const storeId = storeData._id;
+
+    const response = await getAPI({
+      path: `${API_PATHS.STAFF.GET_STAFFS}/${storeId}`,
+    });
+    
+    return response;
+  } catch (error) {
+    
     return { isError: true, error };
   }
 }
@@ -292,5 +325,61 @@ export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (disp
     dispatch(setExpiredItems([]));
   } finally {
     dispatch(setLoading(false));
+  }
+};
+
+export const getAllCompaniesAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.COMPANY.GET_ALL_COMPANY,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const getAllBrandsAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.BRAND.GET_ALL_BRAND,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const getAllDealersAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.DEALER.GET_ALL_DEALERS,
+    });   
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const addNewDealerAPI = async (
+  dealerName: string,
+  dealerNumber: number,
+  dealerBrands: string[] = [],
+  dealerCompanies: string[] = []
+) => {
+  
+  try {
+    const response = await postAPI({
+      path: API_PATHS.DEALER.ADD_NEW_DEALER,
+      data: {
+        dealerName,
+        dealerNumber,
+        dealerBrands,
+        dealerCompanies,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
   }
 };

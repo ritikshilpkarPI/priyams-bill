@@ -26,9 +26,11 @@ const AddExpiredItem = () => {
     const [isEnable, setIsEnable] = useState(false)
     const getItemList = async () => {
         try {
+            const pincode = localStorage.getItem('userPincode');
+
             setLoading(true)
             const response = await genericAxios({
-                url:API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+                url:`${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
                 method:API_METHODS.GET
             })
             if (response) {
