@@ -65,6 +65,8 @@ import { itemsStaticAttributes } from "./itemsStaticAttributes";
 import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
 import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
+import { itemPurchaseBatches } from './itemPurchaseBatches';
+
 
 export {
   addBulkItems,
@@ -133,5 +135,6 @@ export {
   itemsStaticAttributes,
   updateStockTransactionByAdmin,
   addNewStockTransactions,
+  itemPurchaseBatches,
   getItemsFromStoreInventory,
 };
