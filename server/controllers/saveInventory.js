@@ -69,7 +69,7 @@ const saveInventory = async (req, res, next) => {
           mrp: item?.mrp,
           barcode: item?.barcode,
           itemName: item?.inputName,
-        })
+        }),
       };
 
       const oldItem = existingItemsMap.get(item.item_id);
@@ -112,7 +112,12 @@ const saveInventory = async (req, res, next) => {
         });
       } else {
         bulkOperations.push({
-          insertOne: { document: itemDetails },
+          insertOne: { 
+            document: {
+            ...itemDetails,
+            createdFromPO: purchaseOrderId, 
+          }
+        },
         });
       }
     });
