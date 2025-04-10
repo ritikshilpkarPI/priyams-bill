@@ -66,7 +66,8 @@ const saveInventory = async (req, res, next) => {
           mrp: item?.mrp,
           barcode: item?.barcode,
           itemName: item?.inputName,
-        })
+        }),
+        createdFromPO: purchaseOrderId,
       };
 
       const oldItem = existingItemsMap.get(item.item_id);
