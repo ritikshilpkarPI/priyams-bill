@@ -327,3 +327,25 @@ export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (disp
     dispatch(setLoading(false));
   }
 };
+
+export const getAllCompaniesAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.COMPANY.GET_ALL_COMPANY,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const getAllBrandsAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.BRAND.GET_ALL_BRAND,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
