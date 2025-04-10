@@ -48,13 +48,17 @@ import { setItemsData } from '../../redux/items/itemsSlice';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 import { radioGroupConfig, skuModalQuestion, YES } from 'src/constants/purchaseOrderConstants';
+import { ItemSearch } from '../ItemSearch';
+import CompanySelector from '../companySelector/CompanySelector';
+import BrandSelector from '../brandSelector/BrandSelector';
 
 
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit,
   loading,
-  isApprovedPO
+  isApprovedPO,
+  onItemSelect,
 }) => {
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
@@ -278,6 +282,9 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
             </span>
           </Flex>
         </Title>
+        <Box>
+          <ItemSearch onItemSelect={onItemSelect} isApprovedPO={isApprovedPO} />
+        </Box>
         <Flex wrap="wrap" direction="row" gap="32px">
           <Box>
             <Divider my="xs" label="Item SKU Details" labelPosition="center" />
@@ -404,21 +411,23 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
             <Divider my="xs" label="Add Item Details" labelPosition="center" />
             <Grid gutter="md" sx={{ width: '240px' }}>
               <Col span={12}>
-                <TextInput
+                <CompanySelector
                   label="Company Name"
+                  placeholder="Add Company Name"
                   value={purchasedItemFormData.companyName}
                   required
-                  onChange={(event) => onChange('companyName', event.currentTarget.value)}
+                  onChange={(value) => onChange('companyName', value)}
                   error={errors.companyName}
                   disabled={isApprovedPO}
                 />
               </Col>
               <Col span={12}>
-                <TextInput
+                <BrandSelector
                   label="Brand Name"
+                  placeholder ="Add Brand Name "
                   value={purchasedItemFormData.brand}
                   required
-                  onChange={(event) => onChange('brand', event.currentTarget.value)}
+                  onChange={(value) => onChange('brand', value)}
                   error={errors.brand}
                   disabled={isApprovedPO}
                 />

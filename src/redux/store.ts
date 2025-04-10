@@ -10,6 +10,8 @@ import storeInventoryManagement from  "./storeInventoryManagement/storeInventory
 import userSlice from './user/userSlice';
 import staffSlice from "./staffList/StaffSlice";
 import expiredItemsSlice from './expiredItems/expiredItemsSlice'
+import brandSlice from "./brands/brandSlice"
+import companySlice from "./companys/companySlice"
 import dealerSlice from './dealerlist/dealerSlice';
 
 export const store = configureStore({
@@ -25,6 +27,8 @@ export const store = configureStore({
     storeInventoryManagement: storeInventoryManagement,
     staffs: staffSlice,
     expiredItems: expiredItemsSlice,
+    brands: brandSlice,
+    company: companySlice,
     dealer: dealerSlice,
   },
 });

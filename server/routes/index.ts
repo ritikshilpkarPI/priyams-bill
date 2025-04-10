@@ -63,6 +63,8 @@ const {
   transferStockToStore,
   getAllStores,
   getStaffByStoreId,
+  getAllCompanies,
+  getAllBrands,
   getAllDealers,
   addNewDealer,
 } = require('../controllers/index');
@@ -268,6 +270,10 @@ router.post(API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,isLoggedIn, transfe
 
 router.get(API_PATHS.STORE.GET_ALL_STORES, isLoggedIn, getAllStores);
 router.get(`${API_PATHS.STAFF.GET_STAFFS}/:storeId`, getStaffByStoreId);
+
+router.get(API_PATHS.COMPANY.GET_ALL_COMPANY,isLoggedIn, getAllCompanies);
+
+router.get(API_PATHS.BRAND.GET_ALL_BRAND,isLoggedIn, getAllBrands);
 
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 

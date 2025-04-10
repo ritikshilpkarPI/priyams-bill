@@ -1,10 +1,29 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { getItemSKU } = require('../util/getItemSKU');
 const { isShelfExpired } = require('../util/isShelfExpired');
+const { MESSAGES } = require ('../constants/messages');
+const { createBrandAndCompany } = require('../util/createBrandAndCompany');
 
 const saveOrder = async (req, res ) => {
   try {
     const { new_order = {} } = req.body;
+
+    if (!new_order.brand || !new_order.companyName)
+      return res.status(400).json({ error: MESSAGES.MISSING_REQUIRED_FIELDS });
+
+    const { success } = await createBrandAndCompany(
+      new_order.companyName,
+      new_order.brand
+    );
+    
+    if (!success) {
+      return res
+        .status(404)
+        .json({
+          message: MESSAGES.SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY,
+          success: false,
+        });
+    }
 
     if(
          !new_order.inputName 

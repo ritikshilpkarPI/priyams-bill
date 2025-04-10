@@ -224,6 +224,7 @@ declare global {
     onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
     loading?: boolean;
     isApprovedPO?: boolean;
+    onItemSelect: (item: { itemDetail: BillLeanItemType }) => void;
   }
 
   interface ItemExpiryDateType {
@@ -519,6 +520,43 @@ declare global {
   }
   
   
+  interface Brand {
+    _id: string;
+    brandName: string;
+    companyId: string;
+  }
+  interface BrandState {
+    brands: Brand[];
+    loading: boolean;
+    error: string | null;
+  }
+  interface company {
+    _id: string;
+    companyName: string;
+  }
+  interface companyState {
+    companys: company[];
+    loading: boolean;
+    error: string | null;
+  }
+  type BrandSelectorProps = {
+    label?: string;
+    value: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean;
+  };
+  type CompanySelectorProps = {
+    value: string;
+    onChange: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean; 
+  };
   interface Dealer {
     _id?: string;
     dealerName: string;
