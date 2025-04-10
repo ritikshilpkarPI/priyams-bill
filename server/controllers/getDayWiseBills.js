@@ -28,6 +28,20 @@ const getDayWiseBills = async (req, res, next) => {
           $match: matchStage,
         },
         {
+          $lookup: {
+            from: 'staffs',
+            localField: 'staffId',
+            foreignField: '_id',
+            as: 'staffInfo',
+          },
+        },
+        {
+          $unwind: {
+            path: '$staffInfo',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
           $group: {
             _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
             totalNumberOfBillsForToday: { $sum: 1 },
