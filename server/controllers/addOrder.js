@@ -27,10 +27,10 @@ const addOrder = async (req, res,next) => {
       const isDraft = req.body.new_order.isDraft;
   
       let billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
-      let dealer_ID
+      let newDealerId
 
       if (!dealerId) {
-        const formattedDealerName = dealerName.toUpperCase();
+        const formattedDealerName = dealerName.replace(/\s+/g, ' ').trim().toUpperCase();
         const formattedPhoneNumber = Number(phoneNumber);
         const response = await createNewDealer(formattedDealerName, formattedPhoneNumber);
         if (response.success === false){
@@ -39,9 +39,9 @@ const addOrder = async (req, res,next) => {
           .json({ message: MESSAGES.UNABLE_TO_CREATE_DEALER, success: false });
         }  
 
-        dealer_ID = response.dealer._id
+        newDealerId = response.dealer._id
       }else{
-        dealer_ID = dealerId
+        newDealerId = dealerId
       }
 
       if(orders && orders.length){
@@ -74,7 +74,7 @@ const addOrder = async (req, res,next) => {
         dealerName,
         phoneNumber,
         minimumQuantity,
-        dealerId: dealer_ID,
+        dealerId: newDealerId,
       };
       if(isDraft){
         purchaseOrder.draftTime = Date.now();

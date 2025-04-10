@@ -77,18 +77,22 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
   const dealersLoading = useSelector(selectDealerLoading);    
   
   useEffect(()=>{
-    getDealers()
+    if (dealers.length === 0) {
+      getDealers();
+    }
   },[])
   useEffect(()=>{
     setIsExistingDealer(false) 
     const foundDealer = dealers.find((dealer) => dealer._id === dealerFormData.dealerId);
     if(foundDealer && foundDealer._id){
-      console.log("foundDealer");
       dispatch(setDealerId(foundDealer._id))
       setIsExistingDealer(true)
       onChange('phoneNumber', foundDealer.dealerNumber)
+    }else{
+      setIsExistingDealer(false)
+      onChange('phoneNumber', "")
     }
-  },[dealers, dealerFormData])
+  },[dealers, dealerFormData.dealerId])
 
   const updateOrder = async () => {
     if(!purchaseOrder._id) return;
@@ -137,6 +141,20 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
     label: dealer.dealerName,
   }));
 
+  const handleDealerSelection = (newValue: unknown) => {
+    if (typeof newValue === 'string') {
+      onChange('dealerId', '');
+      onChange('dealerName', newValue.toLocaleUpperCase());
+    } else if (newValue && typeof newValue === 'object') {
+      const dealer = newValue as { value: string; label: string };
+      onChange('dealerName', dealer.label.toLocaleUpperCase());
+      onChange('dealerId', dealer.value);
+    } else {
+      onChange('dealerId', '');
+      onChange('dealerName', '');
+    }
+  };
+
   return (
     <Flex
       mt="lg"
@@ -168,17 +186,7 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
                 ) || (dealerFormData.dealerName ? { value: '', label: dealerFormData.dealerName } : null)
               }
               onChange={(event, newValue) => {
-
-                if (typeof newValue === 'string') {
-                  onChange('dealerId', '');
-                  onChange('dealerName', newValue.toLocaleUpperCase());
-                } else if (newValue && typeof newValue === 'object') {
-                  onChange('dealerName', newValue.label.toLocaleUpperCase());
-                  onChange('dealerId', newValue.value);
-                } else {
-                  onChange('dealerId', '');
-                  onChange('dealerName', '');
-                }
+                handleDealerSelection(newValue);
               }}
               inputValue={dealerFormData.dealerName}
               onInputChange={(event, value) => {
