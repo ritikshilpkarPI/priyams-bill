@@ -28,7 +28,7 @@ export const transferStockToStore = async (
     const StoreInventory = getStoreInventoryModel(collectionName);
     const updatedItems = [];
 
-    for (const { itemId, quantity } of items) {
+    for (const { itemId, quantity, itemShelfDates = [] } of items) {
 
       if (!itemId || !quantity) {
         return res.status(400).json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
@@ -44,6 +44,11 @@ export const transferStockToStore = async (
         storeItem = new StoreInventory({
           itemId,
           itemQuantityInStore: quantity,
+          itemShelfDates: itemShelfDates.map((shelf: { quantityToAdd: number; }) => ({
+            ...shelf,
+            quantity: shelf.quantityToAdd,
+          })),
+          
           itemStockChangeHistory: [
             {
               quantity,
@@ -55,6 +60,13 @@ export const transferStockToStore = async (
         });
       } else {
         storeItem.itemQuantityInStore += quantity;
+        storeItem.itemShelfDates = [
+          ...storeItem.itemShelfDates,
+          ...itemShelfDates.map((shelf: { quantityToAdd: number; }) => ({
+            ...shelf,
+            quantity: shelf.quantityToAdd ?? 0,
+          })),
+        ];
         storeItem.itemStockChangeHistory.push({
           quantity,
           user: userId,
