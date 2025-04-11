@@ -60,3 +60,50 @@ export  interface AddressComponent {
       role: string;
     };
   };
+export interface TransactionSource {
+  sourceStaff?: string;
+  sourceEntity: string;
+  sourceRemark?: string;
+}
+
+export interface TransactionDestination {
+  destinationEntity?: string;
+  destinationStaff?: string;
+  destinationRemark?: string;
+}
+
+export interface TransactionItemByDate {
+  sourceQuantity: {
+    expDt: Date;
+    qty: number;
+  };
+  destinationQuantity: {
+    expDt: Date;
+    qty: number;
+  };
+  destinationRemark?: string;
+  sourceRemark?: string;
+  error?: {
+    errorReason: string;
+    errorQty?: number;
+  };
+}
+
+export interface TransactionItem {
+  itemId: mongoose.Types.ObjectId;
+  itemByDate: TransactionItemByDate[];
+}
+
+export interface StockTransactionType extends Document {
+  transactionType: string;
+  source: TransactionSource;
+  destination?: TransactionDestination;
+  transactionReason?: string;
+  dateOfTransaction: Date;
+  transactionStatus: string;
+  hasErrors: boolean;
+  approvedByAdmin: boolean;
+  adminRemark?: string;
+  isDeleted: boolean;
+  transactionItems: TransactionItem[];
+}
