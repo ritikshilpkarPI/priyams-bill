@@ -102,6 +102,11 @@ const ItemSchema = new mongoose.Schema(
     },
     returnPolicyRemarks: { type: String }, 
     freeItemsAvailable: { type: Boolean, default: false },
+    createdFromPO: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'PurchaseOrder',
+    }
+    
   },
   { strict: false, timestamps: true }
 );
