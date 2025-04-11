@@ -556,6 +556,13 @@ declare global {
     rejectOrder: (id: string, index: number) => void;
     navigate:any
   };
+
+  interface ShelfLifeInfoProps {
+    expiryDate: {
+      mfgDate: string | Date;
+      date: string | Date;
+    };
+  }
   
   
   interface Brand {

@@ -12,11 +12,11 @@ import Cookies from 'js-cookie';
 
 
 
-export const getBillingLeanItemsAPI = async () => {
+export const getBillingLeanItemsAPI = async (selectedStoreId?: string) => {
   try {
     const pincode = localStorage.getItem('userPincode');
     const response = await getAPI({
-      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
+      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}/?storeCode=${selectedStoreId}&pincode=${pincode}`,  
     });
 
     return response.message;
