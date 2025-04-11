@@ -32,15 +32,17 @@
     itemId: mongoose.Types.ObjectId;
     itemQuantityInStore: number;
     itemStockChangeHistory: StockChangeHistoryType[];
-    itemShelfDates: {
-      _id: string;
-      expiryDate: Date;
-      manufacturingDate?: Date;
-      quantity: number;
-      purchaseOrderId: mongoose.Types.ObjectId;
-      entryDate?: Date;
-    }[];
+    itemShelfDates: ItemShelfDateInfo[];
   }
+
+  type ItemShelfDateInfo = {
+    _id: string;
+    expiryDate: Date;
+    manufacturingDate?: Date;
+    quantity: number;
+    purchaseOrderId: mongoose.Types.ObjectId;
+    entryDate?: Date;
+}
 
 
   export interface StoreType extends Document {

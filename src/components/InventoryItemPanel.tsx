@@ -3,38 +3,6 @@ import { Table, ActionIcon, ScrollArea, Text } from '@mantine/core';
 import CustomNumberInput from './customNumberInput/CustomNumberInput';
 import { IconTrash } from '@tabler/icons-react';
 
-interface ExpiryBatch {
-  isShelfExpired: boolean;
-  purchaseOrderId: string;
-  quantityToAdd?: number;
-  expiryDate: string;
-  manufacturingDate: string;
-  quantity: number;
-  _id: string;
-}
-
-interface InventoryItem {
-  itemDetail: {
-    _id: string;
-    itemName: string;
-    itemBarcode: string;
-    itemStockQuantity: number;
-    itemShelfDates?: ExpiryBatch[];
-    itemQtyInStore: number;
-
-  };
-  quantityToAdd: number; 
-}
-
-interface InventoryItemPanelProps {
-  items: InventoryItem[];
-  onQuantityChange: (
-    itemId: string,
-    quantity: number,
-    shelfId?: string 
-  ) => void;
-  onRemoveItem: (itemId: string) => void;
-}
 
 export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   items,
