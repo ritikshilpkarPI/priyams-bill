@@ -4,7 +4,16 @@ const { StoreModel } = require('../db-models/store-model');
 const { MESSAGES } = require('../constants/messages');
 
 const getItemsLean = async (req, res, next) => {
-  const { pincode } = req.query;
+  const { pincode, storeCode } = req.query;
+
+  let store;
+
+  if (storeCode) {
+    store = await StoreModel.findOne({ code: storeCode});
+  } else if (pincode) {
+    store = await StoreModel.findOne({ pincode });
+  }
+  
   
   try {
 

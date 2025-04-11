@@ -164,10 +164,24 @@ const StoreInventoryManagement: React.FC = () => {
         <Grid.Col span={12}>
           <ItemSearch
             onItemSelect={handleItemSelect}
-            isApprovedPO={undefined}
+            // passing the selected store id to the item search to disable the items search
+            isApprovedPO={!selectedStoreId}
             error={errors.inventoryItems}
           />
+          {!selectedStoreId && (
+            <Text
+              sx={{ 
+                color: 'red',
+                fontSize: '12px',
+                marginTop: '4px',
+              }}
+            >
+              Please select a store to add items.
+            </Text>
+          )}
+              
         </Grid.Col>
+       
 
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
           <StoreSelect
@@ -175,7 +189,21 @@ const StoreInventoryManagement: React.FC = () => {
             value={selectedStoreId}
             onChange={handleStoreChange}
             error={errors.selectedStoreId}
+            disabled={inventoryItems.length > 0}
           />
+          {
+            inventoryItems.length > 0 && (
+              <Text
+                sx={{
+                  color: 'red',
+                  fontSize: '12px',
+                  marginTop: '4px',
+                }}
+              >
+                Store cannot be changed after adding items. Please remove all items to change the store.
+              </Text>
+            )
+          }
         </Grid.Col>
 
         <Grid.Col span={12}>
