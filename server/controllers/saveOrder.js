@@ -11,7 +11,7 @@ const saveOrder = async (req, res ) => {
     if (!new_order.brand || !new_order.companyName)
       return res.status(400).json({ error: MESSAGES.MISSING_REQUIRED_FIELDS });
 
-    const { success } = await createBrandAndCompany(
+    const { success, brand, company  } = await createBrandAndCompany(
       new_order.companyName,
       new_order.brand
     );
@@ -49,7 +49,9 @@ const saveOrder = async (req, res ) => {
     const purchaseOrder = await PurchaseOrder.create({
       purchasedItems: [{
         ...new_order,
-        sku: itemSKU
+        sku: itemSKU,
+        brandId: brand._id,
+        companyId: company._id,
       }],
       purchaseDetails: {
         totalItemsCost: newItemCost, 

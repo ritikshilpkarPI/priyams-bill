@@ -1,7 +1,8 @@
 import React from 'react';
-import { Badge, Button, Flex, Table } from '@mantine/core';
+import { Badge, Button, Flex, Group, Table, Text } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
-import { isShelfExpired } from 'src/utils/isShelfExpired';
+
+import { ShelfLifeInfo } from '../shelfLifeInfo/ShelfLifeInfo';
 
 export interface ItemExpiryTableProps {
   expiryDates: ItemExpiryDateType[];
@@ -22,58 +23,69 @@ export const ItemExpiryTable = ({
     (acc, expiryDate) => acc + Number(expiryDate.value || 0),
     0
   );
-  const rows = expiryDates.map((expiryDate, idx) => (
-    <tr key={idx}>
-      <td>{new Date(expiryDate.mfgDate)?.toLocaleDateString('en-GB')}</td>
-      <td>{new Date(expiryDate.date)?.toLocaleDateString('en-GB')}</td>
-      <td>{expiryDate.value}</td>
-      <td>
-        {isShelfExpired(expiryDate.mfgDate, expiryDate.date) ? (
-          <Badge color="red">Shelf Expired</Badge>
-        ) : (
-          '-'
-        )}
-      </td>
-      {showActions && (
-        <td style={{ display: 'flex', gap: '8px' }}>
-          
-          {onEdit && (
-            <Button onClick={() => onEdit(idx)} variant="outline">
-              Edit
-            </Button>
-          )}
-          <Button
-            color="red"
-            leftIcon={<IconX />}
-            onClick={() => onRemove(idx)}
-          >
-            Remove
-          </Button>
+
+  const rows = expiryDates.map((expiryDate, idx) => {
+    const mfgDate = new Date(expiryDate.mfgDate);
+    const expDate = new Date(expiryDate.date);
+
+    return (
+      <tr key={idx}>
+        <td>{mfgDate.toLocaleDateString('en-GB')}</td>
+        <td>{expDate.toLocaleDateString('en-GB')}</td>
+        <td>{expiryDate.value}</td>
+        <td style={{ whiteSpace: 'nowrap', minWidth: 250 }}>
+          <ShelfLifeInfo expiryDate={expiryDate} />
         </td>
-      )}
-    </tr>
-  ));
+        {showActions && (
+          <td>
+            <Group spacing="xs">
+              {onEdit && (
+                <Button onClick={() => onEdit(idx)} variant="outline" size="xs">
+                  Edit
+                </Button>
+              )}
+              <Button
+                color="red"
+                leftIcon={<IconX />}
+                onClick={() => onRemove(idx)}
+                size="xs"
+              >
+                Remove
+              </Button>
+            </Group>
+          </td>
+        )}
+      </tr>
+    );
+  });
+
   return (
     <Flex
       sx={{
         border: '0.5px solid #D4D4D4',
-        borderRadius:'4px',
-        padding: "5px",
-        overflow: 'scroll',
-        maxWidth: '60vw',
+        borderRadius: '4px',
+        padding: '10px',
+        overflowX: 'auto',
+        width: '100%',
+        maxWidth: '100%',
         '&::-webkit-scrollbar': {
           display: 'none',
         },
       }}
       mt="8px"
     >
-      <Table>
+      <Table
+        striped
+        highlightOnHover
+        verticalSpacing="sm"
+        style={{ minWidth: '800px', width: '100%' }}
+      >
         <thead>
           <tr>
-            <th>Mfg. Date.</th>
-            <th>Exp. Date.</th>
+            <th>Mfg. Date</th>
+            <th>Exp. Date</th>
             <th>Qty.</th>
-            <th>Tags</th>
+            <th style={{ minWidth: 250 }}>Shelf Life Info</th>
             {showActions && <th>Action</th>}
           </tr>
         </thead>
@@ -81,10 +93,10 @@ export const ItemExpiryTable = ({
           {rows}
           {showTotal && (
             <tr>
-              <td>Total</td>
+              <td><strong>Total</strong></td>
               <td>-</td>
               <td>{totalExpiryQuantity}</td>
-              {showActions && <td>-</td>}
+              <td colSpan={showActions ? 2 : 1}>—</td>
             </tr>
           )}
         </tbody>
