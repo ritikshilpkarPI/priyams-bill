@@ -3,14 +3,20 @@ const { Bill } = require('../db-models/bill-model');
 const getAllBill = async (req, res, next) => {
   try {
     const allBill = await Bill.find()
-      .populate({
+    .populate([
+      {
         path: 'items',
         populate: {
           path: 'itemDetail',
           model: 'Item',
           select: '-itemCostPricePerUnit',
         },
-      })
+      },
+      {
+        path: 'staffId',
+        model: 'staff',
+      },
+    ])
       .sort({ createdAt: -1 })
       .limit(Number(req.query.size));
     const billCount = await Bill.countDocuments();
