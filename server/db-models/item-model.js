@@ -113,8 +113,9 @@ const ItemSchema = new mongoose.Schema(
     createdFromPO: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'PurchaseOrder',
-    }
-    
+    },
+    companyId: { type: mongoose.Types.ObjectId, ref: 'Company'},
+    brandId: { type: mongoose.Types.ObjectId, ref: 'Brand'}
   },
   { strict: false, timestamps: true }
 );
