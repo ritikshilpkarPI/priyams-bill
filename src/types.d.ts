@@ -4,9 +4,16 @@ import { RefObject } from "react";
 import { NumberValue } from "d3";
 
 declare global {
+
+  interface StoreDataType {
+    name: string;
+    number: string;
+    pincode: string;
+  };
   export interface UserStateType {
     isGeolocationPermissionGranted: boolean;
     userDeviceLocation?: DeviceLocationType;
+    storeData: StoreDataType;
   }
 
   export type RootState = ReturnType<typeof store.getState>;
@@ -139,6 +146,7 @@ declare global {
     upiPay: number;
     amountReturn: number;
     billId: string;
+    staffId: string;
   }
   interface SearchItem {
     _id: string;
@@ -177,6 +185,7 @@ declare global {
     dealerName: string;
     phoneNumber: string;
     remark: string;
+    dealerId: string;
   };
 
   
@@ -215,6 +224,7 @@ declare global {
     onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
     loading?: boolean;
     isApprovedPO?: boolean;
+    onItemSelect: (item: { itemDetail: BillLeanItemType }) => void;
   }
 
   interface ItemExpiryDateType {
@@ -265,7 +275,23 @@ declare global {
     public_id: string;
     secure_url: string;
   }
-
+  export interface StatusHistoryDataType {
+    userId?: string;
+    status?: 'draft' | 'reject' | 'approve'; 
+    browser?: string;
+    os?: string;
+    ipAddress?: string;
+    referer?: string;
+    rejectMessage?: string;
+  }
+  
+  export interface StatusHistoryItemType {
+    _id: string;
+    createdAt: string;
+    data?: StatusHistoryDataType;
+  }
+  
+  
   interface PurchaseOrderDataType {
     isApproved?: boolean;
     isRejected?: boolean;
@@ -283,6 +309,8 @@ declare global {
     payment?: string;
     procurementSource?: string;
     remark?: string;
+    dateOnBill?: Date | null;
+    statusHistory?: StatusHistoryItemType[];
   }
 
   interface PurchasedItemTableProps {
@@ -428,6 +456,124 @@ declare global {
     latitude?: number;
     longitude?: number;
   }
+  interface StaffInterface {
+    _id?: string;
+    name?: string;
+    username?: string;
+    role?: string;
+  }
+  interface StaffSliceInterface {
+    staffs: Staff[]; 
+    loading: boolean;
+  } 
+  interface StaffSelectDropdownInterface {
+    error?: string;
+    onChange: (value: string) => void; 
+    label?: string;
+    selectedStaffId?: string;
+    disabled?:boolean;
+  }
+  interface ExpiredItem {
+    itemName: string;
+    itemBarcode: string;
+    itemMRPperUnit: number;
+    itemCostPricePerUnit: number;
+    itemSellingPricePerUnit: number;
+    mfgDate: string;
+    expiryDate: string;
+    expiryQuantity: number;
+  }
+  
+  interface ExpiredItemsState {
+    items: ExpiredItem[];
+    isLoading: boolean;
+    startDate: Date;
+    endDate: Date;
+    order: 'asc' | 'desc';
+    orderBy: string;
+    page: number;
+    rowsPerPage: number;
+  }
+
+  type Order = 'asc' | 'desc';
+
+  interface Column {
+    label: string;
+    key: string;
+    sortable?: boolean;
+    render?: (row: any) => React.ReactNode;
+  }
+  
+  interface DataTableProps {
+    columns: Column[];
+    data: any[];
+    isLoading: boolean;
+    order: 'asc' | 'desc';
+    orderBy: string;
+    onSort: (columnKey: string) => void;
+    page: number;
+    rowsPerPage: number;
+    onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
+    onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    rowCount: number;
+    paginationMode?: 'client' | 'server'; // 👈 Add this line if you want to support both modes
+  }
+  
+  
+  interface Brand {
+    _id: string;
+    brandName: string;
+    companyId: string;
+  }
+  interface BrandState {
+    brands: Brand[];
+    loading: boolean;
+    error: string | null;
+  }
+  interface company {
+    _id: string;
+    companyName: string;
+  }
+  interface companyState {
+    companys: company[];
+    loading: boolean;
+    error: string | null;
+  }
+  type BrandSelectorProps = {
+    label?: string;
+    value: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean;
+  };
+  type CompanySelectorProps = {
+    value: string;
+    onChange: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean; 
+  };
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
+  }
+  type DealerOption = {
+    value: string;
+    label: string;
+  };
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

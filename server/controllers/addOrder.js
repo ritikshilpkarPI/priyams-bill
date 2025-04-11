@@ -3,6 +3,10 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 const { clodinaryFoldersPath } = require('../util/constant');
 const { isShelfExpired } = require('../util/isShelfExpired');
 const { getItemSKU } = require('../util/getItemSKU');
+const { MESSAGES } = require ('../constants/messages');
+const { createNewDealer } = require('../util/createNewDealer');
+
+
 
 const addOrder = async (req, res,next) => {
     try {
@@ -18,10 +22,27 @@ const addOrder = async (req, res,next) => {
         dealerName,
         phoneNumber,
         minimumQuantity,
+        dealerId,
       } = req.body.new_order.purchaseObj;
       const isDraft = req.body.new_order.isDraft;
   
       let billPhotos = await uploadImages(bills,clodinaryFoldersPath.bill);
+      let newDealerId
+
+      if (!dealerId) {
+        const formattedDealerName = dealerName.replace(/\s+/g, ' ').trim().toUpperCase();
+        const formattedPhoneNumber = Number(phoneNumber);
+        const response = await createNewDealer(formattedDealerName, formattedPhoneNumber);
+        if (response.success === false){
+          return res
+          .status(404)
+          .json({ message: MESSAGES.UNABLE_TO_CREATE_DEALER, success: false });
+        }  
+
+        newDealerId = response.dealer._id
+      }else{
+        newDealerId = dealerId
+      }
 
       if(orders && orders.length){
         orders.forEach((order => {
@@ -53,6 +74,7 @@ const addOrder = async (req, res,next) => {
         dealerName,
         phoneNumber,
         minimumQuantity,
+        dealerId: newDealerId,
       };
       if(isDraft){
         purchaseOrder.draftTime = Date.now();

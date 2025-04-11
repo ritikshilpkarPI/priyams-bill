@@ -62,17 +62,26 @@ const Report = () => {
     if (selectedFilter === 'purchasedItems') {
       // For purchased items filter
       const csvRows = [
-        ['Barcode', 'Item Name', 'Total Purchased', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase'],
-        ...reportResult.report.map(item => [
+        ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase', 'Expiry Date(s)', 'Mfg Date(s)', 'Qty per Batch'],
+        ...reportResult.report.map(item => {
+          const expiryDates = `"${item.expiryDates.map(ed => formatDate(ed.date)).join('\n')}"`;
+            const mfgDates = `"${item.expiryDates.map(ed => formatDate(ed.mfgDate)).join('\n')}"`;
+            const batchQtys = `"${item.expiryDates.map(ed => `${ed.value} pcs`).join('\n')}"`;
+          return [
           item.barcode,
           item.itemName,
           item.totalStock,
+          item.itemQuantity,
+          item.unit,
           item.mrp?.toFixed(2),
           item.costPrice?.toFixed(2),
           item.suppliers.join(', '),
           formatDate(item.firstPurchaseDate),
-          formatDate(item.lastPurchaseDate)
-        ])
+          formatDate(item.lastPurchaseDate),
+          expiryDates,
+          mfgDates,
+          batchQtys
+        ]})
       ];
       csvContent = csvRows.map(row => row.join(',')).join('\n');
     } else {
@@ -116,7 +125,7 @@ const Report = () => {
       },
     });
     setLoading(false)
-    if (result.error) return
+    if (result.error) return setLoading(false);
     setReportResult(result.data);
   };
 
@@ -174,7 +183,13 @@ const Report = () => {
           <></>
         )}
       </div>
-      <Button onClick={findResult} loading={isLoading}>Show Result</Button>
+      <Button 
+        onClick={findResult} 
+        loading={isLoading} 
+        disabled={(!dateRange?.at(0) || !dateRange?.at(1) || !selectedFilter)}
+      >
+        Show Result
+      </Button>
       <Button
         onClick={handleDownloadCSV}
         disabled={!reportResult?.report?.length}
@@ -221,11 +236,17 @@ const showBillTable = (reportResult, selectedFilter) => (
           <th>Barcode</th>
           <th>Item Name</th>
           <th>Total Purchased</th>
-          <th>MRP</th>
+          <th>Pkt. Amt</th>
+        <th>Pkt. Unit</th>
+        <th>MRP</th>
           <th>Cost Price</th>
           <th>Suppliers</th>
           <th>First Purchase</th>
           <th>Last Purchase</th>
+          <th style={{ minWidth: '120px' }}>Expiry Date(s)</th>
+         <th style={{ minWidth: '120px' }}>Mfg Date(s)</th>
+          <th style={{ minWidth: '80px' }}>Qty per Batch</th>
+
         </tr>
       ) : (
         // Existing header logic
@@ -251,7 +272,7 @@ const showBillTable = (reportResult, selectedFilter) => (
           </th>
           <th>
             <Text align="center">Bill Discount</Text>
-          </th>
+          </th> 
           {reportResult.filterType === 'itemBillingTrend' ? (
             <th>
               <Text align="center">Bill date</Text>
@@ -259,6 +280,9 @@ const showBillTable = (reportResult, selectedFilter) => (
           ) : (
             <></>
           )}
+          <th>
+            <Text align="center">Bill Created By</Text>
+          </th>
         </tr>
       )}
     </thead>
@@ -271,11 +295,30 @@ const showBillTable = (reportResult, selectedFilter) => (
               <td>{item.barcode}</td>
               <td>{item.itemName}</td>
               <td>{item.totalStock}</td>
+              <td>{item?.itemQuantity}</td>
+              <td>{item?.unit}</td>
               <td>{item.mrp?.toFixed(2)}</td>
               <td>{item.costPrice?.toFixed(2)}</td>
               <td>{item.suppliers.join(', ')}</td>
               <td>{formatDate(item.firstPurchaseDate)}</td>
               <td>{formatDate(item.lastPurchaseDate)}</td>
+              <td>
+  {item?.expiryDates?.map((ed, i) => (
+    <div key={i}>
+      <strong>{formatDate(ed?.date)}</strong>
+    </div>
+  ))}
+</td>
+<td>
+  {item?.expiryDates?.map((ed, i) => (
+    <div key={i}>{formatDate(ed?.mfgDate)}</div>
+  ))}
+</td>
+<td>
+    {item?.expiryDates?.map((ed, i) => (
+      <div key={i}>{ed?.value} pcs</div>
+    ))}
+  </td>
             </tr>
           )
         } else {
@@ -355,6 +398,11 @@ const TableRow = ({ itemBill, idx, filterName }) => {
             {filterName === 'itemBillingTrend'
               ? new Date(itemBill['createdAt'])?.toLocaleString()
               : ''}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={700}>
+            {itemBill?.staffId?.name || itemBill?.staffId?.username || "N/A"}
           </Text>
         </td>
       </tr>

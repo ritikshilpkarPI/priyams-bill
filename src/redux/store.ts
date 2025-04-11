@@ -8,6 +8,11 @@ import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
 import userSlice from './user/userSlice';
+import staffSlice from "./staffList/StaffSlice";
+import expiredItemsSlice from './expiredItems/expiredItemsSlice'
+import brandSlice from "./brands/brandSlice"
+import companySlice from "./companys/companySlice"
+import dealerSlice from './dealerlist/dealerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +25,11 @@ export const store = configureStore({
     purchaseOrder: purchaseOrderSlice,
     paymentDetailForm: paymentDetailFormSlice,
     storeInventoryManagement: storeInventoryManagement,
+    staffs: staffSlice,
+    expiredItems: expiredItemsSlice,
+    brands: brandSlice,
+    company: companySlice,
+    dealer: dealerSlice,
   },
 });
 

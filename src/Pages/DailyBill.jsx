@@ -1,28 +1,103 @@
 import { useEffect, useState } from 'react';
-import { Table, Text, Collapse } from '@mantine/core';
+import { Table, Text, Collapse, Loader } from '@mantine/core';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import BillFeed from './BillFeed';
+import { StoreSelect } from 'src/components/StoreSelect';
+import { useDispatch } from 'react-redux';
+import { getAllStoresAPI } from 'src/utils/apiUtils';
+import { showNotification } from '@mantine/notifications';
+import { setSelectedStore, setStores } from 'src/redux/storeInventoryManagement/storeInventoryManagementSlice';
+import { useSelector } from 'react-redux';
 
 const DayWiseBillFeed = () => {
   const [allBills, setAllBills] = useState([]);
+  const [loader, setLoader] = useState(false);
+
+
+  const selectedStoreId = useSelector(
+    (state) => state.storeInventoryManagement.selectedStoreId
+  );
+
+  const stores = useSelector(
+    (state) => state.storeInventoryManagement.stores
+  );
+
+
+ const storeObject = stores.find(
+    (store) => store.code === selectedStoreId
+  );
 
   useEffect(() => {
     (async () => {
+      setLoader(true);
       const dayBill = await genericAxios({
         url: API_PATHS.BILLING.GET_ALL_DAILY_BILLS,
         method: API_METHODS.GET,
         headers: {
           Cookie: '',
         },
+        params: {
+          storeId: storeObject?._id,
+        },
       });
+      setLoader(false);
       if (dayBill.error) return;
       setAllBills(dayBill.data.message.allDailyBills);
     })();
-  }, []);
+  }, [selectedStoreId]);
+
+
+  const dispatch = useDispatch()
+  const [errors, setErrors] = useState({});
+
+ const handleStoreChange = (storeId) => {
+    dispatch(setSelectedStore(storeId));
+  };
+
+    useEffect(() => {
+      const fetchStores = async () => {
+        try {
+          const res = await getAllStoresAPI();
+          if (!res.stores) {
+            showNotification({ message: 'No stores found', color: 'red' });
+            return;
+          }  
+          dispatch(setStores(res.stores));
+        } catch (error) {
+          showNotification({ message: 'Failed to load stores', color: 'red' });
+        }
+      };
+  
+      fetchStores();
+    }, [dispatch]);
 
   return (
+    <>
+     {loader ? (
+              <div
+                style={{
+                  height: '95vh',
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Loader color="blue" size="xl" />
+              </div>
+            ) : (
+    
+    <div>
+     
+        <StoreSelect
+                            stores={stores}
+                            value={selectedStoreId}
+                            onChange={handleStoreChange}
+                            error={errors.selectedStoreId}
+                          />
+
     <Table striped highlightOnHover>
       <thead className="heading">
         <tr>
@@ -70,6 +145,10 @@ const DayWiseBillFeed = () => {
         })}
       </tbody>
     </Table>
+    </div>
+            )
+          }
+    </>
   );
 };
 
