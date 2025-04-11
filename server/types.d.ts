@@ -61,14 +61,15 @@ export  interface AddressComponent {
     };
   };
 export interface TransactionSource {
-  sourceStaff?: string;
-  sourceEntity: string;
+  sourceStaff?: Types.ObjectId;
+  sourceEntityId?: Types.ObjectId;
+  sourceType?: string;
   sourceRemark?: string;
 }
 
 export interface TransactionDestination {
-  destinationEntity?: string;
-  destinationStaff?: string;
+  destinationEntityId?: Types.ObjectId;
+  destinationStaff?: Types.ObjectId;
   destinationRemark?: string;
 }
 
