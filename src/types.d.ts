@@ -503,6 +503,13 @@ declare global {
     rowCount: number;
     paginationMode?: 'client' | 'server'; // 👈 Add this line if you want to support both modes
   }
+
+  interface ShelfLifeInfoProps {
+    expiryDate: {
+      mfgDate: string | Date;
+      date: string | Date;
+    };
+  }
   
   
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Badge, Button, Flex, Group, Table, Text } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
-import { isShelfExpired } from 'src/utils/isShelfExpired';
-import { getShelfLifeInfo } from 'src/utils/calculateShelfLife';
+
+import { ShelfLifeInfo } from '../shelfLifeInfo/ShelfLifeInfo';
 
 export interface ItemExpiryTableProps {
   expiryDates: ItemExpiryDateType[];
@@ -27,7 +27,6 @@ export const ItemExpiryTable = ({
   const rows = expiryDates.map((expiryDate, idx) => {
     const mfgDate = new Date(expiryDate.mfgDate);
     const expDate = new Date(expiryDate.date);
-    const shelfLife = getShelfLifeInfo(mfgDate, expDate);
 
     return (
       <tr key={idx}>
@@ -35,20 +34,7 @@ export const ItemExpiryTable = ({
         <td>{expDate.toLocaleDateString('en-GB')}</td>
         <td>{expiryDate.value}</td>
         <td style={{ whiteSpace: 'nowrap', minWidth: 250 }}>
-          <Flex direction="column" gap={4}>
-            <Group spacing="xs" noWrap>
-              <Text size="xs" weight={500} color="dimmed">Total:</Text>
-              <Text size="xs" truncate>{shelfLife.totalShelfLife}</Text>
-            </Group>
-            <Group spacing="xs" noWrap>
-              <Text size="xs" weight={500} color="dimmed">Left:</Text>
-              <Text size="xs" truncate>{shelfLife.leftShelfLife}</Text>
-            </Group>
-            <Group spacing="xs" noWrap>
-              <Text size="xs" weight={500} color="dimmed">% Left:</Text>
-              <Badge size="xs" color="blue" variant="light">{shelfLife.percentShelfLifeLeft}</Badge>
-            </Group>
-          </Flex>
+          <ShelfLifeInfo expiryDate={expiryDate} />
         </td>
         {showActions && (
           <td>
