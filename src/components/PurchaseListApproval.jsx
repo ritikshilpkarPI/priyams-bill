@@ -242,18 +242,6 @@ const PurchaseListApproval = ({
               </td>}
             </>
           )}
-          {isAdminUser && list.isApproved &&
-            <td>
-              <Link
-                className="purchase-list-details-button"
-                to={{
-                  pathname: `/sellDetailsPage/${list._id}`,
-                }}
-              >
-                Sell details
-              </Link>
-            </td>
-          }
         </>
       ) : (
         <></>

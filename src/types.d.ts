@@ -551,6 +551,12 @@ declare global {
     ) => void;
     onRemoveItem: (itemId: string) => void;
   }
+  interface ShelfLifeInfoProps {
+    expiryDate: {
+      mfgDate: string | Date;
+      date: string | Date;
+    };
+  }
   
   
   interface Brand {
