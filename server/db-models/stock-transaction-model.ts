@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { StockTransactionType } from "server/types";
+import { StockTransactionType } from "../types";
 
 
 
@@ -10,22 +10,21 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       required: true,
     },
     source: {
-      sourceStaff: {
-        type: Schema.Types.ObjectId,
-        ref: "Staff", 
+        sourceStaff: {
+          type: Schema.Types.ObjectId,
+          ref: "Staff",
+        },
+        sourceEntityId: {
+          type: Schema.Types.ObjectId,
+        },
+        sourceType: { type: String },
+        sourceRemark: {
+          type: String,
+        },
       },
-      sourceEntity: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        sourceType: String
-      },
-      sourceRemark: {
-        type: String,
-      },
-    },
     destination: {
-      destinationEntity: {
-        type: String,
+        destinationEntityId: {
+        type: Schema.Types.ObjectId,
       },
       destinationStaff: {
         type: String,

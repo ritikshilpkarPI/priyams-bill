@@ -88,13 +88,14 @@ export  interface AddressComponent {
   }
 export interface TransactionSource {
   sourceStaff?: Types.ObjectId;
-  sourceEntity: Types.ObjectId;
+  sourceEntityId?: Types.ObjectId;
+  sourceType?: string;
   sourceRemark?: string;
 
 }
 
 export interface TransactionDestination {
-  destinationEntity?: Types.ObjectId;
+  destinationEntityId?: Types.ObjectId;
   destinationStaff?: Types.ObjectId;
   destinationRemark?: string;
 }
