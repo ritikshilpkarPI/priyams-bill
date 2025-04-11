@@ -11,7 +11,7 @@ const updateOrderByIndex = async (req, res,next) => {
       if (!new_order.brand || !new_order.companyName)
         return res.status(400).json({ error: MESSAGES.MISSING_REQUIRED_FIELDS });
 
-      const { success } = await createBrandAndCompany(
+      const { success, brand, company } = await createBrandAndCompany(
         new_order.companyName,
         new_order.brand
       );
@@ -33,6 +33,9 @@ const updateOrderByIndex = async (req, res,next) => {
           barcode: new_order.barcode,
           mrp: new_order.mrp
        });
+      new_order.brandId = brand._id
+      new_order.companyId = company._id
+
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
       
       if ( index >= 0 && index < purchaseOrder.purchasedItems.length) {
