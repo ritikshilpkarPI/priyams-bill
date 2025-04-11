@@ -90,14 +90,21 @@ const getItemTrendReport = async (startDate, lastDate, itemName) => {
       $unwind: '$items',
     },
   ]);
-  const populatedBills = await Bill.populate(unwindedItemBills, {
-    path: 'items',
-    populate: {
-      path: 'itemDetail',
-      model: 'Item',
-      match: { itemName: { $eq: itemName } },
+  const populatedBills = await Bill.populate(unwindedItemBills, [
+    {
+      path: 'items',
+      populate: {
+        path: 'itemDetail',
+        model: 'Item',
+        match: { itemName: { $eq: itemName } },
+      },
     },
-  });
+    {
+      path: 'staffId',
+      model: 'staff',
+    },
+  ]);
+  
   const itemTrendReport = populatedBills.filter(
     (bill) => bill.items.itemDetail
   );
@@ -131,17 +138,21 @@ const getAllItemsTrendReport = async (startDate, lastDate) => {
         totalQuantitysum: {
           $sum: '$items.itemQuantityInBill',
         },
-        itemBarcode: { $first: '$items.itemBarcode' }
+        itemBarcode: { $first: '$items.itemBarcode' },
+        staffId: { $first: '$staffId' }
       },
     },
   ]);
-  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails, {
-    path: 'items',
-    populate: {
-      path: 'itemDetail',
+  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails, [
+    {
+      path: 'items.itemDetail',
       model: 'Item',
     },
-  });
+    {
+      path: 'staffId',
+      model: 'staff',
+    },
+  ]);
   return allItemsBillingTrend;
 };
 

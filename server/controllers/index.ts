@@ -53,9 +53,15 @@ import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
 import { getItemsSku } from "./getItemsSku";
 import { getItemById } from "./getItemById";
-import { getAllStores } from  "./getAllStores"
 import { transferStockToStore } from "./transferStockToStore"
-import { getAllStaffs } from "./getAllStaffs"
+import { getAllStores } from  "./getAllStores"
+import { getAllStaffs } from "./getAllStaffs";
+import {getStaffByStoreId} from "./getStaffByStoreId"
+import { getAllCompanies } from './getAllCompanies';
+import { getAllBrands } from './getAllBrand';
+import { getAllDealers } from "./getAllDealers";
+import { addNewDealer } from "./addNewDealer";
+import { itemsStaticAttributes } from "./itemsStaticAttributes";
 
 export {
   addBulkItems,
@@ -113,7 +119,13 @@ export {
   getItemsSellDetailsByPurchaseOrderId,
   getItemById,
   getItemsSku,
-  getAllStores,
-  transferStockToStore,
   getAllStaffs,
+  transferStockToStore,
+  getAllStores,
+  getStaffByStoreId,
+  getAllCompanies,
+  getAllBrands,
+  getAllDealers,
+  addNewDealer,
+  itemsStaticAttributes,
 };

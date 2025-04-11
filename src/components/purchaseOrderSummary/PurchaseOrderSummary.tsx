@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Box, Button, Card, Checkbox, Flex, Textarea, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';

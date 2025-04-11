@@ -69,24 +69,16 @@ const ItemSchema = new mongoose.Schema(
     subCategory: { type: String },
     flavourOrFeature: { type: String, trim: true }, 
     shelfLife: { type: String },
-    itemShelfDate:{
-      expiryDates: [
-        {
-          date: {
-            type: Date,
-          },
-          value: {
-            type: Number,
-          },
-          mfgDate: {
-            type: Date,
-          },
-          isShelfExpired: { 
-            type: Boolean
-          }
-        },
-      ],
-    } ,
+    itemShelfDates: [
+      {
+        expiryDate: { type: Date, required: true },
+        manufacturingDate: { type: Date },
+        quantity: { type: Number, required: true },
+        purchaseOrderId: { type: mongoose.Schema.Types.ObjectId, ref: 'PurchaseOrder' },
+        entryDate: { type: Date, default: Date.now }
+      }
+    ],
+    
     expiryDates: [
       {
         date: {
@@ -110,6 +102,11 @@ const ItemSchema = new mongoose.Schema(
     },
     returnPolicyRemarks: { type: String }, 
     freeItemsAvailable: { type: Boolean, default: false },
+    createdFromPO: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'PurchaseOrder',
+    }
+    
   },
   { strict: false, timestamps: true }
 );
