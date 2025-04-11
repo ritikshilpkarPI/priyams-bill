@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, ActionIcon, ScrollArea, Text } from '@mantine/core';
 import CustomNumberInput from './customNumberInput/CustomNumberInput';
 import { IconTrash } from '@tabler/icons-react';
+import ShelfTable from './shelfTable/ShelfTable';
 
 
 export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
@@ -53,44 +54,11 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
               </td>
 
                 <td>
-                  {shelfList.length > 0 ? (
-                    <Table withBorder withColumnBorders>
-                      <thead>
-                        <tr>
-                          <th>Expiry</th>
-                          <th>Manufacturing</th>
-                          <th>Stock</th>
-                          <th>Qty to Add</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {shelfList.map((shelf) => (
-                          <tr key={shelf._id}>
-                            <td>{formatDate(shelf.expiryDate)}</td>
-                            <td>{formatDate(shelf.manufacturingDate)}</td>
-                            <td>{shelf.quantity}</td>
-                            <td>
-                              <CustomNumberInput
-                                required
-                                placeholder="Enter qty"
-                                value={shelf.quantityToAdd ?? 0}
-                                onChange={(e) =>
-                                  handleQuantityChange(
-                                    itemDetail._id,
-                                    shelf.quantity,
-                                    Number(e.target.value),
-                                    shelf._id 
-                                  )
-                                }
-                              />
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  ) : (
-                    <Text size="sm">No expiry batches</Text>
-                  )}
+                <ShelfTable
+                 shelfList={shelfList}
+                 itemId={itemDetail._id}
+                 handleQuantityChange={handleQuantityChange}
+                   />
                 </td>
 
                 <td>
