@@ -3,9 +3,16 @@ const { Item } = require('../db-models/item-model');
 const { StoreModel } = require('../db-models/store-model');
 
 const getItemsLean = async (req, res, next) => {
-  const { pincode } = req.query;
+  const { pincode, storeCode } = req.query;
 
-  const store = await StoreModel.findOne({ pincode });
+  let store;
+
+  if (storeCode) {
+    store = await StoreModel.findOne({ code: storeCode});
+  } else if (pincode) {
+    store = await StoreModel.findOne({ pincode });
+  }
+  
   
   try {
     const collectionName = store?.collectionName;
