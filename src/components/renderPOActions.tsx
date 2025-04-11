@@ -15,7 +15,16 @@ const renderPurchaseOrderActions = ({
   const loading = loadingState[list._id];
 
   return (
-    <Box sx={{ display: 'flex', gap: 12 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        gap: 12,
+        height: '100%',
+        width: '100%',
+      }}
+    >
       {isAdminUser ? (
         <>
           {list.isApproved ? (
