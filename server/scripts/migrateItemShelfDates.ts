@@ -1,8 +1,7 @@
-
-import mongoose from "mongoose";
-import { Item } from "../db-models/item-model";
-import PurchaseOrder from "../db-models/purchase-order-model";
-import dotenv from "dotenv";
+import mongoose from 'mongoose';
+import { Item } from '../db-models/item-model';
+import PurchaseOrder from '../db-models/purchase-order-model';
+import dotenv from 'dotenv';
 dotenv.config();
 const { ENV_NAME, NODE_ENV, STAGING_DB, PROD_DB, DEV_DB } = process.env;
 
@@ -28,58 +27,70 @@ const connectToDB = async () => {
 const migrateItemShelfDates = async () => {
   try {
     await connectToDB();
-    const unsetResult = await Item.updateMany({}, { $unset: { itemShelfDate: 1 } });
-    console.log(`Removed 'itemShelfDate' from ${unsetResult.modifiedCount} items`);
-    
 
-    const approvedOrders = await PurchaseOrder.find({ isApproved: true});
+    const unsetResult = await Item.updateMany(
+      {},
+      { $unset: { itemShelfDates: 1 } }
+    );
+    console.log(
+      `Removed 'itemShelfDates' from ${unsetResult.modifiedCount} items`
+    );
 
-    let updates = [];
+    const shelfEntries = await PurchaseOrder.aggregate([
+      { $match: { isApproved: true } },
+      { $unwind: '$purchasedItems' },
+      {
+        $match: {
+          'purchasedItems.expiryDates': { $exists: true, $ne: [] },
+        },
+      },
+      { $unwind: '$purchasedItems.expiryDates' },
 
-    for (const order of approvedOrders) {
-      const { purchasedItems = [], _id: purchaseOrderId, approveTime } = order;
+      {
+        $project: {
+          item_id: '$purchasedItems.item_id',
+          shelfDate: {
+            manufacturingDate: {
+              $toDate: '$purchasedItems.expiryDates.mfgDate',
+            },
+            expiryDate: {
+              $toDate: '$purchasedItems.expiryDates.date',
+            },
+            quantity: '$purchasedItems.expiryDates.value',
+            purchaseOrderId: '$_id',
+            entryDate: '$approveTime',
+          },
+        },
+      },
+    ]);
 
-      for (const item of purchasedItems) {
-        if (!item.item_id || !mongoose.Types.ObjectId.isValid(item.item_id)) continue;
-
-        const expiryEntries = item.expiryDates || [];
-
-        for (const entry of expiryEntries) {
-          const { mfgDate, date: expiryDate, value: quantity } = entry;
-
-          if (!mfgDate || !expiryDate || !quantity) continue;
-
-          updates.push({
-            updateOne: {
-              filter: { _id: item.item_id },
-              update: {
-                $push: {
-                  itemShelfDates: {
-                    _id: new mongoose.Types.ObjectId(),
-                    manufacturingDate: new Date(mfgDate),
-                    expiryDate: new Date(expiryDate),
-                    quantity,
-                    purchaseOrderId,
-                    entryDate: approveTime,
-                  },
-                },
+    const updates = shelfEntries
+      .filter((doc) => mongoose.Types.ObjectId.isValid(doc.item_id))
+      .map((doc) => ({
+        updateOne: {
+          filter: { _id: new mongoose.Types.ObjectId(doc.item_id) },
+          update: {
+            $push: {
+              itemShelfDates: {
+                ...doc.shelfDate,
+                _id: new mongoose.Types.ObjectId(),
               },
             },
-          });
-        }
-      }
-    }
+          },
+        },
+      }));
+
 
     if (updates.length > 0) {
       const result = await Item.bulkWrite(updates);
-      console.log("Migration complete:", result);
+      console.log('Migration complete:', result);
     } else {
-      console.log("No itemShelfDates to insert.");
+      console.log('No itemShelfDates to insert.');
     }
 
     await mongoose.disconnect();
   } catch (error) {
-    console.error(" Migration failed:", error);
+    console.error('Migration failed:', error);
     await mongoose.disconnect();
   }
 };
