@@ -11,11 +11,13 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
     },
     source: {
       sourceStaff: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Staff", 
       },
       sourceEntity: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
+        sourceType: String
       },
       sourceRemark: {
         type: String,
