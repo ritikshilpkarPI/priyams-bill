@@ -535,6 +535,26 @@ declare global {
     ) => void;
     onRemoveItem: (itemId: string) => void;
   }
+
+
+  interface Shelf {
+    _id: string;
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    quantityToAdd?: number;
+  }
+  
+  interface ShelfTableProps {
+    shelfList: Shelf[];
+    itemId: string;
+    handleQuantityChange: (
+      itemId: string,
+      shelfQuantity: number,
+      newQuantity: number,
+      shelfId: string
+    ) => void;
+  }
   
   
 }
