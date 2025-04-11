@@ -7,6 +7,7 @@ const initialState: DealerDetailFormType = {
   dealerName: '',
   phoneNumber: '',
   remark: '',
+  dealerId: '',
 };
 
 const dealerDetailFormSlice = createSlice({

@@ -63,6 +63,7 @@ const getItemsLean = async (req, res, next) => {
       const itemWithQty = {
         ...item.toObject(),
         itemQtyInStore: itemQty,
+        itemStockQuantity: itemQty,
       };
 
       itemNamesList.push(item.itemName);

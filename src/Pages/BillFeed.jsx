@@ -152,6 +152,9 @@ const BillFeed = ({ fromDayWise = false, bills = [] }) => {
                 <Text align="center">Bill date</Text>
               </th>
               <th>
+                <Text align="center">Bill created by</Text>
+              </th>
+              <th>
                 <Text align="center">Whatsapp Bill</Text>
               </th>
               <th>
@@ -307,6 +310,11 @@ const TableRow = ({ bill, idx, isFromDayWiseBills }) => {
         <td>
           <Text color="black" weight={500}>
             {new Date(bill['createdAt']).toLocaleString()}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+           {bill['staffId']?.name || bill['staffId']?.username || bill['staffInfo']?.name || bill['staffInfo']?.username || 'N/A'}
           </Text>
         </td>
         <td>

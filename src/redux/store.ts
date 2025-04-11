@@ -10,6 +10,9 @@ import storeInventoryManagement from  "./storeInventoryManagement/storeInventory
 import userSlice from './user/userSlice';
 import staffSlice from "./staffList/StaffSlice";
 import expiredItemsSlice from './expiredItems/expiredItemsSlice'
+import brandSlice from "./brands/brandSlice"
+import companySlice from "./companys/companySlice"
+import dealerSlice from './dealerlist/dealerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -23,7 +26,10 @@ export const store = configureStore({
     paymentDetailForm: paymentDetailFormSlice,
     storeInventoryManagement: storeInventoryManagement,
     staffs: staffSlice,
-    expiredItems: expiredItemsSlice
+    expiredItems: expiredItemsSlice,
+    brands: brandSlice,
+    company: companySlice,
+    dealer: dealerSlice,
   },
 });
 
