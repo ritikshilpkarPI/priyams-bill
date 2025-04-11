@@ -503,6 +503,38 @@ declare global {
     rowCount: number;
     paginationMode?: 'client' | 'server'; // 👈 Add this line if you want to support both modes
   }
+
+
+  interface ExpiryBatch {
+    isShelfExpired: boolean;
+    purchaseOrderId: string;
+    quantityToAdd?: number;
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    _id: string;
+  }
+  
+  interface InventoryItem {
+    itemDetail: {
+      _id: string;
+      itemName: string;
+      itemBarcode: string;
+      itemStockQuantity: number;
+      itemShelfDates?: ExpiryBatch[];
+    };
+    quantityToAdd: number; 
+  }
+  
+  interface InventoryItemPanelProps {
+    items: InventoryItem[];
+    onQuantityChange: (
+      itemId: string,
+      quantity: number,
+      shelfId?: string 
+    ) => void;
+    onRemoveItem: (itemId: string) => void;
+  }
   
   
 }
