@@ -2,9 +2,13 @@ import { toast } from 'react-toastify';
 import { setExpiredItems, setLoading } from 'src/redux/expiredItems/expiredItemsSlice';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
-import { getUserDeviceInfo } from './getUserDeviceInfo';
+import { getUserDetails, getUserDeviceInfo } from './getUserDeviceInfo';
 import MESSAGES from './constants/messages';
 import { AppDispatch } from 'src/redux/store';
+import { API_METHODS } from './constants/apiMethods';
+import { genericAxios } from './genericAxiosMethod';
+import { parseJwt } from './cookie';
+import Cookies from 'js-cookie';
 
 
 
@@ -381,5 +385,129 @@ export const addNewDealerAPI = async (
     return response;
   } catch (error) {
     return { isError: true, error };
+  }
+};
+export const handleApiCall = async (
+  apiFunc: () => Promise<any>,
+  id: string,
+  setLoading: (id: string, state: boolean, buttonName: string) => void,
+  successMessage: string,
+  errorMessage: string,
+  onSuccess: () => void,
+  buttonName: string
+) => {
+  try {
+    setLoading(id, true, buttonName);
+    await apiFunc();
+    toast.success(successMessage);
+    onSuccess();
+  } catch (err) {
+    console.error(err);
+    toast.error(errorMessage);
+  } finally {
+    setLoading(id, false, buttonName);
+  }
+};
+
+export const approvePurchaseOrder = async (
+  id: string,
+  index: number,
+  list: any,
+  getOrders: (type: string) => void,
+  setLoading: (id: string, state: boolean, buttonName: string) => void
+) => {
+  await handleApiCall(
+    async () =>
+      await genericAxios({
+        url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
+        method: API_METHODS.POST,
+        data: {
+          newItems: list.purchasedItems,
+          purchaseOrderId: id,
+          userDetail: await getUserDetails(),
+        },
+      }),
+    id,
+    setLoading,
+    'Order approved successfully',
+    'Something went wrong, unable to approve order',
+    () => getOrders('draft'),
+    'approve'
+  );
+};
+
+export const rejectPurchaseOrder = async (
+  id: string,
+  index: number,
+  getOrders: (type: string) => void,
+  setLoading: (id: string, state: boolean, buttonName: string) => void
+) => {
+  await handleApiCall(
+    async () =>
+      await genericAxios({
+        method: API_METHODS.POST,
+        url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
+        data: {
+          username: parseJwt(Cookies.get('token')).username,
+          userDetail: await getUserDetails(),
+        },
+      }),
+    id,
+    setLoading,
+    'Order rejected successfully',
+    'Something went wrong, unable to reject order',
+    () => getOrders('rejected'),
+    'reject'
+  );
+};
+
+export const draftPurchaseOrder = async (
+  id: string,
+  index: number,
+  allPurchaseList: any[],
+  getOrders: (type: string) => void,
+  setLoading: (id: string, state: boolean, buttonName: string) => void
+) => {
+  if (window.confirm('Do you want to draft this order ?')) {
+    const order = allPurchaseList[index];
+    console.log({allPurchaseList,index2:index});
+    
+    let validate = true;
+    let once = true;
+
+    if (!order.billAmount || !order.dealerName?.length) {
+      alert('please fill payment details information');
+      return;
+    }
+
+    order.purchasedItems.forEach((item: any) => {
+      if (!item.validate) {
+        validate = false;
+        if (once) {
+          alert('Cannot draft orders, please validate the orders');
+          once = false;
+        }
+      }
+    });
+
+    if (!validate) return;
+
+    await handleApiCall(
+      async () =>
+        await genericAxios({
+          method: API_METHODS.POST,
+          url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
+          data: {
+            id,
+            userDetail: await getUserDetails(),
+          },
+        }),
+      id,
+      setLoading,
+      'Order drafted successfully',
+      'Something went wrong, unable to draft the order',
+      () => getOrders('draft'),
+      'draft'
+    );
   }
 };
