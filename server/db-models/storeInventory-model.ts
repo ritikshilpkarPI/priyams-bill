@@ -17,6 +17,16 @@ const StoreInventoryItemSchema: Schema = new Schema({
   itemId: { type: Schema.Types.ObjectId, ref: "Item"},
   itemQuantityInStore: { type: Number, default: 0 },
   itemStockChangeHistory: { type: [StockChangeHistorySchema], default: [] },
+  itemShelfDates: [
+    {
+      expiryDate: { type: Date },
+      manufacturingDate: { type: Date },
+      quantity: { type: Number},
+      purchaseOrderId: { type: mongoose.Schema.Types.ObjectId, ref: 'PurchaseOrder' },
+      entryDate: { type: Date, default: Date.now }
+    }
+  ],
+  
 });
 
 /**

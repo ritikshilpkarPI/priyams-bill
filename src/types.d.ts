@@ -557,11 +557,62 @@ declare global {
     navigate:any
   };
 
+
+  interface ExpiryBatch {
+    isShelfExpired: boolean;
+    purchaseOrderId: string;
+    quantityToAdd?: number;
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    _id: string;
+  }
+  
+  interface InventoryItem {
+    itemDetail: {
+      _id: string;
+      itemName: string;
+      itemBarcode: string;
+      itemStockQuantity: number;
+      itemShelfDates?: ExpiryBatch[];
+      itemQtyInStore?: number;
+    };
+    quantityToAdd: number; 
+  }
+  
+  interface InventoryItemPanelProps {
+    items: InventoryItem[];
+    onQuantityChange: (
+      itemId: string,
+      quantity: number,
+      shelfId?: string 
+    ) => void;
+    onRemoveItem: (itemId: string) => void;
+  }
   interface ShelfLifeInfoProps {
     expiryDate: {
       mfgDate: string | Date;
       date: string | Date;
     };
+
+  }
+  interface Shelf {
+    _id: string;
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    quantityToAdd?: number;
+  }
+  
+  interface ShelfTableProps {
+    shelfList: Shelf[];
+    itemId: string;
+    handleQuantityChange: (
+      itemId: string,
+      shelfQuantity: number,
+      newQuantity: number,
+      shelfId: string
+    ) => void;
   }
   
   
