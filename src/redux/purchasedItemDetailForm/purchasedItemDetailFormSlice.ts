@@ -26,6 +26,14 @@ const initialState: PurchasedItemDetailFormType = {
   returnPolicyRemarks: '',
   itemHasExpiry: null as boolean | null,
   profitPercentage: 0,
+  brandId:{
+    brandName: '',
+    brandId: '',
+  },
+  companyId:{
+    companyName: '',
+    companyId: '',
+  },
 };
 
 const purchasedItemDetailFormSlice = createSlice({
