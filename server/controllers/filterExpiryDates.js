@@ -3,7 +3,6 @@ const { Item } = require('../db-models/item-model');
 
 const filterExpiryDates = async (req, res, next) => {
     let { startDate, endDate } = req.body;
-
     // Normalize input dates
     startDate = normalizeDate(startDate);
     endDate = normalizeDate(endDate);
@@ -14,13 +13,13 @@ const filterExpiryDates = async (req, res, next) => {
     try {
       const expiredItems = await Item.aggregate([
         {
-            $unwind:  "$itemShelfDate.expiryDates"
+            $unwind:  "$itemShelfDates"
         },
         {
           $match: {
-              "itemShelfDate.expiryDates.date": { 
-                  $gte: startDate , 
-                  $lte: endDate
+              "itemShelfDates.expiryDate": { 
+                  $gte: new Date(startDate)  , 
+                  $lte: new Date(endDate)
               }
           }
         },
@@ -32,9 +31,9 @@ const filterExpiryDates = async (req, res, next) => {
                 itemMRPperUnit: 1,
                 itemCostPricePerUnit: 1,
                 itemSellingPricePerUnit: 1,
-                expiryDate: "$itemShelfDate.expiryDates.date",
-                mfgDate: "$itemShelfDate.expiryDates.mfgDate",
-                expiryQuantity: "$itemShelfDate.expiryDates.value"
+                expiryDate: "$itemShelfDates.expiryDate",
+                mfgDate: "$itemShelfDates.manufacturingDate",
+                expiryQuantity: "$itemShelfDates.quantity"
             }
         },
         

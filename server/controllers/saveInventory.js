@@ -76,7 +76,7 @@ const saveInventory = async (req, res, next) => {
           mrp: item?.mrp,
           barcode: item?.barcode,
           itemName: item?.inputName,
-        })
+        }),
       };
 
       const oldItem = existingItemsMap.get(item.item_id);
@@ -110,16 +110,21 @@ const saveInventory = async (req, res, next) => {
           itemStockQuantity: totalStock,
           itemPerUnitQuantity: newTotalItemQuantity,
         };
-
+        const { itemShelfDates, ...restItemUpdate } = new_Item_Update;
         bulkOperations.push({
           updateOne: {
             filter: { _id: item.item_id },
-            update: { $set: new_Item_Update },
+            update: { $set: restItemUpdate, $push: { itemShelfDates: { $each: newShelfDates } }, },
           },
         });
       } else {
         bulkOperations.push({
-          insertOne: { document: itemDetails },
+          insertOne: { 
+            document: {
+            ...itemDetails,
+            createdFromPO: purchaseOrderId, 
+          }
+        },
         });
       }
     });

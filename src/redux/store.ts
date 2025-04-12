@@ -11,6 +11,7 @@ import brandSlice from "./brands/brandSlice"
 import companySlice from "./companys/companySlice"
 import staffSlice from "./staffList/StaffSlice";
 import expiredItemsSlice from './expiredItems/expiredItemsSlice'
+import purchaseListApprovalSlice from './purchaseListApproval/purchaseListApprovalSlice'
 import dealerSlice from './dealerlist/dealerSlice';
 
 export const store = configureStore({
@@ -27,7 +28,8 @@ export const store = configureStore({
     brands: brandSlice,
     company: companySlice,
     staffs: staffSlice,
-    expiredItems: expiredItemsSlice
+    expiredItems: expiredItemsSlice,
+    purchaseListApproval:purchaseListApprovalSlice
   },
 });
 
