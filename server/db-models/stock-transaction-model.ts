@@ -28,7 +28,6 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       destinationEntityId: {
         type: Schema.Types.ObjectId,
       },
-
       destinationType: { type: String },
       destinationRemark: {
         type: String,
@@ -70,21 +69,29 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
         itemByDate: [
           {
             sourceQuantity: {
-              expDt: { type: Date },
+              expiryDate: { type: Date },
+              manufacturingDate: { type: Date },
               qty: { type: Number },
             },
             destinationQuantity: {
-              expDt: { type: Date },
+              expiryDate: { type: Date },
+              manufacturingDate: { type: Date },
               qty: { type: Number },
             },
             destinationRemark: { type: String },
             sourceRemark: { type: String },
-            error: {
-              errorReason: {
-                type: String,
-                default: 'NONE',
-              },
-              errorQty: { type: Number },
+            itemError: {
+                errorReason: {
+                    type: String,
+                    default: 'NONE',
+                  },
+                  errorQty: {
+                    type: Number,
+                  },
+                  isResolved: {
+                    type: Boolean,
+                    default: false,
+                  },
             },
           },
         ],
