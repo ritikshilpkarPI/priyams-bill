@@ -56,6 +56,7 @@ import { getItemById } from "./getItemById";
 import { getAllStores } from  "./getAllStores"
 import { transferStockToStore } from "./transferStockToStore"
 import { getAllStaffs } from "./getAllStaffs"
+import { itemsStaticAttributes } from "./itemsStaticAttributes"
 
 export {
   addBulkItems,
@@ -116,4 +117,5 @@ export {
   getAllStores,
   transferStockToStore,
   getAllStaffs,
+  itemsStaticAttributes,
 };
