@@ -76,20 +76,24 @@ export interface TransactionDestination {
 
 export interface TransactionItemByDate {
   sourceQuantity: {
-    expDt: Date;
+    expiryDate: Date;
+    manufacturingDate: Date;
     qty: number;
   };
   destinationQuantity: {
-    expDt: Date;
+    expiryDate: Date;
+    manufacturingDate: Date;
     qty: number;
   };
   destinationRemark?: string;
   sourceRemark?: string;
-  error?: {
+  itemError?: {
     errorReason: string;
     errorQty?: number;
+    isResolved: boolean;
   };
 }
+
 
 export interface TransactionItem {
   itemId: mongoose.Types.ObjectId;
