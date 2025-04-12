@@ -60,6 +60,22 @@ export  interface AddressComponent {
       role: string;
     };
   };
+
+  export interface CompanyType extends Document {
+    companyName: string;
+  }
+  
+  export interface BrandType extends Document {
+    brandName: string;
+    companyId: Types.ObjectId;
+  }
+  
+  export interface DealerType extends Document {
+    dealerName: string;
+    dealerBrands: Types.ObjectId[];
+    dealerCompanies: Types.ObjectId[];
+    dealerNumber: number;
+  }
 export interface TransactionSource {
   sourceStaff?: Types.ObjectId;
   sourceEntityId?: Types.ObjectId;

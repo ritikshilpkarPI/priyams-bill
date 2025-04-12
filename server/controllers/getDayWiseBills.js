@@ -12,9 +12,23 @@ const getDayWiseBills = async (req, res, next) => {
         {
           $match: {
             createdAt: {
-              $gte: fiveDaysAgo, // Filter documents from the last 5 days
-              $lte: today,       // Up to today
+              $gte: fiveDaysAgo,
+              $lte: today,
             },
+          },
+        },
+        {
+          $lookup: {
+            from: 'staffs',
+            localField: 'staffId',
+            foreignField: '_id',
+            as: 'staffInfo',
+          },
+        },
+        {
+          $unwind: {
+            path: '$staffInfo',
+            preserveNullAndEmptyArrays: true,
           },
         },
         {

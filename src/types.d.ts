@@ -176,6 +176,7 @@ declare global {
     dealerName: string;
     phoneNumber: string;
     remark: string;
+    dealerId: string;
   };
 
   
@@ -208,6 +209,14 @@ declare global {
     freeItemsRemarks?: string;
     itemHasExpiry?: boolean | null;
     profitPercentage: number;
+    brandId: {
+      brandName: string;
+      brandId: string;
+    };
+    companyId: {
+      companyName: string;
+      companyId: string;
+    };
   }
 
   interface PurchasedItemDetailFormProps {
@@ -288,7 +297,7 @@ declare global {
     isPaid?: boolean;
     totalPaidAmount?: number;
     createdAt?: string;
-    _id?: string;
+    _id?: string ;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
     purchaseDetails?: PaymentDetailType;
     billPhotos?: Array<CloudFileType>;
@@ -441,6 +450,43 @@ declare global {
     itemDetail: WarehouseItem;
     itemQuantityInBill: number;
   }
+  interface Brand {
+    _id: string;
+    brandName: string;
+    companyId: string;
+  }
+  interface BrandState {
+    brands: Brand[];
+    loading: boolean;
+    error: string | null;
+  }
+  interface company {
+    _id: string;
+    companyName: string;
+  }
+  interface companyState {
+    companys: company[];
+    loading: boolean;
+    error: string | null;
+  }
+  type BrandSelectorProps = {
+    label?: string;
+    value: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean;
+  };
+  type CompanySelectorProps = {
+    value: string;
+    onChange: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean; 
+  };
   interface StaffInterface {
     _id?: string;
     name?: string;
@@ -468,6 +514,19 @@ declare global {
     expiryDate: string;
     expiryQuantity: number;
   }
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
+  }
   
   interface ExpiredItemsState {
     items: ExpiredItem[];
@@ -486,7 +545,7 @@ declare global {
     label: string;
     key: string;
     sortable?: boolean;
-    render?: (row: any) => React.ReactNode;
+    render?: (row: any,index?: number) => React.ReactNode;
   }
   
   interface DataTableProps {
@@ -501,10 +560,59 @@ declare global {
     onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
     onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     rowCount: number;
-    paginationMode?: 'client' | 'server'; // 👈 Add this line if you want to support both modes
+    paginationMode?: 'client' | 'server'; 
+  }
+  interface PurchaseListApprovalProps {
+    allPurchaseList: any[];
+    approveOrder: (id: string) => void;
+    rejectOrder: (id: string) => void;
+    makeDraft: (id: string) => void;
+    loading: boolean;
+  }
+  interface LoadingState {
+    [key: string]: { state: boolean; btnName: string } | undefined;
+  }
+  interface PurchaseListApprovalProps {
+    allPurchaseList: PurchaseOrderDataType[];
+    loading?: boolean;
+    getOrders?: (type: string) => void;
+  }
+  
+  interface PurchaseListApprovalState {
+    allPurchaseList: PurchaseOrderDataType[];
+    loadingState: LoadingState;
+    order: 'asc' | 'desc';
+    orderBy: string;
+    page: number;
+    rowsPerPage: number;
+    indexDetail: number | null;
+    isAdminUser: boolean;
+  }
+  interface RenderActionsProps {
+    list: any ;
+    index: number;
+    isAdminUser: boolean;
+    isApprovedPO: boolean;
+    isSavedApprovedPage: boolean;
+    loadingState: LoadingState; 
+    draftOrder: (id: string, index: number) => void;
+    approveOrder: (id: string, index: number, list: any) => void;
+    rejectOrder: (id: string, index: number) => void;
+    navigate:any
+  };
+
+  interface ShelfLifeInfoProps {
+    expiryDate: {
+      mfgDate: string | Date;
+      date: string | Date;
+    };
   }
   
   
+  type DealerOption = {
+    value: string;
+    label: string;
+  };
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
