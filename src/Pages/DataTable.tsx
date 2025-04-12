@@ -22,12 +22,27 @@ const DataTable: React.FC<DataTableProps> = ({
     field: col.key,
     headerName: col.label,
     sortable: col.sortable ?? true,
-    minWidth: 150, 
-    flex: 1,
+    
+    ...(col.key === 'actions'
+      ? {
+          flex: 0,
+          minWidth: 400,
+        }
+      : col.key === 'share'
+      ? {
+          flex: 0,
+          minWidth: 200,
+        }
+      : {
+          minWidth: 150,
+          flex: 1,
+        }),
+    
     renderCell: col.render
       ? (params: GridRenderCellParams<any, any>) => col.render?.(params.row)
       : undefined,
   }));
+  
 
   return (
     <Paper sx={{ height: '100%', width: '100%' }}>
@@ -35,10 +50,11 @@ const DataTable: React.FC<DataTableProps> = ({
         <CircularProgress sx={{ m: 2 }} />
       ) : (
         <Box sx={{ width: '100%', overflowX: 'auto' }}>
-          <Box sx={{ minWidth: `${columns.length * 150}px` }}> 
+          <Box sx={{ }}> 
             <DataGrid
               autoHeight
               columns={gridColumns}
+              
               rows={data}
               getRowId={(row) =>
                 row.id || row._id || row.key || JSON.stringify(row)
