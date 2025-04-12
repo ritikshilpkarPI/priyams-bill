@@ -113,7 +113,7 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
       };
     }
 
-    if (col.key === 'BrandName') {
+    if (col.key === purchaseOrderTableConstants.BRAND_NAME) {
       return {
         ...col,
         render: (row: any) => (
@@ -128,7 +128,7 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
       };
     }
 
-    if (col.key === 'CompanyName') {
+    if (col.key === purchaseOrderTableConstants.COMPANY_NAME) {
       return {
         ...col,
         render: (row: any) => (
