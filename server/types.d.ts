@@ -86,6 +86,11 @@ export  interface AddressComponent {
     dealerCompanies: Types.ObjectId[];
     dealerNumber: number;
   }
+
+  export interface BrandType extends Document {
+    brandName: string;
+    companyId: Types.ObjectId;
+  }
 export interface TransactionSource {
   sourceStaff?: Types.ObjectId;
   sourceEntityId?: Types.ObjectId;

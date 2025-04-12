@@ -8,6 +8,7 @@ import {
   Col,
   Flex,
   Title,
+  Badge,
 } from '@mantine/core';
 import { selectDealerDetailForm } from '../../redux/dealerDetailForm/dealerDetailFormSelectors';
 import { useSelector, useDispatch } from 'react-redux';
@@ -155,6 +156,17 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
     }
   };
 
+  const brandCompanyPairs = [
+    ...new Map(
+      (purchaseOrder.purchasedItems || []).map((item) => {
+        const brand = item.brandId?.brandName?.trim();
+        const company = item.companyId?.companyName?.trim();
+        const key = `${brand}-${company}`;
+        return [key, { brand, company }];
+      })
+    ).values(),
+  ];
+
   return (
     <Flex
       mt="lg"
@@ -205,6 +217,25 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
               )}
             />
           </Col>
+
+          {brandCompanyPairs?.length > 0 && (
+  <Col span={12}>
+    <Flex wrap="wrap" gap="xs" mt="xs">
+      {brandCompanyPairs?.map(({ brand, company }, index) => (
+        <Badge
+          key={index}
+          color="teal"
+          variant="light"
+          style={{ fontSize: '12px', padding: '6px 12px' }}
+        >
+          {brand} - {company}
+        </Badge>
+      ))}
+    </Flex>
+  </Col>
+)}
+
+
 
           <Col span={12}>
             <TextInput

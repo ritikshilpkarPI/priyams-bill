@@ -3,12 +3,12 @@ import { setExpiredItems, setLoading } from 'src/redux/expiredItems/expiredItems
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import { getUserDetails, getUserDeviceInfo } from './getUserDeviceInfo';
-import MESSAGES from './constants/messages';
 import { AppDispatch } from 'src/redux/store';
 import { API_METHODS } from './constants/apiMethods';
 import { genericAxios } from './genericAxiosMethod';
 import { parseJwt } from './cookie';
 import Cookies from 'js-cookie';
+import MESSAGES from './constants/messages';
 
 
 

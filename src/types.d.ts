@@ -218,6 +218,14 @@ declare global {
     freeItemsRemarks?: string;
     itemHasExpiry?: boolean | null;
     profitPercentage: number;
+    brandId: {
+      brandName: string;
+      brandId: string;
+    };
+    companyId: {
+      companyName: string;
+      companyId: string;
+    };
   }
 
   interface PurchasedItemDetailFormProps {
@@ -482,6 +490,7 @@ declare global {
     mfgDate: string;
     expiryDate: string;
     expiryQuantity: number;
+    _id:string
   }
   
   interface ExpiredItemsState {

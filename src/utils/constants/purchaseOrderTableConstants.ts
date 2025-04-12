@@ -11,6 +11,8 @@ export const purchaseOrderTableConstants = Object.freeze({
         sortable: true,
       },
       { key: 'dealerName', label: 'Dealer Name' },
+      { key: 'BrandName', label: 'Brand Name' },
+      { key: 'CompanyName', label: 'Company Name' },
       { key: 'phoneNumber', label: 'Phone Number' },
       { key: 'payment', label: 'Payment' },
       { key: 'totalBillAmount', label: 'Total Bill' },
@@ -27,5 +29,7 @@ export const purchaseOrderTableConstants = Object.freeze({
       { key: 'share', label: 'Share' },
       { key: 'actions', label: 'Actions' },
     ],
+    COMPANY_NAME: 'CompanyName',
+    BRAND_NAME: 'BrandName',
   });
   
