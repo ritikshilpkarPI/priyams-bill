@@ -20,4 +20,5 @@ export const Label = lazy(() => import('./Label'));
 export const NewPurchaseOrder = lazy(() => import('./newPurchaseOrder/NewPurchaseOrder'));
 export const StoreInventoryManagement = lazy(() => import('./storeInventoryManagement/StoreInventoryManagement'));
 export const StoreInventory = lazy(() => import('./storeInventory/StoreInventory'));
-
+export const NewInventoryPage = lazy(()=> import("./NewInventoryPage"));
+export const ItemPurchaseOrdersPage = lazy (()=> import("./ItemPurchaseOrdersPage"));

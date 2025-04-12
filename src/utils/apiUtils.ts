@@ -1,5 +1,8 @@
 import { toast } from 'react-toastify';
-import { setExpiredItems, setLoading } from 'src/redux/expiredItems/expiredItemsSlice';
+import {
+  setExpiredItems,
+  setLoading,
+} from 'src/redux/expiredItems/expiredItemsSlice';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import { getUserDetails, getUserDeviceInfo } from './getUserDeviceInfo';
@@ -29,11 +32,11 @@ export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
   try {
     const storeData = localStorage.getItem('storeData');
     if (!storeData) {
-      return toast.error(MESSAGES.STOREDATA_IS_REQUIRED); 
+      return toast.error(MESSAGES.STOREDATA_IS_REQUIRED);
     }
     const parsedStoreData = storeData ? JSON.parse(storeData) : null;
-    const requestData = { ...data, storeData:parsedStoreData };
-   
+    const requestData = { ...data, storeData: parsedStoreData };
+
     const response = await postAPI({
       path: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
       data: requestData,
@@ -43,8 +46,6 @@ export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
     return { isError: true, err };
   }
 };
-
-
 
 export const getItemsSellDetailsByPurchaseOrderIdAPI = async (
   purchaseOrderId: string,
@@ -183,22 +184,23 @@ export const getItemByIdAPI = async (itemId: string) => {
   }
 };
 
-
-
 export const updatePOPaymentAPI = async (
   paymentDetails: PaymentDetailType,
   paymentMethod: string,
   purchaseOrderId: string,
   paymentImages?: File[],
-  index?: number,
+  index?: number
 ) => {
   try {
     const formData = new FormData();
 
-    formData.append('data', JSON.stringify({
-      paymentMethod,
-      purchaseData: paymentDetails,
-    }));
+    formData.append(
+      'data',
+      JSON.stringify({
+        paymentMethod,
+        purchaseData: paymentDetails,
+      })
+    );
 
     if (paymentImages?.length) {
       paymentImages.forEach((image) => {
@@ -209,7 +211,7 @@ export const updatePOPaymentAPI = async (
     const response = await postAPI({
       path: `${API_PATHS.PAYMENT.POST_UPDATE_PAYMENT_BY_ID}/${purchaseOrderId}`,
       data: formData,
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response;
   } catch (error) {
@@ -220,14 +222,14 @@ export const updatePOPaymentAPI = async (
 export const deletePaymentByIdAPI = async (
   purchaseOrderId: string,
   paymentMethod: string,
-  paymentId: string,
+  paymentId: string
 ) => {
   try {
     const response = await postAPI({
       path: `${API_PATHS.PAYMENT.POST_DELETE_PAYMENT_BY_ID}/${purchaseOrderId}`,
       data: {
         paymentMethod,
-        paymentId,        
+        paymentId,
       },
     });
     return response;
@@ -251,32 +253,35 @@ export const draftOrderByIdAPI = async (purchaseOrderId: string) => {
   }
 };
 
-export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[])=>{
+export const transferStockToStoreAPI = async (
+  selectedStoreId: string,
+  items: any[]
+) => {
   try {
     const response = await postAPI({
       path: API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,
-      data:{
+      data: {
         items,
-        collectionName:selectedStoreId,
+        collectionName: selectedStoreId,
       },
     });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
 export const getAllStoresAPI = async () => {
   try {
     const response = await getAPI({
       path: API_PATHS.STORE.GET_ALL_STORES,
-    });   
+    });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
 };
-export const getAllStaffsAPI = async ()=>{
+export const getAllStaffsAPI = async () => {
   try {
     const response = await getAPI({
       path: API_PATHS.STAFF.GET_STAFFS,
@@ -285,16 +290,14 @@ export const getAllStaffsAPI = async ()=>{
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-
-export const getAllStaffsByStoreIdAPI = async ()=>{
+export const getAllStaffsByStoreIdAPI = async () => {
   try {
-    
     const storedStoreDataString = localStorage.getItem('storeData');
 
     if (!storedStoreDataString) {
-      throw new Error(MESSAGES.NO_STORE_DATA_FOUND_IN_LOCAL_STORAGE)
+      throw new Error(MESSAGES.NO_STORE_DATA_FOUND_IN_LOCAL_STORAGE);
     }
 
     const storeData = JSON.parse(storedStoreDataString);
@@ -303,62 +306,62 @@ export const getAllStaffsByStoreIdAPI = async ()=>{
     const response = await getAPI({
       path: `${API_PATHS.STAFF.GET_STAFFS}/${storeId}`,
     });
-    
+
     return response;
   } catch (error) {
     
     return { isError: true, error };
   }
-}
-export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
-
-  try {
-    const response = await postAPI({
-      path: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
-      data: {
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0],
-      },
-    });
-    
-
-    dispatch(setExpiredItems(response?.message?.expiredItems || [] ));
-  } catch (err) {
-    console.log('Error fetching expired items', err);
-    dispatch(setExpiredItems([]));
-  } finally {
-    dispatch(setLoading(false));
-  }
 };
+export const fetchExpiredItems =
+  (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
+    dispatch(setLoading(true));
 
-export const getAllCompaniesAPI = async ()=>{
+    try {
+      const response = await postAPI({
+        path: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
+        data: {
+          startDate: startDate.toISOString().split('T')[0],
+          endDate: endDate.toISOString().split('T')[0],
+        },
+      });
+
+      dispatch(setExpiredItems(response?.message?.expiredItems || []));
+    } catch (err) {
+      console.log('Error fetching expired items', err);
+      dispatch(setExpiredItems([]));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+export const getAllCompaniesAPI = async () => {
   try {
     const response = await getAPI({
       path: API_PATHS.COMPANY.GET_ALL_COMPANY,
-    });    
+    });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const getAllBrandsAPI = async ()=>{
+export const getAllBrandsAPI = async () => {
   try {
     const response = await getAPI({
       path: API_PATHS.BRAND.GET_ALL_BRAND,
-    });    
+    });
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
 
-export const getAllDealersAPI = async ()=>{
+export const getAllDealersAPI = async () => {
   try {
     const response = await getAPI({
       path: API_PATHS.DEALER.GET_ALL_DEALERS,
-    });   
+    });
     return response;
   } catch (error) {
     return { isError: true, error };
@@ -371,7 +374,6 @@ export const addNewDealerAPI = async (
   dealerBrands: string[] = [],
   dealerCompanies: string[] = []
 ) => {
-  
   try {
     const response = await postAPI({
       path: API_PATHS.DEALER.ADD_NEW_DEALER,
@@ -511,6 +513,24 @@ export const draftPurchaseOrder = async (
     );
   }
 };
+
+export const itemPurchaseBatches = async (
+  page?: number,
+  limit?: number,
+  itemId?: string
+) => {
+    const params = new URLSearchParams();
+    if (itemId) params.append('item_id', "633552ea83c644ae355af273");
+    if (typeof page === 'number') params.append('page', page.toString());
+    if (typeof limit === 'number') params.append('limit', limit.toString());
+
+    const response:any = await genericAxios({
+      url: `${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}?${params.toString()}`,
+      method: API_METHODS.GET,
+    });
+  return response.data;
+};
+
 
 export const getItemsFromStoreInventory = async (
   storeId: string, query: { size: number, page: number }
