@@ -20,6 +20,14 @@ const purchaseOrderSchema = new mongoose.Schema({
       validate: Boolean,
       item_id: String,
       brand: String,
+      brandId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Brand',
+      },
+      companyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+      },
       category: String,
       brandId: {
         type: mongoose.Schema.Types.ObjectId,

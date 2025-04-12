@@ -45,6 +45,14 @@ const ItemSchema = new mongoose.Schema(
     slabPricing: { type: Array },
     minStockReached: { type: Boolean, default: false },
     itemBrandName: { type: String },
+    brandId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Brand',
+    },
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+    },
     itemCategory: { type: String },
     useByDate: [
       {

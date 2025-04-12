@@ -176,6 +176,7 @@ declare global {
     dealerName: string;
     phoneNumber: string;
     remark: string;
+    dealerId: string;
   };
 
   
@@ -449,6 +450,43 @@ declare global {
     itemDetail: WarehouseItem;
     itemQuantityInBill: number;
   }
+  interface Brand {
+    _id: string;
+    brandName: string;
+    companyId: string;
+  }
+  interface BrandState {
+    brands: Brand[];
+    loading: boolean;
+    error: string | null;
+  }
+  interface company {
+    _id: string;
+    companyName: string;
+  }
+  interface companyState {
+    companys: company[];
+    loading: boolean;
+    error: string | null;
+  }
+  type BrandSelectorProps = {
+    label?: string;
+    value: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean;
+  };
+  type CompanySelectorProps = {
+    value: string;
+    onChange: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean; 
+  };
   interface StaffInterface {
     _id?: string;
     name?: string;
@@ -475,6 +513,19 @@ declare global {
     mfgDate: string;
     expiryDate: string;
     expiryQuantity: number;
+  }
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
   }
   
   interface ExpiredItemsState {
@@ -558,6 +609,10 @@ declare global {
   }
   
   
+  type DealerOption = {
+    value: string;
+    label: string;
+  };
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

@@ -1,10 +1,30 @@
 const { getItemSKU } = require('../util/getItemSKU');
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const { MESSAGES } = require ('../constants/messages');
+const { createBrandAndCompany } = require('../util/createBrandAndCompany');
 
 const updateOrderByIndex = async (req, res,next) => {
     try {
       const purchase_id = req.params.id;
       const { index, new_order } = req.body;
+
+      if (!new_order.brand || !new_order.companyName)
+        return res.status(400).json({ error: MESSAGES.MISSING_REQUIRED_FIELDS });
+
+      const { success, brand, company } = await createBrandAndCompany(
+        new_order.companyName,
+        new_order.brand
+      );
+  
+      if (!success) {
+        return res
+          .status(404)
+          .json({
+            message: MESSAGES.SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY,
+            success: false,
+          });
+      }
+
       new_order.sku = getItemSKU(
         {
           itemQuantity: new_order.itemQuantity,
@@ -13,6 +33,9 @@ const updateOrderByIndex = async (req, res,next) => {
           barcode: new_order.barcode,
           mrp: new_order.mrp
        });
+      new_order.brandId = brand._id
+      new_order.companyId = company._id
+
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
       
       if ( index >= 0 && index < purchaseOrder.purchasedItems.length) {
