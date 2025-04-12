@@ -214,6 +214,7 @@ declare global {
     onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
     loading?: boolean;
     isApprovedPO?: boolean;
+    onItemSelect: (item: { itemDetail: BillLeanItemType }) => void;
   }
 
   interface ItemExpiryDateType {

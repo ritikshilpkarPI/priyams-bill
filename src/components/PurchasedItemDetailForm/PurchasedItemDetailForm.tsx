@@ -48,13 +48,15 @@ import { setItemsData } from '../../redux/items/itemsSlice';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 import { radioGroupConfig, skuModalQuestion, YES } from 'src/constants/purchaseOrderConstants';
+import { ItemSearch } from '../ItemSearch';
 
 
 
 export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = ({
   onSubmit,
   loading,
-  isApprovedPO
+  isApprovedPO,
+  onItemSelect,
 }) => {
   const dispatch = useDispatch();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
@@ -278,6 +280,9 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
             </span>
           </Flex>
         </Title>
+        <Box>
+          <ItemSearch onItemSelect={onItemSelect} isApprovedPO={isApprovedPO} />
+        </Box>
         <Flex wrap="wrap" direction="row" gap="32px">
           <Box>
             <Divider my="xs" label="Item SKU Details" labelPosition="center" />
