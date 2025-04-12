@@ -1,7 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
-import { StockTransactionType } from "../types";
-
-
+import mongoose, { Document, Schema } from 'mongoose';
+import { StockTransactionType } from '../types';
 
 const StockTransactionSchema = new Schema<StockTransactionType>(
   {
@@ -10,25 +8,28 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       required: true,
     },
     source: {
-        sourceStaff: {
-          type: Schema.Types.ObjectId,
-          ref: "Staff",
-        },
-        sourceEntityId: {
-          type: Schema.Types.ObjectId,
-        },
-        sourceType: { type: String },
-        sourceRemark: {
-          type: String,
-        },
+      sourceStaff: {
+        type: Schema.Types.ObjectId,
+        ref: 'Staff',
       },
-    destination: {
-        destinationEntityId: {
+      sourceEntityId: {
         type: Schema.Types.ObjectId,
       },
-      destinationStaff: {
+      sourceType: { type: String },
+      sourceRemark: {
         type: String,
       },
+    },
+    destination: {
+      destinationStaff: {
+        type: Schema.Types.ObjectId,
+        ref: 'Staff',
+      },
+      destinationEntityId: {
+        type: Schema.Types.ObjectId,
+      },
+
+      destinationType: { type: String },
       destinationRemark: {
         type: String,
       },
@@ -42,7 +43,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
     },
     transactionStatus: {
       type: String,
-      default: "pending",
+      default: 'pending',
     },
     hasErrors: {
       type: Boolean,
@@ -64,7 +65,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
         itemId: {
           type: Schema.Types.ObjectId,
           required: true,
-          ref: "Item",
+          ref: 'Item',
         },
         itemByDate: [
           {
@@ -81,7 +82,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
             error: {
               errorReason: {
                 type: String,
-                default: "NONE",
+                default: 'NONE',
               },
               errorQty: { type: Number },
             },
@@ -94,6 +95,6 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
 );
 
 export const StockTransactionModel = mongoose.model<StockTransactionType>(
-  "StockTransaction",
+  'StockTransaction',
   StockTransactionSchema
 );

@@ -68,8 +68,9 @@ export interface TransactionSource {
 }
 
 export interface TransactionDestination {
-  destinationEntityId?: Types.ObjectId;
   destinationStaff?: Types.ObjectId;
+  destinationEntityId?: Types.ObjectId;
+  destinationType?: string;
   destinationRemark?: string;
 }
 
