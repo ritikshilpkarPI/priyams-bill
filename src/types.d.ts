@@ -288,7 +288,7 @@ declare global {
     isPaid?: boolean;
     totalPaidAmount?: number;
     createdAt?: string;
-    _id?: string;
+    _id?: string ;
     purchasedItems?: Array<PurchasedItemDetailFormType>;
     purchaseDetails?: PaymentDetailType;
     billPhotos?: Array<CloudFileType>;
@@ -486,7 +486,7 @@ declare global {
     label: string;
     key: string;
     sortable?: boolean;
-    render?: (row: any) => React.ReactNode;
+    render?: (row: any,index?: number) => React.ReactNode;
   }
   
   interface DataTableProps {
@@ -501,7 +501,52 @@ declare global {
     onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
     onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     rowCount: number;
-    paginationMode?: 'client' | 'server'; // 👈 Add this line if you want to support both modes
+    paginationMode?: 'client' | 'server'; 
+  }
+  interface PurchaseListApprovalProps {
+    allPurchaseList: any[];
+    approveOrder: (id: string) => void;
+    rejectOrder: (id: string) => void;
+    makeDraft: (id: string) => void;
+    loading: boolean;
+  }
+  interface LoadingState {
+    [key: string]: { state: boolean; btnName: string } | undefined;
+  }
+  interface PurchaseListApprovalProps {
+    allPurchaseList: PurchaseOrderDataType[];
+    loading?: boolean;
+    getOrders?: (type: string) => void;
+  }
+  
+  interface PurchaseListApprovalState {
+    allPurchaseList: PurchaseOrderDataType[];
+    loadingState: LoadingState;
+    order: 'asc' | 'desc';
+    orderBy: string;
+    page: number;
+    rowsPerPage: number;
+    indexDetail: number | null;
+    isAdminUser: boolean;
+  }
+  interface RenderActionsProps {
+    list: any ;
+    index: number;
+    isAdminUser: boolean;
+    isApprovedPO: boolean;
+    isSavedApprovedPage: boolean;
+    loadingState: LoadingState; 
+    draftOrder: (id: string, index: number) => void;
+    approveOrder: (id: string, index: number, list: any) => void;
+    rejectOrder: (id: string, index: number) => void;
+    navigate:any
+  };
+
+  interface ShelfLifeInfoProps {
+    expiryDate: {
+      mfgDate: string | Date;
+      date: string | Date;
+    };
   }
   
   
