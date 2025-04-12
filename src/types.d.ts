@@ -176,6 +176,7 @@ declare global {
     dealerName: string;
     phoneNumber: string;
     remark: string;
+    dealerId: string;
   };
 
   
@@ -208,6 +209,14 @@ declare global {
     freeItemsRemarks?: string;
     itemHasExpiry?: boolean | null;
     profitPercentage: number;
+    brandId: {
+      brandName: string;
+      brandId: string;
+    };
+    companyId: {
+      companyName: string;
+      companyId: string;
+    };
   }
 
   interface PurchasedItemDetailFormProps {
@@ -505,6 +514,19 @@ declare global {
     expiryDate: string;
     expiryQuantity: number;
   }
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
+  }
   
   interface ExpiredItemsState {
     items: ExpiredItem[];
@@ -587,6 +609,10 @@ declare global {
   }
   
   
+  type DealerOption = {
+    value: string;
+    label: string;
+  };
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

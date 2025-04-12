@@ -100,6 +100,7 @@ const NewPurchaseOrder = () => {
         dealerName: data.dealerName,
         phoneNumber: data.phoneNumber,
         remark: data.remark,
+        dealerId: data.dealerId,
       })
     );
   };

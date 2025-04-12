@@ -58,6 +58,8 @@ import { transferStockToStore } from "./transferStockToStore"
 import { getAllCompanies } from './getAllCompanies';
 import { getAllBrands } from './getAllBrand';
 import { getAllStaffs } from "./getAllStaffs"
+import { getAllDealers } from "./getAllDealers";
+import { addNewDealer } from "./addNewDealer";
 
 export {
   addBulkItems,
@@ -119,5 +121,8 @@ export {
   transferStockToStore,
   getAllCompanies,
   getAllBrands,
-  getAllStaffs,
+  getAllStaffs, 
+  getAllDealers,
+  addNewDealer,
+
 };
