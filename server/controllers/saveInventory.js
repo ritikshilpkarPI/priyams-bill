@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
+import { DealerModel } from "../db-models/dealer-model";
 const { CONSTANTS } = require('../constants/constants');
 
 const saveInventory = async (req, res, next) => {
@@ -32,6 +33,8 @@ const saveInventory = async (req, res, next) => {
 
     let bulkOperations = [];
     let failedItems = [];
+    let brandIds = [];
+    let companyIds = [];
     newItems.forEach((item) => {
       const newShelfDates = (item.expiryDates || []).map((exp, idx) => ({
         expiryDate: new Date(exp.date),
@@ -40,6 +43,8 @@ const saveInventory = async (req, res, next) => {
         purchaseOrderId: purchaseOrderId,
         entryDate: new Date(),
       }));
+      brandIds.push(item.brandId)
+      companyIds.push(item.companyId)
       const itemDetails = {
         itemName: item.inputName,
         itemBarcode: item.barcode,
@@ -63,6 +68,8 @@ const saveInventory = async (req, res, next) => {
         returnPolicyAvailable: item.returnPolicyAvailable,
         returnPolicyRemark: item.returnPolicyRemark,
         freeItemAvailable: item.freeItemAvailable,
+        brandId: item.brandId,
+        companyId: item.companyId,
         sku: getItemSKU({
           itemQuantity: item?.itemQuantity,
           unit: item?.unit,
@@ -192,6 +199,23 @@ const saveInventory = async (req, res, next) => {
         referer: referer, 
       },
     };
+
+    const getPurchaseOrder = await PurchaseOrder.findById(purchaseOrderId)
+    const dealerId = getPurchaseOrder.dealerId;
+    let updatedDealer
+
+    if (dealerId) {
+      updatedDealer = await DealerModel.findByIdAndUpdate(
+        dealerId,
+        {
+          $addToSet: {
+            dealerCompanies: { $each: companyIds },
+            dealerBrands: { $each: brandIds },
+          },
+        },
+        { new: true }
+      );
+    }
     
     // If all items are successfully inserted or updated, approve the purchase order
     const order = await PurchaseOrder.findByIdAndUpdate(

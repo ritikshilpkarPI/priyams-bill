@@ -88,8 +88,8 @@ const StoreInventoryManagement: React.FC = () => {
     dispatch(addInventoryItem(newItem));
   };
 
-  const handleQuantityChange = (itemId: string, quantity: number) => {
-    dispatch(updateInventoryItemQuantity({ itemId, quantity }));
+  const handleQuantityChange = (itemId: string, quantity: number, shelfId?: string) => {
+    dispatch(updateInventoryItemQuantity({ itemId, quantity, shelfId }));
   };
 
   const handleRemoveItem = (itemId: string) => {
@@ -101,10 +101,11 @@ const StoreInventoryManagement: React.FC = () => {
       itemsArray.push({
         itemId: item.itemDetail._id,
         quantity: item.quantityToAdd,
+        itemShelfDates: item?.itemShelfDates ?? []
       });
     }
     return itemsArray;
-  };
+  };  
 
   const updateStore = async ()=>{
     setLoading(true);
@@ -121,6 +122,24 @@ const StoreInventoryManagement: React.FC = () => {
     setLoading(false);
     toast.success('store update successfully');
   }
+
+const validateInventoryItems = () => {
+  const errors: YupValidationErrorMapType = {};
+  inventoryItems.forEach((item) => {
+    const totalShelfQuantity = item.itemDetail.itemShelfDates?.reduce(
+      (acc: any, shelf: { quantityToAdd: any; }) => acc + shelf.quantityToAdd,
+      0
+    );
+    if (totalShelfQuantity > item.quantityToAdd) {
+      errors.inventoryItems = 'Shelf quantities exceed total quantity';
+    }
+    if (totalShelfQuantity !== 0 && totalShelfQuantity < item.quantityToAdd) {
+      errors.inventoryItems = 'Total quantity should be equal to shelf quantities';
+    }
+    
+  });
+  return errors;
+}
   
   const handleSubmit = async () => {
     try {
@@ -128,6 +147,13 @@ const StoreInventoryManagement: React.FC = () => {
         abortEarly: false,
       })
       setErrors({});
+
+      const validationErrors = validateInventoryItems();
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
+      }
+
       await updateStore()
       // dispatch(resetStoreInventory());
       // dispatch(fetchBillingLeanItems())
@@ -164,10 +190,24 @@ const StoreInventoryManagement: React.FC = () => {
         <Grid.Col span={12}>
           <ItemSearch
             onItemSelect={handleItemSelect}
-            isApprovedPO={undefined}
+            // passing the selected store id to the item search to disable the items search
+            isApprovedPO={!selectedStoreId}
             error={errors.inventoryItems}
           />
+          {!selectedStoreId && (
+            <Text
+              sx={{ 
+                color: 'red',
+                fontSize: '12px',
+                marginTop: '4px',
+              }}
+            >
+              Please select a store to add items.
+            </Text>
+          )}
+              
         </Grid.Col>
+       
 
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
           <StoreSelect
@@ -175,7 +215,21 @@ const StoreInventoryManagement: React.FC = () => {
             value={selectedStoreId}
             onChange={handleStoreChange}
             error={errors.selectedStoreId}
+            disabled={inventoryItems.length > 0}
           />
+          {
+            inventoryItems.length > 0 && (
+              <Text
+                sx={{
+                  color: 'red',
+                  fontSize: '12px',
+                  marginTop: '4px',
+                }}
+              >
+                Store cannot be changed after adding items. Please remove all items to change the store.
+              </Text>
+            )
+          }
         </Grid.Col>
 
         <Grid.Col span={12}>
