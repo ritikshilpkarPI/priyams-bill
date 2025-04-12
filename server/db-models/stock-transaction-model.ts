@@ -10,7 +10,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
     source: {
       sourceStaff: {
         type: Schema.Types.ObjectId,
-        ref: 'Staff',
+        ref: 'staff',
       },
       sourceEntityId: {
         type: Schema.Types.ObjectId,
@@ -23,7 +23,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
     destination: {
       destinationStaff: {
         type: Schema.Types.ObjectId,
-        ref: 'Staff',
+        ref: 'staff',
       },
       destinationEntityId: {
         type: Schema.Types.ObjectId,
