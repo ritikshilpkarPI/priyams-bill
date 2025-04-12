@@ -60,3 +60,12 @@ export  interface AddressComponent {
       role: string;
     };
   };
+
+  export interface CompanyType extends Document {
+    companyName: string;
+  }
+
+  export interface BrandType extends Document {
+    brandName: string;
+    companyId: Types.ObjectId;
+  }

@@ -113,6 +113,37 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
       };
     }
 
+    if (col.key === 'BrandName') {
+      return {
+        ...col,
+        render: (row: any) => (
+          <div>
+            {row.brandCompanyNames.map(({ brand}: any, index: number) => (
+              <div key={index}>
+                <strong>{brand}</strong>
+              </div>
+            ))}
+          </div>
+        ),
+      };
+    }
+
+    if (col.key === 'CompanyName') {
+      return {
+        ...col,
+        render: (row: any) => (
+          <div>
+            {row.brandCompanyNames.map(({ company }: any, index: number) => (
+              <div key={index}>
+                <strong>{company}</strong>
+              </div>
+            ))}
+          </div>
+        ),
+      };
+    }
+    
+
     return col;
   });
 
@@ -125,6 +156,18 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
         data={allPurchaseList.map((row, idx) => {
           const metrics = getPODashboardMetrics(row.purchasedItems || []);
 
+          const brandCompanyNames = [
+            ...new Map(
+              (row.purchasedItems || []).map((item: { brandId: { brandName: string; }; companyId: { companyName: string; }; }) => {
+                const brand = item.brandId?.brandName || '';
+                const company = item.companyId?.companyName || '';
+                const key = `${brand}-${company}`;
+                console.log({ key });
+                
+                return [key, { brand, company }];
+              })
+            ).values()
+          ];
           return {
             ...row,
 
@@ -142,6 +185,8 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
             newItemsCount: metrics.newItemsCount,
             itemsWithManuAndExpiry: metrics.itemsWithManuAndExpiry,
             itemsWithShortExpiry: metrics.itemsWithShortExpiry,
+            brandCompanyNames,
+
           };
         })}
         isLoading={loading}
