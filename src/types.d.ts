@@ -514,6 +514,7 @@ declare global {
     mfgDate: string;
     expiryDate: string;
     expiryQuantity: number;
+    _id:string
   }
   interface Dealer {
     _id?: string;
