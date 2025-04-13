@@ -116,8 +116,9 @@ const ExpiredItemTable: React.FC = () => {
 
       <DataTable
         columns={columns}
-        data={items.map((item: ExpiredItem) => ({
+        data={items.map((item: ExpiredItem,index) => ({
           ...item,
+          id: `${item._id}-${index}`, 
           manufacturingDate: formatShortDate(item.mfgDate),
           expiryDate: formatShortDate(item.expiryDate),
         }))}

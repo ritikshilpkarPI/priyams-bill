@@ -223,6 +223,7 @@ declare global {
     onSubmit: (purchasedItemFormData: PurchasedItemDetailFormType) => void;
     loading?: boolean;
     isApprovedPO?: boolean;
+    onItemSelect: (item: { itemDetail: BillLeanItemType }) => void;
   }
 
   interface ItemExpiryDateType {
@@ -513,6 +514,7 @@ declare global {
     mfgDate: string;
     expiryDate: string;
     expiryQuantity: number;
+    _id:string
   }
   interface Dealer {
     _id?: string;

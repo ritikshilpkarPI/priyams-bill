@@ -58,6 +58,7 @@ import { transferStockToStore } from "./transferStockToStore"
 import { getAllCompanies } from './getAllCompanies';
 import { getAllBrands } from './getAllBrand';
 import { getAllStaffs } from "./getAllStaffs"
+import { itemsStaticAttributes } from "./itemsStaticAttributes"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 
@@ -119,6 +120,7 @@ export {
   getItemsSku,
   getAllStores,
   transferStockToStore,
+  itemsStaticAttributes,
   getAllCompanies,
   getAllBrands,
   getAllStaffs, 
