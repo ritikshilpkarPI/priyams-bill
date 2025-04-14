@@ -1,137 +1,32 @@
-import { useEffect, useState } from 'react';
-import { Button, Loader, Table, Text, Collapse } from '@mantine/core';
+import { useState } from 'react';
+import { Button, Table, Text, Modal } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-import ProtectedComponent from '../components/ProtectedComponent';
 import access from '../access';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
+import DataGrid from './DataTable';
+import { formatShortDate } from '../utils/formatDate';
+import { parseJwt } from 'src/utils/cookie';
+import Cookies from 'js-cookie';
 
-const BillFeed = ({ fromDayWise = false, bills = [] }) => {
-  const [allBills, setAllBills] = useState([]);
-  const [loader, setLoader] = useState(false);
-  useEffect(() => {
-    setLoader(true);
-    const getBillFeed = async () => {
-      const fetch = await genericAxios({
-        url: API_PATHS.BILLING.GET_BILL_FEED,
-        method: API_METHODS.GET,
-        params: {
-          page: 1,
-          size: 100,
-        },
-        headers: {
-          Cookie: '',
-        },
-      });
-      if (fetch.error) return;
-      setAllBills(fetch.data.message.allBill);
-      setLoader(false);
-    };
-    if (bills.length) {
-      setAllBills(bills);
-      setLoader(false);
-    } else {
-      getBillFeed();
+const BillFeed = ({
+  fromDayWise = false,
+  bills = [],
+  isLoading = false,
+  totalBillCount,
+  setPagination,
+  pagination,
+}) => {
+  const [expandDetails, setExpandDetails] = useState();
+  const [paginationState, setPaginationState] = useState(
+    pagination ?? {
+      page: 1,
+      pageSize: 10,
     }
-    // eslint-disable-next-line
-  }, []);
-
-  return (
-    <>
-      {loader ? (
-        <div
-          style={{
-            height: '95vh',
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Loader color="blue" size="xl" />
-        </div>
-      ) : (
-        <Table striped highlightOnHover>
-          <thead className="heading">
-            <tr>
-              <th>
-                <Text align="center">Sl. No.</Text>
-              </th>
-              <th>
-                <Text align="center">Customer Name</Text>
-              </th>
-              <th>
-                <Text align="center">Customer Phone</Text>
-              </th>
-              <th>
-                <Text align="center">Bill Total Amount</Text>
-              </th>
-              <th>
-                <Text align="center">Bill MRP Total Amount</Text>
-              </th>
-              <th>
-                <Text align="center">Cash Paid</Text>
-              </th>
-              <th>
-                <Text align="center">UPI Paid</Text>
-              </th>
-              <th>
-                <Text align="center">Amount Return</Text>
-              </th>
-              <th>
-                <Text align="center">Total Items</Text>
-              </th>
-              <th>
-                <Text align="center">Quantity</Text>
-              </th>
-              <th>
-                <Text align="center">Bill Discount</Text>
-              </th>
-              <ProtectedComponent role={access.BILL_PROFIT_ROW}>
-                <th>
-                  <Text align="center">Bill Profit</Text>
-                </th>
-              </ProtectedComponent>
-              <th>
-                <Text align="center">Bill date</Text>
-              </th>
-              <th>
-                <Text align="center">Bill created by</Text>
-              </th>
-              <th>
-                <Text align="center">Whatsapp Bill</Text>
-              </th>
-              <th>
-                <Text align="center">Items</Text>
-              </th>
-              <ProtectedComponent role={access.DELETE_BILL_ROW}>
-                <th>
-                  <Text align="center">Delete Bill</Text>
-                </th>
-              </ProtectedComponent>
-            </tr>
-          </thead>
-          <tbody className="body">
-            {allBills.map((bill, idx) => {
-              return (
-                <TableRow
-                  isFromDayWiseBills={fromDayWise}
-                  key={`${bill}$${idx}`}
-                  bill={bill}
-                  idx={idx}
-                />
-              );
-            })}
-          </tbody>
-        </Table>
-      )}
-    </>
   );
-};
-
-const TableRow = ({ bill, idx, isFromDayWiseBills }) => {
-  const [open, setOpen] = useState(false);
+  const { role: userRole = '' } = parseJwt(Cookies.get('token'));
+  const hasAccess = (role) => role?.includes(userRole);
   let navigate = useNavigate();
   function handleClick(id) {
     navigate(`/edit/${id}`);
@@ -182,168 +77,190 @@ const TableRow = ({ bill, idx, isFromDayWiseBills }) => {
 
     sendCustomerMessage(bill._id);
   };
-  return (
-    <>
-      <tr
-        onClick={() => setOpen(!open)}
-        className="bill-row"
-        style={{ cursor: 'pointer' }}
-      >
-        <td>
-          <Text color="black" weight={500}>
-            {idx + 1}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['customerName'] || 'customerName'}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['customerPhone'] || 'customerPhone'}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['billAmountTotal']?.toFixed(2)}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['billMRPTotal']?.toFixed(2)}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['cashPay']?.toFixed(2)}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['upiPay']?.toFixed(2)}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['amountReturn']?.toFixed(2)}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['totalNumberOfItems'] || 0}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['totalNumberOfUniqueItems'] || 0}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-            {bill['billDiscountTotal']?.toFixed(2)}
-          </Text>
-        </td>
-        <ProtectedComponent role={access.BILL_PROFIT_ROW}>
-          <td>
-            <Text color="black" weight={500}>
-              {bill['totalBillProfit']?.toFixed(2)}
-            </Text>
-          </td>
-        </ProtectedComponent>
-        <td>
-          <Text color="black" weight={500}>
-            {new Date(bill['createdAt']).toLocaleString()}
-          </Text>
-        </td>
-        <td>
-          <Text color="black" weight={500}>
-           {bill['staffId']?.name || bill['staffId']?.username || bill['staffInfo']?.name || bill['staffInfo']?.username || 'N/A'}
-          </Text>
-        </td>
-        <td>
-          <Button
-            color={bill.messageSend ? 'blue' : 'green'}
-            disabled={bill.customerPhone && bill.customerName ? false : true}
-            onClick={() => sendBill(bill)}
-          >
-            Send Bill
-          </Button>
-        </td>
-        <td>
-          <Button onClick={() => handleClick(bill['_id'])}>Edit Bill</Button>
-        </td>
-        <ProtectedComponent role={access.DELETE_BILL_ROW}>
-          <td>
-            <Button onClick={() => handleDeleteBill(bill['_id'])}>
+
+  const columns = [
+    { label: 'Sl.No.', key: 'serialNo', sortable: true },
+    { label: 'Customer Name', key: 'customerName', sortable: true },
+    { label: 'Customer Phone', key: 'customerPhone', sortable: true },
+    { label: 'Total Amount', key: 'billAmountTotal', sortable: true },
+    { label: 'MRP Total Amount', key: 'billMRPTotal', sortable: true },
+    { label: 'Cash Paid', key: 'cashPay', sortable: true },
+    { label: 'UPI Paid', key: 'upiPay', sortable: true },
+    { label: 'Amount Return', key: 'amountReturn', sortable: true },
+    { label: 'Total Items', key: 'totalNumberOfItems', sortable: true },
+    { label: 'Quantity', key: 'totalNumberOfUniqueItems', sortable: true },
+    hasAccess(access.BILL_PROFIT_ROW)
+      ? { label: 'Profit', key: 'totalBillProfit', sortable: true }
+      : null,
+    { label: 'Discount', key: 'billDiscountTotal', sortable: true },
+    { label: 'Date', key: 'createdAt', sortable: true },
+    { label: 'Created By', key: 'billCreatedBy', sortable: true },
+    {
+      label: 'Whatsapp Bill',
+      key: 'sendBill',
+      render: (row) => (
+        <Button
+          color={row.messageSend ? 'blue' : 'green'}
+          disabled={row.customerPhone && row.customerName ? false : true}
+          onClick={() => sendBill(row)}
+        >
+          Send Bill
+        </Button>
+      ),
+      sortable: false,
+    },
+    {
+      label: 'Items',
+      key: 'editItem',
+      render: (row) => (
+        <Button onClick={() => handleClick(row._id)}>Edit Bill</Button>
+      ),
+      sortable: false,
+    },
+    hasAccess(access.BILL_PROFIT_ROW)
+      ? {
+          label: 'Delete Bill',
+          key: 'deleteBill',
+          render: (row) => (
+            <Button onClick={() => handleDeleteBill(row['_id'])}>
               Delete Bill
             </Button>
-          </td>
-        </ProtectedComponent>
-      </tr>
-      {!isFromDayWiseBills && (
-        <tr>
-          <Collapse in={open}>
-            <Table striped highlightOnHover>
-              <thead className="heading">
-                <tr>
-                  <th>
-                    <Text>Sl. No.</Text>
-                  </th>
-                  <th>
-                    <Text>Name</Text>
-                  </th>
-                  <th>
-                    <Text>Quantity</Text>
-                  </th>
-                  <th>
-                    <Text>MRP</Text>
-                  </th>
-                  <th>
-                    <Text>Total Amount</Text>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="body">
-                {bill?.items?.length &&
-                  bill?.items.map((billItemObj, idx) => {
-                    return (
-                      <tr key={idx}>
-                        <td>
-                          <Text color="black" weight={500}>
-                            {idx + 1}
-                          </Text>
-                        </td>
-                        <td>
-                          <Text color="black" weight={500}>
-                            {billItemObj?.itemDetail?.itemName ||
-                              'Item name not found'}
-                          </Text>
-                        </td>
-                        <td>
-                          <Text color="black" weight={500}>
-                            {billItemObj?.itemQuantityInBill}
-                          </Text>
-                        </td>
-                        <td>
-                          <Text color="black" weight={500}>
-                            {billItemObj?.itemMRPtotal}
-                          </Text>
-                        </td>
-                        <td>
-                          <Text color="black" weight={500}>
-                            {billItemObj?.itemSellingPriceTotal}
-                          </Text>
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </Table>
-          </Collapse>
-        </tr>
+          ),
+          sortable: false,
+        }
+      : null,
+  ].filter(Boolean);
+
+  const rows = bills.map((bill, idx) => ({
+    ...bill,
+    serialNo: idx + 1,
+    createdAt: formatShortDate(bill['createdAt'] || ''),
+    billDiscountTotal: bill['billDiscountTotal']?.toFixed(2),
+    totalNumberOfUniqueItems: bill['totalNumberOfUniqueItems'] || 0,
+    amountReturn: bill['amountReturn']?.toFixed(2),
+    upiPay: bill['upiPay']?.toFixed(2),
+    cashPay: bill['cashPay']?.toFixed(2),
+    billMRPTotal: bill['billMRPTotal']?.toFixed(2),
+    billAmountTotal: bill['billAmountTotal']?.toFixed(2),
+    customerPhone: bill['customerPhone'] || '-',
+    customerName: bill['customerName'] || '-',
+    totalBillProfit: bill['totalBillProfit']?.toFixed(2),
+    billCreatedBy:
+      bill['staffId']?.name ||
+      bill['staffId']?.username ||
+      bill['staffInfo']?.name ||
+      bill['staffInfo']?.username ||
+      'N/A',
+  }));
+
+  const handlePageChange = (_, page) => {
+    if (page > 0) {
+      const callBack = (prev) => ({ ...prev, page });
+      pagination ? setPagination(callBack) : setPaginationState(callBack);
+    }
+  };
+
+  const handleRowsPerPageChange = (e) => {
+    const callBack = (prev) => ({
+      ...prev,
+      pageSize: parseInt(e.target.value.toString(), 10),
+    });
+    pagination ? setPagination(callBack) : setPaginationState(callBack);
+  };
+
+  const rowCount = totalBillCount ? totalBillCount : bills.length;
+
+  const onRowClick = (t) => {
+    const id = t.id;
+    setExpandDetails(id);
+  };
+
+  return (
+    <>
+      <DataGrid
+        columns={columns}
+        data={rows}
+        isLoading={isLoading}
+        order={'asc'}
+        orderBy={'createdAt'}
+        page={paginationState.page}
+        rowsPerPage={paginationState.pageSize}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+        rowCount={rowCount}
+        paginationMode={fromDayWise ? 'client' : 'server'}
+        onRowClick={onRowClick}
+      />
+      {!fromDayWise && (
+        <Modal
+          onClose={() => setExpandDetails('')}
+          opened={Boolean(expandDetails)}
+          centered
+        >
+          <ItemTable bill={rows.find((r) => r._id === expandDetails)} />
+        </Modal>
       )}
     </>
+  );
+};
+
+const ItemTable = ({ bill }) => {
+  return (
+    <Table striped highlightOnHover>
+      <thead className="heading">
+        <tr>
+          <th>
+            <Text>Sl. No.</Text>
+          </th>
+          <th>
+            <Text>Name</Text>
+          </th>
+          <th>
+            <Text>Quantity</Text>
+          </th>
+          <th>
+            <Text>MRP</Text>
+          </th>
+          <th>
+            <Text>Total Amount</Text>
+          </th>
+        </tr>
+      </thead>
+      <tbody className="body">
+        {bill?.items?.length &&
+          bill?.items.map((billItemObj, idx) => {
+            return (
+              <tr key={idx}>
+                <td>
+                  <Text color="black" weight={500}>
+                    {idx + 1}
+                  </Text>
+                </td>
+                <td>
+                  <Text color="black" weight={500}>
+                    {billItemObj?.itemDetail?.itemName || 'Item name not found'}
+                  </Text>
+                </td>
+                <td>
+                  <Text color="black" weight={500}>
+                    {billItemObj?.itemQuantityInBill}
+                  </Text>
+                </td>
+                <td>
+                  <Text color="black" weight={500}>
+                    {billItemObj?.itemMRPtotal}
+                  </Text>
+                </td>
+                <td>
+                  <Text color="black" weight={500}>
+                    {billItemObj?.itemSellingPriceTotal}
+                  </Text>
+                </td>
+              </tr>
+            );
+          })}
+      </tbody>
+    </Table>
   );
 };
 
