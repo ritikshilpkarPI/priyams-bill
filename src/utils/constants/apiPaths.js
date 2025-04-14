@@ -113,4 +113,7 @@ export const API_PATHS = {
     GET_ALL_DEALERS: "/api/dealer",
     ADD_NEW_DEALER: "/api/addNewDealer",
   },
+  STOCK_TRANSACTION: {
+    UPDATE_SOURCE: "/api/stockTransaction/updateSource",
+  }
 };
