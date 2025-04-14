@@ -88,6 +88,7 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
         slabPricing: item.slabPricing,
         itemShelfDate: item.itemShelfDate,
 
+        itemQtyInStore: item.itemQtyInStore,
       },
       itemQuantityInBill: 1
     });
