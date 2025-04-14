@@ -67,6 +67,7 @@ const {
   itemsStaticAttributes,
   getAllDealers,
   addNewDealer,
+  getStockTransactions
 } = require('../controllers/index');
 
 
@@ -279,5 +280,6 @@ router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttribu
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
+router.get(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS, getStockTransactions)
 
 export default router;
