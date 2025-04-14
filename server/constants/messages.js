@@ -29,6 +29,7 @@ const MESSAGES = Object.freeze({
     INVALID_TRANSACTIONS_TYPE: 'Invalid or missing transactionType (IN or OUT required)',
     SOURCE_REQUIRED: 'Source staff and entity ID are required',
     DESTINATION_REQUIRED: 'Destination staff and entity ID are required',
+    TRANSACTIONS_REQUIRED: 'At least one transaction is required',
     TRANSACTION_ITEMS_REQUIRED: 'At least one transaction item is required',
     CREATED: 'Stock transaction created successfully.',
   },

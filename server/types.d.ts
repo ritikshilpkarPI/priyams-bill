@@ -139,3 +139,7 @@ export interface StockTransactionType extends Document {
   isDeleted: boolean;
   transactionItems: TransactionItem[];
 }
+
+export interface StockTransactionsInterface {
+  transactions: StockTransactionType[]
+}
