@@ -7,8 +7,13 @@ import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedIte
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
+import brandSlice from "./brands/brandSlice"
+import companySlice from "./companys/companySlice"
 import userSlice from './user/userSlice';
 import staffSlice from "./staffList/StaffSlice";
+import expiredItemsSlice from './expiredItems/expiredItemsSlice'
+import purchaseListApprovalSlice from './purchaseListApproval/purchaseListApprovalSlice'
+import dealerSlice from './dealerlist/dealerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +26,12 @@ export const store = configureStore({
     purchaseOrder: purchaseOrderSlice,
     paymentDetailForm: paymentDetailFormSlice,
     storeInventoryManagement: storeInventoryManagement,
+    dealer: dealerSlice,
+    brands: brandSlice,
+    company: companySlice,
     staffs: staffSlice,
+    expiredItems: expiredItemsSlice,
+    purchaseListApproval:purchaseListApprovalSlice
   },
 });
 

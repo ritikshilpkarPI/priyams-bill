@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { BrandModel } = require('./brand-model');
+const { CompanyModel } = require('./company-model');
 
 const purchaseOrderSchema = new mongoose.Schema({
   purchasedItems: [
@@ -18,7 +20,23 @@ const purchaseOrderSchema = new mongoose.Schema({
       validate: Boolean,
       item_id: String,
       brand: String,
+      brandId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Brand',
+      },
+      companyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+      },
       category: String,
+      brandId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Brand',
+      },
+      companyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+      },
       subCategory: String,
       flavourOrFeature: String,
       freeItemsAvailable: Boolean,
@@ -138,6 +156,9 @@ const purchaseOrderSchema = new mongoose.Schema({
   salesmanId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Salesman', 
+  },
+  dateOnBill: {
+    type: Date
   },
 });
 

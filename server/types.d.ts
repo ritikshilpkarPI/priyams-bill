@@ -60,3 +60,72 @@ export  interface AddressComponent {
       role: string;
     };
   };
+
+  export interface CompanyType extends Document {
+    companyName: string;
+  }
+  
+  export interface BrandType extends Document {
+    brandName: string;
+    companyId: Types.ObjectId;
+  }
+  
+  export interface DealerType extends Document {
+    dealerName: string;
+    dealerBrands: Types.ObjectId[];
+    dealerCompanies: Types.ObjectId[];
+    dealerNumber: number;
+  }
+export interface TransactionSource {
+  sourceStaff?: Types.ObjectId;
+  sourceEntityId?: Types.ObjectId;
+  sourceType?: string;
+  sourceRemark?: string;
+}
+
+export interface TransactionDestination {
+  destinationStaff?: Types.ObjectId;
+  destinationEntityId?: Types.ObjectId;
+  destinationType?: string;
+  destinationRemark?: string;
+}
+
+export interface TransactionItemByDate {
+  sourceQuantity: {
+    expiryDate: Date;
+    manufacturingDate: Date;
+    qty: number;
+  };
+  destinationQuantity: {
+    expiryDate: Date;
+    manufacturingDate: Date;
+    qty: number;
+  };
+  destinationRemark?: string;
+  sourceRemark?: string;
+  itemError?: {
+    errorReason: string;
+    errorQty?: number;
+    isResolved: boolean;
+  };
+}
+
+
+export interface TransactionItem {
+  itemId: mongoose.Types.ObjectId;
+  itemByDate: TransactionItemByDate[];
+}
+
+export interface StockTransactionType extends Document {
+  transactionType: string;
+  source: TransactionSource;
+  destination?: TransactionDestination;
+  transactionReason?: string;
+  dateOfTransaction: Date;
+  transactionStatus: string;
+  hasErrors: boolean;
+  approvedByAdmin: boolean;
+  adminRemark?: string;
+  isDeleted: boolean;
+  transactionItems: TransactionItem[];
+}

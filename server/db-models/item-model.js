@@ -45,6 +45,14 @@ const ItemSchema = new mongoose.Schema(
     slabPricing: { type: Array },
     minStockReached: { type: Boolean, default: false },
     itemBrandName: { type: String },
+    brandId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Brand',
+    },
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+    },
     itemCategory: { type: String },
     useByDate: [
       {
@@ -68,7 +76,17 @@ const ItemSchema = new mongoose.Schema(
     companyName: { type: String, trim: true },
     subCategory: { type: String },
     flavourOrFeature: { type: String, trim: true }, 
-    shelfLife: { type: String }, 
+    shelfLife: { type: String },
+    itemShelfDates: [
+      {
+        expiryDate: { type: Date, required: true },
+        manufacturingDate: { type: Date },
+        quantity: { type: Number, required: true },
+        purchaseOrderId: { type: mongoose.Schema.Types.ObjectId, ref: 'PurchaseOrder' },
+        entryDate: { type: Date, default: Date.now }
+      }
+    ],
+    
     expiryDates: [
       {
         date: {
@@ -92,6 +110,11 @@ const ItemSchema = new mongoose.Schema(
     },
     returnPolicyRemarks: { type: String }, 
     freeItemsAvailable: { type: Boolean, default: false },
+    createdFromPO: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'PurchaseOrder',
+    }
+    
   },
   { strict: false, timestamps: true }
 );

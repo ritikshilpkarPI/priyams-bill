@@ -72,7 +72,7 @@ const NewPurchaseOrder = () => {
   const [isValidPaymentDetails, setIsValidPaymentDetails] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(activeTabInitial);
 
-  const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length);
+  const isBillImagesUploaded = Boolean(purchaseOrder?.billPhotos?.length && purchaseOrder.dateOnBill);
   const onTabChange = (newTab: TabKey) => {
     setActiveTab(TAB[newTab]);
     navigate(`${location.pathname}?tab=${newTab}`);
@@ -100,6 +100,7 @@ const NewPurchaseOrder = () => {
         dealerName: data.dealerName,
         phoneNumber: data.phoneNumber,
         remark: data.remark,
+        dealerId: data.dealerId,
       })
     );
   };

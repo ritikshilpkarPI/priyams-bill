@@ -61,7 +61,12 @@ const {
   getItemById,
   getAllStores,
   transferStockToStore,
+  getAllCompanies,
+  getAllBrands,
   getAllStaffs,
+  itemsStaticAttributes,
+  getAllDealers,
+  addNewDealer,
   getStaffByStoreId
 } = require('../controllers/index');
 
@@ -265,7 +270,16 @@ router.get(API_PATHS.STORE.GET_ALL_STORES, isLoggedIn, getAllStores);
 
 router.post(API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,isLoggedIn, transferStockToStore);
 
+router.get(API_PATHS.COMPANY.GET_ALL_COMPANY,isLoggedIn, getAllCompanies);
+
+router.get(API_PATHS.BRAND.GET_ALL_BRAND,isLoggedIn, getAllBrands);
+
 router.get(API_PATHS.STAFF.GET_STAFFS, isLoggedIn, getAllStaffs);
+
+router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttributes);
+router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
+
+router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
 router.get(`${API_PATHS.STAFF.GET_STAFFS}/:storeId`, isLoggedIn, getStaffByStoreId);
 
 export default router;

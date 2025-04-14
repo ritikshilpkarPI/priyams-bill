@@ -1,8 +1,14 @@
-import { toast } from 'react-toastify';
+import { setExpiredItems, setLoading } from 'src/redux/expiredItems/expiredItemsSlice';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
 import MESSAGES from './constants/messages';
-import { getUserDeviceInfo } from './getUserDeviceInfo';
+import { getUserDetails, getUserDeviceInfo } from './getUserDeviceInfo';
+import { AppDispatch } from 'src/redux/store';
+import { API_METHODS } from './constants/apiMethods';
+import { genericAxios } from './genericAxiosMethod';
+import { parseJwt } from './cookie';
+import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
 
 
@@ -271,6 +277,28 @@ export const transferStockToStoreAPI = async (selectedStoreId:string, items:any[
   }
 }
 
+export const getAllCompaniesAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.COMPANY.GET_ALL_COMPANY,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const getAllBrandsAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.BRAND.GET_ALL_BRAND,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
 export const getAllStaffsAPI = async ()=>{
   try {
     const response = await getAPI({
@@ -281,6 +309,185 @@ export const getAllStaffsAPI = async ()=>{
     return { isError: true, error };
   }
 }
+export const fetchExpiredItems = (startDate: Date, endDate: Date) => async (dispatch: AppDispatch) => {
+  dispatch(setLoading(true));
+
+  try {
+    const response = await postAPI({
+      path: API_PATHS.INVENTORY.POST_FILTER_EXPIRY_DATES,
+      data: {
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+      },
+    });
+    
+
+    dispatch(setExpiredItems(response?.message?.expiredItems || [] ));
+  } catch (err) {
+    console.log('Error fetching expired items', err);
+    dispatch(setExpiredItems([]));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+export const handleApiCall = async (
+  apiFunc: () => Promise<any>,
+  id: string,
+  setLoading: (id: string, state: boolean, buttonName: string) => void,
+  successMessage: string,
+  errorMessage: string,
+  onSuccess: () => void,
+  buttonName: string
+) => {
+  try {
+    setLoading(id, true, buttonName);
+    await apiFunc();
+    toast.success(successMessage);
+    onSuccess();
+  } catch (err) {
+    console.error(err);
+    toast.error(errorMessage);
+  } finally {
+    setLoading(id, false, buttonName);
+  }
+};
+
+export const approvePurchaseOrder = async (
+  id: string,
+  index: number,
+  list: any,
+  getOrders: (type: string) => void,
+  setLoading: (id: string, state: boolean, buttonName: string) => void
+) => {
+  await handleApiCall(
+    async () =>
+      await genericAxios({
+        url: API_PATHS.INVENTORY.POST_SAVE_INVENTORY,
+        method: API_METHODS.POST,
+        data: {
+          newItems: list.purchasedItems,
+          purchaseOrderId: id,
+          userDetail: await getUserDetails(),
+        },
+      }),
+    id,
+    setLoading,
+    'Order approved successfully',
+    'Something went wrong, unable to approve order',
+    () => getOrders('draft'),
+    'approve'
+  );
+};
+
+export const rejectPurchaseOrder = async (
+  id: string,
+  index: number,
+  getOrders: (type: string) => void,
+  setLoading: (id: string, state: boolean, buttonName: string) => void
+) => {
+  await handleApiCall(
+    async () =>
+      await genericAxios({
+        method: API_METHODS.POST,
+        url: `${API_PATHS.APPROVAL.POST_REJECT_ORDER}/${id}`,
+        data: {
+          username: parseJwt(Cookies.get('token')).username,
+          userDetail: await getUserDetails(),
+        },
+      }),
+    id,
+    setLoading,
+    'Order rejected successfully',
+    'Something went wrong, unable to reject order',
+    () => getOrders('rejected'),
+    'reject'
+  );
+};
+
+export const draftPurchaseOrder = async (
+  id: string,
+  index: number,
+  allPurchaseList: any[],
+  getOrders: (type: string) => void,
+  setLoading: (id: string, state: boolean, buttonName: string) => void
+) => {
+  if (window.confirm('Do you want to draft this order ?')) {
+    const order = allPurchaseList[index];
+    console.log({allPurchaseList,index2:index});
+    
+    let validate = true;
+    let once = true;
+
+    if (!order.billAmount || !order.dealerName?.length) {
+      alert('please fill payment details information');
+      return;
+    }
+
+    order.purchasedItems.forEach((item: any) => {
+      if (!item.validate) {
+        validate = false;
+        if (once) {
+          alert('Cannot draft orders, please validate the orders');
+          once = false;
+        }
+      }
+    });
+
+    if (!validate) return;
+
+    await handleApiCall(
+      async () =>
+        await genericAxios({
+          method: API_METHODS.POST,
+          url: API_PATHS.PURCHASE_ORDER.POST_DRAFT_ORDER,
+          data: {
+            id,
+            userDetail: await getUserDetails(),
+          },
+        }),
+      id,
+      setLoading,
+      'Order drafted successfully',
+      'Something went wrong, unable to draft the order',
+      () => getOrders('draft'),
+      'draft'
+    );
+  }
+};
+
+export const getAllDealersAPI = async ()=>{
+  try {
+    const response = await getAPI({
+      path: API_PATHS.DEALER.GET_ALL_DEALERS,
+    });   
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const addNewDealerAPI = async (
+  dealerName: string,
+  dealerNumber: number,
+  dealerBrands: string[] = [],
+  dealerCompanies: string[] = []
+) => {
+  
+  try {
+    const response = await postAPI({
+      path: API_PATHS.DEALER.ADD_NEW_DEALER,
+      data: {
+        dealerName,
+        dealerNumber,
+        dealerBrands,
+        dealerCompanies,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
 
 
 export const getAllStaffsByStoreIdAPI = async ()=>{

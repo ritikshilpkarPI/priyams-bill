@@ -55,8 +55,13 @@ import { getItemsSku } from "./getItemsSku";
 import { getItemById } from "./getItemById";
 import { getAllStores } from  "./getAllStores"
 import { transferStockToStore } from "./transferStockToStore"
+import { getAllCompanies } from './getAllCompanies';
+import { getAllBrands } from './getAllBrand';
 import { getAllStaffs } from "./getAllStaffs";
 import {getStaffByStoreId} from "./getStaffByStoreId"
+import { itemsStaticAttributes } from "./itemsStaticAttributes"
+import { getAllDealers } from "./getAllDealers";
+import { addNewDealer } from "./addNewDealer";
 
 export {
   addBulkItems,
@@ -116,6 +121,12 @@ export {
   getItemsSku,
   getAllStores,
   transferStockToStore,
-  getAllStaffs,
+  itemsStaticAttributes,
+  getAllCompanies,
+  getAllBrands,
+  getAllStaffs, 
+  getAllDealers,
+  addNewDealer,
+
   getStaffByStoreId
 };
