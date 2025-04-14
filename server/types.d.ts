@@ -32,7 +32,17 @@
     itemId: mongoose.Types.ObjectId;
     itemQuantityInStore: number;
     itemStockChangeHistory: StockChangeHistoryType[];
+    itemShelfDates: ItemShelfDateInfo[];
   }
+
+  type ItemShelfDateInfo = {
+    _id: string;
+    expiryDate: Date;
+    manufacturingDate?: Date;
+    quantity: number;
+    purchaseOrderId: mongoose.Types.ObjectId;
+    entryDate?: Date;
+}
 
 
   export interface StoreType extends Document {
@@ -47,11 +57,6 @@
     storeCollectionName: string;
   }
 
-export  interface AddressComponent {
-    long_name: string;
-    short_name: string;
-    types: string[];
-}
   export type AuthenticatedRequest = {
     user?: {
       _id: ObjectId;
@@ -60,6 +65,11 @@ export  interface AddressComponent {
       role: string;
     };
   };
+export  interface AddressComponent {
+    long_name: string;
+    short_name: string;
+    types: string[];
+}
 
   export interface CompanyType extends Document {
     companyName: string;
@@ -76,11 +86,17 @@ export  interface AddressComponent {
     dealerCompanies: Types.ObjectId[];
     dealerNumber: number;
   }
+
+  export interface BrandType extends Document {
+    brandName: string;
+    companyId: Types.ObjectId;
+  }
 export interface TransactionSource {
   sourceStaff?: Types.ObjectId;
   sourceEntityId?: Types.ObjectId;
   sourceType?: string;
   sourceRemark?: string;
+
 }
 
 export interface TransactionDestination {

@@ -1,1 +1,1 @@
-export const {SentMessageToDiscord} = require("./SentMessageToDiscord")
+export const {logToDiscord} = require("./logToDiscord")

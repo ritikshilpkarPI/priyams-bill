@@ -5,7 +5,16 @@ import { NumberValue } from "d3";
 import { GridEventListener } from "@mui/x-data-grid";
 
 declare global {
+
+  interface StoreDataType {
+    name: string;
+    number: string;
+    pincode: string;
+  };
   export interface UserStateType {
+    isGeolocationPermissionGranted: boolean;
+    userDeviceLocation?: DeviceLocationType;
+    storeData: StoreDataType;
   }
 
   export type RootState = ReturnType<typeof store.getState>;
@@ -436,6 +445,7 @@ declare global {
 
   interface Store {
     id: string;
+    _id?: string;
     name: string;
     code: string;
   }
@@ -452,43 +462,10 @@ declare global {
     itemDetail: WarehouseItem;
     itemQuantityInBill: number;
   }
-  interface Brand {
-    _id: string;
-    brandName: string;
-    companyId: string;
+  interface DeviceLocationType {
+    latitude?: number;
+    longitude?: number;
   }
-  interface BrandState {
-    brands: Brand[];
-    loading: boolean;
-    error: string | null;
-  }
-  interface company {
-    _id: string;
-    companyName: string;
-  }
-  interface companyState {
-    companys: company[];
-    loading: boolean;
-    error: string | null;
-  }
-  type BrandSelectorProps = {
-    label?: string;
-    value: string;
-    onChange?: (value: string) => void;
-    placeholder?: string;
-    required?: boolean;
-    error?: string;
-    disabled?: boolean;
-  };
-  type CompanySelectorProps = {
-    value: string;
-    onChange: (value: string) => void;
-    label?: string;
-    placeholder?: string;
-    required?: boolean;
-    error?: string;
-    disabled?: boolean; 
-  };
   interface StaffInterface {
     _id?: string;
     name?: string;
@@ -606,14 +583,115 @@ declare global {
     navigate:any
   };
 
+
+  interface ExpiryBatch {
+    isShelfExpired: boolean;
+    purchaseOrderId: string;
+    quantityToAdd?: number;
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    _id: string;
+  }
+  
+  interface InventoryItem {
+    itemDetail: {
+      _id: string;
+      itemName: string;
+      itemBarcode: string;
+      itemStockQuantity: number;
+      itemShelfDates?: ExpiryBatch[];
+      itemQtyInStore?: number;
+    };
+    quantityToAdd: number; 
+  }
+  
+  interface InventoryItemPanelProps {
+    items: InventoryItem[];
+    onQuantityChange: (
+      itemId: string,
+      quantity: number,
+      shelfId?: string 
+    ) => void;
+    onRemoveItem: (itemId: string) => void;
+  }
   interface ShelfLifeInfoProps {
     expiryDate: {
       mfgDate: string | Date;
       date: string | Date;
     };
+
+  }
+  interface Shelf {
+    _id: string;
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    quantityToAdd?: number;
+  }
+  
+  interface ShelfTableProps {
+    shelfList: Shelf[];
+    itemId: string;
+    handleQuantityChange: (
+      itemId: string,
+      shelfQuantity: number,
+      newQuantity: number,
+      shelfId: string
+    ) => void;
   }
   
   
+  interface Brand {
+    _id: string;
+    brandName: string;
+    companyId: string;
+  }
+  interface BrandState {
+    brands: Brand[];
+    loading: boolean;
+    error: string | null;
+  }
+  interface company {
+    _id: string;
+    companyName: string;
+  }
+  interface companyState {
+    companys: company[];
+    loading: boolean;
+    error: string | null;
+  }
+  type BrandSelectorProps = {
+    label?: string;
+    value: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean;
+  };
+  type CompanySelectorProps = {
+    value: string;
+    onChange: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean; 
+  };
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
+  }
   type DealerOption = {
     value: string;
     label: string;
