@@ -554,15 +554,17 @@ declare global {
     columns: Column[];
     data: any[];
     isLoading: boolean;
-    order: 'asc' | 'desc';
-    orderBy: string;
-    onSort: (columnKey: string) => void;
+    order?: 'asc' | 'desc';
+    orderBy?: string;
+    onSort?: (columnKey: string) => void;
     page: number;
     rowsPerPage: number;
     onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
     onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     rowCount: number;
     paginationMode?: 'client' | 'server'; 
+    expandedRows?: string[];
+    onToggleExpand?: (id: string) => void; 
   }
   interface PurchaseListApprovalProps {
     allPurchaseList: any[];
@@ -615,6 +617,82 @@ declare global {
     value: string;
     label: string;
   };
+
+  interface TransactionItem {
+    itemId: {
+      _id: string;
+      itemName: string;
+      itemMRPperUnit: string;
+    };
+    transactionItems: any[];
+  }
+  
+  interface SourceDestination {
+    sourceType?: string;
+    sourceRemark?: string;
+    sourceStaff?: { name: string };
+    destinationType?: string;
+    destinationRemark?: string;
+    destinationStaff?: { name: string };
+  }
+  
+  interface Transaction {
+    _id: string; 
+    transactionType: string;
+    transactionItems: TransactionItem[];
+    source?: SourceDestination;
+    destination?: SourceDestination;
+    transactionReason: string;
+    transactionStatus: string;
+    hasErrors: boolean;
+    approvedByAdmin: boolean;
+    adminRemark: string;
+    dateOfTransaction: string;
+  }
+  
+  type RawData = Transaction[]; 
+
+  interface TransformedRow {
+    _id: string;
+    transactionId: string;
+    itemId: string;
+    itemName: string;
+    price: string;
+    transactionType: string;
+    sourceType?: string;
+    sourceRemark?: string;
+    sourceStaff?: string;
+    destinationType?: string;
+    destinationRemark?: string;
+    destinationStaff?: string;
+    transactionReason: string;
+    transactionStatus: string;
+    hasErrors: string;
+    approvedByAdmin: string;
+    adminRemark: string;
+    dateOfTransaction: string;
+    isSubRow: boolean;
+    sourceExpiry?: string;
+    sourceMfg?: string;
+    qty?: string;
+    destinationQty?: string;
+    destinationExpiry?: string;
+    destinationMfg?: string;
+    ItemSourceRemark?: string;
+    ItemDestinationRemark?: string;
+    itemError?: string;
+  }
+  
+  type TransformedData = TransformedRow[];
+  
+  interface TransactionState {
+    rawData: RawData;
+    transformedData: TransformedData;
+    expandedRows: string[];
+    isLoading: boolean;
+    page: number;
+    rowsPerPage: number;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

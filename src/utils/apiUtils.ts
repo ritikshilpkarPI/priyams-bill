@@ -479,3 +479,13 @@ export const addNewDealerAPI = async (
     return { isError: true, error };
   }
 };
+export const getStockTransactions = async () => {
+  try {
+    const response = await getAPI({
+      path: API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
