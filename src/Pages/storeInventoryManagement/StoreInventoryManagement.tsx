@@ -88,8 +88,8 @@ const StoreInventoryManagement: React.FC = () => {
     dispatch(addInventoryItem(newItem));
   };
 
-  const handleQuantityChange = (itemId: string, quantity: number) => {
-    dispatch(updateInventoryItemQuantity({ itemId, quantity }));
+  const handleQuantityChange = (itemId: string, quantity: number, shelfId?: string) => {
+    dispatch(updateInventoryItemQuantity({ itemId, quantity, shelfId }));
   };
 
   const handleRemoveItem = (itemId: string) => {
@@ -101,10 +101,11 @@ const StoreInventoryManagement: React.FC = () => {
       itemsArray.push({
         itemId: item.itemDetail._id,
         quantity: item.quantityToAdd,
+        itemShelfDates: item?.itemShelfDates ?? []
       });
     }
     return itemsArray;
-  };
+  };  
 
   const updateStore = async ()=>{
     setLoading(true);
@@ -121,6 +122,24 @@ const StoreInventoryManagement: React.FC = () => {
     setLoading(false);
     toast.success('store update successfully');
   }
+
+const validateInventoryItems = () => {
+  const errors: YupValidationErrorMapType = {};
+  inventoryItems.forEach((item) => {
+    const totalShelfQuantity = item.itemDetail.itemShelfDates?.reduce(
+      (acc: any, shelf: { quantityToAdd: any; }) => acc + shelf.quantityToAdd,
+      0
+    );
+    if (totalShelfQuantity > item.quantityToAdd) {
+      errors.inventoryItems = 'Shelf quantities exceed total quantity';
+    }
+    if (totalShelfQuantity !== 0 && totalShelfQuantity < item.quantityToAdd) {
+      errors.inventoryItems = 'Total quantity should be equal to shelf quantities';
+    }
+    
+  });
+  return errors;
+}
   
   const handleSubmit = async () => {
     try {
@@ -128,6 +147,13 @@ const StoreInventoryManagement: React.FC = () => {
         abortEarly: false,
       })
       setErrors({});
+
+      const validationErrors = validateInventoryItems();
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
+      }
+
       await updateStore()
       // dispatch(resetStoreInventory());
       // dispatch(fetchBillingLeanItems())

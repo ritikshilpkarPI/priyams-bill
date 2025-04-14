@@ -43,7 +43,7 @@ const getItemsLean = async (req, res, next) => {
       itemStockQuantity: 1,
       itemPerUnitQuantity: 1,
       quantityUnitName: 1,
-      itemShelfDate: 1,
+      itemShelfDates: 1,
     });
 
     allItemsList.forEach((item) => {
