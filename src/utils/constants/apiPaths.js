@@ -114,6 +114,6 @@ export const API_PATHS = {
     ADD_NEW_DEALER: "/api/addNewDealer",
   },
   STOCK_TRANSACTION: {
-    UPDATE_SOURCE: "/api/stockTransaction/updateSource",
+    UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
   }
 };
