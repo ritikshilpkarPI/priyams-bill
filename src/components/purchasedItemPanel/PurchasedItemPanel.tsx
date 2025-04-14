@@ -135,9 +135,14 @@ const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
   const match = currentUrl.match(/\/new-purchase-order\/([a-f0-9]{24})/);
   return (
     <Flex direction="column" gap="sm" p="sm" sx={{ position: 'relative' }}>
-      <Box mx="sm" mt="16px">
-        <ItemSearch onItemSelect={onItemSelect} isApprovedPO={isApprovedPO} />
-      </Box>
+      <Accordion mx="sm"  mt="16px" radius="md" variant="contained">
+        <Accordion.Item value="Dashboard">
+          <Accordion.Control>Dashboard</Accordion.Control>
+          <Accordion.Panel>
+            <PurchaseOrderDashboard />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
 
       <Accordion mx="sm" radius="md" variant="contained">
         <Accordion.Item value="Item Detail Form">
@@ -147,16 +152,8 @@ const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
               loading={itemFormLoading}
               onSubmit={onPurchasedOrderSubmit}
               isApprovedPO={isApprovedPO}
+              onItemSelect={onItemSelect} 
             />
-          </Accordion.Panel>
-        </Accordion.Item>
-      </Accordion>
-
-      <Accordion mx="sm"  mt="16px" radius="md" variant="contained">
-        <Accordion.Item value="Dashboard">
-          <Accordion.Control>Dashboard</Accordion.Control>
-          <Accordion.Panel>
-            <PurchaseOrderDashboard />
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>

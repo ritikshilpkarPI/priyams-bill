@@ -90,14 +90,21 @@ const getItemTrendReport = async (startDate, lastDate, itemName) => {
       $unwind: '$items',
     },
   ]);
-  const populatedBills = await Bill.populate(unwindedItemBills, {
-    path: 'items',
-    populate: {
-      path: 'itemDetail',
-      model: 'Item',
-      match: { itemName: { $eq: itemName } },
+  const populatedBills = await Bill.populate(unwindedItemBills, [
+    {
+      path: 'items',
+      populate: {
+        path: 'itemDetail',
+        model: 'Item',
+        match: { itemName: { $eq: itemName } },
+      },
     },
-  });
+    {
+      path: 'staffId',
+      model: 'staff',
+    },
+  ]);
+  
   const itemTrendReport = populatedBills.filter(
     (bill) => bill.items.itemDetail
   );
@@ -131,17 +138,21 @@ const getAllItemsTrendReport = async (startDate, lastDate) => {
         totalQuantitysum: {
           $sum: '$items.itemQuantityInBill',
         },
-        itemBarcode: { $first: '$items.itemBarcode' }
+        itemBarcode: { $first: '$items.itemBarcode' },
+        staffId: { $first: '$staffId' }
       },
     },
   ]);
-  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails, {
-    path: 'items',
-    populate: {
-      path: 'itemDetail',
+  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails, [
+    {
+      path: 'items.itemDetail',
       model: 'Item',
     },
-  });
+    {
+      path: 'staffId',
+      model: 'staff',
+    },
+  ]);
   return allItemsBillingTrend;
 };
 
@@ -151,21 +162,30 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
       $match: {
         createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
         isApproved: true,
-        isRejected: false
-      }
+        isRejected: false,
+      },
     },
     { $unwind: '$purchasedItems' },
+    {
+      $unwind: {
+        path: '$purchasedItems.expiryDates',
+        preserveNullAndEmptyArrays: true, 
+      },
+    },
     {
       $group: {
         _id: '$purchasedItems.barcode',
         itemName: { $first: '$purchasedItems.inputName' },
         totalStock: { $sum: '$purchasedItems.stockQuantity' },
+        itemQuantity: { $first: '$purchasedItems.itemQuantity' },
+        unit: { $first: '$purchasedItems.unit' },
         mrp: { $first: '$purchasedItems.mrp' },
         costPrice: { $first: '$purchasedItems.costPrice' },
-        purchaseDates: { $push: '$createdAt' },
-        suppliers: { $push: '$procurementSource' },
-        purchaseOrderIds: { $push: '$_id' }
-      }
+        purchaseDates: { $addToSet: '$createdAt' },
+        suppliers: { $addToSet: '$procurementSource' },
+        purchaseOrderIds: { $addToSet: '$_id' },
+        expiryDates: { $addToSet: '$purchasedItems.expiryDates' },
+      },
     },
     {
       $project: {
@@ -178,7 +198,10 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         lastPurchaseDate: { $max: '$purchaseDates' },
         firstPurchaseDate: { $min: '$purchaseDates' },
         totalOrders: { $size: '$purchaseOrderIds' },
-        suppliers: { $setUnion: ['$suppliers'] } // Get unique suppliers
+        suppliers: { $setUnion: ['$suppliers'] }, // Get unique suppliers
+        itemQuantity: 1,
+        unit: 1,
+        expiryDates: 1,
       }
     }
   ]);

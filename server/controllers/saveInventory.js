@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
+import { DealerModel } from "../db-models/dealer-model";
 const { CONSTANTS } = require('../constants/constants');
 
 const saveInventory = async (req, res, next) => {
@@ -32,8 +33,18 @@ const saveInventory = async (req, res, next) => {
 
     let bulkOperations = [];
     let failedItems = [];
-
+    let brandIds = [];
+    let companyIds = [];
     newItems.forEach((item) => {
+      const newShelfDates = (item.expiryDates || []).map((exp, idx) => ({
+        expiryDate: new Date(exp.date),
+        quantity: exp.value,
+        manufacturingDate: new Date(item.manufacturingDates?.[idx]?.date || null),
+        purchaseOrderId: purchaseOrderId,
+        entryDate: new Date(),
+      }));
+      brandIds.push(item.brandId)
+      companyIds.push(item.companyId)
       const itemDetails = {
         itemName: item.inputName,
         itemBarcode: item.barcode,
@@ -51,22 +62,21 @@ const saveInventory = async (req, res, next) => {
         companyName: item.companyName,
         subCategory: item.subCategory,
         flavourOrFeature: item.flavourOrFeature,
-        itemShelfDate: {
-          expiryDates: item.expiryDates,
-          manufacturingDates: item.manufacturingDates,
-        },
+        itemShelfDates: newShelfDates, 
         shelfLife: item.shelfLife,
         saleTime: item.saleTime,
         returnPolicyAvailable: item.returnPolicyAvailable,
         returnPolicyRemark: item.returnPolicyRemark,
         freeItemAvailable: item.freeItemAvailable,
+        brandId: item.brandId,
+        companyId: item.companyId,
         sku: getItemSKU({
           itemQuantity: item?.itemQuantity,
           unit: item?.unit,
           mrp: item?.mrp,
           barcode: item?.barcode,
           itemName: item?.inputName,
-        })
+        }),
       };
 
       const oldItem = existingItemsMap.get(item.item_id);
@@ -100,16 +110,21 @@ const saveInventory = async (req, res, next) => {
           itemStockQuantity: totalStock,
           itemPerUnitQuantity: newTotalItemQuantity,
         };
-
+        const { itemShelfDates, ...restItemUpdate } = new_Item_Update;
         bulkOperations.push({
           updateOne: {
             filter: { _id: item.item_id },
-            update: { $set: new_Item_Update },
+            update: { $set: restItemUpdate, $push: { itemShelfDates: { $each: newShelfDates } }, },
           },
         });
       } else {
         bulkOperations.push({
-          insertOne: { document: itemDetails },
+          insertOne: { 
+            document: {
+            ...itemDetails,
+            createdFromPO: purchaseOrderId, 
+          }
+        },
         });
       }
     });
@@ -184,6 +199,23 @@ const saveInventory = async (req, res, next) => {
         referer: referer, 
       },
     };
+
+    const getPurchaseOrder = await PurchaseOrder.findById(purchaseOrderId)
+    const dealerId = getPurchaseOrder.dealerId;
+    let updatedDealer
+
+    if (dealerId) {
+      updatedDealer = await DealerModel.findByIdAndUpdate(
+        dealerId,
+        {
+          $addToSet: {
+            dealerCompanies: { $each: companyIds },
+            dealerBrands: { $each: brandIds },
+          },
+        },
+        { new: true }
+      );
+    }
     
     // If all items are successfully inserted or updated, approve the purchase order
     const order = await PurchaseOrder.findByIdAndUpdate(
