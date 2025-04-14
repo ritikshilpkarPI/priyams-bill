@@ -34,14 +34,11 @@ const DataTable: React.FC<DataTableProps> = ({
             headerName: '',
             width: 50,
             renderCell: (params: GridRenderCellParams) => {
-              console.log(params.row.isSubRow);
-              console.log({ expandedRows });
 
               if (params.row.isSubRow) return null;
 
               const isExpanded =
                 expandedRows?.includes(params.row._id) ?? false;
-              console.log(params.row.isSubRow);
 
               return (
                 <IconButton
