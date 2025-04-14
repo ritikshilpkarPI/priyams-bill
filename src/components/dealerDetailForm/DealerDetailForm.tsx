@@ -155,7 +155,6 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
       onChange('dealerName', '');
     }
   };
-
   const brandCompanyPairs = [
     ...new Map(
       (purchaseOrder.purchasedItems || []).map((item) => {
