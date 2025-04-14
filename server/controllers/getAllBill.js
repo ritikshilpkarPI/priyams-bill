@@ -1,6 +1,7 @@
 const { Bill } = require('../db-models/bill-model');
 
 const getAllBill = async (req, res, next) => {
+  const { storeId } = req.query;
   try {
     const allBill = await Bill.find({
       ...(storeId && { storeId }),
