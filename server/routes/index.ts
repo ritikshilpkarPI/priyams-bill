@@ -68,7 +68,8 @@ const {
   getAllDealers,
   addNewDealer,
   itemsStaticAttributes,
-  updateStockTransactionByAdmin
+  updateStockTransactionByAdmin,
+  addNewStockTransactions,
 } = require('../controllers/index');
 
 
@@ -287,5 +288,7 @@ router.post(
 );
 
 router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttributes);
+
+router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, addNewStockTransactions);
 
 export default router;

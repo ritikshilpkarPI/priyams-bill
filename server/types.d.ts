@@ -153,3 +153,6 @@ export interface StockTransactionType extends Document {
   transactionItems: TransactionItem[];
 }
 
+export interface StockTransactionsInterface {
+  transactions: StockTransactionType[]
+}
