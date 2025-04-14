@@ -177,7 +177,7 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         _id: '$purchasedItems.barcode',
         itemName: { $first: '$purchasedItems.inputName' },
         totalStock: { $sum: '$purchasedItems.stockQuantity' },
-        itemQuantity: { $sum: '$purchasedItems.itemQuantity' },
+        itemQuantity: { $first: '$purchasedItems.itemQuantity' },
         unit: { $first: '$purchasedItems.unit' },
         mrp: { $first: '$purchasedItems.mrp' },
         costPrice: { $first: '$purchasedItems.costPrice' },
