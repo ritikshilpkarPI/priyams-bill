@@ -2,29 +2,8 @@ import React from 'react';
 import { Table, ActionIcon, ScrollArea, Text } from '@mantine/core';
 import CustomNumberInput from './customNumberInput/CustomNumberInput';
 import { IconTrash } from '@tabler/icons-react';
+import ShelfTable from './shelfTable/ShelfTable';
 
-interface InventoryItemPanelProps {
-  items: {
-    itemDetail: {
-      _id: string;
-      itemName: string;
-      itemBarcode: string;
-      itemStockQuantity: number;
-      itemShelfDate?: {
-        expiryDates?: {
-          date: string;
-          mfgDate: string;
-          value: number;
-          isShelfExpired: boolean;
-          _id: string;
-        }[];
-      };
-    };
-    quantityToAdd: number;
-  }[];
-  onQuantityChange: (itemId: string, quantity: number) => void;
-  onRemoveItem: (itemId: string) => void;
-}
 
 export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   items,
@@ -33,14 +12,15 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
 }) => {
   const handleQuantityChange = (
     itemId: string,
-    itemStockQuantity: number,
-    quantity: string
+    maxStock: number,
+    quantity: number,
+    shelfId?: string
   ) => {
-    if (Number(quantity) > itemStockQuantity || Number(quantity) < 0) {
+    if (quantity > maxStock || quantity < 0) {
       console.warn('Quantity exceeds available stock!');
       return;
     }
-    onQuantityChange(itemId, Number(quantity));
+    onQuantityChange(itemId, quantity, shelfId);
   };
 
   const formatDate = (dateStr: string) =>
@@ -54,16 +34,16 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
             <th>Item Name</th>
             <th>Barcode</th>
             <th>Current Stock</th>
-            <th>Expiry Dates</th>
-            <th>Manufacturing Dates</th>
-            <th>Shelf Quantities</th>
-            <th>Quantity to Add</th>
+            <th>Expiry Batches (Qty to Add)</th>
+            <th>Total Qty to Add</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {items.map(({ itemDetail, quantityToAdd }) => {
-            const shelfList = itemDetail.itemShelfDate?.expiryDates || [];
+            console.log({itemDetail});
+            
+            const shelfList = itemDetail.itemShelfDates || [];
 
             return (
               <tr key={itemDetail._id}>
@@ -72,51 +52,23 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                 <td>{itemDetail.itemStockQuantity}</td>
 
                 <td>
-                  {shelfList.length > 0 ? (
-                    shelfList.map((shelf) => (
-                      <Text size="sm" key={shelf._id}>
-                        {formatDate(shelf.date)}
-                      </Text>
-                    ))
-                  ) : (
-                    <Text size="sm">-</Text>
-                  )}
-                </td>
-
-                <td>
-                  {shelfList.length > 0 ? (
-                    shelfList.map((shelf) => (
-                      <Text size="sm" key={shelf._id}>
-                        {formatDate(shelf.mfgDate)}
-                      </Text>
-                    ))
-                  ) : (
-                    <Text size="sm">-</Text>
-                  )}
-                </td>
-
-                <td>
-                  {shelfList.length > 0 ? (
-                    shelfList.map((shelf) => (
-                      <Text size="sm" key={shelf._id}>
-                        {shelf.value}
-                      </Text>
-                    ))
-                  ) : (
-                    <Text size="sm">-</Text>
-                  )}
+                <ShelfTable
+                 shelfList={shelfList}
+                 itemId={itemDetail._id}
+                 handleQuantityChange={handleQuantityChange}
+                   />
                 </td>
 
                 <td>
                   <CustomNumberInput
                     required
-                    placeholder="Enter quantity"
+                    placeholder="Enter total qty"
                     value={quantityToAdd}
                     onChange={(e) =>
                       handleQuantityChange(
                         itemDetail._id,
                         itemDetail.itemStockQuantity,
-                        e.target.value
+                        Number(e.target.value)
                       )
                     }
                   />
@@ -131,7 +83,8 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                   </ActionIcon>
                 </td>
               </tr>
-            )})}
+            )
+          })}
         </tbody>
       </Table>
     </ScrollArea>
