@@ -26,11 +26,11 @@ export const store = configureStore({
     purchaseOrder: purchaseOrderSlice,
     paymentDetailForm: paymentDetailFormSlice,
     storeInventoryManagement: storeInventoryManagement,
-    staffs: staffSlice,
-    expiredItems: expiredItemsSlice,
+    dealer: dealerSlice,
     brands: brandSlice,
     company: companySlice,
-    dealer: dealerSlice,
+    staffs: staffSlice,
+    expiredItems: expiredItemsSlice,
     purchaseListApproval:purchaseListApprovalSlice
   },
 });
