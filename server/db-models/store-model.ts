@@ -11,6 +11,7 @@ export interface StoreType extends Document {
   number: number;
   collectionName: string;
   name: string;
+  type: "STORE" | "WAREHOUSE";
 }
 const StoreSchema: Schema<StoreType> = new Schema({
   address: {
@@ -25,6 +26,8 @@ const StoreSchema: Schema<StoreType> = new Schema({
   collectionName: { type: String },
   // name will be generated as address.locality_number
   name: { type: String },
+  // define a fields which will be used to identify it's a store or warehouse use enum
+  type: { type: String, enum: ["STORE", "WAREHOUSE"], default: "STORE" },
 });
 
 StoreSchema.pre<StoreType>("save", async function (next) {

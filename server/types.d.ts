@@ -26,6 +26,7 @@
     user: mongoose.Types.ObjectId;
     changeType: ChangeType;
     changedFrom: ChangedFrom;
+    transactionId?: mongoose.Types.ObjectId;
   }
   
   export interface StoreInventoryItemType extends Document {
@@ -58,6 +59,12 @@ export  interface AddressComponent {
       name: string;
       username: string;
       role: string;
+    };
+    params: {
+      id: string;
+    };
+    body: {
+      [key: string]: any;
     };
   };
 
