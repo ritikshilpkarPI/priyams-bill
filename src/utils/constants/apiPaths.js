@@ -114,6 +114,6 @@ export const API_PATHS = {
     GET_ALL_BRAND: "/api/getAllBrand"
   },
   STOCK_TRANSACTION: {
-    UPDATE_SOURCE: "/api/stockTransaction/updateSource",
+    UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
   }
 };

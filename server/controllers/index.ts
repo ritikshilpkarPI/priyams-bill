@@ -61,7 +61,7 @@ import { getAllStaffs } from "./getAllStaffs"
 import { itemsStaticAttributes } from "./itemsStaticAttributes"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
-import { updateStockTransactionSource } from "./updateStockTransactionSource";
+import { updateStockTransactionDestination } from "./updateStockTransactionDestination";
 
 export {
   addBulkItems,
@@ -127,5 +127,5 @@ export {
   getAllStaffs, 
   getAllDealers,
   addNewDealer,
-  updateStockTransactionSource
+  updateStockTransactionDestination
 };
