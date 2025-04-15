@@ -2,6 +2,7 @@ import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 import { RefObject } from "react";
 import { NumberValue } from "d3";
+import { GridEventListener } from "@mui/x-data-grid";
 
 declare global {
 
@@ -444,6 +445,7 @@ declare global {
 
   interface Store {
     id: string;
+    _id?: string;
     name: string;
     code: string;
   }
@@ -524,6 +526,7 @@ declare global {
     key: string;
     sortable?: boolean;
     render?: (row: any,index?: number) => React.ReactNode;
+    cellClassName?: string;
   }
   
   interface DataTableProps {
@@ -539,6 +542,7 @@ declare global {
     onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     rowCount: number;
     paginationMode?: 'client' | 'server'; 
+    onRowClick?: GridEventListener<'rowClick'>;
   }
   interface PurchaseListApprovalProps {
     allPurchaseList: any[];
