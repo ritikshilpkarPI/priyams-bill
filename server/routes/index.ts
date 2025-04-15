@@ -67,7 +67,8 @@ const {
   itemsStaticAttributes,
   getAllDealers,
   addNewDealer,
-  getStaffByStoreId
+  getStaffByStoreId,
+  getItemsFromStoreInventory,
 } = require('../controllers/index');
 
 
@@ -281,5 +282,6 @@ router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
 router.get(`${API_PATHS.STAFF.GET_STAFFS}/:storeId`, isLoggedIn, getStaffByStoreId);
+router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
 
 export default router;
