@@ -19,6 +19,7 @@ import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeed
 import { ReactBarcode } from 'react-jsbarcode';
 import { Reset } from 'src/icons/Reset';
 import { BillItemsCardView } from "../../components/BillItemsCardView/BillItemsCardView"
+import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 
 
 const NewBillPage = () => {
@@ -84,6 +85,7 @@ const NewBillPage = () => {
       const billData = { ...billState };
       localStorage.setItem(`bill-${billData.billId}`, JSON.stringify({...billData, billCreatedAt: new Date().toISOString(),}));
       saveBillToDatabase(billData);
+      dispatch(fetchBillingLeanItems());
       window.print()
 
       resetBillState();
