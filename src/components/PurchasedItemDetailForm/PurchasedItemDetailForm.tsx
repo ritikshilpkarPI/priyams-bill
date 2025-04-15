@@ -681,8 +681,8 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         onClose={onSkuModalClose}
         question={skuModalQuestion}
         onAgree={() => {
-          setShowSkuModal(false);
-          if (updateChoice === YES) {
+          setShowSkuModal(false);          
+          if (updateChoice !== YES) {
             dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
           }
         }}
