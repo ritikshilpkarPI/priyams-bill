@@ -62,6 +62,7 @@ import { getAllBrands } from './getAllBrand';
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 import { itemsStaticAttributes } from "./itemsStaticAttributes";
+import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
 import { addNewStockTransactions } from "./addNewStockTransactions";
 
 export {
@@ -129,5 +130,6 @@ export {
   getAllDealers,
   addNewDealer,
   itemsStaticAttributes,
+  updateStockTransactionByAdmin,
   addNewStockTransactions,
 };

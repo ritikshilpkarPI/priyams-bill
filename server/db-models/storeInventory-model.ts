@@ -11,6 +11,8 @@ const StockChangeHistorySchema: Schema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", },
   changeType: { type: String, enum: ["ADD", "REMOVE"] },
   changedFrom: { type: String, enum: ["WAREHOUSE", "RETURN-EXC","INITIAL-SETUP-SCRIPT"] },
+  transactionId: { type: Schema.Types.ObjectId },
+
 });
 
 const StoreInventoryItemSchema: Schema = new Schema({
