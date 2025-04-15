@@ -4,30 +4,6 @@ import CustomNumberInput from './customNumberInput/CustomNumberInput';
 import { IconTrash } from '@tabler/icons-react';
 import ShelfTable from './shelfTable/ShelfTable';
 
-interface InventoryItemPanelProps {
-  items: {
-    itemDetail: {
-      itemShelfDates: never[];
-      _id: string;
-      itemName: string;
-      itemBarcode: string;
-      itemStockQuantity: number;
-      itemShelfDate?: {
-        expiryDates?: {
-          date: string;
-          mfgDate: string;
-          value: number;
-          isShelfExpired: boolean;
-          _id: string;
-        }[];
-      };
-      itemQtyInStore: number;
-    };
-    quantityToAdd: number; 
-  }[];
-  onQuantityChange: (itemId: string, quantity: number, shelfId?: string) => void;
-  onRemoveItem: (itemId: string) => void;
-}
 
 export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   items,
@@ -59,18 +35,13 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
             <th>Barcode</th>
             <th>Qty WH</th>
             <th>Qty Store</th>
-            <th>Expiry Dates</th>
-            <th>Manufacturing Dates</th>
-            <th>Shelf Quantities</th>
-            <th>Quantity to Add</th>
             <th>Expiry Batches (Qty to Add)</th>
+            <th>Total Qty to Add</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {items.map(({ itemDetail, quantityToAdd }) => {
-            console.log({itemDetail});
-            
+          {items.map(({ itemDetail, quantityToAdd }) => {            
             const shelfList = itemDetail.itemShelfDates || [];
 
             return (

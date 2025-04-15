@@ -53,15 +53,17 @@ import assignOrderToRider from './assignOrderToRider';
 import getItemsSellDetailsByPurchaseOrderId from './getItemsSellDetailsByPurchaseOrderId';
 import { getItemsSku } from "./getItemsSku";
 import { getItemById } from "./getItemById";
-import { getAllStores } from  "./getAllStores"
 import { transferStockToStore } from "./transferStockToStore"
-import { getAllCompanies } from './getAllCompanies';
-import { getAllBrands } from './getAllBrand';
+import { getAllStores } from  "./getAllStores"
 import { getAllStaffs } from "./getAllStaffs";
 import {getStaffByStoreId} from "./getStaffByStoreId"
-import { itemsStaticAttributes } from "./itemsStaticAttributes"
+import { getAllCompanies } from './getAllCompanies';
+import { getAllBrands } from './getAllBrand';
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
+import { itemsStaticAttributes } from "./itemsStaticAttributes";
+import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
+import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 
 export {
@@ -120,14 +122,16 @@ export {
   getItemsSellDetailsByPurchaseOrderId,
   getItemById,
   getItemsSku,
-  getAllStores,
+  getAllStaffs,
   transferStockToStore,
-  itemsStaticAttributes,
+  getAllStores,
+  getStaffByStoreId,
   getAllCompanies,
   getAllBrands,
-  getAllStaffs, 
   getAllDealers,
   addNewDealer,
+  itemsStaticAttributes,
+  updateStockTransactionByAdmin,
+  addNewStockTransactions,
   getItemsFromStoreInventory,
-  getStaffByStoreId
 };

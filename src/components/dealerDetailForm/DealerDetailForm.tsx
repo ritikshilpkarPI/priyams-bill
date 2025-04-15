@@ -165,8 +165,6 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
       })
     ).values(),
   ];
-  
-  
 
   return (
     <Flex
