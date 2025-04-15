@@ -6,6 +6,7 @@ import { Loader } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { useNavigate } from 'react-router';
+import { setGeolocationPermissionGranted, setStoreData } from 'src/redux/user/userSlice';
 
 
 
@@ -37,13 +38,15 @@ const Login = () => {
   
     try {
       const storedPincode = localStorage.getItem('userPincode');
-  
+      const storedData = localStorage.getItem('storeData');
+      const savedStoreLocation = localStorage.getItem('storeLocation');
+      const storeLocation = savedStoreLocation ? JSON.parse(savedStoreLocation) : {};
       const payload = {
         username: username.toLowerCase(),
         password,
         ...(storedPincode
           ? { pincode: storedPincode }
-          : { latitude: "23.2510348", longitude: "77.465958" } ),
+          : storeLocation ),
       };
   
       const response = await genericAxios({
@@ -58,8 +61,9 @@ const Login = () => {
         localStorage.setItem('userPincode', response.data.pincode);
       }
   
-      if (!storedPincode && response?.data?.storeData) {
+      if (!storedData && response?.data?.storeData) {
         localStorage.setItem('storeData', JSON.stringify(response.data.storeData));
+        dispatch(setStoreData(response.data.storeData));
       }
   
       const errorMessage = response?.error?.response?.data?.error?.message;
@@ -68,6 +72,12 @@ const Login = () => {
           setErrorMsg('Invalid username');
         } else if (errorMessage === "Password doesn't exist") {
           setErrorMsg('Incorrect password');
+        } else if (
+          response?.error?.response?.data?.error ===
+          'Latitude and longitude are required'
+        ) {
+          setErrorMsg('Enable GeoLocation before login');
+          dispatch(setGeolocationPermissionGranted(false));
         } else {
           setErrorMsg('Login failed. Please try again.');
         }

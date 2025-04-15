@@ -9,6 +9,7 @@ import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
 import brandSlice from "./brands/brandSlice"
 import companySlice from "./companys/companySlice"
+import userSlice from './user/userSlice';
 import staffSlice from "./staffList/StaffSlice";
 import expiredItemsSlice from './expiredItems/expiredItemsSlice'
 import purchaseListApprovalSlice from './purchaseListApproval/purchaseListApprovalSlice'
@@ -16,6 +17,7 @@ import dealerSlice from './dealerlist/dealerSlice';
 
 export const store = configureStore({
   reducer: {
+    user: userSlice,
     bill: billReducer,
     allItemsFeedData: allItemsFeedDataSlice,
     items: itemsSlice,
@@ -32,6 +34,7 @@ export const store = configureStore({
     purchaseListApproval:purchaseListApprovalSlice
   },
 });
+
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

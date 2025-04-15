@@ -1,13 +1,46 @@
+const { getStoreInventoryModel } = require('../db-models/storeInventory-model');
 const { Item } = require('../db-models/item-model');
+const { StoreModel } = require('../db-models/store-model');
+const { MESSAGES } = require('../constants/messages');
 
 const getItemsLean = async (req, res, next) => {
+  const { pincode, storeCode } = req.query;
+
+  let store;
+
+  if (storeCode) {
+    store = await StoreModel.findOne({ code: storeCode});
+  } else if (pincode) {
+    store = await StoreModel.findOne({ pincode });
+  }
+  
+  
   try {
-    const itemsBarCodeMap = {};
-    const itemNamesList = [];
-    const itemBarCodesList = [];
-    const itemsNameMap = {};
+
+    if (!pincode) {
+      return res.status(400).json({ error: MESSAGES.PINCODE_REQUIRED });
+    }
+
+    const store = await StoreModel.findOne({ pincode });
+    if (!store) {
+      return res.status(404).json({ error: MESSAGES.STORE_NOT_FOUND });
+    }
+
+    const StoreInventoryModel = getStoreInventoryModel(store.collectionName);
+
+    const inventoryData = await StoreInventoryModel.find({});
+
+    const itemIds = inventoryData.map((inv) => inv.itemId);
+
+    const storeItemQtyMap = {};
+    inventoryData.forEach((entry) => {      
+      if (entry.itemId && entry.itemQuantityInStore != null) {
+        storeItemQtyMap[entry.itemId] = entry.itemQuantityInStore || 0;
+      }
+    });   
     const allItemsList = await Item.find(
       {
+        _id: { $in: itemIds },
         permanentlyOutOfStock: false,
         isDeleted: false,
         temporaryDeleted: { $exists: false },
@@ -22,19 +55,35 @@ const getItemsLean = async (req, res, next) => {
       slabPricing: 1,
       itemStockQuantity: 1,
       itemPerUnitQuantity: 1,
-      quantityUnitName: 1
+      quantityUnitName: 1,
+      itemShelfDates: 1,
     });
 
+    
+    const itemsBarCodeMap = {};
+    const itemNamesList = [];
+    const itemBarCodesList = [];
+    const itemsNameMap = {};
+
     allItemsList.forEach((item) => {
+        
+      const itemQty = storeItemQtyMap[item._id] || 0;
+
+      const itemWithQty = {
+        ...item.toObject(),
+        itemQtyInStore: itemQty,
+        itemStockQuantity: item.itemStockQuantity,
+      };
+
       itemNamesList.push(item.itemName);
-      itemsNameMap[item.itemName] = item;
+      itemsNameMap[item.itemName] = itemWithQty;
+
       if (item.itemBarcode) {
         itemBarCodesList.push(item.itemBarcode);
-        if (itemsBarCodeMap[item.itemBarcode]) {
-          itemsBarCodeMap[item.itemBarcode].push(item);
-        } else {
-          itemsBarCodeMap[item.itemBarcode] = [item];
+        if (!itemsBarCodeMap[item.itemBarcode]) {
+          itemsBarCodeMap[item.itemBarcode] = [];
         }
+        itemsBarCodeMap[item.itemBarcode].push(itemWithQty);
       }
     });
 

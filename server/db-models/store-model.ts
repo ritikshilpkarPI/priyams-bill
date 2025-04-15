@@ -38,7 +38,7 @@ StoreSchema.pre<StoreType>("save", async function (next) {
       this.number = maxStore ? maxStore.number + 1 : 1;
     }
     // Generate storeCode as: pstr_{storeNumber}_{storePincode}
-    this.code = `pstr_${this.number}_${this.pincode}`;
+    this.code = `store_items_${this.number}_${this.pincode}`;
     // Generate storeCollectionName as storeCode in lowercase
     this.collectionName = this.code.toLowerCase();
     this.name = `${this.address.locality}_${this.number}`

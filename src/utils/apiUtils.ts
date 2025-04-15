@@ -1,6 +1,7 @@
 import { setExpiredItems, setLoading } from 'src/redux/expiredItems/expiredItemsSlice';
 import { getAPI, postAPI } from './apiMethods';
 import { API_PATHS } from './constants/apiPaths';
+import MESSAGES from './constants/messages';
 import { getUserDetails, getUserDeviceInfo } from './getUserDeviceInfo';
 import { AppDispatch } from 'src/redux/store';
 import { API_METHODS } from './constants/apiMethods';
@@ -11,10 +12,11 @@ import { toast } from 'react-toastify';
 
 
 
-export const getBillingLeanItemsAPI = async () => {
+export const getBillingLeanItemsAPI = async (selectedStoreId?: string) => {
   try {
+    const pincode = localStorage.getItem('userPincode');
     const response = await getAPI({
-      path: API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
+      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}/?storeCode=${selectedStoreId}&pincode=${pincode}`,  
     });
 
     return response.message;
@@ -25,9 +27,16 @@ export const getBillingLeanItemsAPI = async () => {
 
 export const saveOrCacheBillAPI = async (data: SaveBillAPIDataType) => {
   try {
+    const storeData = localStorage.getItem('storeData');
+    if (!storeData) {
+      return toast.error(MESSAGES.STOREDATA_IS_REQUIRED); 
+    }
+    const parsedStoreData = storeData ? JSON.parse(storeData) : null;
+    const requestData = { ...data, storeData:parsedStoreData };
+   
     const response = await postAPI({
       path: API_PATHS.BILLING.SAVE_OR_CACHE_BILL,
-      data,
+      data: requestData,
     });
     return response;
   } catch (err) {
@@ -479,3 +488,27 @@ export const addNewDealerAPI = async (
     return { isError: true, error };
   }
 };
+
+
+export const getAllStaffsByStoreIdAPI = async ()=>{
+  try {
+    
+    const storedStoreDataString = localStorage.getItem('storeData');
+
+    if (!storedStoreDataString) {
+      throw new Error(MESSAGES.NO_STORE_DATA_FOUND_IN_LOCAL_STORAGE)
+    }
+
+    const storeData = JSON.parse(storedStoreDataString);
+    const storeId = storeData._id;
+
+    const response = await getAPI({
+      path: `${API_PATHS.STAFF.GET_STAFFS}/${storeId}`,
+    });
+    
+    return response;
+  } catch (error) {
+    
+    return { isError: true, error };
+  }
+}
