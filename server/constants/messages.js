@@ -26,6 +26,8 @@ const MESSAGES = Object.freeze({
   SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY: "Something went wrong while creating brand/company",
   STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
   INSUFFICIENT_STOCK:"Insufficient stock",
+  NO_STAFF_FOUND: "No staff found for this storeId",
+  PINCODE_REQUIRED: "Pincode is required",
   INVALID_STORE_ID: "Invalid store ID provided.",
 });
 

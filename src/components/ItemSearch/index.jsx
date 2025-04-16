@@ -85,7 +85,10 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
         itemSellingPricePerUnit: calculateItemPrice(item, 1),
         itemBarcode: item.itemBarcode,
         itemStockQuantity: item.itemStockQuantity,
-        slabPricing: item.slabPricing
+        slabPricing: item.slabPricing,
+        itemShelfDates: item.itemShelfDates,
+
+        itemQtyInStore: item.itemQtyInStore,
       },
       itemQuantityInBill: 1
     });

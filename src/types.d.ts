@@ -4,7 +4,16 @@ import { RefObject } from "react";
 import { NumberValue } from "d3";
 
 declare global {
+
+  interface StoreDataType {
+    name: string;
+    number: string;
+    pincode: string;
+  };
   export interface UserStateType {
+    isGeolocationPermissionGranted: boolean;
+    userDeviceLocation?: DeviceLocationType;
+    storeData: StoreDataType;
   }
 
   export type RootState = ReturnType<typeof store.getState>;
@@ -488,6 +497,10 @@ declare global {
     error?: string;
     disabled?: boolean; 
   };
+  interface DeviceLocationType {
+    latitude?: number;
+    longitude?: number;
+  }
   interface StaffInterface {
     _id?: string;
     name?: string;
@@ -610,6 +623,58 @@ declare global {
       mfgDate: string | Date;
       date: string | Date;
     };
+  }
+
+
+  interface ExpiryBatch {
+    isShelfExpired: boolean;
+    purchaseOrderId: string;
+    quantityToAdd?: number;
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    _id: string;
+  }
+  
+  interface InventoryItem {
+    itemDetail: {
+      _id: string;
+      itemName: string;
+      itemBarcode: string;
+      itemStockQuantity: number;
+      itemShelfDates?: ExpiryBatch[];
+    };
+    quantityToAdd: number; 
+  }
+  
+  interface InventoryItemPanelProps {
+    items: InventoryItem[];
+    onQuantityChange: (
+      itemId: string,
+      quantity: number,
+      shelfId?: string 
+    ) => void;
+    onRemoveItem: (itemId: string) => void;
+  }
+
+
+  interface Shelf {
+    _id: string;
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    quantityToAdd?: number;
+  }
+  
+  interface ShelfTableProps {
+    shelfList: Shelf[];
+    itemId: string;
+    handleQuantityChange: (
+      itemId: string,
+      shelfQuantity: number,
+      newQuantity: number,
+      shelfId: string
+    ) => void;
   }
   
   

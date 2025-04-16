@@ -2,6 +2,7 @@ import { StoreModel } from '../db-models/store-model';
 import { NextFunction, Request, Response } from 'express';
 import { MESSAGES } from '../constants/messages';
 import { getPincodeFromCoordinates } from '../util/getPincodeFromCoordinates';
+import Staff from '../db-models/staff-model';
 
 const locationMiddleware = async (
     req: Request, 
@@ -12,7 +13,7 @@ const locationMiddleware = async (
         let { pincode } = req.body;
 
         if (!pincode) {
-            const { latitude, longitude } = req.body;
+            const { latitude, longitude, username } = req.body;
             if (!latitude || !longitude) {
                 res.status(400).json({ error: MESSAGES.LAT_LONG_REQUIRED });
                 return;
@@ -21,8 +22,13 @@ const locationMiddleware = async (
             pincode = await getPincodeFromCoordinates(latitude, longitude);
 
             if (!pincode) {
-                res.status(400).json({ error: MESSAGES.PINCODE_FETCH_FAILED });
-                return;
+                const user = await Staff.findOne({ username });
+                if (user && user?.role === 'admin'){
+                    pincode = 462022;
+                } else {
+                    res.status(400).json({ error: MESSAGES.PINCODE_FETCH_FAILED });
+                    return;
+                }
             }
         }
 
