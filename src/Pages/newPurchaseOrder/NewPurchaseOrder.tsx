@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
-import { Chip, Group, Flex, LoadingOverlay, Tabs, Title, Badge } from '@mantine/core';
+import {  Flex, Chip, Group, LoadingOverlay, Tabs, Title, Badge } from '@mantine/core';
 import './NewPurchaseOrder.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
 import { getPurchaseOrderDetailsAPI } from '../../utils/apiUtils';
 import {
@@ -19,6 +19,8 @@ import { BillUploadPanel } from '../../components/BillUploadPanel/BillUploadPane
 import { PurchaseOrderSummary } from '../../components/purchaseOrderSummary/PurchaseOrderSummary';
 import { resetPurchasedItemForm } from '../../redux/purchasedItemDetailForm/purchasedItemDetailFormSlice';
 import { toast } from 'react-toastify';
+import { selectPurchaseOrderStatusInfo } from '../../redux/purchaseOrder/purchaseOrderSelectors';
+import { purchaseOrderStatus as purchaseOrderStatusConst } from '../../utils/constants/purchaseOrderStatus';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
 import {
   validateDealerDetails,
@@ -26,8 +28,8 @@ import {
   validatePaymentDetails,
 } from 'src/utils/purchaseOrderValidations';
 import { TAB, TabChip, TabKey } from 'src/components/TabChip';
-import { selectPurchaseOrderStatusInfo } from '../../redux/purchaseOrder/purchaseOrderSelectors';
-import { purchaseOrderStatus as purchaseOrderStatusConst } from '../../utils/constants/purchaseOrderStatus';
+import { useSelector } from 'react-redux';
+
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 
 const NewPurchaseOrder = () => {
@@ -136,19 +138,18 @@ const NewPurchaseOrder = () => {
 
   useEffect(() => {
     setIsApprovedPO(isApproved);
-},[isApproved])
+  },[isApproved])
 
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
-      <Flex className='purchase-order-title-wrapper' columnGap={30} wrap={'wrap'} align={'center'} justify={'center'}>
-          <Title order={2}>Purchase Order</Title>
+       <Flex className='purchase-order-title-wrapper' columnGap={30} wrap={'wrap'} align={'center'} justify={'center'}>
+        <Title order={2}>Purchase Order</Title>
         {purchaseOrderStatus.label && (
           <Chip defaultChecked color={purchaseOrderStatus.color}>
             {purchaseOrderStatus.label}
           </Chip>
         )}
       </Flex>
-        
       <Tabs
         variant="default"
         color="black"
