@@ -84,25 +84,8 @@ const DataTable: React.FC<DataTableProps> = ({
           </Box>
         );
       },
-      ...(col.key === 'actions'
-        ? {
-            flex: 0,
-            minWidth: 400,
-          }
-        : col.key === 'share'
-          ? {
-              flex: 0,
-              minWidth: 200,
-            }
-          : col.key === 'transactionId'
-            ? {
-                flex: 0,
-                minWidth: 250,
-              }
-            : {
-                minWidth: 150,
-                flex: 1,
-              }),
+      minWidth: col.minWidth ?? 150, 
+      flex: col.flex ?? 1, 
     })),
   ];
 

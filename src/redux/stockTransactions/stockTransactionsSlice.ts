@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { formatDateTime } from 'src/utils/formatDate';
+import { generateSlug } from 'src/utils/generateSlug';
 
 
 const initialState: TransactionState = {
@@ -36,7 +37,7 @@ const stockTransactionsSlice = createSlice({
 
       Object.values(state.rawData).forEach((txnList) => {
         txnList.forEach((txn: any) => {
-          const transactionId = txn._id;
+          const transactionId = generateSlug(txn.transactionSlug);
 
           txn.transactionItems?.forEach((item: any, index: number) => {
             const itemName = item?.itemId?.itemName ?? '';

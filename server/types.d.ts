@@ -151,8 +151,10 @@ export interface StockTransactionType extends Document {
   adminRemark?: string;
   isDeleted: boolean;
   transactionItems: TransactionItem[];
+  transactionSlug:string;
 }
 
 export interface StockTransactionsInterface {
   transactions: StockTransactionType[]
 }
+
