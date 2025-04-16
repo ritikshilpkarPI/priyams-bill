@@ -26,6 +26,7 @@
     user: mongoose.Types.ObjectId;
     changeType: ChangeType;
     changedFrom: ChangedFrom;
+    transactionId?: mongoose.Types.ObjectId;
   }
   
   export interface StoreInventoryItemType extends Document {
@@ -57,11 +58,6 @@
     storeCollectionName: string;
   }
 
-export  interface AddressComponent {
-    long_name: string;
-    short_name: string;
-    types: string[];
-}
   export type AuthenticatedRequest = {
     user?: {
       _id: ObjectId;
@@ -69,7 +65,18 @@ export  interface AddressComponent {
       username: string;
       role: string;
     };
+    params: {
+      id: string;
+    };
+    body: {
+      [key: string]: any;
+    };
   };
+export  interface AddressComponent {
+    long_name: string;
+    short_name: string;
+    types: string[];
+}
 
   export interface CompanyType extends Document {
     companyName: string;
@@ -86,11 +93,17 @@ export  interface AddressComponent {
     dealerCompanies: Types.ObjectId[];
     dealerNumber: number;
   }
+
+  export interface BrandType extends Document {
+    brandName: string;
+    companyId: Types.ObjectId;
+  }
 export interface TransactionSource {
   sourceStaff?: Types.ObjectId;
   sourceEntityId?: Types.ObjectId;
   sourceType?: string;
   sourceRemark?: string;
+
 }
 
 export interface TransactionDestination {
@@ -138,4 +151,8 @@ export interface StockTransactionType extends Document {
   adminRemark?: string;
   isDeleted: boolean;
   transactionItems: TransactionItem[];
+}
+
+export interface StockTransactionsInterface {
+  transactions: StockTransactionType[]
 }

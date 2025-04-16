@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { Paper, Text, Input, Button, Loader, Group, Badge } from '@mantine/core';
-import { useSelector } from 'react-redux';
-import { fuzzySearch } from 'src/utils/searchUtils';
+import {
+    Paper,
+    Text,
+    Input,
+    Button,
+    Loader,
+    Group,
+  } from '@mantine/core';
+import { useSelector } from "react-redux";
+import { fuzzySearch } from "src/utils/searchUtils";
 import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
 import "./ItemSearch.css";
 import { setItemsData } from 'src/redux/items/itemsSlice';
@@ -86,9 +93,9 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
         itemBarcode: item.itemBarcode,
         itemStockQuantity: item.itemStockQuantity,
         slabPricing: item.slabPricing,
+        itemQtyInStore: item.itemQtyInStore,
         itemShelfDates: item.itemShelfDates,
 
-        itemQtyInStore: item.itemQtyInStore,
       },
       itemQuantityInBill: 1
     });
@@ -169,9 +176,6 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
             No items found
           </Text>
         )}
-        {error.length>0 &&
-          <Badge mt={10} color="red" size="xs">{error}</Badge>
-        }
       </Paper>
     </div>
   );

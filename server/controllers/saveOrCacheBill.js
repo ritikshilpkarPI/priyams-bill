@@ -1,12 +1,10 @@
 const { Bill } = require('../db-models/bill-model');
 const { UnSavedBill } = require('../db-models/unSavedBill-model');
-
-const { v4: uuidv4 } = require('uuid');
 const {
   setToBillsCache,
   deleteBillFromBillCacheById,
 } = require('../cache/billCacheConfig');
-const { SentMessageToDiscord } = require('../util');
+const { logToDiscord } = require('../util/logToDiscord');
 const { getStoreInventoryModel } = require('../db-models/storeInventory-model');
 
 const saveOrCacheBill = async (req, res) => {
@@ -50,6 +48,7 @@ const saveOrCacheBill = async (req, res) => {
   try {
     const maxAttemptToSaveInDB = 1;
     setToBillsCache(billId, newBillData);
+    logToDiscord(JSON.stringify({billId, newBillData}))
     const duplicateBill = await Bill.findOne({ slug: billId });
     if (duplicateBill) {
       isBillSaved = true;
@@ -59,8 +58,9 @@ const saveOrCacheBill = async (req, res) => {
     const billSaved = await saveBill(newBillData, billId,storeData, maxAttemptToSaveInDB);
     isBillSaved = billSaved.isBillSaved;
     billBarcode = billSaved.billBarcode;
+    logToDiscord(JSON.stringify({billSaved}))
   } catch (error) {
-    SentMessageToDiscord(JSON.stringify(error))
+    logToDiscord(JSON.stringify(error))
     console.log(error);
   } finally {
     if (isBillSaved) {
@@ -144,16 +144,13 @@ const saveBill = async (
           let item;
           if (_id) {
             try {
-              item =await StoreInventoryModel.findOne({ itemId: _id });
-
+              item = await StoreInventoryModel.findOne({ itemId: _id });
               if (item) {
                 item.itemQuantityInStore -= orderQuantityInNumber; 
-                
                 await item.save();
-                  
               }
             } catch (error) {
-              SentMessageToDiscord(JSON.stringify(error))
+              logToDiscord(JSON.stringify(error))
             }
           }
           if (!item) {
@@ -214,7 +211,7 @@ const saveBillToUnsavedBills = async (data) => {
     await UnSavedBill.create({ data });
     return true;
   } catch (error) {
-    SentMessageToDiscord(JSON.stringify(error))
+    logToDiscord(JSON.stringify(error))
     return false;
   }
 };

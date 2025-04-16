@@ -2,8 +2,15 @@ import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 import { RefObject } from "react";
 import { NumberValue } from "d3";
+import { GridEventListener } from "@mui/x-data-grid";
 
 declare global {
+
+  interface StoreDataType {
+    name: string;
+    number: string;
+    pincode: string;
+  };
 
   interface StoreDataType {
     name: string;
@@ -445,6 +452,7 @@ declare global {
 
   interface Store {
     id: string;
+    _id?: string;
     name: string;
     code: string;
   }
@@ -461,43 +469,6 @@ declare global {
     itemDetail: WarehouseItem;
     itemQuantityInBill: number;
   }
-  interface Brand {
-    _id: string;
-    brandName: string;
-    companyId: string;
-  }
-  interface BrandState {
-    brands: Brand[];
-    loading: boolean;
-    error: string | null;
-  }
-  interface company {
-    _id: string;
-    companyName: string;
-  }
-  interface companyState {
-    companys: company[];
-    loading: boolean;
-    error: string | null;
-  }
-  type BrandSelectorProps = {
-    label?: string;
-    value: string;
-    onChange?: (value: string) => void;
-    placeholder?: string;
-    required?: boolean;
-    error?: string;
-    disabled?: boolean;
-  };
-  type CompanySelectorProps = {
-    value: string;
-    onChange: (value: string) => void;
-    label?: string;
-    placeholder?: string;
-    required?: boolean;
-    error?: string;
-    disabled?: boolean; 
-  };
   interface DeviceLocationType {
     latitude?: number;
     longitude?: number;
@@ -562,6 +533,7 @@ declare global {
     key: string;
     sortable?: boolean;
     render?: (row: any,index?: number) => React.ReactNode;
+    cellClassName?: string;
   }
   
   interface DataTableProps {
@@ -577,6 +549,7 @@ declare global {
     onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     rowCount: number;
     paginationMode?: 'client' | 'server'; 
+    onRowClick?: GridEventListener<'rowClick'>;
     expandedRows?: string[];
     onToggleExpand?: (id: string) => void; 
   }
@@ -619,13 +592,6 @@ declare global {
     navigate:any
   };
 
-  interface ShelfLifeInfoProps {
-    expiryDate: {
-      mfgDate: string | Date;
-      date: string | Date;
-    };
-  }
-
 
   interface ExpiryBatch {
     isShelfExpired: boolean;
@@ -644,6 +610,7 @@ declare global {
       itemBarcode: string;
       itemStockQuantity: number;
       itemShelfDates?: ExpiryBatch[];
+      itemQtyInStore?: number;
     };
     quantityToAdd: number; 
   }
@@ -657,8 +624,13 @@ declare global {
     ) => void;
     onRemoveItem: (itemId: string) => void;
   }
+  interface ShelfLifeInfoProps {
+    expiryDate: {
+      mfgDate: string | Date;
+      date: string | Date;
+    };
 
-
+  }
   interface Shelf {
     _id: string;
     expiryDate: string;
@@ -679,6 +651,56 @@ declare global {
   }
   
   
+  interface Brand {
+    _id: string;
+    brandName: string;
+    companyId: string;
+  }
+  interface BrandState {
+    brands: Brand[];
+    loading: boolean;
+    error: string | null;
+  }
+  interface company {
+    _id: string;
+    companyName: string;
+  }
+  interface companyState {
+    companys: company[];
+    loading: boolean;
+    error: string | null;
+  }
+  type BrandSelectorProps = {
+    label?: string;
+    value: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean;
+  };
+  type CompanySelectorProps = {
+    value: string;
+    onChange: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean; 
+  };
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
+  }
   type DealerOption = {
     value: string;
     label: string;

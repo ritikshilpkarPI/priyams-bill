@@ -25,6 +25,7 @@ const DataTable: React.FC<DataTableProps> = ({
   rowCount,
   expandedRows,
   onToggleExpand,
+  onRowClick
 }) => {
   const gridColumns: GridColDef[] = [
     ...(expandedRows
