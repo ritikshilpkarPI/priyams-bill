@@ -33,7 +33,7 @@ const getItemsLean = async (req, res, next) => {
     const itemIds = inventoryData.map((inv) => inv.itemId);
 
     const storeItemQtyMap = {};
-    inventoryData.forEach((entry) => {      
+    inventoryData.forEach((entry) => {
       if (entry.itemId && entry.itemQuantityInStore != null) {
         storeItemQtyMap[entry.itemId] = entry.itemQuantityInStore || 0;
       }
@@ -59,20 +59,20 @@ const getItemsLean = async (req, res, next) => {
       itemShelfDates: 1,
     });
 
-    
+   
     const itemsBarCodeMap = {};
     const itemNamesList = [];
     const itemBarCodesList = [];
     const itemsNameMap = {};
 
     allItemsList.forEach((item) => {
-        
+  
       const itemQty = storeItemQtyMap[item._id] || 0;
 
       const itemWithQty = {
         ...item.toObject(),
         itemQtyInStore: itemQty,
-        itemStockQuantity: item.itemStockQuantity,
+        itemStockQuantity: itemQty,
       };
 
       itemNamesList.push(item.itemName);
