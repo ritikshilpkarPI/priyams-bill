@@ -25,7 +25,8 @@ const DataTable: React.FC<DataTableProps> = ({
   rowCount,
   expandedRows,
   onToggleExpand,
-  onRowClick
+  onRowClick,
+  paginationMode = 'client',
 }) => {
   const gridColumns: GridColDef[] = [
     ...(expandedRows
@@ -57,10 +58,13 @@ const DataTable: React.FC<DataTableProps> = ({
           },
         ]
       : []),
-    ...columns.map((col) => ({
+    ...columns.map((col): GridColDef  => ({
       field: col.key,
       headerName: col.label,
       sortable: col.sortable ?? true,
+      align: "center",
+      headerAlign: "center",
+      cellClassName:col?.cellClassName || '',
       renderCell: (params: GridRenderCellParams) => {
         const value = col.render ? col.render(params.row) : params.value;
         return (
@@ -100,7 +104,9 @@ const DataTable: React.FC<DataTableProps> = ({
             columns={gridColumns}
             rows={data}
             getRowId={(row) => row._id}
+            onRowClick={onRowClick}
             rowCount={data.length}
+            paginationMode={paginationMode}
             paginationModel={{
               pageSize: rowsPerPage,
               page: page,
