@@ -562,6 +562,8 @@ declare global {
     key: string;
     sortable?: boolean;
     render?: (row: any,index?: number) => React.ReactNode;
+    flex?: number; 
+    minWidth?: number;
   }
   
   interface DataTableProps {
