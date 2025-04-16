@@ -4,18 +4,11 @@ import { getAllBrandsAPI } from '../../utils/apiUtils';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBrands, setLoading } from '../../redux/brands/brandSlice';
 import { selectBrands, selectBrandLoading } from '../../redux/brands/brandSelectors';
-
-type BrandSelectorProps = {
-  label?: string;
-  value: string;
-  onChange?: (value: string) => void;
-  placeholder?: string;
-  required?: boolean;
-  error?: string;
-  disabled?: boolean;
-};
+import { Box, Center, Flex, Text } from '@mantine/core';
+import { IconAsteriskSimple } from '@tabler/icons-react';
 
 const BrandSelector: React.FC<BrandSelectorProps> = ({
+  align = 'center',
   label = '',
   value,
   onChange,
@@ -53,6 +46,11 @@ const BrandSelector: React.FC<BrandSelectorProps> = ({
   }, []);  
 
   return (
+    <>
+    <Flex gap={"5px"} align={"center"} justify={align} mb={"2px"}>
+      <Text size="sm" fw={500}>{label}</Text>
+      <IconAsteriskSimple stroke={2} height={"7px"} width={"7px"}color='red' />
+    </Flex>
     <Autocomplete
       size = "small"
       fullWidth
@@ -77,6 +75,7 @@ const BrandSelector: React.FC<BrandSelectorProps> = ({
         />
       )}
     />
+    </>
   );
 };
 

@@ -471,6 +471,7 @@ declare global {
     error: string | null;
   }
   type BrandSelectorProps = {
+    align?: string;
     label?: string;
     value: string;
     onChange?: (value: string) => void;
@@ -480,6 +481,7 @@ declare global {
     disabled?: boolean;
   };
   type CompanySelectorProps = {
+    align?: string;
     value: string;
     onChange: (value: string) => void;
     label?: string;
