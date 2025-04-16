@@ -9,6 +9,7 @@ declare global {
     name: string;
     number: string;
     pincode: string;
+    _id?:string;
   };
   export interface UserStateType {
     isGeolocationPermissionGranted: boolean;
@@ -751,13 +752,29 @@ declare global {
   type TransformedData = TransformedRow[];
   
   interface TransactionState {
-    rawData: RawData;
+    rawData: { [key: number]: any[] }; 
     transformedData: TransformedData;
     expandedRows: string[];
     isLoading: boolean;
     page: number;
     rowsPerPage: number;
+    startDate:Date;
+    endDate:Date;
   }
+  interface DateRangePickerProps {
+    startDate: Date | null;
+    endDate: Date | null;
+    onStartDateChange: (date: Date | null) => void;
+    onEndDateChange: (date: Date | null) => void;
+  };
+  interface StockTransactionParams  {
+    startDate?: Date;
+    endDate?: Date;
+    storeId?: string;
+    page?: number;
+    limit?: number;
+  };
+  
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

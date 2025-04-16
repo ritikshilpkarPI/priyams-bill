@@ -29,6 +29,13 @@ const MESSAGES = Object.freeze({
   NO_STAFF_FOUND: "No staff found for this storeId",
   PINCODE_REQUIRED: "Pincode is required",
   INVALID_STORE_ID: "Invalid store ID provided.",
+  INVALID_TRANSACTION_IDS: 'Invalid transactionIds',
+  INVALID_STORE_ID: 'Invalid storeId',
+  STORE_NOT_FOUND_FOR_TRANSACTIONS: 'Store not found for transactions',
+  TRANSACTIONS_NOT_LINKED_TO_STORE: 'Transactions not linked to store',
+  INVALID_ITEM_IDS: 'Invalid itemIds',
+  ITEMS_NOT_IN_STORE_INVENTORY: 'Items not in store inventory',
+  INVALID_DATE_RANGE: 'Invalid date range',
 });
 
 module.exports = { MESSAGES };

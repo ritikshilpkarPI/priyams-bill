@@ -129,6 +129,6 @@ export {
   getAllDealers,
   addNewDealer,
 
-  getStaffByStoreId
+  getStaffByStoreId,
   getStockTransactions
 };

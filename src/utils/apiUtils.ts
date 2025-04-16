@@ -512,13 +512,30 @@ export const getAllStaffsByStoreIdAPI = async ()=>{
     return { isError: true, error };
   }
 }
-export const getStockTransactions = async () => {
+
+export const getStockTransactions = async ({
+  startDate,
+  endDate,
+  storeId,
+  page = 1,
+  limit = 100,
+}: StockTransactionParams) => {
   try {
-    const response = await getAPI({
+    const data: any = {
+      storeId,
+      page,
+      limit,
+    };
+    if (startDate) data.startDate = startDate.toISOString();
+    if (endDate) data.endDate = endDate.toISOString();
+
+    const response = await postAPI({
       path: API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,
-    });    
+      data
+    });
+
     return response;
   } catch (error) {
     return { isError: true, error };
   }
-}
+};
