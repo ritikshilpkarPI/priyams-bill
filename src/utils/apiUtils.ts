@@ -512,3 +512,17 @@ export const getAllStaffsByStoreIdAPI = async ()=>{
     return { isError: true, error };
   }
 }
+
+export const getItemsFromStoreInventory = async (
+  storeId: string, query: { size: number, page: number }
+) => {
+  try {
+    const response = await genericAxios({
+      url: `${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/${storeId}`,
+      params: query,
+    });    
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
