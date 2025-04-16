@@ -6,7 +6,7 @@ import { Loader } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { useNavigate } from 'react-router';
-import { setGeolocationPermissionGranted } from 'src/redux/user/userSlice';
+import { setGeolocationPermissionGranted, setStoreData } from 'src/redux/user/userSlice';
 
 
 
@@ -63,6 +63,7 @@ const Login = () => {
   
       if (!storedData && response?.data?.storeData) {
         localStorage.setItem('storeData', JSON.stringify(response.data.storeData));
+        dispatch(setStoreData(response.data.storeData));
       }
   
       const errorMessage = response?.error?.response?.data?.error?.message;

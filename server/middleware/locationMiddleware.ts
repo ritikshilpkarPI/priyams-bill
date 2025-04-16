@@ -10,10 +10,13 @@ const locationMiddleware = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        let { pincode } = req.body;
+        let  pincode  = req.query.pincode ;
 
         if (!pincode) {
-            const { latitude, longitude, username } = req.body;
+            const latitude = req.query.latitude as string;
+            const longitude = req.query.longitude as string;
+            const username = req.query.username as string;
+
             if (!latitude || !longitude) {
                 res.status(400).json({ error: MESSAGES.LAT_LONG_REQUIRED });
                 return;
@@ -24,7 +27,7 @@ const locationMiddleware = async (
             if (!pincode) {
                 const user = await Staff.findOne({ username });
                 if (user && user?.role === 'admin'){
-                    pincode = 462022;
+                    pincode = "462022";
                 } else {
                     res.status(400).json({ error: MESSAGES.PINCODE_FETCH_FAILED });
                     return;
@@ -44,7 +47,7 @@ const locationMiddleware = async (
         next(); 
     } catch (error) {
         console.error('Error in location middleware:', error);
-        next(error);
+        next(error); 
     }
 };
 

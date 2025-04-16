@@ -1,5 +1,6 @@
 import { lazy } from 'react';
 export const BillFeed = lazy(() => import('./BillFeed'));
+export const AllBills = lazy(() => import('./AllBills'));
 export const DayWiseBillFeed = lazy(() => import('./DailyBill'));
 export const ItemsList = lazy(() => import('./ItemsList'));
 export const OpenClose = lazy(() => import('./OpenClose'));
