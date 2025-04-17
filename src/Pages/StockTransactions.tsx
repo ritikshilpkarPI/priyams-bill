@@ -12,6 +12,7 @@ import {
   setRowsPerPage,
   setStartDate,
   setEndDate,
+  clearRawData
 } from 'src/redux/stockTransactions/stockTransactionsSlice';
 import { generateColor } from 'src/utils/constants/generateColor';
 import { getStockTransactions } from 'src/utils/apiUtils';
@@ -64,6 +65,7 @@ const StockTransactions: React.FC = () => {
 
   const handleStartDateChange = (newDate: Date | null) => {
     if (newDate) {
+      dispatch(clearRawData()); 
       dispatch(setStartDate(newDate));
       if (newDate > endDate) {
         dispatch(setEndDate(newDate));
@@ -72,7 +74,10 @@ const StockTransactions: React.FC = () => {
   };
 
   const handleEndDateChange = (newDate: Date | null) => {
-    if (newDate) dispatch(setEndDate(newDate));
+    if (newDate) {
+      dispatch(clearRawData());
+      dispatch(setEndDate(newDate));
+    }
   };
 
    const handlePageChange = (_: unknown, newPage: number) => {
