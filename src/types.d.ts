@@ -785,6 +785,7 @@ declare global {
     rowsPerPage: number;
     startDate:Date;
     endDate:Date;
+    totalCount: number;
   }
   interface DateRangePickerProps {
     startDate: Date | null;
