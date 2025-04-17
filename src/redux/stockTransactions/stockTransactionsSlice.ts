@@ -112,6 +112,9 @@ const stockTransactionsSlice = createSlice({
       setEndDate(state, action) {
         state.endDate = action.payload;
       },
+      clearRawData: (state) => {
+        state.rawData = {};
+      },
   },
 });
 
@@ -123,7 +126,8 @@ export const {
   setPage,
   setRowsPerPage,
   setStartDate,
-  setEndDate
+  setEndDate,
+  clearRawData
 } = stockTransactionsSlice.actions;
 
 export default stockTransactionsSlice.reducer;
