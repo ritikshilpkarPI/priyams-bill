@@ -46,7 +46,6 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
     
   const onChange = (field: string, value: string | number | File[]) => {
-    console.log({field, value});
     dispatch(setMakePaymentForm({ ...paymentDetail, [field]: value }));
   };
 
@@ -81,9 +80,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   };
 
   const onSubmit = async () => {
-    try {
-      console.log({paymentDetail, paymentsList});
-      
+    try {      
       await addPaymentDetailValidation.validate({...paymentDetail, totalPayableAmount: purchaseDetails.totalPayableAmount, paymentsList}, {
         abortEarly: false,
       });
