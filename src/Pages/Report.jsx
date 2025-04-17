@@ -255,6 +255,9 @@ const showBillTable = (reportResult, selectedFilter) => (
             <Text align="center">Sl. No.</Text>
           </th>
           <th>
+            <Text align="center">SKU</Text>
+          </th>
+          <th>
             <Text align="center">Item Name</Text>
           </th>
           <th><Text align="center">Barcode</Text></th>
@@ -350,6 +353,12 @@ const TableRow = ({ itemBill, idx, filterName }) => {
         <td>
           <Text color="black" weight={500}>
             {idx + 1}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {itemBill.items[0]?.itemDetail?.sku ||
+              itemBill.items.itemDetail?.sku || "N/A"}
           </Text>
         </td>
         <td>
