@@ -121,7 +121,7 @@ const StockTransactions: React.FC = () => {
     switch (col.key) {
       case TransactionTableConstants.TRANSACTIONID:
         return { ...col, render: renderTransactionId };
-      case 'edit':
+      case TransactionTableConstants.EDIT:
         return { ...col, render: renderEditButton };
       default:
         return col;
