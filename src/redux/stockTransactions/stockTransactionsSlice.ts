@@ -87,12 +87,12 @@ const stockTransactionsSlice = createSlice({
     
             transformed.push({
               _id: `${mainRowId}_date_${subIndex}`,
-              sourceExpiry: formatDateTime(dateData?.sourceQuantity?.expiryDate),
-              sourceMfg: formatDateTime(dateData?.sourceQuantity?.manufacturingDate),
+              sourceExpiry: dateData?.sourceQuantity?.expiryDate ? formatDateTime(dateData?.sourceQuantity?.expiryDate) : "",
+              sourceMfg: dateData?.sourceQuantity?.manufacturingDate ? formatDateTime(dateData?.sourceQuantity?.manufacturingDate) : "",
               qty: dateData?.sourceQuantity?.qty ?? '',
               destinationQty: dateData?.destinationQuantity?.qty ?? '',
-              destinationExpiry: formatDateTime(dateData?.destinationQuantity?.expiryDate),
-              destinationMfg: formatDateTime(dateData?.destinationQuantity?.manufacturingDate),
+              destinationExpiry: dateData?.destinationQuantity?.expiryDate ? formatDateTime(dateData?.destinationQuantity?.expiryDate):"",
+              destinationMfg: dateData?.destinationQuantity?.manufacturingDate ? formatDateTime(dateData?.destinationQuantity?.manufacturingDate) : "",
               ItemSourceRemark: dateData?.sourceRemark ?? '',
               ItemDestinationRemark: dateData?.destinationRemark ?? '',
               itemError: dateData?.itemError?.errorReason,
