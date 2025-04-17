@@ -30,6 +30,7 @@ import {
 import { addPaymentDetailValidation } from 'src/utils/validations/paymentDetailFormValidation';
 import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
+import { PasteableFileInput } from './PasteableFileInput';
 const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
 
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
     
   const onChange = (field: string, value: string | number | File[]) => {
+    console.log({field, value});
     dispatch(setMakePaymentForm({ ...paymentDetail, [field]: value }));
   };
 
@@ -80,6 +82,8 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
 
   const onSubmit = async () => {
     try {
+      console.log({paymentDetail, paymentsList});
+      
       await addPaymentDetailValidation.validate({...paymentDetail, totalPayableAmount: purchaseDetails.totalPayableAmount, paymentsList}, {
         abortEarly: false,
       });
@@ -147,12 +151,12 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
         </Col>
         {takeImages && (
           <Col>
-            <FileInput
+            <PasteableFileInput
               label="Choose Image/s"
               accept="image"
               required
               error={errors.paymentImages}
-              onChange={(files) => onChange('paymentImages', files || [])}
+              onChange={(files: any) => onChange('paymentImages', files || [])}
               multiple
             />
           </Col>
