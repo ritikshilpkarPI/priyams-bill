@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { formatDateTime } from 'src/utils/formatDate';
-import { generateSlug } from 'src/utils/generateSlug';
 
 
 const initialState: TransactionState = {
@@ -32,18 +31,19 @@ const stockTransactionsSlice = createSlice({
         ? state.expandedRows.filter((id) => id !== rowId)
         : [...state.expandedRows, rowId];
     },
-     transformData(state) {
+    transformData(state) {
       const transformed = [];
       const expandedSet = new Set(state.expandedRows);
-      const raw = Object.values(state.rawData).flat();
+    
+      const allPages = Object.values(state.rawData).flat();
     
       let txnIndex = 0;
       let itemIndex = 0;
-      let subIndex = -1; 
+      let subIndex = -1;
     
-      while (txnIndex < raw.length) {
-        const txn = raw[txnIndex];
-        const transactionId = generateSlug(txn.transactionSlug);
+      while (txnIndex < allPages.length) {
+        const txn = allPages[txnIndex];
+        const transactionId = txn.transactionSlug;
         const items = txn.transactionItems ?? [];
     
         if (itemIndex >= items.length) {
@@ -56,9 +56,10 @@ const stockTransactionsSlice = createSlice({
         const item = items[itemIndex];
         const itemId = item?.itemId?._id ?? `item_${itemIndex}`;
         const mainRowId = `${transactionId}_${itemId}`;
+        const isCurrentPage = state.rawData[state.page]?.includes(txn);
         const subRows = item.itemByDate ?? [];
     
-        if (subIndex === -1) {
+        if (subIndex === -1 && isCurrentPage) {
           transformed.push({
             _id: mainRowId,
             transactionId,
@@ -82,28 +83,28 @@ const stockTransactionsSlice = createSlice({
           });
     
           if (expandedSet.has(mainRowId) && subRows.length > 0) {
-            subIndex = 0; 
+            subIndex = 0;
+            continue;
           } else {
-            itemIndex++;  
+            itemIndex++;
+            continue;
           }
-    
-          continue;
         }
     
-        if (subIndex < subRows.length) {
+        if (expandedSet.has(mainRowId) && subIndex >= 0 && subIndex < subRows.length) {
           const dateData = subRows[subIndex];
     
           transformed.push({
             _id: `${mainRowId}_date_${subIndex}`,
-            sourceExpiry: dateData?.sourceQuantity?.expiryDate ? formatDateTime(dateData?.sourceQuantity?.expiryDate) : "",
-            sourceMfg: dateData?.sourceQuantity?.manufacturingDate ? formatDateTime(dateData?.sourceQuantity?.manufacturingDate) : "",
+            sourceExpiry: dateData?.sourceQuantity?.expiryDate ? formatDateTime(dateData.sourceQuantity.expiryDate) : '',
+            sourceMfg: dateData?.sourceQuantity?.manufacturingDate ? formatDateTime(dateData.sourceQuantity.manufacturingDate) : '',
             qty: dateData?.sourceQuantity?.qty ?? '',
             destinationQty: dateData?.destinationQuantity?.qty ?? '',
-            destinationExpiry: dateData?.destinationQuantity?.expiryDate ? formatDateTime(dateData?.destinationQuantity?.expiryDate) : "",
-            destinationMfg: dateData?.destinationQuantity?.manufacturingDate ? formatDateTime(dateData?.destinationQuantity?.manufacturingDate) : "",
+            destinationExpiry: dateData?.destinationQuantity?.expiryDate ? formatDateTime(dateData.destinationQuantity.expiryDate) : '',
+            destinationMfg: dateData?.destinationQuantity?.manufacturingDate ? formatDateTime(dateData.destinationQuantity.manufacturingDate) : '',
             ItemSourceRemark: dateData?.sourceRemark ?? '',
             ItemDestinationRemark: dateData?.destinationRemark ?? '',
-            itemError: dateData?.itemError?.errorReason,
+            itemError: dateData?.itemError?.errorReason ?? '',
             isSubRow: true,
           });
     
@@ -122,7 +123,8 @@ const stockTransactionsSlice = createSlice({
       }
     
       state.transformedData = transformed;
-    },
+    }
+    ,
     setPage(state, action: PayloadAction<number>) {
         state.page = action.payload;
       },
