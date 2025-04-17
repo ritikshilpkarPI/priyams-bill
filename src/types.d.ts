@@ -451,8 +451,7 @@ declare global {
   }
 
   interface Store {
-    id: string;
-    _id?: string;
+    _id: string;
     name: string;
     code: string;
   }
@@ -473,6 +472,45 @@ declare global {
     latitude?: number;
     longitude?: number;
   }
+  interface Brand {
+    _id: string;
+    brandName: string;
+    companyId: string;
+  }
+  interface BrandState {
+    brands: Brand[];
+    loading: boolean;
+    error: string | null;
+  }
+  interface company {
+    _id: string;
+    companyName: string;
+  }
+  interface companyState {
+    companys: company[];
+    loading: boolean;
+    error: string | null;
+  }
+  type BrandSelectorProps = {
+    align?: string;
+    label?: string;
+    value: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean;
+  };
+  type CompanySelectorProps = {
+    align?: string;
+    value: string;
+    onChange: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean; 
+  };
   interface StaffInterface {
     _id?: string;
     name?: string;

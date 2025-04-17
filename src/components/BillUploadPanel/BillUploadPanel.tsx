@@ -11,6 +11,7 @@ import { selectPurchaseOrder } from '../../redux/purchaseOrder/purchaseOrderSele
 import { addNewOrderAPI, updateOrderDetailsAPI } from '../../utils/apiUtils';
 import { getFileURL } from '../../utils/getFileURL';
 import ShareOnWhatsApp from '../shareOnWhatsApp';
+import PastableFileInput from '../makePaymentForm/PasteableFileInput';
 
 export const BillUploadPanel: React.FC<PurchaseOrderProps> = ({isApprovedPO}) => {
   const dispatch = useDispatch();
@@ -151,32 +152,14 @@ export const BillUploadPanel: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =>
           mx="sm"
           mt="md"
         />
-        <Dropzone
-          onDrop={onFileSelect}
-          onReject={onReject}
-          maxSize={5 * 1024 ** 2}
-          mt="16px"
-          sx={{ borderColor: 'black' }}
-          loading={isFileUploading}
-          accept={['image/jpeg', 'image/png', 'image/jpg', 'image/webp']}
-          disabled={isApprovedPO}
-        >
-          <Flex
-            justify="center"
-            align="center"
-            mih={120}
-            style={{ pointerEvents: 'none' }}
-          >
-            <div>
-              <Text size="xl" inline>
-                Drag or select files
-              </Text>
-              <Text size="sm" c="dimmed" inline mt={7}>
-                Attach as many files as you like, each file should not exceed 5mb
-              </Text>
-            </div>
-          </Flex>
-        </Dropzone>
+      <PastableFileInput
+  onDrop={onFileSelect}
+  onPasteFile={onFileSelect}
+  onReject={onReject}
+  loading={isFileUploading}
+  disabled={isApprovedPO}
+/>
+
         <Flex wrap="wrap">
           {purchaseOrder?.billPhotos?.map((billPhoto) => (
             <Flex
