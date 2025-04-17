@@ -15,12 +15,18 @@ export const getItemsFromStoreInventory = async (
       return res.status(404).json({ error: MESSAGES.STORE_NOT_FOUND });
     }
     const StoreInventoryModel = getStoreInventoryModel(store.collectionName);
-
-    const inventoryData = await StoreInventoryModel.find().populate(
-      'itemId',
-      CONSTANTS.STATIC_FIELDS_TO_SELECT
-    );
-    return res.status(200).json({ data: inventoryData });
+    const { page = 1, size = 100 } = req.query;
+    const limit = Number(size);
+    const skip = (Number(page) - 1) * limit;
+    const inventoryData = await StoreInventoryModel
+      .find()
+      .select('itemId')
+      .populate('itemId', CONSTANTS.STATIC_FIELDS_TO_SELECT)
+      .limit(limit)
+      .skip(skip);
+    const totalItems = await StoreInventoryModel.countDocuments();
+    const items = inventoryData.map((data:any)=>data.itemId);
+    return res.status(200).json({ data: items, count: totalItems });
   } catch (error) {
     res.status(400).json({ error });
   }

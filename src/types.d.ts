@@ -444,8 +444,7 @@ declare global {
   }
 
   interface Store {
-    id: string;
-    _id?: string;
+    _id: string;
     name: string;
     code: string;
   }
