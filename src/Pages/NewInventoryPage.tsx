@@ -53,7 +53,6 @@ const NewInventoryPage: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setRowsPerPage(parseInt(e.target.value.toString(), 10));
-    setPage(0); // Reset to first page
   };
 
   const columns = [
