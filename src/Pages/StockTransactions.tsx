@@ -12,7 +12,8 @@ import {
   setRowsPerPage,
   setStartDate,
   setEndDate,
-  clearRawData
+  clearRawData,
+  setTotalCount
 } from 'src/redux/stockTransactions/stockTransactionsSlice';
 import { generateColor } from 'src/utils/constants/generateColor';
 import { getStockTransactions } from 'src/utils/apiUtils';
@@ -29,6 +30,7 @@ const StockTransactions: React.FC = () => {
     rowsPerPage,
     startDate,
     endDate,
+    totalCount
   } = useSelector((state: RootState) => state.stockTransactions);
   const storeData = useSelector((state: RootState) => state.user.storeData);
 
@@ -51,6 +53,7 @@ const StockTransactions: React.FC = () => {
       if (!result?.isError) {
         dispatch(setRawData({ page, data: result.data }));
         dispatch(transformData());
+        dispatch(setTotalCount(result.totalCount));
       } else {
         console.error('Failed to fetch');
       }
@@ -153,7 +156,7 @@ const StockTransactions: React.FC = () => {
         rowsPerPage={rowsPerPage}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowsPerPageChange}
-        rowCount={data.length}
+        rowCount={totalCount}
         expandedRows={expandedRows}
         onToggleExpand={(id) => {
           dispatch(toggleExpandedRow(id));

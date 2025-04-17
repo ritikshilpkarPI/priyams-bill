@@ -11,7 +11,7 @@ const initialState: TransactionState = {
   rowsPerPage: 10, 
   startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
   endDate: new Date(),
-  
+  totalCount: 0,
 };
 
 const stockTransactionsSlice = createSlice({
@@ -140,6 +140,10 @@ const stockTransactionsSlice = createSlice({
       clearRawData: (state) => {
         state.rawData = {};
       },
+      setTotalCount: (state, action) => {
+        state.totalCount = action.payload;
+      },
+      
   },
 });
 
@@ -152,7 +156,8 @@ export const {
   setRowsPerPage,
   setStartDate,
   setEndDate,
-  clearRawData
+  clearRawData,
+  setTotalCount
 } = stockTransactionsSlice.actions;
 
 export default stockTransactionsSlice.reducer;
