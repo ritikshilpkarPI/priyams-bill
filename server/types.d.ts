@@ -158,3 +158,13 @@ export interface StockTransactionsInterface {
   transactions: StockTransactionType[]
 }
 
+export interface StockTransactionFilterBody {
+  transactionId?: string[];
+  storeId?: string;
+  itemId?: string[];
+  startDate?: string;
+  endDate?: string;
+  page?: string;
+  limit?: string;
+}
+
