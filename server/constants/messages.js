@@ -52,6 +52,8 @@ const MESSAGES = Object.freeze({
   INVALID_ITEM_IDS: 'Invalid itemIds',
   ITEMS_NOT_IN_STORE_INVENTORY: 'Items not in store inventory',
   INVALID_DATE_RANGE: 'Invalid date range',
+  TRANSACTION_ID_MUST_BE_ARRAY: 'transactionId should be an array',
+  ITEM_ID_MUST_BE_ARRAY: 'itemId should be an array',
 });
 
 module.exports = { MESSAGES };

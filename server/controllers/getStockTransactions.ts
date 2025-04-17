@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import { StockTransactionModel } from '../db-models/stock-transaction-model';
 import { MESSAGES } from '../constants/messages';
-import { StoreModel } from '../db-models/store-model';
 import { getStoreInventoryModel } from '../db-models/storeInventory-model';
 import { StockTransactionFilterBody } from '../types';
+import { getValidDateRange } from '../util/getValidDateRange';
+import { validateStore } from '../util/validateStore';
+
+const toObjectIds = (ids: string[]) => ids.map(id => new mongoose.Types.ObjectId(id));
 
 export const getStockTransactions = async (
   req: Request,
@@ -13,140 +16,40 @@ export const getStockTransactions = async (
 ) => {
   try {
     const {
-      transactionId,
+      transactionId ,
       storeId,
-      itemId,
+      itemId ,
       startDate,
       endDate,
       page = '1',
       limit = '100',
     } = req.body as StockTransactionFilterBody;
 
-    const filter: Record<string, any> = {};
+    const filter: any = {};
     const pageNumber = Math.max(1, parseInt(page, 10));
     const limitNumber = Math.max(1, parseInt(limit, 10));
     const skip = (pageNumber - 1) * limitNumber;
 
-    if (transactionId?.length) {
-      const validTransactionIds = transactionId.filter(id =>
-        mongoose.Types.ObjectId.isValid(id)
-      );
-
-      if (validTransactionIds.length !== transactionId.length) {
-        return res.status(400).json({
-          success: false,
-          message: MESSAGES.INVALID_TRANSACTION_IDS,
-        });
-      }
-
-      filter._id = {
-        $in: validTransactionIds.map(id => new mongoose.Types.ObjectId(id)),
-      };
-    }
-
+    let store: any;
     if (storeId) {
-      if (!mongoose.Types.ObjectId.isValid(storeId)) {
-        return res.status(400).json({
-          success: false,
-          message: MESSAGES.INVALID_STORE_ID,
-        });
-      }
-
-      const store = await StoreModel.findById(storeId);
-      if (!store) {
-        return res.status(404).json({
-          success: false,
-          message: MESSAGES.STORE_NOT_FOUND_FOR_TRANSACTIONS,
-        });
-      }
-
+      store = await validateStore(storeId);
       filter.$or = [
         { 'source.sourceEntityId': storeId },
-        { 'destination.destinationEntityId': storeId },
+        { 'destination.destinationEntityId': storeId }
       ];
-
-      if (transactionId?.length) {
-        const relatedTransactions = await StockTransactionModel.find({
-          _id: { $in: filter._id.$in },
-          $or: filter.$or,
-        }).select('_id');
-
-        const invalidTransactionIds = transactionId.filter(
-          id => !relatedTransactions.some(t => t._id.toString() === id)
-        );
-
-        if (invalidTransactionIds.length) {
-          return res.status(404).json({
-            success: false,
-            message: MESSAGES.TRANSACTIONS_NOT_LINKED_TO_STORE,
-            invalidTransactionIds,
-          });
-        }
-      }
     }
 
-    if (itemId?.length) {
-      const validItemIds = itemId.filter(id =>
-        mongoose.Types.ObjectId.isValid(id)
-      );
-
-      if (validItemIds.length !== itemId.length) {
-        return res.status(400).json({
-          success: false,
-          message: MESSAGES.INVALID_ITEM_IDS,
-        });
-      }
-
-      if (storeId) {
-        const store = await StoreModel.findById(storeId);
-        if (store) {
-          const inventoryItems = await getStoreInventoryModel(
-            store.code.toLowerCase()
-          )
-            .find({
-              itemId: {
-                $in: validItemIds.map(id => new mongoose.Types.ObjectId(id)),
-              },
-            })
-            .select('itemId');
-
-          const inventoryItemIds = inventoryItems.map(doc =>
-            doc.itemId.toString()
-          );
-
-          const invalidItemIds = validItemIds.filter(
-            id => !inventoryItemIds.includes(id)
-          );
-
-          if (invalidItemIds.length) {
-            return res.status(404).json({
-              success: false,
-              message: MESSAGES.ITEMS_NOT_IN_STORE_INVENTORY,
-              invalidItemIds,
-            });
-          }
-        }
-      }
-
-      filter.transactionItems = {
-        $elemMatch: {
-          itemId: {
-            $in: validItemIds.map(id => new mongoose.Types.ObjectId(id)),
-          },
-        },
-      };
+    if (transactionId !== undefined) {
+      const ids = await validateTransactionIds(transactionId, store ? { $or: filter.$or } : null);
+      filter._id = { $in: ids };
     }
 
-    const start = startDate ? new Date(startDate) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const end = endDate ? new Date(endDate) : new Date();
-
-    if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) {
-      return res.status(400).json({
-        success: false,
-        message: MESSAGES.INVALID_DATE_RANGE,
-      });
+    if (itemId !== undefined) {
+      const itemObjectIds = await validateItemIds(itemId, store?.code);
+      filter.transactionItems = { $elemMatch: { itemId: { $in: itemObjectIds } } };
     }
 
+    const { start, end } = getValidDateRange(startDate, endDate);
     filter.createdAt = { $gte: start, $lte: end };
 
     const transactions = await StockTransactionModel.find(filter)
@@ -159,12 +62,57 @@ export const getStockTransactions = async (
 
     const totalCount = await StockTransactionModel.countDocuments(filter);
 
-    return res.status(200).json({
-      success: true,
-      data: transactions,
-      totalCount,
-    });
-  } catch (error) {
-    next(error);
+
+    return res.status(200).json({ success: true, data: transactions, totalCount });
+
+  } catch (err) {
+    return res.status(400).json({ success: false, err});
   }
 };
+
+async function validateTransactionIds(ids: string[], storeFilter: any) {
+    if (!Array.isArray(ids)) {
+      throw { status: 400, message: MESSAGES.TRANSACTION_ID_MUST_BE_ARRAY };
+    }
+    const validIds = ids.filter(isValidObjectId);
+    if (validIds.length !== ids.length)
+      throw { status: 400, message: MESSAGES.INVALID_TRANSACTION_IDS };
+  
+    const objectIds = toObjectIds(validIds);
+    if (!storeFilter) return objectIds;
+  
+    const matching = await StockTransactionModel.find({
+      _id: { $in: objectIds },
+      ...storeFilter,
+    }).select('_id');
+  
+    const matchedIds = new Set(matching.map((t) => t._id.toString()));
+    const invalid = ids.filter((id) => !matchedIds.has(id));
+    if (invalid.length)
+      throw {
+        status: 404,
+        message: MESSAGES.TRANSACTIONS_NOT_LINKED_TO_STORE,
+        invalidTransactionIds: invalid,
+      };
+  
+    return objectIds;
+  }
+  
+  
+  
+async function validateItemIds(itemIds: string[], storeCode?: string) {
+    if (!Array.isArray(itemIds)) {
+          throw { status: 400, message: MESSAGES.ITEM_ID_MUST_BE_ARRAY };
+        }
+    const validIds = itemIds.filter(isValidObjectId);
+    if (validIds.length !== itemIds.length) throw { status: 400, message: MESSAGES.INVALID_ITEM_IDS };
+    if (!storeCode) return toObjectIds(validIds);
+  
+    const inventoryModel = getStoreInventoryModel(storeCode.toLowerCase());
+    const items = await inventoryModel.find({ itemId: { $in: toObjectIds(validIds) } }).select('itemId');
+    const itemSet = new Set(items.map(i => i.itemId.toString()));
+    const invalid = validIds.filter(id => !itemSet.has(id));
+    if (invalid.length) throw { status: 404, message: MESSAGES.ITEMS_NOT_IN_STORE_INVENTORY, invalidItemIds: invalid };
+  
+    return toObjectIds(validIds);
+  }
