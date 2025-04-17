@@ -3,8 +3,8 @@ export const TransactionTableConstants = Object.freeze({
     EDIT:"edit",
     COLUMNS: [
       { key: 'transactionId', label: 'Transaction ID' ,flex: 0,
-        minWidth: 250,},
-      { key: 'itemName', label: 'Item Name' },
+        minWidth: 180,},
+      { key: 'sku', label: 'SKU' },
       { key: 'price', label: 'Price' },
       { key: 'qty', label: 'Source Qty' },
       { key: 'sourceExpiry', label: 'Source Expiry' },
