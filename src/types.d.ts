@@ -722,24 +722,24 @@ declare global {
 
   interface TransformedRow {
     _id: string;
-    transactionId: string;
-    itemId: string;
-    itemName: string;
-    price: string;
-    transactionType: string;
+    isSubRow: boolean;
+    transactionId?: string;
+    itemId?: string;
+    itemName?: string;
+    price?: string;
+    transactionType?: string;
     sourceType?: string;
     sourceRemark?: string;
     sourceStaff?: string;
     destinationType?: string;
     destinationRemark?: string;
     destinationStaff?: string;
-    transactionReason: string;
-    transactionStatus: string;
-    hasErrors: string;
-    approvedByAdmin: string;
-    adminRemark: string;
-    dateOfTransaction: string;
-    isSubRow: boolean;
+    transactionReason?: string;
+    transactionStatus?: string;
+    hasErrors?: string;
+    approvedByAdmin?: string;
+    adminRemark?: string;
+    dateOfTransaction?: string;
     sourceExpiry?: string;
     sourceMfg?: string;
     qty?: string;
@@ -750,6 +750,7 @@ declare global {
     ItemDestinationRemark?: string;
     itemError?: string;
   }
+  
   
   type TransformedData = TransformedRow[];
   

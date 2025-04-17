@@ -33,73 +33,83 @@ const stockTransactionsSlice = createSlice({
         : [...state.expandedRows, rowId];
     },
     transformData(state) {
-      const transformed: any[] = [];
-
-      Object.values(state.rawData).forEach((txnList) => {
-        txnList.forEach((txn: any) => {
-          const transactionId = generateSlug(txn.transactionSlug);
-
-          txn.transactionItems?.forEach((item: any, index: number) => {
-            const itemName = item?.itemId?.itemName ?? '';
-            const price = item?.itemId?.itemMRPperUnit ?? '';
-            const itemId = item?.itemId?._id ?? `item_${index}`;
-            const mainRowId = `${transactionId}_${itemId}`;
-
-            transformed.push({
-              _id: mainRowId,
-              transactionId,
-              itemId,
-              itemName,
-              price,
-              transactionType: txn.transactionType,
-              sourceType: txn.source?.sourceType,
-              sourceRemark: txn.source?.sourceRemark,
-              sourceStaff: txn.source?.sourceStaff?.name,
-              destinationType: txn.destination?.destinationType,
-              destinationRemark: txn.destination?.destinationRemark,
-              destinationStaff: txn.destination?.destinationStaff?.name,
-              transactionReason: txn.transactionReason,
-              transactionStatus: txn.transactionStatus,
-              hasErrors: txn.hasErrors ? 'Yes' : 'No',
-              approvedByAdmin: txn.approvedByAdmin ? 'Yes' : 'No',
-              adminRemark: txn.adminRemark,
-              dateOfTransaction: formatDateTime(txn.dateOfTransaction),
-              isSubRow: false,
-            });
-
-            if (state.expandedRows.includes(mainRowId)) {
-              
-              item.itemByDate?.forEach((dateData: any, i: number) => {
-                const subRowId = `${mainRowId}_date_${i}`;
-                transformed.push({
-                  _id: subRowId,
-                  sourceExpiry: dateData?.sourceQuantity?.expiryDate
-                    ? formatDateTime(dateData.sourceQuantity.expiryDate)
-                    : '',
-                  sourceMfg: dateData?.sourceQuantity?.manufacturingDate
-                    ? formatDateTime(dateData.sourceQuantity.manufacturingDate)
-                    : '',
-                  qty: dateData?.sourceQuantity?.qty ?? '',
-                  destinationQty: dateData?.destinationQuantity?.qty ?? '',
-                  destinationExpiry: dateData?.destinationQuantity?.expiryDate
-                    ? formatDateTime(dateData.destinationQuantity.expiryDate)
-                    : '',
-                  destinationMfg: dateData?.destinationQuantity?.manufacturingDate
-                    ? formatDateTime(dateData.destinationQuantity.manufacturingDate)
-                    : '',
-                  ItemSourceRemark: dateData?.sourceRemark ?? '',
-                  ItemDestinationRemark: dateData?.destinationRemark ?? '',
-                  itemError: dateData?.itemError?.errorReason,
-                  isSubRow: true,
-                });
-              });
-            }
-          });
+      const transformed = [];
+      const expandedSet = new Set(state.expandedRows);
+      const raw = Object.values(state.rawData).flat();
+    
+      let txnIndex = 0;
+      let itemIndex = 0;
+      let subIndex = 0;
+    
+      while (txnIndex < raw.length) {
+        const txn = raw[txnIndex];
+        const transactionId = generateSlug(txn.transactionSlug);
+        const items = txn.transactionItems ?? [];
+    
+        if (itemIndex >= items.length) {
+          txnIndex++;
+          itemIndex = 0;
+          subIndex = 0;
+          continue;
+        }
+    
+        const item = items[itemIndex];
+        const itemId = item?.itemId?._id ?? `item_${itemIndex}`;
+        const mainRowId = `${transactionId}_${itemId}`;
+    
+        transformed.push({
+          _id: mainRowId,
+          transactionId,
+          itemId,
+          itemName: item?.itemId?.itemName ?? '',
+          price: item?.itemId?.itemMRPperUnit ?? '',
+          transactionType: txn.transactionType,
+          sourceType: txn.source?.sourceType,
+          sourceRemark: txn.source?.sourceRemark,
+          sourceStaff: txn.source?.sourceStaff?.name,
+          destinationType: txn.destination?.destinationType,
+          destinationRemark: txn.destination?.destinationRemark,
+          destinationStaff: txn.destination?.destinationStaff?.name,
+          transactionReason: txn.transactionReason,
+          transactionStatus: txn.transactionStatus,
+          hasErrors: txn.hasErrors ? 'Yes' : 'No',
+          approvedByAdmin: txn.approvedByAdmin ? 'Yes' : 'No',
+          adminRemark: txn.adminRemark,
+          dateOfTransaction: formatDateTime(txn.dateOfTransaction),
+          isSubRow: false,
         });
-      });
-
+    
+        if (expandedSet.has(mainRowId)) {
+          const subRows = item.itemByDate ?? [];
+    
+          if (subIndex < subRows.length) {
+            const dateData = subRows[subIndex];
+    
+            transformed.push({
+              _id: `${mainRowId}_date_${subIndex}`,
+              sourceExpiry: formatDateTime(dateData?.sourceQuantity?.expiryDate),
+              sourceMfg: formatDateTime(dateData?.sourceQuantity?.manufacturingDate),
+              qty: dateData?.sourceQuantity?.qty ?? '',
+              destinationQty: dateData?.destinationQuantity?.qty ?? '',
+              destinationExpiry: formatDateTime(dateData?.destinationQuantity?.expiryDate),
+              destinationMfg: formatDateTime(dateData?.destinationQuantity?.manufacturingDate),
+              ItemSourceRemark: dateData?.sourceRemark ?? '',
+              ItemDestinationRemark: dateData?.destinationRemark ?? '',
+              itemError: dateData?.itemError?.errorReason,
+              isSubRow: true,
+            });
+    
+            subIndex++; 
+            continue;
+          }
+        }
+    
+        itemIndex++;
+      }
+    
       state.transformedData = transformed;
-    },
+    }
+    ,
     setPage(state, action: PayloadAction<number>) {
         state.page = action.payload;
       },
