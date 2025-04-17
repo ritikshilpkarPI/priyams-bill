@@ -87,9 +87,9 @@ const Report = () => {
     } else {
       // For other filters
       const csvRows = [
-        ['Item Name', 'Barcode', 'Quantity', 'MRP', 'Total Amount', 'Discount'],
+        ['SKU', 'Barcode', 'Quantity', 'MRP', 'Total Amount', 'Discount'],
         ...reportResult.report.map(item => ([
-          item.items[0]?.itemDetail?.itemName,
+          item.items[0]?.itemDetail?.sku,
           item.items[0]?.itemDetail?.itemBarcode,
           item.totalQuantitysum,
           item.totalMRPsum?.toFixed(2),
