@@ -3,6 +3,7 @@ import { StockTransactionModel } from '../db-models/stock-transaction-model';
 import { MESSAGES } from '../constants/messages';
 import { CONSTANTS } from '../constants/constants';
 import { TransactionItemByDate, StockTransactionType, TransactionItem, StockTransactionsInterface } from '../types';
+import { generateRandomKey } from '../../src/utils/generateRandomKey';
 
 export const addNewStockTransactions = async (
   req: Request,
@@ -86,6 +87,7 @@ export const addNewStockTransactions = async (
       hasErrors,
       transactionStatus: CONSTANTS.STATUS.PENDING,
       approvedByAdmin: false,
+      transactionSlug: `${Date.now()}${generateRandomKey(4)}`,
     });
   }
 

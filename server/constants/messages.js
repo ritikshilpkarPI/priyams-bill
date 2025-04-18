@@ -43,7 +43,17 @@ const MESSAGES = Object.freeze({
     TRANSACTIONS_REQUIRED: 'At least one transaction is required',
     TRANSACTION_ITEMS_REQUIRED: 'At least one transaction item is required',
     CREATED: 'Stock transaction created successfully.',
-  }
+  },
+  INVALID_STORE_ID: "Invalid store ID provided.",
+  INVALID_TRANSACTION_IDS: 'Invalid transactionIds',
+  INVALID_STORE_ID: 'Invalid storeId',
+  STORE_NOT_FOUND_FOR_TRANSACTIONS: 'Store not found for transactions',
+  TRANSACTIONS_NOT_LINKED_TO_STORE: 'Transactions not linked to store',
+  INVALID_ITEM_IDS: 'Invalid itemIds',
+  ITEMS_NOT_IN_STORE_INVENTORY: 'Items not in store inventory',
+  INVALID_DATE_RANGE: 'Invalid date range',
+  TRANSACTION_ID_MUST_BE_ARRAY: 'transactionId should be an array',
+  ITEM_ID_MUST_BE_ARRAY: 'itemId should be an array',
 });
 
 module.exports = { MESSAGES };

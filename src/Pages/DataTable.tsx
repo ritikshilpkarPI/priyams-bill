@@ -2,10 +2,17 @@ import React from 'react';
 import {
   DataGrid,
   GridColDef,
-  GridToolbar,
   GridRenderCellParams,
+  GridToolbar,
 } from '@mui/x-data-grid';
-import { Paper, CircularProgress, Box } from '@mui/material';
+import {
+  Paper,
+  CircularProgress,
+  Box,
+  IconButton,
+  Typography,
+} from '@mui/material';
+import { Add, Remove } from '@mui/icons-material';
 
 const DataTable: React.FC<DataTableProps> = ({
   columns,
@@ -16,36 +23,75 @@ const DataTable: React.FC<DataTableProps> = ({
   onPageChange,
   onRowsPerPageChange,
   rowCount,
+  expandedRows,
+  onToggleExpand,
+  onRowClick,
   paginationMode = 'client',
-  onRowClick
 }) => {
-  const gridColumns: GridColDef[] = columns.map((col) => ({
-    field: col.key,
-    headerName: col.label,
-    sortable: col.sortable ?? true,
-    align: "center",
-    headerAlign: "center",
-    cellClassName:col?.cellClassName || '',
-    ...(col.key === 'actions'
-      ? {
-          flex: 0,
-          minWidth: 400,
-        }
-      : col.key === 'share'
-      ? {
-          flex: 0,
-          minWidth: 200,
-        }
-      : {
-          minWidth: 150,
-          flex: 1,
-        }),
-    
-    renderCell: col.render
-      ? (params: GridRenderCellParams<any, any>) => col.render?.(params.row)
-      : undefined,
-  }));
-  
+  const gridColumns: GridColDef[] = [
+    ...(expandedRows
+      ? [
+          {
+            field: 'expand',
+            headerName: '',
+            width: 50,
+            renderCell: (params: GridRenderCellParams) => {
+
+              if (params.row.isSubRow) return null;
+
+              const isExpanded =
+                expandedRows?.includes(params.row._id) ?? false;
+
+              return (
+                <IconButton
+                  size="small"
+                  onClick={() => onToggleExpand?.(params.row._id)}
+                >
+                  {isExpanded ? (
+                    <Remove fontSize="small" />
+                  ) : (
+                    <Add fontSize="small" />
+                  )}
+                </IconButton>
+              );
+            },
+          },
+        ]
+      : []),
+    ...columns.map((col): GridColDef  => ({
+      field: col.key,
+      headerName: col.label,
+      sortable: col.sortable ?? true,
+      align: "center",
+      headerAlign: "center",
+      cellClassName:col?.cellClassName || '',
+      renderCell: (params: GridRenderCellParams) => {
+        const value = col.render ? col.render(params.row) : params.value;
+        return (
+          <Box
+            pl={params.row.isSubRow ? 4 : 1}
+            display="flex"
+            alignItems="center"
+            height="100%"
+            width="100%"
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {value}
+            </Typography>
+          </Box>
+        );
+      },
+      minWidth: col.minWidth ?? 150, 
+      flex: col.flex ?? 1, 
+    })),
+  ];
 
   return (
     <Paper sx={{ height: '100%', width: '100%' }}>
@@ -53,36 +99,34 @@ const DataTable: React.FC<DataTableProps> = ({
         <CircularProgress sx={{ m: 2 }} />
       ) : (
         <Box sx={{ width: '100%', overflowX: 'auto' }}>
-          <Box sx={{ }}> 
-            <DataGrid
-              autoHeight
-              columns={gridColumns}
-              
-              rows={data}
-              getRowId={(row) =>
-                row.id || row._id || row.key || JSON.stringify(row)
-              }
-              onRowClick={onRowClick}
-              rowCount={
-                paginationMode === 'server' ? rowCount ?? 0 : data.length
-              }
-              paginationMode={paginationMode}
-              paginationModel={{
-                pageSize: rowsPerPage,
-                page: page,
-              }}
-              onPaginationModelChange={({ page, pageSize }) => {
-                onPageChange?.(null, page);
-                onRowsPerPageChange?.({
-                  target: { value: String(pageSize) },
-                } as React.ChangeEvent<HTMLInputElement>);
-              }}
-              pageSizeOptions={[5, 10, 20, 50, 100]}
-              checkboxSelection
-              disableRowSelectionOnClick
-              slots={{ toolbar: GridToolbar }}
-            />
-          </Box>
+          <DataGrid
+            autoHeight
+            columns={gridColumns}
+            rows={data}
+            getRowId={(row) => row._id}
+            onRowClick={onRowClick}
+            rowCount={data.length}
+            paginationMode={paginationMode}
+            paginationModel={{
+              pageSize: rowsPerPage,
+              page: page,
+            }}
+            onPaginationModelChange={({ page, pageSize }) => {
+              onPageChange?.(null, page);
+              onRowsPerPageChange?.({
+                target: { value: String(pageSize) },
+              } as React.ChangeEvent<HTMLInputElement>);
+            }}
+            pageSizeOptions={[5, 10, 20, 50, 100]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            slots={{ toolbar: GridToolbar }}
+            sx={{
+              '& .MuiDataGrid-columnHeaderTitle': {
+                fontWeight: 'bold', 
+              },
+            }}
+          />
         </Box>
       )}
     </Paper>

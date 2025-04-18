@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { StockTransactionType } from '../types';
+import { generateRandomKey } from '../../src/utils/generateRandomKey';
 
 const StockTransactionSchema = new Schema<StockTransactionType>(
   {
@@ -97,7 +98,15 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
         ],
       },
     ],
+    transactionSlug: {
+      type: String,
+      unique: true,
+      default: function () {
+        return `${Date.now()}${generateRandomKey(4)}`;
+      },
+    },
   },
+  
   { timestamps: true }
 );
 
