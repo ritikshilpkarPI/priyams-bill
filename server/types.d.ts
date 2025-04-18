@@ -33,6 +33,13 @@
     itemId: mongoose.Types.ObjectId;
     itemQuantityInStore: number;
     itemStockChangeHistory: StockChangeHistoryType[];
+    itemShelfDates?: {
+      _id: any;
+      manufacturingDate: Date;
+      expiryDate: Date;
+      currentStockQuantity: number;
+      initialStockQuantity: number;
+    }[];
   }
 
 

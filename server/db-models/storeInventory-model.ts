@@ -18,6 +18,12 @@ const StoreInventoryItemSchema: Schema = new Schema({
   itemId: { type: Schema.Types.ObjectId, ref: "Item"},
   itemQuantityInStore: { type: Number, default: 0 },
   itemStockChangeHistory: { type: [StockChangeHistorySchema], default: [] },
+  itemShelfDates: {
+    manufacturingDate: { type: Date },
+    expiryDate: { type: Date },
+    currentStockQuantity: { type: Number, default: 0 },
+    initialStockQuantity: { type: Number, default: 0 },
+  },
 });
 
 /**
