@@ -28,6 +28,8 @@ import {
   Label,
   NewPurchaseOrder,
   StoreInventoryManagement,
+  AllBills,
+  StoreInventory
 } from '../Pages';
 import App from '../App';
 
@@ -84,7 +86,7 @@ export const router = createBrowserRouter([
           
           {
             path: ROUTES.ALL_BILL,
-            element: <BillFeed />,
+            element: <AllBills />,
             index: true,
           },
           
@@ -182,8 +184,13 @@ export const router = createBrowserRouter([
         index: true,
       },
       {
-        path: ROUTES.STORE_INVENTORY,
+        path: ROUTES.STORE_INVENTORY_MANAGEMENT,
         element: <StoreInventoryManagement />,
+        index: true,
+      },
+      {
+        path: ROUTES.STORE_INVENTORY,
+        element: <StoreInventory />,
         index: true,
       }
     ],

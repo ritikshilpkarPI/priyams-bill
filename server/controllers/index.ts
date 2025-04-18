@@ -63,6 +63,9 @@ import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 import { itemsStaticAttributes } from "./itemsStaticAttributes";
 import { updateStockTransactionDestination } from "./updateStockTransactionDestination";
+import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
+import { addNewStockTransactions } from "./addNewStockTransactions";
+import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 
 export {
   addBulkItems,
@@ -129,5 +132,8 @@ export {
   getAllDealers,
   addNewDealer,
   itemsStaticAttributes,
-  updateStockTransactionDestination
+  updateStockTransactionDestination,
+  updateStockTransactionByAdmin,
+  addNewStockTransactions,
+  getItemsFromStoreInventory,
 };

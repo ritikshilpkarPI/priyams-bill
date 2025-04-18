@@ -9,6 +9,8 @@ import {
   Flex,
   Title,
   Badge,
+  Text,
+  Box,
 } from '@mantine/core';
 import { selectDealerDetailForm } from '../../redux/dealerDetailForm/dealerDetailFormSelectors';
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,6 +26,7 @@ import ShareOnWhatsApp from 'src/components/shareOnWhatsApp';
 import { setDealers, setDealerId, setDealersLoading } from 'src/redux/dealerlist/dealerSlice';
 import { selectDealerLoading, selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 import { Autocomplete, TextField } from '@mui/material';
+import { IconAsteriskSimple } from '@tabler/icons-react';
 
 export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) => {
   const dispatch = useDispatch();
@@ -189,21 +192,26 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
         <Title order={3}>Dealer Details Form</Title>
         <Grid gutter="md" sx={{ maxWidth: '480px' }}>
           <Col span={12}>
+            <Flex gap={"5px"} align={"center"} mb={"2px"}>
+              <Text size="sm" fw={500}>Select Dealer</Text>
+              <IconAsteriskSimple stroke={2} height={"7px"} width={"7px"}color='red' />
+            </Flex>
             <Autocomplete
+              size="small"
               freeSolo
               value={
-                dealersList.find(
+                dealersList?.find(
                   (dealer) => dealer.value === dealerFormData.dealerId
                 ) || (dealerFormData.dealerName ? { value: '', label: dealerFormData.dealerName } : null)
               }
               onChange={(event, newValue) => {
                 handleDealerSelection(newValue);
               }}
-              inputValue={dealerFormData.dealerName}
+              inputValue={dealerFormData?.dealerName ?? ''}
               onInputChange={(event, value) => {
                 onChange('dealerName', value.toLocaleUpperCase());
               }}
-              options={dealersList}
+              options={dealersList  ??  []}
               getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.label
               }
@@ -212,8 +220,9 @@ export const DealerDetailForm: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =
               }
               sx={{ width: "100%"}}
               renderInput={(params) => (
-                <TextField {...params} label="Select Dealer" />
+                <TextField {...params} label="Select Dealer" required />
               )}
+              disabled={isApprovedPO}
             />
           </Col>
 

@@ -7,8 +7,11 @@ import {
   selectCompanys,
   selectCompanysLoading,
 } from '../../redux/companys/companySelectors';
+import { Flex, Text } from '@mantine/core';
+import { IconAsteriskSimple } from '@tabler/icons-react';
 
 const CompanySelector: React.FC<CompanySelectorProps> = ({
+  align = "center",
   label = '',
   value,
   onChange,
@@ -46,6 +49,11 @@ const CompanySelector: React.FC<CompanySelectorProps> = ({
   }, []);
 
   return (
+    <>
+    <Flex gap={"5px"} align={"center"} justify={align} mb={"2px"} >
+      <Text size="sm" fw={500}>{label}</Text>
+      <IconAsteriskSimple stroke={2} height={"7px"} width={"7px"}color='red' />
+    </Flex>
     <Autocomplete
       size="small"
       freeSolo
@@ -69,6 +77,7 @@ const CompanySelector: React.FC<CompanySelectorProps> = ({
         />
       )}
     />
+    </>
   );
 };
 

@@ -27,7 +27,23 @@ const MESSAGES = Object.freeze({
   UNABLE_TO_CREATE_DEALER: 'Unable to create dealer',
   NO_VALID_PINCODE_FOUND: 'No valid pincode found in Ola API response',
   PINCODE_FETCH_FAILED: 'Failed to fetch pincode from coordinates',
-  SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY: "Something went wrong while creating brand/company"
+  SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY: "Something went wrong while creating brand/company",
+  STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
+  INSUFFICIENT_STOCK:"Insufficient stock",
+  NO_STORE_FOUND: "No store found",
+  UNAUTHORIZED_ACCESS: "Unauthorized access",
+  TRANSACTION_NOT_FOUND: "Transaction not found",
+  TRANSACTION_UPDATED_SUCCESSFULLY: "Transaction updated successfully",
+  SERVER_ERROR: "Server error",
+  INSUFFICIENT_STORE_STOCK: "Insufficient store stock",
+  STOCK_TRANSACTIONS:{
+    INVALID_TRANSACTIONS_TYPE: 'Invalid or missing transactionType (IN or OUT required)',
+    SOURCE_REQUIRED: 'Source staff and entity ID are required',
+    DESTINATION_REQUIRED: 'Destination staff and entity ID are required',
+    TRANSACTIONS_REQUIRED: 'At least one transaction is required',
+    TRANSACTION_ITEMS_REQUIRED: 'At least one transaction item is required',
+    CREATED: 'Stock transaction created successfully.',
+  }
 });
 
 module.exports = { MESSAGES };

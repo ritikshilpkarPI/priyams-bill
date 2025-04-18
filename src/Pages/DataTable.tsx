@@ -17,12 +17,15 @@ const DataTable: React.FC<DataTableProps> = ({
   onRowsPerPageChange,
   rowCount,
   paginationMode = 'client',
+  onRowClick
 }) => {
   const gridColumns: GridColDef[] = columns.map((col) => ({
     field: col.key,
     headerName: col.label,
     sortable: col.sortable ?? true,
-    
+    align: "center",
+    headerAlign: "center",
+    cellClassName:col?.cellClassName || '',
     ...(col.key === 'actions'
       ? {
           flex: 0,
@@ -59,6 +62,7 @@ const DataTable: React.FC<DataTableProps> = ({
               getRowId={(row) =>
                 row.id || row._id || row.key || JSON.stringify(row)
               }
+              onRowClick={onRowClick}
               rowCount={
                 paginationMode === 'server' ? rowCount ?? 0 : data.length
               }

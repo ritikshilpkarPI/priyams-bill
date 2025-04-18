@@ -30,6 +30,7 @@ import {
 import { addPaymentDetailValidation } from 'src/utils/validations/paymentDetailFormValidation';
 import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
+import PasteableFileInput from './PasteableFileInput';
 const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
 
   const dispatch = useDispatch();
@@ -79,7 +80,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   };
 
   const onSubmit = async () => {
-    try {
+    try {      
       await addPaymentDetailValidation.validate({...paymentDetail, totalPayableAmount: purchaseDetails.totalPayableAmount, paymentsList}, {
         abortEarly: false,
       });
@@ -145,18 +146,12 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
             onChange={(e) => onChange('paidAmount', Number(e.target.value))}
           />
         </Col>
-        {takeImages && (
-          <Col>
-            <FileInput
-              label="Choose Image/s"
-              accept="image"
-              required
-              error={errors.paymentImages}
-              onChange={(files) => onChange('paymentImages', files || [])}
-              multiple
-            />
-          </Col>
-        )}
+      
+    <PasteableFileInput
+  onDrop={(files: any) => onChange('paymentImages', files || [])}
+  onPasteFile={(files: any) => onChange('paymentImages', files || [])}
+  multiple
+/>
         {(paymentDetail.paymentImages?.length ?? 0) > 0 && (
           <Col>
             <Flex
