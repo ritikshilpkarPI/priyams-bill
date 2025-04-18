@@ -335,7 +335,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   label="Packet Qty."
                   value={purchasedItemFormData.itemQuantity}
                   onChange={(event) =>
-                    onChange('itemQuantity', parseInt(event.currentTarget.value) || 0)
+                    onChange('itemQuantity', Number(event.currentTarget.value) || 0)
                   }
                   required
                   error={errors.itemQuantity}

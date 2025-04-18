@@ -37,7 +37,8 @@ import {
   BarcodePrint,
   Label,
   CreatePurchaseOrderPage,
-  StoreInventory
+  StoreInventory,
+  StockTransactions
 } from '../Pages';
 import { Fragment } from 'react';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
@@ -86,6 +87,8 @@ const StoreRoutes = () => {
             <Route exact path="/edit/:billingID" component={EditBill} />
             <Route exact path="/approval" component={Approval} />
             <Route exact path="/expiredItems" component={ExpiredItems} />
+            <Route exact path="/stockTransactions" component={StockTransactions} />
+
             <Route exact path="/label" component={Label} />
             <Route exact path="/orders" component={Orders} />
             <Route

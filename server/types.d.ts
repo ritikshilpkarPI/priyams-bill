@@ -43,6 +43,8 @@
     quantity: number;
     purchaseOrderId: mongoose.Types.ObjectId;
     entryDate?: Date;
+    currentStockQuantity?: number;
+    initialStockQuantity?: number;
 }
 
 
@@ -151,8 +153,20 @@ export interface StockTransactionType extends Document {
   adminRemark?: string;
   isDeleted: boolean;
   transactionItems: TransactionItem[];
+  transactionSlug:string;
 }
 
 export interface StockTransactionsInterface {
   transactions: StockTransactionType[]
 }
+
+export interface StockTransactionFilterBody {
+  transactionId?: string[];
+  storeId?: string;
+  itemId?: string[];
+  startDate?: string;
+  endDate?: string;
+  page?: string;
+  limit?: string;
+}
+

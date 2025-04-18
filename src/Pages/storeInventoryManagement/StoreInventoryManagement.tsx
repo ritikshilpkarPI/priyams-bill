@@ -120,7 +120,7 @@ const StoreInventoryManagement: React.FC = () => {
       return;
     }
 
-    const newTransactionItem: TransactionItem = {
+    const newTransactionItem: TransactionItemType = {
       itemId: item.itemDetail._id ?? '',
       itemBarcode: item.itemDetail.itemBarcode ?? '',
       itemMRPperUnit: item.itemDetail.itemMRPperUnit ?? 0,
@@ -133,14 +133,14 @@ const StoreInventoryManagement: React.FC = () => {
       sku: item.itemDetail.sku ?? '',
       itemByDate: item.itemDetail.itemShelfDates
         ? item.itemDetail.itemShelfDates.map((shelf) => ({
-            sourceQuantity: {
-              expiryDate: shelf.expiryDate,
-              manufacturingDate: shelf.manufacturingDate,
-              qty: shelf.quantityToAdd,
-              quantity: shelf.quantity,
-            },
-            shelfId: shelf._id,
-          }))
+          sourceQuantity: {
+            expiryDate: shelf.expiryDate,
+            manufacturingDate: shelf.manufacturingDate,
+            qty: shelf.quantityToAdd,
+            quantity: shelf.quantity,
+          },
+          shelfId: shelf._id,
+        }))
         : [],
     };
     dispatch(addTransactionItem(newTransactionItem));

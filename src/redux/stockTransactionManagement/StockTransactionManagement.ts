@@ -38,7 +38,7 @@ const stockTransactionSlice = createSlice({
   name: 'stockTransaction',
   initialState,
   reducers: {
-    addTransactionItem: (state, action: PayloadAction<TransactionItem>) => {
+    addTransactionItem: (state, action: PayloadAction<TransactionItemType>) => {
       state.transactionItems.push(action.payload);
     },
     updateTransactionItemQuantity: (
