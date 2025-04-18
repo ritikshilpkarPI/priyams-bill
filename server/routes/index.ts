@@ -68,6 +68,7 @@ const {
   getAllDealers,
   addNewDealer,
   itemsStaticAttributes,
+  updateStockTransactionDestination,
   updateStockTransactionByAdmin,
   addNewStockTransactions,
   getItemsFromStoreInventory,
@@ -283,6 +284,8 @@ router.get(API_PATHS.BRAND.GET_ALL_BRAND,isLoggedIn, getAllBrands);
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
+router.put(API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION, isLoggedIn, updateStockTransactionDestination);
+
 router.post(
   API_PATHS.STOCK_TRANSACTION.PUT_UPDATE_STOCK_TRANSACTION,
   isLoggedIn,
