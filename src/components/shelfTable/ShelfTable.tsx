@@ -27,7 +27,7 @@ const ShelfTable: React.FC<ShelfTableProps> = ({ shelfList, itemId, handleQuanti
           <tr key={shelf._id}>
             <td>{formatDate(shelf.expiryDate)}</td>
             <td>{formatDate(shelf.manufacturingDate)}</td>
-            <td>{shelf.quantity}</td>
+            <td>{shelf.currentStockQuantity}</td>
             <td>
               <CustomNumberInput
                 required
