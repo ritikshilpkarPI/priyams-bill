@@ -67,7 +67,7 @@ const {
   itemsStaticAttributes,
   getAllDealers,
   addNewDealer,
-  getStaffByStoreId
+  getStaffByStoreId,
   addNewStockTransactions,
 } = require('../controllers/index');
 
