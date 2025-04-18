@@ -29,7 +29,7 @@ import {
   NewPurchaseOrder,
   StoreInventoryManagement,
   AllBills,
-  StoreInventory
+  StoreInventory,
   StockTransactions
 } from '../Pages';
 import App from '../App';
