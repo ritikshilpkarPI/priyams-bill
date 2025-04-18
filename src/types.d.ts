@@ -630,6 +630,8 @@ declare global {
     manufacturingDate: string;
     quantity: number;
     _id: string;
+    currentStockQuantity: number;
+    initialStockQuantity: number;
   }
   
   interface InventoryItem {
@@ -666,6 +668,9 @@ declare global {
     manufacturingDate: string;
     quantity: number;
     quantityToAdd?: number;
+    purchaseOrderId?: string;
+    currentStockQuantity: number;
+    initialStockQuantity: number;
   }
   
   interface ShelfTableProps {
