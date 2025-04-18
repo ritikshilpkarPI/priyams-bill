@@ -4,6 +4,7 @@ import { IconTrash, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import ShelfTable from './shelfTable/ShelfTable';
 import { useSelector } from 'react-redux';
 import { CONSTANTS } from 'src/constants/constants';
+import { pascalCase } from 'src/utils/pascalCase';
 
 export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   items,
@@ -50,16 +51,10 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
             <th>SKU</th>
             <th>Barcode</th>
             <th>
-              {transactionSource.sourceType === CONSTANTS.STORE
-                ? 'Qty Store'
-                : 'Qty WH'}
+              { `Qty ${pascalCase(transactionSource.sourceType ?? "")}`}
             </th>
             <th>
-              {transactionDestination.destinationType === CONSTANTS.DEALER
-                ? 'Qty DL'
-                : transactionDestination.destinationType === CONSTANTS.WAREHOUSE
-                  ? 'Qty WH'
-                  : 'Qty Store'}
+              {`Qty ${pascalCase(transactionDestination.destinationType ?? "" )}`}
             </th>
             <th>Expiry Batches (Qty to Add)</th>
             <th>Total Qty to Add</th>

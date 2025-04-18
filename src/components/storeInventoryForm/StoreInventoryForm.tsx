@@ -8,7 +8,7 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CONSTANTS } from '../../constants/constants';
 import { IconTransfer } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
@@ -24,6 +24,13 @@ import {
 } from '../../redux/stockTransactionManagement/StockTransactionManagement';
 import { selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 import SelectDealer from '../selectDealer/SelectDealer';
+import { boolean } from 'joi';
+import {
+  setDealers,
+  setDealersLoading,
+} from 'src/redux/dealerlist/dealerSlice';
+import { getAllDealersAPI } from 'src/utils/apiUtils';
+import { pascalCase } from '../../utils/pascalCase';
 
 interface StoreInventoryFormProps {
   onChangeSource: (field: string, value: string | number) => void;
@@ -47,8 +54,75 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
   const stockTransaction = useSelector(
     (state: RootState) => state.stockTransaction
   );
+  const sourceTypeData = useSelector(
+    (state: RootState) => state.stockTransaction.sourceTypeData
+  );
+  const destinationTypeData = useSelector(
+    (state: RootState) => state.stockTransaction.destinationTypeData
+  );
 
   const { dealers } = useSelector((state: RootState) => state.dealer);
+
+  const dealersList = dealers
+    .filter((dealer) => dealer.dealerName?.length)
+    .map((dealer) => ({
+      value: dealer._id || '',
+      label: dealer.dealerName,
+    }));
+
+  const [sourceEntityData, setSourceEntityData] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [destinationEntityData, setDestinationEntityData] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  useEffect(() => {
+    switch (stockTransaction.source.sourceType) {
+      case CONSTANTS.STORE:
+        setSourceEntityData(storesData);
+        break;
+      case CONSTANTS.WAREHOUSE:
+        setSourceEntityData(warehouseData);
+        break;
+      default:
+        setSourceEntityData([]);
+        break;
+    }
+  }, [sourceTypeData, storesData, warehouseData]);
+
+  useEffect(() => {
+    switch (stockTransaction.destination.destinationType) {
+      case CONSTANTS.STORE:
+        setDestinationEntityData(storesData);
+        break;
+      case CONSTANTS.WAREHOUSE:
+        setDestinationEntityData(warehouseData);
+        break;
+      case CONSTANTS.DEALER:
+        setDestinationEntityData(dealersList);
+        break;
+      default:
+        setDestinationEntityData([]);
+        break;
+    }
+  }, [destinationTypeData, storesData, warehouseData, dealersList]);
+
+  const getDealers = async () => {
+    try {
+      dispatch(setDealersLoading(true));
+      const response = await getAllDealersAPI();
+      dispatch(setDealers(response?.dealers));
+    } catch (error) {
+      console.error('Failed to fetch dealers:', error);
+    } finally {
+      dispatch(setDealersLoading(false));
+    }
+  };
+
+  useEffect(() => {
+    getDealers();
+  }, []);
 
   return (
     <Grid>
@@ -85,42 +159,20 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                   onChangeSource('sourceType', value ?? '');
                   dispatch(resetTransactionSource());
                 }}
-                data={[
-                  { label: CONSTANTS.WAREHOUSE, value: CONSTANTS.WAREHOUSE },
-                  { label: CONSTANTS.STORE, value: CONSTANTS.STORE },
-                  {
-                    label: CONSTANTS.DEALER,
-                    value: CONSTANTS.DEALER,
-                    disabled: true,
-                  },
-                ]}
+                data={sourceTypeData}
               />
             </Grid.Col>
 
-            {(stockTransaction.source.sourceType === CONSTANTS.STORE ||
-              stockTransaction.source.sourceType === CONSTANTS.WAREHOUSE) && (
+            {Boolean(stockTransaction.source.sourceType) && (
               <Grid.Col span={12}>
                 <Select
-                  label={
-                    stockTransaction.source.sourceType === CONSTANTS.STORE
-                      ? 'Select Store'
-                      : 'Select Warehouse'
-                  }
-                  placeholder={
-                    stockTransaction.source.sourceType === CONSTANTS.STORE
-                      ? 'Pick Store'
-                      : 'Pick Warehouse'
-                  }
+                  label={`Select ${pascalCase(stockTransaction.source.sourceType || '')} `}
+                  placeholder={`Pick ${pascalCase(stockTransaction.source.sourceType || '')} `}
                   value={stockTransaction.source.sourceEntityId}
-                  onChange={(value) => {
-                    onChangeSource('sourceEntityId', value ?? '');
-                    dispatch(resetTransactionDestination());
-                  }}
-                  data={
-                    stockTransaction.source.sourceType === CONSTANTS.STORE
-                      ? storesData
-                      : warehouseData
+                  onChange={(value) =>
+                    onChangeSource('sourceEntityId', value ?? '')
                   }
+                  data={sourceEntityData}
                 />
               </Grid.Col>
             )}
@@ -233,60 +285,31 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                 label="Destination"
                 placeholder="Pick Destination"
                 value={stockTransaction.destination.destinationType}
-                onChange={(value) =>
-                  onChangeDestination('destinationType', value ?? '')
-                }
+                onChange={(value) => {
+                  onChangeDestination('destinationType', value ?? '');
+                  dispatch(resetTransactionDestination());
+                }}
                 data={[CONSTANTS.WAREHOUSE, CONSTANTS.STORE, CONSTANTS.DEALER]}
               />
             </Grid.Col>
 
-            {(stockTransaction.destination.destinationType ===
-              CONSTANTS.STORE ||
-              stockTransaction.destination.destinationType ===
-                CONSTANTS.WAREHOUSE) && (
+            {Boolean(stockTransaction.destination.destinationType) && (
               <Grid.Col span={12}>
                 <Select
-                  label={
-                    stockTransaction.destination.destinationType ===
-                    CONSTANTS.STORE
-                      ? 'Select Store'
-                      : 'Select Warehouse'
-                  }
-                  placeholder={
-                    stockTransaction.destination.destinationType ===
-                    CONSTANTS.STORE
-                      ? 'Pick Store'
-                      : 'Pick Warehouse'
-                  }
+                  label={`Select ${pascalCase(stockTransaction.destination.destinationType ?? "")}`}
+                  placeholder={`Pick ${pascalCase(stockTransaction.destination.destinationType ?? "")}`}
                   value={stockTransaction.destination.destinationEntityId}
                   onChange={(value) =>
                     onChangeDestination('destinationEntityId', value ?? '')
                   }
-                  data={
-                    stockTransaction.destination.destinationType ===
-                    CONSTANTS.STORE
-                      ? storesData
-                      : warehouseData
-                  }
+                  data={destinationEntityData}
                 />
               </Grid.Col>
             )}
-            {stockTransaction.destination.destinationType ===
-              CONSTANTS.DEALER && (
-              <Grid.Col span={12}>
-                <SelectDealer
-                  label="Select Dealer"
-                  placeholder="Select Dealer"
-                  value={stockTransaction.destination.destinationEntityId}
-                  onChange={(value) =>
-                    onChangeDestination('destinationEntityId', value ?? '')
-                  }
-                />
-              </Grid.Col>
-            )}
-            {stockTransaction.destination.destinationType ===
-              CONSTANTS.DEALER &&
-              Boolean(stockTransaction.destination.destinationEntityId) && (
+
+            {Boolean(stockTransaction.destination.destinationEntityId) &&
+              (stockTransaction.destination.destinationType ===
+              CONSTANTS.DEALER ? (
                 <Grid.Col span={12}>
                   <TextInput
                     label="Dealer number"
@@ -298,15 +321,9 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                           stockTransaction.destination.destinationEntityId
                       )?.dealerNumber || ''
                     }
-                    />
+                  />
                 </Grid.Col>
-              )}
-
-            {(stockTransaction.destination.destinationType ===
-              CONSTANTS.STORE ||
-              stockTransaction.destination.destinationType ===
-                CONSTANTS.WAREHOUSE) &&
-              Boolean(stockTransaction.destination.destinationEntityId) && (
+              ) : (
                 <Grid.Col span={12}>
                   <Select
                     label={'Select staff'}
@@ -318,7 +335,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                     }
                   />
                 </Grid.Col>
-              )}
+              ))}
 
             <Grid.Col span={12}>
               <Textarea

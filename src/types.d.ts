@@ -513,6 +513,8 @@ declare global {
   adminRemark?: string;
   isDeleted: boolean;
   transactionItems: TransactionItem[];
+  sourceTypeData: any[];
+  destinationTypeData: any[];
 }
   interface Store {
     id: string;

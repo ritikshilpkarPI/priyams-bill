@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CONSTANTS } from '../../constants/constants';
 const initialState: StockTransactionType = {
   transactionType: '',
   source: {
@@ -21,6 +22,16 @@ const initialState: StockTransactionType = {
   adminRemark: '',
   isDeleted: false,
   transactionItems: [],
+  sourceTypeData: [
+    { label: CONSTANTS.WAREHOUSE, value: CONSTANTS.WAREHOUSE },
+    { label: CONSTANTS.STORE, value: CONSTANTS.STORE },
+    { label: CONSTANTS.DEALER, value: CONSTANTS.DEALER, disabled: true },
+  ],
+  destinationTypeData: [
+    { label: CONSTANTS.WAREHOUSE, value: CONSTANTS.WAREHOUSE },
+    { label: CONSTANTS.STORE, value: CONSTANTS.STORE },
+    { label: CONSTANTS.DEALER, value: CONSTANTS.DEALER },
+  ],
 };
 
 const stockTransactionSlice = createSlice({
@@ -66,8 +77,8 @@ const stockTransactionSlice = createSlice({
       );
     },
     resetStoreInventory: (state) => {
-        state.transactionItems = [];
-      },
+      state.transactionItems = [];
+    },
     removeTransactionItem: (state, action) => {
       state.transactionItems = state.transactionItems.filter(
         (invItem) => invItem.itemId !== action.payload
