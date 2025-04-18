@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Title, Flex, Grid } from '@mantine/core';
+import { Title, Flex, Grid, Button } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -16,6 +16,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { AppDispatch } from '../../redux/store';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { formatShortDate } from '../../utils/formatDate';
+import { useNavigate } from 'react-router';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,6 +24,7 @@ const StoreInventory: React.FC = () => {
     (state: RootState) => state.storeInventoryManagement
   );
   const [items, setItems] = useState([]);
+  const [itemIds, setItemIds] = useState<string[]>([]);
   const [itemCount, setItemCount] = useState(items.length);
   const [loading, setLoading] = useState(false);
 
@@ -153,6 +155,15 @@ const StoreInventory: React.FC = () => {
             onChange={handleStoreChange}
           />
         </Grid.Col>
+        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end" }}>
+          <Button disabled={itemIds.length < 1}
+           onClick={()=>{
+            const filterStringified = JSON.stringify(itemIds?.map(id => btoa(id)));
+            const url = `/stockTransactions?filter=${encodeURIComponent(filterStringified)}`;
+              window.open(url, '_blank');
+            }}
+          >View Transactions</Button>
+        </Grid.Col>
         <Grid.Col span={12}>
           <DataGrid
             columns={columns.map((col) => ({
@@ -190,6 +201,8 @@ const StoreInventory: React.FC = () => {
             }
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar }}
+            checkboxSelection
+            onRowSelectionModelChange={(model)=>setItemIds((model as string[]))}
           />
         </Grid.Col>
       </Grid>

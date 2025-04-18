@@ -777,6 +777,7 @@ declare global {
     storeId?: string;
     page?: number;
     limit?: number;
+    itemIds?: string[];
   };
   
 }
