@@ -43,6 +43,8 @@
     quantity: number;
     purchaseOrderId: mongoose.Types.ObjectId;
     entryDate?: Date;
+    currentStockQuantity?: number;
+    initialStockQuantity?: number;
 }
 
 
