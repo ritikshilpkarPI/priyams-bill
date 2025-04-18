@@ -38,6 +38,7 @@ import {
   Label,
   CreatePurchaseOrderPage,
   StoreInventory,
+  StockTransactions,
   NewInventoryPage
 } from '../Pages';
 import { Fragment } from 'react';
@@ -87,6 +88,8 @@ const StoreRoutes = () => {
             <Route exact path="/edit/:billingID" component={EditBill} />
             <Route exact path="/approval" component={Approval} />
             <Route exact path="/expiredItems" component={ExpiredItems} />
+            <Route exact path="/stockTransactions" component={StockTransactions} />
+
             <Route exact path="/label" component={Label} />
             <Route exact path="/orders" component={Orders} />
             <Route

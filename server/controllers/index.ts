@@ -62,9 +62,11 @@ import { getAllBrands } from './getAllBrand';
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 import { itemsStaticAttributes } from "./itemsStaticAttributes";
+import { updateStockTransactionDestination } from "./updateStockTransactionDestination";
 import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
 import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
+import {getStockTransactions} from "./getStockTransactions"
 import { itemPurchaseBatches } from './itemPurchaseBatches';
 
 
@@ -133,8 +135,10 @@ export {
   getAllDealers,
   addNewDealer,
   itemsStaticAttributes,
+  updateStockTransactionDestination,
   updateStockTransactionByAdmin,
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
+  getStockTransactions
 };

@@ -83,7 +83,9 @@ const ItemSchema = new mongoose.Schema(
         manufacturingDate: { type: Date },
         quantity: { type: Number, required: true },
         purchaseOrderId: { type: mongoose.Schema.Types.ObjectId, ref: 'PurchaseOrder' },
-        entryDate: { type: Date, default: Date.now }
+        entryDate: { type: Date, default: Date.now },
+        currentStockQuantity: { type: Number, default: 0 },
+        initialStockQuantity: { type: Number, default: 0 },
       }
     ],
     

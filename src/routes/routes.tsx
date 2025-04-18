@@ -31,7 +31,8 @@ import {
   NewInventoryPage,
   ItemPurchaseOrdersPage,
   AllBills,
-  StoreInventory
+  StoreInventory,
+  StockTransactions
 } from '../Pages';
 import App from '../App';
 
@@ -204,7 +205,12 @@ export const router = createBrowserRouter([
         path: ROUTES.STORE_INVENTORY,
         element: <StoreInventory />,
         index: true,
-      }
+      },
+      {
+        path: ROUTES.STORE_TRANSACTIONS,
+        element: <StockTransactions />,
+        index: true,
+      },
     ],
   },
   {

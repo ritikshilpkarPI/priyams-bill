@@ -87,6 +87,13 @@ export const updateStockTransactionByAdmin = async (
             itemsToTransfer.push({
               itemId: txnItem.itemId,
               quantity: totalQty,
+              itemShelfDates: txnItem.itemByDate?.map((entry: any) => ({
+                expiryDate: entry.sourceQuantity?.expiryDate,
+                manufacturingDate: entry.sourceQuantity?.manufacturingDate,
+                quantityToAdd: entry.sourceQuantity?.qty,
+                initialStockQuantity: entry.sourceQuantity?.qty,
+                currentStockQuantity: entry.sourceQuantity?.qty,
+              })),
             });
           }
         }

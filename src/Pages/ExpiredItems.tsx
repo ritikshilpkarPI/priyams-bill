@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
 import { Typography, Box } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { formatShortDate } from '../utils/formatDate';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchExpiredItems } from '../utils/apiUtils';
@@ -17,6 +14,7 @@ import {
 } from 'src/redux/expiredItems/expiredItemsSlice';
 import DataTable from './DataTable';
 import { ExpiredItemTableConstants } from 'src/utils/constants/expiredItemTableConstants';
+import DateRangePicker from 'src/components/DateRangePicker';
 
 const ExpiredItemTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -85,40 +83,22 @@ const ExpiredItemTable: React.FC = () => {
   });
   return (
     <Box className="expired-items-card">
-      <Typography variant="h5" sx={{fontWeight:600}} >Expired Items</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 600 }}>
+        Expired Items
+      </Typography>
 
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <div className="date-picker-container">
-          <DatePicker
-            label="Start Date"
-            value={startDate}
-            onChange={handleStartDateChange}
-            slotProps={{
-              textField: {
-                className: 'date-picker-field',
-              },
-            }}
-          />
-
-          <DatePicker
-            label="End Date"
-            value={endDate}
-            minDate={startDate}
-            onChange={handleEndDateChange}
-            slotProps={{
-              textField: {
-                className: 'date-picker-field',
-              },
-            }}
-          />
-        </div>
-      </LocalizationProvider>
+      <DateRangePicker
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={handleStartDateChange}
+        onEndDateChange={handleEndDateChange}
+      />
 
       <DataTable
         columns={columns}
-        data={items.map((item: ExpiredItem,index) => ({
+        data={items.map((item: ExpiredItem, index) => ({
           ...item,
-          id: `${item._id}-${index}`, 
+          id: `${item._id}-${index}`,
           manufacturingDate: formatShortDate(item.mfgDate),
           expiryDate: formatShortDate(item.expiryDate),
         }))}

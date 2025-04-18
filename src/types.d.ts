@@ -11,6 +11,13 @@ declare global {
     number: string;
     pincode: string;
   };
+
+  interface StoreDataType {
+    name: string;
+    number: string;
+    pincode: string;
+    _id?:string;
+  };
   export interface UserStateType {
     isGeolocationPermissionGranted: boolean;
     userDeviceLocation?: DeviceLocationType;
@@ -564,6 +571,8 @@ declare global {
     key: string;
     sortable?: boolean;
     render?: (row: any,index?: number) => React.ReactNode;
+    flex?: number; 
+    minWidth?: number;
     cellClassName?: string;
   }
   
@@ -571,9 +580,9 @@ declare global {
     columns: Column[];
     data: any[];
     isLoading: boolean;
-    order: 'asc' | 'desc';
-    orderBy: string;
-    onSort: (columnKey: string) => void;
+    order?: 'asc' | 'desc';
+    orderBy?: string;
+    onSort?: (columnKey: string) => void;
     page: number;
     rowsPerPage: number;
     onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
@@ -581,6 +590,8 @@ declare global {
     rowCount: number;
     paginationMode?: 'client' | 'server'; 
     onRowClick?: GridEventListener<'rowClick'>;
+    expandedRows?: string[];
+    onToggleExpand?: (id: string) => void; 
   }
   interface PurchaseListApprovalProps {
     allPurchaseList: any[];
@@ -630,6 +641,8 @@ declare global {
     manufacturingDate: string;
     quantity: number;
     _id: string;
+    currentStockQuantity: number;
+    initialStockQuantity: number;
   }
   
   interface InventoryItem {
@@ -666,6 +679,9 @@ declare global {
     manufacturingDate: string;
     quantity: number;
     quantityToAdd?: number;
+    purchaseOrderId?: string;
+    currentStockQuantity: number;
+    initialStockQuantity: number;
   }
   
   interface ShelfTableProps {
@@ -734,6 +750,100 @@ declare global {
     value: string;
     label: string;
   };
+
+  interface TransactionItem {
+    itemId: {
+      _id: string;
+      itemName: string;
+      itemMRPperUnit: string;
+    };
+    transactionItems: any[];
+  }
+  
+  interface SourceDestination {
+    sourceType?: string;
+    sourceRemark?: string;
+    sourceStaff?: { name: string };
+    destinationType?: string;
+    destinationRemark?: string;
+    destinationStaff?: { name: string };
+  }
+  
+  interface Transaction {
+    _id: string; 
+    transactionType: string;
+    transactionItems: TransactionItem[];
+    source?: SourceDestination;
+    destination?: SourceDestination;
+    transactionReason: string;
+    transactionStatus: string;
+    hasErrors: boolean;
+    approvedByAdmin: boolean;
+    adminRemark: string;
+    dateOfTransaction: string;
+  }
+  
+  type RawData = Transaction[]; 
+
+  interface TransformedRow {
+    _id: string;
+    isSubRow: boolean;
+    transactionId?: string;
+    itemId?: string;
+    itemName?: string;
+    price?: string;
+    transactionType?: string;
+    sourceType?: string;
+    sourceRemark?: string;
+    sourceStaff?: string;
+    destinationType?: string;
+    destinationRemark?: string;
+    destinationStaff?: string;
+    transactionReason?: string;
+    transactionStatus?: string;
+    hasErrors?: string;
+    approvedByAdmin?: string;
+    adminRemark?: string;
+    dateOfTransaction?: string;
+    sourceExpiry?: string;
+    sourceMfg?: string;
+    qty?: string;
+    destinationQty?: string;
+    destinationExpiry?: string;
+    destinationMfg?: string;
+    ItemSourceRemark?: string;
+    ItemDestinationRemark?: string;
+    itemError?: string;
+  }
+  
+  
+  type TransformedData = TransformedRow[];
+  
+  interface TransactionState {
+    rawData: { [key: number]: any[] }; 
+    transformedData: TransformedData;
+    expandedRows: string[];
+    isLoading: boolean;
+    page: number;
+    rowsPerPage: number;
+    startDate:Date;
+    endDate:Date;
+    totalCount: number;
+  }
+  interface DateRangePickerProps {
+    startDate: Date | null;
+    endDate: Date | null;
+    onStartDateChange: (date: Date | null) => void;
+    onEndDateChange: (date: Date | null) => void;
+  };
+  interface StockTransactionParams  {
+    startDate?: Date;
+    endDate?: Date;
+    storeId?: string;
+    page?: number;
+    limit?: number;
+  };
+  
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
