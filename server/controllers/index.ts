@@ -67,6 +67,7 @@ import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
 import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
+import { bulkApproveStockTransactions } from "./bulkApproveStockTransactions"
 
 export {
   addBulkItems,
@@ -137,5 +138,7 @@ export {
   updateStockTransactionByAdmin,
   addNewStockTransactions,
   getItemsFromStoreInventory,
-  getStockTransactions
+  getStockTransactions,
+  bulkApproveStockTransactions
+
 };
