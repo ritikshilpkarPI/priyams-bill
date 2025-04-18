@@ -64,7 +64,7 @@ const Report = () => {
       const csvRows = [
         ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase', 'Expiry Date(s)', 'Mfg Date(s)', 'Qty per Batch'],
         ...reportResult.report.map(item => {
-            const expiryDates = `"${item.expiryDates.map(ed => formatDate(ed.date)).join('\n')}"`;
+          const expiryDates = `"${item.expiryDates.map(ed => formatDate(ed.date)).join('\n')}"`;
             const mfgDates = `"${item.expiryDates.map(ed => formatDate(ed.mfgDate)).join('\n')}"`;
             const batchQtys = `"${item.expiryDates.map(ed => `${ed.value} pcs`).join('\n')}"`;
           return [
@@ -87,9 +87,9 @@ const Report = () => {
     } else {
       // For other filters
       const csvRows = [
-        ['Item Name', 'Barcode', 'Quantity', 'MRP', 'Total Amount', 'Discount'],
+        ['SKU', 'Barcode', 'Quantity', 'MRP', 'Total Amount', 'Discount'],
         ...reportResult.report.map(item => ([
-          item.items[0]?.itemDetail?.itemName,
+          item.items[0]?.itemDetail?.sku,
           item.items[0]?.itemDetail?.itemBarcode,
           item.totalQuantitysum,
           item.totalMRPsum?.toFixed(2),
@@ -237,8 +237,8 @@ const showBillTable = (reportResult, selectedFilter) => (
           <th>Item Name</th>
           <th>Total Purchased</th>
           <th>Pkt. Amt</th>
-          <th>Pkt. Unit</th>
-          <th>MRP</th>
+        <th>Pkt. Unit</th>
+        <th>MRP</th>
           <th>Cost Price</th>
           <th>Suppliers</th>
           <th>First Purchase</th>
@@ -253,6 +253,9 @@ const showBillTable = (reportResult, selectedFilter) => (
         <tr>
           <th>
             <Text align="center">Sl. No.</Text>
+          </th>
+          <th>
+            <Text align="center">SKU</Text>
           </th>
           <th>
             <Text align="center">Item Name</Text>
@@ -310,12 +313,12 @@ const showBillTable = (reportResult, selectedFilter) => (
   ))}
 </td>
 <td>
-  {item.expiryDates.map((ed, i) => (
+  {item?.expiryDates?.map((ed, i) => (
     <div key={i}>{formatDate(ed?.mfgDate)}</div>
   ))}
 </td>
 <td>
-    {item.expiryDates.map((ed, i) => (
+    {item?.expiryDates?.map((ed, i) => (
       <div key={i}>{ed?.value} pcs</div>
     ))}
   </td>
@@ -350,6 +353,12 @@ const TableRow = ({ itemBill, idx, filterName }) => {
         <td>
           <Text color="black" weight={500}>
             {idx + 1}
+          </Text>
+        </td>
+        <td>
+          <Text color="black" weight={500}>
+            {itemBill.items[0]?.itemDetail?.sku ||
+              itemBill.items.itemDetail?.sku || "N/A"}
           </Text>
         </td>
         <td>

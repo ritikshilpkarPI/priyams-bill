@@ -59,17 +59,20 @@ const {
   getItemsSellDetailsByPurchaseOrderId,
   getItemsSku,
   getItemById,
-  getAllStores,
+  getAllStaffs,
   transferStockToStore,
+  getAllStores,
+  getStaffByStoreId,
   getAllCompanies,
   getAllBrands,
-  getAllStaffs,
-  itemsStaticAttributes,
   getAllDealers,
   addNewDealer,
-  getStaffByStoreId,
-  getStockTransactions,
+  itemsStaticAttributes,
+  updateStockTransactionDestination,
+  updateStockTransactionByAdmin,
+  addNewStockTransactions,
   getItemsFromStoreInventory,
+  getStockTransactions
 } = require('../controllers/index');
 
 
@@ -267,22 +270,31 @@ router.get(API_PATHS.ITEMS.GET_ITEMS_SKU, isLoggedIn, getItemsSku);
 
 router.get(`${API_PATHS.ITEMS.GET_ITEM_BY_ID}/:id`, isLoggedIn, getItemById);
 
-
-router.get(API_PATHS.STORE.GET_ALL_STORES, isLoggedIn, getAllStores);
+router.get(API_PATHS.STAFF.GET_STAFFS, isLoggedIn, getAllStaffs);
 
 router.post(API_PATHS.INVENTORY.POST_TRANSFER_STOCK_TO_STORE,isLoggedIn, transferStockToStore);
+
+router.get(API_PATHS.STORE.GET_ALL_STORES, isLoggedIn, getAllStores);
+router.get(`${API_PATHS.STAFF.GET_STAFFS}/:storeId`, getStaffByStoreId);
 
 router.get(API_PATHS.COMPANY.GET_ALL_COMPANY,isLoggedIn, getAllCompanies);
 
 router.get(API_PATHS.BRAND.GET_ALL_BRAND,isLoggedIn, getAllBrands);
 
-router.get(API_PATHS.STAFF.GET_STAFFS, isLoggedIn, getAllStaffs);
-
-router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttributes);
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
-router.get(`${API_PATHS.STAFF.GET_STAFFS}/:storeId`, isLoggedIn, getStaffByStoreId);
+router.put(API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION, isLoggedIn, updateStockTransactionDestination);
+
+router.post(
+  API_PATHS.STOCK_TRANSACTION.PUT_UPDATE_STOCK_TRANSACTION,
+  isLoggedIn,
+  updateStockTransactionByAdmin
+);
+
+router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttributes);
+
+router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, addNewStockTransactions);
 router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
 router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,isLoggedIn, getStockTransactions)
 
