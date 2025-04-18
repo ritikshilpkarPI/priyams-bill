@@ -70,6 +70,7 @@ const StoreInventory: React.FC = () => {
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   const columns: GridColDef[] = [
+    { field: 'sku', headerName: 'SKU', sortable: true },
     {
       field: 'itemBarcode',
       headerName: 'Bar Code',
@@ -82,28 +83,21 @@ const StoreInventory: React.FC = () => {
       sortable: true,
       minWidth: 150,
     },
+    {
+      field: 'itemPerUnitQuantity',
+      headerName: 'Packet Qty.',
+      sortable: true,
+    },
     { field: 'quantityUnitName', headerName: 'Unit', sortable: true },
     { field: 'itemMRPperUnit', headerName: 'MRP/Unit', sortable: true },
-    { field: 'itemCostPricePerUnit', headerName: 'Cost/Unit', sortable: true },
-    { field: 'itemSellingPricePerUnit', headerName: 'SP/Unit', sortable: true },
     { field: 'itemBrandName', headerName: 'Brand Name', sortable: true },
     {
       field: 'itemCategory',
       headerName: 'Category',
       sortable: true,
     },
-    {
-      field: 'itemPerUnitQuantity',
-      headerName: 'Item Quantity',
-      sortable: true,
-    },
+    
     { field: 'subCategory', headerName: 'Sub Category', sortable: true },
-    { field: 'minimumStockQuantity', headerName: 'Min Stock', sortable: true },
-    {
-      field: 'minStockReached',
-      headerName: 'Min Stock Reached',
-      sortable: true,
-    },
     { field: 'itemStockQuantity', headerName: 'Total Stock', sortable: true },
     { field: 'companyName', headerName: 'Company', sortable: true },
     {
@@ -111,17 +105,7 @@ const StoreInventory: React.FC = () => {
       headerName: 'Flavour Or Feature',
       sortable: true,
     },
-    { field: 'isDeleted', headerName: 'Deleted', sortable: true },
-    { field: 'sku', headerName: 'SKU', sortable: true },
-    { field: 'itemDiscountPerUnit', headerName: 'Discount', sortable: true },
     { field: 'saleTime', headerName: 'Sale Time', sortable: true },
-    {
-      field: 'permanentlyOutOfStock',
-      headerName: 'Out of Stock',
-      sortable: true,
-    },
-    { field: 'createdAt', headerName: 'Created At', sortable: true },
-    { field: 'updatedAt', headerName: 'Updated At', sortable: true },
   ];
 
   return (
@@ -162,15 +146,7 @@ const StoreInventory: React.FC = () => {
               headerAlign: 'center',
               align: 'center',
             }))}
-            rows={items.map((item) => ({
-              ...(item as {}),
-              createdAt: item['createdAt']
-                ? formatShortDate(item['createdAt'] || '')
-                : '',
-              updatedAt: item['updatedAt']
-                ? formatShortDate(item['updatedAt'] || '')
-                : '',
-            }))}
+            rows={items}
             paginationModel={{
               pageSize: pagination.size,
               page: pagination.page - 1,
