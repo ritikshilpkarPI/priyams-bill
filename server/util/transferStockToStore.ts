@@ -13,7 +13,7 @@ export const transferStockToStore = async ({
   userId,
   transactionId,
 }: {
-  items: { itemId: string; quantity: number }[];
+  items: { itemId: string; quantity: number, itemShelfDates: any }[];
   collectionName: string;
   userId: string;
   transactionId?: mongoose.Types.ObjectId;
@@ -21,7 +21,7 @@ export const transferStockToStore = async ({
   const StoreInventory = getStoreInventoryModel(collectionName);
   const updatedItems = [];
 
-  for (const { itemId, quantity } of items) {
+  for (const { itemId, quantity, itemShelfDates=[] } of items) {
     if (!itemId || !quantity) {
       throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
     }
@@ -42,6 +42,11 @@ export const transferStockToStore = async ({
       storeItem = new StoreInventory({
         itemId,
         itemQuantityInStore: quantity,
+        itemShelfDates: itemShelfDates.map((shelf: { quantityToAdd: number; }) => ({
+            ...shelf,
+            initialStockQuantity: shelf.quantityToAdd,
+            currentStockQuantity: shelf.quantityToAdd,
+          })),
         itemStockChangeHistory: [
           {
             quantity,
@@ -54,6 +59,24 @@ export const transferStockToStore = async ({
       });
     } else {
       storeItem.itemQuantityInStore += quantity;
+      const shelfMap = new Map(
+        storeItem?.itemShelfDates?.map((shelf) => [shelf._id?.toString(), shelf])
+      );
+    
+      for (const shelf of itemShelfDates) {
+        const { _id, quantityToAdd } = shelf;
+        const key = _id?.toString();
+    
+        if (key && shelfMap.has(key)) {
+          shelfMap.get(key)!.currentStockQuantity += quantityToAdd;
+        } else {
+          storeItem?.itemShelfDates?.push({
+            ...shelf,
+            initialStockQuantity: quantityToAdd,
+            currentStockQuantity: quantityToAdd,
+          });
+        }
+      }
       storeItem.itemStockChangeHistory.push({
         quantity,
         user: userId,
