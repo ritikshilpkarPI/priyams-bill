@@ -1,6 +1,13 @@
 import React, { useEffect, useCallback } from 'react';
 import { Dropzone, DropzoneProps } from '@mantine/dropzone';
-import { Flex, Text } from '@mantine/core';
+import {
+  Flex,
+  Text,
+  Button,
+  Stack,
+  Group,
+} from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 
 interface PastableFileInputProps extends Omit<DropzoneProps, 'children'> {
   onPasteFile?: (files: File[]) => void;
@@ -15,9 +22,8 @@ const PastableFileInput: React.FC<PastableFileInputProps> = ({
   ...props
 }) => {
   const handlePaste = useCallback(
-    (event: Event) => {
-      const clipboardEvent = event as ClipboardEvent;
-      const items = clipboardEvent.clipboardData?.items;
+    (event: ClipboardEvent) => {
+      const items = event.clipboardData?.items;
       if (!items) return;
 
       const imageFiles: File[] = [];
@@ -37,34 +43,100 @@ const PastableFileInput: React.FC<PastableFileInputProps> = ({
   );
 
   useEffect(() => {
-    window.addEventListener('paste', handlePaste);
-    return () => window.removeEventListener('paste', handlePaste);
+    const handlePasteWrapper = (event: Event) => {
+      if ('clipboardData' in event) {
+        handlePaste(event as ClipboardEvent);
+      }
+    };
+
+    window.addEventListener('paste', handlePasteWrapper);
+    return () => window.removeEventListener('paste', handlePasteWrapper);
   }, [handlePaste]);
 
+  const handleManualPaste = async () => {
+    if (!navigator.clipboard?.read) {
+      showNotification?.({
+        title: 'Clipboard not supported',
+        message: 'Your browser does not support reading images from the clipboard.',
+        color: 'red',
+      });
+      return;
+    }
+
+    try {
+      const clipboardItems = await navigator.clipboard.read();
+      const imageFiles: File[] = [];
+
+      for (const item of clipboardItems) {
+        for (const type of item.types) {
+          if (type.startsWith('image/')) {
+            const blob = await item.getType(type);
+            const file = new File([blob], 'pasted-image', { type: blob.type });
+            imageFiles.push(file);
+          }
+        }
+      }
+
+      if (imageFiles.length > 0) {
+        onPasteFile?.(imageFiles);
+        onDrop(imageFiles);
+      } else {
+        showNotification?.({
+          title: 'No image found',
+          message: 'Please copy an image to clipboard and try again.',
+          color: 'yellow',
+        });
+      }
+    } catch (error) {
+      console.error('Clipboard read failed:', error);
+      showNotification?.({
+        title: 'Paste failed',
+        message: 'Permission denied or unsupported browser.',
+        color: 'red',
+      });
+    }
+  };
+
   return (
-    <Dropzone
-      onDrop={onDrop}
-      onReject={onReject}
-      maxSize={maxSize}
-      accept={accept}
-      {...props}
-    >
-      <Flex
-        justify="center"
-        align="center"
-        mih={120}
-        style={{ pointerEvents: 'none' }}
+    <Stack spacing="xs" align="stretch" w="100%">
+      <Dropzone
+        onDrop={onDrop}
+        onReject={onReject}
+        maxSize={maxSize}
+        accept={accept}
+        {...props}
+        styles={{
+          root: {
+            border: '1px solid #ced4da',
+            borderRadius: '4px',
+            backgroundColor: '#fff',
+            padding: '10px 14px',
+            height: '40px',
+            cursor: 'pointer',
+            transition: 'border-color 0.2s ease',
+          },
+          inner: {
+            pointerEvents: 'none',
+            height: '100%',
+          },
+        }}
       >
-        <div>
-          <Text size="xl" inline>
-            Drag, select or paste image
+        <Flex align="center" style={{ height: '100%' }}>
+          <Text size="sm" color="dimmed">
+            Upload image
           </Text>
-          <Text size="sm" c="dimmed" inline mt={7}>
-            Each image must be under 5 MB
-          </Text>
-        </div>
-      </Flex>
-    </Dropzone>
+        </Flex>
+      </Dropzone>
+
+      <Button
+        variant="outline"
+        size="sm"
+        fullWidth
+        onClick={handleManualPaste}
+      >
+        Paste Image
+      </Button>
+    </Stack>
   );
 };
 
