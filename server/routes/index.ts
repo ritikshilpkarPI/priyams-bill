@@ -71,6 +71,7 @@ const {
   updateStockTransactionByAdmin,
   addNewStockTransactions,
   getItemsFromStoreInventory,
+  getStockTransactions
 } = require('../controllers/index');
 
 
@@ -292,5 +293,6 @@ router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttribu
 
 router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, addNewStockTransactions);
 router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
+router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,isLoggedIn, getStockTransactions)
 
 export default router;
