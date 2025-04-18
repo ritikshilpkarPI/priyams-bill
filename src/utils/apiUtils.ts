@@ -520,7 +520,7 @@ export const itemPurchaseBatches = async (
   itemId?: string
 ) => {
     const params = new URLSearchParams();
-    if (itemId) params.append('item_id', "633552ea83c644ae355af273");
+    if (itemId) params.append('item_id', itemId);
     if (typeof page === 'number') params.append('page', page.toString());
     if (typeof limit === 'number') params.append('limit', limit.toString());
 

@@ -15,11 +15,10 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
     const limitNumber = parseInt(limit as string, 10) || 10;
     const skip = filterItemId ? 0 : (pageNumber - 1) * limitNumber;
 
-    // 1. Fetch static item info
     const staticQuery = filterItemId
       ? { _id: toObjectId(filterItemId as string) }
       : {};
-    // Get total count
+
     const totalCount = await Item.countDocuments(staticQuery);
 
     const items = await Item.find(staticQuery)
@@ -27,62 +26,57 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
       .limit(limitNumber)
       .select(CONSTANTS.STATIC_FIELDS_TO_SELECT);
 
-    // 2. Prepare result and extract item IDs
-    const result: Record<
-      string,
-      { staticData: unknown; purchases: ItemData[] }
-    > = {};
-    const itemsIdList: string[] = [];
+    const result: Record<string, { staticData: unknown; purchases: ItemData[] }> = {};
+    const itemIdToSkuMap: Record<string, string> = {};
+    const itemIdToStockMap: Record<string, number | null> = {};
 
     for (const item of items) {
-      if (item.sku) {
-        itemsIdList.push(item._id.toString());
-        result[item.sku] = {
-          staticData: item,
-          purchases: [],
-        };
+      const sku = item.sku;
+      const itemId = item._id.toString();
+
+      if (sku) {
+        result[sku] = { staticData: item, purchases: [] };
+        itemIdToSkuMap[itemId] = sku;
+        itemIdToStockMap[itemId] = item.itemStockQuantity ?? null;
       }
     }
 
-    // 3. Build optimized PO query using $in for matching item IDs
-    const query: Record<string, unknown> = { isApproved: true };
-    if (itemsIdList.length > 0) {
-      query['purchasedItems.item_id'] = { $in: itemsIdList };
+    const itemIds = Object.keys(itemIdToSkuMap);
+    if (itemIds.length === 0) {
+      return res.json({ totalCount, data: result });
     }
 
-    const purchaseOrders = await PurchaseOrder.find(query);
+    const purchaseOrders = await PurchaseOrder.find({
+      isApproved: true,
+      'purchasedItems.item_id': { $in: itemIds },
+    }).select(['_id', 'approveTime', 'createdAt', 'purchasedItems']);
 
     for (const po of purchaseOrders) {
-      const poApproveTime = po.approveTime;
-      const purchaseOrderId = po._id;
-      const purchaseDate = po.createdAt;
+      const { _id: purchaseOrderId, approveTime: poApproveTime, createdAt: purchaseDate } = po;
 
       for (const item of po.purchasedItems as PurchasedItem[]) {
         const {
-          sku,
+          item_id,
           costPrice,
           sellingPrice,
           expiryDates,
           itemQuantity,
           profitPercentage,
-          item_id: currentItemId,
         } = item;
 
-        if (!sku) continue;
+        const itemId = item_id.toString();
 
-        if (filterItemId && filterItemId.toString() !== currentItemId) continue;
+        if (!itemIdToSkuMap[itemId]) continue;
+        if (filterItemId && filterItemId.toString() !== itemId) continue;
 
         const latestExpiry = expiryDates?.[expiryDates.length - 1];
         const mfgDate = latestExpiry?.mfgDate;
         const expiryDate = latestExpiry?.date;
 
-        const { totalShelfLife, leftShelfLife } = getShelfLifeInfo(
-          mfgDate,
-          expiryDate
-        );
-
-        const itemDoc = await Item.findById(toObjectId(currentItemId));
-        const totalStockQty = itemDoc?.itemStockQuantity ?? null;
+        let shelfLife;
+        if(mfgDate && expiryDate){
+           shelfLife = getShelfLifeInfo(mfgDate, expiryDate);
+        }
 
         const itemData: ItemData = {
           cp: costPrice,
@@ -90,28 +84,21 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
           manufacturing: mfgDate,
           expiry: expiryDate,
           qty: itemQuantity,
-          totalStockQty,
+          totalStockQty: itemIdToStockMap[itemId],
           profitPercentage,
           purchaseDate,
-          totalShelfLife,
-          leftShelfLife,
+          totalShelfLife: shelfLife?.totalShelfLife ?? "",
+          leftShelfLife: shelfLife?.leftShelfLife ?? "",
           purchaseOrderId,
           poApproveTime,
         };
 
-        if (!result[sku]) {
-          continue;
-        }
-
-        result[sku].purchases.push(itemData);
+        const itemSku = itemIdToSkuMap[itemId];
+        result[itemSku].purchases.push(itemData);
       }
     }
 
-    //Send result + totalCount
-    res.json({
-      totalCount,
-      data: result,
-    });
+    res.status(200).json({ totalCount, data: result });
   } catch (err) {
     console.error('Error fetching itemPurchaseBatches:', err);
     res.status(500).json({ error: 'Server error' });

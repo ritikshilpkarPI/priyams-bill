@@ -23,7 +23,7 @@ const NewInventoryPage: React.FC = () => {
       const staticRows: any[] = Object.values(itemData.data).map((entry: any, index: number) => ({
         id: entry.staticData._id || `row-${page}-${index}`,
         ...entry.staticData,
-        purchases: entry.purchases || [], // ✅ inject PO data here
+        purchases: entry.purchases || [],
       }));
 
       setItems(staticRows);
@@ -57,8 +57,8 @@ const NewInventoryPage: React.FC = () => {
 
   const columns = [
     {
-      key: 'itemName',
-      label: 'Item Name',
+      key: 'sku',
+      label: 'Item Sku',
     },
     {
       key: 'itemBarcode',
