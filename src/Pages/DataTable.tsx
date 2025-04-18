@@ -117,7 +117,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 target: { value: String(pageSize) },
               } as React.ChangeEvent<HTMLInputElement>);
             }}
-            pageSizeOptions={[5, 10, 20, 50, 100]}
+            pageSizeOptions={[5, 10, 15, 20, 50, 100]}
             checkboxSelection
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar }}

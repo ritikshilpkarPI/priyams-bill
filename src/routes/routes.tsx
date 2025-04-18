@@ -28,6 +28,8 @@ import {
   Label,
   NewPurchaseOrder,
   StoreInventoryManagement,
+  NewInventoryPage,
+  ItemPurchaseOrdersPage,
   AllBills,
   StoreInventory,
   StockTransactions
@@ -187,6 +189,16 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.STORE_INVENTORY_MANAGEMENT,
         element: <StoreInventoryManagement />,
+        index: true,
+      },
+      {
+        path: ROUTES.NEW_INVENTORY_PAGE,
+        element: <NewInventoryPage />,
+        index: true,
+      },
+      {
+        path: ROUTES.ITEM_PURCHASE_ORDERS,
+        element: <ItemPurchaseOrdersPage />,
         index: true,
       },
       {
