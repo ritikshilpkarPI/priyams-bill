@@ -437,17 +437,89 @@ declare global {
     itemSellingPricePerUnit?: number;
     itemStockQuantity?: number;
     slabPricing?: [number, number, number][];
+    itemQtyInStore?:number;
+    itemStockQuantity?:number;
+    itemShelfDates?: ItemShelfDate[];
+    sku?: string;
   }
 
   interface StoreInventoryItem extends WarehouseItem {
     quantityToAdd: number;
   }
-
+  interface ItemShelfDate {
+    _id:string;
+    expiryDate: string; 
+    manufacturingDate: string; 
+    quantity: number;
+    purchaseOrderId: string;
+    entryDate: string;
+    quantityToAdd: number; 
+  }
+  interface TransactionSource {
+    sourceStaff?: Types.ObjectId;
+    sourceEntityId?: Types.ObjectId;
+    sourceType?: string;
+    sourceRemark?: string;  
+  }
+  interface TransactionDestination {
+    destinationStaff?: Types.ObjectId;
+    destinationEntityId?: Types.ObjectId;
+    destinationType?: string;
+    destinationRemark?: string;
+  }
+  interface TransactionItemByDate {
+    shelfId:string
+    sourceQuantity: {
+      expiryDate: string;
+      manufacturingDate: string;
+      qty: number;
+      quantity: number;
+    };
+    destinationQuantity?: {
+      expiryDate: Date;
+      manufacturingDate: Date;
+      qty: number;
+    };
+    destinationRemark?: string;
+    sourceRemark?: string;
+    itemError?: {
+      errorReason: string;
+      errorQty?: number;
+      isResolved: boolean;
+    };
+  }
+  interface TransactionItem {
+    itemId: string;
+    itemBarcode: string;
+    itemMRPperUnit: number;
+    itemName: string;
+    itemQtyInStore: number;
+    itemStockQuantity:number;
+    itemSellingPricePerUnit: number;
+    itemByDate: TransactionItemByDate[];
+    itemShelfDates: ItemShelfDate[];
+    totalQtyAdd: number;
+    sku: string;
+  }
+  interface StockTransactionType {
+  transactionType: string;
+  source: TransactionSource;
+  destination: TransactionDestination;
+  transactionReason?: string;
+  dateOfTransaction: Date | string;
+  transactionStatus: string;
+  hasErrors: boolean;
+  approvedByAdmin: boolean;
+  adminRemark?: string;
+  isDeleted: boolean;
+  transactionItems: TransactionItem[];
+}
   interface Store {
     id: string;
     _id?: string;
     name: string;
     code: string;
+    type: string
   }
 
   interface StoreInventoryForm {
@@ -482,6 +554,7 @@ declare global {
     label?: string;
     selectedStaffId?: string;
     disabled?:boolean;
+    storeId?:string;
   }
   interface ExpiredItem {
     itemName: string;
@@ -607,7 +680,7 @@ declare global {
   }
   
   interface InventoryItemPanelProps {
-    items: InventoryItem[];
+    items: TransactionItem[];
     onQuantityChange: (
       itemId: string,
       quantity: number,
@@ -631,7 +704,7 @@ declare global {
   }
   
   interface ShelfTableProps {
-    shelfList: Shelf[];
+    shelfList: TransactionItemByDate[];
     itemId: string;
     handleQuantityChange: (
       itemId: string,
