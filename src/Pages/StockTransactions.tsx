@@ -186,6 +186,7 @@ const StockTransactions: React.FC = () => {
         onEndDateChange={handleEndDateChange}
       />
       <DataTable
+        key={`grid-${page}-${rowsPerPage}-${totalRowsToShow}`} 
         columns={columns}
         data={data}
         isLoading={isLoading}
