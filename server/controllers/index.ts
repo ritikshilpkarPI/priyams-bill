@@ -61,6 +61,7 @@ import { getAllCompanies } from './getAllCompanies';
 import { getAllBrands } from './getAllBrand';
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
+import { createExpiryItemsBatch } from "./createExpiryItemsBatch";
 import { itemsStaticAttributes } from "./itemsStaticAttributes";
 import { updateStockTransactionDestination } from "./updateStockTransactionDestination";
 import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
@@ -134,6 +135,7 @@ export {
   getAllBrands,
   getAllDealers,
   addNewDealer,
+  createExpiryItemsBatch,  
   itemsStaticAttributes,
   updateStockTransactionDestination,
   updateStockTransactionByAdmin,
