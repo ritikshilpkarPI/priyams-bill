@@ -99,7 +99,7 @@ const DataTable: React.FC<DataTableProps> = ({
             columns={gridColumns}
             rows={data}
             getRowId={(row) => row._id}
-            rowCount={data.length}
+            rowCount={rowCount ? rowCount : data.length}
             paginationModel={{
               pageSize: rowsPerPage,
               page: page,
