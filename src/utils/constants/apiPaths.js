@@ -113,4 +113,8 @@ export const API_PATHS = {
   BRAND:{
     GET_ALL_BRAND: "/api/getAllBrand"
   },
+  EXPIRED_ITEMS_BATCH: {
+    GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",
+    GET_EXPIRED_ITEMS_BATCH_BY_ID: "/api/expiry-items-batch/getExpiryItemsBatchById",
+  },
 };

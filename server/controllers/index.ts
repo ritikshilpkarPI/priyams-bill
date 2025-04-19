@@ -61,6 +61,8 @@ import { getAllStaffs } from "./getAllStaffs"
 import { itemsStaticAttributes } from "./itemsStaticAttributes"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
+import { getAllExpiryItemsBatch } from "./getAllExpiryItemsBatch";
+import { getExpiryItemsBatchById } from "./getExpiryItemsBatchById";
 
 export {
   addBulkItems,
@@ -126,5 +128,6 @@ export {
   getAllStaffs, 
   getAllDealers,
   addNewDealer,
-
+  getAllExpiryItemsBatch,
+  getExpiryItemsBatchById,
 };
