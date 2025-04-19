@@ -152,6 +152,10 @@ export const BillUploadPanel: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =>
           mx="sm"
           mt="md"
         />
+        <Box mt="16px" p="sm">
+          <Text size="sm" color="dimmed">
+            Upload Bill Images
+          </Text>
       <PastableFileInput
   onDrop={onFileSelect}
   onPasteFile={onFileSelect}
@@ -159,6 +163,7 @@ export const BillUploadPanel: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =>
   loading={isFileUploading}
   disabled={isApprovedPO}
 />
+        </Box>
 
         <Flex wrap="wrap">
           {purchaseOrder?.billPhotos?.map((billPhoto) => (
