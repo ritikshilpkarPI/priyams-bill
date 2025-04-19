@@ -16,7 +16,7 @@ export const getExpiryItemsBatchById = async (req: Request, res: Response) => {
       .populate('itemWiseTotalCost.itemId');
 
     if (!expiredItemBatch) {
-      return res.status(404).json({ success: false, message: MESSAGES.EXPIRED_ITEM_BATCH_NOT_FOUND });
+      return res.status(404).json({ success: false, message: MESSAGES.EXPIRED_ITEMS_BATCH_NOT_FOUND });
     }
 
     res.status(200).json({

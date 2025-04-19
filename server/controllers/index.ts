@@ -63,7 +63,7 @@ import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 import { getAllExpiryItemsBatch } from "./getAllExpiryItemsBatch";
 import { getExpiryItemsBatchById } from "./getExpiryItemsBatchById";
-
+import { markExpiryItemsBatchCleared } from "./markExpiryItemsBatchCleared"
 export {
   addBulkItems,
   addItems,
@@ -130,4 +130,5 @@ export {
   addNewDealer,
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
+  markExpiryItemsBatchCleared,
 };
