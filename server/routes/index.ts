@@ -67,6 +67,7 @@ const {
   itemsStaticAttributes,
   getAllDealers,
   addNewDealer,
+  createExpiryItemsBatch,
 } = require('../controllers/index');
 
 
@@ -279,5 +280,6 @@ router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttribu
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
+router.post(API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEM_BATCH,isLoggedIn, createExpiryItemsBatch);
 
 export default router;
