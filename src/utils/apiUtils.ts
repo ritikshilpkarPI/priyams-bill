@@ -15,12 +15,11 @@ import MESSAGES from './constants/messages';
 
 
 
-export const getBillingLeanItemsAPI = async (selectedStoreId?: string) => {
+export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string) => {
   try {
     const pincode = localStorage.getItem('userPincode');
-    const response = await getAPI({
-      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}/?storeCode=${selectedStoreId}&pincode=${pincode}`,  
-    });
+    const path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=${storeId || ''}&storeCode=${selectedStoreId || ''}&pincode=${pincode || ''}`;
+    const response = await getAPI({path});
 
     return response.message;
   } catch (err) {
@@ -292,8 +291,11 @@ export const getAllStaffsAPI = async () => {
   }
 };
 
-export const getAllStaffsByStoreIdAPI = async () => {
+
+export const getAllStaffsByStoreIdAPI = async (storeId: string)=>{
   try {
+    let finalStoreId;
+    if (!storeId.length){
     const storedStoreDataString = localStorage.getItem('storeData');
 
     if (!storedStoreDataString) {
@@ -301,10 +303,12 @@ export const getAllStaffsByStoreIdAPI = async () => {
     }
 
     const storeData = JSON.parse(storedStoreDataString);
-    const storeId = storeData._id;
-
+    finalStoreId = storeData._id;
+  }else{
+    finalStoreId = storeId
+  }
     const response = await getAPI({
-      path: `${API_PATHS.STAFF.GET_STAFFS}/${storeId}`,
+      path: `${API_PATHS.STAFF.GET_STAFFS}/${finalStoreId}`,
     });
 
     return response;
@@ -573,3 +577,23 @@ export const getStockTransactions = async ({
     return { isError: true, error };
   }
 };
+
+export const addNewStockTransactionsAPI = async (
+  StockTransaction: StockTransactionType
+) => {
+
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION,
+      data: {
+        transactions: [StockTransaction],
+      },
+    });
+    return response;
+    
+  } catch (error) {
+    
+  }
+
+
+}
