@@ -71,6 +71,7 @@ const {
   updateStockTransactionDestination,
   updateStockTransactionByAdmin,
   addNewStockTransactions,
+  itemPurchaseBatches,
   getItemsFromStoreInventory,
   getStockTransactions
 } = require('../controllers/index');
@@ -280,6 +281,8 @@ router.get(`${API_PATHS.STAFF.GET_STAFFS}/:storeId`, getStaffByStoreId);
 router.get(API_PATHS.COMPANY.GET_ALL_COMPANY,isLoggedIn, getAllCompanies);
 
 router.get(API_PATHS.BRAND.GET_ALL_BRAND,isLoggedIn, getAllBrands);
+
+router.get(API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES, isLoggedIn ,itemPurchaseBatches);
 
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 

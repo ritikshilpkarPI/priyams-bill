@@ -98,6 +98,7 @@ export const API_PATHS = {
   ITEMS: {
     GET_ITEMS_SKU: "/api/items/sku",
     GET_ITEM_BY_ID: "/api/item",
+    GET_ITEM_PURCHASE_BATCHES: "/api/itemPurchaseBatches",
     GET_ITEMS_STATIC_FIELDS: "/api/items/itemsStaticAttributes",
   },
   STORE: {
