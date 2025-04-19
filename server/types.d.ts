@@ -26,13 +26,26 @@
     user: mongoose.Types.ObjectId;
     changeType: ChangeType;
     changedFrom: ChangedFrom;
+    transactionId?: mongoose.Types.ObjectId;
   }
   
   export interface StoreInventoryItemType extends Document {
     itemId: mongoose.Types.ObjectId;
     itemQuantityInStore: number;
     itemStockChangeHistory: StockChangeHistoryType[];
+    itemShelfDates: ItemShelfDateInfo[];
   }
+
+  type ItemShelfDateInfo = {
+    _id: string;
+    expiryDate: Date;
+    manufacturingDate?: Date;
+    quantity: number;
+    purchaseOrderId: mongoose.Types.ObjectId;
+    entryDate?: Date;
+    currentStockQuantity?: number;
+    initialStockQuantity?: number;
+}
 
 
   export interface StoreType extends Document {
@@ -47,11 +60,6 @@
     storeCollectionName: string;
   }
 
-export  interface AddressComponent {
-    long_name: string;
-    short_name: string;
-    types: string[];
-}
   export type AuthenticatedRequest = {
     user?: {
       _id: ObjectId;
@@ -59,7 +67,18 @@ export  interface AddressComponent {
       username: string;
       role: string;
     };
+    params: {
+      id: string;
+    };
+    body: {
+      [key: string]: any;
+    };
   };
+export  interface AddressComponent {
+    long_name: string;
+    short_name: string;
+    types: string[];
+}
 
   export interface CompanyType extends Document {
     companyName: string;
@@ -70,17 +89,60 @@ export  interface AddressComponent {
     companyId: Types.ObjectId;
   }
   
+
+
+  export interface ExpiryDate {
+    mfgDate: Date;
+    date: Date;
+  }
+
+  export interface PurchasedItem {
+    sku: string;
+    costPrice: number;
+    sellingPrice: number;
+    expiryDates: ExpiryDate[];
+    itemQuantity: number;
+    profitPercentage: number;
+    item_id: string;
+  }
+
+  export interface ItemData {
+    cp: number;
+    sp: number;
+    manufacturing: Date | undefined;
+    expiry: Date | undefined;
+    qty: number;
+    totalStockQty: number | null;
+    profitPercentage: number;
+    purchaseDate: Date;
+    totalShelfLife: string;
+    leftShelfLife: string;
+    purchaseOrderId: Types.ObjectId;
+    poApproveTime: Date | NativeDate | null | undefined;
+  }
   export interface DealerType extends Document {
     dealerName: string;
     dealerBrands: Types.ObjectId[];
     dealerCompanies: Types.ObjectId[];
     dealerNumber: number;
   }
+  export interface DealerType extends Document {
+    dealerName: string;
+    dealerBrands: Types.ObjectId[];
+    dealerCompanies: Types.ObjectId[];
+    dealerNumber: number;
+  }
+
+  export interface BrandType extends Document {
+    brandName: string;
+    companyId: Types.ObjectId;
+  }
 export interface TransactionSource {
   sourceStaff?: Types.ObjectId;
   sourceEntityId?: Types.ObjectId;
   sourceType?: string;
   sourceRemark?: string;
+
 }
 
 export interface TransactionDestination {
@@ -128,7 +190,23 @@ export interface StockTransactionType extends Document {
   adminRemark?: string;
   isDeleted: boolean;
   transactionItems: TransactionItem[];
+  transactionSlug:string;
 }
+
+export interface StockTransactionsInterface {
+  transactions: StockTransactionType[]
+}
+
+export interface StockTransactionFilterBody {
+  transactionId?: string[];
+  storeId?: string;
+  itemId?: string[];
+  startDate?: string;
+  endDate?: string;
+  page?: string;
+  limit?: string;
+}
+
 
 interface StatusHistory {
   status: string;
