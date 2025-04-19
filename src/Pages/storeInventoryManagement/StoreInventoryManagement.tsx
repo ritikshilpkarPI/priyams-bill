@@ -32,7 +32,6 @@ import {
   transferStockToStoreAPI,
 } from '../../utils/apiUtils';
 import { useMediaQuery } from '@mantine/hooks';
-// import { StoreInventoryManagementValidation } from '../../utils/validations/StoreInventoryManagementValidation';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { AppDispatch } from '../../redux/store';
