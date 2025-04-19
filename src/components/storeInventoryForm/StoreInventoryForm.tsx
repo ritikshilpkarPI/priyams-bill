@@ -289,7 +289,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                   onChangeDestination('destinationType', value ?? '');
                   dispatch(resetTransactionDestination());
                 }}
-                data={[CONSTANTS.WAREHOUSE, CONSTANTS.STORE, CONSTANTS.DEALER]}
+                data={destinationTypeData}
               />
             </Grid.Col>
 
