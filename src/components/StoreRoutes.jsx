@@ -38,7 +38,8 @@ import {
   Label,
   CreatePurchaseOrderPage,
   StoreInventory,
-  StockTransactions
+  StockTransactions,
+  NewInventoryPage
 } from '../Pages';
 import { Fragment } from 'react';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
@@ -110,6 +111,8 @@ const StoreRoutes = () => {
 
             <ProtectedComponent role={access.STORE_INVENTORY_MANAGEMENT}>
             <Route exact path="/storeInventoryManagement" component={StoreInventory} />
+            <Route exact path="/newInventoryPage" component={NewInventoryPage} />
+            
             </ProtectedComponent>
           </ProtectedRoutes>
         </Fragment>
