@@ -282,6 +282,12 @@
 .bottom-nav-container::-webkit-scrollbar{
   display: none ;
 }
+.store-info {
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
 
 // hide nav container on print
 @media print {
