@@ -577,3 +577,23 @@ export const getStockTransactions = async ({
     return { isError: true, error };
   }
 };
+
+export const addNewStockTransactionsAPI = async (
+  StockTransaction: StockTransactionType
+) => {
+
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION,
+      data: {
+        transactions: [StockTransaction],
+      },
+    });
+    return response;
+    
+  } catch (error) {
+    
+  }
+
+
+}

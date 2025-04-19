@@ -26,12 +26,13 @@ import {
   setSourceStaff,
 } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
+  addNewStockTransactionsAPI,
   getAllStaffsByStoreIdAPI,
   getAllStoresAPI,
   transferStockToStoreAPI,
 } from '../../utils/apiUtils';
 import { useMediaQuery } from '@mantine/hooks';
-import { StoreInventoryManagementValidation } from '../../utils/validations/StoreInventoryManagementValidation';
+// import { StoreInventoryManagementValidation } from '../../utils/validations/StoreInventoryManagementValidation';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { AppDispatch } from '../../redux/store';
@@ -44,6 +45,7 @@ import {
   updateTransactionItemQuantity,
 } from '../../redux/stockTransactionManagement/StockTransactionManagement';
 import StoreInventoryForm from 'src/components/storeInventoryForm/StoreInventoryForm';
+import { destinationValidation, sourceValidation } from 'src/utils/validations/StoreInventoryManagementValidation';
 
 const StoreInventoryManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -187,6 +189,12 @@ const StoreInventoryManagement: React.FC = () => {
     return errors;
   };
 
+  const onSubmitTransaction = async () => {
+
+    addNewStockTransactionsAPI(stockTransaction)
+        
+  }
+
   const onChangeTransactionSource = (field: string, value: string | number) => {
     dispatch(addTransactionSource({ ...transactionSource, [field]: value }));
   };
@@ -325,7 +333,11 @@ const StoreInventoryManagement: React.FC = () => {
         </Grid.Col>
 
         <Grid.Col span={isSmallScreen ? 12 : 4}>
-          <Button loading={loading} w="100%">
+          <Button 
+          loading={loading} 
+          w="100%"
+          onClick={onSubmitTransaction}
+          >
             Transfer Inventory
           </Button>
         </Grid.Col>

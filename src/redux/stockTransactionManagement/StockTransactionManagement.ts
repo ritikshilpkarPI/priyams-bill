@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CONSTANTS } from '../../constants/constants';
 const initialState: StockTransactionType = {
-  transactionType: '',
+  transactionType: 'IN',
   source: {
     sourceStaff: '',
     sourceEntityId: '',
@@ -14,9 +14,9 @@ const initialState: StockTransactionType = {
     destinationType: '',
     destinationRemark: '',
   },
-  transactionReason: '',
-  dateOfTransaction: '',
-  transactionStatus: '',
+  transactionReason:"",
+  dateOfTransaction: new Date(),
+  transactionStatus: 'pending',
   hasErrors: false,
   approvedByAdmin: false,
   adminRemark: '',

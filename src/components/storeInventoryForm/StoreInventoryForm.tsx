@@ -126,7 +126,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
 
   return (
     <Grid>
-      <Grid.Col span={4}>
+      <Grid.Col span={isSmallScreen ? 12 : 4}>
         <Box
           sx={{
             border: '.5px solid rgb(222, 226, 230)',
@@ -256,7 +256,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
         </Flex>
       </Grid.Col>
 
-      <Grid.Col span={4}>
+      <Grid.Col span={isSmallScreen ? 12 : 4}>
         <Box
           sx={{
             border: '.5px solid rgb(222, 226, 230)',
@@ -296,12 +296,13 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
             {Boolean(stockTransaction.destination.destinationType) && (
               <Grid.Col span={12}>
                 <Select
-                  label={`Select ${pascalCase(stockTransaction.destination.destinationType ?? "")}`}
-                  placeholder={`Pick ${pascalCase(stockTransaction.destination.destinationType ?? "")}`}
+                  label={`Select ${pascalCase(stockTransaction.destination.destinationType ?? '')}`}
+                  placeholder={`Pick ${pascalCase(stockTransaction.destination.destinationType ?? '')}`}
                   value={stockTransaction.destination.destinationEntityId}
-                  onChange={(value) =>
-                    onChangeDestination('destinationEntityId', value ?? '')
-                  }
+                  onChange={(value) => {
+                    const selectedValue = value ?? '';
+                    onChangeDestination('destinationEntityId', selectedValue);
+                  }}
                   data={destinationEntityData}
                 />
               </Grid.Col>
@@ -344,7 +345,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                 value={stockTransaction.destination.destinationRemark}
                 onChange={(event) =>
                   onChangeDestination(
-                    'destinationStaff',
+                    'destinationRemark',
                     event.currentTarget.value ?? ''
                   )
                 }
