@@ -4,11 +4,12 @@ const { StoreModel } = require('../db-models/store-model');
 const { MESSAGES } = require('../constants/messages');
 
 const getItemsLean = async (req, res, next) => {
-  const { pincode, storeCode } = req.query;
+  const { pincode, storeCode, storeId } = req.query;
 
   let store;
-
-  if (storeCode) {
+  if (storeId) {
+    store = await StoreModel.findById(storeId);
+  } else if (storeCode) {
     store = await StoreModel.findOne({ code: storeCode});
   } else if (pincode) {
     store = await StoreModel.findOne({ pincode });
@@ -17,14 +18,6 @@ const getItemsLean = async (req, res, next) => {
   
   try {
 
-    if (!pincode) {
-      return res.status(400).json({ error: MESSAGES.PINCODE_REQUIRED });
-    }
-
-    const store = await StoreModel.findOne({ pincode });
-    if (!store) {
-      return res.status(404).json({ error: MESSAGES.STORE_NOT_FOUND });
-    }
 
     const StoreInventoryModel = getStoreInventoryModel(store.collectionName);
 
@@ -33,7 +26,7 @@ const getItemsLean = async (req, res, next) => {
     const itemIds = inventoryData.map((inv) => inv.itemId);
 
     const storeItemQtyMap = {};
-    inventoryData.forEach((entry) => {      
+    inventoryData.forEach((entry) => {
       if (entry.itemId && entry.itemQuantityInStore != null) {
         storeItemQtyMap[entry.itemId] = entry.itemQuantityInStore || 0;
       }
@@ -57,22 +50,23 @@ const getItemsLean = async (req, res, next) => {
       itemPerUnitQuantity: 1,
       quantityUnitName: 1,
       itemShelfDates: 1,
+      sku:1,
     });
 
-    
+   
     const itemsBarCodeMap = {};
     const itemNamesList = [];
     const itemBarCodesList = [];
     const itemsNameMap = {};
 
     allItemsList.forEach((item) => {
-        
+  
       const itemQty = storeItemQtyMap[item._id] || 0;
 
       const itemWithQty = {
         ...item.toObject(),
         itemQtyInStore: itemQty,
-        itemStockQuantity: item.itemStockQuantity,
+        itemStockQuantity: itemQty,
       };
 
       itemNamesList.push(item.itemName);

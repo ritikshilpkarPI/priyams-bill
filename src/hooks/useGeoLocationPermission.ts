@@ -8,9 +8,9 @@ import {
 } from '../redux/user/userSlice';
 import { getGeoLocation } from '../utils/getGeoLocation';
 import { checkGeolocationPermission } from 'src/utils/checkGeolocationPermission';
+import { GeoLocationPermission } from '../components/GeolocationPermission/GeolocationPermission';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router';
-import { GeoLocationPermission } from '../components/geoLocationPermission/GeoLocationPermission';
 
 const useGeolocationPermission = () => {
   const dispatch = useDispatch();

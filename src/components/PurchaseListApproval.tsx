@@ -186,6 +186,11 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
             itemsWithManuAndExpiry: metrics.itemsWithManuAndExpiry,
             itemsWithShortExpiry: metrics.itemsWithShortExpiry,
             brandCompanyNames,
+            draftedAt: row.draftTime ? formatDateTime(row.draftTime) : 'N/A',
+            approvedAt: row.approveTime ? formatDateTime(row.approveTime) : 'N/A',
+            dateOnBill: row.dateOnBill
+              ? formatDateTime(row.dateOnBill)
+              : 'N/A',
 
           };
         })}

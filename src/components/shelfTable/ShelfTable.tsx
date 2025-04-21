@@ -24,21 +24,21 @@ const ShelfTable: React.FC<ShelfTableProps> = ({ shelfList, itemId, handleQuanti
       </thead>
       <tbody>
         {shelfList.map((shelf) => (
-          <tr key={shelf._id}>
-            <td>{formatDate(shelf.expiryDate)}</td>
-            <td>{formatDate(shelf.manufacturingDate)}</td>
-            <td>{shelf.quantity}</td>
+          <tr key={shelf.shelfId}>
+            <td>{formatDate(shelf.sourceQuantity.expiryDate ?? "")}</td>
+            <td>{formatDate(shelf.sourceQuantity.manufacturingDate)}</td>
+            <td>{shelf.sourceQuantity.quantity}</td>
             <td>
               <CustomNumberInput
                 required
                 placeholder="Enter qty"
-                value={shelf.quantityToAdd ?? 0}
+                value={shelf.sourceQuantity.qty ?? 0}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   handleQuantityChange(
                     itemId,
-                    shelf.quantity,
+                    shelf.sourceQuantity.quantity,
                     Number(e.target.value),
-                    shelf._id
+                    shelf.shelfId
                   )
                 }
               />

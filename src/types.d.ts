@@ -2,8 +2,15 @@ import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 import { RefObject } from "react";
 import { NumberValue } from "d3";
+import { GridEventListener } from "@mui/x-data-grid";
 
 declare global {
+
+  interface StoreDataType {
+    name: string;
+    number: string;
+    pincode: string;
+  };
 
   interface StoreDataType {
     name: string;
@@ -437,16 +444,90 @@ declare global {
     itemSellingPricePerUnit?: number;
     itemStockQuantity?: number;
     slabPricing?: [number, number, number][];
+    itemQtyInStore?:number;
+    itemStockQuantity?:number;
+    itemShelfDates?: ItemShelfDate[];
+    sku?: string;
   }
 
   interface StoreInventoryItem extends WarehouseItem {
     quantityToAdd: number;
   }
-
+  interface ItemShelfDate {
+    _id:string;
+    expiryDate: string; 
+    manufacturingDate: string; 
+    quantity: number;
+    purchaseOrderId: string;
+    entryDate: string;
+    quantityToAdd: number; 
+  }
+  interface TransactionSource {
+    sourceStaff?: Types.ObjectId;
+    sourceEntityId?: Types.ObjectId;
+    sourceType?: string;
+    sourceRemark?: string;  
+  }
+  interface TransactionDestination {
+    destinationStaff?: Types.ObjectId;
+    destinationEntityId?: Types.ObjectId;
+    destinationType?: string;
+    destinationRemark?: string;
+  }
+  interface TransactionItemByDate {
+    shelfId:string
+    sourceQuantity: {
+      expiryDate: string;
+      manufacturingDate: string;
+      qty: number;
+      quantity: number;
+    };
+    destinationQuantity?: {
+      expiryDate: Date;
+      manufacturingDate: Date;
+      qty: number;
+    };
+    destinationRemark?: string;
+    sourceRemark?: string;
+    itemError?: {
+      errorReason: string;
+      errorQty?: number;
+      isResolved: boolean;
+    };
+  }
+  interface TransactionItemType {
+    itemId: string;
+    itemBarcode: string;
+    itemMRPperUnit: number;
+    itemName: string;
+    itemQtyInStore: number;
+    itemStockQuantity:number;
+    itemSellingPricePerUnit: number;
+    itemByDate: TransactionItemByDate[];
+    itemShelfDates: ItemShelfDate[];
+    totalQtyAdd: number;
+    sku: string;
+  }
+  interface StockTransactionType {
+  transactionType: string;
+  source: TransactionSource;
+  destination: TransactionDestination;
+  transactionReason?: string;
+  dateOfTransaction: Date | string;
+  transactionStatus: string;
+  hasErrors: boolean;
+  approvedByAdmin: boolean;
+  adminRemark?: string;
+  isDeleted: boolean;
+  transactionItems: TransactionItemType[];
+  sourceTypeData: any[];
+  destinationTypeData: any[];
+}
   interface Store {
-    id: string;
+    _id: string;
     name: string;
     code: string;
+    type: string
   }
 
   interface StoreInventoryForm {
@@ -460,6 +541,10 @@ declare global {
   interface ItemWithQuantity {
     itemDetail: WarehouseItem;
     itemQuantityInBill: number;
+  }
+  interface DeviceLocationType {
+    latitude?: number;
+    longitude?: number;
   }
   interface Brand {
     _id: string;
@@ -481,6 +566,7 @@ declare global {
     error: string | null;
   }
   type BrandSelectorProps = {
+    align?: string;
     label?: string;
     value: string;
     onChange?: (value: string) => void;
@@ -490,6 +576,7 @@ declare global {
     disabled?: boolean;
   };
   type CompanySelectorProps = {
+    align?: string;
     value: string;
     onChange: (value: string) => void;
     label?: string;
@@ -498,10 +585,6 @@ declare global {
     error?: string;
     disabled?: boolean; 
   };
-  interface DeviceLocationType {
-    latitude?: number;
-    longitude?: number;
-  }
   interface StaffInterface {
     _id?: string;
     name?: string;
@@ -518,6 +601,7 @@ declare global {
     label?: string;
     selectedStaffId?: string;
     disabled?:boolean;
+    storeId?:string;
   }
   interface ExpiredItem {
     itemName: string;
@@ -564,6 +648,7 @@ declare global {
     render?: (row: any,index?: number) => React.ReactNode;
     flex?: number; 
     minWidth?: number;
+    cellClassName?: string;
   }
   
   interface DataTableProps {
@@ -579,6 +664,7 @@ declare global {
     onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     rowCount: number;
     paginationMode?: 'client' | 'server'; 
+    onRowClick?: GridEventListener<'rowClick'>;
     expandedRows?: string[];
     onToggleExpand?: (id: string) => void; 
   }
@@ -621,13 +707,6 @@ declare global {
     navigate:any
   };
 
-  interface ShelfLifeInfoProps {
-    expiryDate: {
-      mfgDate: string | Date;
-      date: string | Date;
-    };
-  }
-
 
   interface ExpiryBatch {
     isShelfExpired: boolean;
@@ -637,6 +716,8 @@ declare global {
     manufacturingDate: string;
     quantity: number;
     _id: string;
+    currentStockQuantity: number;
+    initialStockQuantity: number;
   }
   
   interface InventoryItem {
@@ -646,12 +727,13 @@ declare global {
       itemBarcode: string;
       itemStockQuantity: number;
       itemShelfDates?: ExpiryBatch[];
+      itemQtyInStore?: number;
     };
     quantityToAdd: number; 
   }
   
   interface InventoryItemPanelProps {
-    items: InventoryItem[];
+    items: TransactionItemType[];
     onQuantityChange: (
       itemId: string,
       quantity: number,
@@ -659,18 +741,26 @@ declare global {
     ) => void;
     onRemoveItem: (itemId: string) => void;
   }
+  interface ShelfLifeInfoProps {
+    expiryDate: {
+      mfgDate: string | Date;
+      date: string | Date;
+    };
 
-
+  }
   interface Shelf {
     _id: string;
     expiryDate: string;
     manufacturingDate: string;
     quantity: number;
     quantityToAdd?: number;
+    purchaseOrderId?: string;
+    currentStockQuantity: number;
+    initialStockQuantity: number;
   }
   
   interface ShelfTableProps {
-    shelfList: Shelf[];
+    shelfList: TransactionItemByDate[];
     itemId: string;
     handleQuantityChange: (
       itemId: string,
@@ -681,6 +771,56 @@ declare global {
   }
   
   
+  interface Brand {
+    _id: string;
+    brandName: string;
+    companyId: string;
+  }
+  interface BrandState {
+    brands: Brand[];
+    loading: boolean;
+    error: string | null;
+  }
+  interface company {
+    _id: string;
+    companyName: string;
+  }
+  interface companyState {
+    companys: company[];
+    loading: boolean;
+    error: string | null;
+  }
+  type BrandSelectorProps = {
+    label?: string;
+    value: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean;
+  };
+  type CompanySelectorProps = {
+    value: string;
+    onChange: (value: string) => void;
+    label?: string;
+    placeholder?: string;
+    required?: boolean;
+    error?: string;
+    disabled?: boolean; 
+  };
+  interface Dealer {
+    _id?: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+  }
+  interface DealerState {
+    dealers: Dealer[];
+    loading: boolean;
+    error: string | null;
+    selectedDealerId?: string;
+  }
   type DealerOption = {
     value: string;
     label: string;
