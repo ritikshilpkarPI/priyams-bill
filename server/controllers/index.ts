@@ -68,6 +68,8 @@ import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
 import { bulkApproveStockTransactions } from "./bulkApproveStockTransactions"
+import { itemPurchaseBatches } from './itemPurchaseBatches';
+
 
 export {
   addBulkItems,
@@ -137,6 +139,7 @@ export {
   updateStockTransactionDestination,
   updateStockTransactionByAdmin,
   addNewStockTransactions,
+  itemPurchaseBatches,
   getItemsFromStoreInventory,
   getStockTransactions,
   bulkApproveStockTransactions

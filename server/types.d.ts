@@ -89,6 +89,43 @@ export  interface AddressComponent {
     companyId: Types.ObjectId;
   }
   
+
+
+  export interface ExpiryDate {
+    mfgDate: Date;
+    date: Date;
+  }
+
+  export interface PurchasedItem {
+    sku: string;
+    costPrice: number;
+    sellingPrice: number;
+    expiryDates: ExpiryDate[];
+    itemQuantity: number;
+    profitPercentage: number;
+    item_id: string;
+  }
+
+  export interface ItemData {
+    cp: number;
+    sp: number;
+    manufacturing: Date | undefined;
+    expiry: Date | undefined;
+    qty: number;
+    totalStockQty: number | null;
+    profitPercentage: number;
+    purchaseDate: Date;
+    totalShelfLife: string;
+    leftShelfLife: string;
+    purchaseOrderId: Types.ObjectId;
+    poApproveTime: Date | NativeDate | null | undefined;
+  }
+  export interface DealerType extends Document {
+    dealerName: string;
+    dealerBrands: Types.ObjectId[];
+    dealerCompanies: Types.ObjectId[];
+    dealerNumber: number;
+  }
   export interface DealerType extends Document {
     dealerName: string;
     dealerBrands: Types.ObjectId[];

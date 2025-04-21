@@ -40,6 +40,11 @@ const updateSavedOrders = async (req, res, next) => {
         isShelfExpired: isShelfExpired(expiryDates.mfgDate, expiryDates.date)
       }))
     }
+
+    if(!Boolean(new_order?.item_id)){
+      new_order.newItem = true;
+    }
+
     const purchaseOrder = await PurchaseOrder.findById(id);
     const newItemCost = new_order.costPrice * new_order.stockQuantity;
     const updatedOrder = await purchaseOrder.updateOne({
