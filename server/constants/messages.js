@@ -35,6 +35,16 @@ const MESSAGES = Object.freeze({
   STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
   INSUFFICIENT_STOCK:"Insufficient stock",
   PINCODE_REQUIRED: "Pincode is required",
+  INVALID_STORE_ID: "Invalid store ID provided.",
+  INVALID_TRANSACTION_IDS: 'Invalid transactionIds',
+  INVALID_STORE_ID: 'Invalid storeId',
+  STORE_NOT_FOUND_FOR_TRANSACTIONS: 'Store not found for transactions',
+  TRANSACTIONS_NOT_LINKED_TO_STORE: 'Transactions not linked to store',
+  INVALID_ITEM_IDS: 'Invalid itemIds',
+  ITEMS_NOT_IN_STORE_INVENTORY: 'Items not in store inventory',
+  INVALID_DATE_RANGE: 'Invalid date range',
+  TRANSACTION_ID_MUST_BE_ARRAY: 'transactionId should be an array',
+  ITEM_ID_MUST_BE_ARRAY: 'itemId should be an array',
 });
 
 module.exports = { MESSAGES };
