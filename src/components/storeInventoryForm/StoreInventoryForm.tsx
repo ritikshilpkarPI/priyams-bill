@@ -89,7 +89,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
         setSourceEntityData([]);
         break;
     }
-  }, [sourceTypeData, storesData, warehouseData]);
+  }, [stockTransaction.source.sourceType]);
 
   useEffect(() => {
     switch (stockTransaction.destination.destinationType) {
@@ -106,7 +106,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
         setDestinationEntityData([]);
         break;
     }
-  }, [destinationTypeData, storesData, warehouseData, dealersList]);
+  }, [stockTransaction.destination.destinationType]);
 
   const getDealers = async () => {
     try {
