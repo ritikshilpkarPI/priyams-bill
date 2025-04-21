@@ -895,7 +895,7 @@ declare global {
   type TransformedData = TransformedRow[];
   
   interface TransactionState {
-    rawData: { [key: number]: any[] }; 
+    rawData: Record<string, any[]>; 
     transformedData: TransformedData;
     expandedRows: string[];
     isLoading: boolean;
