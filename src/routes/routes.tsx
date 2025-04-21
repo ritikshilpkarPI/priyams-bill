@@ -29,6 +29,7 @@ import {
   NewPurchaseOrder,
   StoreInventoryManagement,
   AllBills,
+  ExpiryItemsBatch,
 } from '../Pages';
 import App from '../App';
 
@@ -154,7 +155,11 @@ export const router = createBrowserRouter([
             element: <NewPurchaseOrder />,
             index: true,
           },
-         
+          {
+            path: ROUTES.EXPIRY_ITEMS_BATCH,
+            element: <ExpiryItemsBatch />,
+            index: true,
+          },         
         ]
       },
       {
