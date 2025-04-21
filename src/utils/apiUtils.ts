@@ -592,8 +592,6 @@ export const addNewStockTransactionsAPI = async (
     return response;
     
   } catch (error) {
-    
+    return { isError: true, error };
   }
-
-
 }
