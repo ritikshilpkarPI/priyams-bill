@@ -189,10 +189,13 @@ const StoreInventoryManagement: React.FC = () => {
   };
 
   const onSubmitTransaction = async () => {
-
-    addNewStockTransactionsAPI(stockTransaction)
-        
-  }
+    const response = await addNewStockTransactionsAPI(stockTransaction);
+    if (response?.isError) {      
+      toast.error('Failed to add new stock transaction');
+    } else {
+      toast.success('Stock transaction added successfully');
+    }
+  };  
 
   const onChangeTransactionSource = (field: string, value: string | number) => {
     dispatch(addTransactionSource({ ...transactionSource, [field]: value }));
