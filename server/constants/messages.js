@@ -26,6 +26,8 @@ const MESSAGES = Object.freeze({
   SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY: "Something went wrong while creating brand/company",
   STORE_UPDATED_SUCCESSFULLY: "Store updated successfully",
   INSUFFICIENT_STOCK:"Insufficient stock",
+  EXPIRED_ITEMS_BATCH_NOT_FOUND: "Expired item batch not found",
+  EXPIRED_ITEMS_BATCH_MARKED_AS_CLEARED: "Expired items batch marked as cleared",
 });
 
 module.exports = { MESSAGES };

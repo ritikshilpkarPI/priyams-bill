@@ -89,7 +89,8 @@ export const API_PATHS = {
   },
   EXPIRED_ITEM: {
     ADD_EXPIRED_ITEM: "/api/addexpiredItem",
-    GET_EXPIRED_ITEMS: "/api/getExpiredItems"
+    GET_EXPIRED_ITEMS: "/api/getExpiredItems",
+    CREATE_EXPIRED_ITEM_BATCH: "/api/expiredItems/batch"
   },
  
   RIDER:{
@@ -112,5 +113,10 @@ export const API_PATHS = {
   },
   BRAND:{
     GET_ALL_BRAND: "/api/getAllBrand"
+  },
+  EXPIRED_ITEMS_BATCH: {
+    GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",
+    GET_EXPIRED_ITEMS_BATCH_BY_ID: "/api/expiry-items-batch/getExpiryItemsBatchById",
+    MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID: "/api/expiry-items-batch/markExpiryItemsBatchCleared",
   },
 };
