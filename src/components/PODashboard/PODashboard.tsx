@@ -30,7 +30,7 @@ const PurchaseOrderDashboard: React.FC = () => {
       totalProfitMargin += profitMargin;
     }    
 
-    if (item.item_id) {
+    if (item.item_id || !(item?.newItem)) {
       existingItemsCount++;
     } else {
       newItemsCount++;
