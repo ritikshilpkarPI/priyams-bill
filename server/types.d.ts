@@ -154,3 +154,7 @@ export interface StockTransactionFilterBody {
   page?: string;
   limit?: string;
 }
+
+export interface StockTransactionsInterface {
+  transactions: StockTransactionType[]
+}

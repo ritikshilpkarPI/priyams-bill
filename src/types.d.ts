@@ -2,6 +2,7 @@ import mongoose, { ObjectId } from "mongoose";
 import { store } from "./redux/store";
 import { RefObject } from "react";
 import { NumberValue } from "d3";
+import { GridEventListener } from "@mui/x-data-grid";
 
 declare global {
 
@@ -481,6 +482,7 @@ declare global {
     error: string | null;
   }
   type BrandSelectorProps = {
+    align?: string;
     label?: string;
     value: string;
     onChange?: (value: string) => void;
@@ -490,6 +492,7 @@ declare global {
     disabled?: boolean;
   };
   type CompanySelectorProps = {
+    align?: string;
     value: string;
     onChange: (value: string) => void;
     label?: string;
@@ -562,6 +565,7 @@ declare global {
     key: string;
     sortable?: boolean;
     render?: (row: any,index?: number) => React.ReactNode;
+    cellClassName?: string;
     flex?: number; 
     minWidth?: number;
   }
@@ -579,6 +583,7 @@ declare global {
     onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     rowCount: number;
     paginationMode?: 'client' | 'server'; 
+    onRowClick?: GridEventListener<'rowClick'>;
     expandedRows?: string[];
     onToggleExpand?: (id: string) => void; 
   }
