@@ -228,6 +228,7 @@ declare global {
       companyName: string;
       companyId: string;
     };
+    newItem?: boolean;
   }
 
   interface PurchasedItemDetailFormProps {
