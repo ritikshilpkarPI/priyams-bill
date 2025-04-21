@@ -67,13 +67,17 @@ const {
   getAllBrands,
   getAllDealers,
   addNewDealer,
+  createExpiryItemsBatch,
   itemsStaticAttributes,
   updateStockTransactionDestination,
   updateStockTransactionByAdmin,
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
-  getStockTransactions
+  getStockTransactions,
+  getAllExpiryItemsBatch,
+  getExpiryItemsBatchById,
+  markExpiryItemsBatchCleared,
 } = require('../controllers/index');
 
 
@@ -287,6 +291,7 @@ router.get(API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES, isLoggedIn ,itemPurchaseBa
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
+router.post(API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEM_BATCH,isLoggedIn, createExpiryItemsBatch);
 router.put(API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION, isLoggedIn, updateStockTransactionDestination);
 
 router.post(
@@ -300,5 +305,11 @@ router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttribu
 router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, addNewStockTransactions);
 router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
 router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,isLoggedIn, getStockTransactions)
+
+router.get(API_PATHS.EXPIRED_ITEMS_BATCH.GET_ALL_EXPIRED_ITEMS_BATCH, getAllExpiryItemsBatch);
+
+router.get(`${API_PATHS.EXPIRED_ITEMS_BATCH.GET_EXPIRED_ITEMS_BATCH_BY_ID}/:id`, getExpiryItemsBatchById);
+
+router.post(`${API_PATHS.EXPIRED_ITEMS_BATCH.MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID}/:id`, markExpiryItemsBatchCleared);
 
 export default router;
