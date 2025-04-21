@@ -207,3 +207,48 @@ export interface StockTransactionFilterBody {
   limit?: string;
 }
 
+interface StatusHistory {
+  status: string;
+  staffId: mongoose.Types.ObjectId;
+  dateTime: Date;
+  browser: string;
+  os: string;
+  ipReferrer: string;
+  statusChangeRemark: string;
+}
+
+interface ClearanceDetails {
+  clearanceReason: string;
+  clearedOn: Date;
+  clearancePurchaseOrderId?: mongoose.Types.ObjectId;
+  dealerId?: mongoose.Types.ObjectId;
+  clearanceRemark: string;
+}
+
+interface ExpiredItems {
+  itemId: mongoose.Types.ObjectId;
+  expiryDate: Date;
+  quantity: number;
+  purchaseOrderId: mongoose.Types.ObjectId;
+  costPricePerUnit: number;
+  totalCostPrice: number;
+}
+
+export interface ExpiredItemsSchema {
+  boxId: string;
+  dealerId: mongoose.Types.ObjectId;
+  stockTransactionId: mongoose.Types.ObjectId;
+  expiryImages: string[];
+  expiryBatchCost: number;
+  status: string;
+  statusHistory: StatusHistory[];
+  clearanceDetails?: ClearanceDetails;
+  isCleared: boolean;
+  items: ExpiredItems[];
+  itemWiseTotalCost: [
+    {
+      itemId: mongoose.Types.ObjectId;
+      itemTotalCost: number;
+    },
+  ];
+}

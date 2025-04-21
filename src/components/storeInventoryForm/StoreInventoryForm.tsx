@@ -2,9 +2,11 @@ import {
   ActionIcon,
   Badge,
   Box,
+  Button,
   Flex,
   Grid,
   Select,
+  Text,
   Textarea,
   TextInput,
 } from '@mantine/core';
@@ -77,6 +79,34 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
     { value: string; label: string }[]
   >([]);
 
+  const [overlay, setOverlay] = useState(false);
+
+  const onSelectSource = (lable: string, value: string) => {
+    if (stockTransaction.transactionItems.length) {
+      setOverlay(true);
+    } else {
+      if (lable === 'sourceType') {
+        onChangeSource('sourceType', value ?? '');
+        dispatch(resetTransactionSource());
+      } else {
+        onChangeSource('sourceEntityId', value ?? '');
+      }
+    }
+  };
+
+  const onSelectdestination = (lable: string, value: string) => {
+    if (stockTransaction.transactionItems.length) {
+      setOverlay(true);
+    } else {
+      if (lable === 'destinationType') {
+        onChangeDestination('destinationType', value ?? '');
+        dispatch(resetTransactionDestination());
+      } else {
+        onChangeDestination('destinationEntityId', value);
+      }
+    }
+  };
+
   useEffect(() => {
     switch (stockTransaction.source.sourceType) {
       case CONSTANTS.STORE:
@@ -89,7 +119,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
         setSourceEntityData([]);
         break;
     }
-  }, [sourceTypeData, storesData, warehouseData]);
+  }, [stockTransaction.source.sourceType]);
 
   useEffect(() => {
     switch (stockTransaction.destination.destinationType) {
@@ -106,7 +136,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
         setDestinationEntityData([]);
         break;
     }
-  }, [destinationTypeData, storesData, warehouseData, dealersList]);
+  }, [stockTransaction.destination.destinationType]);
 
   const getDealers = async () => {
     try {
@@ -127,6 +157,72 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
   return (
     <Grid>
       <Grid.Col span={isSmallScreen ? 12 : 4}>
+        {overlay && (
+          <>
+            <Box
+              sx={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                zIndex: 1,
+              }}
+            />
+
+            <Box
+              sx={{
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 2,
+                border: '1px solid #dee2e6',
+                backgroundColor: '#fff',
+                borderRadius: '8px',
+                textAlign: 'left',
+                padding: '24px',
+                width: '90%',
+                maxWidth: '400px',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+              }}
+            >
+              <Text sx={{ marginBottom: '24px' }}>
+                You can’t change source or destination with items added in the
+                table. You need to remove all items to change them.
+              </Text>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '24px',
+                  mt: 3,
+                }}
+              >
+                <Button
+                  variant="filled"
+                  color="red"
+                  onClick={() => {
+                    dispatch(resetStoreInventory());
+                    setOverlay(false);
+                  }}
+                >
+                  Remove All Items
+                </Button>
+                <Button
+                  variant="filled"
+                  color="gray"
+                  onClick={() => setOverlay(false)}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Box>
+          </>
+        )}
+
         <Box
           sx={{
             border: '.5px solid rgb(222, 226, 230)',
@@ -156,8 +252,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                 placeholder="Pick Source"
                 value={stockTransaction.source.sourceType}
                 onChange={(value) => {
-                  onChangeSource('sourceType', value ?? '');
-                  dispatch(resetTransactionSource());
+                  onSelectSource('sourceType', value ?? '');
                 }}
                 data={sourceTypeData}
               />
@@ -170,7 +265,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                   placeholder={`Pick ${pascalCase(stockTransaction.source.sourceType || '')} `}
                   value={stockTransaction.source.sourceEntityId}
                   onChange={(value) =>
-                    onChangeSource('sourceEntityId', value ?? '')
+                    onSelectSource('sourceEntityId', value ?? '')
                   }
                   data={sourceEntityData}
                 />
@@ -286,8 +381,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                 placeholder="Pick Destination"
                 value={stockTransaction.destination.destinationType}
                 onChange={(value) => {
-                  onChangeDestination('destinationType', value ?? '');
-                  dispatch(resetTransactionDestination());
+                  onSelectdestination('destinationType', value ?? '');
                 }}
                 data={destinationTypeData}
               />
@@ -301,7 +395,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                   value={stockTransaction.destination.destinationEntityId}
                   onChange={(value) => {
                     const selectedValue = value ?? '';
-                    onChangeDestination('destinationEntityId', selectedValue);
+                    onSelectdestination('destinationEntityId', selectedValue);
                   }}
                   data={destinationEntityData}
                 />
