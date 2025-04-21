@@ -6,6 +6,12 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import BillFeed from './BillFeed';
+import { useSelector } from 'react-redux';
+import { StoreSelect } from 'src/components/StoreSelect';
+import { setSelectedStore, setStores } from 'src/redux/storeInventoryManagement/storeInventoryManagementSlice';
+import { useDispatch } from 'react-redux';
+import { getAllStoresAPI } from 'src/utils/apiUtils';
+import { showNotification } from '@mantine/notifications';
 
 const AllBills = ({ fromDayWise = false, bills = [] }) => {
   const [allBills, setAllBills] = useState<BillState[]>([]);
@@ -19,6 +25,18 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
     pageSize: 10,
   });
   const [loader, setLoader] = useState(false);
+  const selectedStoreId = useSelector(
+    (state: RootState) => state.storeInventoryManagement.selectedStoreId
+  );
+
+  const stores = useSelector(
+    (state: RootState) => state.storeInventoryManagement.stores
+  );
+
+
+ const storeObject = stores.find(
+    (store) => store.code === selectedStoreId
+  );
 
   const getBillFeed = async (date: DateRangePickerValue) => {
     setLoader(true);
@@ -30,6 +48,7 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
         size: pagination.pageSize,
         startDate: date[0],
         endDate: date[1],
+        storeId: storeObject?._id,
       },
       headers: {
         Cookie: '',
@@ -48,7 +67,32 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
       getBillFeed(dateRange);
     }
     // eslint-disable-next-line
-  }, [pagination]);
+  }, [pagination, selectedStoreId]);
+
+  const dispatch = useDispatch()
+
+ const handleStoreChange = (storeId:string) => {
+    dispatch(setSelectedStore(storeId));
+  };
+
+    useEffect(() => {
+      const fetchStores = async () => {
+        try {
+          const res = await getAllStoresAPI();
+          if (!res.stores) {
+            showNotification({ message: 'No stores found', color: 'red' });
+            return;
+          }  
+          dispatch(setStores(res.stores));
+        } catch (error) {
+          showNotification({ message: 'Failed to load stores', color: 'red' });
+        }
+      };
+  
+      fetchStores();
+    }, [dispatch]);
+
+
 
   return (
     <>
@@ -70,7 +114,11 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
             <Typography variant="h5" sx={{ fontWeight: 600 }}>
               All Bill
             </Typography>
-
+            <StoreSelect
+            stores={stores}
+            value={selectedStoreId}
+            onChange={handleStoreChange}
+            />
             <DateRangePicker
               mb={10}
               style={{ width: '350px' }}

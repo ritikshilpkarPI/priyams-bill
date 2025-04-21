@@ -22,18 +22,32 @@ import {
   removeInventoryItem,
   resetStoreInventory,
   setStores,
+  setDestinationStaff,
+  setSourceStaff,
 } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
-import { getAllStoresAPI, transferStockToStoreAPI } from '../../utils/apiUtils';
+import {
+  addNewStockTransactionsAPI,
+  getAllStaffsByStoreIdAPI,
+  getAllStoresAPI,
+  transferStockToStoreAPI,
+} from '../../utils/apiUtils';
 import { useMediaQuery } from '@mantine/hooks';
-import { StoreInventoryManagementValidation } from '../../utils/validations/StoreInventoryManagementValidation';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { AppDispatch } from '../../redux/store';
 import { toast } from 'react-toastify';
+import {
+  addTransactionDestination,
+  addTransactionItem,
+  addTransactionSource,
+  removeTransactionItem,
+  updateTransactionItemQuantity,
+} from '../../redux/stockTransactionManagement/StockTransactionManagement';
+import StoreInventoryForm from 'src/components/storeInventoryForm/StoreInventoryForm';
+import { destinationValidation, sourceValidation } from 'src/utils/validations/StoreInventoryManagementValidation';
 
 const StoreInventoryManagement: React.FC = () => {
-  // const dispatch = useDispatch();
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
   const storeInventory = useSelector(
     (state: RootState) => state.storeInventoryManagement
   );
@@ -45,11 +59,33 @@ const StoreInventoryManagement: React.FC = () => {
     (state: RootState) => state.storeInventoryManagement.inventoryItems
   );
 
+  const stockTransaction = useSelector(
+    (state: RootState) => state.stockTransaction
+  );
+
   const stores = useSelector(
     (state: RootState) => state.storeInventoryManagement.stores
   );
 
- 
+  const transactionItems = useSelector(
+    (state: RootState) => state.stockTransaction.transactionItems
+  );
+
+  const transactionSource = useSelector(
+    (state: RootState) => state.stockTransaction.source
+  );
+
+  const transactionDestination = useSelector(
+    (state: RootState) => state.stockTransaction.destination
+  );
+
+  const sourceStaff = useSelector(
+    (state: RootState) => state.storeInventoryManagement.sourceStaff
+  );
+  const destinationStaff = useSelector(
+    (state: RootState) => state.storeInventoryManagement.destinationStaff
+  );
+
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -84,16 +120,43 @@ const StoreInventoryManagement: React.FC = () => {
       showNotification({ message: 'Item already added', color: 'yellow' });
       return;
     }
-    const newItem: StoreInventoryItem = { ...item, quantityToAdd: 1 };
-    dispatch(addInventoryItem(newItem));
+
+    const newTransactionItem: TransactionItemType = {
+      itemId: item.itemDetail._id ?? '',
+      itemBarcode: item.itemDetail.itemBarcode ?? '',
+      itemMRPperUnit: item.itemDetail.itemMRPperUnit ?? 0,
+      itemName: item.itemDetail.itemName ?? '',
+      itemQtyInStore: item.itemDetail.itemQtyInStore ?? 0,
+      itemStockQuantity: item.itemDetail.itemStockQuantity ?? 0,
+      itemSellingPricePerUnit: item.itemDetail.itemSellingPricePerUnit ?? 0,
+      itemShelfDates: item.itemDetail.itemShelfDates ?? [],
+      totalQtyAdd: 0,
+      sku: item.itemDetail.sku ?? '',
+      itemByDate: item.itemDetail.itemShelfDates
+        ? item.itemDetail.itemShelfDates.map((shelf) => ({
+          sourceQuantity: {
+            expiryDate: shelf.expiryDate,
+            manufacturingDate: shelf.manufacturingDate,
+            qty: shelf.quantityToAdd,
+            quantity: shelf.quantity,
+          },
+          shelfId: shelf._id,
+        }))
+        : [],
+    };
+    dispatch(addTransactionItem(newTransactionItem));
   };
 
-  const handleQuantityChange = (itemId: string, quantity: number) => {
-    dispatch(updateInventoryItemQuantity({ itemId, quantity }));
+  const handleQuantityChange = (
+    itemId: string,
+    quantity: number,
+    shelfId?: string
+  ) => {
+    dispatch(updateTransactionItemQuantity({ itemId, quantity, shelfId }));
   };
 
   const handleRemoveItem = (itemId: string) => {
-    dispatch(removeInventoryItem(itemId));
+    dispatch(removeTransactionItem(itemId));
   };
   const convertToItemsArray = () => {
     const itemsArray = [];
@@ -101,42 +164,100 @@ const StoreInventoryManagement: React.FC = () => {
       itemsArray.push({
         itemId: item.itemDetail._id,
         quantity: item.quantityToAdd,
+        itemShelfDates: item?.itemShelfDates ?? [],
       });
     }
     return itemsArray;
+  };  
+
+  const validateInventoryItems = () => {
+    const errors: YupValidationErrorMapType = {};
+    inventoryItems.forEach((item) => {
+      const totalShelfQuantity = item.itemDetail.itemShelfDates?.reduce(
+        (acc: any, shelf: { quantityToAdd: any }) => acc + shelf.quantityToAdd,
+        0
+      );
+      if (totalShelfQuantity > item.quantityToAdd) {
+        errors.inventoryItems = 'Shelf quantities exceed total quantity';
+      }
+      if (totalShelfQuantity !== 0 && totalShelfQuantity < item.quantityToAdd) {
+        errors.inventoryItems =
+          'Total quantity should be equal to shelf quantities';
+      }
+    });
+    return errors;
   };
 
-  const updateStore = async ()=>{
-    setLoading(true);
-    const items = convertToItemsArray();
-    const response = await transferStockToStoreAPI(selectedStoreId, items);
-    if (response.isError){
-      setLoading(false);
-      return toast.error(
-              'unable to update store, please try again some time'
-            );
-    }
-    dispatch(resetStoreInventory());
-    dispatch(fetchBillingLeanItems())
-    setLoading(false);
-    toast.success('store update successfully');
+  const onSubmitTransaction = async () => {
+
+    addNewStockTransactionsAPI(stockTransaction)
+        
   }
-  
-  const handleSubmit = async () => {
+
+  const onChangeTransactionSource = (field: string, value: string | number) => {
+    dispatch(addTransactionSource({ ...transactionSource, [field]: value }));
+  };
+  const onChangeTransactionDestination = (
+    field: string,
+    value: string | number
+  ) => {
+    dispatch(
+      addTransactionDestination({ ...transactionDestination, [field]: value })
+    );
+  };
+
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
+
+  const storesData = stores
+    .filter((dealer) => dealer.type === 'STORE')
+    .map((store) => ({
+      value: store._id ?? '',
+      label: store.code + ' - ' + store.name,
+    }));
+
+  const warehouseData = stores
+    .filter((dealer) => dealer.type === 'WAREHOUSE')
+    .map((store) => ({
+      value: store._id ?? '',
+      label: store.code + ' - ' + store.name,
+    }));
+
+  const fetchDestinationStaffs = async (storeId: string) => {
     try {
-      await StoreInventoryManagementValidation.validate(storeInventory, {
-        abortEarly: false,
-      })
-      setErrors({});
-      await updateStore()
-      // dispatch(resetStoreInventory());
-      // dispatch(fetchBillingLeanItems())
+      const response = await getAllStaffsByStoreIdAPI(storeId ?? '');
+      if (response.success) {
+        dispatch(setDestinationStaff(response.data));
+      } else {
+        dispatch(setDestinationStaff([]));
+      }
     } catch (error) {
-      setErrors(getYupValidationErrorMap(error));
+      dispatch(setDestinationStaff([]));
+      toast.error('Failed to fetch staff');
     }
   };
 
-  const isSmallScreen = useMediaQuery('(max-width: 768px)'); 
+  const fetchSourceStaffs = async (storeId: string) => {
+    try {
+      const response = await getAllStaffsByStoreIdAPI(storeId ?? '');
+      if (response.success) {
+        dispatch(setSourceStaff(response.data));
+      } else {
+        dispatch(setSourceStaff([]));
+      }
+    } catch (error) {
+      dispatch(setSourceStaff([]));
+      toast.error('Failed to fetch staff');
+    }
+  };
+
+  useEffect(() => {
+    fetchDestinationStaffs(transactionDestination.destinationEntityId);
+  }, [stockTransaction.destination.destinationEntityId]);
+
+  useEffect(() => {
+    fetchSourceStaffs(transactionSource.sourceEntityId);
+    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId));
+  }, [stockTransaction.source.sourceEntityId]);
 
   return (
     <Flex
@@ -161,27 +282,49 @@ const StoreInventoryManagement: React.FC = () => {
           </Title>
         </Grid.Col>
 
-        <Grid.Col span={12}>
-          <ItemSearch
-            onItemSelect={handleItemSelect}
-            isApprovedPO={undefined}
-            error={errors.inventoryItems}
+        <Grid.Col>
+          <StoreInventoryForm
+            onChangeSource={onChangeTransactionSource}
+            onChangeDestination={onChangeTransactionDestination}
+            storesData={storesData}
+            warehouseData={warehouseData}
+            sourceStaff={sourceStaff.map((staff) => ({
+              value: staff._id,
+              label: staff.name,
+            }))}
+            destinationStaff={destinationStaff.map((staff) => ({
+              value: staff._id,
+              label: staff.name,
+            }))}
           />
         </Grid.Col>
 
-        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
-          <StoreSelect
-            stores={stores}
-            value={selectedStoreId}
-            onChange={handleStoreChange}
-            error={errors.selectedStoreId}
-          />
-        </Grid.Col>
+        {Boolean(stockTransaction.source.sourceType) && (
+          <Grid.Col span={12}>
+            <ItemSearch
+              onItemSelect={handleItemSelect}
+              // passing the selected store id to the item search to disable the items search
+              isApprovedPO={!stockTransaction.source.sourceEntityId}
+              error={errors.inventoryItems}
+            />
+            {!stockTransaction.source.sourceEntityId && (
+              <Text
+                sx={{
+                  color: 'red',
+                  fontSize: '12px',
+                  marginTop: '4px',
+                }}
+              >
+                Please select a Source Store to add items.
+              </Text>
+            )}
+          </Grid.Col>
+        )}
 
         <Grid.Col span={12}>
-          {inventoryItems.length > 0 && (
+          {transactionItems.length > 0 && (
             <InventoryItemPanel
-              items={inventoryItems}
+              items={transactionItems}
               onQuantityChange={handleQuantityChange}
               onRemoveItem={handleRemoveItem}
             />
@@ -189,7 +332,11 @@ const StoreInventoryManagement: React.FC = () => {
         </Grid.Col>
 
         <Grid.Col span={isSmallScreen ? 12 : 4}>
-          <Button loading={loading} w="100%" onClick={handleSubmit}>
+          <Button 
+          loading={loading} 
+          w="100%"
+          onClick={onSubmitTransaction}
+          >
             Transfer Inventory
           </Button>
         </Grid.Col>

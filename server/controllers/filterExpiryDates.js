@@ -33,7 +33,7 @@ const filterExpiryDates = async (req, res, next) => {
                 itemSellingPricePerUnit: 1,
                 expiryDate: "$itemShelfDates.expiryDate",
                 mfgDate: "$itemShelfDates.manufacturingDate",
-                expiryQuantity: "$itemShelfDates.quantity"
+                expiryQuantity: "$itemShelfDates.currentStockQuantity",
             }
         },
         

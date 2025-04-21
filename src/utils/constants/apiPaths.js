@@ -98,14 +98,12 @@ export const API_PATHS = {
   ITEMS: {
     GET_ITEMS_SKU: "/api/items/sku",
     GET_ITEM_BY_ID: "/api/item",
+    GET_ITEM_PURCHASE_BATCHES: "/api/itemPurchaseBatches",
     GET_ITEMS_STATIC_FIELDS: "/api/items/itemsStaticAttributes",
   },
   STORE: {
     GET_ALL_STORES: "/api/store",
-  },
-  DEALER: {
-    GET_ALL_DEALERS: "/api/dealer",
-    ADD_NEW_DEALER: "/api/addNewDealer",
+    GET_ITEMS_BY_STORE_ID: '/api/store/inventory/items',
   },
   COMPANY:{
     GET_ALL_COMPANY: "/api/getAllCompany"
@@ -113,4 +111,16 @@ export const API_PATHS = {
   BRAND:{
     GET_ALL_BRAND: "/api/getAllBrand"
   },
+  DEALER: {
+    GET_ALL_DEALERS: "/api/dealer",
+    ADD_NEW_DEALER: "/api/addNewDealer",
+  },
+  STOCK_TRANSACTION:{
+    PUT_UPDATE_STOCK_TRANSACTION: '/api/stock-transactions/:id/admin',
+    ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
+    UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
+    GET_STOCK_TRANSACTIONS:"/api/stockTransactions"
+
+  }
+  
 };
