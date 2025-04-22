@@ -292,7 +292,7 @@ router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
 router.post(API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEM_BATCH,isLoggedIn, createExpiryItemsBatch);
-router.put(API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION, isLoggedIn, updateStockTransactionDestination);
+router.post(API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION, isLoggedIn, updateStockTransactionDestination);
 
 router.post(
   API_PATHS.STOCK_TRANSACTION.PUT_UPDATE_STOCK_TRANSACTION,
