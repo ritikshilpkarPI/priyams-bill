@@ -183,7 +183,7 @@ export interface StockTransactionType extends Document {
   source: TransactionSource;
   destination?: TransactionDestination;
   transactionReason?: string;
-  dateOfTransaction: Date;
+  dateOfTransaction: Date | string;
   transactionStatus: string;
   hasErrors: boolean;
   approvedByAdmin: boolean;

@@ -192,6 +192,12 @@ export const router = createBrowserRouter([
         index: true,
       },
       {
+        path: ROUTES.STORE_INVENTORY_MANAGEMENT_BY_ID,
+        element: <StoreInventoryManagement />,
+        index: true,
+
+      },
+      {
         path: ROUTES.NEW_INVENTORY_PAGE,
         element: <NewInventoryPage />,
         index: true,

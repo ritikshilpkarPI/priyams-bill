@@ -18,6 +18,7 @@ import {
 import { generateColor } from 'src/utils/constants/generateColor';
 import { getStockTransactions } from 'src/utils/apiUtils';
 import DateRangePicker from 'src/components/DateRangePicker';
+import { useNavigate } from 'react-router';
 
 const StockTransactions: React.FC = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,8 @@ const StockTransactions: React.FC = () => {
   } = useSelector((state: RootState) => state.stockTransactions);
 
   const storeData = useSelector((state: RootState) => state.user.storeData);
+
+  const navigate = useNavigate();
   
   const fetchTransactions = async (targetPage: number, limit: number) => {
     dispatch(setIsLoading(true));
@@ -129,7 +132,8 @@ const StockTransactions: React.FC = () => {
   };
 
   const handleEditClick = (rowId: string) => {
-    console.log('Edit row ID:', rowId);
+    const transactionId =  rowId.split('_')[0];
+    navigate(`/storeInventoryManagement/${transactionId}`);
   };
 
   const renderTransactionId = (row: { transactionId: string; isSubRow?: boolean }) => {
@@ -149,7 +153,7 @@ const StockTransactions: React.FC = () => {
 
   const renderEditButton = (row: { _id: string; isSubRow?: boolean }) => {
     if (row.isSubRow) return null;
-
+     
     return (
       <Button
         variant="contained"

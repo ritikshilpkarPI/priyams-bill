@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
-import { Table, ActionIcon, ScrollArea, Text } from '@mantine/core';
-import { IconTrash, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import {
+  Table,
+  ActionIcon,
+  ScrollArea,
+  Text
+} from '@mantine/core';
+import {
+  IconTrash,
+  IconChevronDown,
+  IconChevronUp,
+} from '@tabler/icons-react';
 import ShelfTable from './shelfTable/ShelfTable';
 import { useSelector } from 'react-redux';
 import { CONSTANTS } from 'src/constants/constants';
 import { pascalCase } from 'src/utils/pascalCase';
+import DestinationShelfTable from './shelfTable/DestinationShelfTable';
 
 export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   items,
   onQuantityChange,
   onRemoveItem,
+  enableDestinationForm,
+  disabled = false,
 }) => {
   const [collapsedIds, setCollapsedIds] = useState<string[]>([]);
 
@@ -49,16 +61,13 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
           <tr>
             <th></th>
             <th>SKU</th>
-            <th>Barcode</th>
-            <th>
-              { `Qty ${pascalCase(transactionSource.sourceType ?? "")}`}
-            </th>
-            <th>
-              {`Qty ${pascalCase(transactionDestination.destinationType ?? "" )}`}
-            </th>
+            {!enableDestinationForm && <>  <th>Barcode</th>
+            <th>{`Qty ${pascalCase(transactionSource.sourceType ?? '')}`}</th>
+            <th>{`Qty ${pascalCase(transactionDestination.destinationType ?? '')}`}</th>
+            </>}
             <th>Expiry Batches (Qty to Add)</th>
-            <th>Total Qty to Add</th>
-            <th>Action</th>
+           {!enableDestinationForm && <> <th>Total Qty to Add</th>
+            <th>Action</th> </>}
           </tr>
         </thead>
         <tbody>
@@ -67,42 +76,61 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
             const sourceQuantity = item.itemByDate || [];
 
             return !isCollapsed ? (
-              <tr key={item.itemId}>
-                <td>
-                  <ActionIcon onClick={() => toggleCollapse(item.itemId)}>
-                    <IconChevronUp size={18} />
-                  </ActionIcon>
-                </td>
-                <td>{item.sku}</td>
-                <td>{item.itemBarcode}</td>
-                <td>{item.itemStockQuantity}</td>
-                <td>
-                  <Text>{item?.itemQtyInStore}</Text>
-                </td>
-                <td>
-                  <ShelfTable
-                    shelfList={sourceQuantity}
-                    itemId={item.itemId}
-                    handleQuantityChange={handleQuantityChange}
-                  />
-                </td>
-                <td>
-                  <span>{item.totalQtyAdd}</span>
-                </td>
-                <td>
-                  <ActionIcon
-                    variant="filled"
-                    color="red"
-                    onClick={() => onRemoveItem(item.itemId)}
-                  >
-                    <IconTrash size={18} />
-                  </ActionIcon>
-                </td>
-              </tr>
+              <React.Fragment key={item.itemId}>
+                <tr>
+                  <td>
+                    <ActionIcon
+                      onClick={() => toggleCollapse(item.itemId)}
+                      disabled={disabled}
+                    >
+                      <IconChevronUp size={18} />
+                    </ActionIcon>
+                  </td>
+                  <td>{item.sku}</td>
+                { !enableDestinationForm && <>  <td>{item.itemBarcode}</td>
+                  <td>{item.itemStockQuantity}</td>
+                  <td>{item.itemQtyInStore}</td> </>}
+                  <td>
+                    {enableDestinationForm ? (
+                      <DestinationShelfTable
+                        shelfList={sourceQuantity}
+                        itemId={item.itemId}
+                      />
+                    ) : (
+                      <ShelfTable
+
+                        shelfList={sourceQuantity}
+                        itemId={item.itemId}
+                        handleQuantityChange={handleQuantityChange}
+                      />
+                    )}
+                   
+                  </td>
+                { !enableDestinationForm && <>  <td>{item.totalQtyAdd}</td>
+                  <td>
+                  
+                    <ActionIcon
+                      variant="filled"
+                      color="red"
+                      onClick={() => onRemoveItem(item.itemId)}
+                      disabled={disabled}
+                    >
+                      <IconTrash size={18} />
+                    </ActionIcon>
+                  </td>
+                  </>}
+                </tr>
+             
+            
+
+              </React.Fragment>
             ) : (
               <tr key={item.itemId}>
                 <td>
-                  <ActionIcon onClick={() => toggleCollapse(item.itemId)}>
+                  <ActionIcon
+                    onClick={() => toggleCollapse(item.itemId)}
+                    disabled={disabled}
+                  >
                     <IconChevronDown size={18} />
                   </ActionIcon>
                 </td>
