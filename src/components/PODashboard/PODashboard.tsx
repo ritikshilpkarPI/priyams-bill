@@ -30,10 +30,10 @@ const PurchaseOrderDashboard: React.FC = () => {
       totalProfitMargin += profitMargin;
     }    
 
-    if (item.item_id) {
-      existingItemsCount++;
-    } else {
+    if (!item.item_id || item?.newItem) {
       newItemsCount++;
+    } else {
+      existingItemsCount++;
     }
 
     if (item.expiryDates && item.expiryDates.length > 0) {
