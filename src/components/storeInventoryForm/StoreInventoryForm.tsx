@@ -41,6 +41,7 @@ interface StoreInventoryFormProps {
   warehouseData: { value: string; label: string }[];
   sourceStaff: { value: string; label: string }[];
   destinationStaff: { value: string; label: string }[];
+  disabled?: boolean;
 }
 
 const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
@@ -50,6 +51,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
   warehouseData,
   sourceStaff,
   destinationStaff,
+  disabled = false,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
@@ -255,6 +257,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                   onSelectSource('sourceType', value ?? '');
                 }}
                 data={sourceTypeData}
+                disabled={disabled}
               />
             </Grid.Col>
 
@@ -268,6 +271,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                     onSelectSource('sourceEntityId', value ?? '')
                   }
                   data={sourceEntityData}
+                  disabled={disabled}
                 />
               </Grid.Col>
             )}
@@ -282,6 +286,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                   onChange={(value) =>
                     onChangeSource('sourceStaff', value ?? '')
                   }
+                  disabled={disabled}
                 />
               </Grid.Col>
             )}
@@ -297,6 +302,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                     event.currentTarget.value ?? ''
                   )
                 }
+                disabled={disabled}
               />
             </Grid.Col>
           </Grid>
@@ -320,6 +326,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                 radius="xl"
                 color="indigo"
                 onClick={() => {
+                  if(disabled) return;
                   dispatch(getSwap());
                   dispatch(resetStoreInventory());
                 }}
@@ -344,6 +351,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                   value={stockTransaction.transactionReason}
                   data={Object.values(CONSTANTS.TRANSACTION_REASON)}
                   onChange={(value) => dispatch(setTransactionReason(value))}
+                  disabled={disabled}
                 />
               </Box>
             </Grid.Col>
@@ -384,6 +392,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                   onSelectdestination('destinationType', value ?? '');
                 }}
                 data={destinationTypeData}
+                disabled={disabled}
               />
             </Grid.Col>
 
@@ -398,6 +407,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                     onSelectdestination('destinationEntityId', selectedValue);
                   }}
                   data={destinationEntityData}
+                  disabled={disabled}
                 />
               </Grid.Col>
             )}
@@ -408,7 +418,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                 <Grid.Col span={12}>
                   <TextInput
                     label="Dealer number"
-                    disabled
+                    disabled={disabled}
                     value={
                       dealers.find(
                         (dealer) =>
@@ -416,6 +426,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                           stockTransaction.destination.destinationEntityId
                       )?.dealerNumber || ''
                     }
+                    
                   />
                 </Grid.Col>
               ) : (
@@ -428,6 +439,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                     onChange={(value) =>
                       onChangeDestination('destinationStaff', value ?? '')
                     }
+                    disabled={disabled}
                   />
                 </Grid.Col>
               ))}
@@ -443,6 +455,7 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
                     event.currentTarget.value ?? ''
                   )
                 }
+                disabled={disabled}
               />
             </Grid.Col>
           </Grid>
