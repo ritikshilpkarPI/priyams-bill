@@ -78,6 +78,7 @@ const {
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
   markExpiryItemsBatchCleared,
+  bulkApproveStockTransactions
 } = require('../controllers/index');
 
 
@@ -311,5 +312,11 @@ router.get(API_PATHS.EXPIRED_ITEMS_BATCH.GET_ALL_EXPIRED_ITEMS_BATCH, getAllExpi
 router.get(`${API_PATHS.EXPIRED_ITEMS_BATCH.GET_EXPIRED_ITEMS_BATCH_BY_ID}/:id`, getExpiryItemsBatchById);
 
 router.post(`${API_PATHS.EXPIRED_ITEMS_BATCH.MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID}/:id`, markExpiryItemsBatchCleared);
+
+router.post(
+  API_PATHS.STOCK_TRANSACTION.POST_BULK_APPROVE_STOCK_TRANSACTIONS,
+  isLoggedIn,
+  bulkApproveStockTransactions
+);
 
 export default router;
