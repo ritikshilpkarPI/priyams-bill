@@ -104,6 +104,7 @@ export const API_PATHS = {
   STORE: {
     GET_ALL_STORES: "/api/store",
     GET_ITEMS_BY_STORE_ID: '/api/store/inventory/items',
+    GET_STORE_INVENTORY_MANAGEMENT: '/api/store/inventory',
   },
   COMPANY:{
     GET_ALL_COMPANY: "/api/getAllCompany"
@@ -119,8 +120,9 @@ export const API_PATHS = {
     PUT_UPDATE_STOCK_TRANSACTION: '/api/stock-transactions/:id/admin',
     ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
     UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
-    GET_STOCK_TRANSACTIONS:"/api/stockTransactions"
-
+    GET_STOCK_TRANSACTIONS:"/api/stockTransactions",
+    UPDATE_STOCK_TRANSACTION_BY_DESTINATION: "/api/stockTransaction/updateStockTransactionByDestination",
+    APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
   }
   
 };

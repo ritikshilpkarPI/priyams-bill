@@ -494,6 +494,7 @@ declare global {
       errorQty?: number;
       isResolved: boolean;
     };
+    statusMessage?: string;
   }
   interface TransactionItemType {
     itemId: string;
@@ -507,6 +508,9 @@ declare global {
     itemShelfDates: ItemShelfDate[];
     totalQtyAdd: number;
     sku: string;
+    destinationRemark?: string;
+    sourceRemark?: string;
+    error?: any;
   }
   interface StockTransactionType {
   transactionType: string;
@@ -740,6 +744,8 @@ declare global {
       shelfId?: string 
     ) => void;
     onRemoveItem: (itemId: string) => void;
+    enableDestinationForm?: boolean;
+    disabled?: boolean;
   }
   interface ShelfLifeInfoProps {
     expiryDate: {

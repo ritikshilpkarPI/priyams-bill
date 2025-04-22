@@ -597,3 +597,65 @@ export const addNewStockTransactionsAPI = async (
 
 
 }
+
+
+export const getStockTransactionsApi = async (
+  transactionsId: string
+) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,
+      data: {
+        transactionId: [transactionsId],
+      }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const updateStockTransactionsAPI = async (
+  transactionsId: string,
+  itemByDate: any,
+) => {
+
+   const data = {
+    transactionId: transactionsId,
+    itemByDate,
+  };
+  try {
+
+  const response = await postAPI({
+    path: API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION,
+    data,
+  });
+  return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+
+}
+
+
+export const approveStockTransactionsAPI = async (
+  transactionsId: string,
+  approvedByAdmin: boolean,
+  adminRemark: string,
+  stockTransaction: StockTransactionType
+) => {
+     const data = {
+      transactionId: transactionsId,
+      adminRemark,
+      stockTransaction
+      };
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.PUT_UPDATE_STOCK_TRANSACTION,
+      data,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
