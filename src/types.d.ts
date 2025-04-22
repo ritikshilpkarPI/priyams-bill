@@ -618,6 +618,134 @@ declare global {
     value: string;
     label: string;
   };
+
+  interface ExpiryImage {
+    publicId: string;
+    secureUrl: string;
+  }
+  
+   interface ExpiryStatusHistory {
+    status: string;
+    staffId: string;
+    dateTime: string;
+    browser?: string;
+    os?: string;
+    ipReferrer?: string;
+    statusChangeRemark?: string;
+  }
+  
+  interface ExpiryClearanceDetails {
+    clearanceReason?: string;
+    clearedOn?: string;
+    clearancePurchaseOrderId?: string;
+    dealerId?: string;
+    clearanceRemark?: string;
+  }
+  
+  interface ExpiryDealerIdType {
+    _id: string;
+    dealerName: string;
+    dealerBrands: string[];
+    dealerCompanies: string[];
+    dealerNumber: number;
+    createdAt: string;
+    updatedAt: string; 
+    __v: number;
+  }
+  
+  interface ExpiryItemIdType{
+    minimumStockQuantity: number;
+    itemPerUnitDiscountPercentage: number;
+    slabPricing: any[]; 
+    minStockReached: boolean;
+    returnPolicyAvailable: boolean;
+    freeItemsAvailable: boolean;
+    _id: string;
+    itemBarcode: string;
+    itemName: string;
+    itemPerUnitQuantity: number;
+    quantityUnitName: string;
+    itemMRPperUnit: number;
+    itemCostPricePerUnit: number;
+    itemSellingPricePerUnit: number;
+    itemBrandName: string;
+    itemCategory: string;
+    subCategory: string;
+    itemStockQuantity: number;
+    companyName: string;
+    flavourOrFeature: string;
+    isDeleted: boolean;
+    sku: string;
+    itemDiscountPerUnit: number;
+    saleTime: string;
+    permanentlyOutOfStock: boolean;
+    __v: number;
+    createdAt: string; 
+    updatedAt: string; 
+    brandId: string;
+    useByDate: string[];
+    images: string[];
+    itemShelfDates: string[]; 
+    expiryDates: string[];
+  }
+  
+  interface ExpiryItemType {
+    itemId: ExpiryItemIdType;
+    expiryDate?: string;
+    quantity: number;
+    purchaseOrderId?: string;
+    costPricePerUnit?: number;
+    totalCostPrice?: number;
+  }
+  
+  interface ExpiryItemWiseTotalCost {
+    itemId: ExpiryItemIdType;
+    itemTotalCost: number;
+  }
+  
+  interface ExpiredItem {
+    _id: string;
+    boxId: string;
+    dealerId: ExpiryDealerIdType;
+    stockTransactionId?: string;
+    expiryImages: ExpiryImage[];
+    expiryBatchCost?: number;
+    status: string;
+    statusHistory: ExpiryStatusHistory[];
+    clearanceDetails?: ExpiryClearanceDetails;
+    isCleared?: boolean;
+    items: ExpiryItemType[];
+    itemWiseTotalCost: ExpiryItemWiseTotalCost[];
+    createdAt: string;
+    updatedAt: string;
+  }
+  
+  interface ExpiredItemsStateType {
+    data: ExpiredItem[];
+    loading: boolean;
+    error: string | null;
+    pagination: {
+      page: number;
+      limit: number;
+      totalPages: number;
+      total: number;
+    };
+  }
+  interface ExpiryItemsQueryParams {
+    page?: number;
+    limit?: number;
+    dealerId?: string;
+    purchaseOrderId?: string;
+    itemId?: string;
+    clearanceReason?: string;
+    status?: string;
+    expiryDateFrom?: string;
+    expiryDateTo?: string;
+    manufacturingDateFrom?: string;
+    manufacturingDateTo?: string;
+    createdAtFrom?: string;
+    createdAtTo?: string;
+  }
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

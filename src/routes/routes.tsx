@@ -160,6 +160,11 @@ export const router = createBrowserRouter([
             element: <ExpiryItemsBatch />,
             index: true,
           },         
+          {
+            path: ROUTES.EXPIRY_ITEMS_BATCH_BY_ID,
+            element: <ExpiryItemsBatch />,
+            index: true,
+          },      
         ]
       },
       {

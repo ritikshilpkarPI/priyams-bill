@@ -479,3 +479,36 @@ export const addNewDealerAPI = async (
     return { isError: true, error };
   }
 };
+
+export const getAllExpiryItemsBatchAPI = async (queryParams: ExpiryItemsQueryParams = {}) => {
+  try {
+    const queryString = new URLSearchParams(
+      Object.entries(queryParams).reduce((acc, [key, value]) => {
+        if (value !== undefined && value !== null) {
+          acc[key] = String(value);
+        }
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+
+    const pathWithQuery = `${API_PATHS.EXPIRED_ITEMS_BATCH.GET_ALL_EXPIRED_ITEMS_BATCH}?${queryString}`;
+
+    const response = await getAPI({ path: pathWithQuery });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const getExpiryItemsBatchByIdAPI = async (
+  id: string
+) => {
+  try {
+    const response = await getAPI({
+      path: `${API_PATHS.EXPIRED_ITEMS_BATCH.GET_EXPIRED_ITEMS_BATCH_BY_ID}/${id}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};

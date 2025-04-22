@@ -13,6 +13,7 @@ import staffSlice from "./staffList/StaffSlice";
 import expiredItemsSlice from './expiredItems/expiredItemsSlice'
 import purchaseListApprovalSlice from './purchaseListApproval/purchaseListApprovalSlice'
 import dealerSlice from './dealerlist/dealerSlice';
+import expiredItemsBatchSlice from './expiredItemsBatch/ExpiredItemsBatchSlice'
 
 export const store = configureStore({
   reducer: {
@@ -29,7 +30,8 @@ export const store = configureStore({
     company: companySlice,
     staffs: staffSlice,
     expiredItems: expiredItemsSlice,
-    purchaseListApproval:purchaseListApprovalSlice
+    purchaseListApproval:purchaseListApprovalSlice,
+    expiredItemsBatch: expiredItemsBatchSlice,
   },
 });
 

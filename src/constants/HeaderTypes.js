@@ -36,7 +36,7 @@ export const sidebarListData = [
       },
       {
         name: 'Expired Items',
-        url: '/expiredItemList',
+        url: '/expiry-items-batch',
         icon: 'images/expireIcon.svg',
       },
       {
