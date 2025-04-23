@@ -425,7 +425,7 @@ const StoreInventoryManagement: React.FC = () => {
               w="100%"
               onClick={onSubmitTransaction}
             >
-              Transfer Inventory
+              Create Transaction
             </Button>
           </Grid.Col>
         )}
