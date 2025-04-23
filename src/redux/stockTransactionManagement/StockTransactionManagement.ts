@@ -91,6 +91,8 @@ const stockTransactionSlice = createSlice({
         destinationType: '',
         destinationRemark: '',
       };
+      state.approvedByAdmin = false;
+      state.transactionReason = '';
       
     },
     removeTransactionItem: (state, action) => {

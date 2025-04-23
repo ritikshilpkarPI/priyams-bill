@@ -45,7 +45,7 @@ export const sidebarListData = [
         url: '/barcodePrint',
         icon: 'images/barcode.svg',
       },
-      { name: 'Store Inventory Management', url: '/storeInventoryManagement', icon: 'images/inventory-management.svg' },
+      { name: 'New Transaction', url: '/storeInventoryManagement', icon: 'images/inventory.png' },
       {
         name: 'Stock Transaction',
         url: '/stockTransactions',
