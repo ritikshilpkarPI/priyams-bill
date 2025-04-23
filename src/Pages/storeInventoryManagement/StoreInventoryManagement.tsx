@@ -316,10 +316,13 @@ const StoreInventoryManagement: React.FC = () => {
       { ...stockTransaction, approvedByAdmin: approveByAdmin }
     );
 
-    if (response.success) {
+    if (response.success && approveByAdmin) {
       toast.success('Transaction approved successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
+    }
+    if (response.success && !approveByAdmin) {
+      toast.success('Transaction updated successfully');
     }
   };
 
@@ -426,7 +429,6 @@ const StoreInventoryManagement: React.FC = () => {
               loading={loading}
               w="100%"
               onClick={onSubmitTransaction}
-              disabled={!isAdminUser}
             >
               Transfer Inventory
             </Button>
