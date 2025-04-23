@@ -78,6 +78,20 @@ const stockTransactionSlice = createSlice({
     },
     resetStoreInventory: (state) => {
       state.transactionItems = [];
+      state.transactionType = 'IN';
+      state.source = {
+        sourceStaff: '',
+        sourceEntityId: '',
+        sourceType: '',
+        sourceRemark: '',
+      };
+      state.destination = {
+        destinationStaff: '',
+        destinationEntityId: '',
+        destinationType: '',
+        destinationRemark: '',
+      };
+      
     },
     removeTransactionItem: (state, action) => {
       state.transactionItems = state.transactionItems.filter(
