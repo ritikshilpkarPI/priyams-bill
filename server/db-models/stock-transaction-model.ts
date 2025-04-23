@@ -16,6 +16,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       sourceEntityId: {
         type: Schema.Types.ObjectId,
         ref: 'Store',
+        required: false
       },
       sourceType: { type: String },
       sourceRemark: {

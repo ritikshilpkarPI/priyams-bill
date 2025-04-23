@@ -303,12 +303,12 @@ const StoreInventoryManagement: React.FC = () => {
     }
   };
 
-  const onApproveByAdmin = async () => {
+  const onApproveByAdmin = async (approveByAdmin: boolean) => {
     const response = await approveStockTransactionsAPI(
       transactionId ?? '',
       true,
       stockTransaction.adminRemark ?? '',
-      { ...stockTransaction, approvedByAdmin: true }
+      { ...stockTransaction, approvedByAdmin: approveByAdmin }
     );
 
     if (response.success) {
@@ -457,15 +457,31 @@ const StoreInventoryManagement: React.FC = () => {
               error={errors.adminRemark}
               disabled={stockTransaction?.approvedByAdmin}
             />
+            <Flex
+              gap="sm"
+              justify="space-between"
+              align="center"
+              mt={20}
+              >
             <Button
               loading={loading}
               w="100%"
-              onClick={onApproveByAdmin}
+              onClick={()=> onApproveByAdmin(true)}
               color="green"
               disabled={stockTransaction?.approvedByAdmin}
             >
               {stockTransaction?.approvedByAdmin ? 'Approved' : 'Approve'}
             </Button>
+            <Button
+              loading={loading}
+              w="100%"
+              onClick={()=> onApproveByAdmin(false)}
+              color="blue"
+              disabled={stockTransaction?.approvedByAdmin}
+            >
+              {stockTransaction?.approvedByAdmin ? 'Approved' : 'Update'}
+            </Button>
+            </Flex>
           </Grid.Col>
         )}
       </Grid>
