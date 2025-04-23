@@ -6,6 +6,8 @@ export const TransactionTableConstants = Object.freeze({
         minWidth: 180,},
       { key: 'sku', label: 'SKU' },
       { key: 'price', label: 'Price' },
+      { key: 'destinationStore', label: 'Destination Store' },
+      { key: 'sourceStore', label: 'Source Store' },
       { key: 'qty', label: 'Source Qty' },
       { key: 'sourceExpiry', label: 'Source Expiry' },
       { key: 'sourceMfg', label: 'Source Mfg' },

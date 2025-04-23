@@ -79,6 +79,8 @@ const stockTransactionsSlice = createSlice({
             adminRemark: txn.adminRemark,
             dateOfTransaction: formatDateTime(txn.dateOfTransaction),
             isSubRow: false,
+            sourceStore: txn.source?.sourceEntityId?.name + '-' + txn.source?.sourceEntityId?.pincode,
+            destinationStore: txn.destination?.destinationEntityId?.name + '-' + txn.destination?.destinationEntityId?.pincode,
           });
     
           if (expandedSet.has(mainRowId) && subRows.length > 0) {

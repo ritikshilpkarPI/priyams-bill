@@ -15,6 +15,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       },
       sourceEntityId: {
         type: Schema.Types.ObjectId,
+        ref: 'Store',
       },
       sourceType: { type: String },
       sourceRemark: {
@@ -28,6 +29,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       },
       destinationEntityId: {
         type: Schema.Types.ObjectId,
+        ref: 'Store',
       },
       destinationType: { type: String },
       destinationRemark: {
