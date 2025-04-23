@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography, Box, Button } from '@mui/material';
 import DataTable from './DataTable';
 import { formatShortDate } from '../utils/formatDate';
+import { InventoryTableRow, PurchaseEntry } from 'src/types';
 
 const ItemPurchaseOrdersPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { item, purchases } = location.state || {};
+  const { item , purchases } = location.state as {item:  InventoryTableRow, purchases: PurchaseEntry[] } || {};
+  
+  const rowsWithId = useMemo(
+    () =>
+      purchases.map((row) => ({
+        ...row,
+        _id: row.purchaseOrderId,
+      })),
+    [purchases],
+  );
 
   const columns = [
     {
@@ -17,7 +27,7 @@ const ItemPurchaseOrdersPage: React.FC = () => {
     {
       key: 'purchaseDate',
       label: 'Purchase Date',
-      render: (row: any) => formatShortDate(row.purchaseDate),
+      render: (row: PurchaseEntry) => formatShortDate(row.purchaseDate),
     },
     {
       key: 'cp',
@@ -34,12 +44,12 @@ const ItemPurchaseOrdersPage: React.FC = () => {
     {
       key: 'manufacturing',
       label: 'MFG Date',
-      render: (row: any) => formatShortDate(row.manufacturing),
+      render: (row: PurchaseEntry) => formatShortDate(row.manufacturing),
     },
     {
       key: 'expiry',
       label: 'Expiry Date',
-      render: (row: any) => formatShortDate(row.expiry),
+      render: (row: PurchaseEntry) => formatShortDate(row.expiry),
     },
     {
       key: 'totalStockQty',
@@ -71,7 +81,7 @@ const ItemPurchaseOrdersPage: React.FC = () => {
 
       <DataTable
         columns={columns}
-        data={purchases || []}
+        data={rowsWithId || []}
         isLoading={false}
         order={'asc'}
         orderBy={'purchaseDate'}
@@ -81,7 +91,6 @@ const ItemPurchaseOrdersPage: React.FC = () => {
         onPageChange={() => {}}
         onRowsPerPageChange={() => {}}
         rowCount={purchases?.length || 0}
-        paginationMode="client"
       />
     </Box>
   );

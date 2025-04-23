@@ -1065,6 +1065,47 @@ declare module '*.sass' {
   export default content;
 }
 
+export interface StaticItemData {
+  _id: string;                          // MongoDB ObjectId as string
+  itemBarcode: string;                  // EAN / UPC
+  itemName: string;
+  itemPerUnitQuantity: number;          // e.g. 35
+  quantityUnitName: string;             // "g", "ml", "pcs"…
+  itemMRPperUnit: number;               // Maximum retail price
+  itemBrandName: string;                // "CADBURY"
+  itemCategory: string;                 // "Packaged Food"
+  subCategory: string;                  // "Chocolates & Candies"
+  companyName: string;                  // Manufacturer / brand owner
+  flavourOrFeature: string;             // empty string allowed
+  sku: string;                          // human-readable composite key
+  saleTime: 'daily' | 'weekly' | 'monthly' | 'yearly' | string;
+  images: string[];                     // array of image URLs or keys
+}
+
+export interface PurchaseEntry {
+  cp: number;                           // cost price
+  sp: number;                           // selling price (may == MRP)
+  manufacturing: string;                // ISO date string (UTC)
+  expiry: string;                       // ISO date string (UTC)
+  qty: number;                          // purchased quantity in units
+  totalStockQty: number | null;         // live stock after this PO
+  purchaseDate: string;                 // ISO date string (UTC)
+  totalShelfLife: string;               // pre-calculated text e.g. "8 months"
+  leftShelfLife: string;                // e.g. "5 months, 7 days"
+  purchaseOrderId: string;              // FK to purchase-orders collection
+  poApproveTime: string;                // ISO date string (UTC)
+}
+
+export interface InventoryRow {
+  staticData: StaticItemData;
+  purchases: PurchaseEntry[];
+}
+
+export type InventoryTableRow = Omit<StaticItemData, '_id'> & {
+  _id: string;                
+  purchases: PurchaseEntry[]; 
+};
+
 export {};
 
 

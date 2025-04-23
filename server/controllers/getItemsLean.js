@@ -2,12 +2,13 @@ const { getStoreInventoryModel } = require('../db-models/storeInventory-model');
 const { Item } = require('../db-models/item-model');
 const { StoreModel } = require('../db-models/store-model');
 const { MESSAGES } = require('../constants/messages');
+const { default: mongoose } = require('mongoose');
 
 const getItemsLean = async (req, res, next) => {
   const { pincode, storeCode, storeId } = req.query;
 
   let store;
-  if (storeId) {
+  if (storeId && mongoose.isValidObjectId(storeId)) {
     store = await StoreModel.findById(storeId);
   } else if (storeCode) {
     store = await StoreModel.findOne({ code: storeCode});
