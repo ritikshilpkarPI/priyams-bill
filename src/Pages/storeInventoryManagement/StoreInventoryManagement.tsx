@@ -322,6 +322,7 @@ const StoreInventoryManagement: React.FC = () => {
 useEffect(() => {  
   if (!transactionId) {
     dispatch(resetStoreInventory());
+    dispatch(resetStoreStockInventory());
   }
 }, [transactionId]);  
 
