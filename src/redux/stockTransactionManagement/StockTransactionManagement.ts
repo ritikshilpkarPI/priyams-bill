@@ -175,10 +175,10 @@ const stockTransactionSlice = createSlice({
       if (approvedByAdmin !== undefined) state.approvedByAdmin = approvedByAdmin;
       if (adminRemark !== undefined) state.adminRemark = adminRemark;
       if (transactionReason !== undefined) state.transactionReason = transactionReason;
-    
+          
       if (source) {
         if (source.sourceType !== undefined) state.source.sourceType = source.sourceType;
-        if (source.sourceEntityId !== undefined) state.source.sourceEntityId = source.sourceEntityId;
+        if (source.sourceEntityId !== undefined) state.source.sourceEntityId = source.sourceEntityId._id;
         if (source.sourceStaff?._id) state.source.sourceStaff = source.sourceStaff._id;
         if (source.sourceRemark !== undefined) state.source.sourceRemark = source.sourceRemark;
       }
@@ -187,7 +187,7 @@ const stockTransactionSlice = createSlice({
         if (destination.destinationType !== undefined)
           state.destination.destinationType = destination.destinationType;
         if (destination.destinationEntityId !== undefined)
-          state.destination.destinationEntityId = destination.destinationEntityId;
+          state.destination.destinationEntityId = destination.destinationEntityId._id;
         if (destination.destinationStaff?._id)
           state.destination.destinationStaff = destination.destinationStaff._id;
         if (destination.destinationRemark !== undefined)
