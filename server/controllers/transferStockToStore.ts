@@ -35,8 +35,8 @@ export const transferStockToStore = async (
       }
 
       const item = await Item.findOne({ _id:itemId });
-      if (!item || item.itemStockQuantity < quantity) {
-        return res.status(400).json({ message: MESSAGES.INSUFFICIENT_STOCK, success: false });
+      if (!item) {
+        return res.status(400).json({ message: MESSAGES.NO_ITEMS_FOUND, success: false });
       }
 
       let storeItem = await StoreInventory.findOne({ itemId });

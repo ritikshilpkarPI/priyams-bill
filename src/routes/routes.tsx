@@ -32,7 +32,8 @@ import {
   ItemPurchaseOrdersPage,
   AllBills,
   StoreInventory,
-  StockTransactions
+  StockTransactions,
+  ExpiryItemsBatch,
 } from '../Pages';
 import App from '../App';
 
@@ -158,7 +159,16 @@ export const router = createBrowserRouter([
             element: <NewPurchaseOrder />,
             index: true,
           },
-         
+          {
+            path: ROUTES.EXPIRY_ITEMS_BATCH,
+            element: <ExpiryItemsBatch />,
+            index: true,
+          },         
+          {
+            path: ROUTES.EXPIRY_ITEMS_BATCH_BY_ID,
+            element: <ExpiryItemsBatch />,
+            index: true,
+          },      
         ]
       },
       {

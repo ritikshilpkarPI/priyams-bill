@@ -95,6 +95,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                       <DestinationShelfTable
                         shelfList={sourceQuantity}
                         itemId={item.itemId}
+                        disabled={disabled}
                       />
                     ) : (
                       <ShelfTable

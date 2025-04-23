@@ -7,6 +7,7 @@ import { updateTransactionItemShelfField } from 'src/redux/stockTransactionManag
 type DestinationShelfTableProps = {
   shelfList: any[];
   itemId: any;
+  disabled?: boolean;
 };
 
 const formatDate = (dateStr: string): string =>
@@ -15,6 +16,7 @@ const formatDate = (dateStr: string): string =>
 const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
   shelfList,
   itemId,
+  disabled = false,
 }) => {
   const dispatch = useDispatch();
 
@@ -57,6 +59,7 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
         {shelfList.map((shelf, index) => {
           const destQty = shelf.destinationQuantity?.qty ?? 0;
           const status = shelf.statusMessage;
+          const isQtyMatched = destQty === shelf.sourceQuantity?.qty;
 
           return (
             <tr key={`${itemId._id}-dest-${index}`}>
@@ -71,6 +74,7 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     handleChange(index, 'qty', Number(e.target.value), shelf.shelfId)
                   }
+                  disabled={disabled}
                 />
               </td>
               <td>
@@ -80,15 +84,16 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
                   onChange={(e) =>
                     handleChange(index, 'remark', e.currentTarget.value, shelf.shelfId)
                   }
+                  disabled={disabled}
                 />
               </td>
               <td>
                 <Text
                   size="xs"
-                  color={status === 'Matched' ? 'green' : 'red'}
+                  color={isQtyMatched ? 'green' : 'red'}
                   weight={500}
                 >
-                  {status === 'Matched' ? '✅ Matched' : '❌ Qty mismatch'}
+                  {isQtyMatched ? '✅ Matched' : '❌ Qty mismatch'}
                 </Text>
               </td>
             </tr>

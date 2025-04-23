@@ -124,6 +124,8 @@ export const API_PATHS = {
     GET_STOCK_TRANSACTIONS:"/api/stockTransactions",
     UPDATE_STOCK_TRANSACTION_BY_DESTINATION: "/api/stockTransaction/updateStockTransactionByDestination",
     APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
+    POST_BULK_APPROVE_STOCK_TRANSACTIONS: "/api/stockTransaction/bulkApproveStockTransactions",
+
     MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" 
   },
   EXPIRED_ITEMS_BATCH: {
