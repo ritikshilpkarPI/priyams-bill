@@ -78,7 +78,7 @@ const {
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
   markExpiryItemsBatchCleared,
-  bulkApproveStockTransactions
+  bulkApproveStockTransactions,
   updateItemMismatchInStock,
 } = require('../controllers/index');
 
