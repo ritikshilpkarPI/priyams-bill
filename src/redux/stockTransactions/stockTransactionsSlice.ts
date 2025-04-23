@@ -3,7 +3,7 @@ import { formatDateTime } from 'src/utils/formatDate';
 
 
 const initialState: TransactionState = {
-  rawData: {},
+  rawData: {} ,
   transformedData: [],
   expandedRows: [],
   isLoading: false,
@@ -18,7 +18,7 @@ const stockTransactionsSlice = createSlice({
   name: 'stockTransactions',
   initialState,
   reducers: {
-    setRawData(state, action: PayloadAction<{ page: number; data: any[] }>) {
+    setRawData(state, action: PayloadAction<{ page: string; data: any[] }>) {
       const { page, data } = action.payload;
       state.rawData[page] = data;  
     },
@@ -32,9 +32,8 @@ const stockTransactionsSlice = createSlice({
         : [...state.expandedRows, rowId];
     },
     transformData(state) {
-      const transformed = [];
+      const transformed: any[] = [];
       const expandedSet = new Set(state.expandedRows);
-    
       const allPages = Object.values(state.rawData).flat();
     
       let txnIndex = 0;
@@ -44,6 +43,7 @@ const stockTransactionsSlice = createSlice({
       while (txnIndex < allPages.length) {
         const txn = allPages[txnIndex];
         const transactionId = txn.transactionSlug;
+        const id=txn._id;
         const items = txn.transactionItems ?? [];
     
         if (itemIndex >= items.length) {
@@ -55,11 +55,10 @@ const stockTransactionsSlice = createSlice({
     
         const item = items[itemIndex];
         const itemId = item?.itemId?._id ?? `item_${itemIndex}`;
-        const mainRowId = `${transactionId}_${itemId}`;
-        const isCurrentPage = state.rawData[state.page]?.includes(txn);
+        const mainRowId = `${id}_${itemId}`;
         const subRows = item.itemByDate ?? [];
     
-        if (subIndex === -1 && isCurrentPage) {
+        if (subIndex === -1) {
           transformed.push({
             _id: mainRowId,
             transactionId,
@@ -91,7 +90,7 @@ const stockTransactionsSlice = createSlice({
           }
         }
     
-        if (expandedSet.has(mainRowId) && subIndex >= 0 && subIndex < subRows.length) {
+        if (subIndex >= 0 && subIndex < subRows.length) {
           const dateData = subRows[subIndex];
     
           transformed.push({

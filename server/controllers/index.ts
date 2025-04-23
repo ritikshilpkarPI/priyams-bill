@@ -61,14 +61,19 @@ import { getAllCompanies } from './getAllCompanies';
 import { getAllBrands } from './getAllBrand';
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
+import { createExpiryItemsBatch } from "./createExpiryItemsBatch";
 import { itemsStaticAttributes } from "./itemsStaticAttributes";
 import { updateStockTransactionDestination } from "./updateStockTransactionDestination";
 import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
 import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
+import { bulkApproveStockTransactions } from "./bulkApproveStockTransactions"
 import { itemPurchaseBatches } from './itemPurchaseBatches';
-
+import { getAllExpiryItemsBatch } from "./getAllExpiryItemsBatch";
+import { getExpiryItemsBatchById } from "./getExpiryItemsBatchById";
+import { markExpiryItemsBatchCleared } from "./markExpiryItemsBatchCleared"
+import { updateItemMismatchInStock } from "./updateItemMismatchInStock";
 
 export {
   addBulkItems,
@@ -134,11 +139,17 @@ export {
   getAllBrands,
   getAllDealers,
   addNewDealer,
+  createExpiryItemsBatch,  
   itemsStaticAttributes,
   updateStockTransactionDestination,
   updateStockTransactionByAdmin,
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
-  getStockTransactions
+  getStockTransactions,  
+  getAllExpiryItemsBatch,
+  getExpiryItemsBatchById,
+  markExpiryItemsBatchCleared,  
+  bulkApproveStockTransactions,
+  updateItemMismatchInStock,
 };

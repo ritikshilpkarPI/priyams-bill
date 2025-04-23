@@ -21,7 +21,7 @@ export const getPODashboardMetrics = (items: PurchasedItemDetailFormType[]) => {
       totalProfitMargin += profitMargin;
     }
 
-    if (item.item_id) {
+    if (item.item_id || !(item?.newItem)) {
       existingItemsCount++;
     } else {
       newItemsCount++;
