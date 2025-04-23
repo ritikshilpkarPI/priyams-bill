@@ -17,6 +17,7 @@ import purchaseListApprovalSlice from './purchaseListApproval/purchaseListApprov
 import stockTransactionsReducer from './stockTransactions/stockTransactionsSlice';
 import stockTransactionSlice from './stockTransactionManagement/StockTransactionManagement'
 import expiredItemsBatchSlice from './expiredItemsBatch/ExpiredItemsBatchSlice'
+import inventoryReducer from './inventoryPage/inventorySlice';
 
 export const store = configureStore({
   reducer: {
@@ -38,6 +39,7 @@ export const store = configureStore({
     purchaseListApproval:purchaseListApprovalSlice,
     stockTransactions: stockTransactionsReducer,
     expiredItemsBatch: expiredItemsBatchSlice,
+    inventory: inventoryReducer
   },
 });
 
