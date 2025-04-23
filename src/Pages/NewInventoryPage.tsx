@@ -3,56 +3,67 @@ import { Typography, Box, CircularProgress } from '@mui/material';
 import { itemPurchaseBatches } from '../utils/apiUtils';
 import DataTable from './DataTable';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import {
+  setIsLoading,
+  setPage,
+  setRowCount,
+  setRowsPerPage,
+  putPageInCache,
+  showRows,
+} from 'src/redux/inventoryPage/inventorySlice';
+import { useSelector } from 'react-redux';
+import { InventoryRow, InventoryTableRow } from 'src/types';
 
 const NewInventoryPage: React.FC = () => {
-  const [items, setItems] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = useState<string>('itemName');
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const [rowCount, setRowCount] = useState<number>(0);
-
+  const dispatch = useDispatch();
+  const { cache, items, page, rowsPerPage, rowCount, isLoading } = useSelector(
+    (state: RootState) => state.inventory
+  );
   const navigate = useNavigate();
-
+  /* key that uniquely describes the request */
+  const cacheKey = `${rowsPerPage}-${page}`;
   const getItemPurchaseBatches = async () => {
+    const rowsInCache = cache[cacheKey];
+
+    if (rowsInCache) {
+      dispatch(showRows(rowsInCache));
+      return;
+    }
     try {
-      setIsLoading(true);
-      const itemData = await itemPurchaseBatches(page + 1, rowsPerPage);
+      const res = await itemPurchaseBatches(page + 1, rowsPerPage);
+      const data = res.data as Record<string, InventoryRow> ;
+      const rows : InventoryTableRow [] = Object.values(data).map(
+        (entry , idx: number) => {
+          const { _id : _ , ...restStaticData } = entry.staticData
+          return {
+          _id: entry.staticData._id ?? `row-${page}-${idx}`,
+          ...restStaticData,
+          purchases: entry.purchases ?? [],
+        }},
+      );
 
-      const staticRows: any[] = Object.values(itemData.data).map((entry: any, index: number) => ({
-        id: entry.staticData._id || `row-${page}-${index}`,
-        ...entry.staticData,
-        purchases: entry.purchases || [],
-      }));
-
-      setItems(staticRows);
-      setRowCount(itemData.totalCount);
-    } catch (error) {
-      console.error('Failed to fetch item batches:', error);
+      /* put in cache + show */
+      dispatch(putPageInCache({ key: cacheKey, rows }));
+      dispatch(showRows(rows));
+      dispatch(setRowCount(res.totalCount));
     } finally {
-      setIsLoading(false);
+      dispatch(setIsLoading(false));
     }
   };
 
   useEffect(() => {
     getItemPurchaseBatches();
-  }, [page, rowsPerPage]);
-
-  const handleSort = (columnKey: string) => {
-    const isAsc = orderBy === columnKey && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(columnKey);
-  };
+  }, [page, rowsPerPage, cacheKey, cache, dispatch]);
 
   const handlePageChange = (_: unknown, newPage: number) => {
-    setPage(newPage);
+    dispatch(setPage(newPage));
   };
 
   const handleRowsPerPageChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setRowsPerPage(parseInt(e.target.value.toString(), 10));
+    dispatch(setRowsPerPage(parseInt(e.target.value.toString(), 10)));
   };
 
   const columns = [
@@ -91,7 +102,7 @@ const NewInventoryPage: React.FC = () => {
     {
       key: 'showPOs',
       label: 'Show POs',
-      render: (row: any) => (
+      render: (row: InventoryRow) => (
         <button
           onClick={() =>
             navigate('/item-purchase-orders', {
@@ -129,9 +140,6 @@ const NewInventoryPage: React.FC = () => {
           columns={columns}
           data={items}
           isLoading={isLoading}
-          order={order}
-          orderBy={orderBy}
-          onSort={handleSort}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={handlePageChange}
