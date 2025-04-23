@@ -106,6 +106,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       },
     },
   },
+  
   { timestamps: true }
 );
 
