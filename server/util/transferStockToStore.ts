@@ -28,7 +28,7 @@ export const transferStockToStore = async ({
 
     // Check warehouse stock
     const item = await Item.findById(itemId);
-    if (!item || item.itemStockQuantity < quantity) {
+    if (!item) {
       throw new Error(MESSAGES.INSUFFICIENT_STOCK);
     }
 

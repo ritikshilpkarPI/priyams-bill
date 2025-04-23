@@ -21,10 +21,10 @@ import {
   addInventoryItem,
   updateInventoryItemQuantity,
   removeInventoryItem,
-  resetStoreInventory,
   setStores,
   setDestinationStaff,
   setSourceStaff,
+  resetStoreStockInventory,
 } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
   addNewStockTransactionsAPI,
@@ -44,6 +44,7 @@ import {
   addTransactionItem,
   addTransactionSource,
   removeTransactionItem,
+  resetStoreInventory,
   setTransactionData,
   updateTransactionItemQuantity,
 } from '../../redux/stockTransactionManagement/StockTransactionManagement';
@@ -300,7 +301,7 @@ const StoreInventoryManagement: React.FC = () => {
     if(response.success){
       toast.success('Destination added successfully');
       dispatch(resetStoreInventory());
-
+      dispatch(resetStoreStockInventory());
     }
 
           
@@ -313,8 +314,16 @@ const StoreInventoryManagement: React.FC = () => {
     if(response.success){
       toast.success('Transaction approved successfully');
       dispatch(resetStoreInventory());
+      dispatch(resetStoreStockInventory());
     }
   }
+  
+
+useEffect(() => {  
+  if (!transactionId) {
+    dispatch(resetStoreInventory());
+  }
+}, [transactionId]);  
 
   return (
     <Flex
@@ -353,16 +362,16 @@ const StoreInventoryManagement: React.FC = () => {
               value: staff._id,
               label: staff.name,
             }))}
-            disabled={!isAdminUser}
+            disabled={( transactionId && !isAdminUser) || stockTransaction?.approvedByAdmin}
           />
         </Grid.Col>
 
-        {Boolean(stockTransaction.source.sourceType) && (
+        {Boolean(stockTransaction.source.sourceType) &&  !( transactionId && !isAdminUser) &&  (
           <Grid.Col span={12}>
             <ItemSearch
               onItemSelect={handleItemSelect}
               // passing the selected store id to the item search to disable the items search
-              isApprovedPO={!stockTransaction.source.sourceEntityId || !isAdminUser}
+              isApprovedPO={!stockTransaction.source.sourceEntityId || stockTransaction.approvedByAdmin}
               error={errors.inventoryItems}
             />
             {!stockTransaction.source.sourceEntityId && (
@@ -386,6 +395,7 @@ const StoreInventoryManagement: React.FC = () => {
               onQuantityChange={handleQuantityChange}
               onRemoveItem={handleRemoveItem}
               enableDestinationForm={transactionId ? true : false}
+              disabled={stockTransaction?.approvedByAdmin}
             />
           )}
         </Grid.Col>
@@ -407,12 +417,13 @@ const StoreInventoryManagement: React.FC = () => {
           loading={loading} 
           w="100%"
           onClick={onDestinationSubmit}
+          disabled={stockTransaction?.approvedByAdmin}
           >
-            Add destination
+            Save
           </Button>
         </Grid.Col>}
 
-        {isAdminUser && transactionId && (
+        {isAdminUser && transactionId &&  (
           <Grid.Col span={isSmallScreen ? 12 : 4}>
             <Textarea
               label="Admin Remark"
@@ -426,12 +437,15 @@ const StoreInventoryManagement: React.FC = () => {
                 )
               }
               error={errors.adminRemark}
+              disabled={stockTransaction?.approvedByAdmin}
+
             />
             <Button
               loading={loading}
               w="100%"
               onClick={onApproveByAdmin}
               color='green'
+              disabled={stockTransaction?.approvedByAdmin}
             >
               Approve
             </Button>

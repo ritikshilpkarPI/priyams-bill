@@ -50,7 +50,7 @@ export const subtractFromSourceInventory = async ({
       }
 
       const item = await Item.findById(itemId);
-      if (!item || item.itemStockQuantity < quantity) {
+      if (!item) {
         throw new Error(`${MESSAGES.INSUFFICIENT_STOCK} for item ${itemId}`);
       }
 
