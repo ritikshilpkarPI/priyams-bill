@@ -73,6 +73,8 @@ import { itemPurchaseBatches } from './itemPurchaseBatches';
 import { getAllExpiryItemsBatch } from "./getAllExpiryItemsBatch";
 import { getExpiryItemsBatchById } from "./getExpiryItemsBatchById";
 import { markExpiryItemsBatchCleared } from "./markExpiryItemsBatchCleared"
+import { updateItemMismatchInStock } from "./updateItemMismatchInStock";
+
 export {
   addBulkItems,
   addItems,
@@ -147,6 +149,7 @@ export {
   getStockTransactions,  
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
-  markExpiryItemsBatchCleared,
-  bulkApproveStockTransactions
+  markExpiryItemsBatchCleared,  
+  bulkApproveStockTransactions,
+  updateItemMismatchInStock,
 };

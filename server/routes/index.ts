@@ -78,7 +78,8 @@ const {
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
   markExpiryItemsBatchCleared,
-  bulkApproveStockTransactions
+  bulkApproveStockTransactions,
+  updateItemMismatchInStock,
 } = require('../controllers/index');
 
 
@@ -318,5 +319,7 @@ router.post(
   isLoggedIn,
   bulkApproveStockTransactions
 );
+
+router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, updateItemMismatchInStock);
 
 export default router;
