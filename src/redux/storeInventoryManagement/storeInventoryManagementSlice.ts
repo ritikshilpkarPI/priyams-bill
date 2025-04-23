@@ -66,9 +66,14 @@ const storeInventorySlice = createSlice({
         (invItem) => invItem.itemDetail._id !== action.payload
       );
     },
-    resetStoreInventory: (state) => {
+    resetStoreStockInventory: (state) => {
       state.selectedStoreId = '';
       state.inventoryItems = [];
+      state.stores = [];
+      state.sourceStaff = [];
+      state.destinationStaff = [];
+
+    
     },
     setSourceStaff: (state, action) => {
       state.sourceStaff = action.payload;
@@ -85,7 +90,7 @@ export const {
   addInventoryItem,
   updateInventoryItemQuantity,
   removeInventoryItem,
-  resetStoreInventory,
+  resetStoreStockInventory,
   setSourceStaff,
   setDestinationStaff,
 } = storeInventorySlice.actions;

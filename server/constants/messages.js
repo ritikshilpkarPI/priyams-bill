@@ -56,6 +56,7 @@ const MESSAGES = Object.freeze({
   ITEM_ID_MUST_BE_ARRAY: 'itemId should be an array',
   EXPIRED_ITEMS_BATCH_NOT_FOUND: "Expired item batch not found",
   EXPIRED_ITEMS_BATCH_MARKED_AS_CLEARED: "Expired items batch marked as cleared",
+  MISMATCH_TRANSACTION_CREATED: "Stock mismatch correction transaction has been successfully created",
 });
 
 module.exports = { MESSAGES };
