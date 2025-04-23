@@ -113,4 +113,7 @@ export const API_PATHS = {
   BRAND:{
     GET_ALL_BRAND: "/api/getAllBrand"
   },
+  STOCK_TRANSACTION: {
+    MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" 
+  }
 };

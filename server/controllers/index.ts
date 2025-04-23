@@ -61,6 +61,7 @@ import { getAllStaffs } from "./getAllStaffs"
 import { itemsStaticAttributes } from "./itemsStaticAttributes"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
+import { updateItemMismatchInStock } from "./updateItemMismatchInStock";
 
 export {
   addBulkItems,
@@ -126,5 +127,5 @@ export {
   getAllStaffs, 
   getAllDealers,
   addNewDealer,
-
+  updateItemMismatchInStock,
 };

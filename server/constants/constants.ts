@@ -11,4 +11,12 @@ export const CONSTANTS = Object.freeze({
     ADD: "ADD",
     WAREHOUSE: "WAREHOUSE",
     STATIC_FIELDS_TO_SELECT: "itemName itemMRPperUnit itemBarcode itemPerUnitQuantity quantityUnitName itemCategory subCategory itemBrandName companyName flavourOrFeature itemHasExpiry saleTime images ", 
+    IN: "IN",
+    OUT: "OUT",
+    STORE: "STORE",
+    STATUS:{
+        PENDING: "pending",
+        APPROVED: "approved"
+    },
+    QUANTITY_UPDATE: "QUANTITY_UPDATE",
 })
