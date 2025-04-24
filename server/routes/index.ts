@@ -322,6 +322,6 @@ router.post(
 );
 
 router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, updateItemMismatchInStock);
-router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, updateExpiryItemsBatch);
+router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, isLoggedIn, updateExpiryItemsBatch);
 
 export default router;
