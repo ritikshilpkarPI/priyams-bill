@@ -20,7 +20,7 @@ export const PAGES = {
 export const sidebarListData = [
   {
     ITEM: [
-      { name: 'Inventory', url: '/inventory', icon: 'images/inventory.svg' },
+      { name: 'Inventory', url: '/newInventoryPage', icon: 'images/inventory.svg' },
       { name: 'Store Inventory', url: '/storeInventory', icon: 'images/inventory.svg' },
       
       { name: 'Item Labels', url: '/label', icon: 'images/label.svg' },
@@ -37,7 +37,7 @@ export const sidebarListData = [
       },
       {
         name: 'Expired Items',
-        url: '/expiredItemList',
+        url: '/expiry-items-batch',
         icon: 'images/expireIcon.svg',
       },
       {
@@ -45,7 +45,7 @@ export const sidebarListData = [
         url: '/barcodePrint',
         icon: 'images/barcode.svg',
       },
-      { name: 'Store Inventory Management', url: '/storeInventoryManagement', icon: 'images/inventory-management.svg' },
+      { name: 'New Transaction', url: '/storeInventoryManagement', icon: 'images/inventory.png' },
       {
         name: 'Stock Transaction',
         url: '/stockTransactions',

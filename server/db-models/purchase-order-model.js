@@ -61,6 +61,10 @@ const purchaseOrderSchema = new mongoose.Schema({
       ],
       slabPrice: [],
       profitPercentage: { type: Number},
+      newItem: {
+        type: Boolean,
+        default: false,
+      },
     },
   ],
   purchaseDetails: {

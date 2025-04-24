@@ -76,10 +76,21 @@ export const addNewStockTransactions = async (
       });
     }
 
+    const cleanDestination = {
+      ...destination,
+    };
+    
+    if (!cleanDestination.destinationStaff) {
+      delete cleanDestination.destinationStaff;
+    }
+    if (!cleanDestination.destinationEntityId) {
+      delete cleanDestination.destinationEntityId;
+    }
+
     transactionsToInsert.push({
       transactionType,
       source,
-      destination,
+      destination: cleanDestination,
       transactionItems: filteredTransactionItems,
       transactionReason,
       dateOfTransaction,

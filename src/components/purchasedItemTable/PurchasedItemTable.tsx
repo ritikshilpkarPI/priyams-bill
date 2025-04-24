@@ -121,7 +121,7 @@ export const PurchasedItemTable = ({
           '-'
         )}
       </td>
-      <td>{!purchasedItem.item_id && <Badge color="green">New Item</Badge>}</td>
+      <td>{ (!purchasedItem.item_id || purchasedItem?.newItem) && <Badge color="green">New Item</Badge>}</td>
       <td className="purchased-item-table-action-td">
         <Button
           disabled={Boolean(loadingRemoveItemById) || isApprovedPO}

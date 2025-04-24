@@ -60,13 +60,13 @@ const uploadToCloudinary = (fileBuffer, fileName, folderName ="pstores/other") =
   });
 }; 
 
-const uploadMultipleImages = async (images) => {
+const uploadMultipleImages = async (images, folderName = clodinaryFoldersPathKey.bill.toString()) => {
   return await Promise.all(
     images.map(async (image) => {
       const  { public_id, secure_url } = await uploadToCloudinary(
         image.data,
         image.name,
-        clodinaryFoldersPathKey.bill
+        folderName
       );
       return { public_id, secure_url };
     })

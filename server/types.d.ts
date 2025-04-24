@@ -89,6 +89,43 @@ export  interface AddressComponent {
     companyId: Types.ObjectId;
   }
   
+
+
+  export interface ExpiryDate {
+    mfgDate: Date;
+    date: Date;
+  }
+
+  export interface PurchasedItem {
+    sku: string;
+    costPrice: number;
+    sellingPrice: number;
+    expiryDates: ExpiryDate[];
+    itemQuantity: number;
+    profitPercentage: number;
+    item_id: string;
+  }
+
+  export interface ItemData {
+    cp: number;
+    sp: number;
+    manufacturing: Date | undefined;
+    expiry: Date | undefined;
+    qty: number;
+    totalStockQty: number | null;
+    profitPercentage: number;
+    purchaseDate: Date;
+    totalShelfLife: string;
+    leftShelfLife: string;
+    purchaseOrderId: Types.ObjectId;
+    poApproveTime: Date | NativeDate | null | undefined;
+  }
+  export interface DealerType extends Document {
+    dealerName: string;
+    dealerBrands: Types.ObjectId[];
+    dealerCompanies: Types.ObjectId[];
+    dealerNumber: number;
+  }
   export interface DealerType extends Document {
     dealerName: string;
     dealerBrands: Types.ObjectId[];
@@ -146,7 +183,7 @@ export interface StockTransactionType extends Document {
   source: TransactionSource;
   destination?: TransactionDestination;
   transactionReason?: string;
-  dateOfTransaction: Date;
+  dateOfTransaction: Date | string;
   transactionStatus: string;
   hasErrors: boolean;
   approvedByAdmin: boolean;
@@ -170,3 +207,48 @@ export interface StockTransactionFilterBody {
   limit?: string;
 }
 
+interface StatusHistory {
+  status: string;
+  staffId: mongoose.Types.ObjectId;
+  dateTime: Date;
+  browser: string;
+  os: string;
+  ipReferrer: string;
+  statusChangeRemark: string;
+}
+
+interface ClearanceDetails {
+  clearanceReason: string;
+  clearedOn: Date;
+  clearancePurchaseOrderId?: mongoose.Types.ObjectId;
+  dealerId?: mongoose.Types.ObjectId;
+  clearanceRemark: string;
+}
+
+interface ExpiredItems {
+  itemId: mongoose.Types.ObjectId;
+  expiryDate: Date;
+  quantity: number;
+  purchaseOrderId: mongoose.Types.ObjectId;
+  costPricePerUnit: number;
+  totalCostPrice: number;
+}
+
+export interface ExpiredItemsSchema {
+  boxId: string;
+  dealerId: mongoose.Types.ObjectId;
+  stockTransactionId: mongoose.Types.ObjectId;
+  expiryImages: string[];
+  expiryBatchCost: number;
+  status: string;
+  statusHistory: StatusHistory[];
+  clearanceDetails?: ClearanceDetails;
+  isCleared: boolean;
+  items: ExpiredItems[];
+  itemWiseTotalCost: [
+    {
+      itemId: mongoose.Types.ObjectId;
+      itemTotalCost: number;
+    },
+  ];
+}

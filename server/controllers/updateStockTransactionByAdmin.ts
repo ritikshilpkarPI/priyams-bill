@@ -14,9 +14,10 @@ export const updateStockTransactionByAdmin = async (
   res: Response
 ) => {
   try {
-    const { id } = req.params;
-    const updateData = req.body;
     const user = req.user;
+
+    const { transactionId: id, adminRemark, stockTransaction: updateData } = req.body;
+    
 
     const transaction = await StockTransactionModel.findById(id);
     if (!transaction || transaction.isDeleted) {
@@ -125,6 +126,12 @@ export const updateStockTransactionByAdmin = async (
           }
         }
       }
+
+      if (adminRemark !== undefined) {
+        transaction.adminRemark = adminRemark;
+        transaction.transactionStatus = 'approved';
+      }
+  
   
 
     await transaction.save();
