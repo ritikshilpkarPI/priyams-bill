@@ -80,6 +80,7 @@ const {
   markExpiryItemsBatchCleared,
   bulkApproveStockTransactions,
   updateItemMismatchInStock,
+  updateExpiryItemsBatch,
 } = require('../controllers/index');
 
 
@@ -321,5 +322,6 @@ router.post(
 );
 
 router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, updateItemMismatchInStock);
+router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, updateExpiryItemsBatch);
 
 export default router;
