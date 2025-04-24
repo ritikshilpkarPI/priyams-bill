@@ -18,7 +18,6 @@ import {
 import { generateColor } from 'src/utils/constants/generateColor';
 import { getStockTransactions } from 'src/utils/apiUtils';
 import DateRangePicker from 'src/components/DateRangePicker';
-import { useLocation } from 'react-router';
 
 const StockTransactions: React.FC = () => {
   const dispatch = useDispatch();
@@ -31,35 +30,30 @@ const StockTransactions: React.FC = () => {
     rowsPerPage,
     startDate,
     endDate,
-    totalCount
+    totalCount,
+    prevLocation
   } = useSelector((state: RootState) => state.stockTransactions);
   const storeData = useSelector((state: RootState) => state.user.storeData);
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const paramItems = params.get('filter');
+  const selectedItemsIds = useSelector(
+    (state: RootState) => state.storeInventoryManagement.selectedItemsIds
+  );
+  const isDirectedfromStoreInventory = prevLocation === "/storeInventory";
 
   const fetchTransactions = async () => {
     dispatch(setIsLoading(true));
 
     const currentPageData = rawData[page]; 
     
-    if (currentPageData) {
+    if (currentPageData?.length) {
       dispatch(transformData()); 
     } else {
-      let encodedIds: string[] = [];
-      try {
-        encodedIds = JSON.parse(paramItems || '[]');
-      } catch (e) {
-        encodedIds = [];
-      };
-      const itemIds  = encodedIds?.map((id:string) => atob(id));
       const result = await getStockTransactions({
-        startDate: itemIds ? undefined : startDate,
-        endDate: itemIds ? undefined : endDate,
+        startDate: isDirectedfromStoreInventory ? undefined : startDate,
+        endDate: isDirectedfromStoreInventory ? undefined : endDate,
         storeId: storeData._id,
         page,
         limit: 100,
-        itemIds
+        itemIds: selectedItemsIds
       });
 
       if (!result?.isError) {
@@ -76,7 +70,7 @@ const StockTransactions: React.FC = () => {
 
   useEffect(() => {
     fetchTransactions();
-  }, [startDate, endDate, page, rowsPerPage,expandedRows]);
+  }, [startDate, endDate, page, rowsPerPage,expandedRows, selectedItemsIds]);
 
   const handleStartDateChange = (newDate: Date | null) => {
     if (newDate) {
@@ -154,7 +148,7 @@ const StockTransactions: React.FC = () => {
         Stock Transactions
       </Typography>
 
-      {!paramItems && 
+      {!isDirectedfromStoreInventory && 
       <DateRangePicker
         startDate={startDate}
         endDate={endDate}
