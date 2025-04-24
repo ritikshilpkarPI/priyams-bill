@@ -62,6 +62,7 @@ import { itemsStaticAttributes } from "./itemsStaticAttributes"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 import { createExpiryItemsBatch } from "./createExpiryItemsBatch";
+import { updateExpiryItemsBatch } from './updateExpiryItemsBatch';
 
 export {
   addBulkItems,
@@ -128,4 +129,5 @@ export {
   getAllDealers,
   addNewDealer,
   createExpiryItemsBatch,
+  updateExpiryItemsBatch,
 };
