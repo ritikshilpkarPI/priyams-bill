@@ -70,42 +70,36 @@ const StoreInventory: React.FC = () => {
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   const columns: GridColDef[] = [
-    { field: 'sku', headerName: 'SKU', sortable: true },
+    { field: 'sku', headerName: 'SKU', headerAlign: 'left', align: 'left', minWidth: 200 },
     {
       field: 'itemBarcode',
       headerName: 'Bar Code',
-      sortable: true,
       minWidth: 150,
     },
     {
       field: 'itemName',
       headerName: 'Item Name',
-      sortable: true,
       minWidth: 150,
     },
     {
       field: 'itemPerUnitQuantity',
       headerName: 'Packet Qty.',
-      sortable: true,
     },
-    { field: 'quantityUnitName', headerName: 'Unit', sortable: true },
-    { field: 'itemMRPperUnit', headerName: 'MRP/Unit', sortable: true },
-    { field: 'itemBrandName', headerName: 'Brand Name', sortable: true },
+    { field: 'quantityUnitName', headerName: 'Unit' },
+    { field: 'itemMRPperUnit', headerName: 'MRP' },
+    { field: 'itemBrandName', headerName: 'Brand Name' },
     {
       field: 'itemCategory',
       headerName: 'Category',
-      sortable: true,
     },
-    
-    { field: 'subCategory', headerName: 'Sub Category', sortable: true },
-    { field: 'itemStockQuantity', headerName: 'Total Stock', sortable: true },
-    { field: 'companyName', headerName: 'Company', sortable: true },
+    { field: 'subCategory', headerName: 'Sub Category' },
+    { field: 'itemQuantityInStore', headerName: 'Store Stock' },
+    { field: 'companyName', headerName: 'Company' },
     {
       field: 'flavourOrFeature',
       headerName: 'Flavour Or Feature',
-      sortable: true,
     },
-    { field: 'saleTime', headerName: 'Sale Time', sortable: true },
+    { field: 'saleTime', headerName: 'Sale Time' },
   ];
 
   return (
@@ -142,9 +136,10 @@ const StoreInventory: React.FC = () => {
             columns={columns.map((col) => ({
               ...col,
               flex: 1,
-              minWidth: col.minWidth ?? 100,
-              headerAlign: 'center',
-              align: 'center',
+              minWidth: col?.minWidth ?? 100,
+              headerAlign: col?.headerAlign ?? 'center',
+              align: col?.align ?? 'center',
+              sortable: col?.sortable ?? true,
             }))}
             rows={items}
             paginationModel={{

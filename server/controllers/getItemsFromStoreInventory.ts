@@ -20,12 +20,17 @@ export const getItemsFromStoreInventory = async (
     const skip = (Number(page) - 1) * limit;
     const inventoryData = await StoreInventoryModel
       .find()
-      .select('itemId')
-      .populate('itemId', CONSTANTS.STATIC_FIELDS_TO_SELECT)
+      .select('itemId itemQuantityInStore')
+      .populate('itemId', CONSTANTS.STATIC_FIELDS_TO_SELECT + ' sku')
       .limit(limit)
-      .skip(skip);
+      .skip(skip)
+      .lean();
+
     const totalItems = await StoreInventoryModel.countDocuments();
-    const items = inventoryData.map((data:any)=>data.itemId);
+    const items = inventoryData.map((data:any)=>({
+      ...data.itemId,
+      itemQuantityInStore: data.itemQuantityInStore
+    }));
     return res.status(200).json({ data: items, count: totalItems });
   } catch (error) {
     res.status(400).json({ error });
