@@ -9,6 +9,7 @@ import {
   ScrollArea,
   LoadingOverlay,
   Text,
+  ActionIcon,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +33,7 @@ import { AppDispatch } from '../../redux/store';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import DataTable from '../DataTable';
 import { toast } from 'react-toastify';
+import { IconTrashX } from '@tabler/icons-react';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -95,20 +97,38 @@ const StoreInventory: React.FC = () => {
     dispatch(setSelectedStore(storeId));
   };
 
-  const fetchUpdateItemMismatchInStockAPI = async (row: any) => {
+  const handleItemMismatchInStock = async (
+    row: any,
+    isDelete: boolean = false
+  ) => {
     setMismatchloading(true);
     const store = stores.find((store) => store.code === selectedStoreId);
-    const response = await updateItemMismatchInStockAPI(store._id ?? '', {
+    if (!store) throw new Error('Store not found');
+
+    const payload = {
       ...row,
+      updateQuantity: isDelete ? 0 : row.updateQuantity,
       itemsId: selecteditem?._id,
-    });
+    };
+
+    const response = await updateItemMismatchInStockAPI(
+      store._id ?? '',
+      payload
+    );
+
     if (response.isError) {
       setMismatchloading(false);
-      return toast.error(
-        'unable to create transaction, please try again some time'
-      );
+      toast.error('Unable to create transaction, please try again some time');
     }
+    dispatch(
+      updateItem({
+        itemsId: selecteditem?._id ?? "",
+        shelfDateId: row._id,
+        value: Number(0),
+      })
+    );
     setMismatchloading(false);
+
     toast.success('create transaction successfully');
   };
 
@@ -251,7 +271,12 @@ const StoreInventory: React.FC = () => {
                   key: 'expiryDate',
                   label: 'Expiry Date',
                   render: (row: any) => (
-                    <Flex h={'100%'} align={'center'} justify={"center"} gap={10}>
+                    <Flex
+                      h={'100%'}
+                      align={'center'}
+                      justify={'center'}
+                      gap={10}
+                    >
                       <Text size="md">
                         {row.expiryDate
                           ? new Date(row.expiryDate).toLocaleDateString()
@@ -264,7 +289,12 @@ const StoreInventory: React.FC = () => {
                   key: 'manufacturingDate',
                   label: 'Manufacturing Date',
                   render: (row: any) => (
-                    <Flex h={'100%'} align={'center'} justify={"center"} gap={10}>
+                    <Flex
+                      h={'100%'}
+                      align={'center'}
+                      justify={'center'}
+                      gap={10}
+                    >
                       <Text size="md">
                         {row.manufacturingDate
                           ? new Date(row.manufacturingDate).toLocaleDateString()
@@ -281,8 +311,8 @@ const StoreInventory: React.FC = () => {
                     <Flex h={'100%'} align={'center'} gap={10}>
                       <NumberInput
                         w="300px"
-                        min={1}
-                        value={row.updateQuantity ?? 1}
+                        min={0}
+                        value={row.updateQuantity ?? 0}
                         onChange={(value) => {
                           dispatch(
                             updateItem({
@@ -297,14 +327,39 @@ const StoreInventory: React.FC = () => {
                   ),
                 },
                 {
-                  key: '',
+                  key: 'save',
                   label: 'Save',
                   render: (row: any) => (
                     <Button
-                      onClick={() => fetchUpdateItemMismatchInStockAPI(row)}
+                      disabled={!row.updateQuantity}
+                      onClick={() => handleItemMismatchInStock(row)}
                     >
                       Save
                     </Button>
+                  ),
+                },
+                {
+                  key: 'delete',
+                  label: 'Delete',
+                  render: (row: any) => (
+                    <Flex
+                      h={'100%'}
+                      align={'center'}
+                      justify={'center'}
+                      gap={10}
+                    >
+                      <ActionIcon
+                        variant="filled"
+                        color="red"
+                        aria-label="Settings"
+                        onClick={() => handleItemMismatchInStock(row, true)}
+                      >
+                        <IconTrashX
+                          style={{ width: '70%', height: '70%' }}
+                          stroke={1.5}
+                        />
+                      </ActionIcon>
+                    </Flex>
                   ),
                 },
               ]}
