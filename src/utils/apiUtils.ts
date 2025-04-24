@@ -557,6 +557,7 @@ export const getStockTransactions = async ({
   storeId,
   page = 1,
   limit = 100,
+  itemIds = []
 }: StockTransactionParams) => {
   try {
     const data: any = {
@@ -566,6 +567,7 @@ export const getStockTransactions = async ({
     };
     if (startDate) data.startDate = startDate.toISOString();
     if (endDate) data.endDate = endDate.toISOString();
+    if (itemIds.length > 0) data.itemId = itemIds;
 
     const response = await postAPI({
       path: API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,
