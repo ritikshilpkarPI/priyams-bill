@@ -7,6 +7,7 @@ import { StoreSelect } from '../../components/StoreSelect';
 import {
   setSelectedStore,
   setStores,
+  setSelectedItemsIds
 } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
   getAllStoresAPI,
@@ -17,14 +18,15 @@ import { AppDispatch } from '../../redux/store';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { formatShortDate } from '../../utils/formatDate';
 import { useNavigate } from 'react-router';
+import { setPrevLocation } from 'src/redux/stockTransactions/stockTransactionsSlice';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { selectedStoreId, stores } = useSelector(
+  const navigate = useNavigate();
+  const { selectedStoreId, stores, selectedItemsIds } = useSelector(
     (state: RootState) => state.storeInventoryManagement
   );
   const [items, setItems] = useState([]);
-  const [itemIds, setItemIds] = useState<string[]>([]);
   const [itemCount, setItemCount] = useState(items.length);
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +45,7 @@ const StoreInventory: React.FC = () => {
       }
     };
 
-    fetchStores();
+    if(!stores.length) fetchStores();
   }, [dispatch]);
 
   useEffect(() => {
@@ -156,12 +158,11 @@ const StoreInventory: React.FC = () => {
           />
         </Grid.Col>
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end" }}>
-          <Button disabled={itemIds.length < 1}
+          <Button disabled={selectedItemsIds.length < 1}
            onClick={()=>{
-            const filterStringified = JSON.stringify(itemIds?.map(id => btoa(id)));
-            const url = `/stockTransactions?filter=${encodeURIComponent(filterStringified)}`;
-              window.open(url, '_blank');
-            }}
+            dispatch(setPrevLocation(window.location.pathname));
+            navigate("/stockTransactions");
+          }}
           >View Transactions</Button>
         </Grid.Col>
         <Grid.Col span={12}>
@@ -202,7 +203,8 @@ const StoreInventory: React.FC = () => {
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar }}
             checkboxSelection
-            onRowSelectionModelChange={(model)=>setItemIds((model as string[]))}
+            onRowSelectionModelChange={(model)=>dispatch(setSelectedItemsIds((model as string[])))}
+            rowSelectionModel={selectedItemsIds}
           />
         </Grid.Col>
       </Grid>

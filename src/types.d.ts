@@ -764,6 +764,7 @@ declare global {
     startDate:Date;
     endDate:Date;
     totalCount: number;
+    prevLocation: string;
   }
   interface DateRangePickerProps {
     startDate: Date | null;
