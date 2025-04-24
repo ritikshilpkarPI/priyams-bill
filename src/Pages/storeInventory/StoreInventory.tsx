@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Title, Flex, Grid } from '@mantine/core';
+import { Title, Flex, Grid, Button } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -7,6 +7,7 @@ import { StoreSelect } from '../../components/StoreSelect';
 import {
   setSelectedStore,
   setStores,
+  setSelectedItemsIds
 } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
   getAllStoresAPI,
@@ -16,10 +17,13 @@ import { useMediaQuery } from '@mantine/hooks';
 import { AppDispatch } from '../../redux/store';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { formatShortDate } from '../../utils/formatDate';
+import { useNavigate } from 'react-router';
+import { setPrevLocation } from 'src/redux/stockTransactions/stockTransactionsSlice';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { selectedStoreId, stores } = useSelector(
+  const navigate = useNavigate();
+  const { selectedStoreId, stores, selectedItemsIds } = useSelector(
     (state: RootState) => state.storeInventoryManagement
   );
   const [items, setItems] = useState([]);
@@ -41,7 +45,7 @@ const StoreInventory: React.FC = () => {
       }
     };
 
-    fetchStores();
+    if(!stores.length) fetchStores();
   }, [dispatch]);
 
   useEffect(() => {
@@ -70,42 +74,36 @@ const StoreInventory: React.FC = () => {
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   const columns: GridColDef[] = [
-    { field: 'sku', headerName: 'SKU', sortable: true },
+    { field: 'sku', headerName: 'SKU', headerAlign: 'left', align: 'left', minWidth: 200 },
     {
       field: 'itemBarcode',
       headerName: 'Bar Code',
-      sortable: true,
       minWidth: 150,
     },
     {
       field: 'itemName',
       headerName: 'Item Name',
-      sortable: true,
       minWidth: 150,
     },
     {
       field: 'itemPerUnitQuantity',
       headerName: 'Packet Qty.',
-      sortable: true,
     },
-    { field: 'quantityUnitName', headerName: 'Unit', sortable: true },
-    { field: 'itemMRPperUnit', headerName: 'MRP/Unit', sortable: true },
-    { field: 'itemBrandName', headerName: 'Brand Name', sortable: true },
+    { field: 'quantityUnitName', headerName: 'Unit' },
+    { field: 'itemMRPperUnit', headerName: 'MRP' },
+    { field: 'itemBrandName', headerName: 'Brand Name' },
     {
       field: 'itemCategory',
       headerName: 'Category',
-      sortable: true,
     },
-    
-    { field: 'subCategory', headerName: 'Sub Category', sortable: true },
-    { field: 'itemStockQuantity', headerName: 'Total Stock', sortable: true },
-    { field: 'companyName', headerName: 'Company', sortable: true },
+    { field: 'subCategory', headerName: 'Sub Category' },
+    { field: 'itemQuantityInStore', headerName: 'Store Stock' },
+    { field: 'companyName', headerName: 'Company' },
     {
       field: 'flavourOrFeature',
       headerName: 'Flavour Or Feature',
-      sortable: true,
     },
-    { field: 'saleTime', headerName: 'Sale Time', sortable: true },
+    { field: 'saleTime', headerName: 'Sale Time' },
   ];
 
   return (
@@ -137,14 +135,23 @@ const StoreInventory: React.FC = () => {
             onChange={handleStoreChange}
           />
         </Grid.Col>
+        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end" }}>
+          <Button disabled={selectedItemsIds.length < 1}
+           onClick={()=>{
+            dispatch(setPrevLocation(window.location.pathname));
+            navigate("/stockTransactions");
+          }}
+          >View Transactions</Button>
+        </Grid.Col>
         <Grid.Col span={12}>
           <DataGrid
             columns={columns.map((col) => ({
               ...col,
               flex: 1,
-              minWidth: col.minWidth ?? 100,
-              headerAlign: 'center',
-              align: 'center',
+              minWidth: col?.minWidth ?? 100,
+              headerAlign: col?.headerAlign ?? 'center',
+              align: col?.align ?? 'center',
+              sortable: col?.sortable ?? true,
             }))}
             rows={items}
             paginationModel={{
@@ -166,6 +173,9 @@ const StoreInventory: React.FC = () => {
             }
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar }}
+            checkboxSelection
+            onRowSelectionModelChange={(model)=>dispatch(setSelectedItemsIds((model as string[])))}
+            rowSelectionModel={selectedItemsIds}
           />
         </Grid.Col>
       </Grid>
