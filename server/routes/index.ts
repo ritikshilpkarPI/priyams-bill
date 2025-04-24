@@ -282,6 +282,6 @@ router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
 router.post(API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEMS_BATCH, isLoggedIn, createExpiryItemsBatch);
-router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, updateExpiryItemsBatch);
+router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, isLoggedIn, updateExpiryItemsBatch);
 
 export default router;
