@@ -10,5 +10,14 @@ export const CONSTANTS = Object.freeze({
     UPI: "upi",
     ADD: "ADD",
     WAREHOUSE: "WAREHOUSE",
-    STATIC_FIELDS_TO_SELECT: "itemName itemMRPperUnit itemBarcode itemPerUnitQuantity quantityUnitName itemCategory subCategory itemBrandName companyName flavourOrFeature itemHasExpiry saleTime images ", 
+    STATIC_FIELDS_TO_SELECT: "itemName itemMRPperUnit itemBarcode itemPerUnitQuantity quantityUnitName itemCategory subCategory itemBrandName companyName flavourOrFeature itemHasExpiry saleTime images itemShelfDates ",
+    REMOVE: "REMOVE",
+    STORE: "STORE",
+    DEALER: "DEALER",  
+    IN: "IN",
+    OUT: "OUT",
+    STATUS:{
+      PENDING: "pending",
+      APPROVED: "approved"
+    },   
 })

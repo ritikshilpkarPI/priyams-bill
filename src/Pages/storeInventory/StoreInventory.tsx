@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Title, Flex, Grid } from '@mantine/core';
+import {
+  Title,
+  Flex,
+  Grid,
+  Button,
+  Drawer,
+  NumberInput,
+  ScrollArea,
+} from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -7,26 +15,32 @@ import { StoreSelect } from '../../components/StoreSelect';
 import {
   setSelectedStore,
   setStores,
-} from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
+  setItems,
+  setItemCount,
+  updateItem,
+  setSelectedItem,
+} from '../../redux/storeInventory/StoreInventoryState';
 import {
   getAllStoresAPI,
   getItemsFromStoreInventory,
 } from '../../utils/apiUtils';
-import { useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { AppDispatch } from '../../redux/store';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { formatShortDate } from '../../utils/formatDate';
+import DataTable from '../DataTable';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { selectedStoreId, stores } = useSelector(
-    (state: RootState) => state.storeInventoryManagement
-  );
-  const [items, setItems] = useState([]);
-  const [itemCount, setItemCount] = useState(items.length);
-  const [loading, setLoading] = useState(false);
+  const { selectedStoreId, stores, items, itemCount, selecteditem } =
+    useSelector((state: RootState) => state.storeInventory);
 
+  const [loading, setLoading] = useState(false);
+  const [itemsId, setItemsId] = useState<string | null>(null);
+  const [firstOpened, firstHandlers] = useDisclosure(false);
   const [pagination, setPagination] = useState({ size: 100, page: 1 });
+
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
+
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -49,25 +63,33 @@ const StoreInventory: React.FC = () => {
       try {
         setLoading(true);
         const res: any = await getItemsFromStoreInventory(storeId, pagination);
-        setItems(res?.data?.data || []);
-        setItemCount(res?.data?.count || 0);
+        dispatch(setItems(res?.data?.data || []));
+        dispatch(setItemCount(res?.data?.count || 0));
       } catch (error) {
         showNotification({ message: 'Failed to load Items', color: 'red' });
       } finally {
         setLoading(false);
       }
     };
+
     if (selectedStoreId) {
       const storeId = stores.find((s) => s.code === selectedStoreId)?._id;
-      storeId && getItemRequest(storeId);
+      if (storeId) getItemRequest(storeId);
     }
   }, [selectedStoreId, stores, pagination]);
+
+  useEffect(() => {
+    if (itemsId) {
+      const row = items.find((item: any) => item._id === itemsId);
+      dispatch(setSelectedItem(row || null));
+    } else {
+      dispatch(setSelectedItem(null));
+    }
+  }, [itemsId, items]);
 
   const handleStoreChange = (storeId: string) => {
     dispatch(setSelectedStore(storeId));
   };
-
-  const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   const columns: GridColDef[] = [
     { field: 'sku', headerName: 'SKU', sortable: true },
@@ -96,7 +118,6 @@ const StoreInventory: React.FC = () => {
       headerName: 'Category',
       sortable: true,
     },
-    
     { field: 'subCategory', headerName: 'Sub Category', sortable: true },
     { field: 'itemStockQuantity', headerName: 'Total Stock', sortable: true },
     { field: 'companyName', headerName: 'Company', sortable: true },
@@ -106,6 +127,20 @@ const StoreInventory: React.FC = () => {
       sortable: true,
     },
     { field: 'saleTime', headerName: 'Sale Time', sortable: true },
+    {
+      field: 'itemShelfDates',
+      headerName: 'Item Shelf Dates',
+      renderCell: (params: any) => (
+        <Button
+          onClick={() => {
+            setItemsId(params.row._id === itemsId ? null : params.row._id);
+            firstHandlers.open();
+          }}
+        >
+          {params.row._id === itemsId ? 'Hide' : 'Show'}
+        </Button>
+      ),
+    },
   ];
 
   return (
@@ -133,7 +168,7 @@ const StoreInventory: React.FC = () => {
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
           <StoreSelect
             stores={stores}
-            value={selectedStoreId}
+            value={selectedStoreId ?? ''}
             onChange={handleStoreChange}
           />
         </Grid.Col>
@@ -169,6 +204,69 @@ const StoreInventory: React.FC = () => {
           />
         </Grid.Col>
       </Grid>
+
+      <Drawer
+        position={isSmallScreen ? 'top' : 'right'}
+        padding={7}
+        size="80vh"
+        opened={firstOpened}
+        onClose={() => {
+          firstHandlers.close();
+          setItemsId(null);
+        }}
+        title={`${selecteditem?.itemName}`}
+      >
+        <ScrollArea h={isSmallScreen ? '70vh' : "100vh"} type="auto" scrollbarSize={4}>
+          {selecteditem && selecteditem?.itemShelfDates && (
+            <DataTable
+              columns={[
+                { key: 'expiryDate', label: 'Expiry Date' },
+                { key: 'manufacturingDate', label: 'Manufacturing Date' },
+                { key: 'currentStockQuantity', label: 'Quantity' },
+                {
+                  key: 'updateQuantity',
+                  label: 'Update Qty',
+                  render: (row: any, record: any) => (
+                    <Flex h={'100%'} align={'center'} gap={10}>
+                      <NumberInput
+                        w={'300px'}
+                        value={row.updateQuantity}
+                        onChange={(value) => {
+                          dispatch(
+                            updateItem({
+                              itemsId: selecteditem._id,
+                              shelfDateId: row._id,
+                              value: Number(value),
+                            })
+                          );
+                        }}
+                      />
+                    </Flex>
+                  ),
+                },
+                {
+                  key: '',
+                  label: 'Save',
+                  render: (row: any) => (
+                    <Button onClick={() => console.log(row)}>Save</Button>
+                  ),
+                },
+              ]}
+              data={selecteditem?.itemShelfDates}
+              isLoading={false}
+              page={0}
+              rowsPerPage={selecteditem?.itemShelfDates?.length}
+              onPageChange={() => {}}
+              onRowsPerPageChange={() => {}}
+              rowCount={selecteditem?.itemShelfDates?.length}
+              paginationMode="client"
+              order="asc"
+              orderBy=""
+              onSort={() => {}}
+            />
+          )}
+        </ScrollArea>
+      </Drawer>
     </Flex>
   );
 };

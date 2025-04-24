@@ -673,6 +673,44 @@ declare global {
     value: string;
     label: string;
   };
+
+  interface StoreInventoryItemShelfDateType {
+    expiryDate: string;
+    manufacturingDate: string;
+    quantity: number;
+    purchaseOrderId: string;
+    entryDate: string;
+    currentStockQuantity: number;
+    initialStockQuantity: number;
+    _id: string;
+    updateQuantity: number;
+  }
+  
+  interface StoreInventoryItemType {
+    _id: string;
+    itemBarcode: string;
+    itemName: string;
+    itemPerUnitQuantity: number;
+    quantityUnitName: string;
+    itemMRPperUnit: number;
+    itemBrandName: string;
+    itemCategory: string;
+    subCategory: string;
+    companyName: string;
+    flavourOrFeature: string;
+    saleTime: string;
+    images: string[];
+    itemShelfDates: StoreInventoryItemShelfDateType[];
+  }
+  
+  interface StoreInventoryStateType {
+    items: StoreInventoryItemType[];
+    itemCount: number;
+    selectedStoreId: string | null;
+    stores: any[];
+    selecteditem: StoreInventoryItemType | null;
+  }
+
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
