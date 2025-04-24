@@ -335,7 +335,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   label="Packet Qty."
                   value={purchasedItemFormData.itemQuantity}
                   onChange={(event) =>
-                    onChange('itemQuantity', parseInt(event.currentTarget.value) || 0)
+                    onChange('itemQuantity', Number(event.currentTarget.value) || 0)
                   }
                   required
                   error={errors.itemQuantity}
@@ -681,8 +681,8 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         onClose={onSkuModalClose}
         question={skuModalQuestion}
         onAgree={() => {
-          setShowSkuModal(false);
-          if (updateChoice === YES) {
+          setShowSkuModal(false);          
+          if (updateChoice !== YES) {
             dispatch(setPurchasedItemDetailForm({ item_id: undefined }));
           }
         }}

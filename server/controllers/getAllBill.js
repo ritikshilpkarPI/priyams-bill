@@ -2,9 +2,19 @@ const { Bill } = require('../db-models/bill-model');
 
 const getAllBill = async (req, res, next) => {
   try {
-    const allBill = await Bill.find({
-      ...(storeId && { storeId }),
-    })
+    const { page = 1, size = 100, startDate, endDate } = req.query;
+
+    const limit = Number(size);
+    const skip = (Number(page) - 1) * limit;
+
+    const filter = {};
+    if (startDate || endDate) {
+      filter.createdAt = {};
+      if (startDate) filter.createdAt.$gte = new Date(startDate);
+      if (endDate) filter.createdAt.$lte = new Date(endDate);
+    }
+
+    const allBill = await Bill.find(filter)
     .populate([
       {
         path: 'items',
@@ -20,8 +30,9 @@ const getAllBill = async (req, res, next) => {
       },
     ])
       .sort({ createdAt: -1 })
-      .limit(Number(req.query.size));
-    const billCount = await Bill.countDocuments();
+      .limit(limit)
+      .skip(skip);
+    const billCount = await Bill.countDocuments(filter);
     res.status(200).json({ message: { allBill, billCount } });
   } catch (error) {
     next(error);

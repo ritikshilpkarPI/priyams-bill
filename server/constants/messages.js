@@ -28,6 +28,7 @@ const MESSAGES = Object.freeze({
   INSUFFICIENT_STOCK:"Insufficient stock",
   NO_STAFF_FOUND: "No staff found for this storeId",
   PINCODE_REQUIRED: "Pincode is required",
+  MISMATCH_TRANSACTION_CREATED: "Stock mismatch correction transaction has been successfully created",
 });
 
 module.exports = { MESSAGES };

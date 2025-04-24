@@ -63,6 +63,7 @@ import { itemsStaticAttributes } from "./itemsStaticAttributes"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
+import { updateItemMismatchInStock } from "./updateItemMismatchInStock";
 
 export {
   addBulkItems,
@@ -129,5 +130,6 @@ export {
   getAllDealers,
   addNewDealer,
   getItemsFromStoreInventory,
-  getStaffByStoreId
+  getStaffByStoreId,  
+  updateItemMismatchInStock,
 };
