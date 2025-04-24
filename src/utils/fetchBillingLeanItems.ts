@@ -9,13 +9,13 @@ import {
   MAX_RETRIES_BILLING_LEAN_ITEMS_API,
 } from './constants/apiConstants';
 
-export const fetchBillingLeanItems = (selectedStoreId?: string) => async (dispatch: AppDispatch) => {
+export const fetchBillingLeanItems = (selectedStoreId?: string, storeId?: any) => async (dispatch: AppDispatch) => {
   let attempts = 0;
   dispatch(setItemsFeedAPILoading(true));
 
   while (attempts < MAX_RETRIES_BILLING_LEAN_ITEMS_API) {
     try {
-      const response = await getBillingLeanItemsAPI(selectedStoreId);
+      const response = await getBillingLeanItemsAPI(selectedStoreId = selectedStoreId ?? "", storeId = storeId ?? "");
       if (response && !response.isError) {
         dispatch(setItemsFeedData(response));
         return;

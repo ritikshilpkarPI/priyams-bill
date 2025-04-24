@@ -19,5 +19,6 @@ export const CONSTANTS = Object.freeze({
     STATUS:{
       PENDING: "pending",
       APPROVED: "approved"
-    },   
+    },  
+    QUANTITY_UPDATE: "QUANTITY_UPDATE", 
 })

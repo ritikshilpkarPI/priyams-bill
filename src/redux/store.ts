@@ -15,6 +15,8 @@ import companySlice from "./companys/companySlice"
 import dealerSlice from './dealerlist/dealerSlice';
 import purchaseListApprovalSlice from './purchaseListApproval/purchaseListApprovalSlice'
 import stockTransactionsReducer from './stockTransactions/stockTransactionsSlice';
+import stockTransactionSlice from './stockTransactionManagement/StockTransactionManagement'
+import expiredItemsBatchSlice from './expiredItemsBatch/ExpiredItemsBatchSlice'
 
 export const store = configureStore({
   reducer: {
@@ -32,8 +34,10 @@ export const store = configureStore({
     company: companySlice,
     staffs: staffSlice,
     expiredItems: expiredItemsSlice,
+    stockTransaction:stockTransactionSlice,
     purchaseListApproval:purchaseListApprovalSlice,
-    stockTransactions: stockTransactionsReducer
+    stockTransactions: stockTransactionsReducer,
+    expiredItemsBatch: expiredItemsBatchSlice,
   },
 });
 

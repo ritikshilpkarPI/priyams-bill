@@ -68,8 +68,12 @@ import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
 import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
+import { bulkApproveStockTransactions } from "./bulkApproveStockTransactions"
 import { itemPurchaseBatches } from './itemPurchaseBatches';
-
+import { getAllExpiryItemsBatch } from "./getAllExpiryItemsBatch";
+import { getExpiryItemsBatchById } from "./getExpiryItemsBatchById";
+import { markExpiryItemsBatchCleared } from "./markExpiryItemsBatchCleared"
+import { updateItemMismatchInStock } from "./updateItemMismatchInStock";
 
 export {
   addBulkItems,
@@ -142,5 +146,10 @@ export {
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
-  getStockTransactions
+  getStockTransactions,  
+  getAllExpiryItemsBatch,
+  getExpiryItemsBatchById,
+  markExpiryItemsBatchCleared,  
+  bulkApproveStockTransactions,
+  updateItemMismatchInStock,
 };

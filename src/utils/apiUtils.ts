@@ -15,12 +15,11 @@ import MESSAGES from './constants/messages';
 
 
 
-export const getBillingLeanItemsAPI = async (selectedStoreId?: string) => {
+export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string) => {
   try {
     const pincode = localStorage.getItem('userPincode');
-    const response = await getAPI({
-      path: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}/?storeCode=${selectedStoreId}&pincode=${pincode}`,  
-    });
+    const path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=${storeId || ''}&storeCode=${selectedStoreId || ''}&pincode=${pincode || ''}`;
+    const response = await getAPI({path});
 
     return response.message;
   } catch (err) {
@@ -292,8 +291,11 @@ export const getAllStaffsAPI = async () => {
   }
 };
 
-export const getAllStaffsByStoreIdAPI = async () => {
+
+export const getAllStaffsByStoreIdAPI = async (storeId: string)=>{
   try {
+    let finalStoreId;
+    if (!storeId.length){
     const storedStoreDataString = localStorage.getItem('storeData');
 
     if (!storedStoreDataString) {
@@ -301,10 +303,12 @@ export const getAllStaffsByStoreIdAPI = async () => {
     }
 
     const storeData = JSON.parse(storedStoreDataString);
-    const storeId = storeData._id;
-
+    finalStoreId = storeData._id;
+  }else{
+    finalStoreId = storeId
+  }
     const response = await getAPI({
-      path: `${API_PATHS.STAFF.GET_STAFFS}/${storeId}`,
+      path: `${API_PATHS.STAFF.GET_STAFFS}/${finalStoreId}`,
     });
 
     return response;
@@ -568,6 +572,119 @@ export const getStockTransactions = async ({
       data
     });
 
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const addNewStockTransactionsAPI = async (
+  StockTransaction: StockTransactionType
+) => {
+
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION,
+      data: {
+        transactions: [StockTransaction],
+      },
+    });
+    return response;
+    
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+
+export const getStockTransactionsApi = async (
+  transactionsId: string
+) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,
+      data: {
+        transactionId: [transactionsId],
+      }
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const updateStockTransactionsAPI = async (
+  transactionsId: string,
+  itemByDate: any,
+) => {
+
+   const data = {
+    transactionId: transactionsId,
+    itemByDate,
+  };
+  try {
+
+  const response = await postAPI({
+    path: API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION,
+    data,
+  });
+  return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+
+}
+
+
+export const approveStockTransactionsAPI = async (
+  transactionsId: string,
+  approvedByAdmin: boolean,
+  adminRemark: string,
+  stockTransaction: StockTransactionType
+) => {
+     const data = {
+      transactionId: transactionsId,
+      adminRemark,
+      stockTransaction
+      };
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.PUT_UPDATE_STOCK_TRANSACTION,
+      data,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
+export const getAllExpiryItemsBatchAPI = async (queryParams: ExpiryItemsQueryParams = {}) => {
+  try {
+    const queryString = new URLSearchParams(
+      Object.entries(queryParams).reduce((acc, [key, value]) => {
+        if (value !== undefined && value !== null) {
+          acc[key] = String(value);
+        }
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+
+    const pathWithQuery = `${API_PATHS.EXPIRED_ITEMS_BATCH.GET_ALL_EXPIRED_ITEMS_BATCH}?${queryString}`;
+
+    const response = await getAPI({ path: pathWithQuery });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const getExpiryItemsBatchByIdAPI = async (
+  id: string
+) => {
+  try {
+    const response = await getAPI({
+      path: `${API_PATHS.EXPIRED_ITEMS_BATCH.GET_EXPIRED_ITEMS_BATCH_BY_ID}/${id}`,
+    });
     return response;
   } catch (error) {
     return { isError: true, error };

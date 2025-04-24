@@ -5,22 +5,14 @@ import { MESSAGES } from '../constants/messages';
 
 export const updateStockTransactionDestination = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { transactionId, itemByDate: {transactionItems}, destination } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(transactionId)) {
       return res.status(400).json({ success: false, message: MESSAGES.BAD_REQUEST });
     }
 
-    const { destination, transactionItems } = req.body;
 
-    if (!destination && !transactionItems) {
-      return res.status(400).json({
-        success: false,
-        message: MESSAGES.MISSING_REQUIRED_FIELDS,
-      });
-    }
-
-    const transaction = await StockTransactionModel.findById(id);
+    const transaction = await StockTransactionModel.findById(transactionId);
     if (!transaction) {
       return res.status(404).json({
         success: false,
@@ -37,41 +29,40 @@ export const updateStockTransactionDestination = async (req: Request, res: Respo
     }
 
     if (Array.isArray(transactionItems)) {
-      const transactionItemMap = new Map(
-        transaction.transactionItems.map((item) => [item.itemId.toString(), item])
-      );
-
       for (const itemUpdate of transactionItems) {
-        const targetItem = transactionItemMap.get(itemUpdate.itemId);
-        if (!targetItem || !Array.isArray(itemUpdate.itemByDate)) continue;
+        const itemIdStr = itemUpdate.itemId?._id?.toString();
+        
+        if (!itemIdStr) continue;
 
-        const existingDates = targetItem.itemByDate;
+        const transactionItem = transaction.transactionItems.find(
+          (item) => item.itemId.toString() === itemIdStr
+        );
+        
+
+        if (!transactionItem || !Array.isArray(itemUpdate.itemByDate)) continue;
 
         for (let i = 0; i < itemUpdate.itemByDate.length; i++) {
-          const dateUpdate = itemUpdate.itemByDate[i];
-          const existingDateItem = existingDates[i];
-          if (!existingDateItem) continue;
+          const update = itemUpdate.itemByDate[i];
+          const existing = transactionItem.itemByDate[i];
+          if (!existing) continue;
 
-          if (dateUpdate.destinationQuantity) {
-            existingDateItem.destinationQuantity = {
-              expiryDate:
-                dateUpdate.destinationQuantity.expiryDate ?? existingDateItem.destinationQuantity?.expiryDate,
-              manufacturingDate:
-                dateUpdate.destinationQuantity.manufacturingDate ?? existingDateItem.destinationQuantity?.manufacturingDate,
-              qty:
-                dateUpdate.destinationQuantity.qty ?? existingDateItem.destinationQuantity?.qty,
+          if (update.destinationQuantity) {
+            existing.destinationQuantity = {
+              expiryDate: update.destinationQuantity.expiryDate ?? existing.destinationQuantity?.expiryDate,
+              manufacturingDate: update.destinationQuantity.manufacturingDate ?? existing.destinationQuantity?.manufacturingDate,
+              qty: update.destinationQuantity.qty ?? existing.destinationQuantity?.qty,
             };
           }
 
-          if (dateUpdate.destinationRemark !== undefined) {
-            existingDateItem.destinationRemark = dateUpdate.destinationRemark;
+          if (update.destinationRemark !== undefined) {
+            existing.destinationRemark = update.destinationRemark;
           }
 
-          if (dateUpdate.itemError) {
-            existingDateItem.itemError = {
-              errorReason: dateUpdate.itemError.errorReason ?? existingDateItem.itemError?.errorReason ?? 'NONE',
-              errorQty: dateUpdate.itemError.errorQty ?? existingDateItem.itemError?.errorQty ?? 0,
-              isResolved: dateUpdate.itemError.isResolved ?? existingDateItem.itemError?.isResolved ?? false,
+          if (update.itemError) {
+            existing.itemError = {
+              errorReason: update.itemError.errorReason ?? existing.itemError?.errorReason ?? 'NONE',
+              errorQty: update.itemError.errorQty ?? existing.itemError?.errorQty ?? 0,
+              isResolved: update.itemError.isResolved ?? existing.itemError?.isResolved ?? false,
             };
           }
         }
