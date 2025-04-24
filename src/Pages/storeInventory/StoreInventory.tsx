@@ -7,6 +7,8 @@ import {
   Drawer,
   NumberInput,
   ScrollArea,
+  LoadingOverlay,
+  Text,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,11 +25,13 @@ import {
 import {
   getAllStoresAPI,
   getItemsFromStoreInventory,
+  updateItemMismatchInStockAPI,
 } from '../../utils/apiUtils';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { AppDispatch } from '../../redux/store';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import DataTable from '../DataTable';
+import { toast } from 'react-toastify';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,7 +42,7 @@ const StoreInventory: React.FC = () => {
   const [itemsId, setItemsId] = useState<string | null>(null);
   const [firstOpened, firstHandlers] = useDisclosure(false);
   const [pagination, setPagination] = useState({ size: 100, page: 1 });
-
+  const [mismatchloading, setMismatchloading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
@@ -91,6 +95,23 @@ const StoreInventory: React.FC = () => {
     dispatch(setSelectedStore(storeId));
   };
 
+  const fetchUpdateItemMismatchInStockAPI = async (row: any) => {
+    setMismatchloading(true);
+    const store = stores.find((store) => store.code === selectedStoreId);
+    const response = await updateItemMismatchInStockAPI(store._id ?? '', {
+      ...row,
+      itemsId: selecteditem?._id,
+    });
+    if (response.isError) {
+      setMismatchloading(false);
+      return toast.error(
+        'unable to create transaction, please try again some time'
+      );
+    }
+    setMismatchloading(false);
+    toast.success('create transaction successfully');
+  };
+
   const columns: GridColDef[] = [
     { field: 'sku', headerName: 'SKU', sortable: true },
     {
@@ -137,7 +158,8 @@ const StoreInventory: React.FC = () => {
             firstHandlers.open();
           }}
         >
-          {params.row._id === itemsId ? 'Hide' : 'Show'}
+          {params.row._id === itemsId ? 'Hide' : 'Show'}{' '}
+          {`( ${params.row.itemShelfDates.length} )`}
         </Button>
       ),
     },
@@ -216,12 +238,41 @@ const StoreInventory: React.FC = () => {
         }}
         title={`${selecteditem?.itemName}`}
       >
-        <ScrollArea h={isSmallScreen ? '70vh' : "100vh"} type="auto" scrollbarSize={4}>
+        <LoadingOverlay visible={mismatchloading} zIndex={1} />
+        <ScrollArea
+          h={isSmallScreen ? '70vh' : '100vh'}
+          type="auto"
+          scrollbarSize={4}
+        >
           {selecteditem && selecteditem?.itemShelfDates && (
             <DataTable
               columns={[
-                { key: 'expiryDate', label: 'Expiry Date' },
-                { key: 'manufacturingDate', label: 'Manufacturing Date' },
+                {
+                  key: 'expiryDate',
+                  label: 'Expiry Date',
+                  render: (row: any) => (
+                    <Flex h={'100%'} align={'center'} justify={"center"} gap={10}>
+                      <Text size="md">
+                        {row.expiryDate
+                          ? new Date(row.expiryDate).toLocaleDateString()
+                          : 'N/A'}
+                      </Text>
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 'manufacturingDate',
+                  label: 'Manufacturing Date',
+                  render: (row: any) => (
+                    <Flex h={'100%'} align={'center'} justify={"center"} gap={10}>
+                      <Text size="md">
+                        {row.manufacturingDate
+                          ? new Date(row.manufacturingDate).toLocaleDateString()
+                          : 'N/A'}
+                      </Text>
+                    </Flex>
+                  ),
+                },
                 { key: 'currentStockQuantity', label: 'Quantity' },
                 {
                   key: 'updateQuantity',
@@ -229,8 +280,9 @@ const StoreInventory: React.FC = () => {
                   render: (row: any, record: any) => (
                     <Flex h={'100%'} align={'center'} gap={10}>
                       <NumberInput
-                        w={'300px'}
-                        value={row.updateQuantity}
+                        w="300px"
+                        min={1}
+                        value={row.updateQuantity ?? 1}
                         onChange={(value) => {
                           dispatch(
                             updateItem({
@@ -248,7 +300,11 @@ const StoreInventory: React.FC = () => {
                   key: '',
                   label: 'Save',
                   render: (row: any) => (
-                    <Button onClick={() => console.log(row)}>Save</Button>
+                    <Button
+                      onClick={() => fetchUpdateItemMismatchInStockAPI(row)}
+                    >
+                      Save
+                    </Button>
                   ),
                 },
               ]}

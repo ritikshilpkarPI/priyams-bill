@@ -526,3 +526,33 @@ export const getItemsFromStoreInventory = async (
     return { isError: true, error };
   }
 }
+
+export const updateItemMismatchInStockAPI = async (
+  storeId: string,
+  item: {
+    itemsId: string;
+    expiryDate: string;
+    manufacturingDate: string;
+    currentStockQuantity: number;
+    updateQuantity: number;
+  }
+) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION,
+      data: {
+        storeId,
+        item: {
+          itemId: item.itemsId,
+          expiryDate: item.expiryDate,
+          manufacturingDate: item.manufacturingDate,
+          currentCount: item.currentStockQuantity,
+          updateCount: item.updateQuantity,
+        }
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
