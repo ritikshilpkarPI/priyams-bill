@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Title, Flex, Grid, Button } from '@mantine/core';
+import {
+  Title,
+  Flex,
+  Grid,
+  Button,
+  Drawer,
+  NumberInput,
+  ScrollArea,
+  LoadingOverlay,
+  Text,
+  ActionIcon,
+} from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -7,30 +18,44 @@ import { StoreSelect } from '../../components/StoreSelect';
 import {
   setSelectedStore,
   setStores,
+  setItems,
+  setItemCount,
+  updateItem,
+  setSelectedItem,
+} from '../../redux/storeInventory/StoreInventoryState';
+import {
   setSelectedItemsIds
 } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
   getAllStoresAPI,
   getItemsFromStoreInventory,
+  updateItemMismatchInStockAPI,
 } from '../../utils/apiUtils';
-import { useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { AppDispatch } from '../../redux/store';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { formatShortDate } from '../../utils/formatDate';
+import DataTable from '../DataTable';
+import { toast } from 'react-toastify';
+import { IconTrashX } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { setPrevLocation } from 'src/redux/stockTransactions/stockTransactionsSlice';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { selectedStoreId, stores, selectedItemsIds } = useSelector(
-    (state: RootState) => state.storeInventoryManagement
-  );
-  const [items, setItems] = useState([]);
-  const [itemCount, setItemCount] = useState(items.length);
-  const [loading, setLoading] = useState(false);
+  const { selectedStoreId, stores, items, itemCount, selecteditem } =
+    useSelector((state: RootState) => state.storeInventory);
+    const { selectedItemsIds } = useSelector(
+      (state: RootState) => state.storeInventoryManagement
+    );
 
+  const [loading, setLoading] = useState(false);
+  const [itemsId, setItemsId] = useState<string | null>(null);
+  const [firstOpened, firstHandlers] = useDisclosure(false);
   const [pagination, setPagination] = useState({ size: 100, page: 1 });
+  const [mismatchloading, setMismatchloading] = useState(false);
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
+
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -45,7 +70,7 @@ const StoreInventory: React.FC = () => {
       }
     };
 
-    if(!stores.length) fetchStores();
+    if(!stores?.length) fetchStores();
   }, [dispatch]);
 
   useEffect(() => {
@@ -53,25 +78,68 @@ const StoreInventory: React.FC = () => {
       try {
         setLoading(true);
         const res: any = await getItemsFromStoreInventory(storeId, pagination);
-        setItems(res?.data?.data || []);
-        setItemCount(res?.data?.count || 0);
+        dispatch(setItems(res?.data?.data || []));
+        dispatch(setItemCount(res?.data?.count || 0));
       } catch (error) {
         showNotification({ message: 'Failed to load Items', color: 'red' });
       } finally {
         setLoading(false);
       }
     };
+
     if (selectedStoreId) {
       const storeId = stores.find((s) => s.code === selectedStoreId)?._id;
-      storeId && getItemRequest(storeId);
+      if (storeId) getItemRequest(storeId);
     }
   }, [selectedStoreId, stores, pagination]);
+
+  useEffect(() => {
+    if (itemsId) {
+      const row = items.find((item: any) => item._id === itemsId);
+      dispatch(setSelectedItem(row || null));
+    } else {
+      dispatch(setSelectedItem(null));
+    }
+  }, [itemsId, items]);
 
   const handleStoreChange = (storeId: string) => {
     dispatch(setSelectedStore(storeId));
   };
 
-  const isSmallScreen = useMediaQuery('(max-width: 768px)');
+  const handleItemMismatchInStock = async (
+    row: any,
+    isDelete: boolean = false
+  ) => {
+    setMismatchloading(true);
+    const store = stores.find((store) => store.code === selectedStoreId);
+    if (!store) throw new Error('Store not found');
+
+    const payload = {
+      ...row,
+      updateQuantity: isDelete ? 0 : row.updateQuantity,
+      itemsId: selecteditem?._id,
+    };
+
+    const response = await updateItemMismatchInStockAPI(
+      store._id ?? '',
+      payload
+    );
+
+    if (response.isError) {
+      setMismatchloading(false);
+      toast.error('Unable to create transaction, please try again some time');
+    }
+    dispatch(
+      updateItem({
+        itemsId: selecteditem?._id ?? "",
+        shelfDateId: row._id,
+        value: Number(0),
+      })
+    );
+    setMismatchloading(false);
+
+    toast.success('create transaction successfully');
+  };
 
   const columns: GridColDef[] = [
     { field: 'sku', headerName: 'SKU', headerAlign: 'left', align: 'left', minWidth: 200 },
@@ -104,6 +172,21 @@ const StoreInventory: React.FC = () => {
       headerName: 'Flavour Or Feature',
     },
     { field: 'saleTime', headerName: 'Sale Time' },
+    {
+      field: 'itemShelfDates',
+      headerName: 'Item Shelf Dates',
+      renderCell: (params: any) => (
+        <Button
+          onClick={() => {
+            setItemsId(params.row._id === itemsId ? null : params.row._id);
+            firstHandlers.open();
+          }}
+        >
+          {params.row._id === itemsId ? 'Hide' : 'Show'}{' '}
+          {`( ${params.row.itemShelfDates?.length ? params.row.itemShelfDates.length : 0} )`}
+        </Button>
+      ),
+    },
   ];
 
   return (
@@ -131,12 +214,12 @@ const StoreInventory: React.FC = () => {
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
           <StoreSelect
             stores={stores}
-            value={selectedStoreId}
+            value={selectedStoreId ?? ''}
             onChange={handleStoreChange}
           />
         </Grid.Col>
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end" }}>
-          <Button disabled={selectedItemsIds.length < 1}
+          <Button disabled={selectedItemsIds?.length < 1}
            onClick={()=>{
             dispatch(setPrevLocation(window.location.pathname));
             navigate("/stockTransactions");
@@ -179,6 +262,138 @@ const StoreInventory: React.FC = () => {
           />
         </Grid.Col>
       </Grid>
+
+      <Drawer
+        position={isSmallScreen ? 'top' : 'right'}
+        padding={7}
+        size="80vh"
+        opened={firstOpened}
+        onClose={() => {
+          firstHandlers.close();
+          setItemsId(null);
+        }}
+        title={`${selecteditem?.itemName}`}
+      >
+        <LoadingOverlay visible={mismatchloading} zIndex={1} />
+        <ScrollArea
+          h={isSmallScreen ? '70vh' : '100vh'}
+          type="auto"
+          scrollbarSize={4}
+        >
+          {selecteditem && selecteditem?.itemShelfDates && (
+            <DataTable
+              columns={[
+                {
+                  key: 'expiryDate',
+                  label: 'Expiry Date',
+                  render: (row: any) => (
+                    <Flex
+                      h={'100%'}
+                      align={'center'}
+                      justify={'center'}
+                      gap={10}
+                    >
+                      <Text size="md">
+                        {row.expiryDate
+                          ? new Date(row.expiryDate).toLocaleDateString()
+                          : 'N/A'}
+                      </Text>
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 'manufacturingDate',
+                  label: 'Manufacturing Date',
+                  render: (row: any) => (
+                    <Flex
+                      h={'100%'}
+                      align={'center'}
+                      justify={'center'}
+                      gap={10}
+                    >
+                      <Text size="md">
+                        {row.manufacturingDate
+                          ? new Date(row.manufacturingDate).toLocaleDateString()
+                          : 'N/A'}
+                      </Text>
+                    </Flex>
+                  ),
+                },
+                { key: 'currentStockQuantity', label: 'Quantity' },
+                {
+                  key: 'updateQuantity',
+                  label: 'Update Qty',
+                  render: (row: any, record: any) => (
+                    <Flex h={'100%'} align={'center'} gap={10}>
+                      <NumberInput
+                        w="300px"
+                        min={0}
+                        value={row.updateQuantity ?? 0}
+                        onChange={(value) => {
+                          dispatch(
+                            updateItem({
+                              itemsId: selecteditem._id,
+                              shelfDateId: row._id,
+                              value: Number(value),
+                            })
+                          );
+                        }}
+                      />
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 'save',
+                  label: 'Save',
+                  render: (row: any) => (
+                    <Button
+                      disabled={!row.updateQuantity}
+                      onClick={() => handleItemMismatchInStock(row)}
+                    >
+                      Save
+                    </Button>
+                  ),
+                },
+                {
+                  key: 'delete',
+                  label: 'Delete',
+                  render: (row: any) => (
+                    <Flex
+                      h={'100%'}
+                      align={'center'}
+                      justify={'center'}
+                      gap={10}
+                    >
+                      <ActionIcon
+                        variant="filled"
+                        color="red"
+                        aria-label="Settings"
+                        onClick={() => handleItemMismatchInStock(row, true)}
+                      >
+                        <IconTrashX
+                          style={{ width: '70%', height: '70%' }}
+                          stroke={1.5}
+                        />
+                      </ActionIcon>
+                    </Flex>
+                  ),
+                },
+              ]}
+              data={selecteditem?.itemShelfDates}
+              isLoading={false}
+              page={0}
+              rowsPerPage={selecteditem?.itemShelfDates?.length}
+              onPageChange={() => {}}
+              onRowsPerPageChange={() => {}}
+              rowCount={selecteditem?.itemShelfDates?.length}
+              paginationMode="client"
+              order="asc"
+              orderBy=""
+              onSort={() => {}}
+            />
+          )}
+        </ScrollArea>
+      </Drawer>
     </Flex>
   );
 };

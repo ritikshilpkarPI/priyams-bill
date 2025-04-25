@@ -234,6 +234,10 @@ interface ExpiredItems {
   totalCostPrice: number;
 }
 
+export interface ItemWiseTotalCostType {
+  itemId: mongoose.Types.ObjectId;
+  itemTotalCost: number;
+}
 export interface ExpiredItemsSchema {
   boxId: string;
   dealerId: mongoose.Types.ObjectId;
@@ -245,10 +249,5 @@ export interface ExpiredItemsSchema {
   clearanceDetails?: ClearanceDetails;
   isCleared: boolean;
   items: ExpiredItems[];
-  itemWiseTotalCost: [
-    {
-      itemId: mongoose.Types.ObjectId;
-      itemTotalCost: number;
-    },
-  ];
+  itemWiseTotalCost: ItemWiseTotalCostType[];
 }

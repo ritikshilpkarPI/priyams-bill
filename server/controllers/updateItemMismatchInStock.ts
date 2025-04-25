@@ -3,16 +3,26 @@ import { StockTransactionModel } from '../db-models/stock-transaction-model';
 import { MESSAGES } from '../constants/messages';
 import { CONSTANTS } from '../constants/constants';
 import { v4 as uuidv4 } from 'uuid'; 
+import { AuthenticatedRequest } from 'server/types';
 
 export const updateItemMismatchInStock = async (
-  req: Request,
+  req: Request & AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
+  
   try {
     const { storeId, staffId, item } = req.body;
+    const userId = req.user?._id;
 
-    if (!storeId || !staffId || !item || typeof item !== 'object') {
+    let newStaffId;
+    if (staffId) {
+      newStaffId = staffId;      
+    }else{
+      newStaffId = userId.toString()
+    }
+
+    if (!storeId || !item || typeof item !== 'object') {
       return res
         .status(400)
         .json({ message: MESSAGES.MISSING_REQUIRED_FIELDS });
@@ -23,13 +33,13 @@ export const updateItemMismatchInStock = async (
 
 
     const source = {
-      sourceStaff: staffId,
+      sourceStaff: newStaffId,
       sourceEntityId: storeId,
       sourceType: CONSTANTS.STORE,
     };
 
     const destination = {
-      destinationStaff: staffId,
+      destinationStaff: newStaffId,
       destinationEntityId: storeId,
       destinationType: CONSTANTS.STORE,
     };
@@ -67,6 +77,8 @@ export const updateItemMismatchInStock = async (
     if (existingTransaction) {
       (existingTransaction.transactionType =
         currentCount > updateCount ? CONSTANTS.OUT : CONSTANTS.IN),
+        (existingTransaction.source = source),
+        (existingTransaction.destination = destination),
         (existingTransaction.transactionItems = [
           {
             itemId,
