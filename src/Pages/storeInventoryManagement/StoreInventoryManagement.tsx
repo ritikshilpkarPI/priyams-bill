@@ -351,13 +351,16 @@ const StoreInventoryManagement: React.FC = () => {
       setConfirmZeroQty(true);
       return;
     }
-    
+
+    setLoading(true);
     const response = await updateStockTransactionsAPI(transactionId ?? '', {
       transactionItems: transactionItems.map((item) => ({
         itemId: item.itemId,
         itemByDate: item.itemByDate,
       })),
     });
+
+    setLoading(true);
 
     if (response.success) {
       toast.success('Destination added successfully');
