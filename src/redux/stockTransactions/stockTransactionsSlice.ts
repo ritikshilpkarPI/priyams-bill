@@ -12,7 +12,6 @@ const initialState: TransactionState = {
   startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
   endDate: new Date(),
   totalCount: 0,
-  prevLocation: ""
 };
 
 const stockTransactionsSlice = createSlice({
@@ -22,9 +21,6 @@ const stockTransactionsSlice = createSlice({
     setRawData(state, action: PayloadAction<{ page: string; data: any[] }>) {
       const { page, data } = action.payload;
       state.rawData[page] = data;  
-    },
-    setPrevLocation(state, action: PayloadAction<string>) {
-      state.prevLocation = action.payload;
     },
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
@@ -161,7 +157,6 @@ export const {
   setEndDate,
   clearRawData,
   setTotalCount,
-  setPrevLocation
 } = stockTransactionsSlice.actions;
 
 export default stockTransactionsSlice.reducer;
