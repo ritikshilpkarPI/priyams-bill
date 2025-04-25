@@ -96,15 +96,16 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
                 />
               </td>
               <td>
-                {touchedRows[index] || hasShelfError && (
-                  <Text
-                    size="xs"
-                    color={isQtyMatched ? 'green' : 'red'}
-                    weight={500}
-                  >
-                    {isQtyMatched ? '✅ Matched' : '❌ Qty mismatch'}
-                  </Text>
-                )}
+              {(touchedRows[index] || (!touchedRows[index] && hasShelfError)) && (
+  <Text
+    size="xs"
+    color={isQtyMatched ? 'green' : 'red'}
+    weight={500}
+  >
+    {isQtyMatched ? '✅ Matched' : '❌ Qty mismatch'}
+  </Text>
+)}
+
               </td>
             </tr>
           );
