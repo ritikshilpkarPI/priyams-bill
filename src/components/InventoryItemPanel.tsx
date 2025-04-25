@@ -99,7 +99,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                       />
                     ) : (
                       <ShelfTable
-
+                        showNewExpiryForm={true}
                         shelfList={sourceQuantity}
                         itemId={item.itemId}
                         handleQuantityChange={handleQuantityChange}

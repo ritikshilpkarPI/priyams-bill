@@ -80,6 +80,7 @@ const {
   markExpiryItemsBatchCleared,
   bulkApproveStockTransactions,
   updateItemMismatchInStock,
+  updateExpiryItemsBatch,
 } = require('../controllers/index');
 
 
@@ -120,11 +121,7 @@ router.get(
   isLoggedIn,
   getDayWiseProcedures
 );
-router.post(
-  API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
-  isLoggedIn,
-  addOpenCloseProcedure
-);
+
 router.post(
   API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE,
   isLoggedIn,
@@ -132,11 +129,6 @@ router.post(
 );
 router.put(
   API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN,
-  isLoggedIn,
-  editOpenCloseProcedure
-);
-router.put(
-  API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE,
   isLoggedIn,
   editOpenCloseProcedure
 );
@@ -320,6 +312,7 @@ router.post(
   bulkApproveStockTransactions
 );
 
-router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, updateItemMismatchInStock);
+router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, isLoggedIn, updateItemMismatchInStock);
+router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, isLoggedIn, updateExpiryItemsBatch);
 
 export default router;
