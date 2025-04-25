@@ -1082,18 +1082,27 @@ export interface StaticItemData {
   images: string[];                     // array of image URLs or keys
 }
 
+type ExpiryDetail = {
+  date: Date;
+  value: number;
+  mfgDate: Date;
+  isShelfExpired: boolean;
+  totalShelfLife: string;
+  leftShelfLife: string;
+};
 export interface PurchaseEntry {
-  cp: number;                           // cost price
-  sp: number;                           // selling price (may == MRP)
-  manufacturing: string;                // ISO date string (UTC)
-  expiry: string;                       // ISO date string (UTC)
-  qty: number;                          // purchased quantity in units
-  totalStockQty: number | null;         // live stock after this PO
-  purchaseDate: string;                 // ISO date string (UTC)
-  totalShelfLife: string;               // pre-calculated text e.g. "8 months"
-  leftShelfLife: string;                // e.g. "5 months, 7 days"
-  purchaseOrderId: string;              // FK to purchase-orders collection
-  poApproveTime: string;                // ISO date string (UTC)
+  cp: number;
+  sp: number;
+  manufacturing: string;
+  expiry: string;
+  qty: number;
+  totalStockQty: number | null;
+  purchaseDate: string;
+  totalShelfLife: string;
+  leftShelfLife: string;
+  purchaseOrderId: string;
+  poApproveTime: string;
+  expiryDetails: ExpiryDetail[];
 }
 
 export interface InventoryRow {

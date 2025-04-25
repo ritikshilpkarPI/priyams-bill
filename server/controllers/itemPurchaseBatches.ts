@@ -69,6 +69,20 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
         if (!itemIdToSkuMap[itemId]) continue;
         if (filterItemId && filterItemId.toString() !== itemId) continue;
 
+        const expiryDetails = (expiryDates || []).map((ed) => {
+          const shelfLife = ed.mfgDate && ed.date
+            ? getShelfLifeInfo(ed.mfgDate, ed.date)
+            : { totalShelfLife: '', leftShelfLife: '' };
+        
+          return {
+            date: ed.date,
+            value: ed.value,
+            mfgDate: ed.mfgDate,
+            isShelfExpired: ed.isShelfExpired,
+            totalShelfLife: shelfLife.totalShelfLife,
+            leftShelfLife: shelfLife.leftShelfLife,
+          };
+        });
         const latestExpiry = expiryDates?.[expiryDates.length - 1];
         const mfgDate = latestExpiry?.mfgDate;
         const expiryDate = latestExpiry?.date;
@@ -91,6 +105,7 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
           leftShelfLife: shelfLife?.leftShelfLife ?? "",
           purchaseOrderId,
           poApproveTime,
+          expiryDetails,
         };
 
         const itemSku = itemIdToSkuMap[itemId];

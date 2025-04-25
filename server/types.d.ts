@@ -94,6 +94,8 @@ export  interface AddressComponent {
   export interface ExpiryDate {
     mfgDate: Date;
     date: Date;
+    isShelfExpired: boolean;
+    value: number;
   }
 
   export interface PurchasedItem {
@@ -105,6 +107,14 @@ export  interface AddressComponent {
     profitPercentage: number;
     item_id: string;
   }
+  type ExpiryDetail = {
+    date: Date;
+    value: number;
+    mfgDate: Date;
+    isShelfExpired: boolean;
+    totalShelfLife: string;
+    leftShelfLife: string;
+  };
 
   export interface ItemData {
     cp: number;
@@ -119,6 +129,7 @@ export  interface AddressComponent {
     leftShelfLife: string;
     purchaseOrderId: Types.ObjectId;
     poApproveTime: Date | NativeDate | null | undefined;
+    expiryDetails?: ExpiryDetail[];
   }
   export interface DealerType extends Document {
     dealerName: string;
