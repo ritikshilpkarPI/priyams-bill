@@ -239,9 +239,10 @@ const StoreInventoryManagement: React.FC = () => {
     setLoading(true);
     if(!errors){
     await addNewStockTransactionsAPI(stockTransaction);
-    }
     setLoading(false);
     navigate('/stockTransactions');
+    }
+   
   };
 
   const onChangeTransactionSource = (field: string, value: string | number) => {
