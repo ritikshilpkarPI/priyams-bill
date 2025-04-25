@@ -64,6 +64,7 @@ import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
+import { getItemTransactions } from './getItemTransactions';
 
 export {
   addBulkItems,
@@ -131,5 +132,6 @@ export {
   addNewDealer,
   getItemsFromStoreInventory,
   getStaffByStoreId,
-  getStockTransactions
+  getStockTransactions,
+  getItemTransactions,
 };
