@@ -273,6 +273,37 @@ const stockTransactionSlice = createSlice({
       if (path === 'destinationRemark') {
         shelf.destinationRemark = value;
       }
+    },
+    addExpiryBatches: (
+      state,
+      action: PayloadAction<{ itemId: string; entries: any[] }>
+    ) => {
+      const { itemId, entries } = action.payload;
+
+      
+      const item = state.transactionItems.find((i) => i.itemId === itemId);
+      if (!item) return;
+    
+      if (!item.itemByDate) {
+        item.itemByDate = [];
+      }
+    
+      const newBatches = entries.map((entry) => ({
+        shelfId: `${itemId}-${Date.now()}-${Math.random()}`, 
+        sourceQuantity: {
+          expiryDate: entry.expiryDate,
+          manufacturingDate: entry.manufacturingDate,
+          quantity: entry.quantity,
+          qty: entry.quantity,
+        },
+      }));
+    
+      item.itemByDate.push(...newBatches);
+    
+      item.totalQtyAdd = item.itemByDate.reduce(
+        (sum, batch: any) => sum + (batch.sourceQuantity.qty ?? 0),
+        0
+      );
     }
     
     
@@ -293,7 +324,8 @@ export const {
   resetStoreInventory,
   setTransactionData,
   updateTransactionItemRemarkAndError,
-  updateTransactionItemShelfField
+  updateTransactionItemShelfField,
+  addExpiryBatches
 } = stockTransactionSlice.actions;
 
 export default stockTransactionSlice.reducer;

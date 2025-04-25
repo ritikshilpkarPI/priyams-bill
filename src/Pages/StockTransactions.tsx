@@ -133,7 +133,7 @@ const StockTransactions: React.FC = () => {
 
   const handleEditClick = (rowId: string) => {
     const transactionId =  rowId.split('_')[0];
-    navigate(`/storeInventoryManagement/${transactionId}`);
+    navigate(`/createTransaction/${transactionId}`);
   };
 
   const renderTransactionId = (row: { transactionId: string; isSubRow?: boolean }) => {

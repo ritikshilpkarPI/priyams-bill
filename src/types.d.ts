@@ -774,6 +774,7 @@ declare global {
       newQuantity: number,
       shelfId: string
     ) => void;
+    showNewExpiryForm?: boolean
   }
   
   

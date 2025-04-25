@@ -53,9 +53,12 @@ import StoreInventoryForm from 'src/components/storeInventoryForm/StoreInventory
 import {
   destinationValidation,
   sourceValidation,
+  transactionReasonValidation,
 } from 'src/utils/validations/StoreInventoryManagementValidation';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { isAdmin } from 'src/utils/isAdmin';
+import * as Yup from 'yup';
+import MESSAGES from 'src/utils/constants/messages';
 
 const StoreInventoryManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -101,6 +104,8 @@ const StoreInventoryManagement: React.FC = () => {
   const transactionId = params?.id;
 
   const isAdminUser = transactionId ? isAdmin() : false;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStores = async () => {
@@ -186,26 +191,57 @@ const StoreInventoryManagement: React.FC = () => {
     return itemsArray;
   };
 
-  const validateInventoryItems = () => {
-    const errors: YupValidationErrorMapType = {};
-    inventoryItems.forEach((item) => {
-      const totalShelfQuantity = item.itemDetail.itemShelfDates?.reduce(
-        (acc: any, shelf: { quantityToAdd: any }) => acc + shelf.quantityToAdd,
-        0
-      );
-      if (totalShelfQuantity > item.quantityToAdd) {
-        errors.inventoryItems = 'Shelf quantities exceed total quantity';
-      }
-      if (totalShelfQuantity !== 0 && totalShelfQuantity < item.quantityToAdd) {
-        errors.inventoryItems =
-          'Total quantity should be equal to shelf quantities';
-      }
-    });
-    return errors;
-  };
+ 
 
+  const validateStockTransactionData = async () => {
+    try {
+  
+       await sourceValidation.validate(transactionSource, {
+        abortEarly: false, 
+      });
+       await destinationValidation.validate(
+        transactionDestination,
+        {
+          abortEarly: false,
+        }
+      );
+      
+       await transactionReasonValidation.validate(
+        stockTransaction.transactionReason,
+        {
+          abortEarly: false,
+        }
+      );
+      
+      if (!transactionItems.length) {
+         toast.error(MESSAGES.AT_LEAST_ONE_TRANSACTION_ITEM_REQUIRED)
+      }
+  
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const formattedErrors = error.inner.reduce((acc: Record<string, string>, curr) => {          
+          if (curr.path || curr.message) {
+            acc[curr.path ?? ''] = curr.message;
+            toast.error(curr.message); 
+          }
+
+          return acc;
+        }, {} as Record<string, string>);  
+        return formattedErrors;
+      } else {
+        console.error('Unexpected error during validation:', error);
+      }
+    }
+  };
+  
   const onSubmitTransaction = async () => {
-    addNewStockTransactionsAPI(stockTransaction);
+    const errors =  await validateStockTransactionData();
+    setLoading(true);
+    if(!errors){
+    await addNewStockTransactionsAPI(stockTransaction);
+    }
+    setLoading(false);
+    navigate('/stockTransactions');
   };
 
   const onChangeTransactionSource = (field: string, value: string | number) => {
@@ -288,7 +324,25 @@ const StoreInventoryManagement: React.FC = () => {
     const response = getStockTransactions();
   }, []);
 
+  const [confirmZeroQty, setConfirmZeroQty] = useState(false);
+
+
+  const hasZeroQty = transactionItems.some((item) =>
+    item.itemByDate?.some(
+      (batch: any) =>
+        batch.destinationQuantity?.qty === 0 || batch.destinationQuantity?.qty === undefined
+    )
+  );
+  
+
   const onDestinationSubmit = async () => {
+
+    if (hasZeroQty && !confirmZeroQty) {
+      toast.warning(MESSAGES.STOCK_QUANTITY_WARNING);
+      setConfirmZeroQty(true);
+      return;
+    }
+    
     const response = await updateStockTransactionsAPI(transactionId ?? '', {
       transactionItems: transactionItems.map((item) => ({
         itemId: item.itemId,
@@ -300,6 +354,7 @@ const StoreInventoryManagement: React.FC = () => {
       toast.success('Destination added successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
+      navigate('/stockTransactions');
     }
   };
 
@@ -438,8 +493,8 @@ const StoreInventoryManagement: React.FC = () => {
               onClick={onDestinationSubmit}
               disabled={stockTransaction?.approvedByAdmin}
             >
-              Save
-            </Button>
+      {confirmZeroQty ? 'Yes, save' : 'Save'}
+      </Button>
           </Grid.Col>
         )}
 
