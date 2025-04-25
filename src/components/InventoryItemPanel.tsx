@@ -1,120 +1,147 @@
-import React from 'react';
-import { Table, ActionIcon, ScrollArea, Text } from '@mantine/core';
-import CustomNumberInput from './customNumberInput/CustomNumberInput';
-import { IconTrash } from '@tabler/icons-react';
+import React, { useState } from 'react';
+import {
+  Table,
+  ActionIcon,
+  ScrollArea,
+  Text
+} from '@mantine/core';
+import {
+  IconTrash,
+  IconChevronDown,
+  IconChevronUp,
+} from '@tabler/icons-react';
 import ShelfTable from './shelfTable/ShelfTable';
-
-interface InventoryItemPanelProps {
-  items: {
-    itemDetail: {
-      itemShelfDates: never[];
-      _id: string;
-      itemName: string;
-      itemBarcode: string;
-      itemStockQuantity: number;
-      itemShelfDate?: {
-        expiryDates?: {
-          date: string;
-          mfgDate: string;
-          value: number;
-          isShelfExpired: boolean;
-          _id: string;
-        }[];
-      };
-      itemQtyInStore: number;
-    };
-    quantityToAdd: number; 
-  }[];
-  onQuantityChange: (itemId: string, quantity: number, shelfId?: string) => void;
-  onRemoveItem: (itemId: string) => void;
-}
+import { useSelector } from 'react-redux';
+import { CONSTANTS } from 'src/constants/constants';
+import { pascalCase } from 'src/utils/pascalCase';
+import DestinationShelfTable from './shelfTable/DestinationShelfTable';
 
 export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   items,
   onQuantityChange,
   onRemoveItem,
+  enableDestinationForm,
+  disabled = false,
 }) => {
+  const [collapsedIds, setCollapsedIds] = useState<string[]>([]);
+
+  const toggleCollapse = (itemId: string) => {
+    setCollapsedIds((prev) =>
+      prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId]
+    );
+  };
+
   const handleQuantityChange = (
     itemId: string,
     maxStock: number,
     quantity: number,
     shelfId?: string
   ) => {
-    if (quantity > maxStock || quantity < 0) {
+    if (quantity < 0) {
       console.warn('Quantity exceeds available stock!');
       return;
     }
     onQuantityChange(itemId, quantity, shelfId);
   };
 
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString();
+  const transactionSource = useSelector(
+    (state: RootState) => state.stockTransaction.source
+  );
+
+  const transactionDestination = useSelector(
+    (state: RootState) => state.stockTransaction.destination
+  );
 
   return (
     <ScrollArea style={{ width: '100%' }}>
       <Table striped highlightOnHover withBorder>
         <thead>
           <tr>
-            <th>Item Name</th>
-            <th>Barcode</th>
-            <th>Qty WH</th>
-            <th>Qty Store</th>
-            <th>Expiry Dates</th>
-            <th>Manufacturing Dates</th>
-            <th>Shelf Quantities</th>
-            <th>Quantity to Add</th>
+            <th></th>
+            <th>SKU</th>
+            {!enableDestinationForm && <>  <th>Barcode</th>
+            <th>{`Qty ${pascalCase(transactionSource.sourceType ?? '')}`}</th>
+            <th>{`Qty ${pascalCase(transactionDestination.destinationType ?? '')}`}</th>
+            </>}
             <th>Expiry Batches (Qty to Add)</th>
-            <th>Action</th>
+           {!enableDestinationForm && <> <th>Total Qty to Add</th>
+            <th>Action</th> </>}
           </tr>
         </thead>
         <tbody>
-          {items.map(({ itemDetail, quantityToAdd }) => {
-            console.log({itemDetail});
+          {items.map((item) => {
+            const isCollapsed = collapsedIds.includes(item.itemId);
+            const sourceQuantity = item.itemByDate || [];
+
+            return !isCollapsed ? (
+              <React.Fragment key={item.itemId}>
+                <tr>
+                  <td>
+                    <ActionIcon
+                      onClick={() => toggleCollapse(item.itemId)}
+                      disabled={disabled}
+                    >
+                      <IconChevronUp size={18} />
+                    </ActionIcon>
+                  </td>
+                  <td>{item.sku}</td>
+                { !enableDestinationForm && <>  <td>{item.itemBarcode}</td>
+                  <td>{item.itemStockQuantity}</td>
+                  <td>{item.itemQtyInStore}</td> </>}
+                  <td>
+                    {enableDestinationForm ? (
+                      <DestinationShelfTable
+                        shelfList={sourceQuantity}
+                        itemId={item.itemId}
+                        disabled={disabled}
+                      />
+                    ) : (
+                      <ShelfTable
+
+                        shelfList={sourceQuantity}
+                        itemId={item.itemId}
+                        handleQuantityChange={handleQuantityChange}
+                      />
+                    )}
+                   
+                  </td>
+                { !enableDestinationForm && <>  <td>{item.totalQtyAdd}</td>
+                  <td>
+                  
+                    <ActionIcon
+                      variant="filled"
+                      color="red"
+                      onClick={() => onRemoveItem(item.itemId)}
+                      disabled={disabled}
+                    >
+                      <IconTrash size={18} />
+                    </ActionIcon>
+                  </td>
+                  </>}
+                </tr>
+             
             
-            const shelfList = itemDetail.itemShelfDates || [];
 
-            return (
-              <tr key={itemDetail._id}>
-                <td>{itemDetail.itemName}</td>
-                <td>{itemDetail.itemBarcode}</td>
-                <td>{itemDetail.itemStockQuantity}</td>
-                <td>
-                <Text>{itemDetail?.itemQtyInStore}</Text>
-              </td>
-
-                <td>
-                <ShelfTable
-                 shelfList={shelfList}
-                 itemId={itemDetail._id}
-                 handleQuantityChange={handleQuantityChange}
-                   />
-                </td>
-
-                <td>
-                  <CustomNumberInput
-                    required
-                    placeholder="Enter total qty"
-                    value={quantityToAdd}
-                    onChange={(e) =>
-                      handleQuantityChange(
-                        itemDetail._id,
-                        itemDetail.itemStockQuantity,
-                        Number(e.target.value)
-                      )
-                    }
-                  />
-                </td>
+              </React.Fragment>
+            ) : (
+              <tr key={item.itemId}>
                 <td>
                   <ActionIcon
-                    variant="filled"
-                    color="red"
-                    onClick={() => onRemoveItem(itemDetail._id)}
+                    onClick={() => toggleCollapse(item.itemId)}
+                    disabled={disabled}
                   >
-                    <IconTrash size={18} />
+                    <IconChevronDown size={18} />
                   </ActionIcon>
                 </td>
+                <td colSpan={7}>
+                  <Text color="dimmed" italic>
+                    {item.sku}
+                  </Text>
+                </td>
               </tr>
-            )
+            );
           })}
         </tbody>
       </Table>
