@@ -62,6 +62,7 @@ import {getStaffByStoreId} from "./getStaffByStoreId"
 import { itemsStaticAttributes } from "./itemsStaticAttributes"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
+import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
 import { getItemTransactions } from './getItemTransactions';
@@ -132,6 +133,7 @@ export {
   addNewDealer,
   getItemsFromStoreInventory,
   getStaffByStoreId,
+  addNewStockTransactions,
   getStockTransactions,
   getItemTransactions,
 };

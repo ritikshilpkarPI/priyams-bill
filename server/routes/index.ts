@@ -68,6 +68,7 @@ const {
   getAllDealers,
   addNewDealer,
   getStaffByStoreId,
+  addNewStockTransactions,
   getStockTransactions,
   getItemsFromStoreInventory,
   getItemTransactions
@@ -284,6 +285,8 @@ router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
 router.get(`${API_PATHS.STAFF.GET_STAFFS}/:storeId`, isLoggedIn, getStaffByStoreId);
+
+router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, addNewStockTransactions);
 router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
 router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS, isLoggedIn, getStockTransactions)
 router.post(API_PATHS.STOCK_TRANSACTION.GET_ITEM_TRANSACTIONS, isLoggedIn, getItemTransactions)

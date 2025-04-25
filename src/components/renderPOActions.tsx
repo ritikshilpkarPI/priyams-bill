@@ -50,40 +50,16 @@ const renderPurchaseOrderActions = ({
             </Button>
           )}
 
-          {list.isDraft && isSavedApprovedPage ? (
+          {!(list.isDraft &&isSavedApprovedPage) && !isApprovedPO &&
             <Button
               disabled={!!loading || list.isRejected || list.isApproved}
-              loading={!!loading?.state && loading.btnName === 'approve'}
-              onClick={() => approveOrder(list._id, index, list)}
+              loading={!!loading?.state && loading.btnName === 'draft'}
+              onClick={() => draftOrder(list._id, index)}
               className="approve-btn"
             >
-              Approve
+              Draft
             </Button>
-          ) : (
-            !isApprovedPO && (
-              <Button
-                disabled={!!loading || list.isRejected || list.isApproved}
-                loading={!!loading?.state && loading.btnName === 'draft'}
-                onClick={() => draftOrder(list._id, index)}
-                className="approve-btn"
-              >
-                Draft
-              </Button>
-            )
-          )}
-
-          {isSavedApprovedPage && (
-            <Button
-              disabled={
-                !!loading || list.isApproved || list.isRejected || !list.isDraft
-              }
-              loading={!!loading?.state && loading.btnName === 'reject'}
-              onClick={() => rejectOrder(list._id, index)}
-              className="reject-btn"
-            >
-              Reject
-            </Button>
-          )}
+          }
         </>
       ) : (
         <>
@@ -108,15 +84,6 @@ const renderPurchaseOrderActions = ({
             </Button>
           )}
         </>
-      )}
-
-      {isAdminUser && list.isDraft && (
-        <Button
-          variant="outline"
-          onClick={() => navigate(`/sellDetailsPage/${list._id}`)}
-        >
-          Sell Details
-        </Button>
       )}
     </Box>
   );
