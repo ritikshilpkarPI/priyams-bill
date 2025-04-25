@@ -16,6 +16,6 @@ export const destinationValidation = Yup.object({
     .required('Destination type is required'),
 });
 
-export const transactionReason  = Yup.string().required('Transaction Reason is required')
+export const transactionReasonValidation  = Yup.string().required('Transaction Reason is required')
 
 
