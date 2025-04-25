@@ -216,6 +216,14 @@ const StoreInventoryManagement: React.FC = () => {
       if (!transactionItems.length) {
          toast.error(MESSAGES.AT_LEAST_ONE_TRANSACTION_ITEM_REQUIRED)
       }
+
+     const totalItemsQuantity = transactionItems.reduce((acc, curr: any) => {      
+      return acc + curr.totalQtyAdd;
+      }, 0);
+      if (totalItemsQuantity === 0) {
+        toast.error(MESSAGES.AT_LEAST_ONE_TRANSACTION_ITEM_REQUIRED)
+        return true;
+      }
   
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -236,12 +244,13 @@ const StoreInventoryManagement: React.FC = () => {
   
   const onSubmitTransaction = async () => {
     const errors =  await validateStockTransactionData();
+    if(!errors){      
     setLoading(true);
-    if(!errors){
-    await addNewStockTransactionsAPI(stockTransaction);
-    }
+     await addNewStockTransactionsAPI(stockTransaction);
     setLoading(false);
     navigate('/stockTransactions');
+    }
+   
   };
 
   const onChangeTransactionSource = (field: string, value: string | number) => {
