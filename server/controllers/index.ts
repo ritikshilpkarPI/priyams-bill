@@ -68,6 +68,7 @@ import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
 import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
+import { getItemTransactions } from './getItemTransactions';
 import { bulkApproveStockTransactions } from "./bulkApproveStockTransactions"
 import { itemPurchaseBatches } from './itemPurchaseBatches';
 import { getAllExpiryItemsBatch } from "./getAllExpiryItemsBatch";
@@ -146,7 +147,8 @@ export {
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
-  getStockTransactions,  
+  getStockTransactions,
+  getItemTransactions,
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
   markExpiryItemsBatchCleared,  

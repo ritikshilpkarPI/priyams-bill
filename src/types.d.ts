@@ -670,6 +670,7 @@ declare global {
     rowCount: number;
     paginationMode?: 'client' | 'server'; 
     onRowClick?: GridEventListener<'rowClick'>;
+    onRowClick?: GridEventListener<'rowClick'>;
     expandedRows?: string[];
     onToggleExpand?: (id: string) => void; 
   }
@@ -911,7 +912,6 @@ declare global {
     startDate:Date;
     endDate:Date;
     totalCount: number;
-    prevLocation: string;
   }
   interface DateRangePickerProps {
     startDate: Date | null;
@@ -923,6 +923,7 @@ declare global {
     startDate?: Date;
     endDate?: Date;
     storeId?: string;
+    storeIds?: string[];
     page?: number;
     limit?: number;
     itemIds?: string[];

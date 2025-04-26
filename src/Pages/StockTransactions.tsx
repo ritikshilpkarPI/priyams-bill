@@ -16,12 +16,14 @@ import {
   setTotalCount
 } from 'src/redux/stockTransactions/stockTransactionsSlice';
 import { generateColor } from 'src/utils/constants/generateColor';
-import { getStockTransactions } from 'src/utils/apiUtils';
+import { getItemTransactions, getStockTransactions } from 'src/utils/apiUtils';
 import DateRangePicker from 'src/components/DateRangePicker';
 import { useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 
 const StockTransactions: React.FC = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const {
     rawData,
     transformedData: data,
@@ -32,28 +34,37 @@ const StockTransactions: React.FC = () => {
     startDate,
     endDate,
     totalCount,
-    prevLocation
   } = useSelector((state: RootState) => state.stockTransactions);
 
   const storeData = useSelector((state: RootState) => state.user.storeData);
   const selectedItemsIds = useSelector(
     (state: RootState) => state.storeInventoryManagement.selectedItemsIds
   );
-  const isDirectedfromStoreInventory = prevLocation === "/storeInventory";
+  const isDirectedfromStoreInventory = location.state?.fromStoreInventory;
 
   const navigate = useNavigate();
   
   const fetchTransactions = async (targetPage: number, limit: number) => {
     dispatch(setIsLoading(true));
   
-    const result = await getStockTransactions({
-      startDate: isDirectedfromStoreInventory ? undefined : startDate,
-      endDate: isDirectedfromStoreInventory ? undefined : endDate,
-      storeId: storeData._id,
-      page: targetPage + 1, 
-      limit,
-      itemIds: selectedItemsIds
-    });
+    let result;
+    if(isDirectedfromStoreInventory) {
+      const storeIds = storeData._id ? [storeData._id] : [];
+      result = await getItemTransactions({
+        storeIds,
+        page: page + 1,
+        limit: rowsPerPage,
+        itemIds: selectedItemsIds
+      });
+    } else {
+      result = await getStockTransactions({
+        startDate,
+        endDate,
+        storeId: storeData._id,
+        page: targetPage + 1, 
+        limit,
+      });
+    }
   
     if (!result?.isError) {
       dispatch(setRawData({ page: `${targetPage}_${limit}`, data: result.data }));
@@ -67,13 +78,10 @@ const StockTransactions: React.FC = () => {
   };
   
   useEffect(() => {
-    const currentKey = `${page}_${rowsPerPage}`;
-  
-    if (!rawData[currentKey]) {
+    return () => {
       dispatch(clearRawData());
-       fetchTransactions(page, rowsPerPage);
     }
-  }, [rowsPerPage]);
+  }, []);
   
   useEffect(() => {
    
