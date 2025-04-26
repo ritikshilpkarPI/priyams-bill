@@ -267,6 +267,12 @@ const stockTransactionSlice = createSlice({
             errorQty: sourceQty - destQty,
             isResolved: false,
           }
+        }else {
+          shelf.itemError = {
+            errorReason: '',
+            errorQty: 0,
+            isResolved: true,
+          }
         }
       }
     
