@@ -2,10 +2,11 @@ import mongoose, { Schema } from 'mongoose';
 import { ExpiredItemsSchema } from '../types';
 import { expiredStatus } from '../util/constants/expiredItemsConstant';
 
-const expiredItemsSchema = new Schema<ExpiredItemsSchema>(
+const expiredItemsBatchSchema = new Schema<ExpiredItemsSchema>(
   {
     boxId: {
       type: String,
+      unique: true
     },
     dealerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Dealer' },
     stockTransactionId: { type: mongoose.Schema.Types.ObjectId, ref: 'StockTransaction' },
@@ -77,6 +78,6 @@ const expiredItemsSchema = new Schema<ExpiredItemsSchema>(
 );
 
 export default mongoose.model<ExpiredItemsSchema>(
-  'ExpiredItems',
-  expiredItemsSchema
+  'ExpiredItemsBatch',
+  expiredItemsBatchSchema
 );

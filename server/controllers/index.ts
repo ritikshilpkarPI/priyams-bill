@@ -75,6 +75,7 @@ import { getAllExpiryItemsBatch } from "./getAllExpiryItemsBatch";
 import { getExpiryItemsBatchById } from "./getExpiryItemsBatchById";
 import { markExpiryItemsBatchCleared } from "./markExpiryItemsBatchCleared"
 import { updateItemMismatchInStock } from "./updateItemMismatchInStock";
+import { updateExpiryItemsBatch } from './updateExpiryItemsBatch';
 
 export {
   addBulkItems,
@@ -154,4 +155,5 @@ export {
   markExpiryItemsBatchCleared,  
   bulkApproveStockTransactions,
   updateItemMismatchInStock,
+  updateExpiryItemsBatch,
 };

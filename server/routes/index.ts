@@ -81,6 +81,7 @@ const {
   markExpiryItemsBatchCleared,
   bulkApproveStockTransactions,
   updateItemMismatchInStock,
+  updateExpiryItemsBatch,
 } = require('../controllers/index');
 
 
@@ -121,11 +122,7 @@ router.get(
   isLoggedIn,
   getDayWiseProcedures
 );
-router.post(
-  API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
-  isLoggedIn,
-  addOpenCloseProcedure
-);
+
 router.post(
   API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE,
   isLoggedIn,
@@ -133,11 +130,6 @@ router.post(
 );
 router.put(
   API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN,
-  isLoggedIn,
-  editOpenCloseProcedure
-);
-router.put(
-  API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE,
   isLoggedIn,
   editOpenCloseProcedure
 );
@@ -294,7 +286,7 @@ router.get(API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES, isLoggedIn ,itemPurchaseBa
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
-router.post(API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEM_BATCH,isLoggedIn, createExpiryItemsBatch);
+router.post(API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEMS_BATCH,isLoggedIn, createExpiryItemsBatch);
 router.post(API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION, isLoggedIn, updateStockTransactionDestination);
 
 router.post(
@@ -324,6 +316,7 @@ router.post(
   bulkApproveStockTransactions
 );
 
-router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, updateItemMismatchInStock);
+router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, isLoggedIn, updateItemMismatchInStock);
+router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, isLoggedIn, updateExpiryItemsBatch);
 
 export default router;

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import expiredItem from '../db-models/expired-items-model';
-import { ExpiredItems, StatusHistory } from '../types';
+import expiredItemsBatch from '../db-models/expired-items-batch-model';
+import { StatusHistory } from '../types';
 import mongoose from 'mongoose';
 import { uploadMultipleImages } from '../util/image';
 import { clodinaryFoldersPathKey } from '../util/constant';
@@ -12,16 +12,16 @@ export const createExpiryItemsBatch = async (req: Request, res: Response, next: 
       boxId,
       dealerId,
       remark,
+      expiryBatchCost,
     } = req.body;
 
-    let { items, itemWiseTotalCost, deviceInfo } = req.body;
+    let { items = [], itemWiseTotalCost = {}, deviceInfo = {} } = req.body;
 
-    items = JSON.parse(req.body?.items || "")
-    itemWiseTotalCost = JSON.parse(req.body?.itemWiseTotalCost || "")
-    if (req.body?.deviceInfo) deviceInfo = JSON.parse(req.body?.deviceInfo)
-    else deviceInfo = {};
+    if (typeof items === "string") items = JSON.parse(req.body?.items || "")
+    if (typeof itemWiseTotalCost === "string") itemWiseTotalCost = JSON.parse(req.body?.itemWiseTotalCost || "")
+    if (typeof deviceInfo === "string") deviceInfo = JSON.parse(req.body?.deviceInfo || "")
 
-    if (!/^[A-Za-z0-9]{6,8}$/.test(boxId)) {
+    if (!boxId) {
       return res.status(400).json({ message: 'Invalid Box ID' });
     }
 
@@ -32,6 +32,11 @@ export const createExpiryItemsBatch = async (req: Request, res: Response, next: 
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'No items added' });
     }
+
+    if (isNaN(Number(expiryBatchCost))) {
+      return res.status(400).json({ message: 'Mismatched expiryBatchCost' });
+    };
+
     let expiryImages;
     if (req.files?.expiryImages) {
         let images = req.files?.expiryImages;
@@ -54,10 +59,6 @@ export const createExpiryItemsBatch = async (req: Request, res: Response, next: 
       }
     }
 
-    const expiryBatchCost = Number(
-      items.reduce((sum: number, item: ExpiredItems) => sum + (item.totalCostPrice || 0), 0).toFixed(2)
-    );
-
     const newStatus: StatusHistory = {
       dateTime: new Date(),
       ipReferrer: req.headers.referer || '',
@@ -68,7 +69,7 @@ export const createExpiryItemsBatch = async (req: Request, res: Response, next: 
       os: deviceInfo?.os || 'Unknown',
     };
 
-    const savedItem = await expiredItem.create({
+    const savedItem = await expiredItemsBatch.create({
       boxId,
       dealerId,
       expiryImages,

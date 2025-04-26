@@ -58,11 +58,11 @@ export const updateStockTransactionDestination = async (req: Request, res: Respo
             existing.destinationRemark = update.destinationRemark;
           }
 
-          if (update.itemError) {
+          if (update.destination.qty !== existing.destinationQuantity?.qty) {
             existing.itemError = {
-              errorReason: update.itemError.errorReason ?? existing.itemError?.errorReason ?? 'NONE',
-              errorQty: update.itemError.errorQty ?? existing.itemError?.errorQty ?? 0,
-              isResolved: update.itemError.isResolved ?? existing.itemError?.isResolved ?? false,
+              errorReason: 'Destination quantity mismatch',
+              errorQty: update.destination.qty,
+              isResolved: false,
             };
           }
         }

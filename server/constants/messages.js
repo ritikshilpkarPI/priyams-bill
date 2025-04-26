@@ -53,7 +53,6 @@ const MESSAGES = Object.freeze({
     TRANSACTION_ITEMS_REQUIRED: 'At least one transaction item is required',
     CREATED: 'Stock transaction created successfully.',
   },
-  INVALID_STORE_ID: "Invalid store ID provided.",
   INVALID_TRANSACTION_IDS: 'Invalid transactionIds',
   INVALID_STORE_ID: 'Invalid storeId',
   STORE_NOT_FOUND_FOR_TRANSACTIONS: 'Store not found for transactions',

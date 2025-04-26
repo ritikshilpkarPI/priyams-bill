@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import expiredItemsModel from '../db-models/expired-items-model';
+import expiredItemsBatchModel from '../db-models/expired-items-batch-model';
 import { expiredStatus } from '../util/constants/expiredItemsConstant';
 import { MESSAGES } from '../constants/messages';
 
@@ -15,7 +15,7 @@ export const markExpiryItemsBatchCleared = async (req: Request, res: Response) =
   } = req.body;
 
   try {
-    const batch = await expiredItemsModel.findById(id);
+    const batch = await expiredItemsBatchModel.findById(id);
 
     if (!batch) {
       return res.status(404).json({ success: false, message: MESSAGES.EXPIRED_ITEMS_BATCH_NOT_FOUND });

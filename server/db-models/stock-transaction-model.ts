@@ -94,7 +94,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
                   },
                   isResolved: {
                     type: Boolean,
-                    default: false,
+                    default: true,
                   },
             },
           },
