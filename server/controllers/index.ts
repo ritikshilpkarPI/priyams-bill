@@ -64,6 +64,7 @@ import { addNewDealer } from "./addNewDealer";
 import { createExpiryItemsBatch } from "./createExpiryItemsBatch";
 import { updateExpiryItemsBatch } from './updateExpiryItemsBatch';
 import { draftExpiryItemsBatch } from './draftExpiryItemsBatch';
+import { approveOrRejectExpiryItemsBatch } from './approveOrRejectExpiryItemsBatch';
 
 export {
   addBulkItems,
@@ -132,4 +133,5 @@ export {
   createExpiryItemsBatch,
   updateExpiryItemsBatch,
   draftExpiryItemsBatch,
+  approveOrRejectExpiryItemsBatch
 };
