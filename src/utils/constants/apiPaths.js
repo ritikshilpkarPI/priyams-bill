@@ -119,8 +119,6 @@ export const API_PATHS = {
     ADD_NEW_DEALER: "/api/addNewDealer",
   },
   STOCK_TRANSACTION:{
-    ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
-    GET_STOCK_TRANSACTIONS:"/api/stockTransactions",
     GET_ITEM_TRANSACTIONS:"/api/stockTransactions/items",
     PUT_UPDATE_STOCK_TRANSACTION: '/api/stock-transactions/:id/admin',
     ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",

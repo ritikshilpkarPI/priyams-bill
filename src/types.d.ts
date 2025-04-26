@@ -670,7 +670,6 @@ declare global {
     rowCount: number;
     paginationMode?: 'client' | 'server'; 
     onRowClick?: GridEventListener<'rowClick'>;
-    onRowClick?: GridEventListener<'rowClick'>;
     expandedRows?: string[];
     onToggleExpand?: (id: string) => void; 
   }

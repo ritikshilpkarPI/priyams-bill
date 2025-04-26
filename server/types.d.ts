@@ -207,10 +207,6 @@ export interface StockTransactionFilterBody {
   limit?: string;
 }
 
-export interface StockTransactionsInterface {
-  transactions: StockTransactionType[]
-}
-
 interface StatusHistory {
   status: string;
   staffId: mongoose.Types.ObjectId;
