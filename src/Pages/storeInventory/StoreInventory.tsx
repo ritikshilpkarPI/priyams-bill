@@ -38,7 +38,6 @@ import DataTable from '../DataTable';
 import { toast } from 'react-toastify';
 import { IconTrashX } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
-import { setPrevLocation } from 'src/redux/stockTransactions/stockTransactionsSlice';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -219,11 +218,9 @@ const StoreInventory: React.FC = () => {
           />
         </Grid.Col>
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end" }}>
-          <Button disabled={selectedItemsIds?.length < 1}
-           onClick={()=>{
-            dispatch(setPrevLocation(window.location.pathname));
-            navigate("/stockTransactions");
-          }}
+          <Button 
+            disabled={selectedItemsIds?.length < 1}
+            onClick={()=>navigate("/stockTransactions", { state: { fromStoreInventory: true } })}
           >View Transactions</Button>
         </Grid.Col>
         <Grid.Col span={12}>

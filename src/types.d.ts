@@ -912,7 +912,6 @@ declare global {
     startDate:Date;
     endDate:Date;
     totalCount: number;
-    prevLocation: string;
   }
   interface DateRangePickerProps {
     startDate: Date | null;
@@ -924,6 +923,7 @@ declare global {
     startDate?: Date;
     endDate?: Date;
     storeId?: string;
+    storeIds?: string[];
     page?: number;
     limit?: number;
     itemIds?: string[];
