@@ -580,6 +580,28 @@ export const getStockTransactions = async ({
   }
 };
 
+export const getItemTransactions = async ({
+  storeIds = [],
+  page = 1,
+  limit = 100,
+  itemIds = []
+}: StockTransactionParams) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.GET_ITEM_TRANSACTIONS,
+      data: {
+        storeIds,
+        page,
+        limit,
+        itemIds
+      }
+    });
+
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
 export const addNewStockTransactionsAPI = async (
   StockTransaction: StockTransactionType
 ) => {
