@@ -1,0 +1,142 @@
+import React, { useState } from 'react';
+import {
+  Table,
+  ActionIcon,
+  ScrollArea,
+  Text
+} from '@mantine/core';
+import {
+  IconTrash,
+  IconChevronDown,
+  IconChevronUp,
+} from '@tabler/icons-react';
+import ShelfTable from './shelfTable/ShelfTable';
+import { useSelector } from 'react-redux';
+import { CONSTANTS } from 'src/constants/constants';
+import { pascalCase } from 'src/utils/pascalCase';
+import DestinationShelfTable from './shelfTable/DestinationShelfTable';
+
+export const ExpiredItemPOTable = ({
+
+}) => {
+  const [collapsedIds, setCollapsedIds] = useState<string[]>([]);
+
+  const toggleCollapse = (itemId: string) => {
+    setCollapsedIds((prev) =>
+      prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId]
+    );
+  };
+
+//   const handleQuantityChange = (
+//     itemId: string,
+//     maxStock: number,
+//     quantity: number,
+//     shelfId?: string
+//   ) => {
+//     if (quantity < 0) {
+//       console.warn('Quantity exceeds available stock!');
+//       return;
+//     }
+//     onQuantityChange(itemId, quantity, shelfId);
+//   };
+
+  const transactionSource = useSelector(
+    (state: RootState) => state.stockTransaction.source
+  );
+
+  const transactionDestination = useSelector(
+    (state: RootState) => state.stockTransaction.destination
+  );
+
+  return (
+    <ScrollArea style={{ width: '100%' }}>
+      <Table striped highlightOnHover withBorder>
+        <thead>
+          <tr>
+            <th></th>
+            <th>SKU</th>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Company</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* {items.map((item) => {
+            const isCollapsed = collapsedIds.includes(item.itemId);
+            const sourceQuantity = item.itemByDate || [];
+
+            return !isCollapsed ? (
+              <React.Fragment key={item.itemId}>
+                <tr>
+                  <td>
+                    <ActionIcon
+                      onClick={() => toggleCollapse(item.itemId)}
+                      disabled={disabled}
+                    >
+                      <IconChevronUp size={18} />
+                    </ActionIcon>
+                  </td>
+                  <td>{item.sku}</td>
+                { !enableDestinationForm && <>  <td>{item.itemBarcode}</td>
+                  <td>{item.itemStockQuantity}</td>
+                  <td>{item.itemQtyInStore}</td> </>}
+                  <td>
+                    {enableDestinationForm ? (
+                      <DestinationShelfTable
+                        shelfList={sourceQuantity}
+                        itemId={item.itemId}
+                        disabled={disabled}
+                      />
+                    ) : (
+                      <ShelfTable
+
+                        shelfList={sourceQuantity}
+                        itemId={item.itemId}
+                        handleQuantityChange={handleQuantityChange}
+                      />
+                    )}
+                   
+                  </td>
+                { !enableDestinationForm && <>  <td>{item.totalQtyAdd}</td>
+                  <td>
+                  
+                    <ActionIcon
+                      variant="filled"
+                      color="red"
+                      onClick={() => onRemoveItem(item.itemId)}
+                      disabled={disabled}
+                    >
+                      <IconTrash size={18} />
+                    </ActionIcon>
+                  </td>
+                  </>}
+                </tr>
+             
+            
+
+              </React.Fragment>
+            ) : (
+              <tr key={item.itemId}>
+                <td>
+                  <ActionIcon
+                    onClick={() => toggleCollapse(item.itemId)}
+                    disabled={disabled}
+                  >
+                    <IconChevronDown size={18} />
+                  </ActionIcon>
+                </td>
+                <td colSpan={7}>
+                  <Text color="dimmed" italic>
+                    {item.sku}
+                  </Text>
+                </td>
+              </tr>
+            );
+          })} */}
+        </tbody>
+      </Table>
+    </ScrollArea>
+  );
+};
