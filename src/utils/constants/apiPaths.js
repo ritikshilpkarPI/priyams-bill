@@ -92,6 +92,8 @@ export const API_PATHS = {
     GET_EXPIRED_ITEMS: "/api/getExpiredItems",
     CREATE_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch",
     UPDATE_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch",
+    DRAFT_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch/draft",
+    APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch/approve-reject",
   },
  
   RIDER:{
