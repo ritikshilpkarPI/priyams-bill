@@ -7,15 +7,21 @@ import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedIte
 import purchaseOrderSlice from './purchaseOrder/purchaseOrderSlice';
 import paymentDetailFormSlice from './paymentDetailForm/paymentDetailFormSlice';
 import storeInventoryManagement from  "./storeInventoryManagement/storeInventoryManagementSlice";
-import brandSlice from "./brands/brandSlice"
-import companySlice from "./companys/companySlice"
+import userSlice from './user/userSlice';
 import staffSlice from "./staffList/StaffSlice";
 import expiredItemsSlice from './expiredItems/expiredItemsSlice'
-import purchaseListApprovalSlice from './purchaseListApproval/purchaseListApprovalSlice'
+import brandSlice from "./brands/brandSlice"
+import companySlice from "./companys/companySlice"
 import dealerSlice from './dealerlist/dealerSlice';
+import purchaseListApprovalSlice from './purchaseListApproval/purchaseListApprovalSlice'
+import stockTransactionsReducer from './stockTransactions/stockTransactionsSlice';
+import stockTransactionSlice from './stockTransactionManagement/StockTransactionManagement'
+import expiredItemsBatchSlice from './expiredItemsBatch/ExpiredItemsBatchSlice'
+import inventoryReducer from './inventoryPage/inventorySlice';
 
 export const store = configureStore({
   reducer: {
+    user: userSlice,
     bill: billReducer,
     allItemsFeedData: allItemsFeedDataSlice,
     items: itemsSlice,
@@ -29,7 +35,11 @@ export const store = configureStore({
     company: companySlice,
     staffs: staffSlice,
     expiredItems: expiredItemsSlice,
-    purchaseListApproval:purchaseListApprovalSlice
+    stockTransaction:stockTransactionSlice,
+    purchaseListApproval:purchaseListApprovalSlice,
+    stockTransactions: stockTransactionsReducer,
+    expiredItemsBatch: expiredItemsBatchSlice,
+    inventory: inventoryReducer
   },
 });
 
