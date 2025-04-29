@@ -102,16 +102,16 @@ export const updateStockTransactionByAdmin = async (
         if (itemsToTransfer.length > 0) {
           const { sourceType, destinationType } = updateData;
   
-          if (destinationType === CONSTANTS.WAREHOUSE) {
+          if (updateData?.destination?.destinationType === CONSTANTS.WAREHOUSE) {
             await transferStockToWarehouse({
               items: itemsToTransfer,
-              collectionName: sourceType,
+              storeId: updateData?.source?.sourceEntityId,
               userId: user?._id,
             });
-          } else if (destinationType === CONSTANTS.DEALER) {
+          } else if (updateData?.destination?.destinationType === CONSTANTS.DEALER) {
             await subtractFromSourceInventory({
               items: itemsToTransfer,
-              collectionName: sourceType,
+              storeId: updateData?.source?.sourceEntityId,
               userId: user?._id,
               sourceType: sourceType === CONSTANTS.WAREHOUSE ? CONSTANTS.WAREHOUSE : CONSTANTS.STORE,
               transactionId: transaction._id,
@@ -119,7 +119,7 @@ export const updateStockTransactionByAdmin = async (
           } else {
             await transferStockToStore({
               items: itemsToTransfer,
-              collectionName: destinationType,
+              storeId: updateData?.destination?.destinationEntityId,
               userId: user?._id,
               transactionId: transaction._id,
             });

@@ -154,11 +154,11 @@ const StoreInventoryManagement: React.FC = () => {
       totalQtyAdd: 0,
       sku: item.itemDetail.sku ?? '',
       itemByDate: item.itemDetail.itemShelfDates
-        ? item.itemDetail.itemShelfDates.map((shelf) => ({
+        ? item.itemDetail.itemShelfDates?.map((shelf) => ({
             sourceQuantity: {
               expiryDate: shelf.expiryDate,
               manufacturingDate: shelf.manufacturingDate,
-              qty: shelf.quantityToAdd,
+              qty: shelf.currentStockQuantity ?? 0,
               quantity: shelf.quantity,
             },
             shelfId: shelf._id,
@@ -315,8 +315,8 @@ const StoreInventoryManagement: React.FC = () => {
 
   useEffect(() => {
     fetchSourceStaffs(transactionSource.sourceEntityId);
-    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId));
-  }, [stockTransaction.source.sourceEntityId]);
+    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId, stockTransaction?.source?.sourceType ));
+  }, [stockTransaction.source]);
 
   const getStockTransactions = async () => {
     try {
@@ -354,7 +354,7 @@ const StoreInventoryManagement: React.FC = () => {
 
     setLoading(true);
     const response = await updateStockTransactionsAPI(transactionId ?? '', {
-      transactionItems: transactionItems.map((item) => ({
+      transactionItems: transactionItems?.map((item) => ({
         itemId: item.itemId,
         itemByDate: item.itemByDate,
       })),
@@ -431,11 +431,11 @@ const StoreInventoryManagement: React.FC = () => {
             onChangeDestination={onChangeTransactionDestination}
             storesData={storesData}
             warehouseData={warehouseData}
-            sourceStaff={sourceStaff.map((staff) => ({
+            sourceStaff={sourceStaff?.map((staff) => ({
               value: staff._id,
               label: staff.name,
             }))}
-            destinationStaff={destinationStaff.map((staff) => ({
+            destinationStaff={destinationStaff?.map((staff) => ({
               value: staff._id,
               label: staff.name,
             }))}
