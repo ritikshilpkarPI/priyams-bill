@@ -28,7 +28,6 @@ const ItemPurchaseOrdersPage: React.FC = () => {
       }}
     />
   );
-  console.log({ item });
 
   const rowsWithId = useMemo<TableRow[]>(() => {
     const out: TableRow[] = [];
@@ -79,7 +78,6 @@ const ItemPurchaseOrdersPage: React.FC = () => {
     { key: 'totalShelfLife', label: 'Shelf Life' },
     { key: 'leftShelfLife', label: 'Left Shelf Life' },
   ];
-  console.log({ rowsWithId });
   return (
     <Box p={3}>
       <Button variant="outlined" onClick={() => navigate(-1)} sx={{ mb: 2 }}>
