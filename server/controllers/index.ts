@@ -68,6 +68,7 @@ import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
 import { itemPurchaseBatches } from './itemPurchaseBatches';
+import { updateStockTransactionBySource } from "./updateStockTransactionBySource"
 
 
 export {
@@ -140,5 +141,6 @@ export {
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
-  getStockTransactions
+  getStockTransactions,
+  updateStockTransactionBySource
 };

@@ -659,3 +659,21 @@ export const approveStockTransactionsAPI = async (
     return { isError: true, error };
   }
 }
+
+export const addNewStockTransactionsBySourceAPI = async (
+  transactionsId: string,
+  transactionItems: any
+  ) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.UPDATE_STOCK_TRANSACTION_BY_SOURCE,
+      data: {
+        transactionsId,
+        transactionItems,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};

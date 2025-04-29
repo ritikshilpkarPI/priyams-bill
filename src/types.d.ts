@@ -746,6 +746,7 @@ declare global {
     onRemoveItem: (itemId: string) => void;
     enableDestinationForm?: boolean;
     disabled?: boolean;
+    isSourceStaff?: boolean;
   }
   interface ShelfLifeInfoProps {
     expiryDate: {

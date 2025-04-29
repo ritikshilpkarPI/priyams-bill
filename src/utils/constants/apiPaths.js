@@ -123,6 +123,7 @@ export const API_PATHS = {
     GET_STOCK_TRANSACTIONS:"/api/stockTransactions",
     UPDATE_STOCK_TRANSACTION_BY_DESTINATION: "/api/stockTransaction/updateStockTransactionByDestination",
     APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
+    UPDATE_STOCK_TRANSACTION_BY_SOURCE: "/api/stockTransaction/updateStockTransactionBySource",
   }
   
 };
