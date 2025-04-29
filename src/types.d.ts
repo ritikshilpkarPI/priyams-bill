@@ -1089,6 +1089,7 @@ type ExpiryDetail = {
   isShelfExpired: boolean;
   totalShelfLife: string;
   leftShelfLife: string;
+  initialItemQuantity: number;
 };
 export interface PurchaseEntry {
   cp: number;
@@ -1103,6 +1104,7 @@ export interface PurchaseEntry {
   purchaseOrderId: string;
   poApproveTime: string;
   expiryDetails: ExpiryDetail[];
+  initialItemQuantity: number;
 }
 
 export interface InventoryRow {

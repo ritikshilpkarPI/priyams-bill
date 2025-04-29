@@ -8,18 +8,16 @@ import { generateColor } from 'src/utils/constants/generateColor';
 
 type TableRow = PurchaseEntry & {
   _id: string;
-  isShelfExpired?: boolean;
 };
 
 const ItemPurchaseOrdersPage: React.FC = () => {
   const location = useLocation();
-  const navigate  = useNavigate();
-  const { item, purchases } = (location.state ??
-    {}) as {
+  const navigate = useNavigate();
+  const { item } = (location.state ?? {}) as {
     item: InventoryTableRow;
     purchases: PurchaseEntry[];
   };
-
+  const purchases = item?.purchases;
   const renderPoDate = (row: TableRow) => (
     <Chip
       label={formatShortDate(row.purchaseDate)}
@@ -30,30 +28,30 @@ const ItemPurchaseOrdersPage: React.FC = () => {
       }}
     />
   );
+  console.log({ item });
 
   const rowsWithId = useMemo<TableRow[]>(() => {
     const out: TableRow[] = [];
-  
     for (const po of purchases ?? []) {
       if (!po.expiryDetails?.length) {
         out.push(Object.assign({ _id: po.purchaseOrderId }, po));
         continue;
       }
-  
+
       po.expiryDetails.forEach((ed, i) => {
         out.push({
           ...po,
           manufacturing: String(ed.mfgDate),
-          expiry:        String(ed.date),
+          expiry: String(ed.date),
           leftShelfLife: ed.leftShelfLife,
           totalShelfLife: ed.totalShelfLife,
-          qty:           ed.value ?? po.qty,
-          isShelfExpired: ed.isShelfExpired ?? false,
+          qty: ed.value ?? po.qty,
           _id: `${po.purchaseOrderId}-${i}`,
+          initialItemQuantity: ed.initialItemQuantity
         });
       });
     }
-  
+
     return out;
   }, [purchases]);
 
@@ -66,6 +64,7 @@ const ItemPurchaseOrdersPage: React.FC = () => {
     { key: 'cp', label: 'Cost Price' },
     { key: 'sp', label: 'Selling Price' },
     { key: 'qty', label: 'Quantity' },
+    { key: 'initialItemQuantity', label: 'Initial Qty'},
     {
       key: 'manufacturing',
       label: 'MFG Date',
@@ -76,17 +75,11 @@ const ItemPurchaseOrdersPage: React.FC = () => {
       label: 'Expiry Date',
       render: (row: TableRow) => formatShortDate(row.expiry),
     },
-    { key: 'totalStockQty', label: 'Stock Qty' },
     { key: 'profitPercentage', label: 'Profit %' },
     { key: 'totalShelfLife', label: 'Shelf Life' },
     { key: 'leftShelfLife', label: 'Left Shelf Life' },
-    {
-      key: 'isShelfExpired',
-      label: 'Shelf Expired',
-      render: (row: TableRow) => (row.isShelfExpired ? '✅' : '❌' ),
-    },
   ];
-
+  console.log({ rowsWithId });
   return (
     <Box p={3}>
       <Button variant="outlined" onClick={() => navigate(-1)} sx={{ mb: 2 }}>
@@ -94,7 +87,7 @@ const ItemPurchaseOrdersPage: React.FC = () => {
       </Button>
 
       <Typography variant="h5" fontWeight={600} mb={2}>
-        Purchase Orders for: {item?.itemName} ({item?.itemBarcode})
+        {item?.sku}
       </Typography>
 
       <DataTable
