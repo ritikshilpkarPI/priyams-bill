@@ -70,8 +70,8 @@ const ShelfTable: React.FC<ShelfTableProps> = ({
         <Table withBorder withColumnBorders>
           <thead>
             <tr>
-              <th>Expiry</th>
               <th>Manufacturing</th>
+              <th>Expiry</th>
               <th>Stock</th>
               <th>Qty to Add</th>
             </tr>
@@ -79,8 +79,8 @@ const ShelfTable: React.FC<ShelfTableProps> = ({
           <tbody>
             {shelfList.map((shelf) => (
               <tr key={shelf.shelfId}>
-                <td>{formatDate(shelf.sourceQuantity.expiryDate ?? '')}</td>
                 <td>{formatDate(shelf.sourceQuantity.manufacturingDate)}</td>
+                <td>{formatDate(shelf.sourceQuantity.expiryDate ?? '')}</td>
                 <td>{shelf.sourceQuantity.quantity}</td>
                 <td>
                   <CustomNumberInput
