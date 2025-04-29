@@ -3,21 +3,28 @@ import { Item } from '../db-models/item-model';
 import { CONSTANTS } from '../constants/constants';
 import { MESSAGES } from '../constants/messages';
 import mongoose from 'mongoose';
+import { StoreModel } from '../db-models/store-model';
 
 /**
  * Transfers stock from warehouse (Item collection) to store (dynamic inventory collection)
  */
 export const transferStockToStore = async ({
   items,
-  collectionName,
+  storeId,
   userId,
   transactionId,
 }: {
   items: { itemId: string; quantity: number, itemShelfDates: any }[];
-  collectionName: string;
+  storeId: mongoose.Types.ObjectId;
   userId: string;
   transactionId?: mongoose.Types.ObjectId;
 }) => {
+
+  const store = await StoreModel.findById(storeId);
+  if (!store) {
+    throw new Error('Store not found');
+  }
+  const collectionName = store.collectionName;
   const StoreInventory = getStoreInventoryModel(collectionName);
   const updatedItems = [];
 
@@ -46,6 +53,7 @@ export const transferStockToStore = async ({
             ...shelf,
             initialStockQuantity: shelf.quantityToAdd,
             currentStockQuantity: shelf.quantityToAdd,
+            transactionId,
           })),
         itemStockChangeHistory: [
           {
@@ -72,7 +80,7 @@ export const transferStockToStore = async ({
         } else {
           storeItem?.itemShelfDates?.push({
             ...shelf,
-            initialStockQuantity: quantityToAdd,
+            // initialStockQuantity: quantityToAdd,
             currentStockQuantity: quantityToAdd,
           });
         }

@@ -24,7 +24,7 @@ const StoreInventoryItemSchema: Schema = new Schema({
       expiryDate: { type: Date },
       manufacturingDate: { type: Date },
       quantity: { type: Number},
-      purchaseOrderId: { type: mongoose.Schema.Types.ObjectId, ref: 'PurchaseOrder' },
+      transactionId: { type: mongoose.Schema.Types.ObjectId, ref: 'StockTransaction' },
       entryDate: { type: Date, default: Date.now },
       currentStockQuantity: { type: Number },
       initialStockQuantity: { type: Number },
