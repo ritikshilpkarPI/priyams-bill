@@ -12,15 +12,21 @@ import { genericAxios } from './genericAxiosMethod';
 import { parseJwt } from './cookie';
 import Cookies from 'js-cookie';
 import MESSAGES from './constants/messages';
+import { CONSTANTS } from '../constants/constants';
 
 
-
-export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string) => {
+export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string, sourceType?:string ) => {
   try {
-    const pincode = localStorage.getItem('userPincode');
-    const path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=${storeId || ''}&storeCode=${selectedStoreId || ''}&pincode=${pincode || ''}`;
-    const response = await getAPI({path});
+  
+    let path = '';
 
+    if (sourceType === CONSTANTS.WAREHOUSE) {
+      path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=''&storeCode=''&pincode=''`;
+    } else {
+      const pincode = localStorage.getItem('userPincode') || '';
+      path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=${storeId || ''}&storeCode=${selectedStoreId || ''}&pincode=${pincode || ''}`;
+    }
+    const response = await getAPI({path});
     return response.message;
   } catch (err) {
     return { isError: true, err };
@@ -518,10 +524,15 @@ export const draftPurchaseOrder = async (
   }
 };
 
-export const itemPurchaseBatches = async (
-  page?: number,
-  limit?: number,
-  itemId?: string
+export const itemPurchaseBatches = async ({
+  page,
+  limit,
+  itemId,
+}: {
+  page?: number;
+  limit?: number;
+  itemId?: string;
+}
 ) => {
     const params = new URLSearchParams();
     if (itemId) params.append('item_id', itemId);

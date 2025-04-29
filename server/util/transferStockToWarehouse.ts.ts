@@ -2,16 +2,25 @@ import { getStoreInventoryModel } from '../db-models/storeInventory-model';
 import { Item } from '../db-models/item-model';
 import { CONSTANTS } from '../constants/constants';
 import { MESSAGES } from '../constants/messages';
+import mongoose from 'mongoose';
+import { StoreModel } from '../db-models/store-model';
 
 export const transferStockToWarehouse = async ({
   items,
-  collectionName,
+  storeId,
   userId,
 }: {
   items: { itemId: string; quantity: number }[];
-  collectionName: string;
+  storeId: mongoose.Types.ObjectId;
   userId: string;
 }) => {
+
+  const store = await StoreModel.findById(storeId);
+  if (!store) {
+     throw new Error('Store not found');
+  }
+  const collectionName = store.collectionName;
+
   const StoreInventory = getStoreInventoryModel(collectionName);
   const updatedItems = [];
 
