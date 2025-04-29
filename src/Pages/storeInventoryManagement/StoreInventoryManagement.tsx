@@ -160,8 +160,8 @@ const StoreInventoryManagement: React.FC = () => {
             sourceQuantity: {
               expiryDate: shelf.expiryDate,
               manufacturingDate: shelf.manufacturingDate,
-              qty: shelf.currentStockQuantity ?? 0,
-              quantity: shelf.quantity,
+              qty: shelf.quantityToAdd,
+              quantity: shelf.currentStockQuantity ?? 0,
             },
             shelfId: shelf._id,
           }))
