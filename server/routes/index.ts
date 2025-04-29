@@ -83,7 +83,9 @@ const {
   updateItemMismatchInStock,
   updateExpiryItemsBatch,
   draftExpiryItemsBatch,
-  approveOrRejectExpiryItemsBatch
+  approveOrRejectExpiryItemsBatch,
+  updateStockTransactionBySource
+
 } = require('../controllers/index');
 
 
@@ -321,5 +323,7 @@ router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, isLoggedIn, 
 router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, isLoggedIn, updateExpiryItemsBatch);
 router.post(API_PATHS.EXPIRED_ITEM.DRAFT_EXPIRED_ITEMS_BATCH, isLoggedIn, draftExpiryItemsBatch);
 router.post(API_PATHS.EXPIRED_ITEM.APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH,isLoggedIn, isAdmin, approveOrRejectExpiryItemsBatch);
+
+router.post(API_PATHS.STOCK_TRANSACTION.UPDATE_STOCK_TRANSACTION_BY_SOURCE, isLoggedIn, updateStockTransactionBySource);
 
 export default router;

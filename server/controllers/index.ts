@@ -78,6 +78,7 @@ import { updateItemMismatchInStock } from "./updateItemMismatchInStock";
 import { updateExpiryItemsBatch } from './updateExpiryItemsBatch';
 import { draftExpiryItemsBatch } from './draftExpiryItemsBatch';
 import { approveOrRejectExpiryItemsBatch } from './approveOrRejectExpiryItemsBatch';
+import { updateStockTransactionBySource } from "./updateStockTransactionBySource"
 
 export {
   addBulkItems,
@@ -159,5 +160,7 @@ export {
   updateItemMismatchInStock,
   updateExpiryItemsBatch,
   draftExpiryItemsBatch,
-  approveOrRejectExpiryItemsBatch
+  approveOrRejectExpiryItemsBatch,
+  updateStockTransactionBySource
+
 };
