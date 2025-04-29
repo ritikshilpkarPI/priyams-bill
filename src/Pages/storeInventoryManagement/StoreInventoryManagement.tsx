@@ -601,6 +601,7 @@ try {
                 loading={loading}
                 w="100%"
                 onClick={handleUpdateTransaction}
+                disabled
               >
                 Update Transaction
               </Button>
