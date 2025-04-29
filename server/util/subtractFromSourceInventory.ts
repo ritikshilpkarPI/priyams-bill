@@ -3,21 +3,28 @@ import { Item } from '../db-models/item-model';
 import { CONSTANTS } from '../constants/constants';
 import { MESSAGES } from '../constants/messages';
 import mongoose from 'mongoose';
+import { StoreModel } from '../db-models/store-model';
 
 export const subtractFromSourceInventory = async ({
   items,
-  collectionName,
+  storeId,
   userId,
   sourceType,
   transactionId
 }: {
   items: { itemId: string; quantity: number }[];
-  collectionName: string;
+  storeId: mongoose.Types.ObjectId;
   userId: string;
   sourceType: 'STORE' | 'WAREHOUSE';
   transactionId?: mongoose.Types.ObjectId;
 }) => {
   if (sourceType === CONSTANTS.STORE) {
+
+    const store = await StoreModel.findById(storeId); 
+    if (!store) {
+      throw new Error('Store not found');
+    }
+    const collectionName = store.collectionName;
     const StoreInventory = getStoreInventoryModel(collectionName);
 
     for (const { itemId, quantity } of items) {

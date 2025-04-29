@@ -462,6 +462,7 @@ declare global {
     purchaseOrderId: string;
     entryDate: string;
     quantityToAdd: number; 
+    currentStockQuantity: number;
   }
   interface TransactionSource {
     sourceStaff?: Types.ObjectId;

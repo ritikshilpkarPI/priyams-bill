@@ -67,6 +67,8 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
           const sourceQty = shelf.sourceQuantity?.qty ?? 0;
           const isQtyMatched = destQty === sourceQty;
 
+           const hasShelfError = shelf.itemError.errorReason !== 'NONE'
+          
           return (
             <tr key={`${itemId._id}-dest-${index}`}>
               <td>{formatDate(shelf.sourceQuantity.manufacturingDate)}</td>
@@ -94,15 +96,16 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
                 />
               </td>
               <td>
-                {touchedRows[index] && (
-                  <Text
-                    size="xs"
-                    color={isQtyMatched ? 'green' : 'red'}
-                    weight={500}
-                  >
-                    {isQtyMatched ? '✅ Matched' : '❌ Qty mismatch'}
-                  </Text>
-                )}
+              {(touchedRows[index] || (!touchedRows[index] && hasShelfError)) && (
+  <Text
+    size="xs"
+    color={isQtyMatched ? 'green' : 'red'}
+    weight={500}
+  >
+    {isQtyMatched ? '✅ Matched' : '❌ Qty mismatch'}
+  </Text>
+)}
+
               </td>
             </tr>
           );
