@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
-import { Types } from 'mongoose';
 import PurchaseOrder from '../db-models/purchase-order-model';
 import { Item } from '../db-models/item-model';
 import { toObjectId } from '../util/toObjectId';
 import { getShelfLifeInfo } from '../util/calculateItemSelfLife';
-import { ItemData, PurchasedItem } from '../types';
+import { ItemData, PurchasedItem, ItemShelfDate } from '../types';
 import { CONSTANTS } from '../constants/constants';
 
 export const itemPurchaseBatches = async (req: Request, res: Response) => {
@@ -24,20 +23,40 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
     const items = await Item.find(staticQuery)
       .skip(skip)
       .limit(limitNumber)
-      .select(CONSTANTS.STATIC_FIELDS_TO_SELECT);
+      .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
+      .lean();
 
-    const result: Record<string, { staticData: unknown; purchases: ItemData[] }> = {};
+    const result: Record<
+      string,
+      { staticData: unknown; purchases: ItemData[] }
+    > = {};
     const itemIdToSkuMap: Record<string, string> = {};
     const itemIdToStockMap: Record<string, number | null> = {};
+    const shelfDatesBySkuAndPo: Record<
+      string,
+      Record<string, ItemShelfDate[]>
+    > = {};
 
-    for (const item of items) {
-      const sku = item.sku;
-      const itemId = item._id.toString();
+    for (const it of items) {
+      const sku = it.sku as string;
+      const itemId = it._id.toString();
+      if (!sku) continue;
 
-      if (sku) {
-        result[sku] = { staticData: item, purchases: [] };
-        itemIdToSkuMap[itemId] = sku;
-        itemIdToStockMap[itemId] = item.itemStockQuantity ?? null;
+      result[sku] = { staticData: it, purchases: [] };
+      itemIdToSkuMap[itemId] = sku;
+      itemIdToStockMap[itemId] = it.itemStockQuantity ?? null;
+
+      // group this item's shelf dates by their purchaseOrderId
+      const byPo: Record<string, ItemShelfDate[]> = {};
+      for (const sd of (it.itemShelfDates as ItemShelfDate[]) || []) {
+        const poId = sd.purchaseOrderId.toString();
+        if (!byPo[poId]) byPo[poId] = [];
+        byPo[poId].push(sd);
+      }
+      shelfDatesBySkuAndPo[sku] = byPo;
+
+      if (Object.keys(itemIdToSkuMap).length === 0) {
+        return res.json({ totalCount, data: result });
       }
     }
 
@@ -49,19 +68,26 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
     const purchaseOrders = await PurchaseOrder.find({
       isApproved: true,
       'purchasedItems.item_id': { $in: itemIds },
-    }).select(['_id', 'approveTime', 'createdAt', 'purchasedItems']);
+    }).select(CONSTANTS.PURCHASE_ORDER_FIELDS_TO_SELECT);
 
     for (const po of purchaseOrders) {
-      const { _id: purchaseOrderId, approveTime: poApproveTime, createdAt: purchaseDate } = po;
+      const {
+        _id: purchaseOrderId,
+        approveTime: poApproveTime,
+        createdAt: purchaseDate,
+        dateOnBill,
+        draftTime,
+      } = po;
 
       for (const item of po.purchasedItems as PurchasedItem[]) {
         const {
           item_id,
           costPrice,
           sellingPrice,
-          expiryDates,
           itemQuantity,
           profitPercentage,
+          sku,
+          newItem,
         } = item;
 
         const itemId = item_id.toString();
@@ -69,28 +95,38 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
         if (!itemIdToSkuMap[itemId]) continue;
         if (filterItemId && filterItemId.toString() !== itemId) continue;
 
-        const latestExpiry = expiryDates?.[expiryDates.length - 1];
-        const mfgDate = latestExpiry?.mfgDate;
-        const expiryDate = latestExpiry?.date;
+        const expiryDates =
+          shelfDatesBySkuAndPo[sku]?.[purchaseOrderId.toString()] ?? [];
 
-        let shelfLife;
-        if(mfgDate && expiryDate){
-           shelfLife = getShelfLifeInfo(mfgDate, expiryDate);
-        }
+        const expiryDetails = expiryDates?.map((ed) => {
+          const sl =
+            ed.manufacturingDate && ed.expiryDate
+              ? getShelfLifeInfo(ed.manufacturingDate, ed.expiryDate)
+              : { totalShelfLife: '', leftShelfLife: '' };
+
+          return {
+            date: ed.expiryDate,
+            value: ed.quantity,
+            mfgDate: ed.manufacturingDate,
+            currentStockQuantity: ed.currentStockQuantity,
+            initialItemQuantity: ed.initialStockQuantity,
+            totalShelfLife: sl.totalShelfLife,
+            leftShelfLife: sl.leftShelfLife,
+          };
+        });
 
         const itemData: ItemData = {
           cp: costPrice,
           sp: sellingPrice,
-          manufacturing: mfgDate,
-          expiry: expiryDate,
           qty: itemQuantity,
-          totalStockQty: itemIdToStockMap[itemId],
           profitPercentage,
           purchaseDate,
-          totalShelfLife: shelfLife?.totalShelfLife ?? "",
-          leftShelfLife: shelfLife?.leftShelfLife ?? "",
           purchaseOrderId,
           poApproveTime,
+          expiryDetails,
+          newItem,
+          dateOnBill : dateOnBill ? new Date (dateOnBill): null,
+          draftedDate: draftTime ? new Date(draftTime) : null,
         };
 
         const itemSku = itemIdToSkuMap[itemId];

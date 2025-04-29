@@ -518,10 +518,15 @@ export const draftPurchaseOrder = async (
   }
 };
 
-export const itemPurchaseBatches = async (
-  page?: number,
-  limit?: number,
-  itemId?: string
+export const itemPurchaseBatches = async ({
+  page,
+  limit,
+  itemId,
+}: {
+  page?: number;
+  limit?: number;
+  itemId?: string;
+}
 ) => {
     const params = new URLSearchParams();
     if (itemId) params.append('item_id', itemId);

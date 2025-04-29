@@ -21,7 +21,6 @@ const NewInventoryPage: React.FC = () => {
     (state: RootState) => state.inventory
   );
   const navigate = useNavigate();
-  /* key that uniquely describes the request */
   const cacheKey = `${rowsPerPage}-${page}`;
   const getItemPurchaseBatches = async () => {
     const rowsInCache = cache[cacheKey];
@@ -31,9 +30,9 @@ const NewInventoryPage: React.FC = () => {
       return;
     }
     try {
-      const res = await itemPurchaseBatches(page + 1, rowsPerPage);
-      const data = res.data as Record<string, InventoryRow> ;
-      const rows : InventoryTableRow [] = Object.values(data).map(
+      const res = await itemPurchaseBatches({ page:page + 1, limit: rowsPerPage });
+      const data = res?.data as Record<string, InventoryRow> ;
+      const rows : InventoryTableRow [] = Object.values(data)?.map(
         (entry , idx: number) => {
           const { _id : _ , ...restStaticData } = entry.staticData
           return {
@@ -65,6 +64,11 @@ const NewInventoryPage: React.FC = () => {
   ) => {
     dispatch(setRowsPerPage(parseInt(e.target.value.toString(), 10)));
   };
+
+  function twoDigit(n?: number | null): string {
+    const num = typeof n === 'number' && n >= 0 ? n : 0;
+    return num.toString().padStart(2, '0');
+  }
 
   const columns = [
     {
@@ -119,9 +123,10 @@ const NewInventoryPage: React.FC = () => {
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
+            fontSize: '14px'
           }}
         >
-          Show POs
+          Show POs - {twoDigit(row?.purchases?.length)}
         </button>
       ),
     },
