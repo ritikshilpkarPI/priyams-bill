@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Table, TextInput, Text } from '@mantine/core';
+import { Table, TextInput, Text, Avatar } from '@mantine/core';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 import { useDispatch } from 'react-redux';
 import { updateTransactionItemShelfField } from 'src/redux/stockTransactionManagement/StockTransactionManagement';
-
+import { IconX, IconCheck } from '@tabler/icons-react';
 type DestinationShelfTableProps = {
   shelfList: any[];
   itemId: any;
@@ -65,10 +65,9 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
         {shelfList.map((shelf, index) => {
           const destQty = shelf.destinationQuantity?.qty ?? 0;
           const sourceQty = shelf.sourceQuantity?.qty ?? 0;
-          const isQtyMatched = destQty === sourceQty;
+          const isResolved = shelf.itemError?.isResolved;
+          const hasShelfError = shelf.itemError?.errorReason;
 
-           const hasShelfError = shelf.itemError.errorReason !== 'NONE'
-          
           return (
             <tr key={`${itemId._id}-dest-${index}`}>
               <td>{formatDate(shelf.sourceQuantity.manufacturingDate)}</td>
@@ -83,6 +82,7 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
                     handleChange(index, 'qty', Number(e.target.value), shelf.shelfId)
                   }
                   disabled={disabled}
+                  error={hasShelfError}
                 />
               </td>
               <td>
@@ -96,16 +96,9 @@ const DestinationShelfTable: React.FC<DestinationShelfTableProps> = ({
                 />
               </td>
               <td>
-              {(touchedRows[index] || (!touchedRows[index] && hasShelfError)) && (
-  <Text
-    size="xs"
-    color={isQtyMatched ? 'green' : 'red'}
-    weight={500}
-  >
-    {isQtyMatched ? '✅ Matched' : '❌ Qty mismatch'}
-  </Text>
-)}
-
+                <Avatar variant="filled" radius="sm" size="sm" color={isResolved ? "green" : "red" } >
+                  {isResolved ? <IconCheck stroke={2} /> : <IconX stroke={2} /> }
+                </Avatar>           
               </td>
             </tr>
           );

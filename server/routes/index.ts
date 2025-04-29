@@ -74,6 +74,7 @@ const {
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
+  getItemTransactions,
   getStockTransactions,
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
@@ -81,6 +82,8 @@ const {
   bulkApproveStockTransactions,
   updateItemMismatchInStock,
   updateExpiryItemsBatch,
+  draftExpiryItemsBatch,
+  approveOrRejectExpiryItemsBatch
 } = require('../controllers/index');
 
 
@@ -296,9 +299,11 @@ router.post(
 
 router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttributes);
 
+
 router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, addNewStockTransactions);
 router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
-router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,isLoggedIn, getStockTransactions)
+router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS, isLoggedIn, getStockTransactions)
+router.post(API_PATHS.STOCK_TRANSACTION.GET_ITEM_TRANSACTIONS, isLoggedIn, getItemTransactions)
 
 router.get(API_PATHS.EXPIRED_ITEMS_BATCH.GET_ALL_EXPIRED_ITEMS_BATCH, isLoggedIn, getAllExpiryItemsBatch);
 
@@ -314,5 +319,7 @@ router.post(
 
 router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, isLoggedIn, updateItemMismatchInStock);
 router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, isLoggedIn, updateExpiryItemsBatch);
+router.post(API_PATHS.EXPIRED_ITEM.DRAFT_EXPIRED_ITEMS_BATCH, isLoggedIn, draftExpiryItemsBatch);
+router.post(API_PATHS.EXPIRED_ITEM.APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH,isLoggedIn, isAdmin, approveOrRejectExpiryItemsBatch);
 
 export default router;
