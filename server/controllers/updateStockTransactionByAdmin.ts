@@ -141,10 +141,10 @@ export const updateStockTransactionByAdmin = async (
       message: MESSAGES.TRANSACTION_UPDATED_SUCCESSFULLY,
       transaction,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Admin update error:', error);
     return res
       .status(500)
-      .json({ success: false, message: MESSAGES.SERVER_ERROR, error });
+      .json({ success: false, message: error?.message || 'Unknown error', error: MESSAGES.SERVER_ERROR});
   }
 };

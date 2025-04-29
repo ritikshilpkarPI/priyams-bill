@@ -315,8 +315,8 @@ const StoreInventoryManagement: React.FC = () => {
 
   useEffect(() => {
     fetchSourceStaffs(transactionSource.sourceEntityId);
-    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId, stockTransaction?.source?.sourceType ));
-  }, [stockTransaction.source]);
+    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId, transactionSource.sourceType ));
+  }, [transactionSource.sourceEntityId]);
 
   const getStockTransactions = async () => {
     try {
