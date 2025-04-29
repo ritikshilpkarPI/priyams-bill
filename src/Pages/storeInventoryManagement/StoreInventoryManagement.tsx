@@ -403,7 +403,7 @@ const StoreInventoryManagement: React.FC = () => {
   const user = getUser();
 
 
- const isSourceStaff = user?.storeId?._id === stockTransaction?.source?.sourceEntityId;
+ const isSourceStaff = Boolean(transactionId) && user?.storeId?._id === stockTransaction?.source?.sourceEntityId;
 
 
  const handleUpdateTransaction = async () => {
