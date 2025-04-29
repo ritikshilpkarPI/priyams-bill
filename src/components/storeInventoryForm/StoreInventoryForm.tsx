@@ -97,16 +97,14 @@ const StoreInventoryForm: React.FC<StoreInventoryFormProps> = ({
   };
 
   const onSelectdestination = (lable: string, value: string) => {
-    if (stockTransaction.transactionItems.length) {
-      setOverlay(true);
-    } else {
+   
       if (lable === 'destinationType') {
         onChangeDestination('destinationType', value ?? '');
         dispatch(resetTransactionDestination());
       } else {
         onChangeDestination('destinationEntityId', value);
       }
-    }
+    
   };
 
   useEffect(() => {

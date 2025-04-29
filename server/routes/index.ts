@@ -74,12 +74,16 @@ const {
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
+  getItemTransactions,
   getStockTransactions,
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
   markExpiryItemsBatchCleared,
   bulkApproveStockTransactions,
   updateItemMismatchInStock,
+  updateExpiryItemsBatch,
+  draftExpiryItemsBatch,
+  approveOrRejectExpiryItemsBatch
 } = require('../controllers/index');
 
 
@@ -120,11 +124,7 @@ router.get(
   isLoggedIn,
   getDayWiseProcedures
 );
-router.post(
-  API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
-  isLoggedIn,
-  addOpenCloseProcedure
-);
+
 router.post(
   API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE,
   isLoggedIn,
@@ -132,11 +132,6 @@ router.post(
 );
 router.put(
   API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN,
-  isLoggedIn,
-  editOpenCloseProcedure
-);
-router.put(
-  API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE,
   isLoggedIn,
   editOpenCloseProcedure
 );
@@ -293,7 +288,7 @@ router.get(API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES, isLoggedIn ,itemPurchaseBa
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
 router.post(API_PATHS.DEALER.ADD_NEW_DEALER, isLoggedIn, addNewDealer);
-router.post(API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEM_BATCH,isLoggedIn, createExpiryItemsBatch);
+router.post(API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEMS_BATCH,isLoggedIn, createExpiryItemsBatch);
 router.post(API_PATHS.STOCK_TRANSACTION.UPDATE_DESTINATION, isLoggedIn, updateStockTransactionDestination);
 
 router.post(
@@ -304,9 +299,11 @@ router.post(
 
 router.get(`${API_PATHS.ITEMS.GET_ITEMS_STATIC_FIELDS}/:id?`, itemsStaticAttributes);
 
+
 router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, addNewStockTransactions);
 router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
-router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,isLoggedIn, getStockTransactions)
+router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS, isLoggedIn, getStockTransactions)
+router.post(API_PATHS.STOCK_TRANSACTION.GET_ITEM_TRANSACTIONS, isLoggedIn, getItemTransactions)
 
 router.get(API_PATHS.EXPIRED_ITEMS_BATCH.GET_ALL_EXPIRED_ITEMS_BATCH, isLoggedIn, getAllExpiryItemsBatch);
 
@@ -320,6 +317,9 @@ router.post(
   bulkApproveStockTransactions
 );
 
-router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, updateItemMismatchInStock);
+router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, isLoggedIn, updateItemMismatchInStock);
+router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, isLoggedIn, updateExpiryItemsBatch);
+router.post(API_PATHS.EXPIRED_ITEM.DRAFT_EXPIRED_ITEMS_BATCH, isLoggedIn, draftExpiryItemsBatch);
+router.post(API_PATHS.EXPIRED_ITEM.APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH,isLoggedIn, isAdmin, approveOrRejectExpiryItemsBatch);
 
 export default router;

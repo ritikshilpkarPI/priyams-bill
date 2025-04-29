@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import expiredItemsModel from '../db-models/expired-items-model';
+import expiredItemsBatchModel from '../db-models/expired-items-batch-model';
 import { MESSAGES } from '../constants/messages';
 
 export const getExpiryItemsBatchById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const expiredItemBatch = await expiredItemsModel.findById(id)
+    const expiredItemBatch = await expiredItemsBatchModel.findById(id)
       .populate('dealerId')
       .populate('stockTransactionId')
       .populate('clearanceDetails.clearancePurchaseOrderId')
