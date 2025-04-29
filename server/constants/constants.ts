@@ -29,5 +29,4 @@ export const CONSTANTS = Object.freeze({
       'dateOnBill',
       'purchasedItems',
     ],
-    QUANTITY_UPDATE: "QUANTITY_UPDATE",
 })
