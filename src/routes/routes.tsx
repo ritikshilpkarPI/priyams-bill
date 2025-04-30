@@ -28,7 +28,12 @@ import {
   Label,
   NewPurchaseOrder,
   StoreInventoryManagement,
+  NewInventoryPage,
+  ItemPurchaseOrdersPage,
   AllBills,
+  StoreInventory,
+  StockTransactions,
+  ExpiryItemsBatch,
 } from '../Pages';
 import App from '../App';
 import { parseJwtToken } from '../utils/cookie';
@@ -134,6 +139,16 @@ export const protectedRouteMap: Record<string, Record<string, ReactNode>> = {
     element: <StoreInventoryManagement />,
     index: true,
   },
+  EXPIRY_ITEMS_BATCH: {
+    path: ROUTES.EXPIRY_ITEMS_BATCH,
+    element: <ExpiryItemsBatch />,
+    index: true,
+  },
+  EXPIRY_ITEMS_BATCH_BY_ID: {
+    path: ROUTES.EXPIRY_ITEMS_BATCH_BY_ID,
+    element: <ExpiryItemsBatch />,
+    index: true,
+  },
 };
 
 const { allowedRoutes = [], role = '' } = parseJwtToken();
@@ -182,6 +197,47 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.CUSTOMER_BILL,
         element: <CustomerBill />,
+        index: true,
+      },
+      {
+        path: ROUTES.ADD_EXPIRED_ITEM,
+        element: <AddExpiredItem />,
+        index: true,
+      },
+      {
+        path: ROUTES.EXPIRED_ITEM_LIST,
+        element: <ExpiredItemList />,
+        index: true,
+      },
+      {
+        path: ROUTES.STORE_INVENTORY_MANAGEMENT,
+        element: <StoreInventoryManagement />,
+        index: true,
+      },
+      {
+        path: ROUTES.STORE_INVENTORY_MANAGEMENT_BY_ID,
+        element: <StoreInventoryManagement />,
+        index: true,
+
+      },
+      {
+        path: ROUTES.NEW_INVENTORY_PAGE,
+        element: <NewInventoryPage />,
+        index: true,
+      },
+      {
+        path: ROUTES.ITEM_PURCHASE_ORDERS,
+        element: <ItemPurchaseOrdersPage />,
+        index: true,
+      },
+      {
+        path: ROUTES.STORE_INVENTORY,
+        element: <StoreInventory />,
+        index: true,
+      },
+      {
+        path: ROUTES.STORE_TRANSACTIONS,
+        element: <StockTransactions />,
         index: true,
       },
     ],

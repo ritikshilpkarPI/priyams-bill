@@ -21,6 +21,10 @@ const staffSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  storeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Store', 
+  },
   allowedRoutes: { 
     type: [String]
   },

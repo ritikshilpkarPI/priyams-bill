@@ -6,9 +6,10 @@ interface StoreSelectProps {
   value: string;
   error?: string;
   onChange: (storeId: string) => void;
+  disabled?: boolean;
 }
 
-export const StoreSelect: React.FC<StoreSelectProps> = ({ stores, value, onChange, error }) => {
+export const StoreSelect: React.FC<StoreSelectProps> = ({ stores, value, onChange, error, disabled }) => {
   const data = stores.map((store) => ({
     value: store.code,
     label: store.code + ' - ' + store.name,
@@ -21,6 +22,7 @@ export const StoreSelect: React.FC<StoreSelectProps> = ({ stores, value, onChang
       value={value}
       onChange={(val) => onChange(val || '')}
       error={error}
+      disabled={disabled}
     />
   );
 };

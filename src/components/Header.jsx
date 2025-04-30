@@ -3,6 +3,7 @@ import { sidebarListData } from '../constants/HeaderTypes';
 import { Link, useNavigate } from 'react-router-dom';
 import '../CSS/_header.scss';
 import { toggleSidebar } from 'src/utils/toggleSidebar';
+import { useSelector } from 'react-redux';
 import { parseJwtToken } from 'src/utils/cookie';
 import { getAllowedRouteUrlList } from 'src/utils/getAllowedRouteUrls';
 
@@ -99,6 +100,9 @@ const Header = ({
   useEffect(() => {
     toggleSidebar(false, { inputElem, profile, mainContainer, sidebarElem, liItem }); 
   }, []);
+  const storeData = useSelector((state) => state.user.storeData);
+  const { pincode, name, number } = storeData || {};
+
   
   return (
     <>
@@ -121,15 +125,13 @@ const Header = ({
       </div>
 
       {/* Search Input */}
-      <input
-        type="text"
-        ref={inputElem}
-        name="search"
-        id="search-input"
-        placeholder="Search"
-        value={inputText}
-        onChange={(e) => setInputValue(e)}
-      />
+      <div className="store-info" ref={inputElem}>
+       <p>{name}</p>
+       <p>{number}</p>
+       <p>{pincode}</p>
+      </div>
+     
+
 
       {/* Billing Button */}
       <button className="billing" onClick={goToBilling}>
