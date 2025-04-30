@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import UnAuthorizedRoute from '../components/UnAuthorizedRoute';
@@ -31,6 +31,119 @@ import {
   AllBills,
 } from '../Pages';
 import App from '../App';
+import { parseJwtToken } from '../utils/cookie';
+
+export const protectedRouteMap: Record<string, Record<string, ReactNode>> = {
+  BILLING: {
+    path: ROUTES.BILLING,
+    element: <NewBillingPage />,
+    index: true,
+  },
+  NEW_BILLING: {
+    path: ROUTES.NEW_BILLING,
+    element: <NewBillingPage />,
+    index: true,
+  },
+  OPEN_CLOSE: {
+    path: ROUTES.OPEN_CLOSE,
+    element: <OpenClose />,
+    index: true,
+  },
+  INVENTORY: {
+    path: ROUTES.INVENTORY,
+    element: <ItemsList />,
+    index: true,
+  },
+  INVENTORY_ITEMS_BY_ID: {
+    path: ROUTES.INVENTORY_ITEMS_BY_ID,
+    element: <PerItemListPurchaseOrder />,
+    index: true,
+  },
+  ALL_BILL: {
+    path: ROUTES.ALL_BILL,
+    element: <AllBills />,
+    index: true,
+  },
+  APPROVAL: {
+    path: ROUTES.APPROVAL,
+    element: <Approval />,
+    index: true,
+  },
+  EXPIRED_ITEMS: {
+    path: ROUTES.EXPIRED_ITEMS,
+    element: <ExpiredItems />,
+    index: true,
+  },
+  LABEL: {
+    path: ROUTES.LABEL,
+    element: <Label />,
+    index: true,
+  },
+  ORDERS: {
+    path: ROUTES.ORDERS,
+    element: <Orders />,
+    index: true,
+  },
+  ORDER_BY_STATUS: {
+    path: ROUTES.ORDER_BY_STATUS,
+    element: <OrderStatusDetail />,
+    index: true,
+  },
+  ITEMS_BARCODE: {
+    path: ROUTES.ITEMS_BARCODE,
+    element: <ItemsBarCode />,
+    index: true,
+  },
+  RETURN_AND_EXCHANGE: {
+    path: ROUTES.RETURN_AND_EXCHANGE,
+    element: <ReturnAndExchange />,
+    index: true,
+  },
+  PO_SELL_DETAILS: {
+    path: ROUTES.PO_SELL_DETAILS,
+    element: <SellDetailsPage />,
+    index: true,
+  },
+  BARCODE_PRINT: {
+    path: ROUTES.BARCODE_PRINT,
+    element: <BarcodePrint />,
+    index: true,
+  },
+  NEW_PURCHASE_ORDER: {
+    path: ROUTES.NEW_PURCHASE_ORDER,
+    element: <NewPurchaseOrder />,
+    index: true,
+  },
+  NEW_PURCHASE_ORDER_BY_ID: {
+    path: ROUTES.NEW_PURCHASE_ORDER_BY_ID,
+    element: <NewPurchaseOrder />,
+    index: true,
+  },
+  ADD_EXPIRED_ITEM: {
+    path: ROUTES.ADD_EXPIRED_ITEM,
+    element: <AddExpiredItem />,
+    index: true,
+  },
+  EXPIRED_ITEM_LIST: {
+    path: ROUTES.EXPIRED_ITEM_LIST,
+    element: <ExpiredItemList />,
+    index: true,
+  },
+  STORE_INVENTORY: {
+    path: ROUTES.STORE_INVENTORY,
+    element: <StoreInventoryManagement />,
+    index: true,
+  },
+};
+
+const { allowedRoutes = [], role = '' } = parseJwtToken();
+
+export const authorizedRouteList =
+  role === 'admin'
+    ? Object.values(protectedRouteMap)
+    : allowedRoutes
+        .map((key: string) => protectedRouteMap[key])
+        .filter(Boolean);
 
 export const router = createBrowserRouter([
   {
@@ -54,108 +167,7 @@ export const router = createBrowserRouter([
       },
       {
         element: <ProtectedRoute />,
-        children: [
-          {
-            path: ROUTES.HOME,
-            element: <NewBillingPage />,
-            index: true,
-          },
-          {
-            path: ROUTES.BILLING,
-            element: <NewBillingPage />,
-            index: true,
-          },
-          {
-            path: ROUTES.OPEN_CLOSE,
-            element: <OpenClose />,
-            index: true,
-          },
-          {
-            path: ROUTES.INVENTORY,
-            element: <ItemsList />,
-            index: true,
-          },
-          {
-            path: ROUTES.INVENTORY_ITEMS_BY_ID,
-            element: <PerItemListPurchaseOrder />,
-            index: true,
-          },
-          
-          
-          
-          {
-            path: ROUTES.ALL_BILL,
-            element: <AllBills />,
-            index: true,
-          },
-          
-         
-          {
-            path: ROUTES.APPROVAL,
-            element: <Approval />,
-            index: true,
-          },
-          {
-            path: ROUTES.EXPIRED_ITEMS,
-            element: <ExpiredItems />,
-            index: true,
-          },
-          {
-            path: ROUTES.LABEL,
-            element: <Label />,
-            index: true,
-          },
-          {
-            path: ROUTES.ORDERS,
-            element: <Orders />,
-            index: true,
-          },
-          {
-            path: ROUTES.ORDER_BY_STATUS,
-            element: <OrderStatusDetail />,
-            index: true,
-          },
-          {
-            path: ROUTES.NEW_BILLING,
-            element: <NewBillingPage />,
-            index: true,
-          },
-          {
-            path: ROUTES.ITEMS_BARCODE,
-            element: <ItemsBarCode />,
-            index: true,
-          },
-          
-          
-         
-          
-          {
-            path: ROUTES.RETURN_AND_EXCHANGE,
-            element: <ReturnAndExchange />,
-            index: true,
-          },
-          {
-            path: ROUTES.PO_SELL_DETAILS,
-            element: <SellDetailsPage />,
-            index: true,
-          },
-          {
-            path: ROUTES.BARCODE_PRINT,
-            element: <BarcodePrint />,
-            index: true,
-          },
-          {
-            path: ROUTES.NEW_PURCHASE_ORDER,
-            element: <NewPurchaseOrder />,
-            index: true,
-          },
-          {
-            path: ROUTES.NEW_PURCHASE_ORDER_BY_ID,
-            element: <NewPurchaseOrder />,
-            index: true,
-          },
-         
-        ]
+        children: authorizedRouteList,
       },
       {
         element: <UnAuthorizedRoute />,
@@ -172,21 +184,6 @@ export const router = createBrowserRouter([
         element: <CustomerBill />,
         index: true,
       },
-      {
-        path: ROUTES.ADD_EXPIRED_ITEM,
-        element: <AddExpiredItem />,
-        index: true,
-      },
-      {
-        path: ROUTES.EXPIRED_ITEM_LIST,
-        element: <ExpiredItemList />,
-        index: true,
-      },
-      {
-        path: ROUTES.STORE_INVENTORY,
-        element: <StoreInventoryManagement />,
-        index: true,
-      }
     ],
   },
   {
