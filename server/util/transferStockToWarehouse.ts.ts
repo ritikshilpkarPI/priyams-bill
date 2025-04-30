@@ -10,7 +10,7 @@ export const transferStockToWarehouse = async ({
   storeId,
   userId,
 }: {
-  items: { itemId: string; quantity: number }[];
+  items: { itemId: string; quantity: number; itemShelfDates: any }[];
   storeId: mongoose.Types.ObjectId;
   userId: string;
 }) => {
@@ -24,7 +24,7 @@ export const transferStockToWarehouse = async ({
   const StoreInventory = getStoreInventoryModel(collectionName);
   const updatedItems = [];
 
-  for (const { itemId, quantity } of items) {
+  for (const { itemId, quantity, itemShelfDates = [] } of items) {
     if (!itemId || !quantity) {
       throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
     }
@@ -35,6 +35,22 @@ export const transferStockToWarehouse = async ({
       throw new Error(MESSAGES.INSUFFICIENT_STORE_STOCK);
     }
 
+    for (let inputShelf of itemShelfDates) {
+      const inputExpiry = new Date(inputShelf.expiryDate ?? '').getTime();
+      const inputMfg = new Date(inputShelf.manufacturingDate ?? '').getTime();
+
+      const matchingShelf = storeItem.itemShelfDates.find((shelf) => {
+        const shelfExpiry = new Date(shelf.expiryDate ?? '').getTime();
+        const shelfMfg = new Date(shelf.manufacturingDate ?? '').getTime();
+        return shelfExpiry === inputExpiry && shelfMfg === inputMfg;
+      });
+
+      if (matchingShelf) {
+        matchingShelf.currentStockQuantity =
+          (matchingShelf.currentStockQuantity ?? 0) -
+          (inputShelf.quantityToAdd ?? 0);
+      }
+    }
     storeItem.itemQuantityInStore -= quantity;
     storeItem.itemStockChangeHistory.push({
       quantity: -quantity,
@@ -42,15 +58,29 @@ export const transferStockToWarehouse = async ({
       changeType: CONSTANTS.REMOVE,
       changedFrom: CONSTANTS.STORE,
     });
+
+    const updatedItem = await Item.findById(itemId);
+    if (!updatedItem) throw new Error(MESSAGES.NO_ITEMS_FOUND);
+
+    updatedItem.itemStockQuantity += quantity;
+
+    for (let inputShelf of itemShelfDates) {
+      const inputExpiry = new Date(inputShelf.expiryDate ?? '').getTime();
+      const inputMfg = new Date(inputShelf.manufacturingDate ?? '').getTime();
+
+      const matchingShelf = updatedItem.itemShelfDates.find((shelf) => {
+        const shelfExpiry = new Date(shelf.expiryDate ?? '').getTime();
+        const shelfMfg = new Date(shelf.manufacturingDate ?? '').getTime();
+        return shelfExpiry === inputExpiry && shelfMfg === inputMfg;
+      });
+
+      if (matchingShelf) {
+        matchingShelf.currentStockQuantity += inputShelf.quantityToAdd;
+      }
+    }
+
+    await updatedItem.save();
     await storeItem.save();
-
-    // Increase in warehouse (Item collection)
-    const updatedItem = await Item.findByIdAndUpdate(
-      itemId,
-      { $inc: { itemStockQuantity: quantity } },
-      { new: true }
-    );
-
     updatedItems.push({ storeItem, updatedItem });
   }
 
