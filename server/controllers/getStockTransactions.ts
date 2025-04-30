@@ -52,8 +52,8 @@ export const getStockTransactions = async (
     const { start, end } = getValidDateRange(startDate, endDate);
     filter.createdAt = { $gte: start, $lte: end };
 
-    const transactions = await StockTransactionModel.find(filter)
-      .sort({ createdAt: -1 })
+    const transactions = await StockTransactionModel.find()
+      .sort({ updatedAt: -1 })
       .skip(skip)
       .limit(limitNumber)
       .populate('transactionItems.itemId')
