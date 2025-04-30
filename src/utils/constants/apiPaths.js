@@ -92,6 +92,8 @@ export const API_PATHS = {
     GET_EXPIRED_ITEMS: "/api/getExpiredItems",
     CREATE_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch",
     UPDATE_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch",
+    DRAFT_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch/draft",
+    APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch/approve-reject",
   },
  
   RIDER:{
@@ -119,6 +121,7 @@ export const API_PATHS = {
     ADD_NEW_DEALER: "/api/addNewDealer",
   },
   STOCK_TRANSACTION:{
+    GET_ITEM_TRANSACTIONS:"/api/stockTransactions/items",
     PUT_UPDATE_STOCK_TRANSACTION: '/api/stock-transactions/:id/admin',
     ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
     UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
@@ -127,7 +130,8 @@ export const API_PATHS = {
     APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
     POST_BULK_APPROVE_STOCK_TRANSACTIONS: "/api/stockTransaction/bulkApproveStockTransactions",
 
-    MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" 
+    MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" ,
+    UPDATE_STOCK_TRANSACTION_BY_SOURCE: "/api/stockTransaction/updateStockTransactionBySource",
   },
   EXPIRED_ITEMS_BATCH: {
     GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",

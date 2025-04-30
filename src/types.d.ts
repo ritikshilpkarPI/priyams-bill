@@ -462,6 +462,7 @@ declare global {
     purchaseOrderId: string;
     entryDate: string;
     quantityToAdd: number; 
+    currentStockQuantity: number;
   }
   interface TransactionSource {
     sourceStaff?: Types.ObjectId;
@@ -747,6 +748,7 @@ declare global {
     onRemoveItem: (itemId: string) => void;
     enableDestinationForm?: boolean;
     disabled?: boolean;
+    isSourceStaff?: boolean;
   }
   interface ShelfLifeInfoProps {
     expiryDate: {
@@ -912,7 +914,6 @@ declare global {
     startDate:Date;
     endDate:Date;
     totalCount: number;
-    prevLocation: string;
   }
   interface DateRangePickerProps {
     startDate: Date | null;
@@ -924,6 +925,7 @@ declare global {
     startDate?: Date;
     endDate?: Date;
     storeId?: string;
+    storeIds?: string[];
     page?: number;
     limit?: number;
     itemIds?: string[];
@@ -1123,18 +1125,29 @@ export interface StaticItemData {
   images: string[];                     // array of image URLs or keys
 }
 
+type ExpiryDetail = {
+  date: Date;
+  value: number;
+  mfgDate: Date;
+  isShelfExpired: boolean;
+  totalShelfLife: string;
+  leftShelfLife: string;
+  initialItemQuantity: number;
+};
 export interface PurchaseEntry {
-  cp: number;                           // cost price
-  sp: number;                           // selling price (may == MRP)
-  manufacturing: string;                // ISO date string (UTC)
-  expiry: string;                       // ISO date string (UTC)
-  qty: number;                          // purchased quantity in units
-  totalStockQty: number | null;         // live stock after this PO
-  purchaseDate: string;                 // ISO date string (UTC)
-  totalShelfLife: string;               // pre-calculated text e.g. "8 months"
-  leftShelfLife: string;                // e.g. "5 months, 7 days"
-  purchaseOrderId: string;              // FK to purchase-orders collection
-  poApproveTime: string;                // ISO date string (UTC)
+  cp: number;
+  sp: number;
+  manufacturing: string;
+  expiry: string;
+  qty: number;
+  totalStockQty: number | null;
+  purchaseDate: string;
+  totalShelfLife: string;
+  leftShelfLife: string;
+  purchaseOrderId: string;
+  poApproveTime: string;
+  expiryDetails: ExpiryDetail[];
+  initialItemQuantity: number;
 }
 
 export interface InventoryRow {

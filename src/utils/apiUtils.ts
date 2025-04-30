@@ -12,15 +12,21 @@ import { genericAxios } from './genericAxiosMethod';
 import { parseJwt } from './cookie';
 import Cookies from 'js-cookie';
 import MESSAGES from './constants/messages';
+import { CONSTANTS } from '../constants/constants';
 
 
-
-export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string) => {
+export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string, sourceType?:string ) => {
   try {
-    const pincode = localStorage.getItem('userPincode');
-    const path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=${storeId || ''}&storeCode=${selectedStoreId || ''}&pincode=${pincode || ''}`;
-    const response = await getAPI({path});
+  
+    let path = '';
 
+    if (sourceType === CONSTANTS.WAREHOUSE) {
+      path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=''&storeCode=''&pincode=''`;
+    } else {
+      const pincode = localStorage.getItem('userPincode') || '';
+      path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=${storeId || ''}&storeCode=${selectedStoreId || ''}&pincode=${pincode || ''}`;
+    }
+    const response = await getAPI({path});
     return response.message;
   } catch (err) {
     return { isError: true, err };
@@ -518,10 +524,15 @@ export const draftPurchaseOrder = async (
   }
 };
 
-export const itemPurchaseBatches = async (
-  page?: number,
-  limit?: number,
-  itemId?: string
+export const itemPurchaseBatches = async ({
+  page,
+  limit,
+  itemId,
+}: {
+  page?: number;
+  limit?: number;
+  itemId?: string;
+}
 ) => {
     const params = new URLSearchParams();
     if (itemId) params.append('item_id', itemId);
@@ -580,6 +591,28 @@ export const getStockTransactions = async ({
   }
 };
 
+export const getItemTransactions = async ({
+  storeIds = [],
+  page = 1,
+  limit = 100,
+  itemIds = []
+}: StockTransactionParams) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.GET_ITEM_TRANSACTIONS,
+      data: {
+        storeIds,
+        page,
+        limit,
+        itemIds
+      }
+    });
+
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
 export const addNewStockTransactionsAPI = async (
   StockTransaction: StockTransactionType
 ) => {
@@ -722,3 +755,23 @@ export const updateItemMismatchInStockAPI = async (
     return { isError: true, error };
   }
 };
+
+
+export const addNewStockTransactionsBySourceAPI = async (
+  transactionsId: string,
+  transactionItems: any
+  ) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.UPDATE_STOCK_TRANSACTION_BY_SOURCE,
+      data: {
+        transactionsId,
+        transactionItems,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+
+}

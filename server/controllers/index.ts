@@ -68,6 +68,7 @@ import { updateStockTransactionByAdmin } from "./updateStockTransactionByAdmin"
 import { addNewStockTransactions } from "./addNewStockTransactions";
 import { getItemsFromStoreInventory } from './getItemsFromStoreInventory';
 import {getStockTransactions} from "./getStockTransactions"
+import { getItemTransactions } from './getItemTransactions';
 import { bulkApproveStockTransactions } from "./bulkApproveStockTransactions"
 import { itemPurchaseBatches } from './itemPurchaseBatches';
 import { getAllExpiryItemsBatch } from "./getAllExpiryItemsBatch";
@@ -75,6 +76,9 @@ import { getExpiryItemsBatchById } from "./getExpiryItemsBatchById";
 import { markExpiryItemsBatchCleared } from "./markExpiryItemsBatchCleared"
 import { updateItemMismatchInStock } from "./updateItemMismatchInStock";
 import { updateExpiryItemsBatch } from './updateExpiryItemsBatch';
+import { draftExpiryItemsBatch } from './draftExpiryItemsBatch';
+import { approveOrRejectExpiryItemsBatch } from './approveOrRejectExpiryItemsBatch';
+import { updateStockTransactionBySource } from "./updateStockTransactionBySource"
 
 export {
   addBulkItems,
@@ -147,11 +151,16 @@ export {
   addNewStockTransactions,
   itemPurchaseBatches,
   getItemsFromStoreInventory,
-  getStockTransactions,  
+  getStockTransactions,
+  getItemTransactions,
   getAllExpiryItemsBatch,
   getExpiryItemsBatchById,
   markExpiryItemsBatchCleared,  
   bulkApproveStockTransactions,
   updateItemMismatchInStock,
   updateExpiryItemsBatch,
+  draftExpiryItemsBatch,
+  approveOrRejectExpiryItemsBatch,
+  updateStockTransactionBySource
+
 };
