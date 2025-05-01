@@ -775,3 +775,9 @@ export const addNewStockTransactionsBySourceAPI = async (
   }
 
 }
+
+export const getStaffByToken = async ()=>{
+  await genericAxios({
+    url: API_PATHS.STAFF.GET_STAFF_BY_TOKEN,
+  })
+};

@@ -61,6 +61,7 @@ import { getAllCompanies } from './getAllCompanies';
 import { getAllBrands } from './getAllBrand';
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
+import { getStaffByToken } from "./getStaffByToken";
 import { createExpiryItemsBatch } from "./createExpiryItemsBatch";
 import { itemsStaticAttributes } from "./itemsStaticAttributes";
 import { updateStockTransactionDestination } from "./updateStockTransactionDestination";
@@ -144,6 +145,7 @@ export {
   getAllBrands,
   getAllDealers,
   addNewDealer,
+  getStaffByToken,
   createExpiryItemsBatch,  
   itemsStaticAttributes,
   updateStockTransactionDestination,

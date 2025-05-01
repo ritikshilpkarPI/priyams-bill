@@ -67,6 +67,7 @@ const {
   getAllBrands,
   getAllDealers,
   addNewDealer,
+  getStaffByToken,
   createExpiryItemsBatch,
   itemsStaticAttributes,
   updateStockTransactionDestination,
@@ -209,6 +210,7 @@ router.post(
 );
 
 
+router.get(API_PATHS.STAFF.GET_STAFF_BY_TOKEN, isLoggedIn, getStaffByToken);
 router.post(API_PATHS.AUTH.POST_LOGIN,locationMiddleware, loginUser);
 router.get(API_PATHS.AUTH.GET_LOGOUT, isLoggedIn, logoutUser);
 
