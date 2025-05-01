@@ -62,6 +62,9 @@ import { itemsStaticAttributes } from "./itemsStaticAttributes"
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
 import { getStaffByToken } from "./getStaffByToken";
+import { addAllowedRoutesToMultipleStaff } from './addAllowedRoutesToMultipleStaff';
+import { removeAllowedRoutes } from './removeAllowedRoutes';
+import { addAllowedRoutesToStaff } from './addAllowedRoutesToStaff';
 
 export {
   addBulkItems,
@@ -128,5 +131,7 @@ export {
   getAllDealers,
   addNewDealer,
   getStaffByToken,
-
+  addAllowedRoutesToStaff,
+  removeAllowedRoutes,
+  addAllowedRoutesToMultipleStaff,
 };

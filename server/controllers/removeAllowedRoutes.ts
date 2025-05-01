@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from "express";
 import Staff from "../db-models/staff-model";
 
-export const removeAllowedRoutesFrom = async (req: Request, res: Response, next: NextFunction) => {
+export const removeAllowedRoutes = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { username, routes = [], removeAllRoutes = false } = req.body;
   
