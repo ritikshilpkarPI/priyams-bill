@@ -1,5 +1,5 @@
+import { protectedRouteMap } from '../routes/protectedRouteMap';
 import { parseJwtToken } from './cookie';
-import { protectedRouteMap } from '../routes/routes';
 
 export const getAllowedRouteUrlList = () => {
   const { allowedRoutes = [] } = parseJwtToken();
