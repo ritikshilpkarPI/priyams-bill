@@ -8,11 +8,14 @@ import { fetchBillingLeanItems } from './utils/fetchBillingLeanItems';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { parseJwtToken } from './utils/cookie';
+import { getStaffByToken } from './utils/apiUtils';
 const defaultTheme = createTheme(); 
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
+    getStaffByToken();
     dispatch(fetchBillingLeanItems());
   }, []);
   useEffect(() => {

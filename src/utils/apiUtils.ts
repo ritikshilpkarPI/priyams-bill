@@ -479,3 +479,9 @@ export const addNewDealerAPI = async (
     return { isError: true, error };
   }
 };
+
+export const getStaffByToken = async ()=>{
+  await genericAxios({
+    url: API_PATHS.STAFF.GET_STAFF_BY_TOKEN,
+  })
+};

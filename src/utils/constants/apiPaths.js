@@ -75,6 +75,7 @@ export const API_PATHS = {
     GET_STAFFS: '/api/staffs',
     GET_STAFF: '/api/staff',
     POST_STAFF: '/api/staff',
+    GET_STAFF_BY_TOKEN: '/api/staffByToken',
   },
   ORDERS: {
     GET_USER_ORDERS: '/api/online/orders',
