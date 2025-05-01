@@ -68,6 +68,9 @@ const {
   getAllDealers,
   addNewDealer,
   getStaffByToken,
+  addAllowedRoutesToStaff,
+  removeAllowedRoutes,
+  addAllowedRoutesToMultipleStaff,
   createExpiryItemsBatch,
   itemsStaticAttributes,
   updateStockTransactionDestination,
@@ -288,6 +291,9 @@ router.get(API_PATHS.COMPANY.GET_ALL_COMPANY,isLoggedIn, getAllCompanies);
 router.get(API_PATHS.BRAND.GET_ALL_BRAND,isLoggedIn, getAllBrands);
 
 router.get(API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES, isLoggedIn ,itemPurchaseBatches);
+router.get(API_PATHS.STAFF.ADD_ROUTE_IN_STAFF, isLoggedIn, isAdmin, addAllowedRoutesToStaff);
+router.get(API_PATHS.STAFF.ADD_BULK_ROUTE_IN_STAFF, isLoggedIn, isAdmin, addAllowedRoutesToMultipleStaff);
+router.get(API_PATHS.STAFF.REMOVE_ROUTE_FROM_STAFF, isLoggedIn, isAdmin, removeAllowedRoutes);
 
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 

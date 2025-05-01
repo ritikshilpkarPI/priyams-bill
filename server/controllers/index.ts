@@ -80,6 +80,9 @@ import { updateExpiryItemsBatch } from './updateExpiryItemsBatch';
 import { draftExpiryItemsBatch } from './draftExpiryItemsBatch';
 import { approveOrRejectExpiryItemsBatch } from './approveOrRejectExpiryItemsBatch';
 import { updateStockTransactionBySource } from "./updateStockTransactionBySource"
+import { addAllowedRoutesToMultipleStaff } from './addAllowedRoutesToMultipleStaff';
+import { removeAllowedRoutes } from './removeAllowedRoutes';
+import { addAllowedRoutesToStaff } from './addAllowedRoutesToStaff';
 
 export {
   addBulkItems,
@@ -163,6 +166,8 @@ export {
   updateExpiryItemsBatch,
   draftExpiryItemsBatch,
   approveOrRejectExpiryItemsBatch,
-  updateStockTransactionBySource
-
+  updateStockTransactionBySource,
+  addAllowedRoutesToStaff,
+  removeAllowedRoutes,
+  addAllowedRoutesToMultipleStaff,
 };
