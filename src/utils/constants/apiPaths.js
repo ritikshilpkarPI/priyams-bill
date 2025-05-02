@@ -75,6 +75,10 @@ export const API_PATHS = {
     GET_STAFFS: '/api/staffs',
     GET_STAFF: '/api/staff',
     POST_STAFF: '/api/staff',
+    GET_STAFF_BY_TOKEN: '/api/staffByToken',
+    ADD_ROUTE_IN_STAFF: '/api/staff/addRoutes',
+    REMOVE_ROUTE_FROM_STAFF: '/api/staff/removeRoutes',
+    ADD_BULK_ROUTE_IN_STAFF: '/api/staff/addRoutes/multiple',
   },
   ORDERS: {
     GET_USER_ORDERS: '/api/online/orders',
