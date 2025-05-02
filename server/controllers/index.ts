@@ -61,6 +61,7 @@ import { getAllCompanies } from './getAllCompanies';
 import { getAllBrands } from './getAllBrand';
 import { getAllDealers } from "./getAllDealers";
 import { addNewDealer } from "./addNewDealer";
+import { getStaffByToken } from "./getStaffByToken";
 import { createExpiryItemsBatch } from "./createExpiryItemsBatch";
 import { itemsStaticAttributes } from "./itemsStaticAttributes";
 import { updateStockTransactionDestination } from "./updateStockTransactionDestination";
@@ -79,6 +80,9 @@ import { updateExpiryItemsBatch } from './updateExpiryItemsBatch';
 import { draftExpiryItemsBatch } from './draftExpiryItemsBatch';
 import { approveOrRejectExpiryItemsBatch } from './approveOrRejectExpiryItemsBatch';
 import { updateStockTransactionBySource } from "./updateStockTransactionBySource"
+import { addAllowedRoutesToMultipleStaff } from './addAllowedRoutesToMultipleStaff';
+import { removeAllowedRoutes } from './removeAllowedRoutes';
+import { addAllowedRoutesToStaff } from './addAllowedRoutesToStaff';
 
 export {
   addBulkItems,
@@ -144,6 +148,7 @@ export {
   getAllBrands,
   getAllDealers,
   addNewDealer,
+  getStaffByToken,
   createExpiryItemsBatch,  
   itemsStaticAttributes,
   updateStockTransactionDestination,
@@ -161,6 +166,8 @@ export {
   updateExpiryItemsBatch,
   draftExpiryItemsBatch,
   approveOrRejectExpiryItemsBatch,
-  updateStockTransactionBySource
-
+  updateStockTransactionBySource,
+  addAllowedRoutesToStaff,
+  removeAllowedRoutes,
+  addAllowedRoutesToMultipleStaff,
 };
