@@ -18,15 +18,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import {
   getSwap,
-  removeTransactionItem,
   resetTransactionDestination,
   resetTransactionSource,
   setTransactionReason,
   resetStoreInventory,
 } from '../../redux/stockTransactionManagement/StockTransactionManagement';
-import { selectDealers } from 'src/redux/dealerlist/dealerSelectors';
-import SelectDealer from '../selectDealer/SelectDealer';
-import { boolean } from 'joi';
 import {
   setDealers,
   setDealersLoading,
