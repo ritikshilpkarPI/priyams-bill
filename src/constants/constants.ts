@@ -27,5 +27,6 @@ export const CONSTANTS = Object.freeze({
         TRANSFER_OF_GOOD: "Transfer of Good",
         ERROR: "Error", 
         PACKAGING: "Packaging",
+        QUANTITY_UPDATE: "QUANTITY_UPDATE" 
     },
 })
