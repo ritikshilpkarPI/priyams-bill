@@ -28,15 +28,15 @@ export const transferStockToStore = async (
     const StoreInventory = getStoreInventoryModel(collectionName);
     const updatedItems = [];
 
-    for (const { itemId, quantity } of items) {
+    for (const { itemId, quantity, itemShelfDates = [] } of items) {
 
       if (!itemId || !quantity) {
         return res.status(400).json({ message: MESSAGES.MISSING_REQUIRED_FIELDS, success: false });
       }
 
       const item = await Item.findOne({ _id:itemId });
-      if (!item || item.itemStockQuantity < quantity) {
-        return res.status(400).json({ message: MESSAGES.INSUFFICIENT_STOCK, success: false });
+      if (!item) {
+        return res.status(400).json({ message: MESSAGES.NO_ITEMS_FOUND, success: false });
       }
 
       let storeItem = await StoreInventory.findOne({ itemId });
@@ -44,6 +44,11 @@ export const transferStockToStore = async (
         storeItem = new StoreInventory({
           itemId,
           itemQuantityInStore: quantity,
+          itemShelfDates: itemShelfDates.map((shelf: { quantityToAdd: number; }) => ({
+            ...shelf,
+            quantity: shelf.quantityToAdd,
+          })),
+          
           itemStockChangeHistory: [
             {
               quantity,
@@ -55,6 +60,13 @@ export const transferStockToStore = async (
         });
       } else {
         storeItem.itemQuantityInStore += quantity;
+        storeItem.itemShelfDates = [
+          ...storeItem.itemShelfDates,
+          ...itemShelfDates.map((shelf: { quantityToAdd: number; }) => ({
+            ...shelf,
+            quantity: shelf.quantityToAdd ?? 0,
+          })),
+        ];
         storeItem.itemStockChangeHistory.push({
           quantity,
           user: userId,

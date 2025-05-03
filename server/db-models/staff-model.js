@@ -20,10 +20,14 @@ const staffSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  storeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Store', 
+  },
 });
 staffSchema.methods.getJwtToken = function () {
   return jwt.sign(
-    { id: this._id, name: this.name, role: this.role, username: this.username },
+    { id: this._id, name: this.name, role: this.role, username: this.username, storeId: this.storeId },
     process.env.JWT_SECRET,
     {
       expiresIn: `${process.env.JWT_EXPIRY}`,

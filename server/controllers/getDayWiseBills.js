@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const { Bill } = require('../db-models/bill-model');
 
 const getDayWiseBills = async (req, res, next) => {
@@ -7,15 +8,24 @@ const getDayWiseBills = async (req, res, next) => {
     const fiveDaysAgo = new Date(today);
     fiveDaysAgo.setDate(today.getDate() - 20);
 
+    const { storeId } = req.query;
+
+    const matchStage = {
+      createdAt: {
+        $gte: fiveDaysAgo,
+        $lte: today,
+      },
+    };
+    
+    if (storeId) {
+      matchStage.storeId = new mongoose.Types.ObjectId(storeId);
+    }
+
+  
     const allDailyBills = await Bill.aggregate(
       [
         {
-          $match: {
-            createdAt: {
-              $gte: fiveDaysAgo,
-              $lte: today,
-            },
-          },
+          $match: matchStage,
         },
         {
           $lookup: {

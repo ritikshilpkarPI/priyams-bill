@@ -28,7 +28,12 @@ import {
   Label,
   NewPurchaseOrder,
   StoreInventoryManagement,
+  NewInventoryPage,
+  ItemPurchaseOrdersPage,
   AllBills,
+  StoreInventory,
+  StockTransactions,
+  ExpiryItemsBatch,
 } from '../Pages';
 import App from '../App';
 
@@ -154,7 +159,16 @@ export const router = createBrowserRouter([
             element: <NewPurchaseOrder />,
             index: true,
           },
-         
+          {
+            path: ROUTES.EXPIRY_ITEMS_BATCH,
+            element: <ExpiryItemsBatch />,
+            index: true,
+          },         
+          {
+            path: ROUTES.EXPIRY_ITEMS_BATCH_BY_ID,
+            element: <ExpiryItemsBatch />,
+            index: true,
+          },      
         ]
       },
       {
@@ -183,10 +197,36 @@ export const router = createBrowserRouter([
         index: true,
       },
       {
-        path: ROUTES.STORE_INVENTORY,
+        path: ROUTES.STORE_INVENTORY_MANAGEMENT,
         element: <StoreInventoryManagement />,
         index: true,
-      }
+      },
+      {
+        path: ROUTES.STORE_INVENTORY_MANAGEMENT_BY_ID,
+        element: <StoreInventoryManagement />,
+        index: true,
+
+      },
+      {
+        path: ROUTES.NEW_INVENTORY_PAGE,
+        element: <NewInventoryPage />,
+        index: true,
+      },
+      {
+        path: ROUTES.ITEM_PURCHASE_ORDERS,
+        element: <ItemPurchaseOrdersPage />,
+        index: true,
+      },
+      {
+        path: ROUTES.STORE_INVENTORY,
+        element: <StoreInventory />,
+        index: true,
+      },
+      {
+        path: ROUTES.STORE_TRANSACTIONS,
+        element: <StockTransactions />,
+        index: true,
+      },
     ],
   },
   {

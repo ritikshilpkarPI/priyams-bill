@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { StockTransactionType } from '../types';
+import { generateRandomKey } from '../../src/utils/generateRandomKey';
 
 const StockTransactionSchema = new Schema<StockTransactionType>(
   {
@@ -14,6 +15,8 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       },
       sourceEntityId: {
         type: Schema.Types.ObjectId,
+        ref: 'Store',
+        required: false
       },
       sourceType: { type: String },
       sourceRemark: {
@@ -27,6 +30,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
       },
       destinationEntityId: {
         type: Schema.Types.ObjectId,
+        ref: 'Store',
       },
       destinationType: { type: String },
       destinationRemark: {
@@ -90,14 +94,22 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
                   },
                   isResolved: {
                     type: Boolean,
-                    default: false,
+                    default: true,
                   },
             },
           },
         ],
       },
     ],
+    transactionSlug: {
+      type: String,
+      unique: true,
+      default: function () {
+        return `${Date.now()}${generateRandomKey(4)}`;
+      },
+    },
   },
+  
   { timestamps: true }
 );
 

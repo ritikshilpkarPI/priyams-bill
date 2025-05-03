@@ -8,7 +8,7 @@ const loginUser = async (req, res, next) => {
     if (!username || !password) {
       throw new NotFound('Please provide email and password');
     }
-    const user = await Staff.findOne({ username }).select('+password');
+    const user = await Staff.findOne({ username }).select('+password').populate('storeId');
     if (!user) {
       throw new NotFound("Username doesn't exist");
     }
