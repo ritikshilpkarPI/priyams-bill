@@ -2,6 +2,7 @@ export const purchaseOrderTableConstants = Object.freeze({
     IS_PAID: 'isPaid',
     SHARE: 'share',
     ACTIONS: 'actions',
+    VIEW: 'view',
   
     COLUMNS: [
       { key: 'serial', label: 'S.No.', sortable: true },
@@ -31,6 +32,7 @@ export const purchaseOrderTableConstants = Object.freeze({
       { key: 'itemsWithShortExpiry', label: 'Short Expiry' },
       { key: 'share', label: 'Share',flex: 0,
         minWidth: 200, },
+      { key: 'view', label: 'View' },
       { key: 'actions', label: 'Actions' ,flex: 0,minWidth: 400},
     ],
     COMPANY_NAME: 'CompanyName',

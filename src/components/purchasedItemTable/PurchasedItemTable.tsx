@@ -121,8 +121,16 @@ export const PurchasedItemTable = ({
           '-'
         )}
       </td>
-      <td>{ (!purchasedItem.item_id || purchasedItem?.newItem) && <Badge color="green">New Item</Badge>}</td>
-      <td className="purchased-item-table-action-td">
+      <td>
+  {(
+    (isApprovedPO && ( purchasedItem?.newItem)) ||
+    (!isApprovedPO && (!purchasedItem.item_id || purchasedItem?.newItem))
+  ) && (
+    <Badge color="green">New Item</Badge>
+  )}
+</td>     
+
+       <td className="purchased-item-table-action-td">
         <Button
           disabled={Boolean(loadingRemoveItemById) || isApprovedPO}
           variant="default"

@@ -16,7 +16,7 @@ import { parseJwtToken } from '../utils/cookie';
 import { protectedRouteMap } from './protectedRouteMap';
 
 
-const { allowedRoutes = [], role = '' } = parseJwtToken();
+const { allowedRoutes = [], role = '' } = parseJwtToken() ?? {};
 
 export const authorizedRouteList =
   role === 'admin'
