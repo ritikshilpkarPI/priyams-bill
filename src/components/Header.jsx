@@ -15,7 +15,7 @@ const handleToggle = (id) => {
 };
 
 const authorizedSidebarListData = (() => {
-  const {role} = parseJwtToken();
+  const { role } = parseJwtToken() || {};
 
   if (role === 'admin') {
     return sidebarListData;
