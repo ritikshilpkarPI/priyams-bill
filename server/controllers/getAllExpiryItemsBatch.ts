@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import expiredItemsModel from '../db-models/expired-items-model';
+import expiredItemsBatchModel from '../db-models/expired-items-batch-model';
 import mongoose from 'mongoose';
 
 export const getAllExpiryItemsBatch = async (req: Request, res: Response) => {
@@ -58,7 +58,7 @@ export const getAllExpiryItemsBatch = async (req: Request, res: Response) => {
     const skip = (Number(page) - 1) * Number(limit);
 
     const [data, total] = await Promise.all([
-      expiredItemsModel.find(query)
+      expiredItemsBatchModel.find(query)
         .populate('dealerId')
         .populate('stockTransactionId')
         .populate('clearanceDetails.clearancePurchaseOrderId')
@@ -69,7 +69,7 @@ export const getAllExpiryItemsBatch = async (req: Request, res: Response) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(Number(limit)),
-      expiredItemsModel.countDocuments(query),
+      expiredItemsBatchModel.countDocuments(query),
     ]);
 
     res.status(200).json({

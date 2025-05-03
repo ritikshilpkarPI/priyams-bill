@@ -61,7 +61,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
           <tr>
             <th></th>
             <th>SKU</th>
-            {!enableDestinationForm && <>  <th>Barcode</th>
+            {!enableDestinationForm && <> 
             <th>{`Qty ${pascalCase(transactionSource.sourceType ?? '')}`}</th>
             <th>{`Qty ${pascalCase(transactionDestination.destinationType ?? '')}`}</th>
             </>}
@@ -87,7 +87,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                     </ActionIcon>
                   </td>
                   <td>{item.sku}</td>
-                { !enableDestinationForm && <>  <td>{item.itemBarcode}</td>
+                { !enableDestinationForm && <>
                   <td>{item.itemStockQuantity}</td>
                   <td>{item.itemQtyInStore}</td> </>}
                   <td>
@@ -99,7 +99,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                       />
                     ) : (
                       <ShelfTable
-
+                        showNewExpiryForm={true}
                         shelfList={sourceQuantity}
                         itemId={item.itemId}
                         handleQuantityChange={handleQuantityChange}

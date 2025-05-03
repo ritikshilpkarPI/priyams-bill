@@ -91,6 +91,8 @@ const stockTransactionSlice = createSlice({
         destinationType: '',
         destinationRemark: '',
       };
+      state.approvedByAdmin = false;
+      state.transactionReason = '';
       
     },
     removeTransactionItem: (state, action) => {
@@ -173,10 +175,10 @@ const stockTransactionSlice = createSlice({
       if (approvedByAdmin !== undefined) state.approvedByAdmin = approvedByAdmin;
       if (adminRemark !== undefined) state.adminRemark = adminRemark;
       if (transactionReason !== undefined) state.transactionReason = transactionReason;
-    
+          
       if (source) {
         if (source.sourceType !== undefined) state.source.sourceType = source.sourceType;
-        if (source.sourceEntityId !== undefined) state.source.sourceEntityId = source.sourceEntityId;
+        if (source.sourceEntityId !== undefined) state.source.sourceEntityId = source.sourceEntityId._id;
         if (source.sourceStaff?._id) state.source.sourceStaff = source.sourceStaff._id;
         if (source.sourceRemark !== undefined) state.source.sourceRemark = source.sourceRemark;
       }
@@ -185,7 +187,7 @@ const stockTransactionSlice = createSlice({
         if (destination.destinationType !== undefined)
           state.destination.destinationType = destination.destinationType;
         if (destination.destinationEntityId !== undefined)
-          state.destination.destinationEntityId = destination.destinationEntityId;
+          state.destination.destinationEntityId = destination.destinationEntityId._id;
         if (destination.destinationStaff?._id)
           state.destination.destinationStaff = destination.destinationStaff._id;
         if (destination.destinationRemark !== undefined)
@@ -265,12 +267,49 @@ const stockTransactionSlice = createSlice({
             errorQty: sourceQty - destQty,
             isResolved: false,
           }
+        }else {
+          shelf.itemError = {
+            errorReason: '',
+            errorQty: 0,
+            isResolved: true,
+          }
         }
       }
     
       if (path === 'destinationRemark') {
         shelf.destinationRemark = value;
       }
+    },
+    addExpiryBatches: (
+      state,
+      action: PayloadAction<{ itemId: string; entries: any[] }>
+    ) => {
+      const { itemId, entries } = action.payload;
+
+      
+      const item = state.transactionItems.find((i) => i.itemId === itemId);
+      if (!item) return;
+    
+      if (!item.itemByDate) {
+        item.itemByDate = [];
+      }
+    
+      const newBatches = entries.map((entry) => ({
+        shelfId: `${itemId}-${Date.now()}-${Math.random()}`, 
+        sourceQuantity: {
+          expiryDate: entry.expiryDate,
+          manufacturingDate: entry.manufacturingDate,
+          quantity: entry.quantity,
+          qty: entry.quantity,
+        },
+      }));
+    
+      item.itemByDate.push(...newBatches);
+    
+      item.totalQtyAdd = item.itemByDate.reduce(
+        (sum, batch: any) => sum + (batch.sourceQuantity.qty ?? 0),
+        0
+      );
     }
     
     
@@ -291,7 +330,8 @@ export const {
   resetStoreInventory,
   setTransactionData,
   updateTransactionItemRemarkAndError,
-  updateTransactionItemShelfField
+  updateTransactionItemShelfField,
+  addExpiryBatches
 } = stockTransactionSlice.actions;
 
 export default stockTransactionSlice.reducer;

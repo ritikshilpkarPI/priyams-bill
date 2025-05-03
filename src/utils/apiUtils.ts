@@ -562,6 +562,7 @@ export const getStockTransactions = async ({
   storeId,
   page = 1,
   limit = 100,
+  itemIds = []
 }: StockTransactionParams) => {
   try {
     const data: any = {
@@ -571,6 +572,7 @@ export const getStockTransactions = async ({
     };
     if (startDate) data.startDate = startDate.toISOString();
     if (endDate) data.endDate = endDate.toISOString();
+    if (itemIds.length > 0) data.itemId = itemIds;
 
     const response = await postAPI({
       path: API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS,
@@ -583,6 +585,28 @@ export const getStockTransactions = async ({
   }
 };
 
+export const getItemTransactions = async ({
+  storeIds = [],
+  page = 1,
+  limit = 100,
+  itemIds = []
+}: StockTransactionParams) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.GET_ITEM_TRANSACTIONS,
+      data: {
+        storeIds,
+        page,
+        limit,
+        itemIds
+      }
+    });
+
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
 export const addNewStockTransactionsAPI = async (
   StockTransaction: StockTransactionType
 ) => {
@@ -689,6 +713,36 @@ export const getExpiryItemsBatchByIdAPI = async (
   try {
     const response = await getAPI({
       path: `${API_PATHS.EXPIRED_ITEMS_BATCH.GET_EXPIRED_ITEMS_BATCH_BY_ID}/${id}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const updateItemMismatchInStockAPI = async (
+  storeId: string,
+  item: {
+    itemsId: string;
+    expiryDate: string;
+    manufacturingDate: string;
+    currentStockQuantity: number;
+    updateQuantity: number;
+  }
+) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION,
+      data: {
+        storeId,
+        item: {
+          itemId: item.itemsId,
+          expiryDate: item.expiryDate,
+          manufacturingDate: item.manufacturingDate,
+          currentCount: item.currentStockQuantity,
+          updateCount: item.updateQuantity,
+        }
+      },
     });
     return response;
   } catch (error) {

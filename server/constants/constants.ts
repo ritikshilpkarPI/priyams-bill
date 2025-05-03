@@ -10,7 +10,7 @@ export const CONSTANTS = Object.freeze({
     UPI: "upi",
     ADD: "ADD",
     WAREHOUSE: "WAREHOUSE",
-    STATIC_FIELDS_TO_SELECT: "itemName itemMRPperUnit itemBarcode itemPerUnitQuantity quantityUnitName itemCategory subCategory itemBrandName companyName flavourOrFeature itemHasExpiry saleTime images sku itemShelfDates",
+    STATIC_FIELDS_TO_SELECT: "itemName itemMRPperUnit itemBarcode itemPerUnitQuantity quantityUnitName itemCategory subCategory itemBrandName companyName flavourOrFeature itemHasExpiry saleTime images sku itemShelfDates itemShelfDates ",
     REMOVE: "REMOVE",
     STORE: "STORE",
     DEALER: "DEALER",  
@@ -19,7 +19,7 @@ export const CONSTANTS = Object.freeze({
     STATUS:{
       PENDING: "pending",
       APPROVED: "approved"
-    },  
+    },
     QUANTITY_UPDATE: "QUANTITY_UPDATE",
     PURCHASE_ORDER_FIELDS_TO_SELECT: [
       '_id',

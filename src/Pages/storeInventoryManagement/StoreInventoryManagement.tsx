@@ -9,6 +9,7 @@ import {
   Grid,
   Text,
   Textarea,
+  Chip,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,10 +50,15 @@ import {
   updateTransactionItemQuantity,
 } from '../../redux/stockTransactionManagement/StockTransactionManagement';
 import StoreInventoryForm from 'src/components/storeInventoryForm/StoreInventoryForm';
-import { destinationValidation, sourceValidation } from 'src/utils/validations/StoreInventoryManagementValidation';
-import { useParams } from 'react-router';
+import {
+  destinationValidation,
+  sourceValidation,
+  transactionReasonValidation,
+} from 'src/utils/validations/StoreInventoryManagementValidation';
+import { useNavigate, useParams } from 'react-router';
 import { isAdmin } from 'src/utils/isAdmin';
-
+import * as Yup from 'yup';
+import MESSAGES from 'src/utils/constants/messages';
 
 const StoreInventoryManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -98,8 +104,8 @@ const StoreInventoryManagement: React.FC = () => {
   const transactionId = params?.id;
 
   const isAdminUser = transactionId ? isAdmin() : false;
-    
-  
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStores = async () => {
@@ -108,7 +114,7 @@ const StoreInventoryManagement: React.FC = () => {
         if (!res.stores) {
           showNotification({ message: 'No stores found', color: 'red' });
           return;
-        }  
+        }
         dispatch(setStores(res.stores));
       } catch (error) {
         showNotification({ message: 'Failed to load stores', color: 'red' });
@@ -149,14 +155,14 @@ const StoreInventoryManagement: React.FC = () => {
       sku: item.itemDetail.sku ?? '',
       itemByDate: item.itemDetail.itemShelfDates
         ? item.itemDetail.itemShelfDates.map((shelf) => ({
-          sourceQuantity: {
-            expiryDate: shelf.expiryDate,
-            manufacturingDate: shelf.manufacturingDate,
-            qty: shelf.quantityToAdd,
-            quantity: shelf.quantity,
-          },
-          shelfId: shelf._id,
-        }))
+            sourceQuantity: {
+              expiryDate: shelf.expiryDate,
+              manufacturingDate: shelf.manufacturingDate,
+              qty: shelf.quantityToAdd,
+              quantity: shelf.quantity,
+            },
+            shelfId: shelf._id,
+          }))
         : [],
     };
     dispatch(addTransactionItem(newTransactionItem));
@@ -183,34 +189,69 @@ const StoreInventoryManagement: React.FC = () => {
       });
     }
     return itemsArray;
-  };  
-
-  const validateInventoryItems = () => {
-    const errors: YupValidationErrorMapType = {};
-    inventoryItems.forEach((item) => {
-      const totalShelfQuantity = item.itemDetail.itemShelfDates?.reduce(
-        (acc: any, shelf: { quantityToAdd: any }) => acc + shelf.quantityToAdd,
-        0
-      );
-      if (totalShelfQuantity > item.quantityToAdd) {
-        errors.inventoryItems = 'Shelf quantities exceed total quantity';
-      }
-      if (totalShelfQuantity !== 0 && totalShelfQuantity < item.quantityToAdd) {
-        errors.inventoryItems =
-          'Total quantity should be equal to shelf quantities';
-      }
-    });
-    return errors;
   };
 
-  const onSubmitTransaction = async () => {
-    const response = await addNewStockTransactionsAPI(stockTransaction);
-    if (response?.isError) {      
-      toast.error('Failed to add new stock transaction');
-    } else {
-      toast.success('Stock transaction added successfully');
+ 
+
+  const validateStockTransactionData = async () => {
+    try {
+  
+       await sourceValidation.validate(transactionSource, {
+        abortEarly: false, 
+      });
+       await destinationValidation.validate(
+        transactionDestination,
+        {
+          abortEarly: false,
+        }
+      );
+      
+       await transactionReasonValidation.validate(
+        stockTransaction.transactionReason,
+        {
+          abortEarly: false,
+        }
+      );
+      
+      if (!transactionItems.length) {
+         toast.error(MESSAGES.AT_LEAST_ONE_TRANSACTION_ITEM_REQUIRED)
+      }
+
+     const totalItemsQuantity = transactionItems.reduce((acc, curr: any) => {      
+      return acc + curr.totalQtyAdd;
+      }, 0);
+      if (totalItemsQuantity === 0) {
+        toast.error(MESSAGES.AT_LEAST_ONE_TRANSACTION_ITEM_REQUIRED)
+        return true;
+      }
+  
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const formattedErrors = error.inner.reduce((acc: Record<string, string>, curr) => {          
+          if (curr.path || curr.message) {
+            acc[curr.path ?? ''] = curr.message;
+            toast.error(curr.message); 
+          }
+
+          return acc;
+        }, {} as Record<string, string>);  
+        return formattedErrors;
+      } else {
+        console.error('Unexpected error during validation:', error);
+      }
     }
-  };  
+  };
+  
+  const onSubmitTransaction = async () => {
+    const errors =  await validateStockTransactionData();
+    if(!errors){      
+    setLoading(true);
+     await addNewStockTransactionsAPI(stockTransaction);
+    setLoading(false);
+    navigate('/stockTransactions');
+    }
+   
+  };
 
   const onChangeTransactionSource = (field: string, value: string | number) => {
     dispatch(addTransactionSource({ ...transactionSource, [field]: value }));
@@ -277,7 +318,6 @@ const StoreInventoryManagement: React.FC = () => {
     dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId));
   }, [stockTransaction.source.sourceEntityId]);
 
-
   const getStockTransactions = async () => {
     try {
       const response = await getStockTransactionsApi(transactionId ?? '');
@@ -287,13 +327,32 @@ const StoreInventoryManagement: React.FC = () => {
     } catch (error) {
       toast.error('Transfer failed');
     }
-  }
+  };
 
-  useEffect(() => {    
+  useEffect(() => {
     const response = getStockTransactions();
   }, []);
 
+  const [confirmZeroQty, setConfirmZeroQty] = useState(false);
+
+
+  const hasZeroQty = transactionItems.some((item) =>
+    item.itemByDate?.some(
+      (batch: any) =>
+        batch.destinationQuantity?.qty === 0 || batch.destinationQuantity?.qty === undefined
+    )
+  );
+  
+
   const onDestinationSubmit = async () => {
+
+    if (hasZeroQty && !confirmZeroQty) {
+      toast.warning(MESSAGES.STOCK_QUANTITY_WARNING);
+      setConfirmZeroQty(true);
+      return;
+    }
+
+    setLoading(true);
     const response = await updateStockTransactionsAPI(transactionId ?? '', {
       transactionItems: transactionItems.map((item) => ({
         itemId: item.itemId,
@@ -301,33 +360,40 @@ const StoreInventoryManagement: React.FC = () => {
       })),
     });
 
-    if(response.success){
+    setLoading(true);
+
+    if (response.success) {
       toast.success('Destination added successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
+      navigate('/stockTransactions');
     }
+  };
 
-          
-  }
+  const onApproveByAdmin = async (approveByAdmin: boolean) => {
+    const response = await approveStockTransactionsAPI(
+      transactionId ?? '',
+      true,
+      stockTransaction.adminRemark ?? '',
+      { ...stockTransaction, approvedByAdmin: approveByAdmin }
+    );
 
-  const onApproveByAdmin = async () => {
-  
-    const response = await approveStockTransactionsAPI(transactionId  ?? '',true , stockTransaction.adminRemark ?? '',  {...stockTransaction ,approvedByAdmin: true});
-
-    if(response.success){
+    if (response.success && approveByAdmin) {
       toast.success('Transaction approved successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
     }
-  }
-  
+    if (response.success && !approveByAdmin) {
+      toast.success('Transaction updated successfully');
+    }
+  };
 
-useEffect(() => {  
-  if (!transactionId) {
-    dispatch(resetStoreInventory());
-    dispatch(resetStoreStockInventory());
-  }
-}, [transactionId]);  
+  useEffect(() => {
+    if (!transactionId) {
+      dispatch(resetStoreInventory());
+      dispatch(resetStoreStockInventory());
+    }
+  }, [transactionId]);
 
   return (
     <Flex
@@ -348,9 +414,16 @@ useEffect(() => {
       <Grid columns={12} sx={{ width: '100%' }}>
         <Grid.Col span={12}>
           <Title order={2} mb="md">
-            Store Inventory Management
+            New Transaction
           </Title>
+          {stockTransaction.approvedByAdmin && (
+          <Chip defaultChecked color="green">
+            Approved
+          </Chip>
+        )}
         </Grid.Col>
+
+       
 
         <Grid.Col>
           <StoreInventoryForm
@@ -366,31 +439,39 @@ useEffect(() => {
               value: staff._id,
               label: staff.name,
             }))}
-            disabled={( transactionId && !isAdminUser) || stockTransaction?.approvedByAdmin}
+            disabled={
+              (transactionId && !isAdminUser) ||
+              stockTransaction?.approvedByAdmin
+            }
           />
         </Grid.Col>
 
-        {Boolean(stockTransaction.source.sourceType) &&  !( transactionId && !isAdminUser) &&  (
-          <Grid.Col span={12}>
-            <ItemSearch
-              onItemSelect={handleItemSelect}
-              // passing the selected store id to the item search to disable the items search
-              isApprovedPO={!stockTransaction.source.sourceEntityId || stockTransaction.approvedByAdmin}
-              error={errors.inventoryItems}
-            />
-            {!stockTransaction.source.sourceEntityId && (
-              <Text
-                sx={{
-                  color: 'red',
-                  fontSize: '12px',
-                  marginTop: '4px',
-                }}
-              >
-                Please select a Source Store to add items.
-              </Text>
-            )}
-          </Grid.Col>
-        )}
+        {Boolean(stockTransaction.source.sourceType) &&
+          !(transactionId && !isAdminUser) &&
+          !stockTransaction.approvedByAdmin && (
+            <Grid.Col span={12}>
+              <ItemSearch
+                onItemSelect={handleItemSelect}
+                // passing the selected store id to the item search to disable the items search
+                isApprovedPO={
+                  !stockTransaction.source.sourceEntityId ||
+                  stockTransaction.approvedByAdmin
+                }
+                error={errors.inventoryItems}
+              />
+              {!stockTransaction.source.sourceEntityId && (
+                <Text
+                  sx={{
+                    color: 'red',
+                    fontSize: '12px',
+                    marginTop: '4px',
+                  }}
+                >
+                  Please select a Source Store to add items.
+                </Text>
+              )}
+            </Grid.Col>
+          )}
 
         <Grid.Col span={12}>
           {transactionItems.length > 0 && (
@@ -404,30 +485,32 @@ useEffect(() => {
           )}
         </Grid.Col>
 
-      {!transactionId &&  <Grid.Col span={isSmallScreen ? 12 : 4}>
-          <Button 
-          loading={loading} 
-          w="100%"
-          onClick={onSubmitTransaction}
-          disabled={!isAdminUser}
+        {!transactionId && (
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <Button
+              loading={loading}
+              w="100%"
+              onClick={onSubmitTransaction}
+            >
+              Create Transaction
+            </Button>
+          </Grid.Col>
+        )}
 
-          >
-            Transfer Inventory
-          </Button>
-        </Grid.Col>}
+        {!isAdminUser && transactionId && (
+          <Grid.Col span={isSmallScreen ? 12 : 4}>
+            <Button
+              loading={loading}
+              w="100%"
+              onClick={onDestinationSubmit}
+              disabled={stockTransaction?.approvedByAdmin}
+            >
+      {confirmZeroQty ? 'Yes, save' : 'Save'}
+      </Button>
+          </Grid.Col>
+        )}
 
-      { !isAdminUser && transactionId &&  <Grid.Col span={isSmallScreen ? 12 : 4}>
-          <Button 
-          loading={loading} 
-          w="100%"
-          onClick={onDestinationSubmit}
-          disabled={stockTransaction?.approvedByAdmin}
-          >
-            Save
-          </Button>
-        </Grid.Col>}
-
-        {isAdminUser && transactionId &&  (
+        {isAdminUser && transactionId && (
           <Grid.Col span={isSmallScreen ? 12 : 4}>
             <Textarea
               label="Admin Remark"
@@ -442,21 +525,34 @@ useEffect(() => {
               }
               error={errors.adminRemark}
               disabled={stockTransaction?.approvedByAdmin}
-
             />
+            <Flex
+              gap="sm"
+              justify="space-between"
+              align="center"
+              mt={20}
+              >
             <Button
               loading={loading}
               w="100%"
-              onClick={onApproveByAdmin}
-              color='green'
+              onClick={()=> onApproveByAdmin(true)}
+              color="green"
               disabled={stockTransaction?.approvedByAdmin}
             >
-              Approve
+              {stockTransaction?.approvedByAdmin ? 'Approved' : 'Approve'}
             </Button>
+            <Button
+              loading={loading}
+              w="100%"
+              onClick={()=> onApproveByAdmin(false)}
+              color="blue"
+              disabled={stockTransaction?.approvedByAdmin}
+            >
+              {stockTransaction?.approvedByAdmin ? 'Approved' : 'Update'}
+            </Button>
+            </Flex>
           </Grid.Col>
         )}
-
-
       </Grid>
     </Flex>
   );

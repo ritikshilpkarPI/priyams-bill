@@ -90,7 +90,10 @@ export const API_PATHS = {
   EXPIRED_ITEM: {
     ADD_EXPIRED_ITEM: "/api/addexpiredItem",
     GET_EXPIRED_ITEMS: "/api/getExpiredItems",
-    CREATE_EXPIRED_ITEM_BATCH: "/api/expiredItems/batch"
+    CREATE_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch",
+    UPDATE_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch",
+    DRAFT_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch/draft",
+    APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch/approve-reject",
   },
  
   RIDER:{
@@ -118,6 +121,7 @@ export const API_PATHS = {
     ADD_NEW_DEALER: "/api/addNewDealer",
   },
   STOCK_TRANSACTION:{
+    GET_ITEM_TRANSACTIONS:"/api/stockTransactions/items",
     PUT_UPDATE_STOCK_TRANSACTION: '/api/stock-transactions/:id/admin',
     ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
     UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
