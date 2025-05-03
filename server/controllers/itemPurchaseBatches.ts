@@ -77,6 +77,7 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
         createdAt: purchaseDate,
         dateOnBill,
         draftTime,
+        dealerName
       } = po;
 
       for (const item of po.purchasedItems as PurchasedItem[]) {
@@ -127,6 +128,7 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
           newItem,
           dateOnBill : dateOnBill ? new Date (dateOnBill): null,
           draftedDate: draftTime ? new Date(draftTime) : null,
+          dealerName
         };
 
         const itemSku = itemIdToSkuMap[itemId];

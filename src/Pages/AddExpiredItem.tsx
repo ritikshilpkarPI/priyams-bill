@@ -17,15 +17,16 @@ import { ExpiredItemPOTable } from 'src/components/ExpiredItemPOTable';
 const AddExpiredItem = () => {
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [items, setItems] = useState<InventoryRow[]>([])
 
   const getItemPurchaseBatches = async (itemId: string) => {
     try {
       setIsLoading(true);
       const res = await itemPurchaseBatches({ itemId });
-      console.log({res})
       const data = res.data as Record<string, InventoryRow> ;
-      const rows = Object.values(data)
 
+      const rows = Object.values(data)
+      setItems([...items ,rows[0]]);
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +71,7 @@ const AddExpiredItem = () => {
         </Grid.Col>
 
         <Grid.Col span={12}>
-          <ExpiredItemPOTable/>
+          <ExpiredItemPOTable items={items}/>
         </Grid.Col>
 
         <Grid.Col span={false ? 12 : 4}>
