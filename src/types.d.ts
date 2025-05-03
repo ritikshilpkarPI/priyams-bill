@@ -462,6 +462,7 @@ declare global {
     purchaseOrderId: string;
     entryDate: string;
     quantityToAdd: number; 
+    currentStockQuantity: number;
   }
   interface TransactionSource {
     sourceStaff?: Types.ObjectId;
@@ -747,6 +748,7 @@ declare global {
     onRemoveItem: (itemId: string) => void;
     enableDestinationForm?: boolean;
     disabled?: boolean;
+    isSourceStaff?: boolean;
   }
   interface ShelfLifeInfoProps {
     expiryDate: {

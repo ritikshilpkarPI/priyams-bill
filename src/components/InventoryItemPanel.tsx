@@ -22,6 +22,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   onRemoveItem,
   enableDestinationForm,
   disabled = false,
+  isSourceStaff = false,
 }) => {
   const [collapsedIds, setCollapsedIds] = useState<string[]>([]);
 
@@ -43,6 +44,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
       console.warn('Quantity exceeds available stock!');
       return;
     }
+    
     onQuantityChange(itemId, quantity, shelfId);
   };
 
@@ -91,7 +93,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                   <td>{item.itemStockQuantity}</td>
                   <td>{item.itemQtyInStore}</td> </>}
                   <td>
-                    {enableDestinationForm ? (
+                    {enableDestinationForm && !isSourceStaff ? (
                       <DestinationShelfTable
                         shelfList={sourceQuantity}
                         itemId={item.itemId}

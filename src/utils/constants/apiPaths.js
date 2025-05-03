@@ -75,6 +75,10 @@ export const API_PATHS = {
     GET_STAFFS: '/api/staffs',
     GET_STAFF: '/api/staff',
     POST_STAFF: '/api/staff',
+    GET_STAFF_BY_TOKEN: '/api/staffByToken',
+    ADD_ROUTE_IN_STAFF: '/api/staff/addRoutes',
+    REMOVE_ROUTE_FROM_STAFF: '/api/staff/removeRoutes',
+    ADD_BULK_ROUTE_IN_STAFF: '/api/staff/addRoutes/multiple',
   },
   ORDERS: {
     GET_USER_ORDERS: '/api/online/orders',
@@ -130,7 +134,8 @@ export const API_PATHS = {
     APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
     POST_BULK_APPROVE_STOCK_TRANSACTIONS: "/api/stockTransaction/bulkApproveStockTransactions",
 
-    MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" 
+    MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" ,
+    UPDATE_STOCK_TRANSACTION_BY_SOURCE: "/api/stockTransaction/updateStockTransactionBySource",
   },
   EXPIRED_ITEMS_BATCH: {
     GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",

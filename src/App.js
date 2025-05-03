@@ -10,6 +10,8 @@ import { ToastContainer } from 'react-toastify';
 import useGeolocationPermission from './hooks/useGeoLocationPermission';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
+import { parseJwtToken } from './utils/cookie';
+import { getStaffByToken } from './utils/apiUtils';
 const defaultTheme = createTheme(); 
 
 function App() {
@@ -64,6 +66,7 @@ function App() {
     }
 
     setTimeout(saveBills, timeOut);
+    getStaffByToken();
   }, []);
   const {
     logoutUser,

@@ -29,6 +29,7 @@ import {
 } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
   addNewStockTransactionsAPI,
+  addNewStockTransactionsBySourceAPI,
   approveStockTransactionsAPI,
   getAllStaffsByStoreIdAPI,
   getAllStoresAPI,
@@ -59,6 +60,7 @@ import { useNavigate, useParams } from 'react-router';
 import { isAdmin } from 'src/utils/isAdmin';
 import * as Yup from 'yup';
 import MESSAGES from 'src/utils/constants/messages';
+import { getUser } from 'src/utils/getUser';
 
 const StoreInventoryManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -154,12 +156,12 @@ const StoreInventoryManagement: React.FC = () => {
       totalQtyAdd: 0,
       sku: item.itemDetail.sku ?? '',
       itemByDate: item.itemDetail.itemShelfDates
-        ? item.itemDetail.itemShelfDates.map((shelf) => ({
+        ? item.itemDetail.itemShelfDates?.map((shelf) => ({
             sourceQuantity: {
               expiryDate: shelf.expiryDate,
               manufacturingDate: shelf.manufacturingDate,
               qty: shelf.quantityToAdd,
-              quantity: shelf.quantity,
+              quantity: shelf.currentStockQuantity ?? 0,
             },
             shelfId: shelf._id,
           }))
@@ -172,7 +174,7 @@ const StoreInventoryManagement: React.FC = () => {
     itemId: string,
     quantity: number,
     shelfId?: string
-  ) => {
+  ) => {    
     dispatch(updateTransactionItemQuantity({ itemId, quantity, shelfId }));
   };
 
@@ -224,6 +226,9 @@ const StoreInventoryManagement: React.FC = () => {
         toast.error(MESSAGES.AT_LEAST_ONE_TRANSACTION_ITEM_REQUIRED)
         return true;
       }
+
+    
+      
   
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -246,7 +251,7 @@ const StoreInventoryManagement: React.FC = () => {
     const errors =  await validateStockTransactionData();
     if(!errors){      
     setLoading(true);
-     await addNewStockTransactionsAPI(stockTransaction);
+     await addNewStockTransactionsBySourceAPI(transactionId ?? '', stockTransaction);
     setLoading(false);
     navigate('/stockTransactions');
     }
@@ -315,8 +320,8 @@ const StoreInventoryManagement: React.FC = () => {
 
   useEffect(() => {
     fetchSourceStaffs(transactionSource.sourceEntityId);
-    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId));
-  }, [stockTransaction.source.sourceEntityId]);
+    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId, transactionSource.sourceType ));
+  }, [transactionSource.sourceEntityId]);
 
   const getStockTransactions = async () => {
     try {
@@ -354,7 +359,7 @@ const StoreInventoryManagement: React.FC = () => {
 
     setLoading(true);
     const response = await updateStockTransactionsAPI(transactionId ?? '', {
-      transactionItems: transactionItems.map((item) => ({
+      transactionItems: transactionItems?.map((item) => ({
         itemId: item.itemId,
         itemByDate: item.itemByDate,
       })),
@@ -395,6 +400,40 @@ const StoreInventoryManagement: React.FC = () => {
     }
   }, [transactionId]);
 
+  const user = getUser();
+
+
+ const isSourceStaff = Boolean(transactionId) && user?.storeId?._id === stockTransaction?.source?.sourceEntityId;
+
+
+ const handleUpdateTransaction = async () => {
+try {
+    setLoading(true);
+   const response = await addNewStockTransactionsBySourceAPI(transactionId?? '', {
+    transactionItems: transactionItems.map((item) => ({
+      itemId: item.itemId,
+      itemByDate: item.itemByDate,
+    })),
+   });
+    if (response.success) {
+    setLoading(false);
+    navigate('/stockTransactions');
+    toast.success('Transaction updated successfully');
+    dispatch(resetStoreInventory());
+    dispatch(resetStoreStockInventory());
+    } else {
+      toast.error('Failed to update transaction');
+      setLoading(false);
+    }
+  } catch (error) {
+    console.error('Failed to update transaction:', error);
+    setLoading(false);
+  }
+  
+};
+  
+  
+
   return (
     <Flex
       gap="16px"
@@ -431,23 +470,23 @@ const StoreInventoryManagement: React.FC = () => {
             onChangeDestination={onChangeTransactionDestination}
             storesData={storesData}
             warehouseData={warehouseData}
-            sourceStaff={sourceStaff.map((staff) => ({
+            sourceStaff={sourceStaff?.map((staff) => ({
               value: staff._id,
               label: staff.name,
             }))}
-            destinationStaff={destinationStaff.map((staff) => ({
+            destinationStaff={destinationStaff?.map((staff) => ({
               value: staff._id,
               label: staff.name,
             }))}
             disabled={
-              (transactionId && !isAdminUser) ||
+              (transactionId && !isAdminUser ) ||
               stockTransaction?.approvedByAdmin
             }
           />
         </Grid.Col>
 
         {Boolean(stockTransaction.source.sourceType) &&
-          !(transactionId && !isAdminUser) &&
+          !(transactionId && !isAdminUser && !isSourceStaff) &&
           !stockTransaction.approvedByAdmin && (
             <Grid.Col span={12}>
               <ItemSearch
@@ -481,6 +520,7 @@ const StoreInventoryManagement: React.FC = () => {
               onRemoveItem={handleRemoveItem}
               enableDestinationForm={transactionId ? true : false}
               disabled={stockTransaction?.approvedByAdmin}
+              isSourceStaff={isSourceStaff}
             />
           )}
         </Grid.Col>
@@ -497,7 +537,7 @@ const StoreInventoryManagement: React.FC = () => {
           </Grid.Col>
         )}
 
-        {!isAdminUser && transactionId && (
+        {!isAdminUser && transactionId && !isSourceStaff && (
           <Grid.Col span={isSmallScreen ? 12 : 4}>
             <Button
               loading={loading}
@@ -553,6 +593,21 @@ const StoreInventoryManagement: React.FC = () => {
             </Flex>
           </Grid.Col>
         )}
+         
+         {
+          isSourceStaff && transactionId && (
+            <Grid.Col span={isSmallScreen? 12 : 4}>
+              <Button
+                loading={loading}
+                w="100%"
+                onClick={handleUpdateTransaction}
+              >
+                Update Transaction
+              </Button>
+            </Grid.Col>
+          )
+         }
+
       </Grid>
     </Flex>
   );

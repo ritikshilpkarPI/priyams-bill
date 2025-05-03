@@ -10,7 +10,7 @@ const StockChangeHistorySchema: Schema = new Schema({
   dateTime: { type: Date, default: Date.now },
   user: { type: Schema.Types.ObjectId, ref: "User", },
   changeType: { type: String, enum: ["ADD", "REMOVE"] },
-  changedFrom: { type: String, enum: ["WAREHOUSE", "RETURN-EXC","INITIAL-SETUP-SCRIPT"] },
+  changedFrom: { type: String, enum: ["WAREHOUSE", "RETURN-EXC","INITIAL-SETUP-SCRIPT", "STORE"] },
   transactionId: { type: Schema.Types.ObjectId },
 
 });
@@ -24,7 +24,7 @@ const StoreInventoryItemSchema: Schema = new Schema({
       expiryDate: { type: Date },
       manufacturingDate: { type: Date },
       quantity: { type: Number},
-      purchaseOrderId: { type: mongoose.Schema.Types.ObjectId, ref: 'PurchaseOrder' },
+      transactionId: { type: mongoose.Schema.Types.ObjectId, ref: 'StockTransaction' },
       entryDate: { type: Date, default: Date.now },
       currentStockQuantity: { type: Number },
       initialStockQuantity: { type: Number },

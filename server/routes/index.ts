@@ -67,6 +67,10 @@ const {
   getAllBrands,
   getAllDealers,
   addNewDealer,
+  getStaffByToken,
+  addAllowedRoutesToStaff,
+  removeAllowedRoutes,
+  addAllowedRoutesToMultipleStaff,
   createExpiryItemsBatch,
   itemsStaticAttributes,
   updateStockTransactionDestination,
@@ -83,7 +87,9 @@ const {
   updateItemMismatchInStock,
   updateExpiryItemsBatch,
   draftExpiryItemsBatch,
-  approveOrRejectExpiryItemsBatch
+  approveOrRejectExpiryItemsBatch,
+  updateStockTransactionBySource
+
 } = require('../controllers/index');
 
 
@@ -207,6 +213,7 @@ router.post(
 );
 
 
+router.get(API_PATHS.STAFF.GET_STAFF_BY_TOKEN, isLoggedIn, getStaffByToken);
 router.post(API_PATHS.AUTH.POST_LOGIN,locationMiddleware, loginUser);
 router.get(API_PATHS.AUTH.GET_LOGOUT, isLoggedIn, logoutUser);
 
@@ -284,6 +291,9 @@ router.get(API_PATHS.COMPANY.GET_ALL_COMPANY,isLoggedIn, getAllCompanies);
 router.get(API_PATHS.BRAND.GET_ALL_BRAND,isLoggedIn, getAllBrands);
 
 router.get(API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES, isLoggedIn ,itemPurchaseBatches);
+router.get(API_PATHS.STAFF.ADD_ROUTE_IN_STAFF, isLoggedIn, isAdmin, addAllowedRoutesToStaff);
+router.get(API_PATHS.STAFF.ADD_BULK_ROUTE_IN_STAFF, isLoggedIn, isAdmin, addAllowedRoutesToMultipleStaff);
+router.get(API_PATHS.STAFF.REMOVE_ROUTE_FROM_STAFF, isLoggedIn, isAdmin, removeAllowedRoutes);
 
 router.get(API_PATHS.DEALER.GET_ALL_DEALERS, isLoggedIn, getAllDealers);
 
@@ -321,5 +331,7 @@ router.post(API_PATHS.STOCK_TRANSACTION.MISMATCH_STOCK_TRANSACTION, isLoggedIn, 
 router.patch(`${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/:id`, isLoggedIn, updateExpiryItemsBatch);
 router.post(API_PATHS.EXPIRED_ITEM.DRAFT_EXPIRED_ITEMS_BATCH, isLoggedIn, draftExpiryItemsBatch);
 router.post(API_PATHS.EXPIRED_ITEM.APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH,isLoggedIn, isAdmin, approveOrRejectExpiryItemsBatch);
+
+router.post(API_PATHS.STOCK_TRANSACTION.UPDATE_STOCK_TRANSACTION_BY_SOURCE, isLoggedIn, updateStockTransactionBySource);
 
 export default router;

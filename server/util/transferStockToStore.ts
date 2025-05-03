@@ -3,25 +3,32 @@ import { Item } from '../db-models/item-model';
 import { CONSTANTS } from '../constants/constants';
 import { MESSAGES } from '../constants/messages';
 import mongoose from 'mongoose';
+import { StoreModel } from '../db-models/store-model';
 
 /**
  * Transfers stock from warehouse (Item collection) to store (dynamic inventory collection)
  */
 export const transferStockToStore = async ({
   items,
-  collectionName,
+  storeId,
   userId,
   transactionId,
 }: {
-  items: { itemId: string; quantity: number, itemShelfDates: any }[];
-  collectionName: string;
+  items: { itemId: string; quantity: number; itemShelfDates: any }[];
+  storeId: mongoose.Types.ObjectId;
   userId: string;
   transactionId?: mongoose.Types.ObjectId;
 }) => {
+
+  const store = await StoreModel.findById(storeId);
+  if (!store) {
+    throw new Error('Store not found');
+  }
+  const collectionName = store.collectionName;
   const StoreInventory = getStoreInventoryModel(collectionName);
   const updatedItems = [];
 
-  for (const { itemId, quantity, itemShelfDates=[] } of items) {
+  for (const { itemId, quantity, itemShelfDates = [] } of items) {
     if (!itemId || !quantity) {
       throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
     }
@@ -34,7 +41,21 @@ export const transferStockToStore = async ({
 
     // Decrease from warehouse
     item.itemStockQuantity -= quantity;
-    await item.save();
+
+    for (let inputShelf of itemShelfDates) {
+      const inputExpiry = new Date(inputShelf.expiryDate ?? '').getTime();
+      const inputMfg = new Date(inputShelf.manufacturingDate ?? '').getTime();
+
+      const matchingShelf = item.itemShelfDates.find((shelf) => {
+        const shelfExpiry = new Date(shelf.expiryDate ?? '').getTime();
+        const shelfMfg = new Date(shelf.manufacturingDate ?? '').getTime();
+        return shelfExpiry === inputExpiry && shelfMfg === inputMfg;
+      });
+
+      if (matchingShelf) {
+        matchingShelf.currentStockQuantity -= inputShelf.quantityToAdd;
+      }
+    }
 
     // Add to store
     let storeItem = await StoreInventory.findOne({ itemId });
@@ -42,11 +63,20 @@ export const transferStockToStore = async ({
       storeItem = new StoreInventory({
         itemId,
         itemQuantityInStore: quantity,
-        itemShelfDates: itemShelfDates.map((shelf: { quantityToAdd: number; }) => ({
+        itemShelfDates: itemShelfDates.map(
+          (shelf: {
+            quantityToAdd: number;
+            currentStockQuantity: number;
+            initialStockQuantity: number;
+          }) => ({
             ...shelf,
-            initialStockQuantity: shelf.quantityToAdd,
-            currentStockQuantity: shelf.quantityToAdd,
-          })),
+            initialStockQuantity:
+              shelf.quantityToAdd ?? shelf.initialStockQuantity ?? 0,
+            currentStockQuantity:
+              shelf.quantityToAdd ?? shelf.currentStockQuantity ?? 0,
+            transactionId,
+          })
+        ),
         itemStockChangeHistory: [
           {
             quantity,
@@ -58,25 +88,32 @@ export const transferStockToStore = async ({
         ],
       });
     } else {
-      storeItem.itemQuantityInStore += quantity;
-      const shelfMap = new Map(
-        storeItem?.itemShelfDates?.map((shelf) => [shelf._id?.toString(), shelf])
-      );
-    
-      for (const shelf of itemShelfDates) {
-        const { _id, quantityToAdd } = shelf;
-        const key = _id?.toString();
-    
-        if (key && shelfMap.has(key)) {
-          shelfMap.get(key)!.currentStockQuantity += quantityToAdd;
+      for (let inputShelf of itemShelfDates) {
+        const inputExpiry = new Date(inputShelf.expiryDate ?? '').getTime();
+        const inputMfg = new Date(inputShelf.manufacturingDate ?? '').getTime();
+
+        const matchingShelf = storeItem.itemShelfDates.find((shelf) => {
+          const shelfExpiry = new Date(shelf.expiryDate ?? '').getTime();
+          const shelfMfg = new Date(shelf.manufacturingDate ?? '').getTime();
+          return shelfExpiry === inputExpiry && shelfMfg === inputMfg;
+        });
+
+        if (matchingShelf) {
+          matchingShelf.currentStockQuantity =
+            (matchingShelf.currentStockQuantity ?? 0) +
+            (inputShelf.quantityToAdd ?? 0);
         } else {
-          storeItem?.itemShelfDates?.push({
-            ...shelf,
-            initialStockQuantity: quantityToAdd,
-            currentStockQuantity: quantityToAdd,
+          storeItem.itemShelfDates.push({
+            ...inputShelf,
+            initialStockQuantity:
+              inputShelf.quantityToAdd ?? inputShelf.initialStockQuantity ?? 0,
+            currentStockQuantity:
+              inputShelf.quantityToAdd ?? inputShelf.currentStockQuantity ?? 0,
+            transactionId: transactionId ?? new mongoose.Types.ObjectId(),
           });
         }
       }
+      storeItem.itemQuantityInStore += quantity;
       storeItem.itemStockChangeHistory.push({
         quantity,
         user: userId,
@@ -87,6 +124,7 @@ export const transferStockToStore = async ({
     }
 
     await storeItem.save();
+    await item.save();
 
     updatedItems.push({ storeItem, updatedItem: item });
   }
