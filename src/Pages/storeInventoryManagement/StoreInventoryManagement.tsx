@@ -61,6 +61,7 @@ import { isAdmin } from 'src/utils/isAdmin';
 import * as Yup from 'yup';
 import MESSAGES from 'src/utils/constants/messages';
 import { getUser } from 'src/utils/getUser';
+import { CONSTANTS } from 'src/constants/constants';
 
 const StoreInventoryManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -376,6 +377,7 @@ const StoreInventoryManagement: React.FC = () => {
   };
 
   const onApproveByAdmin = async (approveByAdmin: boolean) => {
+    setLoading(true);
     const response = await approveStockTransactionsAPI(
       transactionId ?? '',
       true,
@@ -384,12 +386,17 @@ const StoreInventoryManagement: React.FC = () => {
     );
 
     if (response.success && approveByAdmin) {
+      setLoading(false);
       toast.success('Transaction approved successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
     }
     if (response.success && !approveByAdmin) {
+      setLoading(false);
       toast.success('Transaction updated successfully');
+    }
+    if(response.isError){
+      setLoading(false);
     }
   };
 
@@ -519,7 +526,7 @@ try {
               onQuantityChange={handleQuantityChange}
               onRemoveItem={handleRemoveItem}
               enableDestinationForm={transactionId ? true : false}
-              disabled={stockTransaction?.approvedByAdmin}
+              disabled={ stockTransaction?.approvedByAdmin || (!isAdminUser  && stockTransaction.transactionReason === CONSTANTS.TRANSACTION_REASON.QUANTITY_UPDATE ) }
               isSourceStaff={isSourceStaff}
             />
           )}
