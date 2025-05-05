@@ -7,7 +7,8 @@ import { transferStockToWarehouse } from '../util/transferStockToWarehouse.ts';
 import { transferStockToStore } from '../util/transferStockToStore';
 import { subtractFromSourceInventory } from '../util/subtractFromSourceInventory';
 import { CONSTANTS } from '../constants/constants';
-
+import { updateDestination } from '../util/updateDestination';
+import { updateSource } from '../util/updateSource';
 
 export const updateStockTransactionByAdmin = async (
   req: AuthenticatedRequest,
@@ -16,8 +17,11 @@ export const updateStockTransactionByAdmin = async (
   try {
     const user = req.user;
 
-    const { transactionId: id, adminRemark, stockTransaction: updateData } = req.body;
-    
+    const {
+      transactionId: id,
+      adminRemark,
+      stockTransaction: updateData,
+    } = req.body;
 
     const transaction = await StockTransactionModel.findById(id);
     if (!transaction || transaction.isDeleted) {
@@ -75,6 +79,8 @@ export const updateStockTransactionByAdmin = async (
     
     if (updateData.approvedByAdmin && updateData.transactionItems?.length) {
         const itemsToTransfer = [];
+        const destinationItemsToTransfer = []
+
   
         for (const txnItem of updateData.transactionItems) {
           const totalQty = txnItem.itemByDate?.reduce(
@@ -98,34 +104,68 @@ export const updateStockTransactionByAdmin = async (
             });
           }
         }
-  
-        if (itemsToTransfer.length > 0) {
-          const { sourceType, destinationType } = updateData;
-  
-          if (updateData?.destination?.destinationType === CONSTANTS.WAREHOUSE) {
-            await transferStockToWarehouse({
-              items: itemsToTransfer,
-              storeId: updateData?.source?.sourceEntityId,
-              userId: user?._id,
-            });
-          } else if (updateData?.destination?.destinationType === CONSTANTS.DEALER) {
-            await subtractFromSourceInventory({
-              items: itemsToTransfer,
-              storeId: updateData?.source?.sourceEntityId,
-              userId: user?._id,
-              sourceType: sourceType === CONSTANTS.WAREHOUSE ? CONSTANTS.WAREHOUSE : CONSTANTS.STORE,
-              transactionId: transaction._id,
-            });
-          } else {
-            await transferStockToStore({
-              items: itemsToTransfer,
-              storeId: updateData?.destination?.destinationEntityId,
-              userId: user?._id,
-              transactionId: transaction._id,
-            });
-          }
+
+      for (const txnItem of updateData.transactionItems) {
+        const totalQty = txnItem.itemByDate?.reduce(
+          (sum: number, entry: any) => {
+            return sum + (entry.destinationQuantity?.qty || 0);
+          },
+          0
+        );
+
+        if (totalQty && txnItem.itemId) {
+          destinationItemsToTransfer.push({
+            itemId: txnItem.itemId,
+            quantity: totalQty,
+            itemShelfDates: txnItem.itemByDate?.map((entry: any) => ({
+              expiryDate: entry.destinationQuantity?.expiryDate,
+              manufacturingDate: entry.destinationQuantity?.manufacturingDate,
+              quantityToAdd: entry.destinationQuantity?.qty,
+              initialStockQuantity: entry.destinationQuantity?.qty,
+              currentStockQuantity: entry.destinationQuantity?.qty,
+            })),
+          });
         }
       }
+      const { source, destination } = updateData;
+      const { sourceType, sourceEntityId } = source;
+      const { destinationType, destinationEntityId } = destination;
+      if (!itemsToTransfer.length && sourceType === CONSTANTS.STORE && destinationType === CONSTANTS.STORE ){        
+        await updateDestination({
+          userId: user?._id,
+          items: destinationItemsToTransfer,
+          destinationType,
+          destinationEntityId,
+          transactionId: transaction._id
+        });
+      }
+      else if (itemsToTransfer.length > 0 && sourceType === CONSTANTS.STORE && destinationType === CONSTANTS.STORE ){        
+        await updateSource({
+          userId: user?._id,
+          items: itemsToTransfer,
+          sourceType,
+          sourceEntityId,
+          transactionId: transaction._id
+        });
+      }
+      else if (itemsToTransfer.length > 0) {     
+
+        await updateSource({
+          userId: user?._id,
+          items: itemsToTransfer,
+          sourceType,
+          sourceEntityId,
+          transactionId: transaction._id
+        });
+        await updateDestination({
+          userId: user?._id,
+          items: itemsToTransfer,
+          destinationType,
+          destinationEntityId,
+          transactionId: transaction._id
+        });
+      }
+    }
 
       if (adminRemark !== undefined) {
         transaction.adminRemark = adminRemark;
@@ -145,6 +185,10 @@ export const updateStockTransactionByAdmin = async (
     console.error('Admin update error:', error);
     return res
       .status(500)
-      .json({ success: false, message: error?.message || 'Unknown error', error: MESSAGES.SERVER_ERROR});
+      .json({
+        success: false,
+        message: error?.message || 'Unknown error',
+        error: MESSAGES.SERVER_ERROR,
+      });
   }
 };
