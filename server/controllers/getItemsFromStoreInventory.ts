@@ -20,7 +20,7 @@ export const getItemsFromStoreInventory = async (
     const skip = (Number(page) - 1) * limit;
     const inventoryData = await StoreInventoryModel
       .find()
-      .select('itemId itemQuantityInStore')
+      .select('itemId itemQuantityInStore itemShelfDates')
       .populate('itemId', CONSTANTS.STATIC_FIELDS_TO_SELECT + ' sku')
       .limit(limit)
       .skip(skip)
@@ -29,7 +29,8 @@ export const getItemsFromStoreInventory = async (
     const totalItems = await StoreInventoryModel.countDocuments();
     const items = inventoryData.map((data:any)=>({
       ...data.itemId,
-      itemQuantityInStore: data.itemQuantityInStore
+      itemQuantityInStore: data.itemQuantityInStore,
+      itemShelfDates: data.itemShelfDates
     }));
     return res.status(200).json({ data: items, count: totalItems });
   } catch (error) {
