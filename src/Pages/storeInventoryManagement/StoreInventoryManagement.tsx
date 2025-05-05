@@ -248,10 +248,10 @@ const StoreInventoryManagement: React.FC = () => {
   };
   
   const onSubmitTransaction = async () => {
-    const errors =  await validateStockTransactionData();
+    const errors =  await validateStockTransactionData();    
     if(!errors){      
     setLoading(true);
-     await addNewStockTransactionsBySourceAPI(transactionId ?? '', stockTransaction);
+     await addNewStockTransactionsAPI(stockTransaction);
     setLoading(false);
     navigate('/stockTransactions');
     }
