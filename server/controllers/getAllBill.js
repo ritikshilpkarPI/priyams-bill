@@ -1,19 +1,22 @@
 const { Bill } = require('../db-models/bill-model');
 
 const getAllBill = async (req, res, next) => {
-  const { storeId } = req.query;
   try {
+    const { storeId } = req.query;
+    
     const { page = 1, size = 100, startDate, endDate } = req.query;
 
     const limit = Number(size);
     const skip = (Number(page) - 1) * limit;
 
     const filter = {};
+    if (storeId) filter.storeId = storeId;
     if (startDate || endDate) {
       filter.createdAt = {};
       if (startDate) filter.createdAt.$gte = new Date(startDate);
       if (endDate) filter.createdAt.$lte = new Date(endDate);
     }
+
 
     const allBill = await Bill.find(filter)
     .populate([

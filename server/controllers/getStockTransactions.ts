@@ -52,13 +52,15 @@ export const getStockTransactions = async (
     const { start, end } = getValidDateRange(startDate, endDate);
     filter.createdAt = { $gte: start, $lte: end };
 
-    const transactions = await StockTransactionModel.find(filter)
-      .sort({ createdAt: -1 })
+    const transactions = await StockTransactionModel.find()
+      .sort({ updatedAt: -1 })
       .skip(skip)
       .limit(limitNumber)
       .populate('transactionItems.itemId')
       .populate({ path: 'source.sourceStaff', select: '-password' })
-      .populate({ path: 'destination.destinationStaff', select: '-password' });
+      .populate({ path: 'destination.destinationStaff', select: '-password' })
+      .populate({ path: 'source.sourceEntityId', select: 'name pincode' })
+      .populate({ path: 'destination.destinationEntityId', select: 'name pincode' });
 
     const totalCount = await StockTransactionModel.countDocuments(filter);
 

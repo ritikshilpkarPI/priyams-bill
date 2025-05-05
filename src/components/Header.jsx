@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../CSS/_header.scss';
 import { toggleSidebar } from 'src/utils/toggleSidebar';
 import { useSelector } from 'react-redux';
+import { parseJwtToken } from 'src/utils/cookie';
+import { getAllowedRouteUrlList } from 'src/utils/getAllowedRouteUrls';
 
 const handleToggle = (id) => {
   let toggledElement = document.getElementById(`linkContainer${id}`);
@@ -12,10 +14,31 @@ const handleToggle = (id) => {
     toggledElement.style.display === 'none' ? 'block' : 'none';
 };
 
+const authorizedSidebarListData = (() => {
+  const { role } = parseJwtToken() || {};
+
+  if (role === 'admin') {
+    return sidebarListData;
+  }
+
+  const allowedUrls = new Set(getAllowedRouteUrlList() || []);
+  return sidebarListData
+    .map((section) => {
+      const key = Object.keys(section)[0];
+      const links = section[key];
+
+      const filteredLinks = links.filter((item) =>
+        allowedUrls.has(item.url)
+      );
+
+      return filteredLinks.length ? { [key]: filteredLinks } : null;
+    })
+    .filter(Boolean);
+})()
+
 function searchSidebarListData(searchTerm) {
   const results = [];
-
-  sidebarListData.forEach((item) => {
+  authorizedSidebarListData.forEach((item) => {
     const subItems = [];
     Object.values(item)[0].forEach((subItem) => {
       if (subItem.name.toLowerCase().includes(searchTerm.toLowerCase())) {
@@ -39,7 +62,7 @@ const Header = ({
   logoutUser,
 }) => {
   const [inputText, setInputText] = useState('');
-  const [listItemsData, setListItemsData] = useState(sidebarListData);
+  const [listItemsData, setListItemsData] = useState(authorizedSidebarListData);
 
   const navigate = useNavigate();
 

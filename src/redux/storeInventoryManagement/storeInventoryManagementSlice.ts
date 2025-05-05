@@ -4,12 +4,18 @@ interface StoreInventoryState {
   selectedStoreId: string;
   inventoryItems: any[];
   stores: Store[];
+  sourceStaff: any[],
+  destinationStaff: any[],
+  selectedItemsIds: string[];
 }
 
 const initialState: StoreInventoryState = {
   selectedStoreId: '',
   inventoryItems: [],
   stores: [],
+  sourceStaff: [],
+  destinationStaff: [],
+  selectedItemsIds: []
 };
 
 const storeInventorySlice = createSlice({
@@ -62,9 +68,23 @@ const storeInventorySlice = createSlice({
         (invItem) => invItem.itemDetail._id !== action.payload
       );
     },
-    resetStoreInventory: (state) => {
+    resetStoreStockInventory: (state) => {
       state.selectedStoreId = '';
       state.inventoryItems = [];
+      state.stores = [];
+      state.sourceStaff = [];
+      state.destinationStaff = [];
+
+    
+    },
+    setSourceStaff: (state, action) => {
+      state.sourceStaff = action.payload;
+    },
+    setDestinationStaff: (state, action) => {
+      state.destinationStaff = action.payload;
+    },
+    setSelectedItemsIds: (state, action: PayloadAction<string[]>) => {
+      state.selectedItemsIds = action.payload;
     },
   },
 });
@@ -75,7 +95,10 @@ export const {
   addInventoryItem,
   updateInventoryItemQuantity,
   removeInventoryItem,
-  resetStoreInventory,
+  resetStoreStockInventory,
+  setSourceStaff,
+  setDestinationStaff,
+  setSelectedItemsIds
 } = storeInventorySlice.actions;
 
 export default storeInventorySlice.reducer;

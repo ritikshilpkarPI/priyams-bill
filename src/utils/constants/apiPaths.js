@@ -75,6 +75,10 @@ export const API_PATHS = {
     GET_STAFFS: '/api/staffs',
     GET_STAFF: '/api/staff',
     POST_STAFF: '/api/staff',
+    GET_STAFF_BY_TOKEN: '/api/staffByToken',
+    ADD_ROUTE_IN_STAFF: '/api/staff/addRoutes',
+    REMOVE_ROUTE_FROM_STAFF: '/api/staff/removeRoutes',
+    ADD_BULK_ROUTE_IN_STAFF: '/api/staff/addRoutes/multiple',
   },
   ORDERS: {
     GET_USER_ORDERS: '/api/online/orders',
@@ -89,7 +93,11 @@ export const API_PATHS = {
   },
   EXPIRED_ITEM: {
     ADD_EXPIRED_ITEM: "/api/addexpiredItem",
-    GET_EXPIRED_ITEMS: "/api/getExpiredItems"
+    GET_EXPIRED_ITEMS: "/api/getExpiredItems",
+    CREATE_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch",
+    UPDATE_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch",
+    DRAFT_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch/draft",
+    APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH: "/api/expiredItems/batch/approve-reject",
   },
  
   RIDER:{
@@ -98,14 +106,13 @@ export const API_PATHS = {
   ITEMS: {
     GET_ITEMS_SKU: "/api/items/sku",
     GET_ITEM_BY_ID: "/api/item",
+    GET_ITEM_PURCHASE_BATCHES: "/api/itemPurchaseBatches",
     GET_ITEMS_STATIC_FIELDS: "/api/items/itemsStaticAttributes",
   },
   STORE: {
     GET_ALL_STORES: "/api/store",
-  },
-  DEALER: {
-    GET_ALL_DEALERS: "/api/dealer",
-    ADD_NEW_DEALER: "/api/addNewDealer",
+    GET_ITEMS_BY_STORE_ID: '/api/store/inventory/items',
+    GET_STORE_INVENTORY_MANAGEMENT: '/api/store/inventory',
   },
   COMPANY:{
     GET_ALL_COMPANY: "/api/getAllCompany"
@@ -113,9 +120,26 @@ export const API_PATHS = {
   BRAND:{
     GET_ALL_BRAND: "/api/getAllBrand"
   },
-  STOCK_TRANSACTION:{
-    ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
-    GET_STOCK_TRANSACTIONS:"/api/stockTransactions"
+  DEALER: {
+    GET_ALL_DEALERS: "/api/dealer",
+    ADD_NEW_DEALER: "/api/addNewDealer",
   },
-  
+  STOCK_TRANSACTION:{
+    GET_ITEM_TRANSACTIONS:"/api/stockTransactions/items",
+    PUT_UPDATE_STOCK_TRANSACTION: '/api/stock-transactions/:id/admin',
+    ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
+    UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
+    GET_STOCK_TRANSACTIONS:"/api/stockTransactions",
+    UPDATE_STOCK_TRANSACTION_BY_DESTINATION: "/api/stockTransaction/updateStockTransactionByDestination",
+    APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
+    POST_BULK_APPROVE_STOCK_TRANSACTIONS: "/api/stockTransaction/bulkApproveStockTransactions",
+
+    MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" ,
+    UPDATE_STOCK_TRANSACTION_BY_SOURCE: "/api/stockTransaction/updateStockTransactionBySource",
+  },
+  EXPIRED_ITEMS_BATCH: {
+    GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",
+    GET_EXPIRED_ITEMS_BATCH_BY_ID: "/api/expiry-items-batch/getExpiryItemsBatchById",
+    MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID: "/api/expiry-items-batch/markExpiryItemsBatchCleared",
+  },
 };

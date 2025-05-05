@@ -16,11 +16,14 @@ import {
   setTotalCount
 } from 'src/redux/stockTransactions/stockTransactionsSlice';
 import { generateColor } from 'src/utils/constants/generateColor';
-import { getStockTransactions } from 'src/utils/apiUtils';
+import { getItemTransactions, getStockTransactions } from 'src/utils/apiUtils';
 import DateRangePicker from 'src/components/DateRangePicker';
+import { useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 
 const StockTransactions: React.FC = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const {
     rawData,
     transformedData: data,
@@ -30,21 +33,38 @@ const StockTransactions: React.FC = () => {
     rowsPerPage,
     startDate,
     endDate,
-    totalCount
+    totalCount,
   } = useSelector((state: RootState) => state.stockTransactions);
 
   const storeData = useSelector((state: RootState) => state.user.storeData);
+  const selectedItemsIds = useSelector(
+    (state: RootState) => state.storeInventoryManagement.selectedItemsIds
+  );
+  const isDirectedfromStoreInventory = location.state?.fromStoreInventory;
+
+  const navigate = useNavigate();
   
   const fetchTransactions = async (targetPage: number, limit: number) => {
     dispatch(setIsLoading(true));
   
-    const result = await getStockTransactions({
-      startDate,
-      endDate,
-      storeId: storeData._id,
-      page: targetPage + 1, 
-      limit,
-    });
+    let result;
+    if(isDirectedfromStoreInventory) {
+      const storeIds = storeData._id ? [storeData._id] : [];
+      result = await getItemTransactions({
+        storeIds,
+        page: page + 1,
+        limit: rowsPerPage,
+        itemIds: selectedItemsIds
+      });
+    } else {
+      result = await getStockTransactions({
+        startDate,
+        endDate,
+        storeId: storeData._id,
+        page: targetPage + 1, 
+        limit,
+      });
+    }
   
     if (!result?.isError) {
       dispatch(setRawData({ page: `${targetPage}_${limit}`, data: result.data }));
@@ -58,23 +78,20 @@ const StockTransactions: React.FC = () => {
   };
   
   useEffect(() => {
-    const currentKey = `${page}_${rowsPerPage}`;
-  
-    if (!rawData[currentKey]) {
+    return () => {
       dispatch(clearRawData());
-       fetchTransactions(page, rowsPerPage);
     }
-  }, [rowsPerPage]);
+  }, []);
   
   useEffect(() => {
    
     const currentPageData = rawData[`${page}_${rowsPerPage}`];
-    if (currentPageData) {
+    if (currentPageData?.length) {
       dispatch(transformData());
     } else {
       fetchTransactions(page, rowsPerPage);
     }
-  }, [startDate, endDate, page, rowsPerPage,expandedRows]);
+  }, [startDate, endDate, page, rowsPerPage,expandedRows, selectedItemsIds]);
   
 
 
@@ -129,7 +146,8 @@ const StockTransactions: React.FC = () => {
   };
 
   const handleEditClick = (rowId: string) => {
-    console.log('Edit row ID:', rowId);
+    const transactionId =  rowId.split('_')[0];
+    navigate(`/createTransaction/${transactionId}`);
   };
 
   const renderTransactionId = (row: { transactionId: string; isSubRow?: boolean }) => {
@@ -149,7 +167,7 @@ const StockTransactions: React.FC = () => {
 
   const renderEditButton = (row: { _id: string; isSubRow?: boolean }) => {
     if (row.isSubRow) return null;
-
+     
     return (
       <Button
         variant="contained"
@@ -179,12 +197,14 @@ const StockTransactions: React.FC = () => {
         Stock Transactions
       </Typography>
 
+      {!isDirectedfromStoreInventory && 
       <DateRangePicker
         startDate={startDate}
         endDate={endDate}
         onStartDateChange={handleStartDateChange}
         onEndDateChange={handleEndDateChange}
       />
+      }
       <DataTable
         key={`grid-${page}-${rowsPerPage}-${totalRowsToShow}`} 
         columns={columns}

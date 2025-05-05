@@ -12,6 +12,7 @@ const StaffSelectDropdown: React.FC<StaffSelectDropdownInterface> = ({
   onChange,
   label,
   selectedStaffId, 
+  storeId,
   disabled
 }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,7 +21,7 @@ const StaffSelectDropdown: React.FC<StaffSelectDropdownInterface> = ({
   const fetchStaffs = async () => {
     dispatch(setLoading(true));
     try {
-      const response = await getAllStaffsByStoreIdAPI();
+      const response = await getAllStaffsByStoreIdAPI(storeId ?? "");
       if (response.success) {
         dispatch(setStaff(response.data));
       }

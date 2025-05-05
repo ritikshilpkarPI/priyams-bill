@@ -38,7 +38,8 @@ import {
   Label,
   CreatePurchaseOrderPage,
   StoreInventory,
-  StockTransactions
+  StockTransactions,
+  NewInventoryPage
 } from '../Pages';
 import { Fragment } from 'react';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
@@ -88,7 +89,7 @@ const StoreRoutes = () => {
             <Route exact path="/approval" component={Approval} />
             <Route exact path="/expiredItems" component={ExpiredItems} />
             <Route exact path="/stockTransactions" component={StockTransactions} />
-
+            
             <Route exact path="/label" component={Label} />
             <Route exact path="/orders" component={Orders} />
             <Route
@@ -109,7 +110,11 @@ const StoreRoutes = () => {
             <Route exact path="/createPurchaseOrderPage" component={CreatePurchaseOrderPage} />
 
             <ProtectedComponent role={access.STORE_INVENTORY_MANAGEMENT}>
-            <Route exact path="/storeInventoryManagement" component={StoreInventory} />
+            <Route exact path="/createTransaction" component={StoreInventory} />
+            <Route exact path="/createTransaction/:id" component={StoreInventory} />
+
+            <Route exact path="/newInventoryPage" component={NewInventoryPage} />
+            
             </ProtectedComponent>
           </ProtectedRoutes>
         </Fragment>
