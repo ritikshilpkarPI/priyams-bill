@@ -3,9 +3,7 @@ import { useDispatch } from 'react-redux';
 import {
   Container,
   Grid,
-  Paper,
   Button,
-  Title,
 } from '@mantine/core';
 import "./NewBillPage.css"
 import {
@@ -20,6 +18,7 @@ import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeed
 import { ReactBarcode } from 'react-jsbarcode';
 import { Reset } from 'src/icons/Reset';
 import { BillItemsCardView } from "../../components/BillItemsCardView/BillItemsCardView"
+import { fetchBillingLeanItems } from 'src/utils/fetchBillingLeanItems';
 import { updateStaffInBill } from 'src/redux/bill/billSlice';
 
 
@@ -87,6 +86,7 @@ const NewBillPage = () => {
       const billData = { ...billState };
       localStorage.setItem(`bill-${billData.billId}`, JSON.stringify({...billData, billCreatedAt: new Date().toISOString(),}));
       saveBillToDatabase(billData);
+      dispatch(fetchBillingLeanItems());
       window.print()
 
       resetBillState();
