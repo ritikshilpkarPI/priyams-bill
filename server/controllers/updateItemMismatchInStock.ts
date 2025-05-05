@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { StockTransactionModel } from '../db-models/stock-transaction-model';
 import { MESSAGES } from '../constants/messages';
 import { CONSTANTS } from '../constants/constants';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
 import { AuthenticatedRequest } from 'server/types';
 
 export const updateItemMismatchInStock = async (
@@ -19,7 +19,7 @@ export const updateItemMismatchInStock = async (
     if (staffId) {
       newStaffId = staffId;      
     }else{
-      newStaffId = userId.toString()
+      newStaffId = userId.toString();
     }
 
     if (!storeId || !item || typeof item !== 'object') {
@@ -50,16 +50,16 @@ export const updateItemMismatchInStock = async (
           expiryDate,
           manufacturingDate,
           qty:
-            updateCount > currentCount
-              ? Math.abs(updateCount - currentCount)
+            currentCount > updateCount
+              ? Math.abs(currentCount - updateCount)
               : 0,
         },
         destinationQuantity: {
           expiryDate,
           manufacturingDate,
           qty:
-            currentCount > updateCount
-              ? Math.abs(currentCount - updateCount)
+            updateCount > currentCount
+              ? Math.abs(updateCount - currentCount)
               : 0,
         },
       },
