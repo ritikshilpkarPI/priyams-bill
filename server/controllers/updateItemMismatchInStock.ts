@@ -50,16 +50,16 @@ export const updateItemMismatchInStock = async (
           expiryDate,
           manufacturingDate,
           qty:
-            currentCount > updateCount
-              ? Math.abs(currentCount - updateCount)
+            updateCount > currentCount
+              ? Math.abs(updateCount - currentCount)
               : 0,
         },
         destinationQuantity: {
           expiryDate,
           manufacturingDate,
           qty:
-            updateCount > currentCount
-              ? Math.abs(updateCount - currentCount)
+            currentCount > updateCount
+              ? Math.abs(currentCount - updateCount)
               : 0,
         },
       },
