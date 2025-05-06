@@ -61,12 +61,12 @@ export const useStyles = createStyles((theme) => ({
   actionCell: {
     width: 80,
     padding: 0,
-    textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: theme.spacing.xs
+    gap: theme.spacing.xs,
   },
+  colInfo: { width: '360px' },
   colSm: { width: '160px' },
   colMd: { width: '220px' },
   colLg: { width: '280px' },
@@ -90,7 +90,7 @@ export const useStyles = createStyles((theme) => ({
     fontSize: theme.fontSizes.sm,
   },
   ellipsis: {
-    maxWidth: '120px',
+    maxWidth: '100px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   }
@@ -152,10 +152,10 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
       >
         <thead>
           <tr>
-            <th className={`${classes.header} ${classes.colMd}`} />
-            <th className={`${classes.header} ${classes.colMd}`}>SKU</th>
-            <th className={`${classes.header} ${classes.colMd}`}>Brand</th>
-            <th className={`${classes.header} ${classes.colLg}`}>Company</th>
+            <th className={classes.colSm} />
+            <th className={`${classes.header} ${classes.colInfo}`}>
+              SKU / Brand / Company
+            </th>
             <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
               CP
             </th>
@@ -164,18 +164,14 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
             </th>
             <th className={`${classes.header} ${classes.colMd}`}>MFG Date</th>
             <th className={`${classes.header} ${classes.colMd}`}>Expiry Date</th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              Shelf Life
-            </th>
+            
             <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
               Init Qty
             </th>
             <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
               Current
             </th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric} ${classes.actionCell}` } >
-              Edit
-            </th>
+            <th className={classes.header}>Edit</th>
           </tr>
         </thead>
 
@@ -190,7 +186,6 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
 
             return (
               <Fragment key={id}>
-                {/* main row */}
                 <tr className={cx(classes.row, { [classes.activeRow]: sel })}>
                   <td className={classes.actionCell}>
                     <ActionIcon
@@ -206,27 +201,17 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
                     </ActionIcon>
                   </td>
 
-                  <td className={`${classes.cell} ${classes.colMd}`}>
-                    <Tooltip label={item.staticData.sku} withArrow position="top">
-                      <span>{item.staticData.sku}</span>
-                    </Tooltip>
-                  </td>
-                  <td className={`${classes.cell} ${classes.colMd}`}>
+                  <td className={`${classes.cell} ${classes.colInfo}`}>
                     <Tooltip
-                      label={item.staticData.itemBrandName}
+                      label={`${item.staticData.sku} / ${item.staticData.itemBrandName} / ${item.staticData.companyName}`}
                       withArrow
                       position="top"
                     >
-                      <span>{item.staticData.itemBrandName}</span>
-                    </Tooltip>
-                  </td>
-                  <td className={`${classes.cell} ${classes.colLg}`}>
-                    <Tooltip
-                      label={item.staticData.companyName}
-                      withArrow
-                      position="top"
-                    >
-                      <span>{item.staticData.companyName}</span>
+                      <div>
+                        <div>{item.staticData.sku}</div>
+                        <div>{item.staticData.itemBrandName}</div>
+                        <div>{item.staticData.companyName}</div>
+                      </div>
                     </Tooltip>
                   </td>
 
@@ -270,11 +255,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
                           fmt(selDetail.date)
                         )}
                       </td>
-                      <td
-                        className={`${classes.cell} ${classes.colSm} ${classes.numeric}`}
-                      >
-                        {selDetail.leftShelfLife}
-                      </td>
+                     
                       <td
                         className={`${classes.cell} ${classes.colSm} ${classes.numeric}`}
                       >
@@ -303,43 +284,45 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
                           selDetail.value
                         )}
                       </td>
-<td className={classes.actionCell}>
-  {isEditing && sel && (
-    <>
-      <ActionIcon
-        size="lg"                 
-        radius="sm"
-        color="green"
-        variant="filled"
-        onClick={() => handleSave(id, sel.poIdx, sel.expIdx)}
-        title="Save"
-      >
-        <IconCheck size={20} />   
-      </ActionIcon>
-
-      <ActionIcon
-        size="lg"
-        radius="sm"
-        color="red"
-        variant="filled"
-        onClick={() =>
-          setDraft((p) => ({ ...p, [id]: undefined as never }))
-        }
-        title="Cancel"
-      >
-        <IconX size={20} />
-      </ActionIcon>
-    </>
-  )}
-</td>
-
+                      <td className={classes.actionCell}>
+                        {isEditing && sel && (
+                          <>
+                            <ActionIcon
+                              size="lg"
+                              radius="sm"
+                              color="green"
+                              variant="filled"
+                              onClick={() =>
+                                handleSave(id, sel.poIdx, sel.expIdx)
+                              }
+                              title="Save"
+                            >
+                              <IconCheck size={20} />
+                            </ActionIcon>
+                            <ActionIcon
+                              size="lg"
+                              radius="sm"
+                              color="red"
+                              variant="filled"
+                              onClick={() =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  [id]: undefined as never,
+                                }))
+                              }
+                              title="Cancel"
+                            >
+                              <IconX size={20} />
+                            </ActionIcon>
+                          </>
+                        )}
+                      </td>
                     </>
                   ) : (
                     <td className={classes.cell} colSpan={8} />
                   )}
                 </tr>
 
-                {/* expanded PO rows */}
                 {isOpen && (
                   <>
                     <POHeaderRow numeric={classes.numeric} />
@@ -371,13 +354,15 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
                           >
                             <td className={classes.actionCell} />
                             <td className={`${classes.cell} ${classes.colMd}`}>
-                              <Tooltip label={po.dealerName} withArrow position="top">
+                              <Tooltip
+                                label={po.dealerName}
+                                withArrow
+                                position="top"
+                              >
                                 <span>{po.dealerName}</span>
                               </Tooltip>
                             </td>
-                            <td className={classes.cell}>
-                              {fmt(po.purchaseDate)}
-                            </td>
+                            <td className={classes.cell}>{fmt(po.purchaseDate)}</td>
                             <td
                               className={`${classes.cell} ${classes.numeric}`}
                             >
@@ -388,17 +373,9 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
                             >
                               {po.sp.toFixed(2)}
                             </td>
-                            <td className={classes.cell}>
-                              {fmt(d.mfgDate)}
-                            </td>
-                            <td className={classes.cell}>
-                              {fmt(d.date)}
-                            </td>
-                            <td
-                              className={`${classes.cell} ${classes.numeric}`}
-                            >
-                              {d.leftShelfLife}
-                            </td>
+                            <td className={classes.cell}>{fmt(d.mfgDate)}</td>
+                            <td className={classes.cell}>{fmt(d.date)}</td>
+                            
                             <td
                               className={`${classes.cell} ${classes.numeric}`}
                             >
