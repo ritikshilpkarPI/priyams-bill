@@ -1,6 +1,6 @@
 import '../CSS/addExpiredItem.scss';
 import React, { useEffect, useState } from 'react';
-import { Title, Button, Flex, Grid } from '@mantine/core';
+import { Title, Button, Flex, Grid, Loader, Center } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { ItemSearch } from '../components/ItemSearch';
@@ -13,24 +13,33 @@ import { itemPurchaseBatches } from 'src/utils/apiUtils';
 import { string } from 'joi';
 import { InventoryRow } from 'src/types';
 import { ExpiredItemPOTable } from 'src/components/ExpiredItemPOTable';
+import { toast } from 'react-toastify';
 
 const AddExpiredItem = () => {
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [items, setItems] = useState<InventoryRow[]>([])
+  const [items, setItems] = useState<InventoryRow[]>([]);
 
   const getItemPurchaseBatches = async (itemId: string) => {
     try {
-      setIsLoading(true);
+      const isAlreadyAdded = items.some(item => item?.staticData?._id === itemId);
+      if (isAlreadyAdded) {
+        toast('Item already added to the list. Please select a different item.');
+        return;
+      } 
+      setIsLoading(true);      
       const res = await itemPurchaseBatches({ itemId });
-      const data = res.data as Record<string, InventoryRow> ;
+      const data = res.data as Record<string, InventoryRow>;
+      const rows = Object.values(data);
+      const newItem = rows[0];
 
-      const rows = Object.values(data)
-      setItems([...items ,rows[0]]);
+      setItems([...items, newItem]);
+     
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const handleItemSelect = (item: ItemWithQuantity) => {
     const itemId = item.itemDetail._id;
@@ -70,9 +79,17 @@ const AddExpiredItem = () => {
           />
         </Grid.Col>
 
-        <Grid.Col span={12}>
-          <ExpiredItemPOTable items={items}/>
-        </Grid.Col>
+        {isLoading ? (
+          <Grid.Col span={12}>
+            <Center>
+              <Loader size="md" />
+            </Center>
+          </Grid.Col>
+        ) : (
+          <Grid.Col span={12}>
+            <ExpiredItemPOTable items={items} />
+          </Grid.Col>
+        )}
 
         <Grid.Col span={false ? 12 : 4}>
           <Button loading={false} w="100%" onClick={() => {}}>
