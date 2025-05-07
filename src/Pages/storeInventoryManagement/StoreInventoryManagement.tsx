@@ -376,7 +376,11 @@ const StoreInventoryManagement: React.FC = () => {
     }
   };
 
+  const [approvedLoading, setApprovedLoading ] = useState(false);
+  const [updateLoading, setUpdateLoading ] = useState(false);
+
   const onApproveByAdmin = async (approveByAdmin: boolean) => {
+    approveByAdmin ? setApprovedLoading(true) : setUpdateLoading(true);
     setLoading(true);
     const response = await approveStockTransactionsAPI(
       transactionId ?? '',
@@ -386,17 +390,17 @@ const StoreInventoryManagement: React.FC = () => {
     );
 
     if (response.success && approveByAdmin) {
-      setLoading(false);
+      approveByAdmin ? setApprovedLoading(false) : setUpdateLoading(false);
       toast.success('Transaction approved successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
     }
     if (response.success && !approveByAdmin) {
-      setLoading(false);
+      approveByAdmin ? setApprovedLoading(false) : setUpdateLoading(false);
       toast.success('Transaction updated successfully');
     }
     if(response.isError){
-      setLoading(false);
+      approveByAdmin ? setApprovedLoading(false) : setUpdateLoading(false);
     }
   };
 
@@ -580,22 +584,22 @@ try {
               mt={20}
               >
             <Button
-              loading={loading}
+              loading={approvedLoading}
               w="100%"
               onClick={()=> onApproveByAdmin(true)}
               color="green"
-              disabled={stockTransaction?.approvedByAdmin}
+              disabled={stockTransaction?.approvedByAdmin || updateLoading}
             >
               {stockTransaction?.approvedByAdmin ? 'Approved' : 'Approve'}
             </Button>
             <Button
-              loading={loading}
+              loading={updateLoading}
               w="100%"
               onClick={()=> onApproveByAdmin(false)}
               color="blue"
-              disabled={stockTransaction?.approvedByAdmin}
+              disabled={stockTransaction?.approvedByAdmin || approvedLoading}
             >
-              {stockTransaction?.approvedByAdmin ? 'Approved' : 'Update'}
+              {stockTransaction?.approvedByAdmin ? 'Updated' : 'Update'}
             </Button>
             </Flex>
           </Grid.Col>
