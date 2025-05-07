@@ -1097,6 +1097,50 @@ declare global {
     selecteditem: StoreInventoryItemType | null;
   }
 
+  interface InventoryPurchaseOrderEntry {
+    purchaseOrderId: string;
+    approveTime: string;
+    draftTime: string;
+    costPrice: number;
+    sellingPrice: number;
+    mrp: number;
+  }
+  interface InventoryPurchaseOrderItemShelfDate {
+    _id?: string;
+    purchaseOrderId: string;
+    expiryDate: string;
+    manufacturingDate: string;
+    initialStockQuantity: number;
+    currentStockQuantity: number;
+    updateQuantity: number;
+  }
+   interface InventoryPurchaseOrderItem {
+    _id: string;
+    companyName: string;
+    flavourOrFeature: string;
+    itemBarcode: string;
+    itemBrandName: string;
+    itemCategory: string;
+    itemMRPperUnit: number;
+    itemName: string;
+    itemPerUnitQuantity: number;
+    itemShelfDates: InventoryPurchaseOrderItemShelfDate[];
+    purchaseData: InventoryPurchaseOrderEntry[];  
+    quantityUnitName: string;
+    saleTime: string;
+    sku: string;
+    subCategory: string;
+  }
+  interface InventoryPurchaseOrderState {
+    items: InventoryPurchaseOrderItem[];
+    page: number;
+    rowsPerPage: number;
+    rowCount: number;
+    isLoading: boolean;
+    cache: Record<string, InventoryTableRow[]>;
+    selectedItem: InventoryPurchaseOrderItem | null
+  }
+
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

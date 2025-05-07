@@ -130,7 +130,13 @@ export const updateStockTransactionByAdmin = async (
       const { source, destination } = updateData;
       const { sourceType, sourceEntityId } = source;
       const { destinationType, destinationEntityId } = destination;
-      if (!itemsToTransfer.length && sourceType === CONSTANTS.STORE && destinationType === CONSTANTS.STORE ){        
+      if (
+        !itemsToTransfer.length &&
+        ((sourceType === CONSTANTS.STORE &&
+          destinationType === CONSTANTS.STORE) ||
+          (sourceType === CONSTANTS.WAREHOUSE &&
+            destinationType === CONSTANTS.WAREHOUSE))
+      ){        
         await updateDestination({
           userId: user?._id,
           items: destinationItemsToTransfer,
@@ -139,7 +145,13 @@ export const updateStockTransactionByAdmin = async (
           transactionId: transaction._id
         });
       }
-      else if (itemsToTransfer.length > 0 && sourceType === CONSTANTS.STORE && destinationType === CONSTANTS.STORE ){        
+      else if (
+        itemsToTransfer.length > 0 && 
+        ((sourceType === CONSTANTS.STORE && 
+          destinationType === CONSTANTS.STORE) ||
+          (sourceType === CONSTANTS.WAREHOUSE &&
+            destinationType === CONSTANTS.WAREHOUSE))
+      ){        
         await updateSource({
           userId: user?._id,
           items: itemsToTransfer,
