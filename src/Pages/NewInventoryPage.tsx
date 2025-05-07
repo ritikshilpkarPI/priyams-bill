@@ -11,48 +11,33 @@ import {
   setRowsPerPage,
   putPageInCache,
   showRows,
+  setSelectedItem,
 } from 'src/redux/inventoryPage/inventorySlice';
 import { useSelector } from 'react-redux';
-import { InventoryRow, InventoryTableRow } from 'src/types';
 
 const NewInventoryPage: React.FC = () => {
   const dispatch = useDispatch();
   const { cache, items, page, rowsPerPage, rowCount, isLoading } = useSelector(
     (state: RootState) => state.inventory
   );
-  const navigate = useNavigate();
-  const cacheKey = `${rowsPerPage}-${page}`;
-  const getItemPurchaseBatches = async () => {
-    const rowsInCache = cache[cacheKey];
 
-    if (rowsInCache) {
-      dispatch(showRows(rowsInCache));
-      return;
-    }
-    try {
-      const res = await itemPurchaseBatches({ page:page + 1, limit: rowsPerPage });
-      const data = res?.data as Record<string, InventoryRow> ;
-      const rows : InventoryTableRow [] = Object.values(data)?.map(
-        (entry , idx: number) => {
-          const { _id : _ , ...restStaticData } = entry.staticData
-          return {
-          _id: entry.staticData._id ?? `row-${page}-${idx}`,
-          ...restStaticData,
-          purchases: entry.purchases ?? [],
-        }},
-      );
-
-      /* put in cache + show */
-      dispatch(putPageInCache({ key: cacheKey, rows }));
-      dispatch(showRows(rows));
-      dispatch(setRowCount(res.totalCount));
-    } finally {
-      dispatch(setIsLoading(false));
+  const fetchItemPurchaseBatchesApi = async () => {
+    const response = await itemPurchaseBatches({
+      page: page + 1,
+      limit: rowsPerPage,
+    });
+    if (response?.success) {
+      dispatch(showRows(response.data));
+      dispatch(setRowCount(response.totalCount));
     }
   };
 
+  const navigate = useNavigate();
+  const cacheKey = `${rowsPerPage}-${page}`;
+
+
   useEffect(() => {
-    getItemPurchaseBatches();
+    fetchItemPurchaseBatchesApi();
   }, [page, rowsPerPage, cacheKey, cache, dispatch]);
 
   const handlePageChange = (_: unknown, newPage: number) => {
@@ -104,18 +89,14 @@ const NewInventoryPage: React.FC = () => {
       label: 'Company',
     },
     {
-      key: 'showPOs',
-      label: 'Show POs',
-      render: (row: InventoryRow) => (
+      key: 'purchaseData',
+      label: 'Purchase Data',
+      render: (row: any) => (
         <button
-          onClick={() =>
-            navigate('/item-purchase-orders', {
-              state: {
-                item: row,
-                purchases: row.purchases || [],
-              },
-            })
-          }
+          onClick={() => {
+            dispatch(setSelectedItem(row));
+            navigate(`/item-purchase-orders/${row._id}`);
+          }}
           style={{
             padding: '4px 8px',
             backgroundColor: '#2e7d32',
@@ -123,10 +104,10 @@ const NewInventoryPage: React.FC = () => {
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontSize: '14px'
+            fontSize: '14px',
           }}
         >
-          Show POs - {twoDigit(row?.purchases?.length)}
+          Show POs - {twoDigit(row?.purchaseData?.length)}
         </button>
       ),
     },
@@ -143,7 +124,7 @@ const NewInventoryPage: React.FC = () => {
       ) : (
         <DataTable
           columns={columns}
-          data={items}
+          data={items ?? []}
           isLoading={isLoading}
           page={page}
           rowsPerPage={rowsPerPage}
