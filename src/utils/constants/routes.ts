@@ -35,7 +35,7 @@ export const ROUTES = Object.freeze({
     STORE_INVENTORY_MANAGEMENT: "/createTransaction",
     STORE_INVENTORY: "/storeInventory",
     STORE_TRANSACTIONS:"/stockTransactions",
-    NEW_INVENTORY_PAGE: "/newInventoryPage",
+    WAREHOUSE_INVENTORY_PAGE: "/warehouseInventory",
     ITEM_PURCHASE_ORDERS:"/item-purchase-orders/:id",
     STORE_INVENTORY_MANAGEMENT_BY_ID: "/createTransaction/:id",
     EXPIRY_ITEMS_BATCH: "/expiry-items-batch",

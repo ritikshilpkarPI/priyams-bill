@@ -155,7 +155,7 @@ export const protectedRouteMap: Record<string, RouteConfig> = {
       index: true,
     },
     NEW_INVENTORY_PAGE: {
-      path: ROUTES.NEW_INVENTORY_PAGE,
+      path: ROUTES.WAREHOUSE_INVENTORY_PAGE,
       element: <NewInventoryPage />,
       index: true,
     },

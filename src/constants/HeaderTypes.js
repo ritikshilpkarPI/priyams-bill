@@ -20,8 +20,8 @@ export const PAGES = {
 export const sidebarListData = [
   {
     ITEM: [
-      { name: 'Inventory', url: '/newInventoryPage', icon: 'images/inventory.svg' },
-      { name: 'Store Inventory', url: '/storeInventory', icon: 'images/inventory.svg' },
+      { name: 'Warehouse Inventory', url: '/warehouseInventory', icon: 'images/warehouse-inventory.svg' },
+      { name: 'Store Inventory', url: '/storeInventory', icon: 'images/store-inventory.svg' },
       
       { name: 'Item Labels', url: '/label', icon: 'images/label.svg' },
       { name: 'Item Barcode ', url: '/itemsBarcode', icon: 'images/barcode.svg' },
