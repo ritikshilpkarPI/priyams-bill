@@ -534,6 +534,7 @@ export const itemPurchaseBatches = async ({
   itemId?: string;
 }
 ) => {
+  try {    
     const params = new URLSearchParams();
     if (itemId) params.append('item_id', itemId);
     if (typeof page === 'number') params.append('page', page.toString());
@@ -543,7 +544,10 @@ export const itemPurchaseBatches = async ({
       url: `${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}?${params.toString()}`,
       method: API_METHODS.GET,
     });
-  return response.data;
+    return response.data;
+  } catch (error) {
+    return { isError: true, error };
+  }
 };
 
 
@@ -734,7 +738,8 @@ export const updateItemMismatchInStockAPI = async (
     manufacturingDate: string;
     currentStockQuantity: number;
     updateQuantity: number;
-  }
+  },
+  type?: string
 ) => {
   try {
     const response = await postAPI({
@@ -747,7 +752,8 @@ export const updateItemMismatchInStockAPI = async (
           manufacturingDate: item.manufacturingDate,
           currentCount: item.currentStockQuantity,
           updateCount: item.updateQuantity,
-        }
+        },
+        ...(type && { type }),
       },
     });
     return response;

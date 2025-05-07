@@ -12,7 +12,7 @@ export const updateItemMismatchInStock = async (
 ) => {
   
   try {
-    const { storeId, staffId, item } = req.body;
+    const { storeId, staffId, item, type = CONSTANTS.STORE  } = req.body;
     const userId = req.user?._id;
 
     let newStaffId;
@@ -35,13 +35,13 @@ export const updateItemMismatchInStock = async (
     const source = {
       sourceStaff: newStaffId,
       sourceEntityId: storeId,
-      sourceType: CONSTANTS.STORE,
+      sourceType: type,
     };
 
     const destination = {
       destinationStaff: newStaffId,
       destinationEntityId: storeId,
-      destinationType: CONSTANTS.STORE,
+      destinationType: type,
     };
 
     const itemByDate = [
