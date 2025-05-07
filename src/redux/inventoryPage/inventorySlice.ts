@@ -1,22 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { InventoryRow, InventoryTableRow } from 'src/types';
 
-interface InventoryState {
-  items: InventoryTableRow[];
-  page: number;
-  rowsPerPage: number;
-  rowCount: number;
-  isLoading: boolean;
-  cache: Record<string, InventoryTableRow[]>;
-}
 
-const initialState: InventoryState = {
+const initialState: InventoryPurchaseOrderState = {
   cache: {},
   items: [],
   page: 0,
   rowsPerPage: 10,
   rowCount: 0,
   isLoading: false,
+  selectedItem: null
 };
 
 const inventorySlice = createSlice({
@@ -36,12 +29,28 @@ const inventorySlice = createSlice({
       state.rowCount = action.payload;
     },
     /* ---------- cache & view helpers ---------- */
-    putPageInCache(state, action: PayloadAction<{ key: string; rows: InventoryTableRow[] }>) {
+    putPageInCache(state, action ) {
       const { key, rows } = action.payload;
       state.cache[key] = rows;
     },
-    showRows(state, action: PayloadAction<InventoryTableRow[]>) {
+    showRows(state, action: PayloadAction<InventoryPurchaseOrderItem[]>) {
       state.items = action.payload;
+    },
+    setSelectedItem(state, action: PayloadAction<InventoryPurchaseOrderItem>) {
+      state.selectedItem = action.payload;
+    },
+    setshelfCount(state, action: { payload: {
+      _id: string; 
+      updateQuantity: number;
+    }; }){
+      const { _id, updateQuantity } = action.payload;
+      if (state.selectedItem) {
+        state.selectedItem.itemShelfDates = state.selectedItem.itemShelfDates.map((shelfDate) =>
+          shelfDate._id === _id
+            ? { ...shelfDate, updateQuantity }
+            : shelfDate
+        );
+      }
     },
     resetInventory: () => initialState,
   },
@@ -55,6 +64,8 @@ export const {
   resetInventory,
   putPageInCache,
   showRows,
+  setSelectedItem,
+  setshelfCount,
 } = inventorySlice.actions;
 
 export default inventorySlice.reducer;
