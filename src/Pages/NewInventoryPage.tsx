@@ -14,21 +14,31 @@ import {
   setSelectedItem,
 } from 'src/redux/inventoryPage/inventorySlice';
 import { useSelector } from 'react-redux';
+import { Grid, TextInput } from '@mantine/core';
+import { useDebouncedValue, useMediaQuery } from "@mantine/hooks";
 
 const NewInventoryPage: React.FC = () => {
   const dispatch = useDispatch();
   const { cache, items, page, rowsPerPage, rowCount, isLoading } = useSelector(
     (state: RootState) => state.inventory
   );
+  const [itemNameOrBarcode, setItemNameOrBarcode] = useState("")
+  const [debouncedNameOrBarcode] = useDebouncedValue(itemNameOrBarcode, 500);
+    const isSmallScreen = useMediaQuery('(max-width: 768px)'); 
 
-  const fetchItemPurchaseBatchesApi = async () => {
+  const fetchItemPurchaseBatchesApi = async (itemNameOrBarcode?: string) => {
     const response = await itemPurchaseBatches({
       page: page + 1,
       limit: rowsPerPage,
+      itemNameOrBarcode
+      
     });
     if (response?.success) {
       dispatch(showRows(response.data));
       dispatch(setRowCount(response.totalCount));
+    }else{
+      dispatch(showRows([]));
+      dispatch(setRowCount(0));
     }
   };
 
@@ -37,8 +47,8 @@ const NewInventoryPage: React.FC = () => {
 
 
   useEffect(() => {
-    fetchItemPurchaseBatchesApi();
-  }, [page, rowsPerPage, cacheKey, cache, dispatch]);
+    fetchItemPurchaseBatchesApi(itemNameOrBarcode);
+  }, [page, rowsPerPage, cacheKey, cache, debouncedNameOrBarcode, dispatch]);
 
   const handlePageChange = (_: unknown, newPage: number) => {
     dispatch(setPage(newPage));
@@ -119,21 +129,33 @@ const NewInventoryPage: React.FC = () => {
         Inventory Page
       </Typography>
 
-      {isLoading ? (
-        <CircularProgress />
-      ) : (
-        <DataTable
-          columns={columns}
-          data={items ?? []}
-          isLoading={isLoading}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handlePageChange}
-          onRowsPerPageChange={handleRowsPerPageChange}
-          rowCount={rowCount}
-          paginationMode="server"
-        />
-      )}
+      <Grid>
+        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
+          <TextInput
+            label="Search"
+            placeholder="Search item by name or barcode"
+            onChange={(event) => setItemNameOrBarcode(event.target.value)}
+          />
+        </Grid.Col>
+       
+        <Grid.Col span={12}>
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <DataTable
+              columns={columns}
+              data={items ?? []}
+              isLoading={isLoading}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+              rowCount={rowCount}
+              paginationMode="server"
+            />
+          )}
+        </Grid.Col>
+      </Grid>
     </Box>
   );
 };
