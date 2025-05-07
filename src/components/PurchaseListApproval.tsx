@@ -24,11 +24,16 @@ import {
   rejectPurchaseOrder,
 } from 'src/utils/apiUtils';
 import { formatDateTime } from 'src/utils/formatDate';
+import {
+  Button,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { POSummaryDrawer } from './POSummaryDrawer/POSummaryDrawer';
 
 const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
   allPurchaseList,
   loading,
-  getOrders = () => {},
+  getOrders = () => { },
 }) => {
   const { loadingState, order, orderBy, page, rowsPerPage, isAdminUser } =
     useSelector((state: RootState) => state.purchaseListApproval);
@@ -94,6 +99,26 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
       };
     }
 
+    if (col.key === purchaseOrderTableConstants.VIEW) {
+      return {
+        ...col,
+        render: (row: any) => {
+          return (
+            <Button
+              onClick={() => {
+                findPurchaseOrderById(row._id);
+                open();
+              }}
+              variant="light"
+              color="grape"
+            >
+              View
+            </Button>
+          );
+        },
+      };
+    }
+
     if (col.key === purchaseOrderTableConstants.ACTIONS) {
       return {
         ...col,
@@ -118,7 +143,7 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
         ...col,
         render: (row: any) => (
           <div>
-            {row.brandCompanyNames.map(({ brand}: any, index: number) => (
+            {row.brandCompanyNames.map(({ brand }: any, index: number) => (
               <div key={index}>
                 <strong>{brand}</strong>
               </div>
@@ -142,15 +167,24 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
         ),
       };
     }
-    
+
 
     return col;
   });
 
-  console.log({ allPurchaseList });
+  const [opened, { open, close }] = useDisclosure(false);
+
+  const [selectedOrder, setSelectedOrder] =
+    useState<PurchaseOrderDataType | null>(null);
+
+  const findPurchaseOrderById = (_id: string) => {
+    const result = allPurchaseList.find((order) => order._id === _id);
+    setSelectedOrder(result || null); // Handle case when result is undefined
+  };
 
   return (
     <div style={{ padding: '20px' }}>
+      <POSummaryDrawer selectedOrder={selectedOrder} opened={opened} close={close} />
       <DataTable
         columns={columns}
         data={allPurchaseList.map((row, idx) => {
@@ -163,7 +197,7 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
                 const company = item.companyId?.companyName || '';
                 const key = `${brand}-${company}`;
                 console.log({ key });
-                
+
                 return [key, { brand, company }];
               })
             ).values()

@@ -11,6 +11,7 @@ export interface StoreType extends Document {
   number: number;
   collectionName: string;
   name: string;
+  type: "STORE" | "WAREHOUSE";
 }
 const StoreSchema: Schema<StoreType> = new Schema({
   address: {
@@ -25,6 +26,8 @@ const StoreSchema: Schema<StoreType> = new Schema({
   collectionName: { type: String },
   // name will be generated as address.locality_number
   name: { type: String },
+  // define a fields which will be used to identify it's a store or warehouse use enum
+  type: { type: String, enum: ["STORE", "WAREHOUSE"], default: "STORE" },
 });
 
 StoreSchema.pre<StoreType>("save", async function (next) {
@@ -35,7 +38,7 @@ StoreSchema.pre<StoreType>("save", async function (next) {
       this.number = maxStore ? maxStore.number + 1 : 1;
     }
     // Generate storeCode as: pstr_{storeNumber}_{storePincode}
-    this.code = `pstr_${this.number}_${this.pincode}`;
+    this.code = `store_items_${this.number}_${this.pincode}`;
     // Generate storeCollectionName as storeCode in lowercase
     this.collectionName = this.code.toLowerCase();
     this.name = `${this.address.locality}_${this.number}`

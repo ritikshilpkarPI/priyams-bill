@@ -4,12 +4,18 @@ interface StoreInventoryState {
   selectedStoreId: string;
   inventoryItems: any[];
   stores: Store[];
+  sourceStaff: any[],
+  destinationStaff: any[],
+  selectedItemsIds: string[];
 }
 
 const initialState: StoreInventoryState = {
   selectedStoreId: '',
   inventoryItems: [],
   stores: [],
+  sourceStaff: [],
+  destinationStaff: [],
+  selectedItemsIds: []
 };
 
 const storeInventorySlice = createSlice({
@@ -27,24 +33,58 @@ const storeInventorySlice = createSlice({
     },
     updateInventoryItemQuantity: (
       state,
-      action: PayloadAction<{ itemId: string; quantity: number }>
+      action: PayloadAction<{ itemId: string; quantity: number; shelfId?: string }>
     ) => {
-      const { itemId, quantity } = action.payload;
-      const item = state.inventoryItems.find(
+      const { itemId, quantity, shelfId } = action.payload;
+    
+      let item = state.inventoryItems.find(
         (invItem) => invItem.itemDetail._id === itemId
       );
-      if (item) {
+    
+      if (!item) return;
+    
+      if (shelfId) {
+        const batch = item.itemDetail.itemShelfDates?.find(
+          (batch: any) => batch._id === shelfId
+        );
+        if (batch) {
+          batch.quantityToAdd = quantity;
+          item = {
+            ...item,
+              itemShelfDates: item.itemDetail.itemShelfDates?.map((batch: any) =>
+                batch._id === shelfId ? { ...batch, quantity: quantity ?? 0 } : batch
+              ),
+          }
+        }
+      } else {
         item.quantityToAdd = quantity;
       }
+      state.inventoryItems = state.inventoryItems.map((invItem) =>
+        invItem.itemDetail._id === itemId ? item : invItem
+      );
     },
     removeInventoryItem: (state, action: PayloadAction<string>) => {
       state.inventoryItems = state.inventoryItems.filter(
         (invItem) => invItem.itemDetail._id !== action.payload
       );
     },
-    resetStoreInventory: (state) => {
+    resetStoreStockInventory: (state) => {
       state.selectedStoreId = '';
       state.inventoryItems = [];
+      state.stores = [];
+      state.sourceStaff = [];
+      state.destinationStaff = [];
+
+    
+    },
+    setSourceStaff: (state, action) => {
+      state.sourceStaff = action.payload;
+    },
+    setDestinationStaff: (state, action) => {
+      state.destinationStaff = action.payload;
+    },
+    setSelectedItemsIds: (state, action: PayloadAction<string[]>) => {
+      state.selectedItemsIds = action.payload;
     },
   },
 });
@@ -55,7 +95,10 @@ export const {
   addInventoryItem,
   updateInventoryItemQuantity,
   removeInventoryItem,
-  resetStoreInventory,
+  resetStoreStockInventory,
+  setSourceStaff,
+  setDestinationStaff,
+  setSelectedItemsIds
 } = storeInventorySlice.actions;
 
 export default storeInventorySlice.reducer;

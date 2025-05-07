@@ -7,6 +7,7 @@ import {
   FileInput,
   Badge,
   Image,
+  ActionIcon,
 } from '@mantine/core';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -30,6 +31,9 @@ import {
 import { addPaymentDetailValidation } from 'src/utils/validations/paymentDetailFormValidation';
 import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
+import PastableFileInput from './PasteableFileInput';
+import { Box } from '@mui/material';
+import { IconX } from '@tabler/icons-react';
 const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
 
   const dispatch = useDispatch();
@@ -79,7 +83,7 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   };
 
   const onSubmit = async () => {
-    try {
+    try {      
       await addPaymentDetailValidation.validate({...paymentDetail, totalPayableAmount: purchaseDetails.totalPayableAmount, paymentsList}, {
         abortEarly: false,
       });
@@ -89,6 +93,14 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
       setErrors(getYupValidationErrorMap(error));
     }
   };
+
+
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = [...(paymentDetail.paymentImages || [])];
+    updatedImages.splice(index, 1);
+    onChange('paymentImages', updatedImages);
+  };
+  
 
   return (
     <Flex
@@ -145,45 +157,67 @@ const MakePaymentForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
             onChange={(e) => onChange('paidAmount', Number(e.target.value))}
           />
         </Col>
-        {takeImages && (
-          <Col>
-            <FileInput
-              label="Choose Image/s"
-              accept="image"
-              required
-              error={errors.paymentImages}
-              onChange={(files) => onChange('paymentImages', files || [])}
-              multiple
-            />
-          </Col>
-        )}
+
+        <Box p="10px" width={'100%'}>     
+    <PastableFileInput
+  onDrop={(files: any) => onChange('paymentImages', files || [])}
+  onPasteFile={(files: any) => onChange('paymentImages', files || [])}
+  multiple
+/>
+        </Box>
         {(paymentDetail.paymentImages?.length ?? 0) > 0 && (
-          <Col>
-            <Flex
+  <Col>
+    <Flex
+      sx={{
+        overflowX: 'scroll',
+        gap: '8px',
+        padding: '8px',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+      }}
+    >
+      {(paymentDetail.paymentImages || []).map((file, index) => {
+        const imageUrl = URL.createObjectURL(file);
+        return (
+          <Box
+            key={index}
+            sx={{
+              position: 'relative',
+              width: '90px',
+              height: '90px',
+              flexShrink: 0,
+            }}
+          >
+            <Image
+              src={imageUrl}
+              width={90}
+              height={90}
+              radius="sm"
+              alt={`Image ${index}`}
+            />
+            <ActionIcon
+              color="red"
+              size="xs"
+              radius="xl"
+              variant="filled"
+              onClick={() => handleRemoveImage(index)}
               sx={{
-                overflowX: 'scroll',
-                gap: '8px',
-                padding: '8px',
-                '&::-webkit-scrollbar': {
-            display: 'none',
-          },
+                position: 'absolute',
+                top: -6,
+                right: -6,
+                zIndex: 1,
               }}
             >
-              {(paymentDetail.paymentImages || []).map((file, index) => {
-                const imageUrl = URL.createObjectURL(file);
-                return (
-                  <Image
-                    key={index}
-                    src={imageUrl}
-                    width={50}
-                    height={50}
-                    radius="sm"
-                  />
-                );
-              })}
-            </Flex>
-          </Col>
-        )}
+              <IconX size={12} />
+            </ActionIcon>
+          </Box>
+        );
+      })}
+    </Flex>
+  </Col>
+)}
+
         <Col>
           <Button loading={loading} onClick={onSubmit} w={'100%'}>
             Save
