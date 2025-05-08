@@ -14,7 +14,7 @@ import {
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { ItemSearch } from '../../components/ItemSearch';
+import { ItemSearch } from '../../components/ItemSearch/ItemSearch';
 import { StoreSelect } from '../../components/StoreSelect';
 import { InventoryItemPanel } from '../../components/InventoryItemPanel';
 import {
@@ -508,6 +508,7 @@ try {
                   stockTransaction.approvedByAdmin
                 }
                 error={errors.inventoryItems}
+                isWarehouse = { stockTransaction?.source?.sourceType === CONSTANTS.WAREHOUSE ? true : false}
               />
               {!stockTransaction.source.sourceEntityId && (
                 <Text
