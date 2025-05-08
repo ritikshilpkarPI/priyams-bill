@@ -7,50 +7,42 @@ import { MESSAGES } from '../constants/messages';
 
 export const itemPurchaseBatches = async (req: Request, res: Response) => {
   try {
-    const { itemNameOrBarcode, item_id: filterItemId, page = '1', limit = '20' } = req.query;
+    const {
+      itemNameOrBarcode,
+      item_id: filterItemId,
+      page = '1',
+      limit = '20',
+    } = req.query;
 
     const pageNumber = parseInt(page as string, 10) || 1;
     const limitNumber = parseInt(limit as string, 10) || 10;
     const skip = filterItemId ? 0 : (pageNumber - 1) * limitNumber;
 
-    let items = [];
-    let totalCount = 0;
+    let query = {};
 
-    if (itemNameOrBarcode){
+    if (itemNameOrBarcode) {
       const barcode = itemNameOrBarcode.toString();
       const nameRegex = new RegExp(barcode, 'i');
-
-      const searchQuery = {
-        $or: [
-          { itemBarcode: barcode },
-          { itemName: nameRegex }
-        ]
+      query = {
+        $or: [{ itemBarcode: barcode }, { itemName: nameRegex }],
       };
-      totalCount = await Item.countDocuments(searchQuery);
-
-      items = await Item.find(searchQuery)
-        .skip(skip)
-        .limit(limitNumber)
-        .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
-        .lean();
-
-      if (items.length === 0) {
-        return res.status(404).json({ success: false, message: MESSAGES.NO_ITEMS_FOUND_BY_BARCODE });
-      }
     } else {
-      const staticQuery = filterItemId
-        ? { _id: toObjectId(filterItemId as string) }
-        : {};
-
-      totalCount = await Item.countDocuments(staticQuery);
-
-      items = await Item.find(staticQuery)
-        .skip(skip)
-        .limit(limitNumber)
-        .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
-        .lean();
+      query = filterItemId ? { _id: toObjectId(filterItemId as string) } : {};
+    }
+    const items = await Item.find(query)
+    .skip(skip)
+    .limit(limitNumber)
+    .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
+    .lean();
+    
+    if (items.length === 0) {
+      return res
+      .status(404)
+      .json({ success: false, message: MESSAGES.NO_ITEMS_FOUND_BY_BARCODE });
     }
 
+    const totalCount = await Item.countDocuments(query);
+    
     const itemIdMap = new Map<string, any>();
     const itemIds: string[] = [];
 
@@ -81,20 +73,25 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
       .lean();
 
     for (const purchaseOrder of purchaseOrders) {
-      const { _id: purchaseOrderId, draftTime, approveTime, purchasedItems } = purchaseOrder;
+      const {
+        _id: purchaseOrderId,
+        draftTime,
+        approveTime,
+        purchasedItems,
+      } = purchaseOrder;
 
       for (const pItem of purchasedItems) {
         const itemId = pItem.item_id?.toString();
-        if (!itemId || !itemIdMap.has(itemId)) continue;
 
-        const itemData = {
-          purchaseOrderId,
-          draftTime,
-          approveTime,
-          ...pItem
-        };
-
-        itemIdMap.get(itemId).purchaseData.push(itemData);
+        if (itemId && itemIdMap.has(itemId)) {
+          const itemData = {
+            purchaseOrderId,
+            draftTime,
+            approveTime,
+            ...pItem,
+          };
+          itemIdMap.get(itemId).purchaseData.push(itemData);
+        }
       }
     }
 

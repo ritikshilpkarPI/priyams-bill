@@ -14,29 +14,31 @@ import {
   setSelectedItem,
 } from 'src/redux/inventoryPage/inventorySlice';
 import { useSelector } from 'react-redux';
-import { Grid, TextInput } from '@mantine/core';
-import { useDebouncedValue, useMediaQuery } from "@mantine/hooks";
+import { Grid } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import ItemSearchInput from 'src/components/itemSearchInput/ItemSearchInput';
 
 const NewInventoryPage: React.FC = () => {
   const dispatch = useDispatch();
   const { cache, items, page, rowsPerPage, rowCount, isLoading } = useSelector(
     (state: RootState) => state.inventory
   );
-  const [itemNameOrBarcode, setItemNameOrBarcode] = useState("")
-  const [debouncedNameOrBarcode] = useDebouncedValue(itemNameOrBarcode, 500);
-    const isSmallScreen = useMediaQuery('(max-width: 768px)'); 
+  const [itemNameOrBarcode, setItemNameOrBarcode] = useState('');
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   const fetchItemPurchaseBatchesApi = async (itemNameOrBarcode?: string) => {
+    dispatch(setIsLoading(true));
     const response = await itemPurchaseBatches({
       page: page + 1,
       limit: rowsPerPage,
-      itemNameOrBarcode
-      
+      itemNameOrBarcode,
     });
     if (response?.success) {
+      dispatch(setIsLoading(false));
       dispatch(showRows(response.data));
       dispatch(setRowCount(response.totalCount));
-    }else{
+    } else {
+      dispatch(setIsLoading(false));
       dispatch(showRows([]));
       dispatch(setRowCount(0));
     }
@@ -45,10 +47,9 @@ const NewInventoryPage: React.FC = () => {
   const navigate = useNavigate();
   const cacheKey = `${rowsPerPage}-${page}`;
 
-
   useEffect(() => {
     fetchItemPurchaseBatchesApi(itemNameOrBarcode);
-  }, [page, rowsPerPage, cacheKey, cache, debouncedNameOrBarcode, dispatch]);
+  }, [page, rowsPerPage, cacheKey, cache, itemNameOrBarcode, dispatch]);
 
   const handlePageChange = (_: unknown, newPage: number) => {
     dispatch(setPage(newPage));
@@ -75,12 +76,20 @@ const NewInventoryPage: React.FC = () => {
       label: 'Barcode',
     },
     {
+      key: 'itemName',
+      label: 'Item Name',
+    },
+    {
       key: 'itemBrandName',
       label: 'Brand',
     },
     {
       key: 'itemCategory',
       label: 'Category',
+    },
+    {
+      key: 'companyName',
+      label: 'Company',
     },
     {
       key: 'itemMRPperUnit',
@@ -93,10 +102,6 @@ const NewInventoryPage: React.FC = () => {
     {
       key: 'quantityUnitName',
       label: 'Unit',
-    },
-    {
-      key: 'companyName',
-      label: 'Company',
     },
     {
       key: 'purchaseData',
@@ -130,30 +135,25 @@ const NewInventoryPage: React.FC = () => {
       </Typography>
 
       <Grid>
-        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
-          <TextInput
-            label="Search"
+        <Grid.Col span={isSmallScreen ? 12 : 5} sx={{ textAlign: 'left' }}>
+          <ItemSearchInput
             placeholder="Search item by name or barcode"
-            onChange={(event) => setItemNameOrBarcode(event.target.value)}
+            onChange={setItemNameOrBarcode}
           />
         </Grid.Col>
-       
+
         <Grid.Col span={12}>
-          {isLoading ? (
-            <CircularProgress />
-          ) : (
-            <DataTable
-              columns={columns}
-              data={items ?? []}
-              isLoading={isLoading}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowCount={rowCount}
-              paginationMode="server"
-            />
-          )}
+          <DataTable
+            columns={columns}
+            data={items ?? []}
+            isLoading={isLoading}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            rowCount={rowCount}
+            paginationMode="server"
+          />
         </Grid.Col>
       </Grid>
     </Box>
