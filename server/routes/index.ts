@@ -132,10 +132,23 @@ router.get(
 );
 
 router.post(
+  API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_OPEN,
+  isLoggedIn,
+  addOpenCloseProcedure
+);
+
+router.post(
   API_PATHS.OPENCLOSE.POST_NEW_PROCEDURE_CLOSE,
   isLoggedIn,
   addOpenCloseProcedure
 );
+
+router.put(
+  API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_CLOSE,
+  isLoggedIn,
+  editOpenCloseProcedure
+);
+
 router.put(
   API_PATHS.OPENCLOSE.PUT_EDIT_PROCEDURE_OPEN,
   isLoggedIn,
