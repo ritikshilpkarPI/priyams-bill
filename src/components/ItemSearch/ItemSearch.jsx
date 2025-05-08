@@ -1,48 +1,60 @@
 import { useEffect, useRef, useState } from 'react';
+import { Paper, Text, Input, Button, Loader, Group } from '@mantine/core';
+import { useSelector } from 'react-redux';
+import { fuzzySearch } from 'src/utils/searchUtils';
 import {
-    Paper,
-    Text,
-    Input,
-    Button,
-    Loader,
-    Group,
-  } from '@mantine/core';
-import { useSelector } from "react-redux";
-import { fuzzySearch } from "src/utils/searchUtils";
-import { itemsFeedAPILoading, selectItemsFeedData } from "src/redux/allItemsFeedData/allItemsFeedDataSelector";
-import "./ItemSearch.css";
+  itemsFeedAPILoading,
+  selectItemsFeedData,
+  selectWarehouseItemsFeedAPILoading,
+  selectWarehouseItemsFeedData,
+} from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import './ItemSearch.css';
 import { setItemsData } from 'src/redux/items/itemsSlice';
 import { getItemsSkuAPI } from 'src/utils/apiUtils';
 import { selectItemsSkuList } from 'src/redux/items/itemsSelector';
 import { useDispatch } from 'react-redux';
 
-export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [itemsData, setItemData] = useState([]);
-    const itemsFeedData = useSelector(selectItemsFeedData);
-    const loading = useSelector(itemsFeedAPILoading);
-    const inputRef = useRef(null); 
-    const dispatch = useDispatch();
-    useEffect(() => {
-      if (inputRef.current && !loading) {
-        inputRef.current.focus(); 
-      }
-    }, [loading]); 
-    
-    
-    useEffect(() => {
-      if (!itemsFeedData || itemsFeedData.totalItemsCount === 0) {
-      } else {
-        setItemData(itemsFeedData);
-      }
-    }, [itemsFeedData]);
+export const ItemSearch = ({
+  onItemSelect,
+  isApprovedPO,
+  error = '',
+  isWarehouse = false,
+}) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [itemsData, setItemData] = useState([]);
+  const warehouseItemsFeedData = useSelector(selectWarehouseItemsFeedData);
+  const storeItemsFeedData = useSelector(selectItemsFeedData);
+  const warehouseLoading = useSelector(selectWarehouseItemsFeedAPILoading);
+  const storeLoading = useSelector(itemsFeedAPILoading);
+  const itemsFeedData = isWarehouse
+    ? warehouseItemsFeedData
+    : storeItemsFeedData;
+  const loading = isWarehouse ? warehouseLoading : storeLoading;
+  const inputRef = useRef(null);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (inputRef.current && !loading) {
+      inputRef.current.focus();
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    if (itemsFeedData.totalItemsCount > 0) {
+      setItemData(itemsFeedData);
+    }
+  }, [itemsFeedData]);
 
   const handleSearch = (value) => {
     setSearchTerm(value);
 
-    if (!value || !itemsData || !itemsData.itemsBarCodeMap || !itemsData.itemsNameMap) {
+    if (
+      !value ||
+      !itemsData ||
+      !itemsData.itemsBarCodeMap ||
+      !itemsData.itemsNameMap
+    ) {
       setSearchResults([]);
       return;
     }
@@ -59,9 +71,15 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
 
       const barcodeMapResults = Object.values(itemsData.itemsBarCodeMap)
         .flat()
-        .filter((item) => item.itemName.toLowerCase().includes(value.toLowerCase()));
+        .filter((item) =>
+          item.itemName.toLowerCase().includes(value.toLowerCase())
+        );
 
-      results = Array.from(new Map([...nameMatches, ...barcodeMapResults].map((item) => [item._id, item])).values());
+      results = Array.from(
+        new Map(
+          [...nameMatches, ...barcodeMapResults].map((item) => [item._id, item])
+        ).values()
+      );
     }
 
     setSearchResults(results.slice(0, 10));
@@ -97,7 +115,7 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
         itemShelfDates: item.itemShelfDates,
         sku: item.sku,
       },
-      itemQuantityInBill: 1
+      itemQuantityInBill: 1,
     });
     setSearchTerm('');
     setSearchResults([]);
@@ -111,9 +129,9 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
   const getItemsSku = async () => {
     const response = await getItemsSkuAPI();
 
-    if(!response && response.isError) return;
+    if (!response && response.isError) return;
     dispatch(setItemsData({ itemsSkuList: response.itemsSku }));
-  }
+  };
 
   useEffect(() => {
     getItemsSku();
@@ -128,21 +146,29 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
   return (
     <div className="item-search">
       <Paper p="md" radius="md" withBorder mb="md">
-        <Text size="lg" weight={500} mb="md" className="item-search-label">Search Items</Text>
+        <Text size="lg" weight={500} mb="md" className="item-search-label">
+          Search {isWarehouse ? 'Warehouse' : 'Store'} Items
+        </Text>
 
         <Input
           placeholder="Enter item name or barcode"
           ref={inputRef}
           value={searchTerm}
           onChange={(e) => handleSearch(e.target.value)}
-          rightSection={(loading || !itemsSkuList) ? <Loader size="sm" /> : null}
+          rightSection={loading || !itemsSkuList ? <Loader size="sm" /> : null}
           mb="sm"
           disabled={loading || isApprovedPO || !itemsSkuList}
         />
 
         {searchResults.length > 0 && (
-          <Paper withBorder p="xs" style={{ maxHeight: '200px', overflow: 'auto' }}>
-            {searchResults.length === 1 ? handleItemClick(searchResults[0]) : searchResults.map((item) => (
+          <Paper
+            withBorder
+            p="xs"
+            style={{ maxHeight: '200px', overflow: 'auto' }}
+          >
+            {searchResults.length === 1
+              ? handleItemClick(searchResults[0])
+              : searchResults.map((item) => (
                   <Button
                     key={item._id}
                     variant="subtle"
@@ -158,11 +184,16 @@ export const ItemSearch = ({ onItemSelect, isApprovedPO, error = "" }) => {
                         <Text size="sm" color="dimmed">
                           MRP: ₹{item.itemMRPperUnit}
                         </Text>
-                        <Text size="sm" color={item.itemStockQuantity > 0 ? 'green' : 'red'}>
+                        <Text
+                          size="sm"
+                          color={item.itemStockQuantity > 0 ? 'green' : 'red'}
+                        >
                           Stock: {item.itemStockQuantity}
                         </Text>
                         {item.slabPricing?.length > 0 && (
-                          <Text size="sm" color="blue">Has slab pricing</Text>
+                          <Text size="sm" color="blue">
+                            Has slab pricing
+                          </Text>
                         )}
                       </Group>
                     </div>
