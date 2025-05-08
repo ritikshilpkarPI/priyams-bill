@@ -42,6 +42,8 @@ const saveInventory = async (req, res, next) => {
         manufacturingDate: new Date(item.manufacturingDates?.[idx]?.date || null),
         purchaseOrderId: purchaseOrderId,
         entryDate: new Date(),
+        currentStockQuantity: exp.value,
+        initialStockQuantity: exp.value,
       }));
       brandIds.push(item.brandId)
       companyIds.push(item.companyId)

@@ -32,5 +32,12 @@ export const ROUTES = Object.freeze({
     BARCODE_PRINT: "/barcodePrint",
     NEW_PURCHASE_ORDER: "/new-purchase-order",
     NEW_PURCHASE_ORDER_BY_ID: "/new-purchase-order/:id",
-    STORE_INVENTORY: "/storeInventoryManagement",
+    STORE_INVENTORY_MANAGEMENT: "/createTransaction",
+    STORE_INVENTORY: "/storeInventory",
+    STORE_TRANSACTIONS:"/stockTransactions",
+    NEW_INVENTORY_PAGE: "/newInventoryPage",
+    ITEM_PURCHASE_ORDERS:"/item-purchase-orders/:id",
+    STORE_INVENTORY_MANAGEMENT_BY_ID: "/createTransaction/:id",
+    EXPIRY_ITEMS_BATCH: "/expiry-items-batch",
+    EXPIRY_ITEMS_BATCH_BY_ID: "/expiry-items-batch/:id",
 })

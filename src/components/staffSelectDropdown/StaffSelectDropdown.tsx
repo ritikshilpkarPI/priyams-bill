@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectstaffs } from "../../redux/staffList/StaffSelector";
 import { AppDispatch } from "src/redux/store";
-import { getAllStaffsAPI } from "src/utils/apiUtils";
+import {  getAllStaffsByStoreIdAPI } from "src/utils/apiUtils";
 import { setLoading, setStaff } from "src/redux/staffList/StaffSlice";
 import { toast } from "react-toastify";
 
@@ -12,6 +12,7 @@ const StaffSelectDropdown: React.FC<StaffSelectDropdownInterface> = ({
   onChange,
   label,
   selectedStaffId, 
+  storeId,
   disabled
 }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,7 +21,7 @@ const StaffSelectDropdown: React.FC<StaffSelectDropdownInterface> = ({
   const fetchStaffs = async () => {
     dispatch(setLoading(true));
     try {
-      const response = await getAllStaffsAPI();
+      const response = await getAllStaffsByStoreIdAPI(storeId ?? "");
       if (response.success) {
         dispatch(setStaff(response.data));
       }
