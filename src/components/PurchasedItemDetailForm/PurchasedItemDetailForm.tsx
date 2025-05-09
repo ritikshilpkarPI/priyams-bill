@@ -48,9 +48,12 @@ import { setItemsData } from '../../redux/items/itemsSlice';
 import { getYupValidationErrorMap } from '../../utils/getYupValidationErrorMap';
 import CustomNumberInput from '../customNumberInput/CustomNumberInput';
 import { radioGroupConfig, skuModalQuestion, YES } from 'src/constants/purchaseOrderConstants';
-import { ItemSearch } from '../ItemSearch';
+import { ItemSearch } from '../ItemSearch/ItemSearch';
 import CompanySelector from '../companySelector/CompanySelector';
 import BrandSelector from '../brandSelector/BrandSelector';
+import { fetchBillingLeanItems } from '../../utils/fetchBillingLeanItems';
+import { CONSTANTS } from '../../constants/constants';
+import { AppDispatch } from '../../redux/store';
 
 
 
@@ -60,7 +63,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
   isApprovedPO,
   onItemSelect,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const purchasedItemFormData = useSelector(selectPurchasedItemDetailForm);
   const [showSkuModal, setShowSkuModal] = useState(false);
   const itemsSKUList = useSelector(selectItemsSkuList);
@@ -263,6 +266,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     purchasedItemFormData.costPrice
   ]);
 
+   useEffect(() => {
+      dispatch(fetchBillingLeanItems('', '', CONSTANTS.WAREHOUSE));
+    }, []);
+
   return (
     <Flex direction="column" gap="16px" pos="relative">
       <Flex
@@ -283,7 +290,10 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
           </Flex>
         </Title>
         <Box>
-          <ItemSearch onItemSelect={onItemSelect} isApprovedPO={isApprovedPO} />
+          <ItemSearch 
+            onItemSelect={onItemSelect} 
+            isApprovedPO={isApprovedPO} 
+            isWarehouse={true} />
         </Box>
         <Flex wrap="wrap" direction="row" gap="32px">
           <Box>
