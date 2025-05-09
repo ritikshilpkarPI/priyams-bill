@@ -8,16 +8,26 @@ import {
   BILLING_LEAN_ITEMS_API_RETRY_DELAY_MS,
   MAX_RETRIES_BILLING_LEAN_ITEMS_API,
 } from './constants/apiConstants';
+import { CONSTANTS } from '../constants/constants';
+import { setWarehouseItemsFeedAPILoading, setWarehouseItemsFeedData } from '../redux/allItemsFeedData/allWarehouseItemsFeedDataSlice';
 
 export const fetchBillingLeanItems = (selectedStoreId?: string, storeId?: any, sourceType?:string) => async (dispatch: AppDispatch) => {
   let attempts = 0;
-  dispatch(setItemsFeedAPILoading(true));
+
+    dispatch(setItemsFeedAPILoading(true));
+    dispatch(setWarehouseItemsFeedAPILoading(true));
+
+    const isWarehouse = sourceType === CONSTANTS.WAREHOUSE;
 
   while (attempts < MAX_RETRIES_BILLING_LEAN_ITEMS_API) {
     try {
       const response = await getBillingLeanItemsAPI(selectedStoreId = selectedStoreId ?? "", storeId = storeId ?? "", sourceType = sourceType ?? "");
       if (response && !response.isError) {
-        dispatch(setItemsFeedData(response));
+        if (isWarehouse) {
+          dispatch(setWarehouseItemsFeedData(response));
+        } else {
+          dispatch(setItemsFeedData(response));
+        }
         return;
       } else {
         console.error(
@@ -38,8 +48,8 @@ export const fetchBillingLeanItems = (selectedStoreId?: string, storeId?: any, s
       );
     }
   }
-
-  dispatch(setItemsFeedAPILoading(false));
+    dispatch(setItemsFeedAPILoading(false));
+    dispatch(setWarehouseItemsFeedAPILoading(false));
   console.error(
     `BillingLeanItems API failed after ${MAX_RETRIES_BILLING_LEAN_ITEMS_API} attempts.`
   );

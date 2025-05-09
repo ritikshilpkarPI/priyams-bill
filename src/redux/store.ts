@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import billReducer from './bill/billSlice';
 import allItemsFeedDataSlice from './allItemsFeedData/allItemsFeedDataSlice';
+import allWarehouseItemsFeedDataSlice from './allItemsFeedData/allWarehouseItemsFeedDataSlice';
 import itemsSlice from './items/itemsSlice';
 import dealerDetailFormSlice from './dealerDetailForm/dealerDetailFormSlice';
 import purchasedItemDetailFormSlice from './purchasedItemDetailForm/purchasedItemDetailFormSlice';
@@ -25,6 +26,7 @@ export const store = configureStore({
     user: userSlice,
     bill: billReducer,
     allItemsFeedData: allItemsFeedDataSlice,
+    allWarehouseItemsFeedData: allWarehouseItemsFeedDataSlice,
     items: itemsSlice,
     dealerDetailForm: dealerDetailFormSlice,
     purchasedItemDetailForm: purchasedItemDetailFormSlice,

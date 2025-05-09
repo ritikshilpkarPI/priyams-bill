@@ -18,7 +18,6 @@ import {
 import { PurchasedItemDetailForm } from '../PurchasedItemDetailForm/PurchasedItemDetailForm';
 import { PurchasedItemTable } from '../purchasedItemTable/PurchasedItemTable';
 import { QuestionModal } from '../questionModal/QuestionModal';
-import { ItemSearch } from '../ItemSearch';
 import { Box, Flex, Accordion } from '@mantine/core';
 import { getPurchasedItemByItem } from '../../utils/getPurchasedItemByItem';
 import { toast } from 'react-toastify';
