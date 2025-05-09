@@ -19,11 +19,12 @@ import "../Pages/newBillPage/NewBillPage.css";
 
 // New Billing UI imports
 import { useBillState } from '../hooks/useBillState';
-import { ItemSearch } from '../components/ItemSearch';
+import { ItemSearch } from '../components/ItemSearch/ItemSearch';
 import { BillItems } from '../components/BillItems/BillItems';
 import { PaymentSection } from '../components/PaymentSection/PaymentSection';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
+import { fetchBillingLeanItems } from '../utils/fetchBillingLeanItems';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -52,6 +53,7 @@ const INPUT_INITIAL_STATE = {
 };
 
 const ReturnBill = () => {
+  const dispatch = useDispatch();
   // ---------- OLD UI STATES ----------
   const [slug, setSlug] = useState('');
   const [existingBill, setExistingBill] = useState({});
@@ -357,6 +359,10 @@ const ReturnBill = () => {
   useEffect(() => {
     dispatchContext({ type: 'BILL_ITEMS_LIST', payload: bill });
   }, [bill]);
+
+     useEffect(() => {
+        dispatch(fetchBillingLeanItems());
+      }, []);
 
   // -------------------- RENDER --------------------
   return (
