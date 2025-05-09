@@ -1,12 +1,20 @@
-import { Tooltip } from "@mantine/core";
-import { useStyles } from "./ExpiredItemPOTable";
+import React from 'react';
+import { Tooltip } from '@mantine/core';
+import { useStyles } from './ExpiredItemPOTable';
 
-export const DataCell: React.FC<{ value: string | number }> = ({ value }) => {
+type DataCellProps = {
+  value: string | number;
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+export const DataCell: React.FC<DataCellProps> = ({ value, className, style }) => {
   const { classes } = useStyles();
+
   return (
-    <td>
+    <td className={className} style={style}>
       <Tooltip label={value} withArrow>
-        <span className={classes.ellipsis}>{value}</span>
+        <div className={classes.ellipsis}>{value}</div>
       </Tooltip>
     </td>
   );
