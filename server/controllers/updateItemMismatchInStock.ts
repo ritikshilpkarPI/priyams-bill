@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { StockTransactionModel } from '../db-models/stock-transaction-model';
 import { MESSAGES } from '../constants/messages';
 import { CONSTANTS } from '../constants/constants';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
 import { AuthenticatedRequest } from 'server/types';
 
 export const updateItemMismatchInStock = async (
@@ -12,14 +12,14 @@ export const updateItemMismatchInStock = async (
 ) => {
   
   try {
-    const { storeId, staffId, item } = req.body;
+    const { storeId, staffId, item, type = CONSTANTS.STORE  } = req.body;
     const userId = req.user?._id;
 
     let newStaffId;
     if (staffId) {
       newStaffId = staffId;      
     }else{
-      newStaffId = userId.toString()
+      newStaffId = userId.toString();
     }
 
     if (!storeId || !item || typeof item !== 'object') {
@@ -35,13 +35,13 @@ export const updateItemMismatchInStock = async (
     const source = {
       sourceStaff: newStaffId,
       sourceEntityId: storeId,
-      sourceType: CONSTANTS.STORE,
+      sourceType: type,
     };
 
     const destination = {
       destinationStaff: newStaffId,
       destinationEntityId: storeId,
-      destinationType: CONSTANTS.STORE,
+      destinationType: type,
     };
 
     const itemByDate = [

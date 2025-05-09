@@ -14,7 +14,7 @@ import {
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { ItemSearch } from '../../components/ItemSearch';
+import { ItemSearch } from '../../components/ItemSearch/ItemSearch';
 import { StoreSelect } from '../../components/StoreSelect';
 import { InventoryItemPanel } from '../../components/InventoryItemPanel';
 import {
@@ -61,6 +61,7 @@ import { isAdmin } from 'src/utils/isAdmin';
 import * as Yup from 'yup';
 import MESSAGES from 'src/utils/constants/messages';
 import { getUser } from 'src/utils/getUser';
+import { CONSTANTS } from 'src/constants/constants';
 
 const StoreInventoryManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -248,10 +249,10 @@ const StoreInventoryManagement: React.FC = () => {
   };
   
   const onSubmitTransaction = async () => {
-    const errors =  await validateStockTransactionData();
+    const errors =  await validateStockTransactionData();    
     if(!errors){      
     setLoading(true);
-     await addNewStockTransactionsBySourceAPI(transactionId ?? '', stockTransaction);
+     await addNewStockTransactionsAPI(stockTransaction);
     setLoading(false);
     navigate('/stockTransactions');
     }
@@ -375,7 +376,12 @@ const StoreInventoryManagement: React.FC = () => {
     }
   };
 
+  const [approvedLoading, setApprovedLoading ] = useState(false);
+  const [updateLoading, setUpdateLoading ] = useState(false);
+
   const onApproveByAdmin = async (approveByAdmin: boolean) => {
+    approveByAdmin ? setApprovedLoading(true) : setUpdateLoading(true);
+    setLoading(true);
     const response = await approveStockTransactionsAPI(
       transactionId ?? '',
       true,
@@ -384,12 +390,17 @@ const StoreInventoryManagement: React.FC = () => {
     );
 
     if (response.success && approveByAdmin) {
+      approveByAdmin ? setApprovedLoading(false) : setUpdateLoading(false);
       toast.success('Transaction approved successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
     }
     if (response.success && !approveByAdmin) {
+      approveByAdmin ? setApprovedLoading(false) : setUpdateLoading(false);
       toast.success('Transaction updated successfully');
+    }
+    if(response.isError){
+      approveByAdmin ? setApprovedLoading(false) : setUpdateLoading(false);
     }
   };
 
@@ -497,6 +508,7 @@ try {
                   stockTransaction.approvedByAdmin
                 }
                 error={errors.inventoryItems}
+                isWarehouse = { stockTransaction?.source?.sourceType === CONSTANTS.WAREHOUSE ? true : false}
               />
               {!stockTransaction.source.sourceEntityId && (
                 <Text
@@ -519,7 +531,7 @@ try {
               onQuantityChange={handleQuantityChange}
               onRemoveItem={handleRemoveItem}
               enableDestinationForm={transactionId ? true : false}
-              disabled={stockTransaction?.approvedByAdmin}
+              disabled={ stockTransaction?.approvedByAdmin || (!isAdminUser  && stockTransaction.transactionReason === CONSTANTS.TRANSACTION_REASON.QUANTITY_UPDATE ) }
               isSourceStaff={isSourceStaff}
             />
           )}
@@ -573,22 +585,22 @@ try {
               mt={20}
               >
             <Button
-              loading={loading}
+              loading={approvedLoading}
               w="100%"
               onClick={()=> onApproveByAdmin(true)}
               color="green"
-              disabled={stockTransaction?.approvedByAdmin}
+              disabled={stockTransaction?.approvedByAdmin || updateLoading}
             >
               {stockTransaction?.approvedByAdmin ? 'Approved' : 'Approve'}
             </Button>
             <Button
-              loading={loading}
+              loading={updateLoading}
               w="100%"
               onClick={()=> onApproveByAdmin(false)}
               color="blue"
-              disabled={stockTransaction?.approvedByAdmin}
+              disabled={stockTransaction?.approvedByAdmin || approvedLoading}
             >
-              {stockTransaction?.approvedByAdmin ? 'Approved' : 'Update'}
+              {stockTransaction?.approvedByAdmin ? 'Updated' : 'Update'}
             </Button>
             </Flex>
           </Grid.Col>
