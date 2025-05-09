@@ -119,6 +119,11 @@ export const protectedRouteMap: Record<string, RouteConfig> = {
       element: <NewPurchaseOrder />,
       index: true,
     },
+    PURCHASE_ORDER_BY_ID: {
+      path: ROUTES.PURCHASE_ORDER_BY_ID,
+      element: <NewPurchaseOrder />,
+      index: true,
+    },
     ADD_EXPIRED_ITEM: {
       path: ROUTES.ADD_EXPIRED_ITEM,
       element: <AddExpiredItem />,
