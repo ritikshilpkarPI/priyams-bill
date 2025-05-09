@@ -16,8 +16,10 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import type { InventoryRow } from 'src/types';
-import { POHeaderRow } from './POHeaderRow';
+
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../redux/store';
+import { updateBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
 
 export const useStyles = createStyles((theme) => ({
   table: {
@@ -55,9 +57,7 @@ export const useStyles = createStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
-  numeric: {
-    textAlign: 'right',
-  },
+  numeric: { textAlign: 'right' },
   actionCell: {
     width: 80,
     padding: 0,
@@ -69,7 +69,7 @@ export const useStyles = createStyles((theme) => ({
   colInfo: { width: '360px' },
   colSm: { width: '160px' },
   colMd: { width: '220px' },
-  colLg: { width: '280px' },
+  colSmArrow: { width: '80px' },
   row: {
     cursor: 'pointer',
     '&:hover': {
@@ -85,55 +85,133 @@ export const useStyles = createStyles((theme) => ({
       0.2
     ),
   },
+  updatedRow: {
+    backgroundColor: theme.fn.rgba(
+      theme.colors.green[theme.colorScheme === 'dark' ? 8 : 2],
+      0.5
+    ),
+  },
   input: {
     maxWidth: '120px',
     fontSize: theme.fontSizes.sm,
   },
   ellipsis: {
-    maxWidth: '100px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  }
+    whiteSpace: 'nowrap',
+  },
 }));
 
 const fmt = (d: string | Date) => dayjs(d).format('DD MMM YYYY');
 
-interface Props {
-  items?: InventoryRow[];
-  onChange?: (
-    itemId: string,
-    poIdx: number,
-    expIdx: number,
-    payload: { expiryDate: Date; currentStock: number }
-  ) => void;
+interface Shelf {
+  _id: string;
+  purchaseOrderId: string;
+  entryDate: string;
+  manufacturingDate: string;
+  expiryDate: string;
+  initialStockQuantity: number;
+  currentStockQuantity: number;
 }
 
-export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
+interface Purchase {
+  purchaseOrderId: string;
+  costPrice: number;
+  sellingPrice: number;
+}
+
+interface ItemData {
+  _id: string;
+  sku: string;
+  itemBrandName: string;
+  companyName: string;
+  itemShelfDates: Shelf[];
+  purchaseData: Purchase[];
+}
+
+interface Props {
+  items?: ItemData[];
+}
+
+export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
   const { classes, cx } = useStyles();
-  const [openRows, setOpenRows] = useState<Set<string>>(new Set());
-  const [activePO, setActivePO] = useState<Record<
-    string,
-    { poIdx: number; expIdx: number }
-  >>({});
-  const [draft, setDraft] = useState<
-    Record<string, { expiryDate: Date; currentStock: number }>
+  const dispatch = useDispatch();
+
+  const expiryBatchMap = useSelector(
+    (state: RootState) => state.expiryBatch.items
+  );
+
+  const [openItems, setOpenItems] = useState<Set<string>>(new Set());
+  const [editingBatches, setEditingBatches] = useState<Set<string>>(
+    new Set()
+  );
+  const [drafts, setDrafts] = useState<
+    Record<string, { manufacturingDate: Date; expiryDate: Date; currentStock: number }>
   >({});
 
-  const toggleRow = (id: string) =>
-    setOpenRows((prev) => {
+  const toggleItem = (itemId: string) =>
+    setOpenItems((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      next.has(itemId) ? next.delete(itemId) : next.add(itemId);
       return next;
     });
 
-  const handleSave = (_id: string, poIdx: number, expIdx: number) => {
-    const d = draft[_id];
-    if (!d || !onChange) return;
-    onChange(_id, poIdx, expIdx, d);
-    setDraft((p) => ({ ...p, [_id]: undefined as never }));
+  const startEdit = (e: MouseEvent, itemId: string, batch: Shelf) => {
+    e.stopPropagation();
+    setEditingBatches((prev) => new Set(prev).add(batch._id));
+
+    const reduxBatches = expiryBatchMap[itemId] || [];
+    const reduxRec = reduxBatches.find((b) => b.shelfId === batch._id);
+
+    setDrafts((prev) => ({
+      ...prev,
+      [batch._id]: {
+        manufacturingDate:
+          reduxRec?.manufacturingDate ?? new Date(batch.manufacturingDate),
+        expiryDate:
+          reduxRec?.expiryDate ?? new Date(batch.expiryDate),
+        currentStock:
+          reduxRec?.quantity ?? batch.currentStockQuantity,
+      },
+    }));
   };
 
-  if (!items?.length) return <Text>No items to display.</Text>;
+  const cancelEdit = (e: MouseEvent, batchId: string) => {
+    e.stopPropagation();
+    setEditingBatches((prev) => {
+      const next = new Set(prev);
+      next.delete(batchId);
+      return next;
+    });
+    setDrafts((prev) => {
+      const { [batchId]: _, ...rest } = prev;
+      return rest;
+    });
+  };
+
+  const saveEdit = (e: MouseEvent, itemId: string, shelfId: string) => {
+    e.stopPropagation();
+    const data = drafts[shelfId];
+    if (!data) return;
+
+    dispatch(
+      updateBatch({
+        itemId,
+        shelfId,
+        fields: {
+          manufacturingDate: data.manufacturingDate,
+          expiryDate: data.expiryDate,
+          quantity: data.currentStock,
+          checked: true,
+        },
+      })
+    );
+    cancelEdit(e, shelfId);
+  };
+
+  if (!items.length) {
+    return <Text>No items to display.</Text>;
+  }
 
   return (
     <ScrollArea
@@ -152,245 +230,233 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items, onChange }) => {
       >
         <thead>
           <tr>
-            <th className={classes.colSm} />
+            <th className={classes.colSmArrow} />
             <th className={`${classes.header} ${classes.colInfo}`}>
               SKU / Brand / Company
             </th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              CP
-            </th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              SP
-            </th>
+            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>CP</th>
+            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>SP</th>
             <th className={`${classes.header} ${classes.colMd}`}>MFG Date</th>
             <th className={`${classes.header} ${classes.colMd}`}>Expiry Date</th>
-            
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              Init Qty
-            </th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              Current
-            </th>
-            <th className={classes.header}>Edit</th>
+            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>Init Qty</th>
+            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>Current</th>
+            <th className={classes.header}>Actions</th>
           </tr>
         </thead>
-
         <tbody>
           {items.map((item) => {
-            const id = item.staticData._id;
-            const isOpen = openRows.has(id);
-            const sel = activePO[id];
-            const selDetail =
-              sel && item.purchases[sel.poIdx]?.expiryDetails[sel.expIdx];
-            const isEditing = !!draft[id];
+            const isOpen = openItems.has(item._id);
+            const reduxBatches = expiryBatchMap[item._id] || [];
+            const reduxMap = Object.fromEntries(
+              reduxBatches.map((b) => [b.shelfId, b])
+            );
+            const findPurchase = (poId: string) =>
+              item.purchaseData.find((p) => p.purchaseOrderId === poId);
 
             return (
-              <Fragment key={id}>
-                <tr className={cx(classes.row, { [classes.activeRow]: sel })}>
+              <Fragment key={item._id}>
+                <tr className={classes.row}>
                   <td className={classes.actionCell}>
                     <ActionIcon
                       variant="transparent"
                       size="sm"
-                      onClick={() => toggleRow(id)}
+                      onClick={() => toggleItem(item._id)}
                     >
-                      {isOpen ? (
-                        <IconChevronUp size={16} />
-                      ) : (
-                        <IconChevronDown size={16} />
-                      )}
+                      {isOpen ? <IconChevronUp /> : <IconChevronDown />}
                     </ActionIcon>
                   </td>
-
                   <td className={`${classes.cell} ${classes.colInfo}`}>
                     <Tooltip
-                      label={`${item.staticData.sku} / ${item.staticData.itemBrandName} / ${item.staticData.companyName}`}
+                      label={`${item.sku} • ${item.itemBrandName} • ${item.companyName}`}
                       withArrow
-                      position="top"
                     >
                       <div>
-                        <div>{item.staticData.sku}</div>
-                        <div>{item.staticData.itemBrandName}</div>
-                        <div>{item.staticData.companyName}</div>
+                        <div>{item.sku}</div>
+                        <div>{item.itemBrandName}</div>
+                        <div>{item.companyName}</div>
                       </div>
                     </Tooltip>
                   </td>
-
-                  {selDetail ? (
-                    <>
-                      <td
-                        className={`${classes.cell} ${classes.colSm} ${classes.numeric}`}
-                      >
-                        {item.purchases[sel.poIdx].cp.toFixed(2)}
-                      </td>
-                      <td
-                        className={`${classes.cell} ${classes.colSm} ${classes.numeric}`}
-                      >
-                        {item.purchases[sel.poIdx].sp.toFixed(2)}
-                      </td>
-                      <td className={`${classes.cell} ${classes.colMd}`}>
-                        {fmt(selDetail.mfgDate)}
-                      </td>
-                      <td className={`${classes.cell} ${classes.colMd}`}>
-                        {isEditing ? (
-                          <TextInput
-                            type="date"
-                            value={dayjs(draft[id].expiryDate).format(
-                              'YYYY-MM-DD'
-                            )}
-                            onChange={(e) =>
-                              setDraft((p) => ({
-                                ...p,
-                                [id]: {
-                                  ...p[id],
-                                  expiryDate: dayjs(
-                                    e.currentTarget.value,
-                                    'YYYY-MM-DD'
-                                  ).toDate(),
-                                },
-                              }))
-                            }
-                            className={classes.input}
-                          />
-                        ) : (
-                          fmt(selDetail.date)
-                        )}
-                      </td>
-                     
-                      <td
-                        className={`${classes.cell} ${classes.colSm} ${classes.numeric}`}
-                      >
-                        {selDetail.initialItemQuantity}
-                      </td>
-                      <td
-                        className={`${classes.cell} ${classes.colSm} ${classes.numeric}`}
-                      >
-                        {isEditing ? (
-                          <NumberInput
-                            min={0}
-                            value={draft[id].currentStock}
-                            onChange={(v) =>
-                              setDraft((p) => ({
-                                ...p,
-                                [id]: {
-                                  ...p[id],
-                                  currentStock: v as number,
-                                },
-                              }))
-                            }
-                            className={classes.input}
-                            hideControls
-                          />
-                        ) : (
-                          selDetail.value
-                        )}
-                      </td>
-                      <td className={classes.actionCell}>
-                        {isEditing && sel && (
-                          <>
-                            <ActionIcon
-                              size="lg"
-                              radius="sm"
-                              color="green"
-                              variant="filled"
-                              onClick={() =>
-                                handleSave(id, sel.poIdx, sel.expIdx)
-                              }
-                              title="Save"
-                            >
-                              <IconCheck size={20} />
-                            </ActionIcon>
-                            <ActionIcon
-                              size="lg"
-                              radius="sm"
-                              color="red"
-                              variant="filled"
-                              onClick={() =>
-                                setDraft((p) => ({
-                                  ...p,
-                                  [id]: undefined as never,
-                                }))
-                              }
-                              title="Cancel"
-                            >
-                              <IconX size={20} />
-                            </ActionIcon>
-                          </>
-                        )}
-                      </td>
-                    </>
-                  ) : (
-                    <td className={classes.cell} colSpan={8} />
-                  )}
+                  <td className={classes.cell} colSpan={7} />
                 </tr>
 
                 {isOpen && (
-                  <>
-                    <POHeaderRow numeric={classes.numeric} />
-                    {item.purchases.flatMap((po, poIdx) =>
-                      po.expiryDetails.map((d, expIdx) => {
-                        const isRowActive =
-                          sel?.poIdx === poIdx && sel?.expIdx === expIdx;
-                        const pick = (e: MouseEvent<HTMLTableRowElement>) => {
-                          e.stopPropagation();
-                          setActivePO((prev) => ({
-                            ...prev,
-                            [id]: { poIdx, expIdx },
-                          }));
-                          setDraft((p) => ({
-                            ...p,
-                            [id]: {
-                              expiryDate: new Date(d.date),
-                              currentStock: d.value,
-                            },
-                          }));
-                        };
-                        return (
-                          <tr
-                            key={`${id}-${po.purchaseOrderId}-${expIdx}`}
-                            onClick={pick}
-                            className={cx(classes.row, {
-                              [classes.activeRow]: isRowActive,
+                  <tr>
+                    <td colSpan={9} style={{ padding: 0 }}>
+                      <ScrollArea
+                        type="always"
+                        scrollbarSize={6}
+                        style={{ height: 300, width: '100%' }}
+                      >
+                        <Table
+                          withColumnBorders
+                          highlightOnHover={false}
+                          className={classes.table}
+                          verticalSpacing="sm"
+                          horizontalSpacing="md"
+                        >
+                          <thead>
+                            <tr>
+                              <th className={classes.header} />
+                              <th className={classes.header}>PO ID</th>
+                              <th className={classes.header}>Entry Date</th>
+                              <th className={`${classes.header} ${classes.numeric}`}>CP</th>
+                              <th className={`${classes.header} ${classes.numeric}`}>SP</th>
+                              <th className={classes.header}>MFG Date</th>
+                              <th className={classes.header}>Expiry Date</th>
+                              <th className={`${classes.header} ${classes.numeric}`}>Init Qty</th>
+                              <th className={`${classes.header} ${classes.numeric}`}>Current</th>
+                              <th className={classes.header}>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {item.itemShelfDates.map((batch) => {
+                              const reduxRec = reduxMap[batch._id];
+                              const isEdit = editingBatches.has(batch._id);
+                              const draft = drafts[batch._id];
+                              const purch = findPurchase(batch.purchaseOrderId);
+
+                              // merged values
+                              const mfg = isEdit
+                                ? draft.manufacturingDate
+                                : reduxRec?.manufacturingDate ?? new Date(batch.manufacturingDate);
+                              const exp = isEdit
+                                ? draft.expiryDate
+                                : reduxRec?.expiryDate ?? new Date(batch.expiryDate);
+                              const qty = isEdit
+                                ? draft.currentStock
+                                : reduxRec?.quantity ?? batch.currentStockQuantity;
+                              const checked = reduxRec?.checked;
+                              // apply blue if editing, green if saved
+                              const rowClass = cx(classes.row, {
+                                [classes.activeRow]: isEdit,
+                                [classes.updatedRow]: !isEdit && checked,
+                              });
+
+                              return (
+                                <tr
+                                  key={batch._id}
+                                  className={rowClass}
+                                  onClick={(e) =>
+                                    !isEdit && startEdit(e, item._id, batch)
+                                  }
+                                >
+                                  <td />
+                                  <td className={classes.cell}>{batch.purchaseOrderId}</td>
+                                  <td className={classes.cell}>{fmt(batch.entryDate)}</td>
+                                  <td className={`${classes.cell} ${classes.numeric}`}>
+                                    {purch?.costPrice.toFixed(2) ?? '-'}
+                                  </td>
+                                  <td className={`${classes.cell} ${classes.numeric}`}>
+                                    {purch?.sellingPrice.toFixed(2) ?? '-'}
+                                  </td>
+                                  <td className={classes.cell}>
+                                    {isEdit ? (
+                                      <TextInput
+                                        type="date"
+                                        value={dayjs(mfg).format('YYYY-MM-DD')}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onChange={(e) =>
+                                          setDrafts((p) => ({
+                                            ...p,
+                                            [batch._id]: {
+                                              ...p[batch._id],
+                                              manufacturingDate: dayjs(
+                                                e.currentTarget.value,
+                                                'YYYY-MM-DD'
+                                              ).toDate(),
+                                            },
+                                          }))
+                                        }
+                                        className={classes.input}
+                                      />
+                                    ) : (
+                                      fmt(mfg)
+                                    )}
+                                  </td>
+                                  <td className={classes.cell}>
+                                    {isEdit ? (
+                                      <TextInput
+                                        type="date"
+                                        value={dayjs(exp).format('YYYY-MM-DD')}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onChange={(e) =>
+                                          setDrafts((p) => ({
+                                            ...p,
+                                            [batch._id]: {
+                                              ...p[batch._id],
+                                              expiryDate: dayjs(
+                                                e.currentTarget.value,
+                                                'YYYY-MM-DD'
+                                              ).toDate(),
+                                            },
+                                          }))
+                                        }
+                                        className={classes.input}
+                                      />
+                                    ) : (
+                                      fmt(exp)
+                                    )}
+                                  </td>
+                                  <td className={`${classes.cell} ${classes.numeric}`}>
+                                    {batch.initialStockQuantity}
+                                  </td>
+                                  <td className={`${classes.cell} ${classes.numeric}`}>
+                                    {isEdit ? (
+                                      <NumberInput
+                                        min={0}
+                                        value={qty}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onChange={(v) =>
+                                          setDrafts((p) => ({
+                                            ...p,
+                                            [batch._id]: {
+                                              ...p[batch._id],
+                                              currentStock: v ?? 0,
+                                            },
+                                          }))
+                                        }
+                                        className={classes.input}
+                                        hideControls
+                                      />
+                                    ) : (
+                                      qty
+                                    )}
+                                  </td>
+                                  <td className={classes.actionCell}>
+                                    {isEdit ? (
+                                      <>
+                                        <ActionIcon
+                                          color="green"
+                                          variant="filled"
+                                          onClick={(e) =>
+                                            saveEdit(e, item._id, batch._id)
+                                          }
+                                          title="Save"
+                                        >
+                                          <IconCheck />
+                                        </ActionIcon>
+                                        <ActionIcon
+                                          color="red"
+                                          variant="filled"
+                                          onClick={(e) =>
+                                            cancelEdit(e, batch._id)
+                                          }
+                                          title="Cancel"
+                                        >
+                                          <IconX />
+                                        </ActionIcon>
+                                      </>
+                                    ) : null}
+                                  </td>
+                                </tr>
+                              );
                             })}
-                          >
-                            <td className={classes.actionCell} />
-                            <td className={`${classes.cell} ${classes.colMd}`}>
-                              <Tooltip
-                                label={po.dealerName}
-                                withArrow
-                                position="top"
-                              >
-                                <span>{po.dealerName}</span>
-                              </Tooltip>
-                            </td>
-                            <td className={classes.cell}>{fmt(po.purchaseDate)}</td>
-                            <td
-                              className={`${classes.cell} ${classes.numeric}`}
-                            >
-                              {po.cp.toFixed(2)}
-                            </td>
-                            <td
-                              className={`${classes.cell} ${classes.numeric}`}
-                            >
-                              {po.sp.toFixed(2)}
-                            </td>
-                            <td className={classes.cell}>{fmt(d.mfgDate)}</td>
-                            <td className={classes.cell}>{fmt(d.date)}</td>
-                            
-                            <td
-                              className={`${classes.cell} ${classes.numeric}`}
-                            >
-                              {d.initialItemQuantity}
-                            </td>
-                            <td
-                              className={`${classes.cell} ${classes.numeric}`}
-                            >
-                              {d.value}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </>
+                          </tbody>
+                        </Table>
+                      </ScrollArea>
+                    </td>
+                  </tr>
                 )}
               </Fragment>
             );

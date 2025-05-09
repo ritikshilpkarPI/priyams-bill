@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Title, Button, Flex, Grid, Loader, Center } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { ItemSearch } from '../components/ItemSearch';
+import { ItemSearch } from '../components/ItemSearch/ItemSearch';
 
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
@@ -87,7 +87,7 @@ const AddExpiredItem = () => {
           </Grid.Col>
         ) : (
           <Grid.Col span={12}>
-            <ExpiredItemPOTable items={items} />
+            <ExpiredItemPOTable items={items as any} />
           </Grid.Col>
         )}
 
