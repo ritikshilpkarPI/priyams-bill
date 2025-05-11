@@ -6,6 +6,7 @@ import { formatShortDate } from '../utils/formatDate';
 import DataTable from './DataTable';
 import { NumberInput } from '@mantine/core';
 import {
+  getAllStoresAPI,
   itemPurchaseBatches,
   updateItemMismatchInStockAPI,
 } from '../utils/apiUtils';
@@ -30,7 +31,6 @@ const ItemPurchaseOrdersPage: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [savingRowId, setSavingRowId] = useState<string | null>(null);
-  // console.log(selectedItem);
 
   const fetchItemPurchaseBatchesApi = async () => {
     if (!selectedItem) {
@@ -54,8 +54,10 @@ const ItemPurchaseOrdersPage: React.FC = () => {
       updateQuantity: row.updateQuantity,
       itemsId: selectedItem?._id,
     };
+    const {stores} = await getAllStoresAPI();
+    const storeID = stores.find((store: any) => store.type === CONSTANTS.WAREHOUSE)?._id;
     const response = await updateItemMismatchInStockAPI(
-      '67fcf517f8fd360aa5374e3d',
+      storeID,
       payload,
       CONSTANTS.WAREHOUSE
     );
