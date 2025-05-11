@@ -1,6 +1,7 @@
 const MESSAGES = Object.freeze({
   PURCHASE_ORDER_NOT_FOUND: 'Purchase order not found',
   NO_ITEMS_FOUND: 'No items found in purchase order',
+  NO_ITEMS_FOUND_BY_BARCODE: 'Item not found by barcode',
   GET_ITEM_SOLD_SUCCESSFULLY: 'Get sold items successfully',
   UNEXPECTED_ERROR: 'An unexpected error occurred',
   BAD_REQUEST: 'Bad Request',
