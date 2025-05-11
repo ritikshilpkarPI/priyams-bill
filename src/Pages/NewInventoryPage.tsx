@@ -131,7 +131,7 @@ const NewInventoryPage: React.FC = () => {
   return (
     <Box className="expired-items-card">
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
-        Inventory Page
+        Warehouse Inventory
       </Typography>
 
       <Grid>
