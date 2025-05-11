@@ -528,15 +528,18 @@ export const itemPurchaseBatches = async ({
   page,
   limit,
   itemId,
+  itemNameOrBarcode,
 }: {
   page?: number;
   limit?: number;
   itemId?: string;
+  itemNameOrBarcode?: string;
 }
 ) => {
   try {    
     const params = new URLSearchParams();
     if (itemId) params.append('item_id', itemId);
+    if (itemNameOrBarcode) params.append('itemNameOrBarcode', itemNameOrBarcode);
     if (typeof page === 'number') params.append('page', page.toString());
     if (typeof limit === 'number') params.append('limit', limit.toString());
 
