@@ -1193,6 +1193,7 @@ export interface PurchaseEntry {
   poApproveTime: string;
   expiryDetails: ExpiryDetail[];
   initialItemQuantity: number;
+  dealerName: string;
 }
 
 export interface InventoryRow {

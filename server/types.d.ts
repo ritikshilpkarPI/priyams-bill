@@ -139,6 +139,7 @@ export  interface AddressComponent {
     newItem: Boolean;
     dateOnBill? : Date | null;
     draftedDate?: Date | null;
+    dealerName?: string | null;
   }
   export interface DealerType extends Document {
     dealerName: string;
