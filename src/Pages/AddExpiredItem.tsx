@@ -9,20 +9,64 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { StoreSelect } from 'src/components/StoreSelect';
-import { itemPurchaseBatches } from 'src/utils/apiUtils';
+import { addNewExpiredItemsBatchAPI, itemPurchaseBatches } from 'src/utils/apiUtils';
 import { string } from 'joi';
 import { InventoryRow } from 'src/types';
 import { ExpiredItemPOTable } from 'src/components/ExpiredItemPOTable';
 import { toast } from 'react-toastify';
 
+
+
+function getCheckedExpiredItems(resp: any) {
+  const items = [];
+  let expiryBatchCost = 0;
+
+  for (const [itemId, batches] of Object.entries(resp)) {
+    const checkedBatch = (batches as any).find((b: { checked: boolean; }) => b.checked);
+    if (!checkedBatch) continue;
+
+    const {
+      expiryDate,
+      quantity,
+      purchaseOrderId,
+      costPrice = 0,
+    } = checkedBatch;
+
+    const totalCostPrice = costPrice * quantity;
+    expiryBatchCost += totalCostPrice;
+
+    items.push({
+      itemId,
+      expiryDate: new Date(expiryDate),
+      quantity,
+      purchaseOrderId,
+      costPricePerUnit: costPrice,
+      totalCostPrice,
+    });
+  }
+
+  return { items, expiryBatchCost };
+}
+
+
 const AddExpiredItem = () => {
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<InventoryRow[]>([]);
+   const expiryBatchItems = useSelector(
+      (state: RootState) => state.expiryBatch.items
+    );
+  
+    const boxId = useSelector(
+      (state: RootState) => state.expiryBatch.boxId
+    );
+    const dealerId = useSelector(
+      (state: RootState) => state.expiryBatch.dealerId
+    );
 
   const getItemPurchaseBatches = async (itemId: string) => {
     try {
-      const isAlreadyAdded = items.some(item => item?.staticData?._id === itemId);
+      const isAlreadyAdded = items.some(item => item?._id === itemId);
       if (isAlreadyAdded) {
         toast('Item already added to the list. Please select a different item.');
         return;
@@ -47,6 +91,29 @@ const AddExpiredItem = () => {
       getItemPurchaseBatches(itemId);
     }
   };
+
+  const addExpiredItemsBatch = async () => {    
+    try {      
+      const data = getCheckedExpiredItems(expiryBatchItems);
+      
+      const res = await addNewExpiredItemsBatchAPI({
+        items: data.items,
+        boxId,
+        dealerId,
+        expiryBatchCost: data.expiryBatchCost,
+      });
+      if (res.status === 200) {
+        showNotification({
+          title: 'Success',
+          message: 'Expired items batch added successfully',
+          color: 'green',
+        });
+        setItems([]);
+      }
+
+    } catch (error) {
+    }
+  }
 
   return (
     <Flex
@@ -92,7 +159,7 @@ const AddExpiredItem = () => {
         )}
 
         <Grid.Col span={false ? 12 : 4}>
-          <Button loading={false} w="100%" onClick={() => {}}>
+          <Button loading={false} w="100%" onClick={addExpiredItemsBatch}>
             Add expired items batch
           </Button>
         </Grid.Col>

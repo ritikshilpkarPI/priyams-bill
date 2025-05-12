@@ -1198,6 +1198,7 @@ export interface PurchaseEntry {
 export interface InventoryRow {
   staticData: StaticItemData;
   purchases: PurchaseEntry[];
+  _id: string;
 }
 
 export type InventoryTableRow = Omit<StaticItemData, '_id'> & {

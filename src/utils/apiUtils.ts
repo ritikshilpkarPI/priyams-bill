@@ -787,3 +787,16 @@ export const getStaffByToken = async ()=>{
     url: API_PATHS.STAFF.GET_STAFF_BY_TOKEN,
   })
 };
+
+
+export const addNewExpiredItemsBatchAPI = async (data: any) => {
+  try {    
+    const response = await postAPI({
+      path: API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEMS_BATCH,
+      data,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
