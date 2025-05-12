@@ -6,14 +6,22 @@ export interface BatchEntry {
   expiryDate: Date;
   quantity: number;
   checked: boolean;
+  costPrice?: number;
+  purchaseOrderId?: string;
+  entryDate?: Date;
+  initialStockQuantity?: number;
 }
 
 export interface ExpiryBatchState {
   items: Record<string, BatchEntry[]>;
+  dealerId: string;
+  boxId: string;
 }
 
 const initialState: ExpiryBatchState = {
   items: {},
+  dealerId: '',
+  boxId: '',
 };
 
 const expiryBatchSlice = createSlice({
@@ -30,6 +38,7 @@ const expiryBatchSlice = createSlice({
             manufacturingDate: string;
             expiryDate: string;
             currentStockQuantity: number;
+            purchaseOrderId: string;
           }[];
         }[];
       }>
@@ -42,6 +51,7 @@ const expiryBatchSlice = createSlice({
           expiryDate: new Date(batch.expiryDate),
           quantity: batch.currentStockQuantity,
           checked: false,
+          purchaseOrderId: batch.purchaseOrderId,
         }));
       });
     },
@@ -66,17 +76,66 @@ const expiryBatchSlice = createSlice({
           expiryDate: Date;
           quantity: number;
             checked: boolean;
+          costPrice: number;
         }>;
       }>
-    ) => {
+    ) => {  
+
       const batches = state.items[action.payload.itemId];
       if (!batches) return;
       const b = batches.find((x) => x.shelfId === action.payload.shelfId);
       if (b) Object.assign(b, action.payload.fields);
     },
+    addBatch: (
+      state,
+      action: PayloadAction<{
+        itemId: string;
+        batch: {
+          _id: string;
+          shelfId: string;
+          purchaseOrderId: string;
+          entryDate: string;
+          manufacturingDate: string;
+          expiryDate: string;
+          initialStockQuantity: number;
+          currentStockQuantity: number;
+          checked?: boolean;
+          costPrice?: number;
+        };
+      }>
+    ) => {
+      const { itemId, batch } = action.payload;
+      if (!state.items[itemId]) {
+        state.items[itemId] = [];
+      }
+      state.items[itemId].push({
+        shelfId: batch.shelfId,
+        manufacturingDate: new Date(batch.manufacturingDate),
+        expiryDate: new Date(batch.expiryDate),
+        quantity: batch.currentStockQuantity,
+        checked: batch.checked ?? false,
+      });
+    },
+    setDealerIdToBatch: (
+      state,
+      action: PayloadAction<{ dealerId: string}>
+    ) => {
+      state.dealerId = action.payload.dealerId;
+    },
+    setBoxIdToBatch: (
+      state,
+      action: PayloadAction<{ boxId: string }>
+    ) => {
+      state.boxId = action.payload.boxId;
+    },
+    clearBatch: (state) => {
+      state.items = {};
+      state.dealerId = '';
+      state.boxId = '';
+    },
   },
 });
 
-export const { setItems, toggleChecked, updateBatch } =
+export const { setItems, toggleChecked, updateBatch, addBatch, setDealerIdToBatch, setBoxIdToBatch, clearBatch } =
   expiryBatchSlice.actions;
 export default expiryBatchSlice.reducer;

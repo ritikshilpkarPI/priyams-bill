@@ -1,4 +1,4 @@
-import React, { useState, Fragment, MouseEvent } from 'react';
+import React, { useState, Fragment, MouseEvent, useEffect } from 'react';
 import {
   Table,
   ScrollArea,
@@ -8,18 +8,23 @@ import {
   Tooltip,
   createStyles,
   TextInput,
+  Chip,
+  Center,
+  Code,
+  Button,
 } from '@mantine/core';
 import {
   IconChevronDown,
   IconChevronUp,
   IconCheck,
   IconX,
+  IconPlus,
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
-import { updateBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
+import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
 
 export const useStyles = createStyles((theme) => ({
   table: {
@@ -104,6 +109,16 @@ export const useStyles = createStyles((theme) => ({
 
 const fmt = (d: string | Date) => dayjs(d).format('DD MMM YYYY');
 
+const generateBoxId = (): string => {
+  const len = Math.floor(Math.random() * 3) + 6;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let id = '';
+  for (let i = 0; i < len; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+};
+
 interface Shelf {
   _id: string;
   purchaseOrderId: string;
@@ -118,6 +133,10 @@ interface Purchase {
   purchaseOrderId: string;
   costPrice: number;
   sellingPrice: number;
+  dealerId: {
+    dealerName: string;
+    _id: string;
+  };
 }
 
 interface ItemData {
@@ -136,18 +155,44 @@ interface Props {
 export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
   const { classes, cx } = useStyles();
   const dispatch = useDispatch();
-
   const expiryBatchMap = useSelector(
     (state: RootState) => state.expiryBatch.items
   );
 
+  const [updatedRows, setUpdatedRows] = useState<Set<string>>(new Set());
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
-  const [editingBatches, setEditingBatches] = useState<Set<string>>(
-    new Set()
-  );
+  const [editingBatches, setEditingBatches] = useState<Set<string>>(new Set());
   const [drafts, setDrafts] = useState<
-    Record<string, { manufacturingDate: Date; expiryDate: Date; currentStock: number }>
+    Record<
+      string,
+      {
+        manufacturingDate: Date;
+        expiryDate: Date;
+        currentStock: number;
+        costPrice: number;
+      }
+    >
   >({});
+  const [selectedDealer, setSelectedDealer] = useState<string | null>(null);
+  const [addingItemId, setAddingItemId] = useState<string | null>(null);
+  const [newBatchDraft, setNewBatchDraft] = useState<{
+    purchaseOrderId: string;
+    manufacturingDate: Date;
+    expiryDate: Date;
+    currentStock: number;
+    costPrice: number;
+  }>({
+    purchaseOrderId: '',
+    manufacturingDate: new Date(),
+    expiryDate: new Date(),
+    currentStock: 0,
+    costPrice: 0,
+  });
+  const [boxId] = useState<string>(generateBoxId);
+
+  useEffect(() => {
+    dispatch(setBoxIdToBatch({boxId: boxId}));
+  }, [boxId, dispatch]);
 
   const toggleItem = (itemId: string) =>
     setOpenItems((prev) => {
@@ -156,12 +201,19 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
       return next;
     });
 
-  const startEdit = (e: MouseEvent, itemId: string, batch: Shelf) => {
+  const startEdit = (
+    e: MouseEvent,
+    itemId: string,
+    batch: Shelf
+  ) => {
     e.stopPropagation();
     setEditingBatches((prev) => new Set(prev).add(batch._id));
 
     const reduxBatches = expiryBatchMap[itemId] || [];
     const reduxRec = reduxBatches.find((b) => b.shelfId === batch._id);
+    const purch = items
+      .find((i) => i._id === itemId)
+      ?.purchaseData.find((p) => p.purchaseOrderId === batch.purchaseOrderId);
 
     setDrafts((prev) => ({
       ...prev,
@@ -172,6 +224,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
           reduxRec?.expiryDate ?? new Date(batch.expiryDate),
         currentStock:
           reduxRec?.quantity ?? batch.currentStockQuantity,
+        costPrice: reduxRec?.costPrice ?? purch?.costPrice ?? 0,
       },
     }));
   };
@@ -189,10 +242,28 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     });
   };
 
-  const saveEdit = (e: MouseEvent, itemId: string, shelfId: string) => {
+  const saveEdit = (
+    e: MouseEvent,
+    itemId: string,
+    shelfId: string,
+    dealerName?: string,
+    dealerId?: string
+  ) => {
     e.stopPropagation();
     const data = drafts[shelfId];
     if (!data) return;
+    
+    
+    if (dealerId && dealerId !== 'N/A') {
+      dispatch(setDealerIdToBatch({ dealerId: dealerId }));
+    }
+
+    if (!selectedDealer || selectedDealer !== 'N/A') {
+      setSelectedDealer(dealerName ?? null);
+    } else if (dealerName !== selectedDealer) {
+      window.alert('You cannot add a PO from a different dealer');
+      return;
+    }
 
     dispatch(
       updateBatch({
@@ -202,23 +273,89 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
           manufacturingDate: data.manufacturingDate,
           expiryDate: data.expiryDate,
           quantity: data.currentStock,
+          costPrice: data.costPrice,
           checked: true,
         },
       })
     );
+
+    setUpdatedRows((prev) => new Set(prev).add(shelfId));
     cancelEdit(e, shelfId);
   };
+
+  const startAdd = (itemId: string) => {
+    setAddingItemId(itemId);
+    setNewBatchDraft({
+      purchaseOrderId: '',
+      manufacturingDate: new Date(),
+      expiryDate: new Date(),
+      currentStock: 0,
+      costPrice: 0,
+    });
+  };
+
+  const cancelAdd = () => {
+    setAddingItemId(null);
+  };
+
+  const saveAdd = (itemId: string) => {
+    const shelfId = `${Date.now()}`;
+    dispatch(
+      addBatch({
+        itemId,
+        batch: {
+          _id: shelfId,
+          shelfId,
+          purchaseOrderId: newBatchDraft.purchaseOrderId,
+          entryDate: new Date().toISOString(),
+          manufacturingDate: newBatchDraft.manufacturingDate.toISOString(),
+          expiryDate: newBatchDraft.expiryDate.toISOString(),
+          initialStockQuantity: newBatchDraft.currentStock,
+          currentStockQuantity: newBatchDraft.currentStock,
+          costPrice: newBatchDraft.costPrice,
+          checked: true,
+        },
+      })
+    );
+    setUpdatedRows((prev) => new Set(prev).add(shelfId));
+    setAddingItemId(null);
+  };
+
+  useEffect(() => {
+    if (items.length > 0) {
+     dispatch(setItems({ items }));
+    }
+ },[items, dispatch]);
 
   if (!items.length) {
     return <Text>No items to display.</Text>;
   }
-
+  
   return (
     <ScrollArea
       type="scroll"
       scrollbarSize={8}
       style={{ width: '100%', maxHeight: 600 }}
     >
+      <Center py="lg">
+        <Text size="lg" weight={600} align="center">
+          Box ID:&nbsp;<Code>{boxId}</Code>
+        </Text>
+      </Center>
+
+      {selectedDealer && (
+        <Text
+          size="sm"
+          weight={500}
+          color="dimmed"
+          style={{ padding: '8px 12px', textAlign: 'center' }}
+        >
+          <Chip size="md" color="blue" variant="filled" checked>
+            {selectedDealer}
+          </Chip>
+        </Text>
+      )}
+
       <Table
         withBorder
         withColumnBorders
@@ -234,15 +371,24 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
             <th className={`${classes.header} ${classes.colInfo}`}>
               SKU / Brand / Company
             </th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>CP</th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>SP</th>
+            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
+              CP
+            </th>
+            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
+              SP
+            </th>
             <th className={`${classes.header} ${classes.colMd}`}>MFG Date</th>
             <th className={`${classes.header} ${classes.colMd}`}>Expiry Date</th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>Init Qty</th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>Current</th>
+            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
+              Init Qty
+            </th>
+            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
+              Current
+            </th>
             <th className={classes.header}>Actions</th>
           </tr>
         </thead>
+
         <tbody>
           {items.map((item) => {
             const isOpen = openItems.has(item._id);
@@ -250,6 +396,19 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
             const reduxMap = Object.fromEntries(
               reduxBatches.map((b) => [b.shelfId, b])
             );
+            const additionalBatches = reduxBatches
+  .filter((b) => !item.itemShelfDates.some((s) => s._id === b.shelfId))
+  .map((b) => ({
+    _id: b.shelfId,
+    purchaseOrderId: b.purchaseOrderId,
+    entryDate: b.entryDate,
+    manufacturingDate: b.manufacturingDate,
+    expiryDate: b.expiryDate,
+    initialStockQuantity: b.initialStockQuantity,
+    currentStockQuantity: b.quantity,
+    checked: b.checked,
+    costPrice: b.costPrice,
+  }));
             const findPurchase = (poId: string) =>
               item.purchaseData.find((p) => p.purchaseOrderId === poId);
 
@@ -281,182 +440,363 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                 </tr>
 
                 {isOpen && (
-                  <tr>
-                    <td colSpan={9} style={{ padding: 0 }}>
-                      <ScrollArea
-                        type="always"
-                        scrollbarSize={6}
-                        style={{ height: 300, width: '100%' }}
-                      >
-                        <Table
-                          withColumnBorders
-                          highlightOnHover={false}
-                          className={classes.table}
-                          verticalSpacing="sm"
-                          horizontalSpacing="md"
+                  <Fragment>
+                    <tr>
+                      <td colSpan={9} style={{ padding: 0 }}>
+                        <Center mb="xs">
+                          <Button
+                            size="xs"
+                            variant="outline"
+                            leftIcon={<IconPlus size={14} />}
+                            onClick={() => startAdd(item._id)}
+                          >
+                            Add expiry
+                          </Button>
+                        </Center>
+
+                        <ScrollArea
+                          type="always"
+                          scrollbarSize={6}
+                          style={{ height: 300, width: '100%' }}
                         >
-                          <thead>
-                            <tr>
-                              <th className={classes.header} />
-                              <th className={classes.header}>PO ID</th>
-                              <th className={classes.header}>Entry Date</th>
-                              <th className={`${classes.header} ${classes.numeric}`}>CP</th>
-                              <th className={`${classes.header} ${classes.numeric}`}>SP</th>
-                              <th className={classes.header}>MFG Date</th>
-                              <th className={classes.header}>Expiry Date</th>
-                              <th className={`${classes.header} ${classes.numeric}`}>Init Qty</th>
-                              <th className={`${classes.header} ${classes.numeric}`}>Current</th>
-                              <th className={classes.header}>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {item.itemShelfDates.map((batch) => {
-                              const reduxRec = reduxMap[batch._id];
-                              const isEdit = editingBatches.has(batch._id);
-                              const draft = drafts[batch._id];
-                              const purch = findPurchase(batch.purchaseOrderId);
+                          <Table
+                            withColumnBorders
+                            highlightOnHover={false}
+                            className={classes.table}
+                            verticalSpacing="sm"
+                            horizontalSpacing="md"
+                          >
+                            <thead>
+                              <tr>
+                                <th className={classes.header} />
+                                <th className={classes.header}>PO ID</th>
+                                <th className={classes.header}>Dealer Name</th>
+                                <th className={classes.header}>Entry Date</th>
+                                <th className={`${classes.header} ${classes.numeric}`}>
+                                  CP
+                                </th>
+                                <th className={`${classes.header} ${classes.numeric}`}>
+                                  SP
+                                </th>
+                                <th className={classes.header}>MFG Date</th>
+                                <th className={classes.header}>Expiry Date</th>
+                                <th className={`${classes.header} ${classes.numeric}`}>
+                                  Init Qty
+                                </th>
+                                <th className={`${classes.header} ${classes.numeric}`}>
+                                  Current
+                                </th>
+                                <th className={classes.header}>Actions</th>
+                              </tr>
+                            </thead>
 
-                              // merged values
-                              const mfg = isEdit
-                                ? draft.manufacturingDate
-                                : reduxRec?.manufacturingDate ?? new Date(batch.manufacturingDate);
-                              const exp = isEdit
-                                ? draft.expiryDate
-                                : reduxRec?.expiryDate ?? new Date(batch.expiryDate);
-                              const qty = isEdit
-                                ? draft.currentStock
-                                : reduxRec?.quantity ?? batch.currentStockQuantity;
-                              const checked = reduxRec?.checked;
-                              // apply blue if editing, green if saved
-                              const rowClass = cx(classes.row, {
-                                [classes.activeRow]: isEdit,
-                                [classes.updatedRow]: !isEdit && checked,
-                              });
-
-                              return (
-                                <tr
-                                  key={batch._id}
-                                  className={rowClass}
-                                  onClick={(e) =>
-                                    !isEdit && startEdit(e, item._id, batch)
-                                  }
-                                >
+                            <tbody>
+                              {addingItemId === item._id && (
+                                <tr className={cx(classes.row, classes.updatedRow)}>
                                   <td />
-                                  <td className={classes.cell}>{batch.purchaseOrderId}</td>
-                                  <td className={classes.cell}>{fmt(batch.entryDate)}</td>
-                                  <td className={`${classes.cell} ${classes.numeric}`}>
-                                    {purch?.costPrice.toFixed(2) ?? '-'}
-                                  </td>
-                                  <td className={`${classes.cell} ${classes.numeric}`}>
-                                    {purch?.sellingPrice.toFixed(2) ?? '-'}
+                                  <td className={classes.cell}>
+                                    <TextInput
+                                      size="xs"
+                                      placeholder="PO ID"
+                                      value={newBatchDraft.purchaseOrderId}
+                                      onChange={(e) =>
+                                        setNewBatchDraft((d) => ({
+                                          ...d,
+                                          purchaseOrderId: e.currentTarget.value,
+                                        }))
+                                      }
+                                    />
                                   </td>
                                   <td className={classes.cell}>
-                                    {isEdit ? (
-                                      <TextInput
-                                        type="date"
-                                        value={dayjs(mfg).format('YYYY-MM-DD')}
-                                        onClick={(e) => e.stopPropagation()}
-                                        onChange={(e) =>
-                                          setDrafts((p) => ({
-                                            ...p,
-                                            [batch._id]: {
-                                              ...p[batch._id],
-                                              manufacturingDate: dayjs(
-                                                e.currentTarget.value,
-                                                'YYYY-MM-DD'
-                                              ).toDate(),
-                                            },
-                                          }))
-                                        }
-                                        className={classes.input}
-                                      />
-                                    ) : (
-                                      fmt(mfg)
-                                    )}
+                                    {selectedDealer ?? '—'}
                                   </td>
                                   <td className={classes.cell}>
-                                    {isEdit ? (
-                                      <TextInput
-                                        type="date"
-                                        value={dayjs(exp).format('YYYY-MM-DD')}
-                                        onClick={(e) => e.stopPropagation()}
-                                        onChange={(e) =>
-                                          setDrafts((p) => ({
-                                            ...p,
-                                            [batch._id]: {
-                                              ...p[batch._id],
-                                              expiryDate: dayjs(
-                                                e.currentTarget.value,
-                                                'YYYY-MM-DD'
-                                              ).toDate(),
-                                            },
-                                          }))
-                                        }
-                                        className={classes.input}
-                                      />
-                                    ) : (
-                                      fmt(exp)
-                                    )}
+                                    {fmt(new Date())}
                                   </td>
                                   <td className={`${classes.cell} ${classes.numeric}`}>
-                                    {batch.initialStockQuantity}
+                                    <NumberInput
+                                      size="xs"
+                                      min={0}
+                                      precision={2}
+                                      value={newBatchDraft.costPrice}
+                                      onChange={(v) =>
+                                        setNewBatchDraft((d) => ({
+                                          ...d,
+                                          costPrice: v ?? 0,
+                                        }))
+                                      }
+                                      hideControls
+                                      className={classes.input}
+                                    />
                                   </td>
                                   <td className={`${classes.cell} ${classes.numeric}`}>
-                                    {isEdit ? (
-                                      <NumberInput
-                                        min={0}
-                                        value={qty}
-                                        onClick={(e) => e.stopPropagation()}
-                                        onChange={(v) =>
-                                          setDrafts((p) => ({
-                                            ...p,
-                                            [batch._id]: {
-                                              ...p[batch._id],
-                                              currentStock: v ?? 0,
-                                            },
-                                          }))
-                                        }
-                                        className={classes.input}
-                                        hideControls
-                                      />
-                                    ) : (
-                                      qty
-                                    )}
+                                    —
+                                  </td>
+                                  <td className={classes.cell}>
+                                    <TextInput
+                                      size="xs"
+                                      type="date"
+                                      value={dayjs(newBatchDraft.manufacturingDate).format(
+                                        'YYYY-MM-DD'
+                                      )}
+                                      onChange={(e) =>
+                                        setNewBatchDraft((d) => ({
+                                          ...d,
+                                          manufacturingDate: dayjs(
+                                            e.currentTarget.value,
+                                            'YYYY-MM-DD'
+                                          ).toDate(),
+                                        }))
+                                      }
+                                      className={classes.input}
+                                    />
+                                  </td>
+                                  <td className={classes.cell}>
+                                    <TextInput
+                                      size="xs"
+                                      type="date"
+                                      value={dayjs(newBatchDraft.expiryDate).format(
+                                        'YYYY-MM-DD'
+                                      )}
+                                      onChange={(e) =>
+                                        setNewBatchDraft((d) => ({
+                                          ...d,
+                                          expiryDate: dayjs(
+                                            e.currentTarget.value,
+                                            'YYYY-MM-DD'
+                                          ).toDate(),
+                                        }))
+                                      }
+                                      className={classes.input}
+                                    />
+                                  </td>
+                                  <td className={`${classes.cell} ${classes.numeric}`}>
+                                    <NumberInput
+                                      size="xs"
+                                      min={0}
+                                      value={newBatchDraft.currentStock}
+                                      onChange={(v) =>
+                                        setNewBatchDraft((d) => ({
+                                          ...d,
+                                          currentStock: v ?? 0,
+                                        }))
+                                      }
+                                      hideControls
+                                    />
+                                  </td>
+                                  <td className={`${classes.cell} ${classes.numeric}`}>
+                                    {newBatchDraft.currentStock}
                                   </td>
                                   <td className={classes.actionCell}>
-                                    {isEdit ? (
-                                      <>
-                                        <ActionIcon
-                                          color="green"
-                                          variant="filled"
-                                          onClick={(e) =>
-                                            saveEdit(e, item._id, batch._id)
-                                          }
-                                          title="Save"
-                                        >
-                                          <IconCheck />
-                                        </ActionIcon>
-                                        <ActionIcon
-                                          color="red"
-                                          variant="filled"
-                                          onClick={(e) =>
-                                            cancelEdit(e, batch._id)
-                                          }
-                                          title="Cancel"
-                                        >
-                                          <IconX />
-                                        </ActionIcon>
-                                      </>
-                                    ) : null}
+                                    <ActionIcon
+                                      color="green"
+                                      variant="filled"
+                                      onClick={() => saveAdd(item._id)}
+                                      title="Save"
+                                    >
+                                      <IconCheck />
+                                    </ActionIcon>
+                                    <ActionIcon
+                                      color="red"
+                                      variant="filled"
+                                      onClick={cancelAdd}
+                                      title="Cancel"
+                                    >
+                                      <IconX />
+                                    </ActionIcon>
                                   </td>
                                 </tr>
-                              );
-                            })}
-                          </tbody>
-                        </Table>
-                      </ScrollArea>
-                    </td>
-                  </tr>
+                              )}
+
+                              {[...item.itemShelfDates, ...additionalBatches].map((batch) => {
+                                const reduxRec = reduxMap[batch._id];
+                                const isEdit = editingBatches.has(batch._id);
+                                const draft = drafts[batch._id];
+                                const purch = findPurchase(batch.purchaseOrderId ?? '');
+
+                                const mfg = isEdit
+                                  ? draft.manufacturingDate
+                                  : reduxRec?.manufacturingDate ??
+                                    new Date(batch.manufacturingDate);
+                                const exp = isEdit
+                                  ? draft.expiryDate
+                                  : reduxRec?.expiryDate ??
+                                    new Date(batch.expiryDate);
+                                const qty = isEdit
+                                  ? draft.currentStock
+                                  : reduxRec?.quantity ??
+                                    batch.currentStockQuantity;
+                                const checked = reduxRec?.checked;
+                                const wasUpdated = updatedRows.has(batch._id);
+
+                                const rowClass = cx(classes.row, {
+                                  [classes.activeRow]: isEdit,
+                                  [classes.updatedRow]:
+                                    !isEdit && (checked || wasUpdated),
+                                });
+                                const dealerName =
+                                  purch?.dealerId?.dealerName ?? 'N/A';
+
+                                return (
+                                  <tr
+                                    key={batch._id}
+                                    className={rowClass}
+                                    onClick={(e) =>
+                                      !isEdit && startEdit(e, item._id, batch as any)
+                                    }
+                                  >
+                                    <td />
+                                    <td className={classes.cell}>
+                                      {batch.purchaseOrderId}
+                                    </td>
+                                    <td className={classes.cell}>
+                                      {dealerName}
+                                    </td>
+                                    <td className={classes.cell}>
+                                      {fmt(batch.entryDate ?? '')}
+                                    </td>
+                                    <td className={`${classes.cell} ${classes.numeric}`}>
+                                      {isEdit ? (
+                                        <NumberInput
+                                          size="xs"
+                                          min={0}
+                                          precision={2}
+                                          value={draft.costPrice}
+                                          onClick={(e) => e.stopPropagation()}
+                                          onChange={(v) =>
+                                            setDrafts((p) => ({
+                                              ...p,
+                                              [batch._id]: {
+                                                ...p[batch._id],
+                                                costPrice: v ?? 0,
+                                              },
+                                            }))
+                                          }
+                                          className={classes.input}
+                                          hideControls
+                                        />
+                                      ) : (
+                                        (
+                                          reduxRec?.costPrice ??
+                                          purch?.costPrice
+                                        )?.toFixed(2) ?? '-'
+                                      )}
+                                    </td>
+                                    <td className={`${classes.cell} ${classes.numeric}`}>
+                                      {purch?.sellingPrice.toFixed(2) ?? '-'}
+                                    </td>
+                                    <td className={classes.cell}>
+                                      {isEdit ? (
+                                        <TextInput
+                                          type="date"
+                                          value={dayjs(mfg).format('YYYY-MM-DD')}
+                                          onClick={(e) => e.stopPropagation()}
+                                          onChange={(e) =>
+                                            setDrafts((p) => ({
+                                              ...p,
+                                              [batch._id]: {
+                                                ...p[batch._id],
+                                                manufacturingDate: dayjs(
+                                                  e.currentTarget.value,
+                                                  'YYYY-MM-DD'
+                                                ).toDate(),
+                                              },
+                                            }))
+                                          }
+                                          className={classes.input}
+                                        />
+                                      ) : (
+                                        fmt(mfg)
+                                      )}
+                                    </td>
+                                    <td className={classes.cell}>
+                                      {isEdit ? (
+                                        <TextInput
+                                          type="date"
+                                          value={dayjs(exp).format('YYYY-MM-DD')}
+                                          onClick={(e) => e.stopPropagation()}
+                                          onChange={(e) =>
+                                            setDrafts((p) => ({
+                                              ...p,
+                                              [batch._id]: {
+                                                ...p[batch._id],
+                                                expiryDate: dayjs(
+                                                  e.currentTarget.value,
+                                                  'YYYY-MM-DD'
+                                                ).toDate(),
+                                              },
+                                            }))
+                                          }
+                                          className={classes.input}
+                                        />
+                                      ) : (
+                                        fmt(exp)
+                                      )}
+                                    </td>
+                                    <td className={`${classes.cell} ${classes.numeric}`}>
+                                      {batch.initialStockQuantity}
+                                    </td>
+                                    <td className={`${classes.cell} ${classes.numeric}`}>
+                                      {isEdit ? (
+                                        <NumberInput
+                                          min={0}
+                                          value={qty}
+                                          onClick={(e) => e.stopPropagation()}
+                                          onChange={(v) =>
+                                            setDrafts((p) => ({
+                                              ...p,
+                                              [batch._id]: {
+                                                ...p[batch._id],
+                                                currentStock: v ?? 0,
+                                              },
+                                            }))
+                                          }
+                                          className={classes.input}
+                                          hideControls
+                                        />
+                                      ) : (
+                                        qty
+                                      )}
+                                    </td>
+                                    <td className={classes.actionCell}>
+                                      {isEdit && (
+                                        <>
+                                          <ActionIcon
+                                            color="green"
+                                            variant="filled"
+                                            onClick={(e) =>
+                                              saveEdit(
+                                                e,
+                                                item._id,
+                                                batch._id,
+                                                purch?.dealerId?.dealerName,
+                                                purch?.dealerId?._id
+                                              )
+                                            }
+                                            title="Save"
+                                          >
+                                            <IconCheck />
+                                          </ActionIcon>
+                                          <ActionIcon
+                                            color="red"
+                                            variant="filled"
+                                            onClick={(e) => cancelEdit(e, batch._id)}
+                                            title="Cancel"
+                                          >
+                                            <IconX />
+                                          </ActionIcon>
+                                        </>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </Table>
+                        </ScrollArea>
+                      </td>
+                    </tr>
+                  </Fragment>
                 )}
               </Fragment>
             );

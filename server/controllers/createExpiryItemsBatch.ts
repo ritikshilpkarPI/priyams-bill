@@ -15,7 +15,7 @@ export const createExpiryItemsBatch = async (req: Request, res: Response, next: 
       expiryBatchCost,
     } = req.body;
 
-    let { items = [], itemWiseTotalCost = {}, deviceInfo = {} } = req.body;
+    let { items, itemWiseTotalCost = {}, deviceInfo = {} } = req.body;
 
     if (typeof items === "string") items = JSON.parse(req.body?.items || "")
     if (typeof itemWiseTotalCost === "string") itemWiseTotalCost = JSON.parse(req.body?.itemWiseTotalCost || "")
