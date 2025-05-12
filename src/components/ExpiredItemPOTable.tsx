@@ -471,7 +471,6 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                 <th className={classes.header} />
                                 <th className={classes.header}>PO ID</th>
                                 <th className={classes.header}>Dealer Name</th>
-                                <th className={classes.header}>Entry Date</th>
                                 <th className={`${classes.header} ${classes.numeric}`}>
                                   CP
                                 </th>
@@ -652,9 +651,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                     <td className={classes.cell}>
                                       {dealerName}
                                     </td>
-                                    <td className={classes.cell}>
-                                      {fmt(batch.entryDate ?? '')}
-                                    </td>
+                                    
                                     <td className={`${classes.cell} ${classes.numeric}`}>
                                       {isEdit ? (
                                         <NumberInput
