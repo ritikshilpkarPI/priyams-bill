@@ -39,7 +39,7 @@ const saveInventory = async (req, res, next) => {
       const newShelfDates = (item.expiryDates || []).map((exp, idx) => ({
         expiryDate: new Date(exp.date),
         quantity: exp.value,
-        manufacturingDate: new Date(item.manufacturingDates?.[idx]?.date || null),
+        manufacturingDate: new Date(exp.mfgDate),
         purchaseOrderId: purchaseOrderId,
         entryDate: new Date(),
         currentStockQuantity: exp.value,
