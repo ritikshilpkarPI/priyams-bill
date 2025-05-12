@@ -10,6 +10,7 @@ import {
   LoadingOverlay,
   Text,
   ActionIcon,
+  Box,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,12 +24,10 @@ import {
   updateItem,
   setSelectedItem,
 } from '../../redux/storeInventory/StoreInventoryState';
-import {
-  setSelectedItemsIds
-} from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
+import { setSelectedItemsIds } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
   getAllStoresAPI,
-  getItemsFromStoreInventory,
+  getItemsFromStoreInventoryAPI,
   updateItemMismatchInStockAPI,
 } from '../../utils/apiUtils';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
@@ -38,20 +37,23 @@ import DataTable from '../DataTable';
 import { toast } from 'react-toastify';
 import { IconTrashX } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
+import { CONSTANTS } from 'src/constants/constants';
+import ItemSearchInput from 'src/components/itemSearchInput/ItemSearchInput';
+import { Typography } from '@mui/material';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { selectedStoreId, stores, items, itemCount, selecteditem } =
+  const { selectedStoreId, stores, items, itemCount, selecteditem, isLoading } =
     useSelector((state: RootState) => state.storeInventory);
-    const { selectedItemsIds } = useSelector(
-      (state: RootState) => state.storeInventoryManagement
-    );
+  const { selectedItemsIds } = useSelector(
+    (state: RootState) => state.storeInventoryManagement
+  );
 
-  const [loading, setLoading] = useState(false);
   const [itemsId, setItemsId] = useState<string | null>(null);
   const [firstOpened, firstHandlers] = useDisclosure(false);
-  const [pagination, setPagination] = useState({ size: 100, page: 1 });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [mismatchloading, setMismatchloading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
@@ -69,28 +71,10 @@ const StoreInventory: React.FC = () => {
       }
     };
 
-    if(!stores?.length) fetchStores();
+    if (!stores?.length) fetchStores();
   }, [dispatch]);
 
-  useEffect(() => {
-    const getItemRequest = async (storeId: string) => {
-      try {
-        setLoading(true);
-        const res: any = await getItemsFromStoreInventory(storeId, pagination);
-        dispatch(setItems(res?.data?.data || []));
-        dispatch(setItemCount(res?.data?.count || 0));
-      } catch (error) {
-        showNotification({ message: 'Failed to load Items', color: 'red' });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (selectedStoreId) {
-      const storeId = stores.find((s) => s.code === selectedStoreId)?._id;
-      if (storeId) getItemRequest(storeId);
-    }
-  }, [selectedStoreId, stores, pagination]);
+  const storeId = stores.find((s) => s.code === selectedStoreId)?._id;
 
   useEffect(() => {
     if (itemsId) {
@@ -130,7 +114,7 @@ const StoreInventory: React.FC = () => {
     }
     dispatch(
       updateItem({
-        itemsId: selecteditem?._id ?? "",
+        itemsId: selecteditem?._id ?? '',
         shelfDateId: row._id,
         value: Number(0),
       })
@@ -140,76 +124,72 @@ const StoreInventory: React.FC = () => {
     toast.success('create transaction successfully');
   };
 
-  const columns: GridColDef[] = [
-    { field: 'sku', headerName: 'SKU', headerAlign: 'left', align: 'left', minWidth: 200 },
+  const handlePageChange = (_: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRowsPerPage(parseInt(e.target.value.toString(), 10));
+  };
+
+  const columns = [
     {
-      field: 'itemBarcode',
-      headerName: 'Bar Code',
-      minWidth: 150,
+      key: 'sku',
+      label: 'SKU',
     },
     {
-      field: 'itemName',
-      headerName: 'Item Name',
-      minWidth: 150,
+      key: 'itemBarcode',
+      label: 'Bar Code',
     },
     {
-      field: 'itemPerUnitQuantity',
-      headerName: 'Packet Qty.',
+      key: 'itemName',
+      label: 'Item Name',
     },
-    { field: 'quantityUnitName', headerName: 'Unit' },
-    { field: 'itemMRPperUnit', headerName: 'MRP' },
-    { field: 'itemBrandName', headerName: 'Brand Name' },
     {
-      field: 'itemCategory',
-      headerName: 'Category',
+      key: 'itemPerUnitQuantity',
+      label: 'Packet Qty.',
     },
-    { field: 'subCategory', headerName: 'Sub Category' },
-    { field: 'itemQuantityInStore', headerName: 'Store Stock' },
-    { field: 'companyName', headerName: 'Company' },
+    { key: 'quantityUnitName', label: 'Unit' },
+    { key: 'itemMRPperUnit', label: 'MRP' },
+    { key: 'itemBrandName', label: 'Brand Name' },
     {
-      field: 'flavourOrFeature',
-      headerName: 'Flavour Or Feature',
+      key: 'itemCategory',
+      label: 'Category',
     },
-    { field: 'saleTime', headerName: 'Sale Time' },
+    { key: 'subCategory', label: 'Sub Category' },
+    { key: 'itemQuantityInStore', label: 'Store Stock' },
+    { key: 'companyName', label: 'Company' },
     {
-      field: 'itemShelfDates',
-      headerName: 'Item Shelf Dates',
-      renderCell: (params: any) => (
+      key: 'flavourOrFeature',
+      label: 'Flavour Or Feature',
+    },
+    { key: 'saleTime', label: 'Sale Time' },
+    {
+      key: 'itemShelfDates',
+      label: 'Item Shelf Dates',
+      render: (row: any) => (
         <Button
           onClick={() => {
-            setItemsId(params.row._id === itemsId ? null : params.row._id);
+            setItemsId(row._id === itemsId ? null : row._id);
             firstHandlers.open();
           }}
         >
-          {params.row._id === itemsId ? 'Hide' : 'Show'}{' '}
-          {`( ${params.row.itemShelfDates?.length ? params.row.itemShelfDates.length : 0} )`}
+          {row._id === itemsId ? 'Hide' : 'Show'}{' '}
+          {`( ${row.itemShelfDates?.length ? row.itemShelfDates.length : 0} )`}
         </Button>
       ),
     },
   ];
-
+  
   return (
-    <Flex
-      gap="16px"
-      direction="column"
-      sx={{
-        border: '1px solid grey',
-        padding: '16px',
-        borderRadius: '8px',
-        overflow: 'scroll',
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
-      }}
-      mx="sm"
-      mt="16px"
-    >
+    <Box className="expired-items-card">
+        <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
+              Store Inventory
+        </Typography>
+    
       <Grid columns={12} sx={{ width: '100%' }}>
-        <Grid.Col span={12}>
-          <Title order={2} mb="md">
-            Store Inventory
-          </Title>
-        </Grid.Col>
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left' }}>
           <StoreSelect
             stores={stores}
@@ -217,45 +197,53 @@ const StoreInventory: React.FC = () => {
             onChange={handleStoreChange}
           />
         </Grid.Col>
-        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end" }}>
-          <Button 
+        <Grid.Col
+          span={isSmallScreen ? 12 : 4}
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <Button
+            w={'100%'}
             disabled={selectedItemsIds?.length < 1}
-            onClick={()=>navigate("/stockTransactions", { state: { fromStoreInventory: true } })}
-          >View Transactions</Button>
+            onClick={() =>
+              navigate('/stockTransactions', {
+                state: { fromStoreInventory: true },
+              })
+            }
+          >
+            View Transactions
+          </Button>
+        </Grid.Col>
+        <Grid.Col 
+         sx={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-end',
+          }}
+         span={isSmallScreen ? 12 : 5}
+        >
+          <ItemSearchInput
+            placeholder="Search item by name or barcode"
+            page={page}
+            rowsPerPage={rowsPerPage}
+            searchType={CONSTANTS.STORE}
+            storeId={storeId ?? ''}
+          />
         </Grid.Col>
         <Grid.Col span={12}>
-          <DataGrid
-            columns={columns.map((col) => ({
-              ...col,
-              flex: 1,
-              minWidth: col?.minWidth ?? 100,
-              headerAlign: col?.headerAlign ?? 'center',
-              align: col?.align ?? 'center',
-              sortable: col?.sortable ?? true,
-            }))}
-            rows={items}
-            paginationModel={{
-              pageSize: pagination.size,
-              page: pagination.page - 1,
-            }}
-            onPaginationModelChange={({ page, pageSize }) => {
-              const newPage = page + 1;
-              if (pagination.page !== newPage || pagination.size !== pageSize) {
-                setPagination({ page: newPage, size: pageSize });
-              }
-            }}
+          <DataTable
+            columns={columns}
+            data={items ?? []}
+            isLoading={isLoading}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
             rowCount={itemCount}
             paginationMode="server"
-            pageSizeOptions={[5, 10, 20, 50, 100]}
-            loading={loading}
-            getRowId={(row) =>
-              row.id || row._id || row.key || JSON.stringify(row)
-            }
-            disableRowSelectionOnClick
-            slots={{ toolbar: GridToolbar }}
-            checkboxSelection
-            onRowSelectionModelChange={(model)=>dispatch(setSelectedItemsIds((model as string[])))}
-            rowSelectionModel={selectedItemsIds}
           />
         </Grid.Col>
       </Grid>
@@ -391,7 +379,7 @@ const StoreInventory: React.FC = () => {
           )}
         </ScrollArea>
       </Drawer>
-    </Flex>
+    </Box>
   );
 };
 

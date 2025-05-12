@@ -15,24 +15,39 @@ export const getItemsFromStoreInventory = async (
       return res.status(404).json({ error: MESSAGES.STORE_NOT_FOUND });
     }
     const StoreInventoryModel = getStoreInventoryModel(store.collectionName);
-    const { page = 1, size = 100 } = req.query;
+    const { page = 1, size = 100, itemNameOrBarcode } = req.query;
     const limit = Number(size);
     const skip = (Number(page) - 1) * limit;
+    let query = {};
+    if (itemNameOrBarcode) {
+      const barcode = itemNameOrBarcode.toString();
+      const nameRegex = new RegExp(barcode, 'i');
+      query = {
+         $or: [{ itemBarcode: barcode }, { itemName: nameRegex }],
+        }
+    }
     const inventoryData = await StoreInventoryModel
       .find()
       .select('itemId itemQuantityInStore itemShelfDates')
-      .populate('itemId', CONSTANTS.STATIC_FIELDS_TO_SELECT + ' sku')
+      .populate({
+        path: 'itemId',
+        select: CONSTANTS.STATIC_FIELDS_TO_SELECT + ' sku',
+        match: query
+      })
       .limit(limit)
       .skip(skip)
       .lean();
 
-    const totalItems = await StoreInventoryModel.countDocuments();
-    const items = inventoryData.map((data:any)=>({
+    const filteredData = inventoryData.filter((data: any) => data.itemId);
+    
+    const totalItems = await StoreInventoryModel.countDocuments(query);
+
+    const items = filteredData.map((data:any) => ({
       ...data.itemId,
       itemQuantityInStore: data.itemQuantityInStore,
       itemShelfDates: data.itemShelfDates
     }));
-    return res.status(200).json({ data: items, count: totalItems });
+    return res.status(200).json({  success: true, data: items, count: totalItems });
   } catch (error) {
     res.status(400).json({ error });
   }
