@@ -1095,6 +1095,7 @@ declare global {
     selectedStoreId: string | null;
     stores: any[];
     selecteditem: StoreInventoryItemType | null;
+    isLoading: boolean;
   }
 
   interface InventoryPurchaseOrderEntry {
