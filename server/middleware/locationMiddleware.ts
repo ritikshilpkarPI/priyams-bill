@@ -5,12 +5,12 @@ import { getPincodeFromCoordinates } from '../util/getPincodeFromCoordinates';
 import Staff from '../db-models/staff-model';
 
 const locationMiddleware = async (
-    req: Request, 
-    res: Response, 
+    req: Request,
+    res: Response,
     next: NextFunction
 ): Promise<void> => {
     try {
-        let  pincode  = req.query.pincode ;
+        let pincode = req.query?.pincode || req.body?.pincode;
 
         if (!pincode) {
             const latitude = req.query.latitude as string;
@@ -26,7 +26,7 @@ const locationMiddleware = async (
 
             if (!pincode) {
                 const user = await Staff.findOne({ username });
-                if (user && user?.role === 'admin'){
+                if (user && user?.role === 'admin') {
                     pincode = "462022";
                 } else {
                     res.status(400).json({ error: MESSAGES.PINCODE_FETCH_FAILED });
@@ -44,10 +44,10 @@ const locationMiddleware = async (
         req.body.storeData = store;
         req.body.pincode = pincode;
 
-        next(); 
+        next();
     } catch (error) {
         console.error('Error in location middleware:', error);
-        next(error); 
+        next(error);
     }
 };
 

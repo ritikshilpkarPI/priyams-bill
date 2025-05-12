@@ -798,8 +798,27 @@ export const addNewExpiredItemsBatchAPI = async (data: any) => {
       path: API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEMS_BATCH,
       data,
     });
+
     return response;
   } catch (error) {
     return { isError: true, error };
   }
 }
+export const getBillFeedAPI = async (
+  page?: number,
+  size?: number,
+  startDate?: string,
+  endDate?: string,
+  storeId?: string
+) => {
+  const path = `${API_PATHS.BILLING.GET_BILL_FEED}?page=${page || ''}&size=${size || ''}&startDate=${startDate || ''
+    }&endDate=${endDate || ''}&storeId=${storeId || ''}`;
+
+  try {
+    const response = await getAPI({ path });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
+
