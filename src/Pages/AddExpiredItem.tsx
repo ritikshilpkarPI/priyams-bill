@@ -8,7 +8,7 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { StoreSelect } from 'src/components/StoreSelect';
-import { itemPurchaseBatches } from 'src/utils/apiUtils';
+import { itemPurchaseBatchesAPI } from 'src/utils/apiUtils';
 import { InventoryRow } from 'src/types';
 import { ExpiredItemPOTable } from 'src/components/ExpiredItemPOTable';
 
@@ -20,7 +20,7 @@ const AddExpiredItem = () => {
   const getItemPurchaseBatches = async (itemId: string) => {
     try {
       setIsLoading(true);
-      const res = await itemPurchaseBatches({ itemId });
+      const res = await itemPurchaseBatchesAPI({ itemId });
       const data = res.data as Record<string, InventoryRow> ;
 
       const rows = Object.values(data)
