@@ -1,6 +1,6 @@
 import '../CSS/addExpiredItem.scss';
 import React, { useEffect, useState } from 'react';
-import { Title, Button, Flex, Grid, Loader, Center } from '@mantine/core';
+import { Title, Button, Flex, Grid, Loader, Center, Select } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { ItemSearch } from '../components/ItemSearch/ItemSearch';
@@ -9,11 +9,14 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { StoreSelect } from 'src/components/StoreSelect';
-import { addNewExpiredItemsBatchAPI, itemPurchaseBatches } from 'src/utils/apiUtils';
+import { addNewExpiredItemsBatchAPI, getAllDealersAPI, itemPurchaseBatches } from 'src/utils/apiUtils';
 import { string } from 'joi';
 import { InventoryRow } from 'src/types';
 import { ExpiredItemPOTable } from 'src/components/ExpiredItemPOTable';
 import { toast } from 'react-toastify';
+import { selectDealerLoading, selectDealers } from 'src/redux/dealerlist/dealerSelectors';
+import { setDealers, setDealersLoading } from 'src/redux/dealerlist/dealerSlice';
+import { setDealerIdToBatch } from 'src/redux/ExpiryBatch/expiryBatchSlice';
 
 
 
@@ -63,6 +66,7 @@ const AddExpiredItem = () => {
     const dealerId = useSelector(
       (state: RootState) => state.expiryBatch.dealerId
     );
+     const dispatch = useDispatch();
 
   const getItemPurchaseBatches = async (itemId: string) => {
     try {
@@ -101,19 +105,61 @@ const AddExpiredItem = () => {
         boxId,
         dealerId,
         expiryBatchCost: data.expiryBatchCost,
-      });
-      if (res.status === 200) {
-        showNotification({
-          title: 'Success',
-          message: 'Expired items batch added successfully',
-          color: 'green',
-        });
+      });      
+
+      if (!res?.isError) {
+        toast('Expired items batch added successfully');
+        setErrors({});
         setItems([]);
+      }
+      if (res?.isError) {
+        toast(res?.error?.error ?? 'Failed to add expired items batch');
       }
 
     } catch (error) {
+      console.error('Error adding expired items batch:', error);
+      toast('Failed to add expired items batch');
     }
   }
+
+  const noOfItemsInBatch = getCheckedExpiredItems(expiryBatchItems).items.length;
+
+ const getDealers = async ()=>{
+    try {
+      dispatch(setDealersLoading(true))
+      const response = await getAllDealersAPI()
+      dispatch(setDealers(response?.dealers))
+      dispatch(setDealersLoading(false))
+    } catch (error) {
+      dispatch(setDealersLoading(false))
+    }
+  }
+
+  const dealers = useSelector(selectDealers);    
+  const dealersLoading = useSelector(selectDealerLoading);    
+  
+  useEffect(()=>{
+    if (dealers.length === 0) {
+      getDealers();
+    }
+  },[])  
+
+  const [selectedDealer, setSelectedDealer] = useState<string | null>(null);
+
+  const dealerOptions: { value: string; label: string }[] = dealers
+  .filter((d): d is Dealer & { _id: string } => Boolean(d._id))
+  .map((dealer) => ({
+    value: dealer._id,
+    label: dealer.dealerName,
+  }));
+  
+  const onDealerSelect = (value: string | null) => {
+    setSelectedDealer(value);
+    if (value) {
+      dispatch(setDealerIdToBatch({dealerId: value, dealerName: dealers.find((dealer) => dealer._id === value)?.dealerName}));
+    } 
+  }
+
 
   return (
     <Flex
@@ -146,6 +192,41 @@ const AddExpiredItem = () => {
           />
         </Grid.Col>
 
+        <Grid.Col span={12}>
+          <Flex gap="xs" align="center" mb="2px">
+            <Title order={3}>Select Dealer</Title>
+          </Flex>
+          <Select
+          data={dealerOptions}
+          placeholder="Choose a dealer"
+          searchable
+          nothingFound="No dealers found"
+          value={ dealerId || selectedDealer}
+          onChange={onDealerSelect}
+          disabled={dealersLoading || (Boolean(dealerId) && noOfItemsInBatch > 0)}
+        />
+        {
+          dealerId && noOfItemsInBatch > 0 && (
+            <Flex gap="xs" align="center" mb="2px">
+              <Title order={3}
+              sx={{
+                color: 'red',
+                fontSize: '14px',
+                fontWeight: 500,
+                marginTop: '8px',
+                marginBottom: '8px',
+                textAlign: 'center',
+                textTransform: 'capitalize',
+              }}
+              >
+                You can't change the dealer once the items are added to the batch from the dealer.
+              </Title>
+            </Flex>
+          )
+        }
+        
+        </Grid.Col>
+            
         {isLoading ? (
           <Grid.Col span={12}>
             <Center>
@@ -159,7 +240,7 @@ const AddExpiredItem = () => {
         )}
 
         <Grid.Col span={false ? 12 : 4}>
-          <Button loading={false} w="100%" onClick={addExpiredItemsBatch}>
+          <Button loading={false} w="100%" onClick={addExpiredItemsBatch} disabled={noOfItemsInBatch === 0}>
             Add expired items batch
           </Button>
         </Grid.Col>
