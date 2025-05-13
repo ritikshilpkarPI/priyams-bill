@@ -137,10 +137,11 @@ const StoreInventoryManagement: React.FC = () => {
   const handleItemSelect = (item: ItemWithQuantity) => {
     // Check if item already exists in the inventory items
     if (
-      inventoryItems.find(
-        (invItem) => invItem.itemDetail._id === item.itemDetail._id
+      transactionItems.find(
+        (invItem) => invItem.itemId === item.itemDetail._id
       )
     ) {
+       toast.warning("Item already added")
       showNotification({ message: 'Item already added', color: 'yellow' });
       return;
     }
@@ -366,7 +367,7 @@ const StoreInventoryManagement: React.FC = () => {
       })),
     });
 
-    setLoading(true);
+    if (response.isError) setLoading(false);
 
     if (response.success) {
       toast.success('Destination added successfully');
@@ -443,6 +444,7 @@ try {
   
 };
   
+  console.log("inventoryItems: ",inventoryItems);
   
 
   return (
