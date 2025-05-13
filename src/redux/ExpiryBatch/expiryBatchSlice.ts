@@ -139,9 +139,24 @@ const expiryBatchSlice = createSlice({
       state.dealerId = '';
       state.boxId = '';
     },
+    removeBatch: (
+      state,
+      action: PayloadAction<{ itemId: string; shelfId: string }>
+    ) => {
+      const { itemId, shelfId } = action.payload;
+      
+      const batches = state.items[itemId];
+      
+      if (!batches) return;
+      const batch = batches.find(b => b.shelfId === shelfId);
+      
+       if (batch) {
+    batch.checked = false;
+     }
+    },
   },
 });
 
-export const { setItems, toggleChecked, updateBatch, addBatch, setDealerIdToBatch, setBoxIdToBatch, clearBatch } =
+export const { setItems, toggleChecked, updateBatch, addBatch, setDealerIdToBatch, setBoxIdToBatch, clearBatch, removeBatch } =
   expiryBatchSlice.actions;
 export default expiryBatchSlice.reducer;

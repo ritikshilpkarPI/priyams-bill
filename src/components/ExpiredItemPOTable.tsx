@@ -24,7 +24,7 @@ import dayjs from 'dayjs';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
-import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
+import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch, removeBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
 
 export const useStyles = createStyles((theme) => ({
   table: {
@@ -235,8 +235,20 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     }));
   };
 
-  const cancelEdit = (e: MouseEvent, batchId: string) => {
+  const cancelEdit = (e: MouseEvent, batchId: string, itemId?: string) => {
     e.stopPropagation();
+
+    dispatch(removeBatch({
+      itemId: itemId ?? '', 
+      shelfId: batchId,
+    }));
+
+    setUpdatedRows(prev => {
+      const next = new Set(prev);
+      next.delete(batchId);
+      return next;
+    });
+    
     setEditingBatches((prev) => {
       const next = new Set(prev);
       next.delete(batchId);
@@ -789,7 +801,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                           <ActionIcon
                                             color="red"
                                             variant="filled"
-                                            onClick={(e) => cancelEdit(e, batch._id)}
+                                            onClick={(e) => cancelEdit(e, batch._id, item._id)}
                                             title="Cancel"
                                           >
                                             <IconX />
