@@ -58,7 +58,7 @@ export const updateStockTransactionDestination = async (req: Request, res: Respo
             existing.destinationRemark = update.destinationRemark;
           }
 
-          if (update.destination.qty !== existing.destinationQuantity?.qty) {
+          if (update.destination?.qty !== undefined && update.destination?.qty !== existing.destinationQuantity?.qty) {
             existing.itemError = {
               errorReason: 'Destination quantity mismatch',
               errorQty: update.destination.qty,

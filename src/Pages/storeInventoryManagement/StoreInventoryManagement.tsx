@@ -366,7 +366,7 @@ const StoreInventoryManagement: React.FC = () => {
       })),
     });
 
-    setLoading(true);
+    if (response.isError) setLoading(false);
 
     if (response.success) {
       toast.success('Destination added successfully');
