@@ -158,6 +158,12 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
   const expiryBatchMap = useSelector(
     (state: RootState) => state.expiryBatch.items
   );
+  const dealerId = useSelector(
+    (state: RootState) => state.expiryBatch.dealerId
+  );
+  const dealerNameInExpiryBatch = useSelector(
+    (state: RootState) => state.expiryBatch.dealerNameInExpiryBatch
+  );
 
   const [updatedRows, setUpdatedRows] = useState<Set<string>>(new Set());
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
@@ -255,7 +261,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     
     
     if (dealerId && dealerId !== 'N/A') {
-      dispatch(setDealerIdToBatch({ dealerId: dealerId }));
+      dispatch(setDealerIdToBatch({ dealerId: dealerId, dealerName }));
     }
 
     if (!selectedDealer || selectedDealer !== 'N/A') {
@@ -329,7 +335,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
 
   if (!items.length) {
     return <Text>No items to display.</Text>;
-  }
+  }  
   
   return (
     <ScrollArea
@@ -339,11 +345,17 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     >
       <Center py="lg">
         <Text size="lg" weight={600} align="center">
-          Box ID:&nbsp;<Code>{boxId}</Code>
+          Box ID:&nbsp;<Code 
+          sx={(theme) => ({
+            fontSize: theme.fontSizes.xl,
+            paddingInline: theme.spacing.sm,
+            paddingBlock: theme.spacing.xs,
+          })}
+          >{boxId}</Code>
         </Text>
       </Center>
 
-      {selectedDealer && (
+      {dealerNameInExpiryBatch && (
         <Text
           size="sm"
           weight={500}
@@ -351,7 +363,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
           style={{ padding: '8px 12px', textAlign: 'center' }}
         >
           <Chip size="md" color="blue" variant="filled" checked>
-            {selectedDealer}
+            {dealerNameInExpiryBatch}
           </Chip>
         </Text>
       )}

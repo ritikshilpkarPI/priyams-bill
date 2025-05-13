@@ -16,12 +16,14 @@ export interface ExpiryBatchState {
   items: Record<string, BatchEntry[]>;
   dealerId: string;
   boxId: string;
+  dealerNameInExpiryBatch: string;
 }
 
 const initialState: ExpiryBatchState = {
   items: {},
   dealerId: '',
   boxId: '',
+  dealerNameInExpiryBatch: '',
 };
 
 const expiryBatchSlice = createSlice({
@@ -118,9 +120,13 @@ const expiryBatchSlice = createSlice({
     },
     setDealerIdToBatch: (
       state,
-      action: PayloadAction<{ dealerId: string}>
+      action: PayloadAction<{ dealerId?: string, dealerName?: string }>
     ) => {
+      if (action.payload.dealerId)
       state.dealerId = action.payload.dealerId;
+      if (action.payload.dealerName) {
+        state.dealerNameInExpiryBatch = action.payload.dealerName;
+      }
     },
     setBoxIdToBatch: (
       state,
