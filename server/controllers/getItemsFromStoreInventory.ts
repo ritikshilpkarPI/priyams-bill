@@ -19,35 +19,48 @@ export const getItemsFromStoreInventory = async (
     const limit = Number(size);
     const skip = (Number(page) - 1) * limit;
     let query = {};
+    let inventoryData = [];
+    let totalItems = 0;
     if (itemNameOrBarcode) {
       const barcode = itemNameOrBarcode.toString();
       const nameRegex = new RegExp(barcode, 'i');
       query = {
-         $or: [{ itemBarcode: barcode }, { itemName: nameRegex }],
-        }
+        $or: [{ itemBarcode: barcode }, { itemName: nameRegex }],
+      };
+      inventoryData = await StoreInventoryModel.find()
+        .select('itemId itemQuantityInStore itemShelfDates')
+        .populate({
+          path: 'itemId',
+          select: CONSTANTS.STATIC_FIELDS_TO_SELECT + ' sku',
+          match: query,
+        })
+        .lean();
+
+      totalItems = inventoryData.length;
+    } else {
+      inventoryData = await StoreInventoryModel.find()
+        .select('itemId itemQuantityInStore itemShelfDates')
+        .populate({
+          path: 'itemId',
+          select: CONSTANTS.STATIC_FIELDS_TO_SELECT + ' sku',
+        })
+        .limit(limit)
+        .skip(skip)
+        .lean();
+
+      totalItems = await StoreInventoryModel.countDocuments();
     }
-    const inventoryData = await StoreInventoryModel
-      .find()
-      .select('itemId itemQuantityInStore itemShelfDates')
-      .populate({
-        path: 'itemId',
-        select: CONSTANTS.STATIC_FIELDS_TO_SELECT + ' sku',
-        match: query
-      })
-      .limit(limit)
-      .skip(skip)
-      .lean();
 
     const filteredData = inventoryData.filter((data: any) => data.itemId);
-    
-    const totalItems = await StoreInventoryModel.countDocuments(query);
 
-    const items = filteredData.map((data:any) => ({
+    const items = filteredData.map((data: any) => ({
       ...data.itemId,
       itemQuantityInStore: data.itemQuantityInStore,
-      itemShelfDates: data.itemShelfDates
+      itemShelfDates: data.itemShelfDates,
     }));
-    return res.status(200).json({  success: true, data: items, count: totalItems });
+    return res
+      .status(200)
+      .json({ success: true, data: items, count: totalItems });
   } catch (error) {
     res.status(400).json({ error });
   }
