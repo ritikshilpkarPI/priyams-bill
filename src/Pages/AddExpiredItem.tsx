@@ -1,6 +1,6 @@
 import '../CSS/addExpiredItem.scss';
 import React, { useEffect, useState } from 'react';
-import { Title, Button, Flex, Grid, Loader, Center, Select } from '@mantine/core';
+import { Title, Button, Flex, Grid, Loader, Center, Select, Text, Chip } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { ItemSearch } from '../components/ItemSearch/ItemSearch';
@@ -66,6 +66,9 @@ const AddExpiredItem = () => {
     );
     const dealerId = useSelector(
       (state: RootState) => state.expiryBatch.dealerId
+    );
+    const dealerNameInExpiryBatch = useSelector(
+      (state: RootState) => state.expiryBatch.dealerNameInExpiryBatch
     );
      const dispatch = useDispatch();
 
@@ -194,18 +197,19 @@ const AddExpiredItem = () => {
         </Grid.Col>
 
         <Grid.Col span={12}>
-          <Flex gap="xs" align="center" mb="2px">
-            <Title order={3}>Select Dealer</Title>
-          </Flex>
-          <Select
-          data={dealerOptions}
-          placeholder="Choose a dealer"
-          searchable
-          nothingFound="No dealers found"
-          value={ dealerId || selectedDealer}
-          onChange={onDealerSelect}
-          disabled={dealersLoading || (Boolean(dealerId) && noOfItemsInBatch > 0)}
-        />
+          {dealerNameInExpiryBatch && (
+                  <Text
+                    size="sm"
+                    weight={500}
+                    color="dimmed"
+                    style={{ padding: '8px 12px', textAlign: 'center' }}
+                  >
+                    <Chip size="md" color="blue" variant="filled" checked>
+                      {dealerNameInExpiryBatch}
+                    </Chip>
+                  </Text>
+                )}
+                
         {
           dealerId && noOfItemsInBatch > 0 && (
             <Flex gap="xs" align="center" mb="2px">
@@ -228,17 +232,10 @@ const AddExpiredItem = () => {
         
         </Grid.Col>
             
-        {isLoading ? (
-          <Grid.Col span={12}>
-            <Center>
-              <Loader size="md" />
-            </Center>
-          </Grid.Col>
-        ) : (
+        
           <Grid.Col span={12}>
             <ExpiredItemPOTable items={items as any} />
           </Grid.Col>
-        )}
 
         <Grid.Col span={false ? 12 : 4}>
           <Button loading={false} w="100%" onClick={addExpiredItemsBatch} disabled={noOfItemsInBatch === 0}>

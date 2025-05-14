@@ -40,9 +40,6 @@ export const updateSource = async ({
         throw new Error(MESSAGES.NO_ITEMS_FOUND);
       }
 
-      if (item.itemStockQuantity < quantity) {
-        throw new Error(MESSAGES.INSUFFICIENT_STOCK);
-      }
 
       item.itemStockQuantity -= quantity;
       updateItemShelfDates(
