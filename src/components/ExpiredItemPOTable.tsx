@@ -12,6 +12,7 @@ import {
   Center,
   Code,
   Button,
+  Flex,
 } from '@mantine/core';
 import {
   IconChevronDown,
@@ -42,7 +43,7 @@ export const useStyles = createStyles((theme) => ({
     textTransform: 'uppercase',
     color:
       theme.colorScheme === 'dark' ? theme.colors.gray[3] : theme.black,
-    padding: '8px 12px',
+    padding: '4px 8px',
     borderBottom: `1px solid ${
       theme.colorScheme === 'dark'
         ? theme.colors.dark[4]
@@ -51,7 +52,7 @@ export const useStyles = createStyles((theme) => ({
     textAlign: 'left',
   },
   cell: {
-    padding: '8px 12px',
+    padding: '4px 8px',
     verticalAlign: 'middle',
     borderBottom: `1px solid ${
       theme.colorScheme === 'dark'
@@ -71,7 +72,7 @@ export const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
     gap: theme.spacing.xs,
   },
-  colInfo: { width: '360px' },
+  colInfo: { width: '460px' },
   colSm: { width: '160px' },
   colMd: { width: '220px' },
   colSmArrow: { width: '80px' },
@@ -355,7 +356,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
       scrollbarSize={8}
       style={{ width: '100%', maxHeight: 600 }}
     >
-      <Center py="lg">
+      <Flex py="lg">
         <Text size="lg" weight={600} align="center">
           Box ID:&nbsp;<Code 
           sx={(theme) => ({
@@ -365,7 +366,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
           })}
           >{boxId}</Code>
         </Text>
-      </Center>
+      </Flex>
 
       {dealerNameInExpiryBatch && (
         <Text
@@ -387,7 +388,6 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
         className={classes.table}
         verticalSpacing="sm"
         horizontalSpacing="md"
-        sx={{ minWidth: 1600 }}
       >
         <thead>
           <tr>
@@ -398,14 +398,10 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
             <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
               CP
             </th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              SP
-            </th>
+            
             <th className={`${classes.header} ${classes.colMd}`}>MFG Date</th>
             <th className={`${classes.header} ${classes.colMd}`}>Expiry Date</th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              Init Qty
-            </th>
+           
             <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
               Current
             </th>
@@ -488,24 +484,19 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                             highlightOnHover={false}
                             className={classes.table}
                             verticalSpacing="sm"
-                            horizontalSpacing="md"
+                            horizontalSpacing="xs"
                           >
                             <thead>
                               <tr>
-                                <th className={classes.header} />
-                                <th className={classes.header}>PO ID</th>
+                                <th className={classes.header}>View PO</th>
                                 <th className={classes.header}>Dealer Name</th>
                                 <th className={`${classes.header} ${classes.numeric}`}>
                                   CP
                                 </th>
-                                <th className={`${classes.header} ${classes.numeric}`}>
-                                  SP
-                                </th>
+                                
                                 <th className={classes.header}>MFG Date</th>
                                 <th className={classes.header}>Expiry Date</th>
-                                <th className={`${classes.header} ${classes.numeric}`}>
-                                  Init Qty
-                                </th>
+                               
                                 <th className={`${classes.header} ${classes.numeric}`}>
                                   Current
                                 </th>
@@ -668,8 +659,16 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                       !isEdit && startEdit(e, item._id, batch as any)
                                     }
                                   >
-                                    <td />
-                                    <td className={classes.cell}>
+                                    <td className={classes.cell}
+                                    onClick={e => {
+                                      e.stopPropagation();           
+                                      window.open(
+                                        `/new-purchase-order/${batch.purchaseOrderId}`,
+                                        '_blank',
+                                        'noopener,noreferrer'
+                                      );
+                                    }}
+                                    >
                                       {batch.purchaseOrderId}
                                     </td>
                                     <td className={classes.cell}>
@@ -703,9 +702,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                         )?.toFixed(2) ?? '-'
                                       )}
                                     </td>
-                                    <td className={`${classes.cell} ${classes.numeric}`}>
-                                      {purch?.sellingPrice.toFixed(2) ?? '-'}
-                                    </td>
+                                    
                                     <td className={classes.cell}>
                                       {isEdit ? (
                                         <TextInput
@@ -754,9 +751,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                         fmt(exp)
                                       )}
                                     </td>
-                                    <td className={`${classes.cell} ${classes.numeric}`}>
-                                      {batch.initialStockQuantity}
-                                    </td>
+                                    
                                     <td className={`${classes.cell} ${classes.numeric}`}>
                                       {isEdit ? (
                                         <NumberInput
