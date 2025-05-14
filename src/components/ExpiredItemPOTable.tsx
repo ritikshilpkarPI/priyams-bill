@@ -13,6 +13,7 @@ import {
   Code,
   Button,
   Flex,
+  Select,
 } from '@mantine/core';
 import {
   IconChevronDown,
@@ -26,6 +27,7 @@ import dayjs from 'dayjs';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
 import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch, removeBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
+import { selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 
 export const useStyles = createStyles((theme) => ({
   table: {
@@ -76,6 +78,7 @@ export const useStyles = createStyles((theme) => ({
   colSm: { width: '160px' },
   colMd: { width: '220px' },
   colSmArrow: { width: '80px' },
+  skuCol: {width: '50vw'},
   row: {
     cursor: 'pointer',
     '&:hover': {
@@ -165,6 +168,9 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
   const dealerNameInExpiryBatch = useSelector(
     (state: RootState) => state.expiryBatch.dealerNameInExpiryBatch
   );
+
+    const dealers = useSelector(selectDealers);    
+  
 
   const [updatedRows, setUpdatedRows] = useState<Set<string>>(new Set());
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
@@ -272,17 +278,15 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     const data = drafts[shelfId];
     if (!data) return;
     
+    if (dealerId && dealerId !== dealerNameInExpiryBatch) {
+      window.alert('You cannot add a PO from a different dealer');
+      return;
+    } 
     
     if (dealerId && dealerId !== 'N/A') {
       dispatch(setDealerIdToBatch({ dealerId: dealerId, dealerName }));
     }
 
-    if (!selectedDealer || selectedDealer !== 'N/A') {
-      setSelectedDealer(dealerName ?? null);
-    } else if (dealerName !== selectedDealer) {
-      window.alert('You cannot add a PO from a different dealer');
-      return;
-    }
 
     dispatch(
       updateBatch({
@@ -349,6 +353,20 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
   if (!items.length) {
     return <Text>No items to display.</Text>;
   }  
+
+  const dealerOptions: { value: string; label: string }[] = dealers
+  .filter((d): d is Dealer & { _id: string } => Boolean(d._id))
+  .map((dealer) => ({
+    value: dealer._id,
+    label: dealer.dealerName,
+  }));
+
+    const onDealerSelect = (value: string | null) => {
+      setSelectedDealer(value);
+      if (value) {
+        dispatch(setDealerIdToBatch({dealerId: value, dealerName: dealers.find((dealer) => dealer._id === value)?.dealerName}));
+      } 
+    }
   
   return (
     <ScrollArea
@@ -368,18 +386,12 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
         </Text>
       </Flex>
 
-      {dealerNameInExpiryBatch && (
-        <Text
-          size="sm"
-          weight={500}
-          color="dimmed"
-          style={{ padding: '8px 12px', textAlign: 'center' }}
-        >
-          <Chip size="md" color="blue" variant="filled" checked>
-            {dealerNameInExpiryBatch}
-          </Chip>
-        </Text>
-      )}
+      
+       <ScrollArea
+                          type="always"
+                          scrollbarSize={6}
+                          style={{ height: 300, width: '100%' }}
+      >
 
       <Table
         withBorder
@@ -388,26 +400,8 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
         className={classes.table}
         verticalSpacing="sm"
         horizontalSpacing="md"
+        
       >
-        <thead>
-          <tr>
-            <th className={classes.colSmArrow} />
-            <th className={`${classes.header} ${classes.colInfo}`}>
-              SKU / Brand / Company
-            </th>
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              CP
-            </th>
-            
-            <th className={`${classes.header} ${classes.colMd}`}>MFG Date</th>
-            <th className={`${classes.header} ${classes.colMd}`}>Expiry Date</th>
-           
-            <th className={`${classes.header} ${classes.colSm} ${classes.numeric}`}>
-              Current
-            </th>
-            <th className={classes.header}>Actions</th>
-          </tr>
-        </thead>
 
         <tbody>
           {items.map((item) => {
@@ -450,12 +444,33 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                       withArrow
                     >
                       <div>
-                        <div>{item.sku}</div>
-                        <div>{item.itemBrandName}</div>
-                        <div>{item.companyName}</div>
+                        <span>{item.sku}</span>
                       </div>
+                     
                     </Tooltip>
                   </td>
+                  <td className={classes.colInfo}>
+                  {item.itemBrandName && <Chip
+                        size="xs"
+                        color="blue"
+                        variant="filled"
+                        checked
+                        style={{ marginLeft: 8 }}
+                      >
+                        {item.itemBrandName}
+                        </Chip>}
+                      { item.companyName && <Chip
+                      size="xs"
+                      color="blue"
+                      variant="filled"
+                      checked
+                      style={{ marginLeft: 8 }}
+                    >
+                      {item.companyName}
+                    </Chip>}
+                        </td>
+                
+                  
                   <td className={classes.cell} colSpan={7} />
                 </tr>
 
@@ -507,7 +522,6 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                             <tbody>
                               {addingItemId === item._id && (
                                 <tr className={cx(classes.row, classes.updatedRow)}>
-                                  <td />
                                   <td className={classes.cell}>
                                     <TextInput
                                       size="xs"
@@ -522,11 +536,17 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                     />
                                   </td>
                                   <td className={classes.cell}>
-                                    {selectedDealer ?? '—'}
+                                  <Select
+                                                 data={dealerOptions}
+                                                 placeholder="Choose a dealer"
+                                                 searchable
+                                                 nothingFound="No dealers found"
+                                                 value={ dealerId || dealerNameInExpiryBatch}
+                                                 onChange={onDealerSelect}
+                                                 disabled={Boolean(dealerNameInExpiryBatch)}
+                                               />
                                   </td>
-                                  <td className={classes.cell}>
-                                    {fmt(new Date())}
-                                  </td>
+                                 
                                   <td className={`${classes.cell} ${classes.numeric}`}>
                                     <NumberInput
                                       size="xs"
@@ -543,9 +563,8 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                       className={classes.input}
                                     />
                                   </td>
-                                  <td className={`${classes.cell} ${classes.numeric}`}>
-                                    —
-                                  </td>
+                                 
+                                 
                                   <td className={classes.cell}>
                                     <TextInput
                                       size="xs"
@@ -598,9 +617,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                       hideControls
                                     />
                                   </td>
-                                  <td className={`${classes.cell} ${classes.numeric}`}>
-                                    {newBatchDraft.currentStock}
-                                  </td>
+                                  
                                   <td className={classes.actionCell}>
                                     <ActionIcon
                                       color="green"
@@ -671,9 +688,23 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                     >
                                       {batch.purchaseOrderId}
                                     </td>
-                                    <td className={classes.cell}>
-                                      {dealerName}
+                                   { !isEdit ?  <td className={classes.cell}>
+                                      { checked ? dealerNameInExpiryBatch : dealerName}
                                     </td>
+                                   : <>
+                                     
+                                      {  dealerName && dealerName !== 'N/A' ? dealerName : <Select
+                                                 data={dealerOptions}
+                                                 placeholder="Choose a dealer"
+                                                 searchable
+                                                 nothingFound="No dealers found"
+                                                 value={ dealerId || dealerNameInExpiryBatch}
+                                                 onChange={onDealerSelect}
+                                                 disabled={Boolean(dealerNameInExpiryBatch)}
+                                               />}
+                                      
+                                   </>  
+                                  }
                                     
                                     <td className={`${classes.cell} ${classes.numeric}`}>
                                       {isEdit ? (
@@ -819,6 +850,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
           })}
         </tbody>
       </Table>
+      </ScrollArea>
     </ScrollArea>
   );
 };
