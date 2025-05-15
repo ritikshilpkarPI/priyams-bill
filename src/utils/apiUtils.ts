@@ -524,7 +524,7 @@ export const draftPurchaseOrder = async (
   }
 };
 
-export const itemPurchaseBatches = async ({
+export const itemPurchaseBatchesAPI = async ({
   page,
   limit,
   itemId,
@@ -554,14 +554,20 @@ export const itemPurchaseBatches = async ({
 };
 
 
-export const getItemsFromStoreInventory = async (
-  storeId: string, query: { size: number, page: number }
+export const getItemsFromStoreInventoryAPI = async (  
+  storeId: string, 
+  query: { size: number; page: number; itemNameOrBarcode: string }
 ) => {
   try {
-    const response = await genericAxios({
-      url: `${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/${storeId}`,
-      params: query,
-    });    
+    const params = new URLSearchParams({
+      size: String(query.size),
+      page: String(query.page),
+      itemNameOrBarcode: query.itemNameOrBarcode || '',
+    });
+
+    const response = await getAPI({
+      path: `${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/${storeId}?${params.toString()}`,
+    });
     return response;
   } catch (error) {
     return { isError: true, error };
@@ -789,4 +795,22 @@ export const getStaffByToken = async ()=>{
   await genericAxios({
     url: API_PATHS.STAFF.GET_STAFF_BY_TOKEN,
   })
+};
+
+export const getBillFeedAPI = async (
+  page?: number,
+  size?: number,
+  startDate?: string,
+  endDate?: string,
+  storeId?: string
+) => {
+  const path = `${API_PATHS.BILLING.GET_BILL_FEED}?page=${page || ''}&size=${size || ''}&startDate=${startDate || ''
+    }&endDate=${endDate || ''}&storeId=${storeId || ''}`;
+
+  try {
+    const response = await getAPI({ path });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
 };
