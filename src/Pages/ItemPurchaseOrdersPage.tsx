@@ -7,7 +7,7 @@ import DataTable from './DataTable';
 import { NumberInput } from '@mantine/core';
 import {
   getAllStoresAPI,
-  itemPurchaseBatches,
+  itemPurchaseBatchesAPI,
   updateItemMismatchInStockAPI,
 } from '../utils/apiUtils';
 import {
@@ -35,7 +35,7 @@ const ItemPurchaseOrdersPage: React.FC = () => {
   const fetchItemPurchaseBatchesApi = async () => {
     if (!selectedItem) {
       dispatch(setIsLoading(true));
-      const response = await itemPurchaseBatches({ itemId: id });
+      const response = await itemPurchaseBatchesAPI({ itemId: id });
       if (response?.success) {
         dispatch(setSelectedItem(response.data[0]));
         dispatch(setIsLoading(false));

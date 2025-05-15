@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, CircularProgress } from '@mui/material';
-import { itemPurchaseBatches } from '../utils/apiUtils';
+import { itemPurchaseBatchesAPI } from '../utils/apiUtils';
 import DataTable from './DataTable';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
@@ -17,39 +17,18 @@ import { useSelector } from 'react-redux';
 import { Grid } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import ItemSearchInput from 'src/components/itemSearchInput/ItemSearchInput';
+import { CONSTANTS } from 'src/constants/constants';
 
 const NewInventoryPage: React.FC = () => {
   const dispatch = useDispatch();
   const { cache, items, page, rowsPerPage, rowCount, isLoading } = useSelector(
     (state: RootState) => state.inventory
   );
-  const [itemNameOrBarcode, setItemNameOrBarcode] = useState('');
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
-
-  const fetchItemPurchaseBatchesApi = async (itemNameOrBarcode?: string) => {
-    dispatch(setIsLoading(true));
-    const response = await itemPurchaseBatches({
-      page: page + 1,
-      limit: rowsPerPage,
-      itemNameOrBarcode,
-    });
-    if (response?.success) {
-      dispatch(setIsLoading(false));
-      dispatch(showRows(response.data));
-      dispatch(setRowCount(response.totalCount));
-    } else {
-      dispatch(setIsLoading(false));
-      dispatch(showRows([]));
-      dispatch(setRowCount(0));
-    }
-  };
 
   const navigate = useNavigate();
   const cacheKey = `${rowsPerPage}-${page}`;
 
-  useEffect(() => {
-    fetchItemPurchaseBatchesApi(itemNameOrBarcode);
-  }, [page, rowsPerPage, cacheKey, cache, itemNameOrBarcode, dispatch]);
 
   const handlePageChange = (_: unknown, newPage: number) => {
     dispatch(setPage(newPage));
@@ -138,7 +117,9 @@ const NewInventoryPage: React.FC = () => {
         <Grid.Col span={isSmallScreen ? 12 : 5} sx={{ textAlign: 'left' }}>
           <ItemSearchInput
             placeholder="Search item by name or barcode"
-            onChange={setItemNameOrBarcode}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            searchType={CONSTANTS.WAREHOUSE}
           />
         </Grid.Col>
 
