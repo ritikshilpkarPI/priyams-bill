@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import {
   useMantineTheme,
   Container,
@@ -20,71 +20,174 @@ import {
   Space,
   Timeline,
   Stack,
-} from '@mantine/core';
-import dayjs from 'dayjs';
-import { getExpiryItemsBatchByIdAPI } from 'src/utils/apiUtils';
+} from '@mantine/core'
+import dayjs from 'dayjs'
+import {
+  getExpiryItemsBatchByIdAPI,
+  markExpiryItemsBatchClearedAPI,
+} from 'src/utils/apiUtils'
+import { getUser } from 'src/utils/getUser'
+import { toast } from 'react-toastify'
 
 interface StatusRecord {
-  _id: string;
-  status: string;
-  dateTime: string;
-  browser: string;
-  os: string;
-  ipReferrer: string;
-  statusChangeRemark: string;
-  staffId: { name: string };
+  _id: string
+  status: string
+  dateTime: string
+  browser: string
+  os: string
+  ipReferrer: string
+  statusChangeRemark: string
+  staffId: { name: string }
 }
 
 interface ItemRecord {
-  _id: string;
-  expiryDate: string;
-  quantity: number;
-  costPricePerUnit: number;
-  totalCostPrice: number;
-  itemId: { sku: string; itemName: string };
+  _id: string
+  expiryDate: string
+  quantity: number
+  costPricePerUnit: number
+  totalCostPrice: number
+  itemId: { sku: string; itemName: string }
 }
 
 interface Batch {
-  _id: string;
-  boxId: string;
-  dealerId: { dealerName: string };
-  expiryBatchCost: number;
-  status: string;
-  statusHistory: StatusRecord[];
-  items: ItemRecord[];
-  createdAt: string;
-  updatedAt: string;
+  _id: string
+  boxId: string
+  dealerId: { dealerName: string }
+  expiryBatchCost: number
+  status: string
+  statusHistory: StatusRecord[]
+  items: ItemRecord[]
+  createdAt: string
+  updatedAt: string
 }
 
 const AddClearancePage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const theme = useMantineTheme();
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const theme = useMantineTheme()
 
-  const [batch, setBatch] = useState<Batch | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [batch, setBatch] = useState<Batch | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
 
-  const [clearanceType, setClearanceType] = useState<'return' | 'offer' | 'sold'>('return');
-  const [returnDetails, setReturnDetails] = useState('');
-  const [offerPrice, setOfferPrice] = useState<number | undefined>(undefined);
-  const [replacementSku, setReplacementSku] = useState('');
-  const [replacementQty, setReplacementQty] = useState<number | undefined>(undefined);
+  const [clearanceType, setClearanceType] = useState<'return' | 'offer' | 'sold'>('return')
+  const [returnDetails, setReturnDetails] = useState('')
+  const [offerPrice, setOfferPrice] = useState<number>()
+  const [replacementSku, setReplacementSku] = useState('')
+  const [replacementQty, setReplacementQty] = useState<number>()
+
+  const user = getUser()
+
+  const isCleared = batch?.status === 'CLEARED'
 
   useEffect(() => {
-    if (!id) return;
-    getExpiryItemsBatchByIdAPI(id)
-      .then((res) => {
-        if (res.success) setBatch(res.data);
-      })
-      .finally(() => setLoading(false));
-  }, [id]);
+    if (!id) {
+      setLoading(false)
+      return
+    }
 
-  const handleSubmit = () => {
-    navigate(-1);
-  };
+    const fetchBatch = async () => {
+      try {
+        const res = await getExpiryItemsBatchByIdAPI(id)
+        if (res.success) {
+          setBatch(res.data)
+        } else {
+          console.error('Failed to load batch:', res)
+          toast(
+            'Failed to load batch. Please try again.',
+            { type: 'error' }
+          )
+        }
+      } catch (err) {
+        console.error('Error fetching batch:', err)
+        toast(
+          'Error fetching batch. Please try again.',
+          { type: 'error' }
+        )
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBatch()
+  }, [id])
+
+  const handleSubmit = useCallback(async () => {
+    if (!batch || !id || isCleared) return
+
+    setSubmitting(true)
+
+    const clearanceDetails: any = { type: clearanceType }
+    if (clearanceType === 'return') {
+      clearanceDetails.notes = returnDetails
+    } else if (clearanceType === 'offer') {
+      clearanceDetails.offerPrice = offerPrice
+    } else if (clearanceType === 'sold') {
+      clearanceDetails.replacement = {
+        sku: replacementSku,
+        qty: replacementQty,
+      }
+    }
+
+    const browser = navigator.userAgent
+    const os = navigator.platform
+    const ipReferrer = document.referrer
+
+    const staffId = user?.id || 'unknown-staff'
+
+    const payload = {
+      clearanceDetails,
+      statusChangeRemark: clearanceType === 'return' ? returnDetails : undefined,
+      staffId,
+      browser,
+      os,
+      ipReferrer,
+    }
+
+    try {
+      const res = await markExpiryItemsBatchClearedAPI(id, payload)
+
+      if (res.isError) {
+        throw res.error
+      }
+
+      toast(
+        'Batch cleared successfully.',
+        { type: 'success' }
+      )
+      setBatch(res.data)
+
+      
+      navigate('/expiry-items-batch')
+    } catch (error) {
+      console.error('Error clearing batch:', error)
+      toast(
+        'Error clearing batch. Please try again.',
+        { type: 'error' }
+      )
+    } finally {
+      setSubmitting(false)
+    }
+  }, [
+    batch,
+    id,
+    clearanceType,
+    returnDetails,
+    offerPrice,
+    replacementSku,
+    replacementQty,
+    navigate,
+    user,
+    isCleared,
+  ])
 
   if (loading || !batch) {
-    return <Loader size="lg" style={{ margin: '100px auto', display: 'block' }} />;
+    return (
+      <Loader
+        size="lg"
+        style={{ margin: '100px auto', display: 'block' }}
+      />
+    )
   }
 
   return (
@@ -107,7 +210,14 @@ const AddClearancePage: React.FC = () => {
               { label: 'Box ID', value: batch.boxId, bg: theme.colors.blue[0] },
               { label: 'Dealer', value: batch.dealerId.dealerName, bg: theme.colors.orange[0] },
               { label: 'Batch Cost', value: `₹${batch.expiryBatchCost.toFixed(2)}`, bg: theme.colors.green[0] },
-              { label: 'Status', value: batch.status, bg: batch.status === 'SAVED' ? theme.colors.yellow[0] : theme.colors.green[0] },
+              {
+                label: 'Status',
+                value: batch.status,
+                bg:
+                  batch.status === 'SAVED'
+                    ? theme.colors.yellow[0]
+                    : theme.colors.green[0],
+              },
             ].map((info) => (
               <Card key={info.label} p="md" radius="md" sx={{ backgroundColor: info.bg }}>
                 <Text size="xs" color="dimmed">{info.label}</Text>
@@ -139,20 +249,33 @@ const AddClearancePage: React.FC = () => {
 
           <Title order={4}>Status History</Title>
           <Card withBorder p="sm" radius="md" mt="sm">
-            <Timeline active={batch.statusHistory.length - 1} bulletSize={16} lineWidth={2} color="teal">
+            <Timeline
+              active={batch.statusHistory.length - 1}
+              bulletSize={16}
+              lineWidth={2}
+              color="teal"
+            >
               {batch.statusHistory.map((h) => (
                 <Timeline.Item
                   key={h._id}
                   title={`${h.status} by ${h.staffId.name}`}
-                  bullet={<Badge color="teal" size="xs">{dayjs(h.dateTime).format('DD MMM')}</Badge>}
+                  bullet={
+                    <Badge color="teal" size="xs">
+                      {dayjs(h.dateTime).format('DD MMM')}
+                    </Badge>
+                  }
                 >
                   <Group spacing="xs" mb="xs">
-                    <Text size="xs" color="dimmed">{dayjs(h.dateTime).format('HH:mm')}</Text>
+                    <Text size="xs" color="dimmed">
+                      {dayjs(h.dateTime).format('HH:mm')}
+                    </Text>
                     <Badge variant="outline" size="xs">OS: {h.os}</Badge>
                     <Badge variant="outline" size="xs">Browser: {h.browser}</Badge>
                   </Group>
                   {h.statusChangeRemark && (
-                    <Text size="sm" color="dimmed">Remark: {h.statusChangeRemark}</Text>
+                    <Text size="sm" color="dimmed">
+                      Remark: {h.statusChangeRemark}
+                    </Text>
                   )}
                 </Timeline.Item>
               ))}
@@ -221,8 +344,9 @@ const AddClearancePage: React.FC = () => {
           <Card withBorder p="md" radius="md" mt="sm">
             <Radio.Group
               value={clearanceType}
-              onChange={(val) => setClearanceType(val as any)}
+              onChange={(val) => setClearanceType(val as 'return' | 'offer' | 'sold')}
               label="Action"
+              aria-disabled={isCleared}
             >
               <Group mt="xs">
                 <Radio value="return" label="Return to Dealer" color="blue" />
@@ -238,7 +362,8 @@ const AddClearancePage: React.FC = () => {
                 value={returnDetails}
                 onChange={(e) => setReturnDetails(e.currentTarget.value)}
                 mt="md"
-                width={'100%'}
+                style={{ width: '100%' }}
+                disabled={isCleared}
               />
             )}
 
@@ -249,8 +374,9 @@ const AddClearancePage: React.FC = () => {
                 value={offerPrice}
                 onChange={setOfferPrice}
                 mt="md"
-                width={'100%'}
+                style={{ width: '100%' }}
                 precision={2}
+                disabled={isCleared}
               />
             )}
 
@@ -261,20 +387,29 @@ const AddClearancePage: React.FC = () => {
                   placeholder="Enter SKU"
                   value={replacementSku}
                   onChange={(e) => setReplacementSku(e.currentTarget.value)}
-                  width={'100%'}
+                  style={{ width: '100%' }}
+                  disabled={isCleared}
                 />
                 <NumberInput
                   label="Replacement Qty"
                   placeholder="Qty"
                   value={replacementQty}
                   onChange={setReplacementQty}
-                  width={'100%'}
+                  style={{ width: '100%' }}
+                  disabled={isCleared}
                 />
               </SimpleGrid>
             )}
 
             <Group position="right" mt="lg">
-              <Button size="md" radius="md" color="teal" onClick={handleSubmit}>
+              <Button
+                size="md"
+                radius="md"
+                color="teal"
+                onClick={handleSubmit}
+                loading={submitting}
+                disabled={isCleared}
+              >
                 Submit Clearance
               </Button>
             </Group>
@@ -282,7 +417,7 @@ const AddClearancePage: React.FC = () => {
         </Card>
       </Container>
     </ScrollArea>
-  );
-};
+  )
+}
 
-export default AddClearancePage;
+export default AddClearancePage
