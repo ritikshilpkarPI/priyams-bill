@@ -1193,11 +1193,13 @@ export interface PurchaseEntry {
   poApproveTime: string;
   expiryDetails: ExpiryDetail[];
   initialItemQuantity: number;
+  dealerName: string;
 }
 
 export interface InventoryRow {
   staticData: StaticItemData;
   purchases: PurchaseEntry[];
+  _id: string;
 }
 
 export type InventoryTableRow = Omit<StaticItemData, '_id'> & {

@@ -797,6 +797,19 @@ export const getStaffByToken = async ()=>{
   })
 };
 
+
+export const addNewExpiredItemsBatchAPI = async (data: any) => {
+  try {    
+    const response = await postAPI({
+      path: API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEMS_BATCH,
+      data,
+    });
+
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
 export const getBillFeedAPI = async (
   page?: number,
   size?: number,
@@ -813,4 +826,5 @@ export const getBillFeedAPI = async (
   } catch (error) {
     return { isError: true, error };
   }
-};
+}
+

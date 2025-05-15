@@ -151,6 +151,7 @@ const ExpiryItemsBatch = () => {
         </Button>
       ),
     },
+    
     {
       key: 'items',
       label: 'Items',
@@ -165,6 +166,27 @@ const ExpiryItemsBatch = () => {
         </Button>
       ),
     },
+    {
+      key: 'addClearance',
+      label: 'Action',
+      render: (row: any) => (
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => 
+            window.open(
+              `/expiry-items-batch/${row._id}/add-clearance`,
+              '_blank',
+              'noopener,noreferrer'
+            )
+          }
+        >
+          Add Clearance
+        </Button>
+      ),
+    },
+
+
   ];
   
   const rows = expiredItemsBatch.data.map((batch) => ({
@@ -172,7 +194,7 @@ const ExpiryItemsBatch = () => {
     dealerName: batch.dealerId?.dealerName ?? '',
     items: batch.items?.map((item) => {
       const matchedCost = batch.itemWiseTotalCost.find(
-        (itemWise) => itemWise.itemId._id === item.itemId._id
+        (itemWise) => itemWise.itemId?._id === item.itemId?._id
       );
       
       return {
@@ -253,7 +275,8 @@ const ExpiryItemsBatch = () => {
           <DataTable
             columns={[
               { key: 'status', label: 'Status' },
-              { key: 'stafId', label: 'Staff ID' },
+              { key: 'staffId', label: 'Staff ID', render: (row) => row.staffId?.name ?? '–',
+              },
               { key: 'dateTime', label: 'Date Time' },
               { key: 'browser', label: 'Browser' },
               { key: 'os', label: 'OS' },

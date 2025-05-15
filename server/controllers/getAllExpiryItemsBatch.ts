@@ -66,6 +66,7 @@ export const getAllExpiryItemsBatch = async (req: Request, res: Response) => {
         .populate('items.itemId')
         .populate('items.purchaseOrderId')
         .populate('itemWiseTotalCost.itemId')
+        .populate('statusHistory.staffId')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(Number(limit)),
