@@ -173,7 +173,13 @@ const ExpiryItemsBatch = () => {
         <Button
           size="xs"
           variant="outline"
-          // onClick={() => navigate(`/add-clearance/${row._id}`)}
+          onClick={() => 
+            window.open(
+              `/expiry-items-batch/${row._id}/add-clearance`,
+              '_blank',
+              'noopener,noreferrer'
+            )
+          }
         >
           Add Clearance
         </Button>
