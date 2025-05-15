@@ -81,7 +81,7 @@ const ItemSchema = new mongoose.Schema(
       {
         expiryDate: { type: Date, required: true },
         manufacturingDate: { type: Date },
-        quantity: { type: Number, required: true },
+        quantity: { type: Number, default: 0 },
         purchaseOrderId: { type: mongoose.Schema.Types.ObjectId, ref: 'PurchaseOrder' },
         entryDate: { type: Date, default: Date.now },
         currentStockQuantity: { type: Number, default: 0 },
