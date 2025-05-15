@@ -4,7 +4,6 @@ import { DateRangePicker, DateRangePickerValue } from '@mantine/dates';
 import { Typography, Box } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { showNotification } from '@mantine/notifications';
-
 import { StoreSelect } from 'src/components/StoreSelect';
 import BillFeed from './BillFeed';
 import {
@@ -18,7 +17,6 @@ import {
 
 const AllBills = ({ fromDayWise = false, bills = [] }) => {
   const dispatch = useDispatch();
-
   const [allBills, setAllBills] = useState<BillState[]>([]);
   const [totalBillCount, setTotalBillCount] = useState(0);
   const [loader, setLoader] = useState(false);
@@ -26,7 +24,10 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
     new Date(),
     new Date(Date.now() + 24 * 60 * 60 * 1000),
   ]);
-  const [pagination, setPagination] = useState({ page: 1, pageSize: 10 });
+  const [pagination, setPagination] = useState({ 
+    page: 1, 
+    pageSize: 10 
+  });
   const [hasInitialDateLoaded, setHasInitialDateLoaded] = useState(false);
 
   const stores = useSelector(
@@ -97,10 +98,10 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
       setLoader(true)
 
       const firstStore = await fetchStores();
-      if (!firstStore?._id){
+      if (!firstStore?._id) {
         setLoader(false)
         return;
-      } 
+      }
 
       setHasInitialDateLoaded(true);
 
@@ -113,7 +114,6 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
   useEffect(() => {
     if (
       hasInitialDateLoaded &&
-      dateRange.filter(Boolean).length === 2 &&
       storeObject?._id
     ) {
       getBillFeed(
@@ -124,7 +124,7 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
         pagination.pageSize
       );
     }
-  }, [dateRange, storeObject, pagination]);
+  }, [dateRange, storeObject, pagination.page, pagination.pageSize]);
 
   return loader ? (
     <Box
@@ -140,33 +140,33 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
     </Box>
   ) : (
     <>
-    <Box p={2}>
-      <Typography variant="h5" sx={{ fontWeight: 600 }}>
-        All Bill
-      </Typography>
-      <StoreSelect
-        stores={stores}
-        value={selectedStoreId}
-        onChange={handleStoreChange}
+      <Box p={2}>
+        <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          All Bill
+        </Typography>
+        <StoreSelect
+          stores={stores}
+          value={selectedStoreId}
+          onChange={handleStoreChange}
         />
-      <DateRangePicker
-        mb={10}
-        style={{ width: '350px' }}
-        label="Date Range"
-        placeholder="Pick dates range"
-        value={dateRange}
-        onChange={setDateRange}
+        <DateRangePicker
+          mb={10}
+          style={{ width: '350px' }}
+          label="Date Range"
+          placeholder="Pick dates range"
+          value={dateRange}
+          onChange={setDateRange}
         />
-      <BillFeed
-        pagination={pagination}
-        setPagination={setPagination}
-        totalBillCount={totalBillCount}
-        bills={allBills}
-        fromDayWise={fromDayWise}
-        isLoading={loader}
+        <BillFeed
+          pagination={pagination}
+          setPagination={setPagination}
+          totalBillCount={totalBillCount}
+          bills={allBills}
+          fromDayWise={fromDayWise}
+          isLoading={loader}
         />
-    </Box>
-        </>
+      </Box>
+    </>
   );
 };
 

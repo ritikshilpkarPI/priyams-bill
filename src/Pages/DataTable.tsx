@@ -109,10 +109,10 @@ const DataTable: React.FC<DataTableProps> = ({
             paginationMode={paginationMode}
             paginationModel={{
               pageSize: rowsPerPage,
-              page: page,
+              page: page - 1, // Convert 1-based to 0-based
             }}
             onPaginationModelChange={({ page, pageSize }) => {
-              onPageChange?.(null, page);
+              onPageChange?.(null, page + 1); // Convert back to 1-based
               onRowsPerPageChange?.({
                 target: { value: String(pageSize) },
               } as React.ChangeEvent<HTMLInputElement>);
