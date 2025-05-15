@@ -157,10 +157,8 @@ const BillFeed = ({
   }));
 
   const handlePageChange = (_, page) => {
-    if (page > 0) {
-      const callBack = (prev) => ({ ...prev, page });
-      pagination ? setPagination(callBack) : setPaginationState(callBack);
-    }
+    const callBack = (prev) => ({ ...prev, page });
+    pagination ? setPagination(callBack) : setPaginationState(callBack);
   };
 
   const handleRowsPerPageChange = (e) => {
