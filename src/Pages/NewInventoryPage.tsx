@@ -18,6 +18,7 @@ import { Grid } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import ItemSearchInput from 'src/components/itemSearchInput/ItemSearchInput';
 import { CONSTANTS } from 'src/constants/constants';
+import { DownloadWarehouseItemCSVButton } from 'src/components/DownloadWarehouseItemCSVButton';
 
 const NewInventoryPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -112,9 +113,9 @@ const NewInventoryPage: React.FC = () => {
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
         Warehouse Inventory
       </Typography>
-
+      
       <Grid>
-        <Grid.Col span={isSmallScreen ? 12 : 5} sx={{ textAlign: 'left' }}>
+        <Grid.Col span={isSmallScreen ? 12 : 8} sx={{ textAlign: 'left' }}>
           <ItemSearchInput
             placeholder="Search item by name or barcode"
             page={page}
@@ -122,7 +123,9 @@ const NewInventoryPage: React.FC = () => {
             searchType={CONSTANTS.WAREHOUSE}
           />
         </Grid.Col>
-
+        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left',display:"flex", alignItems: "end", justifyContent:"end"}}>
+          <DownloadWarehouseItemCSVButton/>
+        </Grid.Col>
         <Grid.Col span={12}>
           <DataTable
             columns={columns}
