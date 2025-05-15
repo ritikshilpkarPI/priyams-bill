@@ -800,3 +800,26 @@ export const addNewExpiredItemsBatchAPI = async (data: any) => {
     return { isError: true, error };
   }
 }
+
+
+export const markExpiryItemsBatchClearedAPI = async (
+  id: string,
+  data: {
+    clearanceDetails: any
+    statusChangeRemark?: string
+    staffId: string
+    browser: string
+    os: string
+    ipReferrer: string
+  }
+) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.EXPIRED_ITEMS_BATCH.MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID}/${id}`,
+      data,
+    })
+    return response
+  } catch (error) {
+    return { isError: true, error }
+  }
+}
