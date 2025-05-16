@@ -1142,6 +1142,22 @@ declare global {
     selectedItem: InventoryPurchaseOrderItem | null
   }
 
+  interface PaginationStrategy {
+    limitParamName: string;
+    offsetParamName: string;
+    offsetType: 'page' | 'skip';
+    startOffsetValue: number; // e.g., page 2 if first page was 1, or skip 100 if first 100 items fetched
+  }
+  
+  interface ExecutePaginatedAPICallsParams<T> {
+    apiFnToGetData: (params: Record<string, any>) => Promise<T[]>; // Takes dynamic params, returns data array
+    totalObjectsCount: number;
+    itemsPerCall: number;
+    paginationStrategy: PaginationStrategy;
+    parallelCalls?: number;
+    maxRetriesPerCall?: number;
+  }
+
 }
 declare module '*.scss' {
   const content: { [className: string]: string };

@@ -10,16 +10,15 @@ import {
   Table,
   Badge,
   Group,
-  Radio,
-  TextInput,
-  NumberInput,
   Button,
   Divider,
   ScrollArea,
   SimpleGrid,
   Space,
   Timeline,
+  Select,
   Stack,
+  TextInput,
 } from '@mantine/core'
 import dayjs from 'dayjs'
 import {
@@ -50,6 +49,7 @@ interface ItemRecord {
 }
 
 interface Batch {
+  clearanceDetails: any
   _id: string
   boxId: string
   dealerId: { dealerName: string }
@@ -70,14 +70,15 @@ const AddClearancePage: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
-  const [clearanceType, setClearanceType] = useState<'return' | 'offer' | 'sold'>('return')
-  const [returnDetails, setReturnDetails] = useState('')
-  const [offerPrice, setOfferPrice] = useState<number>()
-  const [replacementSku, setReplacementSku] = useState('')
-  const [replacementQty, setReplacementQty] = useState<number>()
+  const [clearanceType, setClearanceType] = useState<
+    | 'REVERTED_TO_DEALER'
+    | 'CLEARED_BY_PURCHASE_ORDER'
+    | 'SOLD_ON_OFFER'
+    | 'DISPOSED'
+  >('REVERTED_TO_DEALER')
+  const [note, setNote] = useState('')
 
   const user = getUser()
-
   const isCleared = batch?.status === 'CLEARED'
 
   useEffect(() => {
@@ -85,110 +86,55 @@ const AddClearancePage: React.FC = () => {
       setLoading(false)
       return
     }
-
-    const fetchBatch = async () => {
+    ;(async () => {
       try {
         const res = await getExpiryItemsBatchByIdAPI(id)
-        if (res.success) {
-          setBatch(res.data)
-        } else {
-          console.error('Failed to load batch:', res)
-          toast(
-            'Failed to load batch. Please try again.',
-            { type: 'error' }
-          )
-        }
-      } catch (err) {
-        console.error('Error fetching batch:', err)
-        toast(
-          'Error fetching batch. Please try again.',
-          { type: 'error' }
-        )
+        if (res.success) setBatch(res.data)
+        else toast('Failed to load batch. Please try again.', { type: 'error' })
+      } catch {
+        toast('Error fetching batch. Please try again.', { type: 'error' })
       } finally {
         setLoading(false)
       }
-    }
-
-    fetchBatch()
+    })()
   }, [id])
 
   const handleSubmit = useCallback(async () => {
     if (!batch || !id || isCleared) return
-
-    setSubmitting(true)
-
-    const clearanceDetails: any = { type: clearanceType }
-    if (clearanceType === 'return') {
-      clearanceDetails.notes = returnDetails
-    } else if (clearanceType === 'offer') {
-      clearanceDetails.offerPrice = offerPrice
-    } else if (clearanceType === 'sold') {
-      clearanceDetails.replacement = {
-        sku: replacementSku,
-        qty: replacementQty,
-      }
+    if (!clearanceType) {
+      toast('Please select a clearance action.', { type: 'error' })
+      return
     }
-
+    setSubmitting(true)
+    const clearanceDetails: any = { clearanceReason: clearanceType,clearanceRemark: note }
     const browser = navigator.userAgent
     const os = navigator.platform
     const ipReferrer = document.referrer
-
     const staffId = user?.id || 'unknown-staff'
-
     const payload = {
+      status: clearanceType,
       clearanceDetails,
-      statusChangeRemark: clearanceType === 'return' ? returnDetails : undefined,
+      statusChangeRemark: note,
       staffId,
       browser,
       os,
       ipReferrer,
     }
-
     try {
       const res = await markExpiryItemsBatchClearedAPI(id, payload)
-
-      if (res.isError) {
-        throw res.error
-      }
-
-      toast(
-        'Batch cleared successfully.',
-        { type: 'success' }
-      )
+      if (res.isError) throw res.error
+      toast('Batch cleared successfully.', { type: 'success' })
       setBatch(res.data)
-
-      
       navigate('/expiry-items-batch')
-    } catch (error) {
-      console.error('Error clearing batch:', error)
-      toast(
-        'Error clearing batch. Please try again.',
-        { type: 'error' }
-      )
+    } catch {
+      toast('Error clearing batch. Please try again.', { type: 'error' })
     } finally {
       setSubmitting(false)
     }
-  }, [
-    batch,
-    id,
-    clearanceType,
-    returnDetails,
-    offerPrice,
-    replacementSku,
-    replacementQty,
-    navigate,
-    user,
-    isCleared,
-  ])
+  }, [batch, id, isCleared, clearanceType, note, navigate, user])
 
-  if (loading || !batch) {
-    return (
-      <Loader
-        size="lg"
-        style={{ margin: '100px auto', display: 'block' }}
-      />
-    )
-  }
+  if (loading || !batch)
+    return <Loader size="lg" style={{ margin: '100px auto', display: 'block' }} />
 
   return (
     <ScrollArea style={{ height: '100vh', padding: 24 }}>
@@ -209,24 +155,29 @@ const AddClearancePage: React.FC = () => {
             {[
               { label: 'Box ID', value: batch.boxId, bg: theme.colors.blue[0] },
               { label: 'Dealer', value: batch.dealerId.dealerName, bg: theme.colors.orange[0] },
-              { label: 'Batch Cost', value: `₹${batch.expiryBatchCost.toFixed(2)}`, bg: theme.colors.green[0] },
+              {
+                label: 'Batch Cost',
+                value: `₹${batch.expiryBatchCost.toFixed(2)}`,
+                bg: theme.colors.green[0],
+              },
               {
                 label: 'Status',
                 value: batch.status,
-                bg:
-                  batch.status === 'SAVED'
-                    ? theme.colors.yellow[0]
-                    : theme.colors.green[0],
+                bg: batch.status === 'SAVED' ? theme.colors.yellow[0] : theme.colors.green[0],
               },
             ].map((info) => (
               <Card key={info.label} p="md" radius="md" sx={{ backgroundColor: info.bg }}>
-                <Text size="xs" color="dimmed">{info.label}</Text>
+                <Text size="xs" color="dimmed">
+                  {info.label}
+                </Text>
                 {info.label === 'Status' ? (
                   <Badge size="lg" color={batch.status === 'SAVED' ? 'yellow' : 'green'}>
                     {info.value}
                   </Badge>
                 ) : (
-                  <Text size="xl" weight={500}>{info.value}</Text>
+                  <Text size="xl" weight={500}>
+                    {info.value}
+                  </Text>
                 )}
               </Card>
             ))}
@@ -249,33 +200,21 @@ const AddClearancePage: React.FC = () => {
 
           <Title order={4}>Status History</Title>
           <Card withBorder p="sm" radius="md" mt="sm">
-            <Timeline
-              active={batch.statusHistory.length - 1}
-              bulletSize={16}
-              lineWidth={2}
-              color="teal"
-            >
+            <Timeline active={batch.statusHistory.length - 1} bulletSize={16} lineWidth={2} color="teal">
               {batch.statusHistory.map((h) => (
+                
                 <Timeline.Item
                   key={h._id}
                   title={`${h.status} by ${h.staffId.name}`}
-                  bullet={
-                    <Badge color="teal" size="xs">
-                      {dayjs(h.dateTime).format('DD MMM')}
-                    </Badge>
-                  }
+                  bullet={<Badge color="teal" size="xs">{dayjs(h.dateTime).format('DD MMM')}</Badge>}
                 >
                   <Group spacing="xs" mb="xs">
-                    <Text size="xs" color="dimmed">
-                      {dayjs(h.dateTime).format('HH:mm')}
-                    </Text>
+                    <Text size="xs" color="dimmed">{dayjs(h.dateTime).format('HH:mm')}</Text>
                     <Badge variant="outline" size="xs">OS: {h.os}</Badge>
                     <Badge variant="outline" size="xs">Browser: {h.browser}</Badge>
                   </Group>
                   {h.statusChangeRemark && (
-                    <Text size="sm" color="dimmed">
-                      Remark: {h.statusChangeRemark}
-                    </Text>
+                    <Text size="sm" color="dimmed">Remark: {h.statusChangeRemark}</Text>
                   )}
                 </Timeline.Item>
               ))}
@@ -308,28 +247,13 @@ const AddClearancePage: React.FC = () => {
                         </Stack>
                       </td>
                       <td>
-                        <Badge
-                          size="lg"
-                          color={dayjs(it.expiryDate).isBefore(dayjs()) ? 'red' : 'orange'}
-                        >
-                          <Text size="lg" weight={600}>
-                            {dayjs(it.expiryDate).format('DD MMM YYYY')}
-                          </Text>
+                        <Badge size="lg" color={dayjs(it.expiryDate).isBefore(dayjs()) ? 'red' : 'orange'}>
+                          <Text size="lg" weight={600}>{dayjs(it.expiryDate).format('DD MMM YYYY')}</Text>
                         </Badge>
                       </td>
-                      <td>
-                        <Text size="lg" weight={600}>{it.quantity}</Text>
-                      </td>
-                      <td>
-                        <Text size="lg" weight={600} color={theme.colors.green[7]}>
-                          ₹{it.costPricePerUnit.toFixed(2)}
-                        </Text>
-                      </td>
-                      <td>
-                        <Text size="lg" weight={600} color={theme.colors.blue[7]}>
-                          ₹{it.totalCostPrice.toFixed(2)}
-                        </Text>
-                      </td>
+                      <td><Text size="lg" weight={600}>{it.quantity}</Text></td>
+                      <td><Text size="lg" weight={600} color={theme.colors.green[7]}>₹{it.costPricePerUnit.toFixed(2)}</Text></td>
+                      <td><Text size="lg" weight={600} color={theme.colors.blue[7]}>₹{it.totalCostPrice.toFixed(2)}</Text></td>
                     </tr>
                   ))}
                 </tbody>
@@ -342,77 +266,60 @@ const AddClearancePage: React.FC = () => {
 
           <Title order={4}>Clearance Details</Title>
           <Card withBorder p="md" radius="md" mt="sm">
-            <Radio.Group
-              value={clearanceType}
-              onChange={(val) => setClearanceType(val as 'return' | 'offer' | 'sold')}
-              label="Action"
-              aria-disabled={isCleared}
-            >
-              <Group mt="xs">
-                <Radio value="return" label="Return to Dealer" color="blue" />
-                <Radio value="offer" label="Make Offer" color="orange" />
-                <Radio value="sold" label="Sold / Replace" color="red" />
-              </Group>
-            </Radio.Group>
-
-            {clearanceType === 'return' && (
-              <TextInput
-                label="Return Details"
-                placeholder="Shipping/return notes"
-                value={returnDetails}
-                onChange={(e) => setReturnDetails(e.currentTarget.value)}
-                mt="md"
-                style={{ width: '100%' }}
-                disabled={isCleared}
-              />
-            )}
-
-            {clearanceType === 'offer' && (
-              <NumberInput
-                label="Offer Price (₹)"
-                placeholder="Your offer"
-                value={offerPrice}
-                onChange={setOfferPrice}
-                mt="md"
-                style={{ width: '100%' }}
-                precision={2}
-                disabled={isCleared}
-              />
-            )}
-
-            {clearanceType === 'sold' && (
-              <SimpleGrid cols={2} mt="md" breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+          {!isCleared ? (
+              <>
+                <Select
+                  label="Clearance Action"
+                  placeholder="Select action"
+                  data={[
+                    { value: 'REVERTED_TO_DEALER', label: 'Reverted to dealer' },
+                    { value: 'CLEARED_BY_PURCHASE_ORDER', label: 'Cleared by purchase order' },
+                    { value: 'SOLD_ON_OFFER', label: 'Sold on offer' },
+                    { value: 'DISPOSED', label: 'Disposed' },
+                  ]}
+                  required
+                  value={clearanceType}
+                  onChange={(val) => val && setClearanceType(val as any)}
+                  disabled={isCleared}
+                  mt="md"
+                  withinPortal
+                />
                 <TextInput
-                  label="Replacement SKU"
-                  placeholder="Enter SKU"
-                  value={replacementSku}
-                  onChange={(e) => setReplacementSku(e.currentTarget.value)}
-                  style={{ width: '100%' }}
+                  label="Note / Reason"
+                  placeholder="Enter note or reason"
+                  value={note}
+                  onChange={(e) => setNote(e.currentTarget.value)}
+                  mt="md"
                   disabled={isCleared}
                 />
-                <NumberInput
-                  label="Replacement Qty"
-                  placeholder="Qty"
-                  value={replacementQty}
-                  onChange={setReplacementQty}
-                  style={{ width: '100%' }}
-                  disabled={isCleared}
-                />
-              </SimpleGrid>
+                <Group position="right" mt="lg">
+                  <Button
+                    size="md"
+                    radius="md"
+                    color="teal"
+                    onClick={handleSubmit}
+                    loading={submitting}
+                    disabled={!clearanceType || isCleared}
+                  >
+                    Submit Clearance
+                  </Button>
+                </Group>
+              </>
+            ) : (
+              batch.clearanceDetails && (
+                <Stack spacing="sm" mt="md">
+                  <Text>
+                    <Text component="span" weight={500}>Action:</Text> {batch.clearanceDetails.clearanceReason}
+                  </Text>
+                  <Text>
+                    <Text component="span" weight={500}>Cleared On:</Text> {dayjs(batch.clearanceDetails.clearedOn).format('DD MMM YYYY HH:mm')}
+                  </Text>
+                  <Text>
+                    <Text component="span" weight={500}>Remark:</Text> {batch.clearanceDetails.clearanceRemark}
+                  </Text>
+                </Stack>
+              )
             )}
-
-            <Group position="right" mt="lg">
-              <Button
-                size="md"
-                radius="md"
-                color="teal"
-                onClick={handleSubmit}
-                loading={submitting}
-                disabled={isCleared}
-              >
-                Submit Clearance
-              </Button>
-            </Group>
           </Card>
         </Card>
       </Container>
