@@ -276,9 +276,9 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
   ) => {
     e.stopPropagation();
     const data = drafts[shelfId];
-    if (!data) return;
+    if (!data) return;    
     
-    if (dealerId && dealerId !== dealerNameInExpiryBatch) {
+    if (dealerId && dealerNameInExpiryBatch && dealerId !== dealerNameInExpiryBatch) {
       window.alert('You cannot add a PO from a different dealer');
       return;
     } 
@@ -429,7 +429,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
             return (
               <Fragment key={item._id}>
                 <tr className={classes.row}>
-                  <td className={classes.actionCell}>
+                  <td className={classes.colSmArrow}>
                     <ActionIcon
                       variant="transparent"
                       size="sm"
