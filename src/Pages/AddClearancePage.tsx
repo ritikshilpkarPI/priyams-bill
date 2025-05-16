@@ -205,7 +205,7 @@ const AddClearancePage: React.FC = () => {
                 
                 <Timeline.Item
                   key={h._id}
-                  title={`${h.status} by ${h.staffId.name}`}
+                  title={`${h.status} by ${h?.staffId?.name ?? 'Unknown'}`}
                   bullet={<Badge color="teal" size="xs">{dayjs(h.dateTime).format('DD MMM')}</Badge>}
                 >
                   <Group spacing="xs" mb="xs">
