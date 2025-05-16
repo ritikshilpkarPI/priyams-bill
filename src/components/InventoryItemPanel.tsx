@@ -57,7 +57,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   );
 
   return (
-    <ScrollArea style={{ width: '100%' }}>
+    <ScrollArea style={{ width: '100%' , overflow: 'visible' }}>
       <Table striped highlightOnHover withBorder>
         <thead>
           <tr>
