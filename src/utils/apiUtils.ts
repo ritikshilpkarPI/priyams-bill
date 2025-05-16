@@ -566,20 +566,21 @@ export const itemPurchaseBatchesWebAPI = async ({
   itemNameOrBarcode?: string;
 }) => {
   try {
-    const baseUrl = getServerBaseUrl();
+    const queryParams: Record<string, string> = {};
+    if (itemId) queryParams['item_id'] = String(itemId);
+    if (itemNameOrBarcode) queryParams['itemNameOrBarcode'] = String(itemNameOrBarcode);
+    if (typeof page === 'number') queryParams['page'] = String(page);
+    if (typeof limit === 'number') queryParams['limit'] = String(limit);
 
-    const params: Record<string, string | number> = {};
-    if (itemId) params['item_id'] = itemId;
-    if (itemNameOrBarcode) params['itemNameOrBarcode'] = itemNameOrBarcode;
-    if (typeof page === 'number') params['page'] = page;
-    if (typeof limit === 'number') params['limit'] = limit;
+    const queryString = new URLSearchParams(queryParams).toString();
+    const pathWithParams = `${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}${queryString ? '?' + queryString : ''}`;
 
-    const response = await axios.get(`${baseUrl}${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}`, {
-      params,
-      withCredentials: true,
+    const response = await getAPI({ 
+      path: pathWithParams 
     });
 
-    return response.data;
+    // Return the entire response object, as it likely contains { data: T[], totalCount: number, ... }
+    return response; 
   } catch (error: any) {
     return {
       isError: true,
