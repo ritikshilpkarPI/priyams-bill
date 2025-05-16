@@ -101,7 +101,7 @@ const ExpiryItemsBatch = () => {
     if (page >= 0) {
       const callBack = (prev: any) => ({ ...prev, page });
       pagination ? setPagination(callBack) : setPagination(callBack);
-      fetchGetAllExpiryItemsBatchAPI(page + 1);
+      fetchGetAllExpiryItemsBatchAPI(page);
     }
   };
 
