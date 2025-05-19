@@ -52,7 +52,7 @@ const StockTransactions: React.FC = () => {
       const storeIds = storeData._id ? [storeData._id] : [];
       result = await getItemTransactions({
         storeIds,
-        page: page + 1,
+        page: page,
         limit: rowsPerPage,
         itemIds: selectedItemsIds
       });
@@ -61,7 +61,7 @@ const StockTransactions: React.FC = () => {
         startDate,
         endDate,
         storeId: storeData._id,
-        page: targetPage + 1, 
+        page: targetPage, 
         limit,
       });
     }
@@ -115,6 +115,8 @@ const StockTransactions: React.FC = () => {
   });
 
   const totalRowsToShow = totalCount + duplicateTxnCount + expandedSubRows;
+console.log("totalRowsToShow:",totalRowsToShow);
+
 
   const handleStartDateChange = (newDate: Date | null) => {
     if (newDate) {
@@ -190,6 +192,7 @@ const StockTransactions: React.FC = () => {
         return col;
     }
   });
+  console.log("page: ",page);
 
   return (
     <Box p={3}>
