@@ -19,21 +19,23 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
     const skip = filterItemId ? 0 : (pageNumber - 1) * limitNumber;
 
     let query = {};
-
+    let items: string | any[] = []
     if (itemNameOrBarcode) {
       const barcode = itemNameOrBarcode.toString();
       const nameRegex = new RegExp(barcode, 'i');
       query = {
         $or: [{ itemBarcode: barcode }, { itemName: nameRegex }],
       };
+      items = await Item.find(query)
+      .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
+      .lean();
     } else {
-      query = filterItemId ? { _id: toObjectId(filterItemId as string) } : {};
+      items = await Item.find({})
+      .skip(skip)
+      .limit(limitNumber)
+      .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
+      .lean();
     }
-    const items = await Item.find(query)
-    .skip(skip)
-    .limit(limitNumber)
-    .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
-    .lean();
     
     if (items.length === 0) {
       return res

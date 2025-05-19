@@ -124,7 +124,9 @@ const NewInventoryPage: React.FC = () => {
           />
         </Grid.Col>
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left',display:"flex", alignItems: "end", justifyContent:"end"}}>
-          <DownloadWarehouseItemCSVButton/>
+          <DownloadWarehouseItemCSVButton
+           sourseType={CONSTANTS.WAREHOUSE}
+           />
         </Grid.Col>
         <Grid.Col span={12}>
           <DataTable
