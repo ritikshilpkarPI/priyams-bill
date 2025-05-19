@@ -2,145 +2,170 @@ import { useEffect, useState } from 'react';
 import { Loader } from '@mantine/core';
 import { DateRangePicker, DateRangePickerValue } from '@mantine/dates';
 import { Typography, Box } from '@mui/material';
-import { genericAxios } from '../utils/genericAxiosMethod';
-import { API_PATHS } from '../utils/constants/apiPaths';
-import { API_METHODS } from '../utils/constants/apiMethods';
-import BillFeed from './BillFeed';
-import { useSelector } from 'react-redux';
-import { StoreSelect } from 'src/components/StoreSelect';
-import { setSelectedStore, setStores } from 'src/redux/storeInventoryManagement/storeInventoryManagementSlice';
-import { useDispatch } from 'react-redux';
-import { getAllStoresAPI } from 'src/utils/apiUtils';
+import { useSelector, useDispatch } from 'react-redux';
 import { showNotification } from '@mantine/notifications';
+import { StoreSelect } from 'src/components/StoreSelect';
+import BillFeed from './BillFeed';
+import {
+  setSelectedStore,
+  setStores,
+} from 'src/redux/storeInventoryManagement/storeInventoryManagementSlice';
+import {
+  getAllStoresAPI,
+  getBillFeedAPI,
+} from 'src/utils/apiUtils';
 
 const AllBills = ({ fromDayWise = false, bills = [] }) => {
+  const dispatch = useDispatch();
   const [allBills, setAllBills] = useState<BillState[]>([]);
   const [totalBillCount, setTotalBillCount] = useState(0);
+  const [loader, setLoader] = useState(false);
   const [dateRange, setDateRange] = useState<DateRangePickerValue>([
     new Date(),
-    new Date(),
+    new Date(Date.now() + 24 * 60 * 60 * 1000),
   ]);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pageSize: 10,
+  const [pagination, setPagination] = useState({ 
+    page: 1, 
+    pageSize: 10 
   });
-  const [loader, setLoader] = useState(false);
-  const selectedStoreId = useSelector(
-    (state: RootState) => state.storeInventoryManagement.selectedStoreId
-  );
+  const [hasInitialDateLoaded, setHasInitialDateLoaded] = useState(false);
 
   const stores = useSelector(
     (state: RootState) => state.storeInventoryManagement.stores
   );
-
-
- const storeObject = stores.find(
-    (store) => store.code === selectedStoreId
+  const selectedStoreId = useSelector(
+    (state: RootState) => state.storeInventoryManagement.selectedStoreId
   );
+  const storeObject = stores.find((store) => store.code === selectedStoreId);
 
-  const getBillFeed = async (date: DateRangePickerValue) => {
-    setLoader(true);
-    const fetch: any = await genericAxios({
-      url: API_PATHS.BILLING.GET_BILL_FEED,
-      method: API_METHODS.GET,
-      params: {
-        page: pagination.page,
-        size: pagination.pageSize,
-        startDate: date[0],
-        endDate: date[1],
-        storeId: storeObject?._id,
-      },
-      headers: {
-        Cookie: '',
-      },
-    });
-    if (fetch.error) return;
-    setAllBills(fetch.data.message.allBill);
-    setTotalBillCount(fetch.data.message.billCount);
-    setLoader(false);
-  };
-
-  useEffect(() => {
-    if (bills.length) {
-      setAllBills(bills);
-    } else {
-      getBillFeed(dateRange);
-    }
-    // eslint-disable-next-line
-  }, [pagination, selectedStoreId]);
-
-  const dispatch = useDispatch()
-
- const handleStoreChange = (storeId:string) => {
+  const handleStoreChange = (storeId: string) => {
     dispatch(setSelectedStore(storeId));
   };
 
-    useEffect(() => {
-      const fetchStores = async () => {
-        try {
-          const res = await getAllStoresAPI();
-          if (!res.stores) {
-            showNotification({ message: 'No stores found', color: 'red' });
-            return;
-          }  
-          dispatch(setStores(res.stores));
-        } catch (error) {
-          showNotification({ message: 'Failed to load stores', color: 'red' });
-        }
-      };
-  
-      fetchStores();
-    }, [dispatch]);
+  const fetchStores = async () => {
+    try {
+      const res = await getAllStoresAPI();
+      const firstStore = res?.stores?.[0];
 
+      if (!firstStore) return;
 
+      dispatch(setStores(res.stores));
+      dispatch(setSelectedStore(firstStore.code));
+      return firstStore;
+    } catch (error) {
+      showNotification({ message: 'Failed to load stores', color: 'red' });
+      return;
+    }
+  };
 
-  return (
+  const getBillFeed = async (
+    storeId: string,
+    start: Date,
+    end: Date,
+    page = 1,
+    pageSize = 10
+  ) => {
+    setLoader(true);
+
+    try {
+      const response = await getBillFeedAPI(
+        page,
+        pageSize,
+        start.toISOString(),
+        end.toISOString(),
+        storeId
+      );
+
+      const allBill = response?.message?.allBill;
+      const billCount = response?.message?.billCount;
+
+      if (!Array.isArray(allBill)) {
+        showNotification({ message: 'Failed to load bills', color: 'red' });
+        return;
+      }
+
+      setAllBills(allBill);
+      setTotalBillCount(billCount || 0);
+    } catch (error) {
+      showNotification({ message: 'Failed to load bills', color: 'red' });
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      setLoader(true)
+
+      const firstStore = await fetchStores();
+      if (!firstStore?._id) {
+        setLoader(false)
+        return;
+      }
+
+      setHasInitialDateLoaded(true);
+
+      await getBillFeed(firstStore._id, dateRange[0]!, dateRange[1]!);
+    };
+
+    init();
+  }, []);
+
+  useEffect(() => {
+    if (
+      hasInitialDateLoaded &&
+      storeObject?._id
+    ) {
+      getBillFeed(
+        storeObject._id,
+        dateRange[0]!,
+        dateRange[1]!,
+        pagination.page,
+        pagination.pageSize
+      );
+    }
+  }, [dateRange, storeObject, pagination.page, pagination.pageSize]);
+
+  return loader ? (
+    <Box
+      sx={{
+        height: '95vh',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Loader color="blue" size="xl" />
+    </Box>
+  ) : (
     <>
-      {loader ? (
-        <div
-          style={{
-            height: '95vh',
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Loader color="blue" size="xl" />
-        </div>
-      ) : (
-        <>
-          <Box p={2}>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
-              All Bill
-            </Typography>
-            <StoreSelect
-            stores={stores}
-            value={selectedStoreId}
-            onChange={handleStoreChange}
-            />
-            <DateRangePicker
-              mb={10}
-              style={{ width: '350px' }}
-              label="Date Range"
-              placeholder="Pick dates range"
-              value={dateRange}
-              onChange={(val) => {
-                setDateRange(val);
-                if (val.filter(Boolean).length === 2) getBillFeed(val);
-              }}
-            />
-            <BillFeed
-              pagination={pagination}
-              setPagination={setPagination}
-              totalBillCount={totalBillCount}
-              bills={allBills}
-              fromDayWise={fromDayWise}
-              isLoading={loader}
-            />
-          </Box>
-        </>
-      )}
+      <Box p={2}>
+        <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          All Bill
+        </Typography>
+        <StoreSelect
+          stores={stores}
+          value={selectedStoreId}
+          onChange={handleStoreChange}
+        />
+        <DateRangePicker
+          mb={10}
+          style={{ width: '350px' }}
+          label="Date Range"
+          placeholder="Pick dates range"
+          value={dateRange}
+          onChange={setDateRange}
+        />
+        <BillFeed
+          pagination={pagination}
+          setPagination={setPagination}
+          totalBillCount={totalBillCount}
+          bills={allBills}
+          fromDayWise={fromDayWise}
+          isLoading={loader}
+        />
+      </Box>
     </>
   );
 };

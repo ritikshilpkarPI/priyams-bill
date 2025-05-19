@@ -9,6 +9,7 @@ import DataGrid from './DataTable';
 import { formatShortDate } from '../utils/formatDate';
 import { parseJwt } from 'src/utils/cookie';
 import Cookies from 'js-cookie';
+import { formatToISTTime } from '../utils/dateAndTime/formatToISTTime';
 
 const BillFeed = ({
   fromDayWise = false,
@@ -94,6 +95,7 @@ const BillFeed = ({
       : null,
     { label: 'Discount', key: 'billDiscountTotal', sortable: true },
     { label: 'Date', key: 'createdAt', sortable: true },
+    { label: 'Time', key: 'createdTime', sortable: true },
     { label: 'Created By', key: 'billCreatedBy', sortable: true },
     {
       label: 'Whatsapp Bill',
@@ -135,6 +137,7 @@ const BillFeed = ({
     ...bill,
     serialNo: idx + 1,
     createdAt: formatShortDate(bill['createdAt'] || ''),
+    createdTime: formatToISTTime(bill['createdAt'] || ''),
     billDiscountTotal: bill['billDiscountTotal']?.toFixed(2),
     totalNumberOfUniqueItems: bill['totalNumberOfUniqueItems'] || 0,
     amountReturn: bill['amountReturn']?.toFixed(2),
@@ -154,10 +157,8 @@ const BillFeed = ({
   }));
 
   const handlePageChange = (_, page) => {
-    if (page > 0) {
-      const callBack = (prev) => ({ ...prev, page });
-      pagination ? setPagination(callBack) : setPaginationState(callBack);
-    }
+    const callBack = (prev) => ({ ...prev, page });
+    pagination ? setPagination(callBack) : setPaginationState(callBack);
   };
 
   const handleRowsPerPageChange = (e) => {

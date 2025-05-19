@@ -52,7 +52,7 @@ export const getStockTransactions = async (
     const { start, end } = getValidDateRange(startDate, endDate);
     filter.createdAt = { $gte: start, $lte: end };
 
-    const transactions = await StockTransactionModel.find()
+    const transactions = await StockTransactionModel.find( transactionId ? {_id: transactionId} : {} )
       .sort({ updatedAt: -1 })
       .skip(skip)
       .limit(limitNumber)

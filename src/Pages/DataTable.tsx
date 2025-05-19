@@ -26,6 +26,7 @@ const DataTable: React.FC<DataTableProps> = ({
   expandedRows,
   onToggleExpand,
   onRowClick,
+  onSelectionModelChange,
   paginationMode = 'client',
 }) => {
   const gridColumns: GridColDef[] = [
@@ -109,10 +110,10 @@ const DataTable: React.FC<DataTableProps> = ({
             paginationMode={paginationMode}
             paginationModel={{
               pageSize: rowsPerPage,
-              page: page,
+              page: page - 1, // Convert 1-based to 0-based
             }}
             onPaginationModelChange={({ page, pageSize }) => {
-              onPageChange?.(null, page);
+              onPageChange?.(null, page + 1); // Convert back to 1-based
               onRowsPerPageChange?.({
                 target: { value: String(pageSize) },
               } as React.ChangeEvent<HTMLInputElement>);
@@ -120,6 +121,7 @@ const DataTable: React.FC<DataTableProps> = ({
             pageSizeOptions={[5, 10, 15, 20, 50, 100]}
             checkboxSelection
             disableRowSelectionOnClick
+            onRowSelectionModelChange={(newSelection) => onSelectionModelChange?.(newSelection)}
             slots={{ toolbar: GridToolbar }}
             sx={{
               '& .MuiDataGrid-columnHeaderTitle': {
