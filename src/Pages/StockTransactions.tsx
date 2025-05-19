@@ -115,8 +115,6 @@ const StockTransactions: React.FC = () => {
   });
 
   const totalRowsToShow = totalCount + duplicateTxnCount + expandedSubRows;
-console.log("totalRowsToShow:",totalRowsToShow);
-
 
   const handleStartDateChange = (newDate: Date | null) => {
     if (newDate) {
@@ -192,7 +190,6 @@ console.log("totalRowsToShow:",totalRowsToShow);
         return col;
     }
   });
-  console.log("page: ",page);
 
   return (
     <Box p={3}>
