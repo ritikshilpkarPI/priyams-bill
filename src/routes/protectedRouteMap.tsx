@@ -130,6 +130,11 @@ export const protectedRouteMap: Record<string, RouteConfig> = {
       element: <AddExpiredItem />,
       index: true,
     },
+    UPDATE_EXPIRED_ITEM: {
+      path: ROUTES.UPDATE_EXPIRY_ITEMS_BATCH,
+      element: <AddExpiredItem />,
+      index: true,
+    },
     EXPIRED_ITEM_LIST: {
       path: ROUTES.EXPIRED_ITEM_LIST,
       element: <ExpiredItemList />,

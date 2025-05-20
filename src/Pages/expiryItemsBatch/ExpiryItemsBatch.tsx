@@ -9,7 +9,7 @@ import {
 import { setExpiredItemsBatch } from 'src/redux/expiredItemsBatch/ExpiredItemsBatchSlice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 
 const ExpiryItemsBatch = () => {
@@ -27,6 +27,8 @@ const ExpiryItemsBatch = () => {
     page: 0,
     pageSize: 10,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const newPage = expiredItemsBatch?.pagination?.page;
@@ -163,6 +165,21 @@ const ExpiryItemsBatch = () => {
           }}
         >
           {row._id === expandedRowId ? 'Hide' : 'Show'}
+        </Button>
+      ),
+    },
+    {
+      key: 'edit',
+      label: 'Action',
+      render: (row: any) => (
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => 
+            navigate(`/addExpiredItem/${row._id}`)
+          }
+        >
+          Edit Expiry Batch
         </Button>
       ),
     },
