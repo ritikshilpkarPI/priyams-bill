@@ -7,7 +7,7 @@ const initialState: TransactionState = {
   transformedData: [],
   expandedRows: [],
   isLoading: false,
-  page: 0,
+  page: 1,
   rowsPerPage: 10, 
   startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
   endDate: new Date(),
