@@ -26,7 +26,7 @@ import dayjs from 'dayjs';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
-import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch, removeBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
+import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch, removeBatch, updateItemsWithExpiryBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
 import { selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 
 export const useStyles = createStyles((theme) => ({
@@ -154,9 +154,17 @@ interface ItemData {
 
 interface Props {
   items?: ItemData[];
+  expiryBatchData?: {
+    itemId: string;
+    expiryDate: Date;
+    quantity: number;
+    purchaseOrderId: string;
+    costPricePerUnit: number;
+    totalCostPrice: number;
+  }[];
 }
 
-export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
+export const ExpiredItemPOTable: React.FC<Props> = ({ items = [], expiryBatchData }) => {
   const { classes, cx } = useStyles();
   const dispatch = useDispatch();
   const expiryBatchMap = useSelector(
@@ -223,16 +231,17 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     setEditingBatches((prev) => new Set(prev).add(batch._id));
 
     const reduxBatches = expiryBatchMap[itemId] || [];
-    const reduxRec = reduxBatches.find((b) => b.shelfId === batch._id);
+    const reduxRec = reduxBatches?.find((b) => b.shelfId === batch._id);
     const purch = items
-      .find((i) => i._id === itemId)
-      ?.purchaseData.find((p) => p.purchaseOrderId === batch.purchaseOrderId);
+      ?.find((i) => i._id === itemId)
+      ?.purchaseData?.find((p) => p.purchaseOrderId === batch.purchaseOrderId);
+      
 
     setDrafts((prev) => ({
       ...prev,
       [batch._id]: {
         manufacturingDate:
-          reduxRec?.manufacturingDate ?? new Date(batch.manufacturingDate),
+          reduxRec?.manufacturingDate ?? new Date(batch?.manufacturingDate),
         expiryDate:
           reduxRec?.expiryDate ?? new Date(batch.expiryDate),
         currentStock:
@@ -272,19 +281,27 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     itemId: string,
     shelfId: string,
     dealerName?: string,
-    dealerId?: string
+    newDealerId?: string
   ) => {
     e.stopPropagation();
     const data = drafts[shelfId];
     if (!data) return;    
+   
+
+    const allUnchecked = Object.values(expiryBatchMap).every(batches => {
+      return batches.every(b => !b.checked);
+    });     
     
-    if (dealerId && dealerNameInExpiryBatch && dealerId !== dealerNameInExpiryBatch) {
+    allUnchecked && dispatch(setDealerIdToBatch({ dealerId: '', dealerName: '' }));
+
+    
+    if (!allUnchecked && dealerId && newDealerId && dealerId !== newDealerId) {
       window.alert('You cannot add a PO from a different dealer');
       return;
     } 
     
-    if (dealerId && dealerId !== 'N/A') {
-      dispatch(setDealerIdToBatch({ dealerId: dealerId, dealerName }));
+    if (newDealerId && newDealerId !== 'N/A') {
+      dispatch(setDealerIdToBatch({ dealerId: newDealerId, dealerName }));
     }
 
 
@@ -294,7 +311,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
         shelfId,
         fields: {
           manufacturingDate: data.manufacturingDate,
-          expiryDate: data.expiryDate,
+          expiryDate: data?.expiryDate,
           quantity: data.currentStock,
           costPrice: data.costPrice,
           checked: true,
@@ -348,6 +365,25 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     if (items.length > 0) {
      dispatch(setItems({ items }));
     }
+    
+    if (expiryBatchData) {
+      const itemWiseTotalCost: {
+        itemId: string;
+        totalCostPrice: number;
+      }[] = [];
+      let expiryBatchCost = 0;
+
+      for (const item of expiryBatchData) {
+        const totalCostPrice = item.costPricePerUnit * item.quantity;
+        expiryBatchCost += totalCostPrice;
+
+        itemWiseTotalCost.push({
+          itemId: item.itemId,
+          totalCostPrice,
+        });
+      }      
+      dispatch(updateItemsWithExpiryBatch({ items: expiryBatchData}));
+    }
  },[items, dispatch]);
 
   if (!items.length) {
@@ -366,7 +402,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
       if (value) {
         dispatch(setDealerIdToBatch({dealerId: value, dealerName: dealers.find((dealer) => dealer._id === value)?.dealerName}));
       } 
-    }
+    } 
   
   return (
     <ScrollArea
@@ -416,15 +452,16 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     _id: b.shelfId,
     purchaseOrderId: b.purchaseOrderId,
     entryDate: b.entryDate,
-    manufacturingDate: b.manufacturingDate,
-    expiryDate: b.expiryDate,
+    manufacturingDate: b?.manufacturingDate,
+    expiryDate: b?.expiryDate,
     initialStockQuantity: b.initialStockQuantity,
     currentStockQuantity: b.quantity,
     checked: b.checked,
     costPrice: b.costPrice,
   }));
             const findPurchase = (poId: string) =>
-              item.purchaseData.find((p) => p.purchaseOrderId === poId);
+              item.purchaseData?.find((p) => p.purchaseOrderId === poId);
+            
 
             return (
               <Fragment key={item._id}>
@@ -492,7 +529,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                         <ScrollArea
                           type="always"
                           scrollbarSize={6}
-                          style={{ height: 300, width: '100%' }}
+                          style={{ width: '100%' }}
                         >
                           <Table
                             withColumnBorders
@@ -588,7 +625,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                     <TextInput
                                       size="xs"
                                       type="date"
-                                      value={dayjs(newBatchDraft.expiryDate).format(
+                                      value={dayjs(newBatchDraft?.expiryDate).format(
                                         'YYYY-MM-DD'
                                       )}
                                       onChange={(e) =>
@@ -646,17 +683,17 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                 const purch = findPurchase(batch.purchaseOrderId ?? '');
 
                                 const mfg = isEdit
-                                  ? draft.manufacturingDate
+                                  ? draft?.manufacturingDate
                                   : reduxRec?.manufacturingDate ??
-                                    new Date(batch.manufacturingDate);
+                                    new Date(batch?.manufacturingDate);
                                 const exp = isEdit
-                                  ? draft.expiryDate
+                                  ? draft?.expiryDate
                                   : reduxRec?.expiryDate ??
-                                    new Date(batch.expiryDate);
+                                    new Date(batch?.expiryDate);
                                 const qty = isEdit
-                                  ? draft.currentStock
+                                  ? draft?.currentStock
                                   : reduxRec?.quantity ??
-                                    batch.currentStockQuantity;
+                                    batch?.currentStockQuantity;
                                 const checked = reduxRec?.checked;
                                 const wasUpdated = updatedRows.has(batch._id);
 
@@ -712,7 +749,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                           size="xs"
                                           min={0}
                                           precision={2}
-                                          value={draft.costPrice}
+                                          value={draft?.costPrice}
                                           onClick={(e) => e.stopPropagation()}
                                           onChange={(v) =>
                                             setDrafts((p) => ({
