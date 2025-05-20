@@ -23,8 +23,8 @@ import {
   setItemCount,
   updateItem,
   setSelectedItem,
+  setSelectedItemsIds
 } from '../../redux/storeInventory/StoreInventoryState';
-import { setSelectedItemsIds } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
   getAllStoresAPI,
   getItemsFromStoreInventoryAPI,
@@ -44,11 +44,8 @@ import { Typography } from '@mui/material';
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { selectedStoreId, stores, items, itemCount, selecteditem, isLoading } =
+  const { selectedStoreId, stores, items, itemCount, selecteditem, isLoading, selectedItemsIds } =
     useSelector((state: RootState) => state.storeInventory);
-  const { selectedItemsIds } = useSelector(
-    (state: RootState) => state.storeInventoryManagement
-  );
 
   const [itemsId, setItemsId] = useState<string | null>(null);
   const [firstOpened, firstHandlers] = useDisclosure(false);
@@ -183,6 +180,10 @@ const StoreInventory: React.FC = () => {
     },
   ];
   
+  useEffect(()=>{
+    dispatch(setSelectedItemsIds([]));
+  },[])
+  
   return (
     <Box className="expired-items-card">
         <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
@@ -244,6 +245,9 @@ const StoreInventory: React.FC = () => {
             onRowsPerPageChange={handleRowsPerPageChange}
             rowCount={itemCount}
             paginationMode="server"
+            onSelectionModelChange={(selectedIds) => {
+              dispatch(setSelectedItemsIds(selectedIds as string[]));
+            }}
           />
         </Grid.Col>
       </Grid>
