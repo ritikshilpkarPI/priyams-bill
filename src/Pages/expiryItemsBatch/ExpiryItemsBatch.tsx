@@ -9,7 +9,7 @@ import {
 import { setExpiredItemsBatch } from 'src/redux/expiredItemsBatch/ExpiredItemsBatchSlice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 
 const ExpiryItemsBatch = () => {
@@ -24,9 +24,11 @@ const ExpiryItemsBatch = () => {
   );
 
   const [pagination, setPagination] = useState({
-    page: 0,
+    page: 1,
     pageSize: 10,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const newPage = expiredItemsBatch?.pagination?.page;
@@ -56,7 +58,7 @@ const ExpiryItemsBatch = () => {
           setExpiredItemsBatch({
             data: [response.data],
             pagination: {
-              page: 0,
+              page: 1,
               limit: 10,
               totalPages: 0,
               total: 0,
@@ -82,7 +84,7 @@ const ExpiryItemsBatch = () => {
           setExpiredItemsBatch({
             data: response.data,
             pagination: {
-              page: response.pagination.page - 1 || 0,
+              page: response.pagination.page || 0,
               limit: response.pagination.limit || 10,
               totalPages: response.pagination.totalPages || 0,
               total: response.pagination.total || 0,
@@ -163,6 +165,21 @@ const ExpiryItemsBatch = () => {
           }}
         >
           {row._id === expandedRowId ? 'Hide' : 'Show'}
+        </Button>
+      ),
+    },
+    {
+      key: 'edit',
+      label: 'Action',
+      render: (row: any) => (
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => 
+            navigate(`/addExpiredItem/${row._id}`)
+          }
+        >
+          Edit Expiry Batch
         </Button>
       ),
     },

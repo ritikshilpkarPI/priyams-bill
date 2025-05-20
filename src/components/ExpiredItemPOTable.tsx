@@ -272,19 +272,27 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     itemId: string,
     shelfId: string,
     dealerName?: string,
-    dealerId?: string
+    newDealerId?: string
   ) => {
     e.stopPropagation();
     const data = drafts[shelfId];
     if (!data) return;    
+   
+
+    const allUnchecked = Object.values(expiryBatchMap).every(batches => {
+      return batches.every(b => !b.checked);
+    });     
     
-    if (dealerId && dealerNameInExpiryBatch && dealerId !== dealerNameInExpiryBatch) {
+    allUnchecked && dispatch(setDealerIdToBatch({ dealerId: '', dealerName: '' }));
+
+    
+    if (!allUnchecked && dealerId && newDealerId && dealerId !== newDealerId) {
       window.alert('You cannot add a PO from a different dealer');
       return;
     } 
     
-    if (dealerId && dealerId !== 'N/A') {
-      dispatch(setDealerIdToBatch({ dealerId: dealerId, dealerName }));
+    if (newDealerId && newDealerId !== 'N/A') {
+      dispatch(setDealerIdToBatch({ dealerId: newDealerId, dealerName }));
     }
 
 
@@ -492,7 +500,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                         <ScrollArea
                           type="always"
                           scrollbarSize={6}
-                          style={{ height: 300, width: '100%' }}
+                          style={{ width: '100%' }}
                         >
                           <Table
                             withColumnBorders

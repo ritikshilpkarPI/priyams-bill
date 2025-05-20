@@ -7,6 +7,7 @@ const initialState: StoreInventoryStateType = {
   stores: [],
   selecteditem: null,
   isLoading: false,
+  selectedItemsIds: []
 };
 
 const storeInventorySlice = createSlice({
@@ -54,6 +55,9 @@ const storeInventorySlice = createSlice({
     clearItems: (state) => {
       state.items = [];
     },
+    setSelectedItemsIds: (state, action: PayloadAction<string[]>) => {
+      state.selectedItemsIds = action.payload;
+    },
   },
 });
 
@@ -66,6 +70,7 @@ export const {
   setSelectedItem,
   setLoading,
   clearItems,
+  setSelectedItemsIds,
 } = storeInventorySlice.actions;
 
 export default storeInventorySlice.reducer;
