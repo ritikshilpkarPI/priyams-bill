@@ -9,14 +9,15 @@ import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { StoreSelect } from 'src/components/StoreSelect';
-import { addNewExpiredItemsBatchAPI, getAllDealersAPI, itemPurchaseBatches } from 'src/utils/apiUtils';
+import { addNewExpiredItemsBatchAPI, getAllDealersAPI, getExpiryItemsBatchByIdAPI, itemPurchaseBatches } from 'src/utils/apiUtils';
 import { string } from 'joi';
 import { InventoryRow } from 'src/types';
 import { ExpiredItemPOTable } from 'src/components/ExpiredItemPOTable';
 import { toast } from 'react-toastify';
 import { selectDealerLoading, selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 import { setDealers, setDealersLoading } from 'src/redux/dealerlist/dealerSlice';
-import { setDealerIdToBatch } from 'src/redux/ExpiryBatch/expiryBatchSlice';
+import { setBoxIdToBatch, setDealerIdToBatch } from 'src/redux/ExpiryBatch/expiryBatchSlice';
+import { useParams } from 'react-router';
 
 
 
@@ -171,6 +172,37 @@ const AddExpiredItem = () => {
     } 
   }
 
+  const params = useParams();
+  const { id } = params as { id: string };
+  const [expiryBatchData, setExpiryBatchData] = useState<any>(null);
+
+useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await getExpiryItemsBatchByIdAPI(id);
+        
+        if (res.success) {
+        const itemsArray = res?.data?.items?.map((item: any)=> {
+          return item?.itemId
+        })
+        setItems(itemsArray);
+        setExpiryBatchData(res?.data?.items);
+       dispatch(setDealerIdToBatch({
+          dealerId: res?.data?.dealerId?._id,
+          dealerName: res?.data?.dealerId?.dealerName,
+        }));
+        dispatch(setBoxIdToBatch({ boxId: res?.data?.boxId }));
+        setSelectedDealer(res?.data?.dealerId?._id);
+      }
+        else toast('Failed to load batch. Please try again.', { type: 'error' })
+      } catch {
+        toast('Error fetching batch. Please try again.', { type: 'error' })
+      } finally {
+      }
+    })()
+  }, [id])
+
+  
 
   return (
     <Flex
@@ -241,7 +273,7 @@ const AddExpiredItem = () => {
             
         
           <Grid.Col span={12}>
-            <ExpiredItemPOTable items={items as any} />
+            <ExpiredItemPOTable items={items as any} expiryBatchData={expiryBatchData} />
           </Grid.Col>
 
         <Grid.Col span={false ? 12 : 4}>
