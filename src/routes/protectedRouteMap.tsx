@@ -25,6 +25,7 @@ import {
   StoreInventory,
   StockTransactions,
   ExpiryItemsBatch,
+  StockTransactionsPage
 } from '../Pages';
 
 interface RouteConfig {
@@ -172,6 +173,11 @@ export const protectedRouteMap: Record<string, RouteConfig> = {
     STORE_TRANSACTIONS: {
       path: ROUTES.STORE_TRANSACTIONS,
       element: <StockTransactions />,
+      index: true,
+    },
+    STOCK_TRANSACTIONS: {
+      path: ROUTES.STOCK_TRANSACTIONS,
+      element: <StockTransactionsPage />,
       index: true,
     },
   };
