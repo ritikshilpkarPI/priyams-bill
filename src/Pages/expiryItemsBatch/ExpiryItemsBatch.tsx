@@ -9,7 +9,7 @@ import {
 import { setExpiredItemsBatch } from 'src/redux/expiredItemsBatch/ExpiredItemsBatchSlice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 
 const ExpiryItemsBatch = () => {
@@ -24,9 +24,11 @@ const ExpiryItemsBatch = () => {
   );
 
   const [pagination, setPagination] = useState({
-    page: 0,
+    page: 1,
     pageSize: 10,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const newPage = expiredItemsBatch?.pagination?.page;
@@ -56,7 +58,7 @@ const ExpiryItemsBatch = () => {
           setExpiredItemsBatch({
             data: [response.data],
             pagination: {
-              page: 0,
+              page: 1,
               limit: 10,
               totalPages: 0,
               total: 0,
@@ -82,7 +84,7 @@ const ExpiryItemsBatch = () => {
           setExpiredItemsBatch({
             data: response.data,
             pagination: {
-              page: response.pagination.page - 1 || 0,
+              page: response.pagination.page || 0,
               limit: response.pagination.limit || 10,
               totalPages: response.pagination.totalPages || 0,
               total: response.pagination.total || 0,
@@ -101,7 +103,7 @@ const ExpiryItemsBatch = () => {
     if (page >= 0) {
       const callBack = (prev: any) => ({ ...prev, page });
       pagination ? setPagination(callBack) : setPagination(callBack);
-      fetchGetAllExpiryItemsBatchAPI(page + 1);
+      fetchGetAllExpiryItemsBatchAPI(page);
     }
   };
 
@@ -151,6 +153,7 @@ const ExpiryItemsBatch = () => {
         </Button>
       ),
     },
+    
     {
       key: 'items',
       label: 'Items',
@@ -165,6 +168,42 @@ const ExpiryItemsBatch = () => {
         </Button>
       ),
     },
+    {
+      key: 'edit',
+      label: 'Action',
+      render: (row: any) => (
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => 
+            navigate(`/addExpiredItem/${row._id}`)
+          }
+        >
+          Edit Expiry Batch
+        </Button>
+      ),
+    },
+    {
+      key: 'addClearance',
+      label: 'Action',
+      render: (row: any) => (
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => 
+            window.open(
+              `/expiry-items-batch/${row._id}/add-clearance`,
+              '_blank',
+              'noopener,noreferrer'
+            )
+          }
+        >
+          Add Clearance
+        </Button>
+      ),
+    },
+
+
   ];
   
   const rows = expiredItemsBatch.data.map((batch) => ({
@@ -172,7 +211,7 @@ const ExpiryItemsBatch = () => {
     dealerName: batch.dealerId?.dealerName ?? '',
     items: batch.items?.map((item) => {
       const matchedCost = batch.itemWiseTotalCost.find(
-        (itemWise) => itemWise.itemId._id === item.itemId._id
+        (itemWise) => itemWise.itemId?._id === item.itemId?._id
       );
       
       return {
@@ -253,7 +292,8 @@ const ExpiryItemsBatch = () => {
           <DataTable
             columns={[
               { key: 'status', label: 'Status' },
-              { key: 'stafId', label: 'Staff ID' },
+              { key: 'staffId', label: 'Staff ID', render: (row) => row.staffId?.name ?? '–',
+              },
               { key: 'dateTime', label: 'Date Time' },
               { key: 'browser', label: 'Browser' },
               { key: 'os', label: 'OS' },

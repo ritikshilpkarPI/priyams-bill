@@ -673,6 +673,7 @@ declare global {
     onRowClick?: GridEventListener<'rowClick'>;
     expandedRows?: string[];
     onToggleExpand?: (id: string) => void; 
+    onSelectionModelChange?: (selectionModel: GridRowSelectionModel) => void;
   }
   interface PurchaseListApprovalProps {
     allPurchaseList: any[];
@@ -1096,6 +1097,7 @@ declare global {
     stores: any[];
     selecteditem: StoreInventoryItemType | null;
     isLoading: boolean;
+    selectedItemsIds: string[];
   }
 
   interface InventoryPurchaseOrderEntry {
@@ -1140,6 +1142,22 @@ declare global {
     isLoading: boolean;
     cache: Record<string, InventoryTableRow[]>;
     selectedItem: InventoryPurchaseOrderItem | null
+  }
+
+  interface PaginationStrategy {
+    limitParamName: string;
+    offsetParamName: string;
+    offsetType: 'page' | 'skip';
+    startOffsetValue: number; // e.g., page 2 if first page was 1, or skip 100 if first 100 items fetched
+  }
+  
+  interface ExecutePaginatedAPICallsParams<T> {
+    apiFnToGetData: (params: Record<string, any>) => Promise<T[]>; // Takes dynamic params, returns data array
+    totalObjectsCount: number;
+    itemsPerCall: number;
+    paginationStrategy: PaginationStrategy;
+    parallelCalls?: number;
+    maxRetriesPerCall?: number;
   }
 
 }
@@ -1193,11 +1211,13 @@ export interface PurchaseEntry {
   poApproveTime: string;
   expiryDetails: ExpiryDetail[];
   initialItemQuantity: number;
+  dealerName: string;
 }
 
 export interface InventoryRow {
   staticData: StaticItemData;
   purchases: PurchaseEntry[];
+  _id: string;
 }
 
 export type InventoryTableRow = Omit<StaticItemData, '_id'> & {

@@ -325,7 +325,7 @@ const StoreInventoryManagement: React.FC = () => {
     dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId, transactionSource.sourceType ));
   }, [transactionSource.sourceEntityId]);
 
-  const getStockTransactions = async () => {
+  const getStockTransactions = async (transactionId: string) => {
     try {
       const response = await getStockTransactionsApi(transactionId ?? '');
       if (response.success) {
@@ -337,8 +337,10 @@ const StoreInventoryManagement: React.FC = () => {
   };
 
   useEffect(() => {
-    const response = getStockTransactions();
-  }, []);
+    if (transactionId) {
+      getStockTransactions(transactionId);
+    }
+  }, [transactionId]);
 
   const [confirmZeroQty, setConfirmZeroQty] = useState(false);
 

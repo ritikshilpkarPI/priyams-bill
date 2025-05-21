@@ -56,6 +56,8 @@ const StoreRoutes = () => {
           component={CustomerBill}
         />
           <Route exact path="/addExpiredItem" component={AddExpiredItem} />
+          <Route exact path="/addExpiredItem/:id" component={AddExpiredItem} />
+
           <Route exact path="/expiredItemList" component={ExpiredItemList} />
         <Fragment>
           <ProtectedRoutes>

@@ -13,7 +13,8 @@ import { parseJwt } from './cookie';
 import Cookies from 'js-cookie';
 import MESSAGES from './constants/messages';
 import { CONSTANTS } from '../constants/constants';
-
+import { getServerBaseUrl } from './getServerBaseUrl';
+import axios from 'axios';
 
 export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string, sourceType?:string ) => {
   try {
@@ -553,6 +554,40 @@ export const itemPurchaseBatchesAPI = async ({
   }
 };
 
+export const itemPurchaseBatchesWebAPI = async ({
+  page,
+  limit,
+  itemId,
+  itemNameOrBarcode,
+}: {
+  page?: number;
+  limit?: number;
+  itemId?: string;
+  itemNameOrBarcode?: string;
+}) => {
+  try {
+    const baseUrl = getServerBaseUrl();
+
+    const params: Record<string, string | number> = {};
+    if (itemId) params['item_id'] = itemId;
+    if (itemNameOrBarcode) params['itemNameOrBarcode'] = itemNameOrBarcode;
+    if (typeof page === 'number') params['page'] = page;
+    if (typeof limit === 'number') params['limit'] = limit;
+
+    const response = await axios.get(`${baseUrl}${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}`, {
+      params,
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error: any) {
+    return {
+      isError: true,
+      error: error.response?.data || error.message || 'Unknown error',
+    };
+  }
+};
+
 
 export const getItemsFromStoreInventoryAPI = async (  
   storeId: string, 
@@ -815,6 +850,19 @@ export const getStaffByToken = async ()=>{
   })
 };
 
+
+export const addNewExpiredItemsBatchAPI = async (data: any) => {
+  try {    
+    const response = await postAPI({
+      path: API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEMS_BATCH,
+      data,
+    });
+
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
 export const getBillFeedAPI = async (
   page?: number,
   size?: number,
@@ -831,4 +879,28 @@ export const getBillFeedAPI = async (
   } catch (error) {
     return { isError: true, error };
   }
-};
+}
+
+
+
+export const markExpiryItemsBatchClearedAPI = async (
+  id: string,
+  data: {
+    clearanceDetails: any
+    statusChangeRemark?: string
+    staffId: string
+    browser: string
+    os: string
+    ipReferrer: string
+  }
+) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.EXPIRED_ITEMS_BATCH.MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID}/${id}`,
+      data,
+    })
+    return response
+  } catch (error) {
+    return { isError: true, error }
+  }
+}

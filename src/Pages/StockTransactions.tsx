@@ -52,7 +52,7 @@ const StockTransactions: React.FC = () => {
       const storeIds = storeData._id ? [storeData._id] : [];
       result = await getItemTransactions({
         storeIds,
-        page: page + 1,
+        page: page,
         limit: rowsPerPage,
         itemIds: selectedItemsIds
       });
@@ -61,7 +61,7 @@ const StockTransactions: React.FC = () => {
         startDate,
         endDate,
         storeId: storeData._id,
-        page: targetPage + 1, 
+        page: targetPage, 
         limit,
       });
     }

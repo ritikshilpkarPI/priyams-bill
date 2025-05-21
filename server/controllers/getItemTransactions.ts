@@ -46,7 +46,9 @@ export const getItemTransactions = async (
       .limit(limitNumber)
       .populate('transactionItems.itemId')
       .populate({ path: 'source.sourceStaff', select: '-password' })
+      .populate({ path: 'source.sourceEntityId' })
       .populate({ path: 'destination.destinationStaff', select: '-password' })
+      .populate({ path: 'destination.destinationEntityId' })
       .lean();
 
     const totalCount = await StockTransactionModel.countDocuments(filter);
