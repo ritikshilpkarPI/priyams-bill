@@ -20,15 +20,15 @@ interface FullAPIResponse<T> {
   isError?: boolean;
 }
 
-interface DownloadWarehouseItemCSVButtonProps {
-  sourseType: string;
+interface DownloadItemCSVButtonProps {
+  sourceType: string;
   storeId?: string;
 }
-export const DownloadWarehouseItemCSVButton: React.FC<DownloadWarehouseItemCSVButtonProps> = ({
-  sourseType,
+export const DownloadItemCSVButton: React.FC<DownloadItemCSVButtonProps> = ({
+  sourceType,
   storeId,
 }: {
-  sourseType?: string;
+  sourceType?: string;
   storeId?: string;
 }) => {
   const [loading, setLoading] = useState(false);
@@ -41,10 +41,10 @@ export const DownloadWarehouseItemCSVButton: React.FC<DownloadWarehouseItemCSVBu
     setError(null);
 
     try {
-      const allItems = await fetchAllItemsInBatches(sourseType, storeId);
+      const allItems = await fetchAllItemsInBatches(sourceType, storeId);
 
       if (allItems && allItems.length > 0) {
-        const csv = sourseType === CONSTANTS.STORE ? generateStoreCSV(allItems) : generateWarehouseCSV(allItems);
+        const csv = sourceType === CONSTANTS.STORE ? generateStoreCSV(allItems) : generateWarehouseCSV(allItems);
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -80,7 +80,7 @@ export const DownloadWarehouseItemCSVButton: React.FC<DownloadWarehouseItemCSVBu
 
 
 export async function fetchAllItemsInBatches<T = any>(
-  sourseType?: string,
+  sourceType?: string,
   storeId?: string,
   itemsPerCallOverride: number = DEFAULT_LIMIT,
   parallelCallsOverride: number = DEFAULT_PARALLEL_CALLS
@@ -89,7 +89,7 @@ export async function fetchAllItemsInBatches<T = any>(
   let totalItemsFromAPI = 0;
   let initialPageData: T[] = [];
   const initialPageToFetch = 1;
-  const isStore = sourseType === 'STORE';
+  const isStore = sourceType === 'STORE';
 
   let initialResponse: FullAPIResponse<T>;
 

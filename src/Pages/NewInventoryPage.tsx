@@ -18,7 +18,7 @@ import { Grid } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import ItemSearchInput from 'src/components/itemSearchInput/ItemSearchInput';
 import { CONSTANTS } from 'src/constants/constants';
-import { DownloadWarehouseItemCSVButton } from 'src/components/DownloadWarehouseItemCSVButton';
+import { DownloadItemCSVButton } from 'src/components/DownloadItemCSVButton';
 
 const NewInventoryPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -124,8 +124,8 @@ const NewInventoryPage: React.FC = () => {
           />
         </Grid.Col>
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left',display:"flex", alignItems: "end", justifyContent:"end"}}>
-          <DownloadWarehouseItemCSVButton
-           sourseType={CONSTANTS.WAREHOUSE}
+          <DownloadItemCSVButton
+           sourceType={CONSTANTS.WAREHOUSE}
            />
         </Grid.Col>
         <Grid.Col span={12}>

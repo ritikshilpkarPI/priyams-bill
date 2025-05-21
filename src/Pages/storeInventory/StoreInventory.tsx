@@ -40,7 +40,7 @@ import { useNavigate } from 'react-router';
 import { CONSTANTS } from 'src/constants/constants';
 import ItemSearchInput from 'src/components/itemSearchInput/ItemSearchInput';
 import { Typography } from '@mui/material';
-import { DownloadWarehouseItemCSVButton } from 'src/components/DownloadWarehouseItemCSVButton';
+import { DownloadItemCSVButton } from 'src/components/DownloadItemCSVButton';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -219,8 +219,8 @@ const StoreInventory: React.FC = () => {
           </Button>
         </Grid.Col>
         <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left',display:"flex", alignItems: "end", justifyContent:"end"}}>
-          <DownloadWarehouseItemCSVButton
-          sourseType={CONSTANTS.STORE}
+          <DownloadItemCSVButton
+          sourceType={CONSTANTS.STORE}
           storeId = {storeId ?? ""}
           />
         </Grid.Col>
