@@ -554,41 +554,6 @@ export const itemPurchaseBatchesAPI = async ({
   }
 };
 
-export const itemPurchaseBatchesWebAPI = async ({
-  page,
-  limit,
-  itemId,
-  itemNameOrBarcode,
-}: {
-  page?: number;
-  limit?: number;
-  itemId?: string;
-  itemNameOrBarcode?: string;
-}) => {
-  try {
-    const baseUrl = getServerBaseUrl();
-
-    const params: Record<string, string | number> = {};
-    if (itemId) params['item_id'] = itemId;
-    if (itemNameOrBarcode) params['itemNameOrBarcode'] = itemNameOrBarcode;
-    if (typeof page === 'number') params['page'] = page;
-    if (typeof limit === 'number') params['limit'] = limit;
-
-    const response = await axios.get(`${baseUrl}${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}`, {
-      params,
-      withCredentials: true,
-    });
-
-    return response.data;
-  } catch (error: any) {
-    return {
-      isError: true,
-      error: error.response?.data || error.message || 'Unknown error',
-    };
-  }
-};
-
-
 export const getItemsFromStoreInventoryAPI = async (  
   storeId: string, 
   query: { size: number; page: number; itemNameOrBarcode: string }
