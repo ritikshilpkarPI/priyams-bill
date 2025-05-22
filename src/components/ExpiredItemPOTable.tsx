@@ -192,7 +192,7 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
     setEditingBatches((prev) => new Set(prev).add(batch._id));
 
     const reduxItemExpiryBatches = expiryBatchMap[itemId] || [];
-    const reduxRec = reduxItemExpiryBatches?.find((b) => b.shelfId === batch._id);
+    const reduxItemExpiryBatchRecord = reduxItemExpiryBatches?.find((b) => b.shelfId === batch._id);
     const purch = items
       ?.find((item) => item._id === itemId)
       ?.purchaseData?.find((purchaseOrder) => purchaseOrder.purchaseOrderId === batch.purchaseOrderId);
@@ -202,12 +202,12 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
       ...prev,
       [batch._id]: {
         manufacturingDate:
-          reduxRec?.manufacturingDate ?? new Date(batch?.manufacturingDate),
+        reduxItemExpiryBatchRecord?.manufacturingDate ?? new Date(batch?.manufacturingDate),
         expiryDate:
-          reduxRec?.expiryDate ?? new Date(batch.expiryDate),
+        reduxItemExpiryBatchRecord?.expiryDate ?? new Date(batch.expiryDate),
         currentStock:
-          reduxRec?.quantity ?? batch.currentStockQuantity,
-        costPrice: reduxRec?.costPrice ?? purch?.costPrice ?? 0,
+        reduxItemExpiryBatchRecord?.quantity ?? batch.currentStockQuantity,
+        costPrice: reduxItemExpiryBatchRecord?.costPrice ?? purch?.costPrice ?? 0,
       },
     }));
   };
