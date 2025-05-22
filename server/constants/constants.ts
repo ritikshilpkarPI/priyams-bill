@@ -29,5 +29,10 @@ export const CONSTANTS = Object.freeze({
       'dateOnBill',
       'purchasedItems',
       'dealerName'
-    ]
+    ],
+    TRANSACTIONS_STATUS:{
+      SOURCE_CREATED: "sourceCreated",
+      DESTINATION_UPDATED: "destinationUpdated",
+      APPROVED: "approved"
+    }
 })

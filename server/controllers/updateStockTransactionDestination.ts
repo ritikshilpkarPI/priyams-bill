@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { StockTransactionModel } from '../db-models/stock-transaction-model';
 import { MESSAGES } from '../constants/messages';
+import { CONSTANTS } from '../constants/constants';
 
 export const updateStockTransactionDestination = async (req: Request, res: Response) => {
   try {
@@ -19,6 +20,8 @@ export const updateStockTransactionDestination = async (req: Request, res: Respo
         message: MESSAGES.NOT_FOUND,
       });
     }
+
+    transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED;
 
     if (destination && transaction.destination) {
       const { destinationStaff, destinationEntityId, destinationType, destinationRemark } = destination;

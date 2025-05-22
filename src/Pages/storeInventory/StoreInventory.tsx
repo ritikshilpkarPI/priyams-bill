@@ -23,8 +23,8 @@ import {
   setItemCount,
   updateItem,
   setSelectedItem,
+  setSelectedItemsIds
 } from '../../redux/storeInventory/StoreInventoryState';
-import { setSelectedItemsIds } from '../../redux/storeInventoryManagement/storeInventoryManagementSlice';
 import {
   getAllStoresAPI,
   getItemsFromStoreInventoryAPI,
@@ -40,19 +40,17 @@ import { useNavigate } from 'react-router';
 import { CONSTANTS } from 'src/constants/constants';
 import ItemSearchInput from 'src/components/itemSearchInput/ItemSearchInput';
 import { Typography } from '@mui/material';
+import { DownloadItemCSVButton } from 'src/components/DownloadItemCSVButton';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { selectedStoreId, stores, items, itemCount, selecteditem, isLoading } =
+  const { selectedStoreId, stores, items, itemCount, selecteditem, isLoading, selectedItemsIds } =
     useSelector((state: RootState) => state.storeInventory);
-  const { selectedItemsIds } = useSelector(
-    (state: RootState) => state.storeInventoryManagement
-  );
 
   const [itemsId, setItemsId] = useState<string | null>(null);
   const [firstOpened, firstHandlers] = useDisclosure(false);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [mismatchloading, setMismatchloading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
@@ -183,6 +181,10 @@ const StoreInventory: React.FC = () => {
     },
   ];
   
+  useEffect(()=>{
+    dispatch(setSelectedItemsIds([]));
+  },[])
+  
   return (
     <Box className="expired-items-card">
         <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
@@ -217,6 +219,12 @@ const StoreInventory: React.FC = () => {
             View Transactions
           </Button>
         </Grid.Col>
+        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left',display:"flex", alignItems: "end", justifyContent:"end"}}>
+          <DownloadItemCSVButton
+          sourceType={CONSTANTS.STORE}
+          storeId = {storeId ?? ""}
+          />
+        </Grid.Col>
         <Grid.Col 
          sx={{
             display: 'flex',
@@ -244,6 +252,9 @@ const StoreInventory: React.FC = () => {
             onRowsPerPageChange={handleRowsPerPageChange}
             rowCount={itemCount}
             paginationMode="server"
+            onSelectionModelChange={(selectedIds) => {
+              dispatch(setSelectedItemsIds(selectedIds as string[]));
+            }}
           />
         </Grid.Col>
       </Grid>

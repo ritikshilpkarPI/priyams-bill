@@ -26,6 +26,7 @@ const DataTable: React.FC<DataTableProps> = ({
   expandedRows,
   onToggleExpand,
   onRowClick,
+  onSelectionModelChange,
   paginationMode = 'client',
 }) => {
   const gridColumns: GridColDef[] = [
@@ -120,6 +121,7 @@ const DataTable: React.FC<DataTableProps> = ({
             pageSizeOptions={[5, 10, 15, 20, 50, 100]}
             checkboxSelection
             disableRowSelectionOnClick
+            onRowSelectionModelChange={(newSelection) => onSelectionModelChange?.(newSelection)}
             slots={{ toolbar: GridToolbar }}
             sx={{
               '& .MuiDataGrid-columnHeaderTitle': {

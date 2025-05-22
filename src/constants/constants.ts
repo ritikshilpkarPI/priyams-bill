@@ -29,4 +29,9 @@ export const CONSTANTS = Object.freeze({
         PACKAGING: "Packaging",
         QUANTITY_UPDATE: "QUANTITY_UPDATE" 
     },
+    TRANSACTIONS_STATUS:{
+        SOURCE_CREATED: "sourceCreated",
+        DESTINATION_UPDATED: "destinationUpdated",
+        APPROVED: "approved"
+    },
 })
