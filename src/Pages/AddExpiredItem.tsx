@@ -20,6 +20,7 @@ import { setDealers, setDealersLoading } from 'src/redux/dealerlist/dealerSlice'
 import { setBoxIdToBatch, setDealerIdToBatch, setBatchStatus } from 'src/redux/ExpiryBatch/expiryBatchSlice';
 import { useParams } from 'react-router';
 import { isAdmin } from 'src/utils/isAdmin';
+import { ITEM_EXPIRY_BATCH_ACTION, ITEM_EXPIRY_BATCH_STATUS } from 'src/constants/constants';
 
 
 
@@ -183,31 +184,32 @@ const AddExpiredItem = () => {
   const { id } = params as { id: string };
   const [expiryBatchData, setExpiryBatchData] = useState<any>(null);
 
-useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await getExpiryItemsBatchByIdAPI(id);     
+  const getItemExpiryBatchData = async () => {
+    try {
+      const res = await getExpiryItemsBatchByIdAPI(id);     
 
-        if (res.success) {
-        const itemsArray = res?.data?.items?.map((item: any)=> {
-          return item?.itemId
-        })
-        setItems(itemsArray);
-        setExpiryBatchData(res?.data?.items);
-        dispatch(setDealerIdToBatch({
-          dealerId: res?.data?.dealerId?._id,
-          dealerName: res?.data?.dealerId?.dealerName,
-        }));
-        dispatch(setBoxIdToBatch({ boxId: res?.data?.boxId }));
-        dispatch(setBatchStatus({status: res?.data?.status}));
-        setSelectedDealer(res?.data?.dealerId?._id);
-      }
-        else toast('Failed to load batch. Please try again.', { type: 'error' })
-      } catch {
-        toast('Error fetching batch. Please try again.', { type: 'error' })
-      } finally {
-      }
-    })()
+      if (res.success) {
+      const itemsArray = res?.data?.items?.map((item: ItemSoldInterface)=> {
+        return item?.itemId
+      })
+      setItems(itemsArray);
+      setExpiryBatchData(res?.data?.items);
+      dispatch(setDealerIdToBatch({
+        dealerId: res?.data?.dealerId?._id,
+        dealerName: res?.data?.dealerId?.dealerName,
+      }));
+      dispatch(setBoxIdToBatch({ boxId: res?.data?.boxId }));
+      dispatch(setBatchStatus({status: res?.data?.status}));
+      setSelectedDealer(res?.data?.dealerId?._id);
+    }
+      else toast('Failed to load batch. Please try again.', { type: 'error' })
+    } catch {
+      toast('Error fetching batch. Please try again.', { type: 'error' })
+    } 
+  }
+
+useEffect(() => {
+  getItemExpiryBatchData();
   }, [id])
 
   const isAdminUser = isAdmin();
@@ -216,7 +218,7 @@ useEffect(() => {
  const updateBatch = async (actionType: string) => {
   
   try {
-    if (actionType === 'approve') {
+    if (actionType === ITEM_EXPIRY_BATCH_ACTION.APPROVE) {
       const res = await updateExpiredItemsBatchAPI(id,{
         status: 'APPROVED',
       });
@@ -226,7 +228,7 @@ useEffect(() => {
       toast('Expired items batch approved successfully');
       
     }
-    else if (actionType === 'draft') {
+    else if (actionType === ITEM_EXPIRY_BATCH_ACTION.DRAFT) {
       const res = await updateExpiredItemsBatchAPI(id,{
         status: 'DRAFTED',
       });
@@ -236,7 +238,7 @@ useEffect(() => {
       toast('Expired items batch drafted successfully');
       
     }
-    else if (actionType === 'update') {
+    else if (actionType === ITEM_EXPIRY_BATCH_ACTION.UPDATE) {
       const data = getCheckedExpiredItems(expiryBatchItems);
       const res = await updateExpiredItemsBatchAPI(id, {
         items: data.items,
@@ -340,17 +342,17 @@ useEffect(() => {
       :   
       <Flex gap="xs" align="center" mb="2px">
         <Grid.Col span={false ? 12 : 8}>
-          <Button loading={false} w="100%" onClick={()=> updateBatch('update')} disabled={Boolean(batchStatus) && batchStatus !== 'SAVED'}>
+          <Button loading={false} w="100%" onClick={()=> updateBatch(ITEM_EXPIRY_BATCH_ACTION.UPDATE)} disabled={Boolean(batchStatus) && batchStatus !== ITEM_EXPIRY_BATCH_STATUS.SAVED}>
             Update expired items batch
           </Button>
         </Grid.Col>
        {isAdminUser && <Grid.Col span={false ? 12 : 4}>
-          <Button loading={false} w="100%" onClick={()=> updateBatch('approve')} disabled={Boolean(batchStatus) && batchStatus !== 'DRAFTED'} color='green'>
+          <Button loading={false} w="100%" onClick={()=> updateBatch(ITEM_EXPIRY_BATCH_ACTION.APPROVE)} disabled={Boolean(batchStatus) && batchStatus !== ITEM_EXPIRY_BATCH_STATUS.DRAFTED} color='green'>
             Approve batch
           </Button>
         </Grid.Col>}
         <Grid.Col span={false ? 12 : 4}>
-          <Button loading={false} w="100%" onClick={()=> updateBatch('draft')} disabled={batchStatus === 'DRAFTED' || batchStatus === 'APPROVED' || batchStatus === 'CLEARED'}>
+          <Button loading={false} w="100%" onClick={()=> updateBatch(ITEM_EXPIRY_BATCH_ACTION.DRAFT)} disabled={batchStatus === ITEM_EXPIRY_BATCH_STATUS.DRAFTED || batchStatus === ITEM_EXPIRY_BATCH_STATUS.APPROVED || batchStatus === ITEM_EXPIRY_BATCH_STATUS.CLEARED}>
             Draft batch
           </Button>
         </Grid.Col>
