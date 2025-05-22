@@ -3,28 +3,36 @@ import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
 import { DealerModel } from "../db-models/dealer-model";
+import { getStoreInventoryModel } from "../db-models/storeInventory-model"; 
 const { CONSTANTS } = require('../constants/constants');
 
 const saveInventory = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction(); // Start transaction
   try {
-    const { newItems, purchaseOrderId, userDetail } = req.body; 
+    const {
+      newItems,
+      purchaseOrderId,
+      userDetail,
+      storeCode = 'pstr_1_462020_warehouse', 
+    } = req.body;
     const referer = req.headers.referer;
-    const status  = CONSTANTS.APPROVE
+    const status  = CONSTANTS.APPROVE;
     const user = req.user;
-    
+
+    const StoreInventory = getStoreInventoryModel(storeCode);
+
     // Extract valid item IDs
     const itemIds = newItems
       .map((item) => item.item_id)
       .filter((id) => mongoose.Types.ObjectId.isValid(id));
-      
+
     const newItemSkus = newItems.filter((item) => !item.item_id).map(item => item.sku);
-    
+
     const existingItemsWithIds = await Item.find({ _id: { $in: itemIds } }).lean().session(session);
     const existingItemWithSkus = await Item.find({ sku: { $in: newItemSkus } }).lean().session(session);
 
-    const existingItems = [...existingItemsWithIds, ...existingItemWithSkus]; 
+    const existingItems = [...existingItemsWithIds, ...existingItemWithSkus];
 
     // Create a map for quick lookup
     const existingItemsMap = new Map(
@@ -35,6 +43,8 @@ const saveInventory = async (req, res, next) => {
     let failedItems = [];
     let brandIds = [];
     let companyIds = [];
+    let storeBulkOps = []; 
+
     newItems.forEach((item) => {
       const newShelfDates = (item.expiryDates || []).map((exp, idx) => ({
         expiryDate: new Date(exp.date),
@@ -64,7 +74,7 @@ const saveInventory = async (req, res, next) => {
         companyName: item.companyName,
         subCategory: item.subCategory,
         flavourOrFeature: item.flavourOrFeature,
-        itemShelfDates: newShelfDates, 
+        itemShelfDates: newShelfDates,
         shelfLife: item.shelfLife,
         saleTime: item.saleTime,
         returnPolicyAvailable: item.returnPolicyAvailable,
@@ -82,6 +92,8 @@ const saveInventory = async (req, res, next) => {
       };
 
       const oldItem = existingItemsMap.get(item.item_id);
+      const qty = Number(item.stockQuantity) || 0;
+      const dateTime = new Date();
 
       if (oldItem) {
         let oldItemCost = Number(oldItem.itemCostPricePerUnit) || 0;
@@ -95,8 +107,8 @@ const saveInventory = async (req, res, next) => {
             ? (oldItemCost * oldStock + newItemCost * newStock) / totalStock
             : 0;
 
-        let newTotalItemQuantity =
-          itemDetails.itemPerUnitQuantity;
+        let newTotalItemQuantity = 
+        itemDetails.itemPerUnitQuantity;
 
         let newUseByDate = mergeExpiryDates(
           oldItem.useByDate,
@@ -121,14 +133,36 @@ const saveInventory = async (req, res, next) => {
         });
       } else {
         bulkOperations.push({
-          insertOne: { 
+          insertOne: {
             document: {
-            ...itemDetails,
-            createdFromPO: purchaseOrderId, 
-          }
-        },
+              ...itemDetails,
+              createdFromPO: purchaseOrderId,
+            },
+          },
         });
       }
+
+      // ─── STORE MIRROR: upsert into store-inventory ───
+      storeBulkOps.push({
+        updateOne: {
+          filter: { itemId: new mongoose.Types.ObjectId(item.item_id) },
+          update: {
+            $inc: { itemQuantityInStore: qty },
+            $push: {
+              itemStockChangeHistory: {
+                quantity: qty,
+                dateTime,
+                user: user._id,
+                changeType: "ADD",
+                changedFrom: "WAREHOUSE",
+                transactionId: purchaseOrderId,
+              },
+              itemShelfDates: { $each: newShelfDates },
+            },
+          },
+          upsert: true,
+        },
+      });
     });
 
     // Execute bulk operation if there are any updates
@@ -137,6 +171,12 @@ const saveInventory = async (req, res, next) => {
       bulkWriteResult = await Item.bulkWrite(bulkOperations, { session });
       console.log({ bulkWriteResult });
     }
+
+    // ─── STORE MIRROR: flush store ops ───
+    if (storeBulkOps.length > 0) {
+      await StoreInventory.bulkWrite(storeBulkOps, { session });
+    }
+
     const insertedIds = bulkWriteResult.insertedIds
       ? Object.values(bulkWriteResult.insertedIds)
       : [];
@@ -162,7 +202,6 @@ const saveInventory = async (req, res, next) => {
       await PurchaseOrder.bulkWrite(purchaseOrderItemBulkUpdates, { session });
     }
 
-    
     // Identify failed items
     failedItems = newItems.filter(
       (item) =>
