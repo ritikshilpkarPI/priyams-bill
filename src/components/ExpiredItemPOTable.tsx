@@ -411,16 +411,16 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
             );
             const additionalBatches = reduxItemExpiryBatches
   .filter((b) => !item.itemShelfDates.some((s) => s._id === b.shelfId))
-  .map((b) => ({
-    _id: b.shelfId,
-    purchaseOrderId: b.purchaseOrderId,
-    entryDate: b.entryDate,
-    manufacturingDate: b?.manufacturingDate,
-    expiryDate: b?.expiryDate,
-    initialStockQuantity: b.initialStockQuantity,
-    currentStockQuantity: b.quantity,
-    checked: b.checked,
-    costPrice: b.costPrice,
+  .map((itemExpiryBatch) => ({
+    _id: itemExpiryBatch.shelfId,
+    purchaseOrderId: itemExpiryBatch.purchaseOrderId,
+    entryDate: itemExpiryBatch.entryDate,
+    manufacturingDate: itemExpiryBatch?.manufacturingDate,
+    expiryDate: itemExpiryBatch?.expiryDate,
+    initialStockQuantity: itemExpiryBatch.initialStockQuantity,
+    currentStockQuantity: itemExpiryBatch.quantity,
+    checked: itemExpiryBatch.checked,
+    costPrice: itemExpiryBatch.costPrice,
   }));
             const findPurchase = (poId: string) =>
               item.purchaseData?.find((p) => p.purchaseOrderId === poId);
