@@ -154,9 +154,50 @@ const expiryBatchSlice = createSlice({
     batch.checked = false;
      }
     },
+    updateItemsWithExpiryBatch: (
+      state,
+      action: PayloadAction<{
+       items: {
+          itemId: {
+            _id: string
+          };
+          costPricePerUnit?: number;
+          purchaseOrderId?: {
+            _id: string
+          };
+          totalCostPrice?: number;
+          quantity?: number;
+          _id?: string;
+          expiryDate?: Date;
+       }[];
+        
+      }>
+    ) => {
+      const { items } = action.payload;
+      items.forEach((item) => {
+        const batches = state.items[item.itemId?._id];
+        if (!batches) return;
+        const batch = batches.find(b => b.shelfId === item._id);        
+        if (batch) {
+          batch.costPrice = item.costPricePerUnit;
+          batch.quantity = item.quantity || 0;
+          batch.purchaseOrderId = item.purchaseOrderId?._id || '';
+        } else {
+          batches.push({
+            shelfId: item._id || '',
+            manufacturingDate: new Date(),
+            expiryDate: item.expiryDate || new Date(),
+            quantity: item.quantity || 0,
+            checked: true,
+            costPrice: item.costPricePerUnit,
+            purchaseOrderId: item.purchaseOrderId?._id || '',
+          });
+        }
+      });
+    }
   },
 });
 
-export const { setItems, toggleChecked, updateBatch, addBatch, setDealerIdToBatch, setBoxIdToBatch, clearBatch, removeBatch } =
+export const { setItems, toggleChecked, updateBatch, addBatch, setDealerIdToBatch, setBoxIdToBatch, clearBatch, removeBatch, updateItemsWithExpiryBatch } =
   expiryBatchSlice.actions;
 export default expiryBatchSlice.reducer;
