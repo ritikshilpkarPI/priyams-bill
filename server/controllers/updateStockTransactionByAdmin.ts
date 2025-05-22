@@ -181,7 +181,7 @@ export const updateStockTransactionByAdmin = async (
 
       if (adminRemark !== undefined) {
         transaction.adminRemark = adminRemark;
-        transaction.transactionStatus = 'approved';
+        transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED;
       }
   
   
