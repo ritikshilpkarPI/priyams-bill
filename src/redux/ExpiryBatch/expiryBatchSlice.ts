@@ -17,6 +17,7 @@ export interface ExpiryBatchState {
   dealerId: string;
   boxId: string;
   dealerNameInExpiryBatch: string;
+  batchStatus: string;
 }
 
 const initialState: ExpiryBatchState = {
@@ -24,6 +25,7 @@ const initialState: ExpiryBatchState = {
   dealerId: '',
   boxId: '',
   dealerNameInExpiryBatch: '',
+  batchStatus: '',  
 };
 
 const expiryBatchSlice = createSlice({
@@ -194,10 +196,19 @@ const expiryBatchSlice = createSlice({
           });
         }
       });
+    },
+    setBatchStatus: (
+      state,
+      action: PayloadAction<{ status: string }>
+    ) => {
+      state.batchStatus = action.payload.status;
+    },
+    clearBatchStatus: (state) => {
+      state.batchStatus = '';
     }
   },
 });
 
-export const { setItems, toggleChecked, updateBatch, addBatch, setDealerIdToBatch, setBoxIdToBatch, clearBatch, removeBatch, updateItemsWithExpiryBatch } =
+export const { setItems, toggleChecked, updateBatch, addBatch, setDealerIdToBatch, setBoxIdToBatch, clearBatch, removeBatch, updateItemsWithExpiryBatch, setBatchStatus, clearBatchStatus } =
   expiryBatchSlice.actions;
 export default expiryBatchSlice.reducer;
