@@ -255,7 +255,7 @@ const StoreInventoryManagement: React.FC = () => {
     setLoading(true);
      await addNewStockTransactionsAPI(stockTransaction);
     setLoading(false);
-    navigate('/stockTransactions');
+    navigate('/stock-transactions');
     }
    
   };
@@ -325,7 +325,7 @@ const StoreInventoryManagement: React.FC = () => {
     dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId, transactionSource.sourceType ));
   }, [transactionSource.sourceEntityId]);
 
-  const getStockTransactions = async () => {
+  const getStockTransactions = async (transactionId: string) => {
     try {
       const response = await getStockTransactionsApi(transactionId ?? '');
       if (response.success) {
@@ -337,8 +337,10 @@ const StoreInventoryManagement: React.FC = () => {
   };
 
   useEffect(() => {
-    const response = getStockTransactions();
-  }, []);
+    if (transactionId) {
+      getStockTransactions(transactionId);
+    }
+  }, [transactionId]);
 
   const [confirmZeroQty, setConfirmZeroQty] = useState(false);
 
@@ -373,7 +375,7 @@ const StoreInventoryManagement: React.FC = () => {
       toast.success('Destination added successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
-      navigate('/stockTransactions');
+      navigate('/stock-transactions');
     }
   };
 
@@ -429,7 +431,7 @@ try {
    });
     if (response.success) {
     setLoading(false);
-    navigate('/stockTransactions');
+    navigate('/stock-transactions');
     toast.success('Transaction updated successfully');
     dispatch(resetStoreInventory());
     dispatch(resetStoreStockInventory());
