@@ -554,6 +554,41 @@ export const itemPurchaseBatchesAPI = async ({
   }
 };
 
+export const itemPurchaseBatchesWebAPI = async ({
+  page,
+  limit,
+  itemId,
+  itemNameOrBarcode,
+}: {
+  page?: number;
+  limit?: number;
+  itemId?: string;
+  itemNameOrBarcode?: string;
+}) => {
+  try {
+    const queryParams: Record<string, string> = {};
+    if (itemId) queryParams['item_id'] = String(itemId);
+    if (itemNameOrBarcode) queryParams['itemNameOrBarcode'] = String(itemNameOrBarcode);
+    if (typeof page === 'number') queryParams['page'] = String(page);
+    if (typeof limit === 'number') queryParams['limit'] = String(limit);
+
+    const queryString = new URLSearchParams(queryParams).toString();
+    const pathWithParams = `${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}${queryString ? '?' + queryString : ''}`;
+
+    const response = await getAPI({ 
+      path: pathWithParams 
+    });
+
+    // Return the entire response object, as it likely contains { data: T[], totalCount: number, ... }
+    return response; 
+  } catch (error: any) {
+    return {
+      isError: true,
+      error: error.response?.data || error.message || 'Unknown error',
+    };
+  }
+};
+
 export const getItemsFromStoreInventoryAPI = async (  
   storeId: string, 
   query: { size: number; page: number; itemNameOrBarcode: string }
