@@ -1223,6 +1223,52 @@ export type InventoryTableRow = Omit<StaticItemData, '_id'> & {
   purchases: PurchaseEntry[]; 
 };
 
+
+interface Shelf {
+  _id: string;
+  purchaseOrderId: string;
+  entryDate: string;
+  manufacturingDate: string;
+  expiryDate: string;
+  initialStockQuantity: number;
+  currentStockQuantity: number;
+}
+
+interface Purchase {
+  purchaseOrderId: string;
+  costPrice: number;
+  sellingPrice: number;
+  dealerId: {
+    dealerName: string;
+    _id: string;
+  };
+}
+
+export interface ItemData {
+  _id: string;
+  sku: string;
+  itemBrandName: string;
+  companyName: string;
+  itemShelfDates: Shelf[];
+  purchaseData: Purchase[];
+}
+
+export interface ExpiredItemTableProps {
+  items?: ItemData[];
+  expiryBatchData?: {
+    itemId: {
+      _id: string
+    };
+    expiryDate: Date;
+    quantity: number;
+    purchaseOrderId: {
+      _id: string
+    };
+    costPricePerUnit: number;
+    totalCostPrice: number;
+  }[];
+}
+
 export {};
 
 
