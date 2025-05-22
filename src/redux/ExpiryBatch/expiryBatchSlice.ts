@@ -158,9 +158,13 @@ const expiryBatchSlice = createSlice({
       state,
       action: PayloadAction<{
        items: {
-          itemId: any;
+          itemId: {
+            _id: string
+          };
           costPricePerUnit?: number;
-          purchaseOrderId?: any;
+          purchaseOrderId?: {
+            _id: string
+          };
           totalCostPrice?: number;
           quantity?: number;
           _id?: string;
