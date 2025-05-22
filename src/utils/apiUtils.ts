@@ -438,6 +438,7 @@ export const approvePurchaseOrder = async (
           newItems: list.purchasedItems,
           purchaseOrderId: id,
           userDetail: await getUserDetails(),
+          storeCode: 'pstr_1_462020_warehouse',
         },
       }),
     id,
