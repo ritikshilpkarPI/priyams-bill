@@ -24,14 +24,18 @@ export async function executePaginatedAPICalls<T>({
 }: PaginatedAPIConfig<T>): Promise<T[]> {
   const results: T[] = [];
   const totalPages = Math.ceil(totalObjectsCount / itemsPerCall);
-  const batches = Math.ceil(totalPages / parallelCalls);
 
-  for (let batch = 0; batch < batches; batch++) {
+  const startPage = paginationStrategy.startOffsetValue;
+  const endPage = startPage + totalPages;
+  
+
+  console.log(`Fetching pages ${startPage} to ${endPage-1}, totalPages: ${totalPages}`);
+
+  for (let currentPage = startPage; currentPage < endPage; currentPage += parallelCalls) {
     const batchPromises = [];
-    const startPage = paginationStrategy.startOffsetValue + (batch * parallelCalls);
-
-    for (let i = 0; i < parallelCalls && startPage + i <= totalPages; i++) {
-      const page = startPage + i;
+    
+    for (let i = 0; i < parallelCalls && currentPage + i < endPage; i++) {
+      const page = currentPage + i;
       const params = {
         [paginationStrategy.limitParamName]: itemsPerCall,
         [paginationStrategy.offsetParamName]: page,
