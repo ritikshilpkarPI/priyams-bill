@@ -35,3 +35,17 @@ export const CONSTANTS = Object.freeze({
         APPROVED: "approved"
     },
 })
+
+export const ITEM_EXPIRY_BATCH_ACTION = Object.freeze({
+    APPROVE: "approve",
+    REJECT: "reject",
+    DRAFT: "draft",
+    UPDATE: "update",    
+})
+
+export const ITEM_EXPIRY_BATCH_STATUS = Object.freeze({
+    APPROVED: "APPROVED",
+    DRAFTED: "DRAFTED",
+    SAVED: "SAVED",
+    CLEARED: "CLEARED",
+})
