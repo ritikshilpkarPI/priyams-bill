@@ -13,7 +13,8 @@ import { parseJwt } from './cookie';
 import Cookies from 'js-cookie';
 import MESSAGES from './constants/messages';
 import { CONSTANTS } from '../constants/constants';
-
+import { getServerBaseUrl } from './getServerBaseUrl';
+import axios from 'axios';
 
 export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string, sourceType?:string ) => {
   try {
@@ -550,6 +551,41 @@ export const itemPurchaseBatchesAPI = async ({
     return response.data;
   } catch (error) {
     return { isError: true, error };
+  }
+};
+
+export const itemPurchaseBatchesWebAPI = async ({
+  page,
+  limit,
+  itemId,
+  itemNameOrBarcode,
+}: {
+  page?: number;
+  limit?: number;
+  itemId?: string;
+  itemNameOrBarcode?: string;
+}) => {
+  try {
+    const queryParams: Record<string, string> = {};
+    if (itemId) queryParams['item_id'] = String(itemId);
+    if (itemNameOrBarcode) queryParams['itemNameOrBarcode'] = String(itemNameOrBarcode);
+    if (typeof page === 'number') queryParams['page'] = String(page);
+    if (typeof limit === 'number') queryParams['limit'] = String(limit);
+
+    const queryString = new URLSearchParams(queryParams).toString();
+    const pathWithParams = `${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}${queryString ? '?' + queryString : ''}`;
+
+    const response = await getAPI({ 
+      path: pathWithParams 
+    });
+
+    // Return the entire response object, as it likely contains { data: T[], totalCount: number, ... }
+    return response; 
+  } catch (error: any) {
+    return {
+      isError: true,
+      error: error.response?.data || error.message || 'Unknown error',
+    };
   }
 };
 
