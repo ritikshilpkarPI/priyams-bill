@@ -910,8 +910,14 @@ export const updateExpiredItemsBatchAPI = async (
   id: string,
   data: {
     status?: string
-    items?: any[]
-    itemWiseTotalCost?: any[]
+    items?: {
+      itemId: string;
+      expiryDate: Date;
+      quantity: number;
+      purchaseOrderId: string;
+      costPricePerUnit: number;
+      totalCostPrice: number;
+    }[]
     statusChangeRemark?: string
     expiryBatchCost?: number
   }
