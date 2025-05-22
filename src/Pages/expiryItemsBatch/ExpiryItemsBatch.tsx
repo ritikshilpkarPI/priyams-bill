@@ -179,7 +179,7 @@ const ExpiryItemsBatch = () => {
             navigate(`/addExpiredItem/${row._id}`)
           }
         >
-          Edit Expiry Batch
+          Edit Batch
         </Button>
       ),
     },
@@ -197,6 +197,7 @@ const ExpiryItemsBatch = () => {
               'noopener,noreferrer'
             )
           }
+          disabled={row.status !== 'APPROVED'}
         >
           Add Clearance
         </Button>
