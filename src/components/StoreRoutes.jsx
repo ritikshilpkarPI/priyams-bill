@@ -56,6 +56,8 @@ const StoreRoutes = () => {
           component={CustomerBill}
         />
           <Route exact path="/addExpiredItem" component={AddExpiredItem} />
+          <Route exact path="/addExpiredItem/:id" component={AddExpiredItem} />
+
           <Route exact path="/expiredItemList" component={ExpiredItemList} />
         <Fragment>
           <ProtectedRoutes>
@@ -110,8 +112,8 @@ const StoreRoutes = () => {
             <Route exact path="/createPurchaseOrderPage" component={CreatePurchaseOrderPage} />
 
             <ProtectedComponent role={access.STORE_INVENTORY_MANAGEMENT}>
-            <Route exact path="/createTransaction" component={StoreInventory} />
-            <Route exact path="/createTransaction/:id" component={StoreInventory} />
+            <Route exact path="/create-transaction" component={StoreInventory} />
+            <Route exact path="/create-transaction/:id" component={StoreInventory} />
 
             <Route exact path="/newInventoryPage" component={NewInventoryPage} />
             

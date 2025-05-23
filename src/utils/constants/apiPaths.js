@@ -130,6 +130,7 @@ export const API_PATHS = {
     ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
     UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
     GET_STOCK_TRANSACTIONS:"/api/stockTransactions",
+    GET_STOCK_TRANSACTIONS_BY_STATUS:"/api/stockTransactions/status",
     UPDATE_STOCK_TRANSACTION_BY_DESTINATION: "/api/stockTransaction/updateStockTransactionByDestination",
     APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
     POST_BULK_APPROVE_STOCK_TRANSACTIONS: "/api/stockTransaction/bulkApproveStockTransactions",
@@ -141,5 +142,6 @@ export const API_PATHS = {
     GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",
     GET_EXPIRED_ITEMS_BATCH_BY_ID: "/api/expiry-items-batch/getExpiryItemsBatchById",
     MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID: "/api/expiry-items-batch/markExpiryItemsBatchCleared",
+    POST_ADD_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/addExpiryItemsBatch",
   },
 };

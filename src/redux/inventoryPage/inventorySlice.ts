@@ -5,7 +5,7 @@ import { InventoryRow, InventoryTableRow } from 'src/types';
 const initialState: InventoryPurchaseOrderState = {
   cache: {},
   items: [],
-  page: 0,
+  page: 1,
   rowsPerPage: 10,
   rowCount: 0,
   isLoading: false,

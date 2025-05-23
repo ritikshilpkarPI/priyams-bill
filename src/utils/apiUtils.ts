@@ -589,7 +589,6 @@ export const itemPurchaseBatchesWebAPI = async ({
   }
 };
 
-
 export const getItemsFromStoreInventoryAPI = async (  
   storeId: string, 
   query: { size: number; page: number; itemNameOrBarcode: string }
@@ -719,7 +718,6 @@ export const updateStockTransactionsAPI = async (
 
 }
 
-
 export const approveStockTransactionsAPI = async (
   transactionsId: string,
   approvedByAdmin: boolean,
@@ -741,6 +739,25 @@ export const approveStockTransactionsAPI = async (
     return { isError: true, error };
   }
 }
+
+export const getStockTransactionsByStatusApi = async (
+  status:string,
+  page:number,
+  limit:number,
+) => {
+  try {
+    const params = new URLSearchParams();
+    if (status) params.append('status', status);
+    if (typeof page === 'number') params.append('page', page.toString());
+    if (typeof limit === 'number') params.append('limit', limit.toString());
+    const response = await postAPI({
+      path: `${API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS_BY_STATUS}?${params.toString()}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
 
 export const getAllExpiryItemsBatchAPI = async (queryParams: ExpiryItemsQueryParams = {}) => {
   try {
@@ -833,6 +850,19 @@ export const getStaffByToken = async ()=>{
   })
 };
 
+
+export const addNewExpiredItemsBatchAPI = async (data: any) => {
+  try {    
+    const response = await postAPI({
+      path: API_PATHS.EXPIRED_ITEM.CREATE_EXPIRED_ITEMS_BATCH,
+      data,
+    });
+
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+}
 export const getBillFeedAPI = async (
   page?: number,
   size?: number,
@@ -849,4 +879,56 @@ export const getBillFeedAPI = async (
   } catch (error) {
     return { isError: true, error };
   }
-};
+}
+
+
+
+export const markExpiryItemsBatchClearedAPI = async (
+  id: string,
+  data: {
+    clearanceDetails: any
+    statusChangeRemark?: string
+    staffId: string
+    browser: string
+    os: string
+    ipReferrer: string
+  }
+) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.EXPIRED_ITEMS_BATCH.MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID}/${id}`,
+      data,
+    })
+    return response
+  } catch (error) {
+    return { isError: true, error }
+  }
+}
+
+
+export const updateExpiredItemsBatchAPI = async (
+  id: string,
+  data: {
+    status?: string
+    items?: {
+      itemId: string;
+      expiryDate: Date;
+      quantity: number;
+      purchaseOrderId: string;
+      costPricePerUnit: number;
+      totalCostPrice: number;
+    }[]
+    statusChangeRemark?: string
+    expiryBatchCost?: number
+  }
+) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/${id}`,
+      data,
+    })
+    return response
+  } catch (error) {
+    return { isError: true, error }
+  }
+}

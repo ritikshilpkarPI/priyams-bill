@@ -11,7 +11,7 @@ export const Approval = lazy(() => import('./Approval'));
 export const Orders = lazy(() => import('./Orders'));
 export const OrderStatusDetail = lazy(() => import('./OrderStatusDetail'));
 export const NewBillingPage = lazy(()=>  import('./newBillPage/NewBillPage'));
-export const AddExpiredItem = lazy(()=> import('./AddExpiredItem'))
+export const AddExpiredItem = lazy(()=> import('./addExpiredItem/AddExpiredItem'))
 export const ExpiredItemList = lazy(()=> import('./ExpiredItemList'))
 export const ReturnAndExchange = lazy(()=> import('./ReturnBill'));
 export const SellDetailsPage = lazy(()=> import('./sellDetailsPage/SellDetailsPage'));
@@ -24,3 +24,4 @@ export const StoreInventory = lazy(() => import('./storeInventory/StoreInventory
 export const StockTransactions = lazy(()=> import('./StockTransactions'));
 export const NewInventoryPage = lazy(()=> import("./NewInventoryPage"));
 export const ItemPurchaseOrdersPage = lazy (()=> import("./ItemPurchaseOrdersPage"));
+export const StockTransactionsPage = lazy (()=> import("./stockTransactionsPage/StockTransactionsPage"));
