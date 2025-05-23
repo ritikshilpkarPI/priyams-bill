@@ -26,8 +26,9 @@ import dayjs from 'dayjs';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
-import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch, removeBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
+import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch, removeBatch, updateItemsWithExpiryBatch } from '../redux/ExpiryBatch/expiryBatchSlice';
 import { selectDealers } from 'src/redux/dealerlist/dealerSelectors';
+import { ExpiredItemTableProps } from 'src/types';
 
 export const useStyles = createStyles((theme) => ({
   table: {
@@ -123,40 +124,8 @@ const generateBoxId = (): string => {
   return id;
 };
 
-interface Shelf {
-  _id: string;
-  purchaseOrderId: string;
-  entryDate: string;
-  manufacturingDate: string;
-  expiryDate: string;
-  initialStockQuantity: number;
-  currentStockQuantity: number;
-}
 
-interface Purchase {
-  purchaseOrderId: string;
-  costPrice: number;
-  sellingPrice: number;
-  dealerId: {
-    dealerName: string;
-    _id: string;
-  };
-}
-
-interface ItemData {
-  _id: string;
-  sku: string;
-  itemBrandName: string;
-  companyName: string;
-  itemShelfDates: Shelf[];
-  purchaseData: Purchase[];
-}
-
-interface Props {
-  items?: ItemData[];
-}
-
-export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
+export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = [], expiryBatchData }) => {
   const { classes, cx } = useStyles();
   const dispatch = useDispatch();
   const expiryBatchMap = useSelector(
@@ -222,22 +191,23 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     e.stopPropagation();
     setEditingBatches((prev) => new Set(prev).add(batch._id));
 
-    const reduxBatches = expiryBatchMap[itemId] || [];
-    const reduxRec = reduxBatches.find((b) => b.shelfId === batch._id);
+    const reduxItemExpiryBatches = expiryBatchMap[itemId] || [];
+    const reduxItemExpiryBatchRecord = reduxItemExpiryBatches?.find((b) => b.shelfId === batch._id);
     const purch = items
-      .find((i) => i._id === itemId)
-      ?.purchaseData.find((p) => p.purchaseOrderId === batch.purchaseOrderId);
+      ?.find((item) => item._id === itemId)
+      ?.purchaseData?.find((purchaseOrder) => purchaseOrder.purchaseOrderId === batch.purchaseOrderId);
+      
 
     setDrafts((prev) => ({
       ...prev,
       [batch._id]: {
         manufacturingDate:
-          reduxRec?.manufacturingDate ?? new Date(batch.manufacturingDate),
+        reduxItemExpiryBatchRecord?.manufacturingDate ?? new Date(batch?.manufacturingDate),
         expiryDate:
-          reduxRec?.expiryDate ?? new Date(batch.expiryDate),
+        reduxItemExpiryBatchRecord?.expiryDate ?? new Date(batch.expiryDate),
         currentStock:
-          reduxRec?.quantity ?? batch.currentStockQuantity,
-        costPrice: reduxRec?.costPrice ?? purch?.costPrice ?? 0,
+        reduxItemExpiryBatchRecord?.quantity ?? batch.currentStockQuantity,
+        costPrice: reduxItemExpiryBatchRecord?.costPrice ?? purch?.costPrice ?? 0,
       },
     }));
   };
@@ -302,7 +272,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
         shelfId,
         fields: {
           manufacturingDate: data.manufacturingDate,
-          expiryDate: data.expiryDate,
+          expiryDate: data?.expiryDate,
           quantity: data.currentStock,
           costPrice: data.costPrice,
           checked: true,
@@ -356,6 +326,27 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
     if (items.length > 0) {
      dispatch(setItems({ items }));
     }
+    
+    if (expiryBatchData) {
+      const itemWiseTotalCost: {
+        itemId: {
+          _id: string;
+        };
+        totalCostPrice: number;
+      }[] = [];
+      let expiryBatchCost = 0;
+
+      for (const item of expiryBatchData) {
+        const totalCostPrice = item.costPricePerUnit * item.quantity;
+        expiryBatchCost += totalCostPrice;
+
+        itemWiseTotalCost.push({
+          itemId: item.itemId,
+          totalCostPrice,
+        });
+      }      
+      dispatch(updateItemsWithExpiryBatch({ items: expiryBatchData}));
+    }
  },[items, dispatch]);
 
   if (!items.length) {
@@ -374,7 +365,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
       if (value) {
         dispatch(setDealerIdToBatch({dealerId: value, dealerName: dealers.find((dealer) => dealer._id === value)?.dealerName}));
       } 
-    }
+    } 
   
   return (
     <ScrollArea
@@ -414,25 +405,26 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
         <tbody>
           {items.map((item) => {
             const isOpen = openItems.has(item._id);
-            const reduxBatches = expiryBatchMap[item._id] || [];
-            const reduxMap = Object.fromEntries(
-              reduxBatches.map((b) => [b.shelfId, b])
+            const reduxItemExpiryBatches = expiryBatchMap[item._id] || [];
+            const reduxItemExpiryBatchesMap = Object.fromEntries(
+              reduxItemExpiryBatches.map((b) => [b.shelfId, b])
             );
-            const additionalBatches = reduxBatches
+            const additionalBatches = reduxItemExpiryBatches
   .filter((b) => !item.itemShelfDates.some((s) => s._id === b.shelfId))
-  .map((b) => ({
-    _id: b.shelfId,
-    purchaseOrderId: b.purchaseOrderId,
-    entryDate: b.entryDate,
-    manufacturingDate: b.manufacturingDate,
-    expiryDate: b.expiryDate,
-    initialStockQuantity: b.initialStockQuantity,
-    currentStockQuantity: b.quantity,
-    checked: b.checked,
-    costPrice: b.costPrice,
+  .map((itemExpiryBatch) => ({
+    _id: itemExpiryBatch.shelfId,
+    purchaseOrderId: itemExpiryBatch.purchaseOrderId,
+    entryDate: itemExpiryBatch.entryDate,
+    manufacturingDate: itemExpiryBatch?.manufacturingDate,
+    expiryDate: itemExpiryBatch?.expiryDate,
+    initialStockQuantity: itemExpiryBatch.initialStockQuantity,
+    currentStockQuantity: itemExpiryBatch.quantity,
+    checked: itemExpiryBatch.checked,
+    costPrice: itemExpiryBatch.costPrice,
   }));
             const findPurchase = (poId: string) =>
-              item.purchaseData.find((p) => p.purchaseOrderId === poId);
+              item.purchaseData?.find((p) => p.purchaseOrderId === poId);
+            
 
             return (
               <Fragment key={item._id}>
@@ -596,7 +588,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                     <TextInput
                                       size="xs"
                                       type="date"
-                                      value={dayjs(newBatchDraft.expiryDate).format(
+                                      value={dayjs(newBatchDraft?.expiryDate).format(
                                         'YYYY-MM-DD'
                                       )}
                                       onChange={(e) =>
@@ -648,24 +640,24 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                               )}
 
                               {[...item.itemShelfDates, ...additionalBatches].map((batch) => {
-                                const reduxRec = reduxMap[batch._id];
+                                const reduxItemExpiryRec = reduxItemExpiryBatchesMap[batch._id];
                                 const isEdit = editingBatches.has(batch._id);
                                 const draft = drafts[batch._id];
                                 const purch = findPurchase(batch.purchaseOrderId ?? '');
 
                                 const mfg = isEdit
-                                  ? draft.manufacturingDate
-                                  : reduxRec?.manufacturingDate ??
-                                    new Date(batch.manufacturingDate);
+                                  ? draft?.manufacturingDate
+                                  : reduxItemExpiryRec?.manufacturingDate ??
+                                    new Date(batch?.manufacturingDate);
                                 const exp = isEdit
-                                  ? draft.expiryDate
-                                  : reduxRec?.expiryDate ??
-                                    new Date(batch.expiryDate);
+                                  ? draft?.expiryDate
+                                  : reduxItemExpiryRec?.expiryDate ??
+                                    new Date(batch?.expiryDate);
                                 const qty = isEdit
-                                  ? draft.currentStock
-                                  : reduxRec?.quantity ??
-                                    batch.currentStockQuantity;
-                                const checked = reduxRec?.checked;
+                                  ? draft?.currentStock
+                                  : reduxItemExpiryRec?.quantity ??
+                                    batch?.currentStockQuantity;
+                                const checked = reduxItemExpiryRec?.checked;
                                 const wasUpdated = updatedRows.has(batch._id);
 
                                 const rowClass = cx(classes.row, {
@@ -720,7 +712,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                           size="xs"
                                           min={0}
                                           precision={2}
-                                          value={draft.costPrice}
+                                          value={draft?.costPrice}
                                           onClick={(e) => e.stopPropagation()}
                                           onChange={(v) =>
                                             setDrafts((p) => ({
@@ -736,7 +728,7 @@ export const ExpiredItemPOTable: React.FC<Props> = ({ items = [] }) => {
                                         />
                                       ) : (
                                         (
-                                          reduxRec?.costPrice ??
+                                          reduxItemExpiryRec?.costPrice ??
                                           purch?.costPrice
                                         )?.toFixed(2) ?? '-'
                                       )}
