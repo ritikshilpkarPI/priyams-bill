@@ -29,4 +29,5 @@ export const CONSTANTS = Object.freeze({
         PACKAGING: "Packaging",
         QUANTITY_UPDATE: "QUANTITY_UPDATE" 
     },
+    WAREHOUSE_COLLECTION_NAME: "pstr_1_462020_warehouse",
 })
