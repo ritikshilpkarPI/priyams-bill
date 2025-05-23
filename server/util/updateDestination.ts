@@ -29,26 +29,7 @@ export const updateDestination = async ({
 }: UpdateDestinationParams) => {
   const updatedItems = [];
 
-  if (destinationType === CONSTANTS.WAREHOUSE) {
-    for (const { itemId, quantity, itemShelfDates = [] } of items) {
-      if (!itemId || !quantity)
-        throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
-
-      const item = await Item.findById(itemId);
-      if (!item) throw new Error(MESSAGES.NO_ITEMS_FOUND);
-
-      item.itemStockQuantity += quantity;
-      updateItemShelfDates(
-        item.itemShelfDates,
-        itemShelfDates,
-        transactionId,
-        'ADD'
-      );
-      await item.save();
-
-      updatedItems.push({ updatedItem: item });
-    }
-  } else if (destinationType === CONSTANTS.STORE) {
+  if (destinationType === CONSTANTS.STORE || CONSTANTS.WAREHOUSE) {
     const store = await StoreModel.findById(destinationEntityId);
     if (!store) throw new Error('Store not found');
 

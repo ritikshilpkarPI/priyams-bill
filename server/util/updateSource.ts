@@ -29,30 +29,7 @@ export const updateSource = async ({
 }: UpdateSourceParams) => {
   const updatedItems = [];
 
-  if (sourceType === CONSTANTS.WAREHOUSE) {
-    for (const { itemId, quantity, itemShelfDates = [] } of items) {
-      if (!itemId || quantity == null) {
-        throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
-      }
-
-      const item = await Item.findById(itemId);
-      if (!item) {
-        throw new Error(MESSAGES.NO_ITEMS_FOUND);
-      }
-
-
-      item.itemStockQuantity -= quantity;
-      updateItemShelfDates(
-        item.itemShelfDates,
-        itemShelfDates,
-        transactionId,
-        'SUBTRACT'
-      );
-
-      await item.save();
-      updatedItems.push({ updatedItem: item });
-    }
-  } else if (sourceType === CONSTANTS.STORE) {
+  if (sourceType === (CONSTANTS.STORE || CONSTANTS.WAREHOUSE)) {
     const store = await StoreModel.findById(sourceEntityId);
     if (!store) throw new Error(MESSAGES.STORE_NOT_FOUND ?? 'Store not found');
 
