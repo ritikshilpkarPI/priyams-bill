@@ -42,7 +42,7 @@ const ItemSearchInput = ({
     try {
       dispatch(setIsLoading(true));
       const response = await itemPurchaseBatchesAPI({
-        page: page + 1,
+        page: page,
         limit: rowsPerPage,
         itemNameOrBarcode: itemNameOrBarcode,
       });
