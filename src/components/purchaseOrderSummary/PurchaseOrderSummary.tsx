@@ -21,6 +21,7 @@ import {
   validateItemDetails,
   validatePaymentDetails,
 } from 'src/utils/purchaseOrderValidations';
+import { CONSTANTS } from 'src/constants/constants';
 
 export const PurchaseOrderSummary = () => {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ export const PurchaseOrderSummary = () => {
           newItems: list.purchasedItems,
           purchaseOrderId: id,
           userDetail: await getUserDetails(),
-          storeCode: 'pstr_1_462020_warehouse', 
+          storeCode: CONSTANTS.WAREHOUSE_COLLECTION_NAME, 
         },
       });
       setApproveLoading(false);

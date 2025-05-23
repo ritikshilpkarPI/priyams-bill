@@ -14,7 +14,7 @@ const saveInventory = async (req, res, next) => {
       newItems,
       purchaseOrderId,
       userDetail,
-      storeCode = 'pstr_1_462020_warehouse', 
+      storeCode = CONSTANTS.WAREHOUSE_COLLECTION_NAME, 
     } = req.body;
     const referer = req.headers.referer;
     const status  = CONSTANTS.APPROVE;
@@ -92,8 +92,8 @@ const saveInventory = async (req, res, next) => {
       };
 
       const oldItem = existingItemsMap.get(item.item_id);
-      const qty = Number(item.stockQuantity) || 0;
-      const dateTime = new Date();
+      const itemQuantity = Number(item.stockQuantity) || 0;
+      const stockChangeDateTime = new Date();
 
       if (oldItem) {
         let oldItemCost = Number(oldItem.itemCostPricePerUnit) || 0;
@@ -147,14 +147,14 @@ const saveInventory = async (req, res, next) => {
         updateOne: {
           filter: { itemId: new mongoose.Types.ObjectId(item.item_id) },
           update: {
-            $inc: { itemQuantityInStore: qty },
+            $inc: { itemQuantityInStore: itemQuantity },
             $push: {
               itemStockChangeHistory: {
-                quantity: qty,
-                dateTime,
+                quantity: itemQuantity,
+                dateTime: stockChangeDateTime,
                 user: user._id,
-                changeType: "ADD",
-                changedFrom: "WAREHOUSE",
+                changeType: CONSTANTS.ADD,
+                changedFrom: CONSTANTS.WAREHOUSE,
                 transactionId: purchaseOrderId,
               },
               itemShelfDates: { $each: newShelfDates },

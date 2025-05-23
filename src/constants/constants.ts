@@ -34,4 +34,5 @@ export const CONSTANTS = Object.freeze({
         DESTINATION_UPDATED: "destinationUpdated",
         APPROVED: "approved"
     },
+    WAREHOUSE_COLLECTION_NAME: "pstr_1_462020_warehouse",
 })
