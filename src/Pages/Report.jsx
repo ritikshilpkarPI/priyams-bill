@@ -64,9 +64,9 @@ const generateAllItemsBillingTrendCSV = (items, dateRange) => {
   const showWeeklyAverage = totalDays >= 7;
 
   const headers = [
-    'SKU',
-    'Item Name',
-    'Barcode',
+    CONSTANTS.TABLE_HEADERS.SKU,
+    CONSTANTS.TABLE_HEADERS.ITEM_NAME,
+    CONSTANTS.TABLE_HEADERS.BARCODE,
     ...(showWeeklyAverage ? ['Weekly Average'] : []),
     ...dates,
   ];
@@ -117,9 +117,9 @@ const Report = () => {
     purchasedItems: 'purchasedItems',
   };
 
-  const filterHasCSV = reportResult?.filterType === 'itemBillingTrend' ||
-    reportResult?.filterType === 'allItemsBillingTrend' ||
-    reportResult?.filterType === 'purchasedItems'
+  const filterHasCSV = reportResult?.filterType === filterNameObj.itemBillingTrend ||
+    reportResult?.filterType === filterNameObj.allItemsBillingTrend ||
+    reportResult?.filterType === filterNameObj.purchasedItems
 
   const handleDownloadCSV = () => {
     let csvContent;
@@ -129,9 +129,9 @@ const Report = () => {
     const fileName = `${startDate}_${selectedFilter}.csv`
       .replace(/ /g, '-')
       .toLowerCase();
-      if (selectedFilter === 'allItemsBillingTrend') {
+      if (selectedFilter === filterNameObj.allItemsBillingTrend) {
         csvContent = generateAllItemsBillingTrendCSV(reportResult.report, dateRange);
-      } else if (selectedFilter === 'purchasedItems') {
+      } else if (selectedFilter === filterNameObj.purchasedItems) {
       // For purchased items filter
       const csvRows = [
         ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase', 'Expiry Date(s)', 'Mfg Date(s)', 'Qty per Batch'],
@@ -185,7 +185,7 @@ const Report = () => {
     let result;
     
     try {
-      if(selectedFilter === 'allItemsBillingTrend'){
+      if(selectedFilter === filterNameObj.allItemsBillingTrend){
         result = await fetchAllPaginatedAPI({
           apiFunction: async (params) => {
             const response = await genericAxios({
@@ -258,7 +258,7 @@ const Report = () => {
   const handleFilterOption = (e) => {
     setSelectedFilter(e);
     setReportResult({}); // Clear previous results
-    setShowItemInput(e === 'itemBillingTrend');
+    setShowItemInput(e === filterNameObj.itemBillingTrend);
   };
 
   return (
@@ -345,7 +345,7 @@ const Report = () => {
               overflowX: 'auto',
             }}
           >
-            {reportResult?.filterType === 'allItemsBillingTrend' ? (
+            {reportResult?.filterType === filterNameObj.allItemsBillingTrend ? (
               <ItemTrendTable
                 items={reportResult.report}
                 startDate={dateRange[0]}

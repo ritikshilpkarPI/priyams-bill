@@ -28,9 +28,6 @@ export async function executePaginatedAPICalls<T>({
   const startPage = paginationStrategy.startOffsetValue;
   const endPage = startPage + totalPages;
   
-
-  console.log(`Fetching pages ${startPage} to ${endPage-1}, totalPages: ${totalPages}`);
-
   for (let currentPage = startPage; currentPage < endPage; currentPage += parallelCalls) {
     const batchPromises = [];
     

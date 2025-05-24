@@ -29,4 +29,14 @@ export const CONSTANTS = Object.freeze({
         PACKAGING: "Packaging",
         QUANTITY_UPDATE: "QUANTITY_UPDATE" 
     },
+    TABLE_HEADERS:{
+        SKU: 'SKU',
+        ITEM_NAME: 'Item Name',
+        BARCODE: 'Barcode',
+        WEEKLY_AVERAGE: 'Weekly Average',
+        QUANTITY: 'Total Quantity',
+        MRP: 'Total MRP',
+        TOTAL_AMOUNT: 'Total Amount',
+        DISCOUNT: 'Total Discount',
+    }   
 })
