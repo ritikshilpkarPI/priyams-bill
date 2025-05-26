@@ -11,14 +11,21 @@ type ItemInput = {
   quantity: number;
   itemShelfDates: any[];
 };
-
 type UpdateSourceParams = {
   userId: string;
-  items: ItemInput[];
+    items: ItemInput[];
   sourceType: string;
   sourceEntityId: string;
-  transactionId?: mongoose.Types.ObjectId;
-};
+  transactionId: string;
+}
+
+interface StoreInventoryItem {
+  _id: mongoose.Types.ObjectId;
+  itemId: mongoose.Types.ObjectId;
+  itemQuantityInStore: number;
+  itemShelfDates: any[];
+  itemStockChangeHistory: any[];
+}
 
 export const updateSource = async ({
   userId,
@@ -30,27 +37,60 @@ export const updateSource = async ({
   const updatedItems = [];
 
   if (sourceType === CONSTANTS.WAREHOUSE) {
+    const itemIds = items.map(item => {
+      if (!item.itemId) {
+        throw new Error('Missing itemId in item data');
+      }
+      
+      try {
+        const itemIdStr = String(item.itemId);
+        return new mongoose.Types.ObjectId(itemIdStr);
+      } catch (error) {
+        throw new Error(`Invalid itemId format: ${JSON.stringify(item.itemId)}`);
+      }
+    });
+    
+    const itemsMap = new Map(
+      (await Item.find({ _id: { $in: itemIds } })).map(item => [item._id.toString(), item])
+    );
+
+    const bulkOps = [];
     for (const { itemId, quantity, itemShelfDates = [] } of items) {
       if (!itemId || quantity == null) {
         throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
       }
 
-      const item = await Item.findById(itemId);
+      const itemIdStr = String(itemId);
+      const item = itemsMap.get(itemIdStr);
       if (!item) {
         throw new Error(MESSAGES.NO_ITEMS_FOUND);
       }
-
 
       item.itemStockQuantity -= quantity;
       updateItemShelfDates(
         item.itemShelfDates,
         itemShelfDates,
-        transactionId,
+        new mongoose.Types.ObjectId(transactionId),
         'SUBTRACT'
       );
 
-      await item.save();
+      bulkOps.push({
+        updateOne: {
+          filter: { _id: item._id },
+          update: {
+            $set: {
+              itemStockQuantity: item.itemStockQuantity,
+              itemShelfDates: item.itemShelfDates
+            }
+          }
+        }
+      });
+
       updatedItems.push({ updatedItem: item });
+    }
+
+    if (bulkOps.length > 0) {
+      await Item.bulkWrite(bulkOps);
     }
   } else if (sourceType === CONSTANTS.STORE) {
     const store = await StoreModel.findById(sourceEntityId);
@@ -58,12 +98,31 @@ export const updateSource = async ({
 
     const StoreInventory = getStoreInventoryModel(store.collectionName);
 
+    const itemIds = items.map(item => {
+      if (!item.itemId) {
+        throw new Error('Missing itemId in item data');
+      }
+      
+      try {
+        const itemIdStr = String(item.itemId);
+        return new mongoose.Types.ObjectId(itemIdStr);
+      } catch (error) {
+        throw new Error(`Invalid itemId format: ${JSON.stringify(item.itemId)}`);
+      }
+    });
+    
+    const storeItemsMap = new Map(
+      (await StoreInventory.find({ itemId: { $in: itemIds } })).map((item: StoreInventoryItem) => [item.itemId.toString(), item])
+    );
+
+    const bulkOps = [];
     for (const { itemId, quantity, itemShelfDates = [] } of items) {
       if (!itemId || quantity == null) {
         throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
       }
 
-      const storeItem = await StoreInventory.findOne({ itemId });
+      const itemIdStr = String(itemId);
+      const storeItem = storeItemsMap.get(itemIdStr) as StoreInventoryItem | undefined;
       if (!storeItem || storeItem.itemQuantityInStore < quantity) {
         throw new Error(MESSAGES.INSUFFICIENT_STORE_STOCK);
       }
@@ -71,21 +130,37 @@ export const updateSource = async ({
       updateItemShelfDates(
         storeItem.itemShelfDates,
         itemShelfDates,
-        transactionId,
+        new mongoose.Types.ObjectId(transactionId),
         'SUBTRACT'
       );
       storeItem.itemQuantityInStore -= quantity;
 
       storeItem.itemStockChangeHistory.push({
         quantity: -quantity,
-        user: userId,
+        user: new mongoose.Types.ObjectId(userId),
         changeType: CONSTANTS.REMOVE,
         changedFrom: CONSTANTS.STORE,
-        transactionId,
+        transactionId: new mongoose.Types.ObjectId(transactionId),
       });
 
-      await storeItem.save();
+      bulkOps.push({
+        updateOne: {
+          filter: { _id: storeItem._id },
+          update: {
+            $set: {
+              itemQuantityInStore: storeItem.itemQuantityInStore,
+              itemShelfDates: storeItem.itemShelfDates,
+              itemStockChangeHistory: storeItem.itemStockChangeHistory
+            }
+          }
+        }
+      });
+
       updatedItems.push({ updatedItem: storeItem });
+    }
+
+    if (bulkOps.length > 0) {
+      await StoreInventory.bulkWrite(bulkOps);
     }
   }
 
