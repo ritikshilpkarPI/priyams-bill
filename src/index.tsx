@@ -10,6 +10,7 @@ import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { router } from './routes/routes';
 import { RouterProvider } from 'react-router-dom';
+import { ThemeProvider } from './theme/ThemeContext';
 
 const rootElement = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
@@ -18,13 +19,13 @@ if (root) {
   root.render(
       <Provider store={store}>
         <AppStateContextProvider>
-          <React.StrictMode>
+          <ThemeProvider>
             <MantineProvider>
               <ModalsProvider>
                 <RouterProvider router={router} />
               </ModalsProvider>
             </MantineProvider>
-          </React.StrictMode>
+          </ThemeProvider>
         </AppStateContextProvider>
       </Provider>
   );
