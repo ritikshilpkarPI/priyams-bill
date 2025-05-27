@@ -53,7 +53,7 @@ const StoreInventory: React.FC = () => {
 
   const [itemsId, setItemsId] = useState<string | null>(null);
   const [firstOpened, firstHandlers] = useDisclosure(false);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [mismatchloading, setMismatchloading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
