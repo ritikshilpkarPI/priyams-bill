@@ -29,4 +29,5 @@ export const CONSTANTS = Object.freeze({
       'dateOnBill',
       'purchasedItems',
     ],
+    WAREHOUSE_COLLECTION_NAME: "pstr_1_462020_warehouse",
 })
