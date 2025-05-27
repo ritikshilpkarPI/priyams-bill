@@ -11,7 +11,7 @@ export const Approval = lazy(() => import('./Approval'));
 export const Orders = lazy(() => import('./Orders'));
 export const OrderStatusDetail = lazy(() => import('./OrderStatusDetail'));
 export const NewBillingPage = lazy(()=>  import('./newBillPage/NewBillPage'));
-export const AddExpiredItem = lazy(()=> import('./AddExpiredItem'))
+export const AddExpiredItem = lazy(()=> import('./addExpiredItem/AddExpiredItem'))
 export const ExpiredItemList = lazy(()=> import('./ExpiredItemList'))
 export const ReturnAndExchange = lazy(()=> import('./ReturnBill'));
 export const SellDetailsPage = lazy(()=> import('./sellDetailsPage/SellDetailsPage'));

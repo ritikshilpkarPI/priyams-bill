@@ -9,7 +9,7 @@ import {
 import { setExpiredItemsBatch } from 'src/redux/expiredItemsBatch/ExpiredItemsBatchSlice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 
 const ExpiryItemsBatch = () => {
@@ -27,6 +27,8 @@ const ExpiryItemsBatch = () => {
     page: 0,
     pageSize: 10,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const newPage = expiredItemsBatch?.pagination?.page;
@@ -101,7 +103,7 @@ const ExpiryItemsBatch = () => {
     if (page >= 0) {
       const callBack = (prev: any) => ({ ...prev, page });
       pagination ? setPagination(callBack) : setPagination(callBack);
-      fetchGetAllExpiryItemsBatchAPI(page + 1);
+      fetchGetAllExpiryItemsBatchAPI(page);
     }
   };
 
@@ -151,6 +153,7 @@ const ExpiryItemsBatch = () => {
         </Button>
       ),
     },
+    
     {
       key: 'items',
       label: 'Items',
@@ -165,6 +168,43 @@ const ExpiryItemsBatch = () => {
         </Button>
       ),
     },
+    {
+      key: 'edit',
+      label: 'Action',
+      render: (row: any) => (
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => 
+            navigate(`/addExpiredItem/${row._id}`)
+          }
+        >
+          Edit Batch
+        </Button>
+      ),
+    },
+    {
+      key: 'addClearance',
+      label: 'Action',
+      render: (row: any) => (
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => 
+            window.open(
+              `/expiry-items-batch/${row._id}/add-clearance`,
+              '_blank',
+              'noopener,noreferrer'
+            )
+          }
+          disabled={row.status !== 'APPROVED'}
+        >
+          Add Clearance
+        </Button>
+      ),
+    },
+
+
   ];
   
   const rows = expiredItemsBatch.data.map((batch) => ({
@@ -172,7 +212,7 @@ const ExpiryItemsBatch = () => {
     dealerName: batch.dealerId?.dealerName ?? '',
     items: batch.items?.map((item) => {
       const matchedCost = batch.itemWiseTotalCost.find(
-        (itemWise) => itemWise.itemId._id === item.itemId._id
+        (itemWise) => itemWise.itemId?._id === item.itemId?._id
       );
       
       return {
@@ -253,7 +293,8 @@ const ExpiryItemsBatch = () => {
           <DataTable
             columns={[
               { key: 'status', label: 'Status' },
-              { key: 'stafId', label: 'Staff ID' },
+              { key: 'staffId', label: 'Staff ID', render: (row) => row.staffId?.name ?? '–',
+              },
               { key: 'dateTime', label: 'Date Time' },
               { key: 'browser', label: 'Browser' },
               { key: 'os', label: 'OS' },
