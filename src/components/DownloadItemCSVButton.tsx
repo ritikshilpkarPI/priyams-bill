@@ -6,7 +6,7 @@ import {
   getItemsFromStoreInventoryAPI,
   itemPurchaseBatchesAPI,
 } from 'src/utils/apiUtils';
-import { executePaginatedAPICalls, PaginationStrategy } from 'src/utils/executePaginatedAPICalls';
+import { executePaginatedAPICalls } from 'src/utils/executePaginatedAPICalls';
 import { CONSTANTS } from '../constants/constants';
 import { generateStoreCSV } from '../utils/generateStoreCSV';
 const DEFAULT_LIMIT = 100;
@@ -64,7 +64,7 @@ export const DownloadItemCSVButton: React.FC<DownloadItemCSVButtonProps> = ({
       setLoading(false);
     }
   };
-  const isDisabled = loading || (sourceType === CONSTANTS.STORE && !storeId);
+  const isDisabled = loading || !storeId
 
   return (
     <Button
