@@ -1142,6 +1142,22 @@ declare global {
     selectedItem: InventoryPurchaseOrderItem | null
   }
 
+  interface PaginationStrategy {
+    limitParamName: string;
+    offsetParamName: string;
+    offsetType: 'page' | 'skip';
+    startOffsetValue: number; // e.g., page 2 if first page was 1, or skip 100 if first 100 items fetched
+  }
+  
+  interface ExecutePaginatedAPICallsParams<T> {
+    apiFnToGetData: (params: Record<string, any>) => Promise<T[]>; // Takes dynamic params, returns data array
+    totalObjectsCount: number;
+    itemsPerCall: number;
+    paginationStrategy: PaginationStrategy;
+    parallelCalls?: number;
+    maxRetriesPerCall?: number;
+  }
+
 }
 declare module '*.scss' {
   const content: { [className: string]: string };
@@ -1193,17 +1209,65 @@ export interface PurchaseEntry {
   poApproveTime: string;
   expiryDetails: ExpiryDetail[];
   initialItemQuantity: number;
+  dealerName: string;
 }
 
 export interface InventoryRow {
   staticData: StaticItemData;
   purchases: PurchaseEntry[];
+  _id: string;
 }
 
 export type InventoryTableRow = Omit<StaticItemData, '_id'> & {
   _id: string;                
   purchases: PurchaseEntry[]; 
 };
+
+
+interface Shelf {
+  _id: string;
+  purchaseOrderId: string;
+  entryDate: string;
+  manufacturingDate: string;
+  expiryDate: string;
+  initialStockQuantity: number;
+  currentStockQuantity: number;
+}
+
+interface Purchase {
+  purchaseOrderId: string;
+  costPrice: number;
+  sellingPrice: number;
+  dealerId: {
+    dealerName: string;
+    _id: string;
+  };
+}
+
+export interface ItemData {
+  _id: string;
+  sku: string;
+  itemBrandName: string;
+  companyName: string;
+  itemShelfDates: Shelf[];
+  purchaseData: Purchase[];
+}
+
+export interface ExpiredItemTableProps {
+  items?: ItemData[];
+  expiryBatchData?: {
+    itemId: {
+      _id: string
+    };
+    expiryDate: Date;
+    quantity: number;
+    purchaseOrderId: {
+      _id: string
+    };
+    costPricePerUnit: number;
+    totalCostPrice: number;
+  }[];
+}
 
 export {};
 
