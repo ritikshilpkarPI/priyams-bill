@@ -221,6 +221,9 @@ const ExpiryItemsBatch = () => {
             onChange={handleTabChange}
             textColor="primary"
             indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{ mb: 2 }}
           >
             {STATUS_TABS.map((s) => (
               <Tab key={s} label={s} value={s} />
