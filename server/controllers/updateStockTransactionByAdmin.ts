@@ -179,15 +179,15 @@ export const updateStockTransactionByAdmin = async (
       }
     }
 
+   
+    if (updateData.approvedByAdmin) {
+      transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.APPROVED;
+    } else if (!updateData.approvedByAdmin) {
+      transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED;
+    }
       if (adminRemark !== undefined) {
         transaction.adminRemark = adminRemark;
-      }
-
-    if (!updateData.approvedByAdmin) {
-      transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.APPROVED;
-    } else {
-      transaction.transactionStatus =
-        CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED;
+        transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.APPROVED;
     }
 
     await transaction.save();
