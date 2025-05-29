@@ -673,6 +673,7 @@ declare global {
     onRowClick?: GridEventListener<'rowClick'>;
     expandedRows?: string[];
     onToggleExpand?: (id: string) => void; 
+    onSelectionModelChange?: (selectionModel: GridRowSelectionModel) => void;
   }
   interface PurchaseListApprovalProps {
     allPurchaseList: any[];
@@ -1096,6 +1097,7 @@ declare global {
     stores: any[];
     selecteditem: StoreInventoryItemType | null;
     isLoading: boolean;
+    selectedItemsIds: string[];
   }
 
   interface InventoryPurchaseOrderEntry {

@@ -24,7 +24,7 @@ const ExpiryItemsBatch = () => {
   );
 
   const [pagination, setPagination] = useState({
-    page: 0,
+    page: 1,
     pageSize: 10,
   });
 
@@ -58,7 +58,7 @@ const ExpiryItemsBatch = () => {
           setExpiredItemsBatch({
             data: [response.data],
             pagination: {
-              page: 0,
+              page: 1,
               limit: 10,
               totalPages: 0,
               total: 0,
@@ -84,7 +84,7 @@ const ExpiryItemsBatch = () => {
           setExpiredItemsBatch({
             data: response.data,
             pagination: {
-              page: response.pagination.page - 1 || 0,
+              page: response.pagination.page || 0,
               limit: response.pagination.limit || 10,
               totalPages: response.pagination.totalPages || 0,
               total: response.pagination.total || 0,
