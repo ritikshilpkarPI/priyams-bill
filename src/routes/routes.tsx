@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to={Cookies.get('token') ? '/billing' : ROUTES.LOGIN} replace />
+        element: <Navigate to={Cookies.get('token') ? ROUTES.BILLING : ROUTES.LOGIN} replace />
       },
       {
         element: <AdminRoute />,
@@ -72,6 +72,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <Navigate to={Cookies.get('token') ? '/billing' : ROUTES.LOGIN} replace />
+    element: <Navigate to={Cookies.get('token') ? ROUTES.BILLING : ROUTES.LOGIN} replace />
   },
 ]);
