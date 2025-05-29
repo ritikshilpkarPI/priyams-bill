@@ -13,7 +13,8 @@ export const getExpiryItemsBatchById = async (req: Request, res: Response) => {
       .populate('clearanceDetails.dealerId')
       .populate('items.itemId')
       .populate('items.purchaseOrderId')
-      .populate('itemWiseTotalCost.itemId');
+      .populate('itemWiseTotalCost.itemId')
+      .populate('statusHistory.staffId');
 
     if (!expiredItemBatch) {
       return res.status(404).json({ success: false, message: MESSAGES.EXPIRED_ITEMS_BATCH_NOT_FOUND });

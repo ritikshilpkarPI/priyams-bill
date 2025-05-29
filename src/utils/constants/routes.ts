@@ -40,5 +40,7 @@ export const ROUTES = Object.freeze({
     STORE_INVENTORY_MANAGEMENT_BY_ID: "/create-transaction/:id",
     EXPIRY_ITEMS_BATCH: "/expiry-items-batch",
     EXPIRY_ITEMS_BATCH_BY_ID: "/expiry-items-batch/:id",
+    ADD_EXPIRY_ITEMS_BATCH_CLEARANCE: "/expiry-items-batch/:id/add-clearance",
+    UPDATE_EXPIRY_ITEMS_BATCH: "/addExpiredItem/:id",
     STOCK_TRANSACTIONS:"/stock-transactions",
 })

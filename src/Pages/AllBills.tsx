@@ -161,7 +161,7 @@ const AllBills = ({ fromDayWise = false, bills = [] }) => {
           pagination={pagination}
           setPagination={setPagination}
           totalBillCount={totalBillCount}
-          bills={allBills}
+          bills={allBills as any}
           fromDayWise={fromDayWise}
           isLoading={loader}
         />

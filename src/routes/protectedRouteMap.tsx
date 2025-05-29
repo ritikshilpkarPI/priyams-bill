@@ -27,6 +27,7 @@ import {
   ExpiryItemsBatch,
   StockTransactionsPage
 } from '../Pages';
+import AddClearancePage from 'src/Pages/AddClearancePage';
 
 interface RouteConfig {
     path: string;
@@ -130,6 +131,11 @@ export const protectedRouteMap: Record<string, RouteConfig> = {
       element: <AddExpiredItem />,
       index: true,
     },
+    UPDATE_EXPIRED_ITEM: {
+      path: ROUTES.UPDATE_EXPIRY_ITEMS_BATCH,
+      element: <AddExpiredItem />,
+      index: true,
+    },
     EXPIRED_ITEM_LIST: {
       path: ROUTES.EXPIRED_ITEM_LIST,
       element: <ExpiredItemList />,
@@ -173,6 +179,11 @@ export const protectedRouteMap: Record<string, RouteConfig> = {
     STORE_TRANSACTIONS: {
       path: ROUTES.STORE_TRANSACTIONS,
       element: <StockTransactions />,
+      index: true,
+    },
+    ADD_EXPIRY_ITEMS_BATCH_CLEARANCE: {
+      path: ROUTES.ADD_EXPIRY_ITEMS_BATCH_CLEARANCE,
+      element: <AddClearancePage />,
       index: true,
     },
     STOCK_TRANSACTIONS: {

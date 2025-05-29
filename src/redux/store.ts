@@ -20,6 +20,8 @@ import stockTransactionSlice from './stockTransactionManagement/StockTransaction
 import expiredItemsBatchSlice from './expiredItemsBatch/ExpiredItemsBatchSlice'
 import inventoryReducer from './inventoryPage/inventorySlice';
 import storeInventorySlice from './storeInventory/StoreInventoryState'
+import expiryBatchReducer from './ExpiryBatch/expiryBatchSlice';
+
 
 export const store = configureStore({
   reducer: {
@@ -43,7 +45,8 @@ export const store = configureStore({
     storeInventory: storeInventorySlice,
     stockTransactions: stockTransactionsReducer,
     expiredItemsBatch: expiredItemsBatchSlice,
-    inventory: inventoryReducer
+    inventory: inventoryReducer,
+    expiryBatch: expiryBatchReducer,
   },
 });
 
