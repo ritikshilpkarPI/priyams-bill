@@ -30,7 +30,11 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
       .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
       .lean();
     } else {
-      items = await Item.find({})
+      if (filterItemId) {
+        const itemId = toObjectId(filterItemId);
+        query = { _id: itemId };
+      }
+      items = await Item.find(query)
       .skip(skip)
       .limit(limitNumber)
       .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)

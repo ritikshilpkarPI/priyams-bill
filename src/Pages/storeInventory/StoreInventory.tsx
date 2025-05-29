@@ -377,7 +377,7 @@ const StoreInventory: React.FC = () => {
               ]}
               data={selecteditem?.itemShelfDates}
               isLoading={false}
-              page={0}
+              page={1}
               rowsPerPage={selecteditem?.itemShelfDates?.length}
               onPageChange={() => {}}
               onRowsPerPageChange={() => {}}
