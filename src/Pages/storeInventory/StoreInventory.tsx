@@ -40,6 +40,7 @@ import { useNavigate } from 'react-router';
 import { CONSTANTS } from 'src/constants/constants';
 import ItemSearchInput from 'src/components/itemSearchInput/ItemSearchInput';
 import { Typography } from '@mui/material';
+import { DownloadItemCSVButton } from 'src/components/DownloadItemCSVButton';
 
 const StoreInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -218,6 +219,12 @@ const StoreInventory: React.FC = () => {
             View Transactions
           </Button>
         </Grid.Col>
+        <Grid.Col span={isSmallScreen ? 12 : 4} sx={{ textAlign: 'left',display:"flex", alignItems: "end", justifyContent:"end"}}>
+          <DownloadItemCSVButton
+          sourceType={CONSTANTS.STORE}
+          storeId = {storeId ?? ""}
+          />
+        </Grid.Col>
         <Grid.Col 
          sx={{
             display: 'flex',
@@ -370,7 +377,7 @@ const StoreInventory: React.FC = () => {
               ]}
               data={selecteditem?.itemShelfDates}
               isLoading={false}
-              page={0}
+              page={1}
               rowsPerPage={selecteditem?.itemShelfDates?.length}
               onPageChange={() => {}}
               onRowsPerPageChange={() => {}}

@@ -438,6 +438,7 @@ export const approvePurchaseOrder = async (
           newItems: list.purchasedItems,
           purchaseOrderId: id,
           userDetail: await getUserDetails(),
+          storeCode: CONSTANTS.WAREHOUSE_COLLECTION_NAME,
         },
       }),
     id,
@@ -566,20 +567,21 @@ export const itemPurchaseBatchesWebAPI = async ({
   itemNameOrBarcode?: string;
 }) => {
   try {
-    const baseUrl = getServerBaseUrl();
+    const queryParams: Record<string, string> = {};
+    if (itemId) queryParams['item_id'] = String(itemId);
+    if (itemNameOrBarcode) queryParams['itemNameOrBarcode'] = String(itemNameOrBarcode);
+    if (typeof page === 'number') queryParams['page'] = String(page);
+    if (typeof limit === 'number') queryParams['limit'] = String(limit);
 
-    const params: Record<string, string | number> = {};
-    if (itemId) params['item_id'] = itemId;
-    if (itemNameOrBarcode) params['itemNameOrBarcode'] = itemNameOrBarcode;
-    if (typeof page === 'number') params['page'] = page;
-    if (typeof limit === 'number') params['limit'] = limit;
+    const queryString = new URLSearchParams(queryParams).toString();
+    const pathWithParams = `${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}${queryString ? '?' + queryString : ''}`;
 
-    const response = await axios.get(`${baseUrl}${API_PATHS.ITEMS.GET_ITEM_PURCHASE_BATCHES}`, {
-      params,
-      withCredentials: true,
+    const response = await getAPI({ 
+      path: pathWithParams 
     });
 
-    return response.data;
+    // Return the entire response object, as it likely contains { data: T[], totalCount: number, ... }
+    return response; 
   } catch (error: any) {
     return {
       isError: true,
@@ -897,6 +899,34 @@ export const markExpiryItemsBatchClearedAPI = async (
   try {
     const response = await postAPI({
       path: `${API_PATHS.EXPIRED_ITEMS_BATCH.MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID}/${id}`,
+      data,
+    })
+    return response
+  } catch (error) {
+    return { isError: true, error }
+  }
+}
+
+
+export const updateExpiredItemsBatchAPI = async (
+  id: string,
+  data: {
+    status?: string
+    items?: {
+      itemId: string;
+      expiryDate: Date;
+      quantity: number;
+      purchaseOrderId: string;
+      costPricePerUnit: number;
+      totalCostPrice: number;
+    }[]
+    statusChangeRemark?: string
+    expiryBatchCost?: number
+  }
+) => {
+  try {
+    const response = await postAPI({
+      path: `${API_PATHS.EXPIRED_ITEM.UPDATE_EXPIRED_ITEMS_BATCH}/${id}`,
       data,
     })
     return response
