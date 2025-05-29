@@ -58,8 +58,6 @@ const getItemsLean = async (req, res, next) => {
     });
 
     const itemsBarCodeMap = {};
-    const itemNamesList = [];
-    const itemBarCodesList = [];
     const itemsNameMap = {};
 
     allItemsList.forEach((item) => {
@@ -81,11 +79,9 @@ const getItemsLean = async (req, res, next) => {
         };
       }
 
-      itemNamesList.push(item.itemName);
       itemsNameMap[item.itemName] = itemWithQty;
 
       if (item.itemBarcode) {
-        itemBarCodesList.push(item.itemBarcode);
         if (!itemsBarCodeMap[item.itemBarcode]) {
           itemsBarCodeMap[item.itemBarcode] = [];
         }
@@ -98,8 +94,6 @@ const getItemsLean = async (req, res, next) => {
       message: {
         itemsNameMap,
         itemsBarCodeMap,
-        itemBarCodesList,
-        itemNamesList,
         totalItemsCount,
       },
     });

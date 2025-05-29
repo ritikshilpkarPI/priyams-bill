@@ -36,7 +36,6 @@ export const CONSTANTS = Object.freeze({
         DESTINATION_UPDATED: "destinationUpdated",
         APPROVED: "approved"
     },
-
 })
 
 export const ITEM_EXPIRY_BATCH_ACTION = Object.freeze({
@@ -51,9 +50,5 @@ export const ITEM_EXPIRY_BATCH_STATUS = Object.freeze({
     DRAFTED: "DRAFTED",
     SAVED: "SAVED",
     CLEARED: "CLEARED",
-    TRANSACTIONS_STATUS:{
-        SOURCE_CREATED: "sourceCreated",
-        DESTINATION_UPDATED: "destinationUpdated",
-        APPROVED: "approved"
-    },
+
 })

@@ -35,5 +35,5 @@ export const CONSTANTS = Object.freeze({
       SOURCE_CREATED: "sourceCreated",
       DESTINATION_UPDATED: "destinationUpdated",
       APPROVED: "approved"
-    }
+    },
 })
