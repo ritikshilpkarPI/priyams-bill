@@ -25,6 +25,7 @@ import { PaymentSection } from '../components/PaymentSection/PaymentSection';
 import { useSelector, useDispatch } from "react-redux";
 import { itemsFeedAPILoading, selectItemsFeedData } from 'src/redux/allItemsFeedData/allItemsFeedDataSelector';
 import { fetchBillingLeanItems } from '../utils/fetchBillingLeanItems';
+import { generateItemLists } from '../utils/apiUtils';
 
 const BILL_INITIAL_STATE = {
   billItems: [],
@@ -137,11 +138,14 @@ const ReturnBill = () => {
       });
       if (response.error) return;
       if (response?.data?.message) {
-        setItemBarCodesList(response.data.message.itemBarCodesList);
-        setItemsByBarcode(response.data.message.itemsBarCodeMap);
-        setItemsByName(response.data.message.itemsNameMap);
-        setItemNamesList(response.data.message.itemNamesList);
-        setTotalItems(response.data.message.totalItemsCount);
+        const { itemsNameMap, itemsBarCodeMap, totalItemsCount } = response.data.message;
+        const { itemNamesList, itemBarCodesList } = generateItemLists(itemsNameMap, itemsBarCodeMap);
+        
+        setItemBarCodesList(itemBarCodesList);
+        setItemsByBarcode(itemsBarCodeMap);
+        setItemsByName(itemsNameMap);
+        setItemNamesList(itemNamesList);
+        setTotalItems(totalItemsCount);
       }
     } catch (error) {
       console.error(error.message);

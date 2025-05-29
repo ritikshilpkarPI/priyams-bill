@@ -1,120 +1,116 @@
 import React, { useEffect, useState } from 'react';
 import DataTable from '../DataTable';
-import { Box, Button, Drawer, LoadingOverlay, Modal } from '@mantine/core';
+import { Button, Drawer, Grid } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import {
   getAllExpiryItemsBatchAPI,
   getExpiryItemsBatchByIdAPI,
 } from 'src/utils/apiUtils';
-import { setExpiredItemsBatch } from 'src/redux/expiredItemsBatch/ExpiredItemsBatchSlice';
+import { setExpiredItemsBatch, setPage, setLimit, setLoading, setTotal } from 'src/redux/expiredItemsBatch/ExpiredItemsBatchSlice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
+import { useSearchParams } from 'react-router-dom';
+import { Tabs, Tab, Typography, Box } from '@mui/material';
+import { ITEM_EXPIRY_BATCH_STATUS } from 'src/constants/constants';
 
+const STATUS_TABS = [ITEM_EXPIRY_BATCH_STATUS.SAVED, ITEM_EXPIRY_BATCH_STATUS.DRAFTED, ITEM_EXPIRY_BATCH_STATUS.APPROVED, ITEM_EXPIRY_BATCH_STATUS.CLEARED];
 const ExpiryItemsBatch = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const params = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const status = searchParams.get('status') || 'SAVED';
   const expiryItemsBatchId = params?.id;
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   const [expandedStatusId, setExpandedStatusId] = useState<string | null>(null);
+  const [firstOpened, firstHandlers] = useDisclosure(false);
 
-  const expiredItemsBatch = useSelector(
+  const { data, pagination, loading } = useSelector(
     (state: RootState) => state.expiredItemsBatch
   );
+  const { page, limit, totalPages, total } = pagination;
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pageSize: 10,
-  });
+  const handleTabChange = (_: any, newValue: string) => {
+    setSearchParams({ status: newValue });
+  };
 
-  const navigate = useNavigate();
+  const handlePageChange = (_: any, newPage: number) => {
+    dispatch(setPage(newPage));
+  };
 
-  useEffect(() => {
-    const newPage = expiredItemsBatch?.pagination?.page;
-    const newLimit = expiredItemsBatch?.pagination?.limit;
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    dispatch(setLimit(parseInt(event.target.value, 10)));
+  };
 
-    if (newPage !== undefined && newLimit !== undefined) {
-      setPagination({
-        page: newPage,
-        pageSize: newLimit,
-      });
-    }
-  }, [
-    expiredItemsBatch?.pagination?.page,
-    expiredItemsBatch?.pagination?.limit,
-  ]);
-
-  const [loader, setLoader] = useState(false);
 
   const fetchGetExpiryItemsBatchByIdAPI = async () => {
     try {
       if (!expiryItemsBatchId) return;
-      setLoader(true);
+      dispatch(setLoading(true));
       const response = await getExpiryItemsBatchByIdAPI(expiryItemsBatchId);
 
       if (response.success) {
         dispatch(
           setExpiredItemsBatch({
             data: [response.data],
-            pagination: {
-              page: 1,
-              limit: 10,
-              totalPages: 0,
-              total: 0,
-            },
           })
         );
       }
     } catch (error) {
       toast.error('Unable to get Expired Items Batch, please try again');
     } finally {
-      setLoader(false);
+      dispatch(setLoading(false));
     }
   };
 
-  const fetchGetAllExpiryItemsBatchAPI = async (page?: number) => {
+  const fetchGetAllExpiryItemsBatchAPI = async () => {
     try {
-      setLoader(true);
-      const response = await getAllExpiryItemsBatchAPI({ page: page });
-      console.log(response);
-
+      dispatch(setLoading(true));
+      const response = await getAllExpiryItemsBatchAPI({
+        page: page,
+        limit: limit,
+        status: status,
+      });
       if (response.success) {
         dispatch(
           setExpiredItemsBatch({
             data: response.data,
-            pagination: {
-              page: response.pagination.page || 0,
-              limit: response.pagination.limit || 10,
-              totalPages: response.pagination.totalPages || 0,
-              total: response.pagination.total || 0,
-            },
           })
         );
+        dispatch(setTotal(response.pagination.total))
       }
     } catch (error) {
       toast.error('Unable to get Expired Items Batch, please try again');
     } finally {
-      setLoader(false);
+      dispatch(setLoading(false));
     }
   };
 
-  const handlePageChange = (_: any, page: number) => {
-    if (page >= 0) {
-      const callBack = (prev: any) => ({ ...prev, page });
-      pagination ? setPagination(callBack) : setPagination(callBack);
-      fetchGetAllExpiryItemsBatchAPI(page);
-    }
-  };
 
-  const handleRowsPerPageChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setPagination((prev) => ({
-      ...prev,
-      pageSize: parseInt(e.target.value, 10),
-    }));
-  };
+  const rows = data.map((batch) => ({
+    ...batch,
+    dealerName: batch.dealerId?.dealerName ?? '',
+    items:
+      batch.items?.map((item) => {
+        const matchedCost = batch.itemWiseTotalCost.find(
+          (itemWise) => itemWise.itemId?._id === item.itemId?._id
+        );
+
+        return {
+          ...item,
+          itemTotalCost: matchedCost?.itemTotalCost ?? 0,
+          sku: item.itemId?.sku ?? '',
+        };
+      }) ?? [],
+  }));
+
+  const selectedRow = data.find((row) => row._id === expandedRowId);
+  const selectedStatusRow = data.find((row) => row._id === expandedStatusId);
 
   useEffect(() => {
     if (expiryItemsBatchId) {
@@ -122,7 +118,13 @@ const ExpiryItemsBatch = () => {
     } else {
       fetchGetAllExpiryItemsBatchAPI();
     }
-  }, []);
+  }, [expiryItemsBatchId, page, limit, status]);
+
+  useEffect(() => {
+    if (!searchParams.has('status')) {
+      setSearchParams({ status: 'SAVED' });
+    }
+  }, [searchParams, setSearchParams]);
 
   const columns = [
     { key: 'boxId', label: 'Box ID' },
@@ -203,54 +205,48 @@ const ExpiryItemsBatch = () => {
         </Button>
       ),
     },
-
-
   ];
-  
-  const rows = expiredItemsBatch.data.map((batch) => ({
-    ...batch,
-    dealerName: batch.dealerId?.dealerName ?? '',
-    items: batch.items?.map((item) => {
-      const matchedCost = batch.itemWiseTotalCost.find(
-        (itemWise) => itemWise.itemId?._id === item.itemId?._id
-      );
-      
-      return {
-        ...item,
-        itemTotalCost: matchedCost?.itemTotalCost ?? 0, 
-        sku: item.itemId?.sku ?? ''
-      };
-    }) ?? [],
-  }));
 
-  const selectedRow = rows.find(
-    (row) => row._id === expandedRowId
-  );
-  const selectedStatusRow = rows.find(
-    (row) => row._id === expandedStatusId
-  );
-
-  const [firstOpened, firstHandlers] = useDisclosure(false);
-  const isSmallScreen = useMediaQuery('(max-width: 768px)');
-  
   return (
-    <Box>
-      <LoadingOverlay visible={loader} zIndex={1} />
-      <DataTable
-        columns={columns}
-        data={rows}
-        isLoading={false}
-        page={pagination.page}
-        rowsPerPage={pagination.pageSize}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleRowsPerPageChange}
-        paginationMode="server"
-        rowCount={expiredItemsBatch.pagination.total}
-        order="asc"
-        orderBy=""
-        onSort={() => {}}
-      />
-
+    <Box p={3}>
+      <Grid>
+        <Grid.Col span={12}>
+          <Typography variant="h5" gutterBottom>
+            Expiry Batches
+          </Typography>
+        </Grid.Col>
+        <Grid.Col span={12}>
+          <Tabs
+            value={status}
+            onChange={handleTabChange}
+            textColor="primary"
+            indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{ mb: 2 }}
+          >
+            {STATUS_TABS.map((s) => (
+              <Tab key={s} label={s} value={s} />
+            ))}
+          </Tabs>
+        </Grid.Col>
+        <Grid.Col span={12}>
+          <DataTable
+            columns={columns}
+            data={rows}
+            isLoading={loading}
+            page={page}
+            rowsPerPage={limit}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            paginationMode="server"
+            rowCount={total}
+            order="asc"
+            orderBy=""
+            onSort={() => {}}
+          />
+        </Grid.Col>
+      </Grid>
       <Drawer
         size={'70%'}
         position={isSmallScreen ? 'top' : 'right'}
@@ -264,20 +260,20 @@ const ExpiryItemsBatch = () => {
         {selectedRow && (
           <DataTable
             columns={[
-              { key: 'sku', label: 'SKU'},
+              { key: 'sku', label: 'SKU' , render: (row: any) => row.itemId?.sku ?? ''},
               { key: 'expiryDate', label: 'Expiry Date' },
               { key: 'quantity', label: 'Quantity' },
               {
                 key: 'costPricePerUnit',
                 label: 'Cost/Unit'
-                
+
               },
               { key: 'totalCostPrice', label: 'Total Expiry Cost' },
               { key: 'itemTotalCost', label: 'Total Cost' },
             ]}
             data={selectedRow.items}
             isLoading={false}
-            page={0}
+            page={1}
             rowsPerPage={selectedRow.items.length}
             onPageChange={() => {}}
             onRowsPerPageChange={() => {}}
@@ -303,7 +299,7 @@ const ExpiryItemsBatch = () => {
             ]}
             data={selectedStatusRow.statusHistory}
             isLoading={false}
-            page={0}
+            page={1}
             rowsPerPage={selectedStatusRow.statusHistory.length}
             onPageChange={() => {}}
             onRowsPerPageChange={() => {}}
