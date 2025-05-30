@@ -322,7 +322,7 @@ const StoreInventoryManagement: React.FC = () => {
 
   useEffect(() => {
     fetchSourceStaffs(transactionSource.sourceEntityId);
-    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId, transactionSource.sourceType ));
+    dispatch(fetchBillingLeanItems('', transactionSource.sourceEntityId));
   }, [transactionSource.sourceEntityId]);
 
   const getStockTransactions = async (transactionId: string) => {
@@ -337,9 +337,9 @@ const StoreInventoryManagement: React.FC = () => {
   };
 
   useEffect(() => {
-    if (transactionId) {
+    if ( transactionId ){
       getStockTransactions(transactionId);
-    }
+    } 
   }, [transactionId]);
 
   const [confirmZeroQty, setConfirmZeroQty] = useState(false);
@@ -512,7 +512,6 @@ try {
                   stockTransaction.approvedByAdmin
                 }
                 error={errors.inventoryItems}
-                isWarehouse = { stockTransaction?.source?.sourceType === CONSTANTS.WAREHOUSE ? true : false}
               />
               {!stockTransaction.source.sourceEntityId && (
                 <Text
