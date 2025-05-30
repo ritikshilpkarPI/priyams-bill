@@ -17,7 +17,7 @@ import { ExpiredItemPOTable } from 'src/components/ExpiredItemPOTable';
 import { toast } from 'react-toastify';
 import { selectDealerLoading, selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 import { setDealers, setDealersLoading } from 'src/redux/dealerlist/dealerSlice';
-import { setBoxIdToBatch, setDealerIdToBatch, setBatchStatus } from 'src/redux/ExpiryBatch/expiryBatchSlice';
+import { setBoxIdToBatch, setDealerIdToBatch, setBatchStatus, addItemData, removeItemData, setItemsData } from 'src/redux/ExpiryBatch/expiryBatchSlice';
 import { useParams } from 'react-router';
 import { isAdmin } from 'src/utils/isAdmin';
 import { ITEM_EXPIRY_BATCH_ACTION, ITEM_EXPIRY_BATCH_STATUS } from 'src/constants/constants';
@@ -32,8 +32,8 @@ import { updateBatch } from './utils/updateBatch';
 const AddExpiredItem = () => {
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [items, setItems] = useState<InventoryRow[]>([]);
-   const expiryBatchItems = useSelector(
+    const [items, setItems] = useState<InventoryRow[]>([]);
+    const expiryBatchItems = useSelector(
       (state: RootState) => state.expiryBatch.items
     );
   
@@ -67,7 +67,7 @@ const AddExpiredItem = () => {
       const newItem = rows[0];
 
       setItems([...items, newItem]);
-     
+
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +95,7 @@ const AddExpiredItem = () => {
       if (!res?.isError) {
         toast('Expired items batch added successfully');
         setErrors({});
-        setItems([]);
+                setItems([]);
       }
       if (res?.isError) {
         toast(res?.error?.error ?? 'Failed to add expired items batch');
@@ -159,13 +159,14 @@ const AddExpiredItem = () => {
       })
       setItems(itemsArray);
       setExpiryBatchData(res?.data?.items);
-      dispatch(setDealerIdToBatch({
+            dispatch(setDealerIdToBatch({
         dealerId: res?.data?.dealerId?._id,
         dealerName: res?.data?.dealerId?.dealerName,
       }));
       dispatch(setBoxIdToBatch({ boxId: res?.data?.boxId }));
-      dispatch(setBatchStatus({status: res?.data?.status}));
+      dispatch(setBatchStatus(res?.data?.status));
       setSelectedDealer(res?.data?.dealerId?._id);
+      setExpiryBatchData(res?.data?.items);
     }
     } catch {
       toast('Error fetching batch. Please try again.', { type: 'error' })
@@ -192,16 +193,16 @@ useEffect(() => {
       gap="16px"
       direction="column"
       sx={{
-        border: '1px solid grey',
-        padding: '16px',
-        borderRadius: '8px',
+        padding: '16px 56px',
         overflow: 'scroll',
         '&::-webkit-scrollbar': {
           display: 'none',
         },
+        backgroundColor: '#DAEDF5',
+        height: '100vh'
+        
       }}
-      mx="sm"
-      mt="16px"
+      
     >
       <Grid columns={12} sx={{ width: '100%' }}>
         <Grid.Col span={12}>
@@ -265,7 +266,7 @@ useEffect(() => {
           </Grid.Col>
 
       { !id ?  <Grid.Col span={false ? 12 : 4}>
-          <Button loading={false} w="100%" onClick={addExpiredItemsBatch} disabled={noOfItemsInBatch === 0}>
+          <Button loading={false} w="100%" onClick={addExpiredItemsBatch} disabled={noOfItemsInBatch === 0}  bg={'#3199C0'}>
             Add expired items batch
           </Button>
         </Grid.Col>

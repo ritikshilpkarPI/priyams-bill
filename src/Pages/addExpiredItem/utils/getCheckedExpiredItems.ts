@@ -6,6 +6,7 @@ export function getCheckedExpiredItems(resp: Record<string, any[]>) {
       purchaseOrderId: string;
       costPricePerUnit: number;
       totalCostPrice: number;
+      manufacturingDate?: Date;
     }[] = [];
     let expiryBatchCost = 0;
   
@@ -19,6 +20,7 @@ export function getCheckedExpiredItems(resp: Record<string, any[]>) {
           quantity,
           purchaseOrderId,
           costPrice = 0,
+          manufacturingDate
         } = batch;
         const totalCostPrice = costPrice * quantity;
         expiryBatchCost += totalCostPrice;
@@ -30,6 +32,7 @@ export function getCheckedExpiredItems(resp: Record<string, any[]>) {
           purchaseOrderId,
           costPricePerUnit: costPrice,
           totalCostPrice,
+          manufacturingDate: new Date(manufacturingDate)
         });
       });
     }
