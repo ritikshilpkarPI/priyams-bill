@@ -1,136 +1,124 @@
-.payment-input-wrapper {
-    position: relative;
+
+.payment-section {
+    width: 90%;
+  }
+  
+  .payment-paper {
+    background: var(--color-surface) !important;
+    border: none !important;
+    color: var(--color-textPrimary) !important;
+  }
+  
+  /* ─── PAYMENT DETAILS HEADER ────────────────────────────────────────────── */
+  
+  .payment-details-text {
+    color: var(--color-primary) !important;
+  }
+  
+  
+ 
+  .amount-display-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
   }
-
-  .text-red {
-    color: red;
+  
+  .amount-label {
+    font-size: var(--font-size-md);
+    margin-right: 0.5rem;
   }
-
-  .text-blue {
-    color: #228be6;
+  
+  .amount-value {
+    font-size: var(--font-size-xl);
+  }
+  
+  .text-primary {
+    color: var(--color-primary) !important;
+  }
+  
+  .text-error {
+    color: var(--color-accent) !important; 
+  }
+  
+  
+  .payment-inputs {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .payment-field .field-label {
+    margin-bottom: 0.25rem;
+    color: var(--color-textSecondary) !important;
+  }
+  
+  .payment-input-wrapper {
+    position: relative;
+    width: 100%;
   }
   
   .payment-input-icon {
     position: absolute;
-    left: 10px;
+    left: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
-    
+    height: 1rem;
+    width: auto;
     pointer-events: none;
-    z-index: 99;
   }
   
-  .payment-input-with-icon input{
-    padding-left: 40px ; 
+  .payment-input-with-icon .mantine-Input-input,
+  .payment-input-with-icon .mantine-NumberInput-input {
+    padding-left: 2.5rem;
+    background: var(--color-background) !important;
+    border: 1px solid var(--color-border) !important;
+    color: var(--color-textPrimary) !important;
+  }
+  
+  .mantine-Input-input::placeholder,
+  .mantine-NumberInput-input::placeholder {
+    color: var(--color-textSecondary) !important;
+  }
+  
+  .staff-field .mantine-Select-selector {
+    background: var(--color-background) !important;
+    border-color: var(--color-border) !important;
+    color: var(--color-textPrimary) !important;
+  }
+  .staff-field .mantine-Select-root .mantine-Select-placeholder {
+    color: var(--color-textSecondary) !important;
   }
   
   
+  .return-alert {
+    background: var(--color-info) !important;
+    border-color: var(--color-border) !important;
+    color: var(--color-textPrimary) !important;
+  }
   
   
-@media print {
-    .payment-section {
-        width: 60mm;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: none;
-        box-shadow: none;
-        border: none;
-        padding: 0 ;
-        margin: 0 ;
-    }
-    
-      
-
+  .pay-print-button {
+    background: var(--gradient-button) !important;
+    color: var(--color-background) !important;
+    border: none !important;
+    font-weight: var(--font-weight-medium) !important;
+  }
+  
+  
+  @media print {
+    .payment-section,
     .payment-section * {
-        background: none;
-        box-shadow: none;
-        border: none;
-        color: black ;
-      
-        margin: 0 ;
-        padding: 0 ;
+      background: none !important;
+      color: black !important;
+      border: none !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
-
-    .payment-details-text {
-        display: none;
-    }
-
-    .amount-display-text {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-
-    .amount-display * {
-        font-size: 14px ;
-        font-weight: bold;
-    }
-
-    .payment-inputs {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        font-weight: normal;
-        font-size: 14px ;
-   
-    }
-
-    .cash-input, .upi-input {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        width: 100%;
-        font-weight: normal ;
-        font-size: 14px ;
-    }
-    .staff-input{
-        display: none;
-    }
-
-    .cash-paid-text, .upi-paid-text {
-        width: 100% ;
-        text-align: left;
-        display: flex;
-        align-items: center;
-        font-weight: normal;
-        font-size: 14px ;
-    }
-
-    .cash-input input, .upi-input input {
-        border: none;
-        outline: none;
-        background: none;
-        font-size: 14px;
-        text-align: right;
-    }
-    
-    .pay-print-button {
-        display: none;
-    }
-
-    .mantine-Paper-root {
-        background: none;
-        box-shadow: none;
-        border: none;
-    }
-
-    .mantine-Alert-root {
-        border: none;
-        background: none;
-        box-shadow: none;
-    }
-
-    .cash-input label, .upi-input label {
-        margin-right: 10px;
-    }
-    .payment-input-icon {
-        display: none;
-    } 
-    
-   
-}
+    .payment-details-text { display: none; }
+    .amount-display-text { margin-bottom: 0.5rem; }
+    .payment-inputs { display: none; }
+    .return-alert { display: none !important; }
+    .pay-print-button { display: none !important; }
+  }
+  
