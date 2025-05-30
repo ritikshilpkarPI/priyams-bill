@@ -313,12 +313,15 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
     }
 
     if (expiryBatchData) {
+  console.log("expiryBatchData: ",expiryBatchData);
   
       const transformedItems = expiryBatchData.map(item => ({
         _id: item.itemId._id,
         shelfId: item.itemId._id,
         itemId: { _id: item.itemId._id },
-        manufacturingDate: new Date().toISOString(),
+        manufacturingDate: item.manufacturingDate
+          ? dayjs(item.manufacturingDate).toISOString()
+          : new Date().toISOString(),
         expiryDate: item.expiryDate,
         quantity: item.quantity,
         currentStockQuantity: item.quantity,
