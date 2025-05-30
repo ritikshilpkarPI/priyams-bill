@@ -19,6 +19,7 @@ import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import { fetchAllPaginatedAPI } from '../utils/fetchPaginatedAPI';
 import ItemTrendTable from 'src/components/ItemTrendTable';
+import { CONSTANTS } from '../constants/constants';
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
