@@ -312,9 +312,7 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
       dispatch(setItems({ items }));
     }
 
-    if (expiryBatchData) {
-  console.log("expiryBatchData: ",expiryBatchData);
-  
+    if (expiryBatchData) {  
       const transformedItems = expiryBatchData.map(item => ({
         _id: item.itemId._id,
         shelfId: item.itemId._id,
