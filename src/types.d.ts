@@ -728,6 +728,7 @@ declare global {
   }
   
   interface InventoryItem {
+    _id: string;
     itemDetail: {
       _id: string;
       itemName: string;
@@ -760,13 +761,13 @@ declare global {
   }
   interface Shelf {
     _id: string;
-    expiryDate: string;
-    manufacturingDate: string;
-    quantity: number;
-    quantityToAdd?: number;
     purchaseOrderId?: string;
-    currentStockQuantity: number;
+    entryDate: string;
+    manufacturingDate: string;
+    expiryDate: string;
     initialStockQuantity: number;
+    currentStockQuantity: number;
+    costPrice?: number;
   }
   
   interface ShelfTableProps {
@@ -1010,6 +1011,7 @@ declare global {
     purchaseOrderId?: string;
     costPricePerUnit?: number;
     totalCostPrice?: number;
+    manufacturingDate?: string;
   }
   
   interface ExpiryItemWiseTotalCost {
@@ -1228,22 +1230,33 @@ export type InventoryTableRow = Omit<StaticItemData, '_id'> & {
 
 interface Shelf {
   _id: string;
-  purchaseOrderId: string;
+  purchaseOrderId?: string;
   entryDate: string;
   manufacturingDate: string;
   expiryDate: string;
   initialStockQuantity: number;
   currentStockQuantity: number;
+  costPrice?: number;
 }
 
-interface Purchase {
-  purchaseOrderId: string;
-  costPrice: number;
-  sellingPrice: number;
-  dealerId: {
-    dealerName: string;
-    _id: string;
-  };
+export interface Purchase {
+  _id?: string;
+  purchaseOrderId?: string;
+  dealerId?: { _id: string; dealerName: string };
+  items: PurchaseItem[];
+  draftTime?: string;
+  approveTime?: string;
+  costPrice?: number;
+}
+
+export interface PurchaseItem {
+  _id?: string;
+  purchaseOrderId?: string;
+  dealerId?: { _id: string; dealerName: string };
+  items: PurchaseItem[];
+  draftTime?: string;
+  approveTime?: string;
+  costPrice?: number;
 }
 
 export interface ItemData {
@@ -1258,10 +1271,11 @@ export interface ItemData {
 export interface ExpiredItemTableProps {
   items?: ItemData[];
   expiryBatchData?: {
+    manufacturingDate: string;
     itemId: {
       _id: string
     };
-    expiryDate: Date;
+    expiryDate: string;
     quantity: number;
     purchaseOrderId: {
       _id: string
@@ -1269,6 +1283,7 @@ export interface ExpiredItemTableProps {
     costPricePerUnit: number;
     totalCostPrice: number;
   }[];
+  setItemsData: (items: any) => void;
 }
 
 export {};

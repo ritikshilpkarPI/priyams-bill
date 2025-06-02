@@ -37,63 +37,7 @@ export const updateDestination = async ({
 }: UpdateDestinationParams) => {
   const updatedItems = [];
 
-  if (destinationType === CONSTANTS.WAREHOUSE) {
-    const itemIds = items.map(item => {
-      if (!item.itemId) {
-        throw new Error('Missing itemId in item data');
-      }
-      
-      try {
-        const itemIdStr = String(item.itemId);
-        return new mongoose.Types.ObjectId(itemIdStr);
-      } catch (error) {
-        throw new Error(`Invalid itemId format: ${JSON.stringify(item.itemId)}`);
-      }
-    });
-    
-    const itemsMap = new Map(
-      (await Item.find({ _id: { $in: itemIds } })).map(item => [item._id.toString(), item])
-    );
-
-    const bulkOps = [];
-    for (const { itemId, quantity, itemShelfDates = [] } of items) {
-      if (!itemId || quantity == null) {
-        throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
-      }
-
-      const itemIdStr = String(itemId);
-      const item = itemsMap.get(itemIdStr);
-      if (!item) {
-        throw new Error(MESSAGES.NO_ITEMS_FOUND);
-      }
-
-      item.itemStockQuantity += quantity;
-      updateItemShelfDates(
-        item.itemShelfDates,
-        itemShelfDates,
-        new mongoose.Types.ObjectId(transactionId),
-        'ADD'
-      );
-
-      bulkOps.push({
-        updateOne: {
-          filter: { _id: item._id },
-          update: {
-            $set: {
-              itemStockQuantity: item.itemStockQuantity,
-              itemShelfDates: item.itemShelfDates
-            }
-          }
-        }
-      });
-
-      updatedItems.push({ updatedItem: item });
-    }
-
-    if (bulkOps.length > 0) {
-      await Item.bulkWrite(bulkOps);
-    }
-  } else if (destinationType === CONSTANTS.STORE) {
+  if (destinationType === CONSTANTS.STORE || CONSTANTS.WAREHOUSE) {
     const store = await StoreModel.findById(destinationEntityId);
     if (!store) throw new Error(MESSAGES.STORE_NOT_FOUND ?? 'Store not found');
 
