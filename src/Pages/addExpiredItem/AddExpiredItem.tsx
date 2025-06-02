@@ -262,7 +262,7 @@ useEffect(() => {
         
         </Grid.Col>   
           <Grid.Col span={12}>
-            <ExpiredItemPOTable items={items as any} expiryBatchData={expiryBatchData} />
+            <ExpiredItemPOTable items={items as any} expiryBatchData={expiryBatchData} setItemsData={setItems} />
           </Grid.Col>
 
       { !id ?  <Grid.Col span={false ? 12 : 4}>

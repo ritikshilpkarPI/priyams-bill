@@ -41,7 +41,7 @@ const generateBoxId = (): string => {
   return id;
 };
 
-export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = [], expiryBatchData }) => {
+export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = [], expiryBatchData, setItemsData }) => {
   const dispatch = useDispatch();
   const expiryBatchMap = useSelector(
     (state: RootState) => state.expiryBatch.items
@@ -355,10 +355,12 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
 
   const handleRemoveItem = async (itemId: string) => {
     try {
+      
       setIsRemovingItem(true);
       setRemovingItemId(itemId);
       dispatch(removeItemData({ itemId }));
-    
+
+      setItemsData((items: any[]) => items.filter((item: { _id: string; }) => item._id !== itemId));
       setOpenItems((prev) => {
         const next = new Set(prev);
         next.delete(itemId);
