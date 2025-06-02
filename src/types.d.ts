@@ -728,6 +728,7 @@ declare global {
   }
   
   interface InventoryItem {
+    _id: string;
     itemDetail: {
       _id: string;
       itemName: string;
@@ -1010,6 +1011,7 @@ declare global {
     purchaseOrderId?: string;
     costPricePerUnit?: number;
     totalCostPrice?: number;
+    manufacturingDate?: string;
   }
   
   interface ExpiryItemWiseTotalCost {
@@ -1269,6 +1271,7 @@ export interface ItemData {
 export interface ExpiredItemTableProps {
   items?: ItemData[];
   expiryBatchData?: {
+    manufacturingDate: string;
     itemId: {
       _id: string
     };
@@ -1280,6 +1283,7 @@ export interface ExpiredItemTableProps {
     costPricePerUnit: number;
     totalCostPrice: number;
   }[];
+  setItemsData: (items: any) => void;
 }
 
 export {};

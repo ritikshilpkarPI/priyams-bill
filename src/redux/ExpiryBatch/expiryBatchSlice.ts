@@ -205,9 +205,7 @@ const expiryBatchSlice = createSlice({
       }
 
       state.itemsData = state.itemsData.filter((item: InventoryRow) => item._id !== itemId);
-
-      const { [itemId]: _, ...rest } = state.items;
-      state.items = rest;
+      
     },
     setItemsData: (state, action: PayloadAction<InventoryRow[]>) => {
       state.itemsData = action.payload;
