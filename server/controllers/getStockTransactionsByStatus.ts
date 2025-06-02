@@ -14,15 +14,7 @@ export const getStockTransactionsByStatus = async (
     const filter: any = { isDeleted: false };
 
     if (status && typeof status === 'string') {
-      filter.transactionStatus =
-        status === CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED
-          ? {
-              $in: [
-                CONSTANTS.TRANSACTIONS_STATUS.SOURCE_CREATED,
-                CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED,
-              ],
-            }
-          : status;
+      filter.transactionStatus = status;
     }
 
     const transactions = await StockTransactionModel.find(filter)

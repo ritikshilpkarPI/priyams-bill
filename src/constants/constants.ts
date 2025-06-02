@@ -29,12 +29,13 @@ export const CONSTANTS = Object.freeze({
         PACKAGING: "Packaging",
         QUANTITY_UPDATE: "QUANTITY_UPDATE" 
     },
+    WAREHOUSE_COLLECTION_NAME: "pstr_1_462020_warehouse",
+    
     TRANSACTIONS_STATUS:{
         SOURCE_CREATED: "sourceCreated",
         DESTINATION_UPDATED: "destinationUpdated",
         APPROVED: "approved"
     },
-    WAREHOUSE_COLLECTION_NAME: "pstr_1_462020_warehouse",
     TABLE_HEADERS:{
         SKU: 'SKU',
         ITEM_NAME: 'Item Name',
@@ -59,4 +60,5 @@ export const ITEM_EXPIRY_BATCH_STATUS = Object.freeze({
     DRAFTED: "DRAFTED",
     SAVED: "SAVED",
     CLEARED: "CLEARED",
+
 })
