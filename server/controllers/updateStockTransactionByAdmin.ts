@@ -170,6 +170,13 @@ export const updateStockTransactionByAdmin = async (
     }
 
     const updateFields: any = {};
+
+    if (updateData.approvedByAdmin) {
+      transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.APPROVED;
+    } else if (!updateData.approvedByAdmin) {
+      transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED;
+    }
+
     if (adminRemark !== undefined) {
       transaction.adminRemark = adminRemark;
       transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED;
