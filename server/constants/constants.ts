@@ -31,4 +31,10 @@ export const CONSTANTS = Object.freeze({
       'dealerName'
     ],
     WAREHOUSE_COLLECTION_NAME: "pstr_1_462020_warehouse",
+    TRANSACTION_REASON:{
+      EXPIRED_BATCH: "EXPIRED_BATCH",
+    }, 
+    EXPIRED_STATUS:{
+      APPROVED: "APPROVED"
+    }
 })
