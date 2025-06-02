@@ -1010,6 +1010,7 @@ declare global {
     purchaseOrderId?: string;
     costPricePerUnit?: number;
     totalCostPrice?: number;
+    manufacturingDate?: string;
   }
   
   interface ExpiryItemWiseTotalCost {
@@ -1269,6 +1270,7 @@ export interface ItemData {
 export interface ExpiredItemTableProps {
   items?: ItemData[];
   expiryBatchData?: {
+    manufacturingDate: string;
     itemId: {
       _id: string
     };
