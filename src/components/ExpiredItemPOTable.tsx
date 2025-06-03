@@ -590,9 +590,7 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
 
                               <tbody>
                               
-                                {[...item.itemShelfDates, ...additionalBatches].map((batch) => {
-                                    console.log({batch});
-                                    
+                                {[...item.itemShelfDates, ...additionalBatches].map((batch) => {                                    
                                   const reduxItemExpiryRec = expiryBatchMap[item._id]?.find((b) => b.shelfId === batch._id);
                                   const isEdit = editingBatches.has(batch._id);
                                   const draft = drafts[batch._id];
