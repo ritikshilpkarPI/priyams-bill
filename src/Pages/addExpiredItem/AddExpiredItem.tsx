@@ -17,7 +17,7 @@ import { ExpiredItemPOTable } from 'src/components/ExpiredItemPOTable';
 import { toast } from 'react-toastify';
 import { selectDealerLoading, selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 import { setDealers, setDealersLoading } from 'src/redux/dealerlist/dealerSlice';
-import { setBoxIdToBatch, setDealerIdToBatch, setBatchStatus, addItemData, removeItemData, setItemsData } from 'src/redux/ExpiryBatch/expiryBatchSlice';
+import { setBoxIdToBatch, setDealerIdToBatch, setBatchStatus, addItemData, removeItemData, setItemsData, clearBatch } from 'src/redux/ExpiryBatch/expiryBatchSlice';
 import { useParams } from 'react-router';
 import { isAdmin } from 'src/utils/isAdmin';
 import { ITEM_EXPIRY_BATCH_ACTION, ITEM_EXPIRY_BATCH_STATUS } from 'src/constants/constants';
@@ -95,7 +95,11 @@ const AddExpiredItem = () => {
       if (!res?.isError) {
         toast('Expired items batch added successfully');
         setErrors({});
-                setItems([]);
+        setItems([]);
+        dispatch(setItemsData([]));
+        dispatch(setBoxIdToBatch({ boxId: '' }));
+        dispatch(setDealerIdToBatch({ dealerId: '', dealerName: '' }));
+        dispatch(clearBatch());
       }
       if (res?.isError) {
         toast(res?.error?.error ?? 'Failed to add expired items batch');
@@ -154,38 +158,71 @@ const AddExpiredItem = () => {
       const res = await getExpiryItemsBatchByIdAPI(id);     
 
       if (res.success) {
-      const itemsArray = res?.data?.items?.map((item: ItemSoldInterface)=> {
-        return item?.itemId
-      })
-      setItems(itemsArray);
-      setExpiryBatchData(res?.data?.items);
-            dispatch(setDealerIdToBatch({
-        dealerId: res?.data?.dealerId?._id,
-        dealerName: res?.data?.dealerId?.dealerName,
-      }));
-      dispatch(setBoxIdToBatch({ boxId: res?.data?.boxId }));
-      dispatch(setBatchStatus(res?.data?.status));
-      setSelectedDealer(res?.data?.dealerId?._id);
-      setExpiryBatchData(res?.data?.items);
-    }
-    } catch {
-      toast('Error fetching batch. Please try again.', { type: 'error' })
+        const itemsArray = res?.data?.items?.map((item: ItemSoldInterface)=> {
+          return item?.itemId
+        })
+                setItems(itemsArray);
+        setExpiryBatchData(res?.data?.items);
+        dispatch(setDealerIdToBatch({
+          dealerId: res?.data?.dealerId?._id,
+          dealerName: res?.data?.dealerId?.dealerName,
+        }));
+        dispatch(setBoxIdToBatch({ boxId: res?.data?.boxId }));
+        dispatch(setBatchStatus(res?.data?.status));
+        setSelectedDealer(res?.data?.dealerId?._id);
+        
+        setExpiryBatchData((prev: any) => {
+          if (JSON.stringify(prev) !== JSON.stringify(res?.data?.items)) {
+            return res?.data?.items;
+          }
+          return prev;
+        });
+      }
+    } catch (error) {
+      toast.error('Error fetching batch. Please try again.');
+      console.error('Error fetching batch:', error);
     } 
-  }
+  };
 
 useEffect(() => {
   getItemExpiryBatchData();
+   if(!id) {
+      dispatch(setDealerIdToBatch({ dealerId: '', dealerName: '' }));
+      setItems([]);
+    }
   }, [id])
 
   const isAdminUser = isAdmin();
 
 
  const updateExpiryBatch = async (actionType: string) => {
-  const message = await updateBatch(id, actionType, expiryBatchItems);
-  if (message) {
-    toast(message);
-  }
-   }
+    try {
+      const message = await updateBatch(id, actionType, expiryBatchItems);
+            let newStatus = '';
+      switch (actionType) {
+        case ITEM_EXPIRY_BATCH_ACTION.DRAFT:
+          newStatus = ITEM_EXPIRY_BATCH_STATUS.DRAFTED;
+          toast.success('Batch drafted successfully');
+          break;
+        case ITEM_EXPIRY_BATCH_ACTION.APPROVE:
+          newStatus = ITEM_EXPIRY_BATCH_STATUS.APPROVED;
+          toast.success('Batch approved successfully');
+          break;
+        case ITEM_EXPIRY_BATCH_ACTION.UPDATE:
+          newStatus = ITEM_EXPIRY_BATCH_STATUS.SAVED;
+          toast.success('Batch updated successfully');
+          break;
+      }
+
+      dispatch(setBatchStatus(newStatus));
+      
+      await getItemExpiryBatchData();
+      
+    } catch (error) {
+      toast.error('Failed to update batch. Please try again.');
+      console.error('Error updating batch:', error);
+    }
+  };
   
 
   return (
@@ -262,7 +299,7 @@ useEffect(() => {
         
         </Grid.Col>   
           <Grid.Col span={12}>
-            <ExpiredItemPOTable items={items as any} expiryBatchData={expiryBatchData} setItemsData={setItems} />
+            <ExpiredItemPOTable items={items as any} expiryBatchData={expiryBatchData} setItemsData={setItems} id={id} isLoading={isLoading} />
           </Grid.Col>
 
       { !id ?  <Grid.Col span={false ? 12 : 4}>
