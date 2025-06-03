@@ -1271,6 +1271,7 @@ export interface ItemData {
 export interface ExpiredItemTableProps {
   items?: ItemData[];
   expiryBatchData?: {
+    _id: string;
     manufacturingDate: string;
     itemId: {
       _id: string
