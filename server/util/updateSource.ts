@@ -65,10 +65,9 @@ export const updateSource = async ({
         throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
       }
 
-      const itemIdStr = String(itemId);
-      const storeItem = storeItemsMap.get(itemIdStr) as StoreInventoryItem | undefined;
-      if (!storeItem || storeItem.itemQuantityInStore < quantity) {
-        throw new Error(MESSAGES.INSUFFICIENT_STORE_STOCK);
+      const storeItem = await StoreInventory.findOne({ itemId });
+      if (!storeItem) {
+        return; 
       }
 
       updateItemShelfDates(
