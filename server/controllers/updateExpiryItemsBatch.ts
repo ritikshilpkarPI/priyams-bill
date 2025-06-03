@@ -33,7 +33,7 @@ export const updateExpiryItemsBatch = async (
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid batch ID' });
     }
-
+    
     const updatePayload: Partial<ExpiredItemsSchema> = {};
     if (expiryBatchCost !== undefined) {
       if (isNaN(Number(expiryBatchCost))) {
