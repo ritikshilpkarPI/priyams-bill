@@ -1,4 +1,4 @@
-import React, { useState, Fragment, MouseEvent, useEffect } from 'react';
+import React, { useState, Fragment, MouseEvent, useEffect, useRef } from 'react';
 import {
   Table,
   ScrollArea,
@@ -13,6 +13,7 @@ import {
   Flex,
   Select,
   Collapse,
+  Loader,
 } from '@mantine/core';
 import {
   IconCheck,
@@ -23,7 +24,7 @@ import dayjs from 'dayjs';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
-import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch, removeBatch, updateItemsWithExpiryBatch, removeItemData } from '../redux/ExpiryBatch/expiryBatchSlice';
+import { updateBatch, addBatch, setItems, setBoxIdToBatch, setDealerIdToBatch, removeBatch, updateItemsWithExpiryBatch, removeItemData, BatchEntry } from '../redux/ExpiryBatch/expiryBatchSlice';
 import { selectDealers } from 'src/redux/dealerlist/dealerSelectors';
 import { ExpiredItemTableProps } from 'src/types';
 
@@ -41,7 +42,7 @@ const generateBoxId = (): string => {
   return id;
 };
 
-export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = [], expiryBatchData, setItemsData }) => {
+export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = [], expiryBatchData, setItemsData, id, isLoading }) => {
   const dispatch = useDispatch();
   const expiryBatchMap = useSelector(
     (state: RootState) => state.expiryBatch.items
@@ -93,6 +94,8 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
   const [isRemovingItem, setIsRemovingItem] = useState<boolean>(false);
   const [removingItemId, setRemovingItemId] = useState<string | null>(null);
   
+  const prevExpiryBatchDataRef = useRef(expiryBatchData);
+  const prevItemsRef = useRef(items);
 
   useEffect(() => {
     dispatch(setBoxIdToBatch({ boxId: boxId }));
@@ -141,7 +144,7 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
   };
 
   const cancelEdit = (e: MouseEvent, batchId: string, itemId?: string, isDeleteAction?: boolean) => {
-    e.stopPropagation();
+    e.stopPropagation();    
 
    
       isDeleteAction && dispatch(removeBatch({
@@ -308,31 +311,67 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
   };
 
   useEffect(() => {
+    if (items.length > 0 && JSON.stringify(items) !== JSON.stringify(prevItemsRef.current)) {
+      const existingItems = { ...expiryBatchMap };
+      
+      const itemsToSet = items.filter(item => !existingItems[item._id] || existingItems[item._id].length === 0);
+      
+      if (itemsToSet.length > 0) {
+        dispatch(setItems({ items: itemsToSet }));
+      }
+      
+      prevItemsRef.current = items;
+    }
+
+    if (expiryBatchData && JSON.stringify(expiryBatchData) !== JSON.stringify(prevExpiryBatchDataRef.current)) {
+      const existingItems = { ...expiryBatchMap };
+      
+      expiryBatchData.forEach(item => {
+        const existingBatches = existingItems[item.itemId._id] || [];
+        const newBatch: BatchEntry & { itemId: { _id: string } } = {
+          _id: item.itemId._id,
+          shelfId: item.itemId._id,
+          itemId: { _id: item.itemId._id },
+          manufacturingDate: item.manufacturingDate
+            ? dayjs(item.manufacturingDate).toISOString()
+            : new Date().toISOString(),
+          expiryDate: item.expiryDate,
+          quantity: item.quantity,
+          currentStockQuantity: item.quantity,
+          checked: true,
+          costPrice: item.costPricePerUnit,
+          purchaseOrderId: item?.purchaseOrderId?._id || '',
+          entryDate: new Date().toISOString(),
+          initialStockQuantity: item.quantity
+        };
+        const updatedBatches = [...existingBatches, newBatch];
+        
+        existingItems[item.itemId._id] = updatedBatches;
+      });
+
+      const allItems = Object.values(existingItems).flat() as (BatchEntry & { itemId: { _id: string } })[];
+      
+      dispatch(updateItemsWithExpiryBatch({ items: allItems }));
+
+      prevExpiryBatchDataRef.current = expiryBatchData;
+    }
+  }, [items, expiryBatchData, dispatch, expiryBatchMap]);
+
+  useEffect(() => {
     if (items.length > 0) {
-      dispatch(setItems({ items }));
-    }
+      const existingItems = { ...expiryBatchMap }; 
+      
+      items.forEach(item => {
+        if (!existingItems[item._id]) {
+          existingItems[item._id] = [];
+        }
+      });
 
-    if (expiryBatchData) {  
-      const transformedItems = expiryBatchData.map(item => ({
-        _id: item.itemId._id,
-        shelfId: item.itemId._id,
-        itemId: { _id: item.itemId._id },
-        manufacturingDate: item.manufacturingDate
-          ? dayjs(item.manufacturingDate).toISOString()
-          : new Date().toISOString(),
-        expiryDate: item.expiryDate,
-        quantity: item.quantity,
-        currentStockQuantity: item.quantity,
-        checked: true,
-        costPrice: item.costPricePerUnit,
-        purchaseOrderId: item?.purchaseOrderId?._id,
-        entryDate: new Date().toISOString(),
-        initialStockQuantity: item.quantity
-      }));
-      dispatch(updateItemsWithExpiryBatch({ items: transformedItems }));
+      const allItems = Object.values(existingItems).flat() as (BatchEntry & { itemId: { _id: string } })[];
+      
+      dispatch(updateItemsWithExpiryBatch({ items: allItems }));
     }
-  }, [items, expiryBatchData, dispatch]);
-
+  }, [items, dispatch, expiryBatchMap]);
 
   if (!items.length) {
     return <Text>No items to display.</Text>;
@@ -408,7 +447,16 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
         />
       </Flex>
 
-    
+      <Flex justify="center" mb="md">
+        {
+          isLoading  && (
+            <Text size="sm" color="dimmed">
+              <Loader size="sm" color="blue" />
+            </Text>
+          )
+
+        }
+      </Flex>
     
       <ScrollArea
       type="scroll"
@@ -498,6 +546,7 @@ export const ExpiredItemPOTable: React.FC<ExpiredItemTableProps> = ({ items = []
                           }}
                           className={classes.closeButtonIcon}
                           loading={isRemovingItem && removingItemId === item._id}
+                          disabled={Boolean(id)}
                         >
                           <IconX size={16} />
                         </ActionIcon>

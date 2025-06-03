@@ -1284,6 +1284,8 @@ export interface ExpiredItemTableProps {
     totalCostPrice: number;
   }[];
   setItemsData: (items: any) => void;
+  id?: string;
+  isLoading?: boolean;
 }
 
 export {};
