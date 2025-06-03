@@ -158,24 +158,31 @@ const AddExpiredItem = () => {
       const res = await getExpiryItemsBatchByIdAPI(id);     
 
       if (res.success) {
-      const itemsArray = res?.data?.items?.map((item: ItemSoldInterface)=> {
-        return item?.itemId
-      })
-      setItems(itemsArray);
-      setExpiryBatchData(res?.data?.items);
-            dispatch(setDealerIdToBatch({
-        dealerId: res?.data?.dealerId?._id,
-        dealerName: res?.data?.dealerId?.dealerName,
-      }));
-      dispatch(setBoxIdToBatch({ boxId: res?.data?.boxId }));
-      dispatch(setBatchStatus(res?.data?.status));
-      setSelectedDealer(res?.data?.dealerId?._id);
-      setExpiryBatchData(res?.data?.items);
-    }
-    } catch {
-      toast('Error fetching batch. Please try again.', { type: 'error' })
+        const itemsArray = res?.data?.items?.map((item: ItemSoldInterface)=> {
+          return item?.itemId
+        })
+                setItems(itemsArray);
+        setExpiryBatchData(res?.data?.items);
+        dispatch(setDealerIdToBatch({
+          dealerId: res?.data?.dealerId?._id,
+          dealerName: res?.data?.dealerId?.dealerName,
+        }));
+        dispatch(setBoxIdToBatch({ boxId: res?.data?.boxId }));
+        dispatch(setBatchStatus(res?.data?.status));
+        setSelectedDealer(res?.data?.dealerId?._id);
+        
+        setExpiryBatchData((prev: any) => {
+          if (JSON.stringify(prev) !== JSON.stringify(res?.data?.items)) {
+            return res?.data?.items;
+          }
+          return prev;
+        });
+      }
+    } catch (error) {
+      toast.error('Error fetching batch. Please try again.');
+      console.error('Error fetching batch:', error);
     } 
-  }
+  };
 
 useEffect(() => {
   getItemExpiryBatchData();
@@ -189,11 +196,33 @@ useEffect(() => {
 
 
  const updateExpiryBatch = async (actionType: string) => {
-  const message = await updateBatch(id, actionType, expiryBatchItems);
-  if (message) {
-    toast(message);
-  }
-   }
+    try {
+      const message = await updateBatch(id, actionType, expiryBatchItems);
+            let newStatus = '';
+      switch (actionType) {
+        case ITEM_EXPIRY_BATCH_ACTION.DRAFT:
+          newStatus = ITEM_EXPIRY_BATCH_STATUS.DRAFTED;
+          toast.success('Batch drafted successfully');
+          break;
+        case ITEM_EXPIRY_BATCH_ACTION.APPROVE:
+          newStatus = ITEM_EXPIRY_BATCH_STATUS.APPROVED;
+          toast.success('Batch approved successfully');
+          break;
+        case ITEM_EXPIRY_BATCH_ACTION.UPDATE:
+          newStatus = ITEM_EXPIRY_BATCH_STATUS.SAVED;
+          toast.success('Batch updated successfully');
+          break;
+      }
+
+      dispatch(setBatchStatus(newStatus));
+      
+      await getItemExpiryBatchData();
+      
+    } catch (error) {
+      toast.error('Failed to update batch. Please try again.');
+      console.error('Error updating batch:', error);
+    }
+  };
   
 
   return (
