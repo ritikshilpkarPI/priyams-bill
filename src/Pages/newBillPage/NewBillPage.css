@@ -209,6 +209,13 @@ body {
   color: var(--color-textSecondary) !important;
 }
 
+.mantine-Container-root {
+  padding: 30px !important;
+  max-width: 100% !important;
+  margin: 0% !important;
+  
+}
+
 /* Add smooth scrolling */
 .items-payments-grid-section::-webkit-scrollbar {
   width: 6px;
