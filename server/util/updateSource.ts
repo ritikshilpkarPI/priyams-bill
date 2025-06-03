@@ -41,8 +41,8 @@ export const updateSource = async ({
       }
 
       const storeItem = await StoreInventory.findOne({ itemId });
-      if (!storeItem || storeItem.itemQuantityInStore < quantity) {
-        throw new Error(MESSAGES.INSUFFICIENT_STORE_STOCK);
+      if (!storeItem) {
+        return; 
       }
 
       updateItemShelfDates(
