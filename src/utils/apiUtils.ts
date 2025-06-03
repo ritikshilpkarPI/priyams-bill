@@ -18,7 +18,6 @@ import axios from 'axios';
 
 export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string, sourceType?:string ) => {
   try {
-  
     let path = '';
 
     if (sourceType === CONSTANTS.WAREHOUSE) {
@@ -28,7 +27,14 @@ export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?:
       path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=${storeId || ''}&storeCode=${selectedStoreId || ''}&pincode=${pincode || ''}`;
     }
     const response = await getAPI({path});
-    return response.message;
+    const { itemsNameMap, itemsBarCodeMap } = response.message;
+    const { itemNamesList, itemBarCodesList } = generateItemLists(itemsNameMap, itemsBarCodeMap);
+    
+    return {
+      ...response.message,
+      itemNamesList,
+      itemBarCodesList
+    };
   } catch (err) {
     return { isError: true, err };
   }
@@ -590,7 +596,6 @@ export const itemPurchaseBatchesWebAPI = async ({
   }
 };
 
-
 export const getItemsFromStoreInventoryAPI = async (  
   storeId: string, 
   query: { size: number; page: number; itemNameOrBarcode: string }
@@ -720,7 +725,6 @@ export const updateStockTransactionsAPI = async (
 
 }
 
-
 export const approveStockTransactionsAPI = async (
   transactionsId: string,
   approvedByAdmin: boolean,
@@ -742,6 +746,25 @@ export const approveStockTransactionsAPI = async (
     return { isError: true, error };
   }
 }
+
+export const getStockTransactionsByStatusApi = async (
+  status:string,
+  page:number,
+  limit:number,
+) => {
+  try {
+    const params = new URLSearchParams();
+    if (status) params.append('status', status);
+    if (typeof page === 'number') params.append('page', page.toString());
+    if (typeof limit === 'number') params.append('limit', limit.toString());
+    const response = await postAPI({
+      path: `${API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS_BY_STATUS}?${params.toString()}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
 
 export const getAllExpiryItemsBatchAPI = async (queryParams: ExpiryItemsQueryParams = {}) => {
   try {
@@ -916,3 +939,13 @@ export const updateExpiredItemsBatchAPI = async (
     return { isError: true, error }
   }
 }
+
+export const generateItemLists = (itemsNameMap: any, itemsBarCodeMap: any) => {
+  const itemNamesList = Object.keys(itemsNameMap || {});
+  const itemBarCodesList = Object.keys(itemsBarCodeMap || {});
+  
+  return {
+    itemNamesList,
+    itemBarCodesList
+  };
+};
