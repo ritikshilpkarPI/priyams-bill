@@ -152,7 +152,7 @@ export const updateExpiryItemsBatch = async (
         items: itemsToTransfer,
         sourceType: CONSTANTS.WAREHOUSE,
         sourceEntityId: storeId,
-        transactionId: transaction._id,
+        transactionId: transaction._id.toString(),
       });
 
       transaction.transactionStatus = CONSTANTS.STATUS.APPROVED;
