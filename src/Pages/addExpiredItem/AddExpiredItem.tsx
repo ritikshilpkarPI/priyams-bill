@@ -32,26 +32,31 @@ import { updateBatch } from './utils/updateBatch';
 const AddExpiredItem = () => {
   const [errors, setErrors] = useState<YupValidationErrorMapType>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [items, setItems] = useState<InventoryRow[]>([]);
-    const expiryBatchItems = useSelector(
-      (state: RootState) => state.expiryBatch.items
-    );
-  
-    const boxId = useSelector(
-      (state: RootState) => state.expiryBatch.boxId
-    );
-    const dealerId = useSelector(
-      (state: RootState) => state.expiryBatch.dealerId
-    );
-    const dealerNameInExpiryBatch = useSelector(
-      (state: RootState) => state.expiryBatch.dealerNameInExpiryBatch
-    );
+  const [isUpdateLoading, setIsUpdateLoading] = useState<boolean>(false);
+  const [isApproveLoading, setIsApproveLoading] = useState<boolean>(false);
+  const [isDraftLoading, setIsDraftLoading] = useState<boolean>(false);
+  const [isAddLoading, setIsAddLoading] = useState<boolean>(false);
+  const [isFetchingBatch, setIsFetchingBatch] = useState<boolean>(false);
+  const [items, setItems] = useState<InventoryRow[]>([]);
+  const expiryBatchItems = useSelector(
+    (state: RootState) => state.expiryBatch.items
+  );
 
-    const batchStatus = useSelector(
-      (state: RootState) => state.expiryBatch.batchStatus
-    );
+  const boxId = useSelector(
+    (state: RootState) => state.expiryBatch.boxId
+  );
+  const dealerId = useSelector(
+    (state: RootState) => state.expiryBatch.dealerId
+  );
+  const dealerNameInExpiryBatch = useSelector(
+    (state: RootState) => state.expiryBatch.dealerNameInExpiryBatch
+  );
 
-     const dispatch = useDispatch();
+  const batchStatus = useSelector(
+    (state: RootState) => state.expiryBatch.batchStatus
+  );
+
+   const dispatch = useDispatch();
 
   const getItemPurchaseBatches = async (itemId: string) => {
     try {
@@ -83,6 +88,7 @@ const AddExpiredItem = () => {
 
   const addExpiredItemsBatch = async () => {    
     try {      
+      setIsAddLoading(true);
       const data = getCheckedExpiredItems(expiryBatchItems);
             
       const res = await addNewExpiredItemsBatchAPI({
@@ -93,7 +99,7 @@ const AddExpiredItem = () => {
       });      
 
       if (!res?.isError) {
-        toast('Expired items batch added successfully');
+        toast.success('Expired items batch added successfully');
         setErrors({});
         setItems([]);
         dispatch(setItemsData([]));
@@ -102,12 +108,14 @@ const AddExpiredItem = () => {
         dispatch(clearBatch());
       }
       if (res?.isError) {
-        toast(res?.error?.error ?? 'Failed to add expired items batch');
+        toast.error(res?.error?.error ?? 'Failed to add expired items batch');
       }
 
     } catch (error) {
       console.error('Error adding expired items batch:', error);
-      toast('Failed to add expired items batch');
+      toast.error('Failed to add expired items batch');
+    } finally {
+      setIsAddLoading(false);
     }
   }
 
@@ -155,13 +163,14 @@ const AddExpiredItem = () => {
 
   const getItemExpiryBatchData = async () => {
     try {
+      setIsFetchingBatch(true);
       const res = await getExpiryItemsBatchByIdAPI(id);     
 
       if (res.success) {
         const itemsArray = res?.data?.items?.map((item: ItemSoldInterface)=> {
           return item?.itemId
         })
-                setItems(itemsArray);
+        setItems(itemsArray);
         setExpiryBatchData(res?.data?.items);
         dispatch(setDealerIdToBatch({
           dealerId: res?.data?.dealerId?._id,
@@ -181,6 +190,8 @@ const AddExpiredItem = () => {
     } catch (error) {
       toast.error('Error fetching batch. Please try again.');
       console.error('Error fetching batch:', error);
+    } finally {
+      setIsFetchingBatch(false);
     } 
   };
 
@@ -197,8 +208,20 @@ useEffect(() => {
 
  const updateExpiryBatch = async (actionType: string) => {
     try {
+      switch (actionType) {
+        case ITEM_EXPIRY_BATCH_ACTION.UPDATE:
+          setIsUpdateLoading(true);
+          break;
+        case ITEM_EXPIRY_BATCH_ACTION.APPROVE:
+          setIsApproveLoading(true);
+          break;
+        case ITEM_EXPIRY_BATCH_ACTION.DRAFT:
+          setIsDraftLoading(true);
+          break;
+      }
+
       const message = await updateBatch(id, actionType, expiryBatchItems);
-            let newStatus = '';
+      let newStatus = '';
       switch (actionType) {
         case ITEM_EXPIRY_BATCH_ACTION.DRAFT:
           newStatus = ITEM_EXPIRY_BATCH_STATUS.DRAFTED;
@@ -215,12 +238,23 @@ useEffect(() => {
       }
 
       dispatch(setBatchStatus(newStatus));
-      
       await getItemExpiryBatchData();
       
     } catch (error) {
       toast.error('Failed to update batch. Please try again.');
       console.error('Error updating batch:', error);
+    } finally {
+      switch (actionType) {
+        case ITEM_EXPIRY_BATCH_ACTION.UPDATE:
+          setIsUpdateLoading(false);
+          break;
+        case ITEM_EXPIRY_BATCH_ACTION.APPROVE:
+          setIsApproveLoading(false);
+          break;
+        case ITEM_EXPIRY_BATCH_ACTION.DRAFT:
+          setIsDraftLoading(false);
+          break;
+      }
     }
   };
   
@@ -299,28 +333,61 @@ useEffect(() => {
         
         </Grid.Col>   
           <Grid.Col span={12}>
-            <ExpiredItemPOTable items={items as any} expiryBatchData={expiryBatchData} setItemsData={setItems} id={id} isLoading={isLoading} />
+            {isFetchingBatch ? (
+              <Center>
+                <Loader size="md" />
+              </Center>
+            ) : (
+              <ExpiredItemPOTable items={items as any} expiryBatchData={expiryBatchData} setItemsData={setItems} id={id} isLoading={isLoading} />
+            )}
           </Grid.Col>
 
       { !id ?  <Grid.Col span={false ? 12 : 4}>
-          <Button loading={false} w="100%" onClick={addExpiredItemsBatch} disabled={noOfItemsInBatch === 0}  bg={'#3199C0'}>
+          <Button 
+            loading={isAddLoading} 
+            w="100%" 
+            onClick={addExpiredItemsBatch} 
+            disabled={noOfItemsInBatch === 0 || isAddLoading}  
+            bg={'#3199C0'}
+          >
             Add expired items batch
           </Button>
         </Grid.Col>
       :   
       <Flex gap="xs" align="center" mb="2px">
         <Grid.Col span={false ? 12 : 8}>
-          <Button loading={false} w="100%" onClick={()=> updateExpiryBatch(ITEM_EXPIRY_BATCH_ACTION.UPDATE)} disabled={Boolean(batchStatus) && batchStatus !== ITEM_EXPIRY_BATCH_STATUS.SAVED}>
+          <Button 
+            loading={isUpdateLoading} 
+            w="100%" 
+            onClick={()=> updateExpiryBatch(ITEM_EXPIRY_BATCH_ACTION.UPDATE)} 
+            disabled={Boolean(batchStatus) && batchStatus !== ITEM_EXPIRY_BATCH_STATUS.SAVED || isUpdateLoading}
+          >
             Update expired items batch
           </Button>
         </Grid.Col>
-       {isAdminUser && <Grid.Col span={false ? 12 : 4}>
-          <Button loading={false} w="100%" onClick={()=> updateExpiryBatch(ITEM_EXPIRY_BATCH_ACTION.APPROVE)} disabled={Boolean(batchStatus) && batchStatus !== ITEM_EXPIRY_BATCH_STATUS.DRAFTED} color='green'>
+       {isAdminUser && 
+        <Grid.Col span={false ? 12 : 4}>
+          <Button 
+            loading={isApproveLoading} 
+            w="100%" 
+            onClick={()=> updateExpiryBatch(ITEM_EXPIRY_BATCH_ACTION.APPROVE)} 
+            disabled={Boolean(batchStatus) && batchStatus !== ITEM_EXPIRY_BATCH_STATUS.DRAFTED || isApproveLoading} 
+            color='green'
+          >
             Approve batch
           </Button>
-        </Grid.Col>}
+        </Grid.Col>
+       }
         <Grid.Col span={false ? 12 : 4}>
-          <Button loading={false} w="100%" onClick={()=> updateExpiryBatch(ITEM_EXPIRY_BATCH_ACTION.DRAFT)} disabled={batchStatus === ITEM_EXPIRY_BATCH_STATUS.DRAFTED || batchStatus === ITEM_EXPIRY_BATCH_STATUS.APPROVED || batchStatus === ITEM_EXPIRY_BATCH_STATUS.CLEARED}>
+          <Button 
+            loading={isDraftLoading} 
+            w="100%" 
+            onClick={()=> updateExpiryBatch(ITEM_EXPIRY_BATCH_ACTION.DRAFT)} 
+            disabled={batchStatus === ITEM_EXPIRY_BATCH_STATUS.DRAFTED || 
+                     batchStatus === ITEM_EXPIRY_BATCH_STATUS.APPROVED || 
+                     batchStatus === ITEM_EXPIRY_BATCH_STATUS.CLEARED || 
+                     isDraftLoading}
+          >
             Draft batch
           </Button>
         </Grid.Col>
