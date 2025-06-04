@@ -13,16 +13,16 @@ const getItemsLean = async (req, res, next) => {
     let storeItemQtyMap = {};
 
     if (storeId && mongoose.isValidObjectId(storeId)) {
-      store = await StoreModel.findById(storeId);
+      store = await StoreModel.findById(storeId).lean();
     } else if (storeCode) {
-      store = await StoreModel.findOne({ code: storeCode });
+      store = await StoreModel.findOne({ code: storeCode }).lean();
     } else if (pincode) {
-      store = await StoreModel.findOne({ pincode });
+      store = await StoreModel.findOne({ pincode }).lean();
     }
 
     if (store) {
       const StoreInventoryModel = getStoreInventoryModel(store.collectionName);
-      inventoryData = await StoreInventoryModel.find({});
+      inventoryData = await StoreInventoryModel.find({}).lean();
       itemIds = inventoryData.map((inv) => inv.itemId);
 
       inventoryData.forEach((entry) => {
@@ -55,11 +55,9 @@ const getItemsLean = async (req, res, next) => {
       quantityUnitName: 1,
       itemShelfDates: 1,
       sku: 1,
-    });
+    }).lean();
 
     const itemsBarCodeMap = {};
-    const itemNamesList = [];
-    const itemBarCodesList = [];
     const itemsNameMap = {};
 
     allItemsList.forEach((item) => {
@@ -68,24 +66,22 @@ const getItemsLean = async (req, res, next) => {
       let itemWithQty
       if(store){
         itemWithQty = {
-          ...item.toObject(),
+          ...item,
           itemQtyInStore: itemQty,
           itemStockQuantity: itemQty,
           itemShelfDates: inventoryEntry?.itemShelfDates || []
         };
       }else{
         itemWithQty = {
-          ...item.toObject(),
+          ...item,
           itemQtyInStore: itemQty,
           itemStockQuantity: itemQty,
         };
       }
 
-      itemNamesList.push(item.itemName);
       itemsNameMap[item.itemName] = itemWithQty;
 
       if (item.itemBarcode) {
-        itemBarCodesList.push(item.itemBarcode);
         if (!itemsBarCodeMap[item.itemBarcode]) {
           itemsBarCodeMap[item.itemBarcode] = [];
         }
@@ -98,8 +94,6 @@ const getItemsLean = async (req, res, next) => {
       message: {
         itemsNameMap,
         itemsBarCodeMap,
-        itemBarCodesList,
-        itemNamesList,
         totalItemsCount,
       },
     });
