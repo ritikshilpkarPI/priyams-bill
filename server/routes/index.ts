@@ -88,8 +88,8 @@ const {
   updateExpiryItemsBatch,
   draftExpiryItemsBatch,
   approveOrRejectExpiryItemsBatch,
-  updateStockTransactionBySource
-
+  updateStockTransactionBySource,
+  getStockTransactionsByStatus,
 } = require('../controllers/index');
 
 
@@ -327,6 +327,7 @@ router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, a
 router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
 router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS, isLoggedIn, getStockTransactions)
 router.post(API_PATHS.STOCK_TRANSACTION.GET_ITEM_TRANSACTIONS, isLoggedIn, getItemTransactions)
+router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS_BY_STATUS, getStockTransactionsByStatus)
 
 router.get(API_PATHS.EXPIRED_ITEMS_BATCH.GET_ALL_EXPIRED_ITEMS_BATCH, isLoggedIn, getAllExpiryItemsBatch);
 
