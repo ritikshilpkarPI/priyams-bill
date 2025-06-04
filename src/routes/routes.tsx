@@ -9,7 +9,8 @@ import CustomerBill from '../Pages/CustomerBill';
 import {
   DayWiseBillFeed,
   Report,
-  Login
+  Login,
+  Dashboard
 } from '../Pages';
 import App from '../App';
 import { parseJwtToken } from '../utils/cookie';
@@ -32,6 +33,11 @@ export const router = createBrowserRouter([
       {
         element: <AdminRoute />,
         children: [
+          {
+            path: ROUTES.DASHBOARD,
+            element: <Dashboard />,
+            index: true,
+          },
           {
             path: ROUTES.DAY_BILL,
             element: <DayWiseBillFeed />,
