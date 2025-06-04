@@ -67,7 +67,7 @@ export const updateItemMismatchInStock = async (
 
     const existingTransaction = await StockTransactionModel.findOne({
       transactionReason: CONSTANTS.QUANTITY_UPDATE,
-      transactionStatus: CONSTANTS.STATUS.PENDING,
+      transactionStatus: CONSTANTS.TRANSACTIONS_STATUS.SOURCE_CREATED,
       'transactionItems.itemId': itemId,
       'source.sourceEntityId': storeId,
     });
@@ -100,7 +100,7 @@ export const updateItemMismatchInStock = async (
           },
         ],
         transactionReason: CONSTANTS.QUANTITY_UPDATE,
-        transactionStatus: CONSTANTS.STATUS.PENDING,
+        transactionStatus: CONSTANTS.TRANSACTIONS_STATUS.SOURCE_CREATED,
         dateOfTransaction: new Date(),
       };
 

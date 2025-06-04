@@ -10,6 +10,7 @@ import { CONSTANTS } from '../constants/constants';
 import { updateDestination } from '../util/updateDestination';
 import { updateSource } from '../util/updateSource';
 import mongoose from 'mongoose';
+import { log } from 'console';
 
 export const updateStockTransactionByAdmin = async (
   req: AuthenticatedRequest,
@@ -169,7 +170,11 @@ export const updateStockTransactionByAdmin = async (
       await Promise.all(updatePromises);
     }
 
-    const updateFields: any = {};
+    const updateFields: any = {
+      transactionStatus: updateData.approvedByAdmin 
+      ? CONSTANTS.TRANSACTIONS_STATUS.APPROVED
+      : CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED,
+    };
 
     if (updateData.approvedByAdmin) {
       transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.APPROVED;

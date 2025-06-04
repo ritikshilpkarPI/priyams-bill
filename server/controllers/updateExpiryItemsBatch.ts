@@ -116,7 +116,7 @@ export const updateExpiryItemsBatch = async (
         source,
         destination,
         transactionItems,
-        transactionStatus: CONSTANTS.STATUS.PENDING,
+        transactionStatus: CONSTANTS.TRANSACTIONS_STATUS.SOURCE_CREATED,
         transactionReason: CONSTANTS.TRANSACTION_REASON.EXPIRED_BATCH,
         dateOfTransaction: new Date(),
       });
@@ -124,7 +124,6 @@ export const updateExpiryItemsBatch = async (
       if (!transaction?._id) {
         throw new Error('Failed to create stock transaction');
       }
-      res.json({transaction})
       const itemsToTransfer = [];
 
       for (const txnItem of transaction.transactionItems || []) {
@@ -156,6 +155,7 @@ export const updateExpiryItemsBatch = async (
       });
 
       transaction.transactionStatus = CONSTANTS.STATUS.APPROVED;
+      transaction.approvedByAdmin = true
       await transaction.save();
 
       updatedBatch = await expiredItemsBatch.findByIdAndUpdate(
