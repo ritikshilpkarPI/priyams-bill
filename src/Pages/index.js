@@ -25,3 +25,4 @@ export const StockTransactions = lazy(()=> import('./StockTransactions'));
 export const NewInventoryPage = lazy(()=> import("./NewInventoryPage"));
 export const ItemPurchaseOrdersPage = lazy (()=> import("./ItemPurchaseOrdersPage"));
 export const StockTransactionsPage = lazy (()=> import("./stockTransactionsPage/StockTransactionsPage"));
+export const Dashboard = lazy(() => import('./Dashboard'));
