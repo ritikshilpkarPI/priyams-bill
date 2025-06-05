@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { ROUTES } from '../utils/constants/routes';
 import PerItemListPurchaseOrder from '../components/IndividualItemListPurchaseOrder';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
-import Dashboard from '../Pages/Dashboard';
+import Dashboard from '../Pages/DashboardV2';
 
 import {
   ItemsList,
