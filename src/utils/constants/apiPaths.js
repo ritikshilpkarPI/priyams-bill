@@ -56,6 +56,7 @@ export const API_PATHS = {
   },
   REPORT: {
     POST_GET_DATE_RANGE_REPORT: '/api/report/getDateRangeReport',
+    POST_SALES_REPORTS: '/api/report/sales',
   },
   EXPENSE: {
     POST_EXPENSE: '/api/expense',

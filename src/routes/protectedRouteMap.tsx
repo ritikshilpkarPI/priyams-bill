@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { ROUTES } from '../utils/constants/routes';
 import PerItemListPurchaseOrder from '../components/IndividualItemListPurchaseOrder';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
+import Dashboard from '../Pages/Dashboard';
 
 import {
   ItemsList,
@@ -35,15 +36,18 @@ interface RouteConfig {
   }
 
 export const protectedRouteMap: Record<string, RouteConfig> = {
+    DASHBOARD: {
+      path: ROUTES.DASHBOARD,
+      element: <Dashboard />,
+      index: true,
+    },
     BILLING: {
       path: ROUTES.BILLING,
       element: <NewBillingPage/>,
-      index: true,
     },
     NEW_BILLING: {
       path: ROUTES.NEW_BILLING,
       element: <NewBillingPage />,
-      index: true,
     },
     OPEN_CLOSE: {
       path: ROUTES.OPEN_CLOSE,
