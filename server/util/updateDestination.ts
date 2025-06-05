@@ -6,19 +6,27 @@ import { StoreModel } from '../db-models/store-model';
 import { getStoreInventoryModel } from '../db-models/storeInventory-model';
 import { updateItemShelfDates } from './updateItemShelfDates';
 
+
 type ItemInput = {
   itemId: string;
   quantity: number;
   itemShelfDates: any[];
 };
-
 type UpdateDestinationParams = {
   userId: string;
   items: ItemInput[];
   destinationType: string;
   destinationEntityId: string;
-  transactionId?: mongoose.Types.ObjectId;
-};
+  transactionId: string;
+}
+
+interface StoreInventoryItem {
+  _id: mongoose.Types.ObjectId;
+  itemId: mongoose.Types.ObjectId;
+  itemQuantityInStore: number;
+  itemShelfDates: any[];
+  itemStockChangeHistory: any[];
+}
 
 export const updateDestination = async ({
   userId,
@@ -29,75 +37,81 @@ export const updateDestination = async ({
 }: UpdateDestinationParams) => {
   const updatedItems = [];
 
-  if (destinationType === CONSTANTS.WAREHOUSE) {
-    for (const { itemId, quantity, itemShelfDates = [] } of items) {
-      if (!itemId || !quantity)
-        throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
-
-      const item = await Item.findById(itemId);
-      if (!item) throw new Error(MESSAGES.NO_ITEMS_FOUND);
-
-      item.itemStockQuantity += quantity;
-      updateItemShelfDates(
-        item.itemShelfDates,
-        itemShelfDates,
-        transactionId,
-        'ADD'
-      );
-      await item.save();
-
-      updatedItems.push({ updatedItem: item });
-    }
-  } else if (destinationType === CONSTANTS.STORE) {
+  if (destinationType === CONSTANTS.STORE || destinationType === CONSTANTS.WAREHOUSE) {
     const store = await StoreModel.findById(destinationEntityId);
-    if (!store) throw new Error('Store not found');
+    if (!store) throw new Error(MESSAGES.STORE_NOT_FOUND ?? 'Store not found');
 
     const StoreInventory = getStoreInventoryModel(store.collectionName);
 
-    for (const { itemId, quantity, itemShelfDates = [] } of items) {
-      let storeItem = await StoreInventory.findOne({ itemId });   
-        
-      if (!storeItem) {
-        storeItem = new StoreInventory({
-          itemId,
-          itemQuantityInStore: quantity,
-          itemShelfDates: itemShelfDates.map((shelf) => ({
-            ...shelf,
-            initialStockQuantity:
-              shelf.quantityToAdd ?? shelf.initialStockQuantity ?? 0,
-            currentStockQuantity:
-              shelf.quantityToAdd ?? shelf.currentStockQuantity ?? 0,
-            transactionId,
-          })),
-          itemStockChangeHistory: [
-            {
-              quantity,
-              user: userId,
-              changeType: CONSTANTS.ADD,
-              changedFrom: CONSTANTS.WAREHOUSE,
-              transactionId,
-            },
-          ],
-        });
-      } else {
-        updateItemShelfDates(
-          storeItem.itemShelfDates,
-          itemShelfDates,
-          transactionId,
-          'ADD'
-        );
-        storeItem.itemQuantityInStore += quantity;
-        storeItem.itemStockChangeHistory.push({
-          quantity,
-          user: userId,
-          changeType: CONSTANTS.ADD,
-          changedFrom: CONSTANTS.WAREHOUSE,
-          transactionId,
-        });
+    const itemIds = items.map(item => {
+      if (!item.itemId) {
+        throw new Error('Missing itemId in item data');
       }
       
-      await storeItem.save();      
+      try {
+        const itemIdStr = String(item.itemId);
+        return new mongoose.Types.ObjectId(itemIdStr);
+      } catch (error) {
+        throw new Error(`Invalid itemId format: ${JSON.stringify(item.itemId)}`);
+      }
+    });
+    
+    const storeItemsMap = new Map(
+      (await StoreInventory.find({ itemId: { $in: itemIds } })).map((item: StoreInventoryItem) => [item.itemId.toString(), item])
+    );
+
+    const bulkOps = [];
+    for (const { itemId, quantity, itemShelfDates = [] } of items) {
+      if (!itemId || quantity == null) {
+        throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
+      }
+
+      const itemIdStr = String(itemId);
+      let storeItem = storeItemsMap.get(itemIdStr) as StoreInventoryItem | undefined;
+      if (!storeItem) {
+        storeItem = new StoreInventory({
+          itemId: itemIdStr,
+          itemQuantityInStore: 0,
+          itemShelfDates: [],
+          itemStockChangeHistory: [],
+        });
+      }
+
+      updateItemShelfDates(
+        storeItem.itemShelfDates,
+        itemShelfDates,
+        new mongoose.Types.ObjectId(transactionId),
+        'ADD'
+      );
+      storeItem.itemQuantityInStore += quantity;
+
+      storeItem.itemStockChangeHistory.push({
+        quantity,
+        user: new mongoose.Types.ObjectId(userId),
+        changeType: CONSTANTS.ADD,
+        changedFrom: CONSTANTS.STORE,
+        transactionId: new mongoose.Types.ObjectId(transactionId),
+      });
+
+      bulkOps.push({
+        updateOne: {
+          filter: { _id: storeItem._id },
+          update: {
+            $set: {
+              itemQuantityInStore: storeItem.itemQuantityInStore,
+              itemShelfDates: storeItem.itemShelfDates,
+              itemStockChangeHistory: storeItem.itemStockChangeHistory
+            }
+          }
+        }
+      });
+
       updatedItems.push({ updatedItem: storeItem });
+    }
+
+    // Execute bulk operation
+    if (bulkOps.length > 0) {
+      await StoreInventory.bulkWrite(bulkOps);
     }
   }
 

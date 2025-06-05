@@ -83,7 +83,7 @@ const Login = () => {
         }
       } else {
         dispatch(fetchBillingLeanItems());
-        navigate('/billing');
+        window.location.href = '/billing';
       }
     } finally {
       setLoading(false);
