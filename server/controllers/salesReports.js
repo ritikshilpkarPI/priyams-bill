@@ -1,6 +1,7 @@
 const { Bill } = require('../db-models/bill-model');
 const { Item } = require('../db-models/item-model');
 const { DealerModel } = require('../db-models/dealer-model');
+const PurchaseOrder = require('../db-models/purchase-order-model');
 
 // Helper function to get default date range (last 15 days)
 const getDefaultDateRange = () => {
@@ -8,6 +9,211 @@ const getDefaultDateRange = () => {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 15);
   return { startDate, endDate };
+};
+
+// Date Range Report Functions
+const getTotalAmountReport = async (startDate, lastDate) => {
+  const totalAmountReport = await Bill.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalAmountSum: {
+          $sum: '$billAmountTotal',
+        },
+      },
+    },
+  ]);
+  return totalAmountReport;
+};
+
+const getTotalProfitReport = async (startDate, lastDate) => {
+  const totalProfitReport = await Bill.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalProfitSum: {
+          $sum: '$totalBillProfit',
+        },
+      },
+    },
+  ]);
+  return totalProfitReport;
+};
+
+const getTotalDiscountReport = async (startDate, lastDate) => {
+  const totalDiscountReport = await Bill.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalDiscountSum: {
+          $sum: '$billDiscountTotal',
+        },
+      },
+    },
+  ]);
+  return totalDiscountReport;
+};
+
+const getTotalMRPReport = async (startDate, lastDate) => {
+  const totalMRPReport = await Bill.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalMRPSum: {
+          $sum: '$billMRPTotal',
+        },
+      },
+    },
+  ]);
+  return totalMRPReport;
+};
+
+const getItemTrendReport = async (startDate, lastDate, itemName) => {
+  const unwindedItemBills = await Bill.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+      },
+    },
+    {
+      $unwind: '$items',
+    },
+  ]);
+  const populatedBills = await Bill.populate(unwindedItemBills, [
+    {
+      path: 'items',
+      populate: {
+        path: 'itemDetail',
+        model: 'Item',
+        match: { itemName: { $eq: itemName } },
+      },
+    },
+    {
+      path: 'staffId',
+      model: 'staff',
+    },
+  ]);
+  
+  const itemTrendReport = populatedBills.filter(
+    (bill) => bill.items.itemDetail
+  );
+  return itemTrendReport;
+};
+
+const getAllItemsTrendReport = async (startDate, lastDate) => {
+  const unwindedItemDetails = await Bill.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+      },
+    },
+    {
+      $unwind: '$items',
+    },
+    {
+      $group: {
+        _id: '$items.itemDetail',
+        createdAtDates: { $push: '$createdAt' },
+        items: { $push: '$items' },
+        totalDiscountSum: {
+          $sum: '$items.itemDiscountTotal',
+        },
+        totalAmountSum: {
+          $sum: '$items.itemSellingPriceTotal',
+        },
+        totalMRPsum: {
+          $sum: '$items.itemMRPtotal',
+        },
+        totalQuantitysum: {
+          $sum: '$items.itemQuantityInBill',
+        },
+        itemBarcode: { $first: '$items.itemBarcode' },
+        staffId: { $first: '$staffId' }
+      },
+    },
+  ]);
+  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails, [
+    {
+      path: 'items.itemDetail',
+      model: 'Item',
+    },
+    {
+      path: 'staffId',
+      model: 'staff',
+    },
+  ]);
+  return allItemsBillingTrend;
+};
+
+const getPurchasedItemsReport = async (startDate, lastDate) => {
+  return await PurchaseOrder.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
+        isApproved: true,
+        isRejected: false,
+      },
+    },
+    { $unwind: '$purchasedItems' },
+    {
+      $unwind: {
+        path: '$purchasedItems.expiryDates',
+        preserveNullAndEmptyArrays: true, 
+      },
+    },
+    {
+      $group: {
+        _id: '$purchasedItems.barcode',
+        itemName: { $first: '$purchasedItems.inputName' },
+        totalStock: { $sum: '$purchasedItems.stockQuantity' },
+        itemQuantity: { $first: '$purchasedItems.itemQuantity' },
+        unit: { $first: '$purchasedItems.unit' },
+        mrp: { $first: '$purchasedItems.mrp' },
+        costPrice: { $first: '$purchasedItems.costPrice' },
+        purchaseDates: { $addToSet: '$createdAt' },
+        suppliers: { $addToSet: '$procurementSource' },
+        purchaseOrderIds: { $addToSet: '$_id' },
+        expiryDates: { $addToSet: '$purchasedItems.expiryDates' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        barcode: '$_id',
+        itemName: 1,
+        totalStock: 1,
+        mrp: 1,
+        costPrice: 1,
+        lastPurchaseDate: { $max: '$purchaseDates' },
+        firstPurchaseDate: { $min: '$purchaseDates' },
+        totalOrders: { $size: '$purchaseOrderIds' },
+        suppliers: { $setUnion: ['$suppliers'] }, // Get unique suppliers
+        itemQuantity: 1,
+        unit: 1,
+        expiryDates: 1,
+      }
+    }
+  ]);
 };
 
 // 1. Highest selling items by quantity
@@ -294,7 +500,7 @@ const getTopDealersByAmount = async (startDate, endDate, limit = 10) => {
 // Main controller function to handle all report requests
 const getSalesReport = async (req, res, next) => {
   try {
-    const { reportType, startDate, endDate, limit } = req.body;
+    const { reportType, startDate, endDate, limit, itemName } = req.body;
     
     // Use default date range if not provided
     const dateRange = startDate && endDate 
@@ -320,6 +526,28 @@ const getSalesReport = async (req, res, next) => {
         break;
       case 'topDealersByAmount':
         report = await getTopDealersByAmount(dateRange.startDate, dateRange.endDate, limit);
+        break;
+      // Add new report types
+      case 'totalAmount':
+        report = await getTotalAmountReport(dateRange.startDate, dateRange.endDate);
+        break;
+      case 'totalProfit':
+        report = await getTotalProfitReport(dateRange.startDate, dateRange.endDate);
+        break;
+      case 'totalDiscount':
+        report = await getTotalDiscountReport(dateRange.startDate, dateRange.endDate);
+        break;
+      case 'totalMRP':
+        report = await getTotalMRPReport(dateRange.startDate, dateRange.endDate);
+        break;
+      case 'itemBillingTrend':
+        report = await getItemTrendReport(dateRange.startDate, dateRange.endDate, itemName);
+        break;
+      case 'allItemsBillingTrend':
+        report = await getAllItemsTrendReport(dateRange.startDate, dateRange.endDate);
+        break;
+      case 'purchasedItems':
+        report = await getPurchasedItemsReport(dateRange.startDate, dateRange.endDate);
         break;
       default:
         return res.status(400).json({ error: 'Invalid report type' });
