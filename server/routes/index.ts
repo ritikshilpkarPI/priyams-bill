@@ -2,6 +2,7 @@ import express from "express";
 import { isAdmin, isLoggedIn } from '../middleware/isAdmin';
 import { API_PATHS } from '../../src/utils/constants/apiPaths';
 import locationMiddleware from "../middleware/locationMiddleware";
+import salesReportsRouter from './salesReports';
 const router = express.Router();
 const {
   addBulkItems,
@@ -347,6 +348,9 @@ router.post(API_PATHS.EXPIRED_ITEM.DRAFT_EXPIRED_ITEMS_BATCH, isLoggedIn, draftE
 router.post(API_PATHS.EXPIRED_ITEM.APPROVE_OR_REJECT_EXPIRED_ITEMS_BATCH, isLoggedIn, isAdmin, approveOrRejectExpiryItemsBatch);
 
 router.post(API_PATHS.STOCK_TRANSACTION.UPDATE_STOCK_TRANSACTION_BY_SOURCE, isLoggedIn, updateStockTransactionBySource);
+
+// Add sales reports route
+router.use(API_PATHS.REPORT.POST_SALES_REPORTS, isLoggedIn, salesReportsRouter);
 
 router.post(API_PATHS.DEALER_CATALOG , getDealerCatalog);
 

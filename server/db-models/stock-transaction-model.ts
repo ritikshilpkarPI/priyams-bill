@@ -46,7 +46,7 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
     },
     transactionStatus: {
       type: String,
-      default: 'pending',
+      default: 'sourceCreated',
     },
     hasErrors: {
       type: Boolean,

@@ -16,6 +16,7 @@ export const ROUTES = Object.freeze({
     PURCHASE_ORDER: "/purchase",
     PURCHASE_ORDER_BY_ID: "/purchase/:id",
     REPORT: "/report",
+    DASHBOARD: "/dashboard",
     APPROVAL: "/approval",
     EXPIRED_ITEMS: "/expiredItems",
     LABEL: "/label",
