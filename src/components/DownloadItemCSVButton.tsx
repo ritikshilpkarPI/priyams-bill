@@ -158,12 +158,12 @@ if(isStore){
     }
   };
 
-  const paginationStrategy: PaginationStrategy = {
+  const paginationStrategy = {
     limitParamName: isStore ? 'size' : 'limit',
     offsetParamName: 'page',
     offsetType: 'page',
     startOffsetValue: initialPageToFetch + 1,
-  };
+  } as PaginationStrategy;
 
   const subsequentItems = await executePaginatedAPICalls<T>({
     apiFnToGetData: paginatedApiFunction,
