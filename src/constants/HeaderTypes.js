@@ -71,6 +71,11 @@ export const sidebarListData = [
     ],
   },
   {
+    REPORT: [
+      { name: 'Dealer Catalog', url: '/dealer-catalog', icon: 'images/openclose.svg' },
+    ]
+  },
+  {
     PURCHASE: [
       {
         name: 'Purchase Order',
