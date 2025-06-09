@@ -6,10 +6,13 @@ const expiredItemsBatchSchema = new Schema<ExpiredItemsSchema>(
   {
     boxId: {
       type: String,
-      unique: true
+      unique: true,
     },
     dealerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Dealer' },
-    stockTransactionId: { type: mongoose.Schema.Types.ObjectId, ref: 'StockTransaction' },
+    stockTransactionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'StockTransaction',
+    },
     expiryImages: [
       {
         publicId: {
@@ -23,7 +26,7 @@ const expiredItemsBatchSchema = new Schema<ExpiredItemsSchema>(
     expiryBatchCost: { type: Number },
     status: {
       type: String,
-      default: expiredStatus.SAVED
+      default: expiredStatus.SAVED,
     },
     statusHistory: [
       {
@@ -60,9 +63,13 @@ const expiredItemsBatchSchema = new Schema<ExpiredItemsSchema>(
         purchaseOrderId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'PurchaseOrder',
+          required: false,
+          default: null,
+          set: (v: string) => (v === '' ? null : v),
         },
         costPricePerUnit: { type: Number },
         totalCostPrice: { type: Number },
+        manufacturingDate: { type: Date },
       },
     ],
     itemWiseTotalCost: [
