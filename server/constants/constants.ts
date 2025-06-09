@@ -35,5 +35,11 @@ export const CONSTANTS = Object.freeze({
       SOURCE_CREATED: "sourceCreated",
       DESTINATION_UPDATED: "destinationUpdated",
       APPROVED: "approved"
+    },
+    TRANSACTION_REASON:{
+      EXPIRED_BATCH: "EXPIRED_BATCH",
+    }, 
+    EXPIRED_STATUS:{
+      APPROVED: "APPROVED"
     }
 })

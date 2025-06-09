@@ -18,7 +18,6 @@ import axios from 'axios';
 
 export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?: string, sourceType?:string ) => {
   try {
-  
     let path = '';
 
     if (sourceType === CONSTANTS.WAREHOUSE) {
@@ -28,7 +27,14 @@ export const getBillingLeanItemsAPI = async (selectedStoreId?: string, storeId?:
       path = `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?storeId=${storeId || ''}&storeCode=${selectedStoreId || ''}&pincode=${pincode || ''}`;
     }
     const response = await getAPI({path});
-    return response.message;
+    const { itemsNameMap, itemsBarCodeMap } = response.message;
+    const { itemNamesList, itemBarCodesList } = generateItemLists(itemsNameMap, itemsBarCodeMap);
+    
+    return {
+      ...response.message,
+      itemNamesList,
+      itemBarCodesList
+    };
   } catch (err) {
     return { isError: true, err };
   }
@@ -934,3 +940,13 @@ export const updateExpiredItemsBatchAPI = async (
     return { isError: true, error }
   }
 }
+
+export const generateItemLists = (itemsNameMap: any, itemsBarCodeMap: any) => {
+  const itemNamesList = Object.keys(itemsNameMap || {});
+  const itemBarCodesList = Object.keys(itemsBarCodeMap || {});
+  
+  return {
+    itemNamesList,
+    itemBarCodesList
+  };
+};
