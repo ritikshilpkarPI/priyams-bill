@@ -30,7 +30,11 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
       .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
       .lean();
     } else {
-      items = await Item.find({})
+      if (filterItemId) {
+        const itemId = toObjectId(filterItemId);
+        query = { _id: itemId };
+      }
+      items = await Item.find(query)
       .skip(skip)
       .limit(limitNumber)
       .select(CONSTANTS.STATIC_FIELDS_TO_SELECT)
@@ -65,22 +69,19 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
     const purchaseOrders = await PurchaseOrder.find({
       isApproved: true,
       'purchasedItems.item_id': { $in: itemIds },
-    })
-      .select({
+    }).populate({
+        path: 'dealerId'
+    }).select({
         _id: 1,
         draftTime: 1,
         approveTime: 1,
         purchasedItems: 1,
+        dateOnBill: 1,
       })
       .lean();
 
     for (const purchaseOrder of purchaseOrders) {
-      const {
-        _id: purchaseOrderId,
-        draftTime,
-        approveTime,
-        purchasedItems,
-      } = purchaseOrder;
+      const { _id: purchaseOrderId, draftTime, approveTime, purchasedItems,dealerId } = purchaseOrder;
 
       for (const pItem of purchasedItems) {
         const itemId = pItem.item_id?.toString();
@@ -90,6 +91,7 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
             purchaseOrderId,
             draftTime,
             approveTime,
+            dealerId,
             ...pItem,
           };
           itemIdMap.get(itemId).purchaseData.push(itemData);

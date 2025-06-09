@@ -5,6 +5,7 @@ import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
 import '../CSS/_barcodeLabel.scss';
 import { Loader } from '@mantine/core';
+import { generateItemLists } from '../utils/apiUtils';
 
 export const ItemsBarCode = () => {
   const [data, setData] = useState([]);
@@ -25,8 +26,16 @@ export const ItemsBarCode = () => {
         url: `${API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING}?pincode=${pincode}`,
         method: API_METHODS.GET,
       });
-      setItemApiData({ ...response.data.message });
-      setData(Object.values(response.data.message.itemsNameMap));
+      const { itemsNameMap, itemsBarCodeMap } = response.data.message;
+      const { itemNamesList, itemBarCodesList } = generateItemLists(itemsNameMap, itemsBarCodeMap);
+      
+      setItemApiData({ 
+        itemBarCodesList,
+        itemNamesList,
+        itemsBarCodeMap,
+        itemsNameMap 
+      });
+      setData(Object.values(itemsNameMap));
       setIsLoading(false);
     })();
   }, []);

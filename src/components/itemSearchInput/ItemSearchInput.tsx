@@ -65,7 +65,7 @@ const ItemSearchInput = ({
   const fetchGetItemsFromStoreInventoryAPI = async () => {
       dispatch(setLoading(true));
       const response = await getItemsFromStoreInventoryAPI(storeId!, {
-        page: page + 1,
+        page: page,
         size: rowsPerPage,
         itemNameOrBarcode: itemNameOrBarcode,
       });

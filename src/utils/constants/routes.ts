@@ -16,6 +16,7 @@ export const ROUTES = Object.freeze({
     PURCHASE_ORDER: "/purchase",
     PURCHASE_ORDER_BY_ID: "/purchase/:id",
     REPORT: "/report",
+    DASHBOARD: "/dashboard",
     APPROVAL: "/approval",
     EXPIRED_ITEMS: "/expiredItems",
     LABEL: "/label",
@@ -40,4 +41,6 @@ export const ROUTES = Object.freeze({
     STORE_INVENTORY_MANAGEMENT_BY_ID: "/createTransaction/:id",
     EXPIRY_ITEMS_BATCH: "/expiry-items-batch",
     EXPIRY_ITEMS_BATCH_BY_ID: "/expiry-items-batch/:id",
+    ADD_EXPIRY_ITEMS_BATCH_CLEARANCE: "/expiry-items-batch/:id/add-clearance",
+    UPDATE_EXPIRY_ITEMS_BATCH: "/addExpiredItem/:id",
 })

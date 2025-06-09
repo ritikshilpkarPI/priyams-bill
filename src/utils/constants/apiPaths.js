@@ -56,6 +56,7 @@ export const API_PATHS = {
   },
   REPORT: {
     POST_GET_DATE_RANGE_REPORT: '/api/report/getDateRangeReport',
+    POST_SALES_REPORTS: '/api/report/sales',
   },
   EXPENSE: {
     POST_EXPENSE: '/api/expense',
@@ -141,5 +142,6 @@ export const API_PATHS = {
     GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",
     GET_EXPIRED_ITEMS_BATCH_BY_ID: "/api/expiry-items-batch/getExpiryItemsBatchById",
     MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID: "/api/expiry-items-batch/markExpiryItemsBatchCleared",
+    POST_ADD_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/addExpiryItemsBatch",
   },
 };

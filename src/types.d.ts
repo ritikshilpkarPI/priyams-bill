@@ -673,6 +673,7 @@ declare global {
     onRowClick?: GridEventListener<'rowClick'>;
     expandedRows?: string[];
     onToggleExpand?: (id: string) => void; 
+    onSelectionModelChange?: (selectionModel: GridRowSelectionModel) => void;
   }
   interface PurchaseListApprovalProps {
     allPurchaseList: any[];
@@ -727,6 +728,7 @@ declare global {
   }
   
   interface InventoryItem {
+    _id: string;
     itemDetail: {
       _id: string;
       itemName: string;
@@ -759,13 +761,13 @@ declare global {
   }
   interface Shelf {
     _id: string;
-    expiryDate: string;
-    manufacturingDate: string;
-    quantity: number;
-    quantityToAdd?: number;
     purchaseOrderId?: string;
-    currentStockQuantity: number;
+    entryDate: string;
+    manufacturingDate: string;
+    expiryDate: string;
     initialStockQuantity: number;
+    currentStockQuantity: number;
+    costPrice?: number;
   }
   
   interface ShelfTableProps {
@@ -1009,6 +1011,7 @@ declare global {
     purchaseOrderId?: string;
     costPricePerUnit?: number;
     totalCostPrice?: number;
+    manufacturingDate?: string;
   }
   
   interface ExpiryItemWiseTotalCost {
@@ -1096,6 +1099,7 @@ declare global {
     stores: any[];
     selecteditem: StoreInventoryItemType | null;
     isLoading: boolean;
+    selectedItemsIds: string[];
   }
 
   interface InventoryPurchaseOrderEntry {
@@ -1140,6 +1144,22 @@ declare global {
     isLoading: boolean;
     cache: Record<string, InventoryTableRow[]>;
     selectedItem: InventoryPurchaseOrderItem | null
+  }
+
+  interface PaginationStrategy {
+    limitParamName: string;
+    offsetParamName: string;
+    offsetType: 'page' | 'skip';
+    startOffsetValue: number; // e.g., page 2 if first page was 1, or skip 100 if first 100 items fetched
+  }
+  
+  interface ExecutePaginatedAPICallsParams<T> {
+    apiFnToGetData: (params: Record<string, any>) => Promise<T[]>; // Takes dynamic params, returns data array
+    totalObjectsCount: number;
+    itemsPerCall: number;
+    paginationStrategy: PaginationStrategy;
+    parallelCalls?: number;
+    maxRetriesPerCall?: number;
   }
 
 }
@@ -1193,17 +1213,81 @@ export interface PurchaseEntry {
   poApproveTime: string;
   expiryDetails: ExpiryDetail[];
   initialItemQuantity: number;
+  dealerName: string;
 }
 
 export interface InventoryRow {
   staticData: StaticItemData;
   purchases: PurchaseEntry[];
+  _id: string;
 }
 
 export type InventoryTableRow = Omit<StaticItemData, '_id'> & {
   _id: string;                
   purchases: PurchaseEntry[]; 
 };
+
+
+interface Shelf {
+  _id: string;
+  purchaseOrderId?: string;
+  entryDate: string;
+  manufacturingDate: string;
+  expiryDate: string;
+  initialStockQuantity: number;
+  currentStockQuantity: number;
+  costPrice?: number;
+}
+
+export interface Purchase {
+  _id?: string;
+  purchaseOrderId?: string;
+  dealerId?: { _id: string; dealerName: string };
+  items: PurchaseItem[];
+  draftTime?: string;
+  approveTime?: string;
+  costPrice?: number;
+}
+
+export interface PurchaseItem {
+  _id?: string;
+  purchaseOrderId?: string;
+  dealerId?: { _id: string; dealerName: string };
+  items: PurchaseItem[];
+  draftTime?: string;
+  approveTime?: string;
+  costPrice?: number;
+}
+
+export interface ItemData {
+  _id: string;
+  sku: string;
+  itemBrandName: string;
+  companyName: string;
+  itemShelfDates: Shelf[];
+  purchaseData: Purchase[];
+}
+
+export interface ExpiredItemTableProps {
+  items?: ItemData[];
+  expiryBatchData?: {
+    _id: string;
+    manufacturingDate: string;
+    itemId: {
+      _id: string
+    };
+    expiryDate: string;
+    quantity: number;
+    purchaseOrderId: {
+      _id: string
+    };
+    costPricePerUnit: number;
+    totalCostPrice: number;
+  }[];
+  setItemsData: (items: any) => void;
+  id?: string;
+  isLoading?: boolean;
+}
 
 export {};
 

@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { ROUTES } from '../utils/constants/routes';
 import PerItemListPurchaseOrder from '../components/IndividualItemListPurchaseOrder';
 import { ItemsBarCode } from '../Pages/itemsBarcode';
+import Dashboard from '../Pages/DashboardV2';
 
 import {
   ItemsList,
@@ -26,6 +27,7 @@ import {
   StockTransactions,
   ExpiryItemsBatch,
 } from '../Pages';
+import AddClearancePage from 'src/Pages/AddClearancePage';
 
 interface RouteConfig {
     path: string;
@@ -34,15 +36,18 @@ interface RouteConfig {
   }
 
 export const protectedRouteMap: Record<string, RouteConfig> = {
+    DASHBOARD: {
+      path: ROUTES.DASHBOARD,
+      element: <Dashboard />,
+      index: true,
+    },
     BILLING: {
       path: ROUTES.BILLING,
       element: <NewBillingPage/>,
-      index: true,
     },
     NEW_BILLING: {
       path: ROUTES.NEW_BILLING,
       element: <NewBillingPage />,
-      index: true,
     },
     OPEN_CLOSE: {
       path: ROUTES.OPEN_CLOSE,
@@ -129,6 +134,11 @@ export const protectedRouteMap: Record<string, RouteConfig> = {
       element: <AddExpiredItem />,
       index: true,
     },
+    UPDATE_EXPIRED_ITEM: {
+      path: ROUTES.UPDATE_EXPIRY_ITEMS_BATCH,
+      element: <AddExpiredItem />,
+      index: true,
+    },
     EXPIRED_ITEM_LIST: {
       path: ROUTES.EXPIRED_ITEM_LIST,
       element: <ExpiredItemList />,
@@ -174,4 +184,9 @@ export const protectedRouteMap: Record<string, RouteConfig> = {
       element: <StockTransactions />,
       index: true,
     },
+    ADD_EXPIRY_ITEMS_BATCH_CLEARANCE: {
+      path: ROUTES.ADD_EXPIRY_ITEMS_BATCH_CLEARANCE,
+      element: <AddClearancePage />,
+      index: true,
+    }
   };

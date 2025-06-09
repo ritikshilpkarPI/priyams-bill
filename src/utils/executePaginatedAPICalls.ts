@@ -1,7 +1,7 @@
 export interface PaginationStrategy {
   limitParamName: string;
   offsetParamName: string;
-  offsetType: 'page' | 'offset';
+  offsetType: 'page' | 'offset' | 'skip';
   startOffsetValue: number;
 }
 
