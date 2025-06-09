@@ -6,10 +6,9 @@ import {
   getItemsFromStoreInventoryAPI,
   itemPurchaseBatchesAPI,
 } from 'src/utils/apiUtils';
-import { executePaginatedAPICalls, PaginationStrategy } from 'src/utils/executePaginatedAPICalls';
+import { executePaginatedAPICalls, PaginationStrategy } from '../utils/executePaginatedAPICalls';
 import { CONSTANTS } from '../constants/constants';
 import { generateStoreCSV } from '../utils/generateStoreCSV';
-import { PaginationStrategy } from '../utils/executePaginatedAPICalls';
 const DEFAULT_LIMIT = 100;
 const MAX_RETRIES_PER_CALL = 3;
 const DEFAULT_PARALLEL_CALLS = 5;
