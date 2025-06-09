@@ -225,7 +225,6 @@ const Report = () => {
           },
           maxRetriesPerCall: 3 
         });
-        console.log(result);
         
         // Floormat the result to match the expected structure
         result = { data: { report: result, filterType: selectedFilter } };
