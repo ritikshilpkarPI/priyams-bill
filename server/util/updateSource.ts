@@ -68,7 +68,7 @@ export const updateSource = async ({
       const itemIdStr = String(itemId);
       const storeItem = storeItemsMap.get(itemIdStr) as StoreInventoryItem | undefined;
       if (!storeItem) {
-        throw new Error(MESSAGES.NO_ITEMS_FOUND);
+        return; 
       }
 
       updateItemShelfDates(
