@@ -4,6 +4,9 @@ import { MESSAGES } from '../constants/messages';
 import { CONSTANTS } from '../constants/constants';
 import { TransactionItemByDate, StockTransactionType, TransactionItem, StockTransactionsInterface } from '../types';
 import { generateRandomKey } from '../../src/utils/generateRandomKey';
+import { StoreModel } from '../db-models/store-model';
+import { getStoreInventoryModel } from '../db-models/storeInventory-model';
+import mongoose from 'mongoose';
 
 export const addNewStockTransactions = async (
   req: Request,
@@ -51,6 +54,19 @@ export const addNewStockTransactions = async (
       });
     }
 
+    let destinationStoreItems = new Map();
+    if (destination?.destinationEntityId && destination?.destinationType === CONSTANTS.STORE) {
+      const store = await StoreModel.findById(destination.destinationEntityId);
+      if (store) {
+        const StoreInventory = getStoreInventoryModel(store.collectionName);
+        const itemIds = transactionItems.map(item => new mongoose.Types.ObjectId(item.itemId));
+        const existingItems = await StoreInventory.find({ itemId: { $in: itemIds } });
+        destinationStoreItems = new Map(
+          existingItems.map(item => [item.itemId.toString(), item])
+        );
+      }
+    }
+
     const filteredTransactionItems = transactionItems
       .map((item: TransactionItem) => {
         const validItemByDate = (item.itemByDate || []).filter(
@@ -63,9 +79,12 @@ export const addNewStockTransactions = async (
 
         if (validItemByDate.length === 0) return null;
 
+        const isNew = !destinationStoreItems.has(item.itemId.toString());
+
         return {
           ...item,
           itemByDate: validItemByDate,
+          isNew
         };
       })
       .filter(Boolean);
