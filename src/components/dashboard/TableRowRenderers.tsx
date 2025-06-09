@@ -62,13 +62,13 @@ export const renderCategoryRow = (
   item: any,
   idx: number,
   expandedCategories: Record<string, boolean>,
-  setExpandedCategories: (fn: (prev: Record<string, boolean>) => Record<string, boolean>) => void,
-  categorySearch: string
+  setExpandedCategories: (value: Record<string, boolean>) => void,
+  searchTerm: string
 ) => {
   const isExpanded = expandedCategories[item.category] || false;
   const filteredProducts = item.topProducts.filter((prod: any) => {
-    const searchLower = categorySearch.toLowerCase();
-    return !categorySearch || 
+    const searchLower = searchTerm.toLowerCase();
+    return !searchTerm || 
       (prod.sku?.toLowerCase().includes(searchLower)) ||
       (prod.barcode?.toLowerCase().includes(searchLower));
   });
@@ -78,10 +78,10 @@ export const renderCategoryRow = (
       <tr>
         <td colSpan={4}>
           <UnstyledButton
-            onClick={() => setExpandedCategories(prev => ({
-              ...prev,
-              [item.category]: !prev[item.category]
-            }))}
+            onClick={() => setExpandedCategories({
+              ...expandedCategories,
+              [item.category]: !expandedCategories[item.category]
+            })}
             style={{ width: '100%' }}
           >
             <Group position="apart">
@@ -144,13 +144,13 @@ export const renderBrandRow = (
   item: any,
   idx: number,
   expandedBrands: Record<string, boolean>,
-  setExpandedBrands: (fn: (prev: Record<string, boolean>) => Record<string, boolean>) => void,
-  brandSearch: string
+  setExpandedBrands: (value: Record<string, boolean>) => void,
+  searchTerm: string
 ) => {
   const isExpanded = expandedBrands[item.brand] || false;
   const filteredProducts = item.topProducts.filter((prod: any) => {
-    const searchLower = brandSearch.toLowerCase();
-    return !brandSearch || 
+    const searchLower = searchTerm.toLowerCase();
+    return !searchTerm || 
       (prod.sku?.toLowerCase().includes(searchLower)) ||
       (prod.barcode?.toLowerCase().includes(searchLower));
   });
@@ -160,10 +160,10 @@ export const renderBrandRow = (
       <tr>
         <td colSpan={4}>
           <UnstyledButton
-            onClick={() => setExpandedBrands(prev => ({
-              ...prev,
-              [item.brand]: !prev[item.brand]
-            }))}
+            onClick={() => setExpandedBrands({
+              ...expandedBrands,
+              [item.brand]: !expandedBrands[item.brand]
+            })}
             style={{ width: '100%' }}
           >
             <Group position="apart">
