@@ -37,7 +37,7 @@ export const updateDestination = async ({
 }: UpdateDestinationParams) => {
   const updatedItems = [];
 
-  if (destinationType === CONSTANTS.STORE || destinationType === CONSTANTS.WAREHOUSE) {
+  if (destinationType === CONSTANTS.STORE || CONSTANTS.WAREHOUSE) {
     const store = await StoreModel.findById(destinationEntityId);
     if (!store) throw new Error(MESSAGES.STORE_NOT_FOUND ?? 'Store not found');
 

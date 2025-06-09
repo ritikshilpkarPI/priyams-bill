@@ -111,7 +111,11 @@ const getItemTrendReport = async (startDate, lastDate, itemName) => {
   return itemTrendReport;
 };
 
-const getAllItemsTrendReport = async (startDate, lastDate) => {
+const getAllItemsTrendReport = async (startDate, lastDate, page = 1, limit = 10) => {
+  page = Math.max(1, parseInt(page) || 1);
+  limit = Math.max(1, Math.min(100, parseInt(limit) || 10));
+  const skip = (page - 1) * limit;
+
   const unwindedItemDetails = await Bill.aggregate([
     {
       $match: {
@@ -124,26 +128,30 @@ const getAllItemsTrendReport = async (startDate, lastDate) => {
     {
       $group: {
         _id: '$items.itemDetail',
-        createdAtDates: { $push: '$createdAt' },
-        items: { $push: '$items' },
-        totalDiscountSum: {
-          $sum: '$items.itemDiscountTotal',
-        },
-        totalAmountSum: {
-          $sum: '$items.itemSellingPriceTotal',
-        },
-        totalMRPsum: {
-          $sum: '$items.itemMRPtotal',
-        },
-        totalQuantitysum: {
-          $sum: '$items.itemQuantityInBill',
-        },
-        itemBarcode: { $first: '$items.itemBarcode' },
-        staffId: { $first: '$staffId' }
+        staffId: { $first: '$staffId' },
+        itemDetail: { $first: "$items.itemDetail"},
+        itemBillingTrend:{ $push: {
+          date: '$createdAt',
+          quantity: '$items.itemQuantityInBill',
+        }},
       },
     },
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [
+          { $skip: skip },
+          { $limit: limit }
+        ]
+      }
+    }
   ]);
-  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails, [
+
+  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails[0].data, [
+    {
+      path: 'itemDetail',
+      model: 'Item',
+    },
     {
       path: 'items.itemDetail',
       model: 'Item',
@@ -153,7 +161,15 @@ const getAllItemsTrendReport = async (startDate, lastDate) => {
       model: 'staff',
     },
   ]);
-  return allItemsBillingTrend;
+
+  // Format response to match what fetchAllPaginatedItems expects
+  return {
+    data: allItemsBillingTrend,
+    total: unwindedItemDetails[0].metadata[0]?.total || 0,
+    page,
+    limit,
+    totalPages: Math.ceil((unwindedItemDetails[0].metadata[0]?.total || 0) / limit)
+  };
 };
 
 const getPurchasedItemsReport = async (startDate, lastDate) => {
@@ -217,19 +233,45 @@ const filterFunctionsObj = {
   purchasedItems: getPurchasedItemsReport,
 };
 
-const getDateRangeReport = async (req, res,next) => {
+const getDateRangeReport = async (req, res, next) => {
   const filterType = req.params.filterName;
   const { startDate, lastDate, itemName } = req.body;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
 
   try {
-    const report = await filterFunctionsObj[filterType](
-      startDate,
-      lastDate,
-      itemName
-    );
+    let report;
+    
+    if (filterType === 'allItemsBillingTrend') {
+      report = await filterFunctionsObj[filterType](
+        startDate,
+        lastDate,
+        page,
+        limit
+      );
+    } else if (filterType === 'itemBillingTrend') {
+      report = await filterFunctionsObj[filterType](
+        startDate,
+        lastDate,
+        itemName
+      );
+    } else {
+      report = await filterFunctionsObj[filterType](
+        startDate,
+        lastDate
+      );
+    }
+    if (filterType === 'allItemsBillingTrend') {
+      res.status(200).json({ report, startDate, lastDate, filterType ,
+        totalCount: report.total,
+        page: report.page,
+        limit: report.limit,
+        totalPages : report.totalPages,
+      });
+    }
     res.status(200).json({ report, startDate, lastDate, filterType });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
