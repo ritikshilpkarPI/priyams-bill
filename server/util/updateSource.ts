@@ -65,7 +65,8 @@ export const updateSource = async ({
         throw new Error(MESSAGES.MISSING_REQUIRED_FIELDS);
       }
 
-      const storeItem = await StoreInventory.findOne({ itemId });
+      const itemIdStr = String(itemId);
+      const storeItem = storeItemsMap.get(itemIdStr) as StoreInventoryItem | undefined;
       if (!storeItem) {
         return; 
       }
