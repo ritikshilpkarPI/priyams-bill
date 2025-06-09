@@ -1,0 +1,242 @@
+.tableContainer {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    padding: 15px;
+    border: 0.1px solid #ccc;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.004), 0 6px 20px 0 rgba(0, 0, 0, 0.067);
+    transition: all 300ms ease-in-out;
+  }
+
+.mainRow {
+    background-color: #ffffff; 
+    border-radius: 18px; 
+    cursor: pointer;
+    transition: background-color 150ms ease;
+    display: table-row; 
+}
+
+.updatedRow {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.updatedRow:hover {
+    background-color: rgba(40, 167, 69, 0.2);
+}
+
+.expandedContentRow:first-child {
+    background: #000;
+}
+
+.mainCell {
+    padding: 22px;
+    vertical-align: top;
+   
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    color: #495057; 
+   
+    display: table-cell; /* Act as a table cell */
+    text-align: left;
+    border-top: 1px solid #ccc;
+}
+
+.mainRow:first-child .mainCell {
+    border-top: none;
+  }
+
+.mainCell:last-child {
+    border-right: none; /* Remove border from the last cell in the row */ 
+}
+
+.skuDetailCell {
+    width: 100%; /* Allocate a larger width for SKU/Details column */
+    /* Inherits from .mainCell */
+   
+}
+
+.chipCell {
+     width: 0%; /* Chips are now combined into SKU cell, this cell is effectively a spacer/structural element */
+     padding: 0;
+}
+
+.placeholderCell {
+     /* Styles for placeholder cells */
+     width: 0%; /* Placeholder cells should not take up space */
+     padding: 0;
+     border-right: none; /* Remove border for placeholder cells */
+}
+
+.totalCostCell {
+    width: 25%; /* Allocate width for Total Item Cost column */
+    text-align: right; /* Right-align numeric content */
+    font-weight: 600;
+    color: #2b8a3e; /* Green color */
+    /* Inherits from .mainCell */
+}
+
+.closeButtonCell {
+    width: 5%; /* Allocate width for the Close button column */
+    padding: 12px 8px; /* Adjusted padding */
+    text-align: center;
+    vertical-align: middle; /* Vertically center the icon */
+}
+.closeButtonIcon {
+border-radius: 15px;
+}
+.closeButtonIcon:hover {
+ background: #ec1b1b4f;
+ color: #ec1b1bd0;
+}
+
+.skuDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    /* Removed gap as padding in .mainCell might be sufficient */
+    /* gap: 2px; */
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 700;
+}
+.brandName {
+  background-color: #1971c2;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+  margin-top: 6px;
+}
+
+.viewDetailsLink {
+    font-size: 14px;
+    color: #1971c2;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+     /* Add margin top for spacing from SKU */
+     margin-top: 4px;
+     font-weight: 600;
+}
+
+.viewDetailsLink:hover {
+    text-decoration: underline;
+}
+
+/* Nested Table (Expanded Details) */
+.expandedDetailsRow {
+     /* Using display: table-row to act as a row */
+    display: table-row;
+}
+
+.expandedDetailsRow > div {
+     /* Style the cell that contains the nested table and add expiry button */
+     padding: 0 12px 12px 12px; /* Padding around the nested content */
+     max-height: 300px; /* Set a maximum height for the expanded content */
+     overflow-y: auto; /* Enable vertical scrolling for the expanded content */
+     display: table-cell; /* Act as a table cell */
+      /* Span across all main content columns */
+     /* Width is handled by the main table layout */
+}
+
+.nestedScrollArea {
+     overflow: scroll;
+     max-height: 300px;
+     
+}
+.scrollArea {
+    overflow: scroll;
+    max-height: 400px;
+}
+
+.nestedTable {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.nestedHeader {
+    background-color: #f1f3f5;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #57606a;
+    padding: 4px 12px;
+    border-bottom: 1px solid #dee2e6;
+    text-align: left;
+}
+
+.nestedCell {
+    padding: 6px 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 14px;
+    color: #212529;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: table-cell; /* Act as a table cell */
+    text-align: left;
+}
+
+.nestedCell:last-child {
+   border-bottom: none;
+}
+
+.nestedCellNumeric {
+     /* Inherits from .nestedCell */
+    text-align: left;
+    font-family: monospace;
+}
+
+.nestedActionCell {
+    /* Inherits from .nestedCell */
+    width: 80px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* Add Expiry Button */
+.addExpiryButton {
+    margin-top: 8px;
+     /* Inherits outline variant styles or define here */
+     /* Adjust display to control alignment if needed, default is inline-block */
+}
+.expandedContentCell {
+    display: block;                     /* allow max-height to animate */
+    max-height: 0;                      /* start fully closed */
+    overflow: hidden;
+    transition: max-height 300ms ease-in-out;
+  }
+  
+  /* expanded state: when the preceding .mainRow is aria-expanded */
+  .mainRow[aria-expanded="true"] + .expandedContentRow .expandedContentCell {
+    max-height: 600px;                  /* must be ≥ your content's tallest height */
+  }
+
+.viewPoLink {
+  color: #1971c2; /* A standard blue color for links */
+  cursor: pointer;
+  text-decoration: none; /* Ensure no default underline */
+}
+
+.viewPoLink:hover {
+  text-decoration: underline; /* Add underline on hover */
+}

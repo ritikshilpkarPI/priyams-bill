@@ -3,28 +3,36 @@ import { getItemSKU } from "../util/getItemSKU";
 import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
 import { DealerModel } from "../db-models/dealer-model";
+import { getStoreInventoryModel } from "../db-models/storeInventory-model"; 
 const { CONSTANTS } = require('../constants/constants');
 
 const saveInventory = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction(); // Start transaction
   try {
-    const { newItems, purchaseOrderId, userDetail } = req.body; 
+    const {
+      newItems,
+      purchaseOrderId,
+      userDetail,
+      storeCode = CONSTANTS.WAREHOUSE_COLLECTION_NAME, 
+    } = req.body;
     const referer = req.headers.referer;
-    const status  = CONSTANTS.APPROVE
+    const status  = CONSTANTS.APPROVE;
     const user = req.user;
-    
+
+    const StoreInventory = getStoreInventoryModel(storeCode);
+
     // Extract valid item IDs
     const itemIds = newItems
       .map((item) => item.item_id)
       .filter((id) => mongoose.Types.ObjectId.isValid(id));
-      
+
     const newItemSkus = newItems.filter((item) => !item.item_id).map(item => item.sku);
-    
+
     const existingItemsWithIds = await Item.find({ _id: { $in: itemIds } }).lean().session(session);
     const existingItemWithSkus = await Item.find({ sku: { $in: newItemSkus } }).lean().session(session);
 
-    const existingItems = [...existingItemsWithIds, ...existingItemWithSkus]; 
+    const existingItems = [...existingItemsWithIds, ...existingItemWithSkus];
 
     // Create a map for quick lookup
     const existingItemsMap = new Map(
@@ -35,8 +43,11 @@ const saveInventory = async (req, res, next) => {
     let failedItems = [];
     let brandIds = [];
     let companyIds = [];
+
     newItems.forEach((item) => {
-      const newShelfDates = (item.expiryDates || []).map((exp, idx) => ({
+      brandIds.push(item.brandId);
+      companyIds.push(item.companyId);
+      const newShelfDates = (item.expiryDates || []).map((exp) => ({
         expiryDate: new Date(exp.date),
         quantity: exp.value,
         manufacturingDate: new Date(exp.mfgDate),
@@ -45,8 +56,6 @@ const saveInventory = async (req, res, next) => {
         currentStockQuantity: exp.value,
         initialStockQuantity: exp.value,
       }));
-      brandIds.push(item.brandId)
-      companyIds.push(item.companyId)
       const itemDetails = {
         itemName: item.inputName,
         itemBarcode: item.barcode,
@@ -64,7 +73,7 @@ const saveInventory = async (req, res, next) => {
         companyName: item.companyName,
         subCategory: item.subCategory,
         flavourOrFeature: item.flavourOrFeature,
-        itemShelfDates: newShelfDates, 
+        itemShelfDates: newShelfDates,
         shelfLife: item.shelfLife,
         saleTime: item.saleTime,
         returnPolicyAvailable: item.returnPolicyAvailable,
@@ -88,21 +97,12 @@ const saveInventory = async (req, res, next) => {
         let oldStock = Number(oldItem.itemStockQuantity) || 0;
         let newItemCost = itemDetails.itemCostPricePerUnit;
         let newStock = itemDetails.itemStockQuantity;
-
         let totalStock = oldStock + newStock;
         let newCostPrice =
           totalStock > 0
             ? (oldItemCost * oldStock + newItemCost * newStock) / totalStock
             : 0;
-
-        let newTotalItemQuantity =
-          itemDetails.itemPerUnitQuantity;
-
-        let newUseByDate = mergeExpiryDates(
-          oldItem.useByDate,
-          itemDetails.useByDate
-        );
-
+        let newUseByDate = mergeExpiryDates(oldItem.useByDate, itemDetails.useByDate);
         let new_Item_Update = {
           ...itemDetails,
           itemCostPricePerUnit: isNaN(newCostPrice)
@@ -110,33 +110,32 @@ const saveInventory = async (req, res, next) => {
             : parseFloat(newCostPrice.toFixed(2)),
           useByDate: newUseByDate,
           itemStockQuantity: totalStock,
-          itemPerUnitQuantity: newTotalItemQuantity,
+          itemPerUnitQuantity: itemDetails.itemPerUnitQuantity,
         };
         const { itemShelfDates, ...restItemUpdate } = new_Item_Update;
         bulkOperations.push({
           updateOne: {
             filter: { _id: item.item_id },
-            update: { $set: restItemUpdate, $push: { itemShelfDates: { $each: newShelfDates } }, },
+            update: { $set: restItemUpdate, $push: { itemShelfDates: { $each: newShelfDates } } },
           },
         });
       } else {
         bulkOperations.push({
-          insertOne: { 
+          insertOne: {
             document: {
-            ...itemDetails,
-            createdFromPO: purchaseOrderId, 
-          }
-        },
+              ...itemDetails,
+              createdFromPO: purchaseOrderId,
+            },
+          },
         });
       }
     });
 
-    // Execute bulk operation if there are any updates
     let bulkWriteResult = {};
     if (bulkOperations.length > 0) {
       bulkWriteResult = await Item.bulkWrite(bulkOperations, { session });
-      console.log({ bulkWriteResult });
     }
+
     const insertedIds = bulkWriteResult.insertedIds
       ? Object.values(bulkWriteResult.insertedIds)
       : [];
@@ -145,6 +144,53 @@ const saveInventory = async (req, res, next) => {
       .select('sku _id')
       .lean()
       .session(session);
+
+    const skuToIdMap = newlyInsertedItems.reduce((m, doc) => {
+      m[doc.sku] = doc._id;
+      return m;
+    }, {});
+
+    let storeBulkOps = [];
+    newItems.forEach((item) => {
+      const realId = item.item_id
+        ? new mongoose.Types.ObjectId(item.item_id)
+        : skuToIdMap[item.sku];
+      const itemQuantity = Number(item.stockQuantity) || 0;
+      const stockChangeDateTime = new Date();
+      const newShelfDates = (item.expiryDates || []).map((exp) => ({
+        expiryDate: new Date(exp.date),
+        quantity: exp.value,
+        manufacturingDate: new Date(exp.mfgDate),
+        purchaseOrderId: purchaseOrderId,
+        entryDate: new Date(),
+        currentStockQuantity: exp.value,
+        initialStockQuantity: exp.value,
+      }));
+      storeBulkOps.push({
+        updateOne: {
+          filter: { itemId: realId },
+          update: {
+            $inc: { itemQuantityInStore: itemQuantity },
+            $push: {
+              itemStockChangeHistory: {
+                quantity: itemQuantity,
+                dateTime: stockChangeDateTime,
+                user: user._id,
+                changeType: CONSTANTS.ADD,
+                changedFrom: CONSTANTS.WAREHOUSE,
+                transactionId: purchaseOrderId,
+              },
+              itemShelfDates: { $each: newShelfDates },
+            },
+          },
+          upsert: true,
+        },
+      });
+    });
+
+    if (storeBulkOps.length > 0) {
+      await StoreInventory.bulkWrite(storeBulkOps, { session });
+    }
 
     const skuToIdArray = newlyInsertedItems.map((item) => ({
       sku: item.sku,
@@ -162,8 +208,6 @@ const saveInventory = async (req, res, next) => {
       await PurchaseOrder.bulkWrite(purchaseOrderItemBulkUpdates, { session });
     }
 
-    
-    // Identify failed items
     failedItems = newItems.filter(
       (item) =>
         !bulkWriteResult.insertedCount &&
@@ -202,9 +246,9 @@ const saveInventory = async (req, res, next) => {
       },
     };
 
-    const getPurchaseOrder = await PurchaseOrder.findById(purchaseOrderId)
+    const getPurchaseOrder = await PurchaseOrder.findById(purchaseOrderId);
     const dealerId = getPurchaseOrder.dealerId;
-    let updatedDealer
+    let updatedDealer;
 
     if (dealerId) {
       updatedDealer = await DealerModel.findByIdAndUpdate(
@@ -219,7 +263,6 @@ const saveInventory = async (req, res, next) => {
       );
     }
     
-    // If all items are successfully inserted or updated, approve the purchase order
     const order = await PurchaseOrder.findByIdAndUpdate(
       purchaseOrderId,
       {
@@ -245,7 +288,6 @@ const saveInventory = async (req, res, next) => {
   }
 };
 
-// Optimized helper function to merge expiry dates
 const mergeExpiryDates = (oldDates = [], newDates = []) => {
   const dateMap = new Map();
 

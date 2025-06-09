@@ -1,20 +1,21 @@
 import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import UnAuthorizedRoute from '../components/UnAuthorizedRoute';
 import AdminRoute from '../components/AdminRoute';
 import { ROUTES } from '../utils/constants/routes';
 import CustomerBill from '../Pages/CustomerBill';
+import Cookies from 'js-cookie';
 
 import {
   DayWiseBillFeed,
   Report,
-  Login
+  Login,
+  Dashboard
 } from '../Pages';
 import App from '../App';
 import { parseJwtToken } from '../utils/cookie';
 import { protectedRouteMap } from './protectedRouteMap';
-
 
 const { allowedRoutes = [], role = '' } = parseJwtToken() ?? {};
 
@@ -31,8 +32,17 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        index: true,
+        element: <Navigate to={Cookies.get('token') ? ROUTES.BILLING : ROUTES.LOGIN} replace />
+      },
+      {
         element: <AdminRoute />,
         children: [
+          {
+            path: ROUTES.DASHBOARD,
+            element: <Dashboard />,
+            index: true,
+          },
           {
             path: ROUTES.DAY_BILL,
             element: <DayWiseBillFeed />,
@@ -68,6 +78,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <>Page Not Found - 404</>,
+    element: <Navigate to={Cookies.get('token') ? ROUTES.BILLING : ROUTES.LOGIN} replace />
   },
 ]);

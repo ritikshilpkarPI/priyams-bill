@@ -76,6 +76,7 @@ export const itemPurchaseBatches = async (req: Request, res: Response) => {
         draftTime: 1,
         approveTime: 1,
         purchasedItems: 1,
+        dateOnBill: 1,
       })
       .lean();
 
