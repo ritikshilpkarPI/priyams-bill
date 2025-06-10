@@ -92,7 +92,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                     </ActionIcon>
                   </td>
                   <td>{item.sku}</td>
-                  {transactionId && <td>{item.isNew ? <Chip label={CONSTANTS.YES} color="success" variant="outlined" /> : null}</td>}
+                  {transactionId && <td>{item.isNew ? <Chip label={CONSTANTS.NEW_ITEM} color="success" variant="outlined" /> : null}</td>}
                 { !enableDestinationForm && <>
                   <td>{item.itemStockQuantity}</td>
                   <td>{item.itemQtyInStore}</td> </>}
