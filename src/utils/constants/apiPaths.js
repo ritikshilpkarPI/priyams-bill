@@ -144,4 +144,5 @@ export const API_PATHS = {
     MARK_EXPIRED_ITEMS_BATCH_CLEARED_BY_ID: "/api/expiry-items-batch/markExpiryItemsBatchCleared",
     POST_ADD_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/addExpiryItemsBatch",
   },
+  DEALER_CATALOG: "/api/dealer-catalog",
 };

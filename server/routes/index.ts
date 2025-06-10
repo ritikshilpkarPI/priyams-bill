@@ -89,7 +89,8 @@ const {
   updateExpiryItemsBatch,
   draftExpiryItemsBatch,
   approveOrRejectExpiryItemsBatch,
-  updateStockTransactionBySource
+  updateStockTransactionBySource,
+  getDealerCatalog,
 
 } = require('../controllers/index');
 
@@ -350,5 +351,7 @@ router.post(API_PATHS.STOCK_TRANSACTION.UPDATE_STOCK_TRANSACTION_BY_SOURCE, isLo
 
 // Add sales reports route
 router.use(API_PATHS.REPORT.POST_SALES_REPORTS, isLoggedIn, salesReportsRouter);
+
+router.post(API_PATHS.DEALER_CATALOG , getDealerCatalog);
 
 export default router;
