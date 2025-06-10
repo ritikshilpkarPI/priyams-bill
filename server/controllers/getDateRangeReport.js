@@ -151,15 +151,13 @@ const getAllItemsTrendReport = async (startDate, lastDate, page = 1, limit = 10)
     {
       path: 'itemDetail',
       model: 'Item',
-    },
-    {
-      path: 'items.itemDetail',
-      model: 'Item',
+      select: 'itemName itemCode sku'
     },
     {
       path: 'staffId',
       model: 'staff',
-    },
+      select: 'name'
+    }
   ]);
 
   // Format response to match what fetchAllPaginatedItems expects
