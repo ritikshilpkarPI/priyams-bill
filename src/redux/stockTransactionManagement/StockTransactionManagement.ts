@@ -207,6 +207,7 @@ const stockTransactionSlice = createSlice({
           totalQtyAdd: 0,
           itemShelfDates: [],
           itemByDate: item.itemByDate,
+          isNew: item.isNew
         }));
       }
     }
