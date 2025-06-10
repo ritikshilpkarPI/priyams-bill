@@ -3,34 +3,16 @@ import { DealerModel } from '../db-models/dealer-model';
 import { CompanyModel } from '../db-models/company-model';
 import { BrandModel } from '../db-models/brand-model';
 import { Types } from 'mongoose';
-
-interface Dealer {
-    _id: Types.ObjectId;
-    dealerName: string;
-    dealerNumber: number;
-    dealerBrands?: Types.ObjectId[];
-    dealerCompanies?: Types.ObjectId[];
-}
-
-interface Company {
-    _id: Types.ObjectId;
-    companyName: string;
-}
-
-interface Brand {
-    _id: Types.ObjectId;
-    brandName: string;
-    companyId?: Types.ObjectId;
-}
+import { dealerCatalogBrand, dealerCatalogCompany, dealerCatalogDealer } from '../types';
 
 export const getDealerCatalog = async (req: Request, res: Response) => {
     try {
         const { type = "dealer" } = req.body;
 
         const [dealers, companies, brands, totalDealers, totalCompanies, totalBrands] = await Promise.all([
-            DealerModel.find().lean() as Promise<Dealer[]>,
-            CompanyModel.find().lean() as Promise<Company[]>,
-            BrandModel.find().lean() as Promise<Brand[]>,
+            DealerModel.find().lean() as Promise<dealerCatalogDealer[]>,
+            CompanyModel.find().lean() as Promise<dealerCatalogCompany[]>,
+            BrandModel.find().lean() as Promise<dealerCatalogBrand[]>,
             DealerModel.countDocuments(),
             CompanyModel.countDocuments(),
             BrandModel.countDocuments()
@@ -40,9 +22,9 @@ export const getDealerCatalog = async (req: Request, res: Response) => {
         const companyMap = new Map(companies.map(company => [company._id.toString(), company]));
         const dealerMap = new Map(dealers.map(dealer => [dealer._id.toString(), dealer]));
 
-        const brandToDealers = new Map<string, Dealer[]>();
-        const companyToDealers = new Map<string, Dealer[]>();
-        const brandToCompanies = new Map<string, Brand[]>();
+        const brandToDealers = new Map<string, dealerCatalogDealer[]>();
+        const companyToDealers = new Map<string, dealerCatalogDealer[]>();
+        const brandToCompanies = new Map<string, dealerCatalogBrand[]>();
 
         dealers.forEach(dealer => {
             if (!dealer._id) return;

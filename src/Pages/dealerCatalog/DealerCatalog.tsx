@@ -18,43 +18,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { getDealerCatalogAPI } from '../../utils/apiUtils';
 import CatalogCard from './CatalogCard';
 
-interface Counts {
-  dealers: number;
-  companies: number;
-  brands: number;
-}
-
-interface Dealer {
-  _id: string;
-  dealerName: string;
-  dealerNumber: number;
-  brands: Array<{ _id: string; brandName: string }>;
-  companies: Array<{ _id: string; companyName: string }>;
-}
-
-interface Company {
-  _id: string;
-  companyName: string;
-  dealers: Array<{ _id: string; dealerName: string; dealerNumber: number }>;
-  brands: Array<{ _id: string; brandName: string }>;
-}
-
-interface Brand {
-  _id: string;
-  brandName: string;
-  companies: Array<{ _id: string; companyName: string }>;
-  dealers: Array<{ _id: string; dealerName: string; dealerNumber: number }>;
-}
-
-type CatalogItem = Dealer | Company | Brand;
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
+function TabPanel(props: dealerCatalogTabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -78,12 +42,12 @@ const DealerCatalog = () => {
   const [activeFilter, setActiveFilter] = useState<
     'dealer' | 'brand' | 'company'
   >('dealer');
-  const [counts, setCounts] = useState<Counts>({
+  const [counts, setCounts] = useState<dealerCatalogCounts>({
     dealers: 0,
     companies: 0,
     brands: 0,
   });
-  const [data, setData] = useState<Dealer[] | Company[] | Brand[]>([]);
+  const [data, setData] = useState<dealerCatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -117,38 +81,38 @@ const DealerCatalog = () => {
     setActiveFilter(types[newValue] as 'dealer' | 'brand' | 'company');
   };
 
-  const filterData = (items: CatalogItem[]) => {
+  const filterData = (items: dealerCatalogItem[]) => {
     if (!searchQuery.trim()) return items;
 
     const query = searchQuery.toLowerCase();
-    return items.filter((item: CatalogItem) => {
+    return items.filter((item: dealerCatalogItem) => {
       if ('dealerName' in item) {
-        const dealer = item as Dealer;
-        const nameMatches = dealer.dealerName.toLowerCase().includes(query);
-        const numberMatches = dealer.dealerNumber.toString().includes(query);
+        const dealerItem = item as dealerCatalogDealer;
+        const nameMatches = dealerItem.dealerName.toLowerCase().includes(query);
+        const numberMatches = dealerItem.dealerNumber.toString().includes(query);
 
         const brandMatches =
-          dealer.brands?.filter((brand) =>
+          dealerItem.brands?.filter((brand) =>
             brand.brandName.toLowerCase().includes(query)
           ).length > 0 || false;
 
         const companyMatches =
-          dealer.companies?.filter((company) =>
+          dealerItem.companies?.filter((company) =>
             company.companyName.toLowerCase().includes(query)
           ).length > 0 || false;
 
         return nameMatches || numberMatches || brandMatches || companyMatches;
       } else if ('companyName' in item) {
-        const company = item as Company;
-        const nameMatches = company.companyName.toLowerCase().includes(query);
+        const companyItem = item as dealerCatalogCompany;
+        const nameMatches = companyItem.companyName.toLowerCase().includes(query);
 
         const brandMatches =
-          company.brands?.filter((brand) =>
+          companyItem.brands?.filter((brand) =>
             brand.brandName.toLowerCase().includes(query)
           ).length > 0 || false;
 
         const dealerMatches =
-          company.dealers?.filter(
+          companyItem.dealers?.filter(
             (dealer) =>
               dealer.dealerName.toLowerCase().includes(query) ||
               dealer.dealerNumber.toString().includes(query)
@@ -156,16 +120,16 @@ const DealerCatalog = () => {
 
         return nameMatches || brandMatches || dealerMatches;
       } else {
-        const brand = item as Brand;
-        const nameMatches = brand.brandName.toLowerCase().includes(query);
+        const brandItem = item as dealerCatalogBrand;
+        const nameMatches = brandItem.brandName.toLowerCase().includes(query);
 
         const companyMatches =
-          brand.companies?.filter((company) =>
+          brandItem.companies?.filter((company) =>
             company.companyName.toLowerCase().includes(query)
           ).length > 0 || false;
 
         const dealerMatches =
-          brand.dealers?.filter(
+          brandItem.dealers?.filter(
             (dealer) =>
               dealer.dealerName.toLowerCase().includes(query) ||
               dealer.dealerNumber.toString().includes(query)
@@ -389,38 +353,44 @@ const DealerCatalog = () => {
                 <Grid>
                   {activeFilter === 'dealer' &&
                     Array.isArray(filteredData) &&
-                    (filteredData as Dealer[]).map((dealer) => (
-                      <Grid.Col key={dealer._id} span={getGridSpan()}>
-                        <CatalogCard
-                          title={dealer.dealerName}
-                          subtitle={`Number: ${dealer.dealerNumber}`}
-                          brands={dealer.brands}
-                          companies={dealer.companies}
-                        />
-                      </Grid.Col>
-                    ))}
+                    (filteredData as dealerCatalogItem[])
+                      .filter((item): item is dealerCatalogDealer => 'dealerName' in item)
+                      .map((dealer: dealerCatalogDealer) => (
+                        <Grid.Col key={dealer._id} span={getGridSpan()}>
+                          <CatalogCard
+                            title={dealer.dealerName}
+                            subtitle={`Number: ${dealer.dealerNumber}`}
+                            brands={dealer.brands}
+                            companies={dealer.companies}
+                          />
+                        </Grid.Col>
+                      ))}
                   {activeFilter === 'company' &&
                     Array.isArray(filteredData) &&
-                    (filteredData as Company[]).map((company) => (
-                      <Grid.Col key={company._id} span={getGridSpan()}>
-                        <CatalogCard
-                          title={company.companyName}
-                          brands={company.brands}
-                          dealers={company.dealers}
-                        />
-                      </Grid.Col>
-                    ))}
+                    (filteredData as dealerCatalogItem[])
+                      .filter((item): item is dealerCatalogCompany => 'companyName' in item)
+                      .map((company: dealerCatalogCompany) => (
+                        <Grid.Col key={company._id} span={getGridSpan()}>
+                          <CatalogCard
+                            title={company.companyName}
+                            brands={company.brands}
+                            dealers={company.dealers}
+                          />
+                        </Grid.Col>
+                      ))}
                   {activeFilter === 'brand' &&
                     Array.isArray(filteredData) &&
-                    (filteredData as Brand[]).map((brand) => (
-                      <Grid.Col key={brand._id} span={getGridSpan()}>
-                        <CatalogCard
-                          title={brand.brandName}
-                          companies={brand.companies}
-                          dealers={brand.dealers}
-                        />
-                      </Grid.Col>
-                    ))}
+                    (filteredData as dealerCatalogItem[])
+                      .filter((item): item is dealerCatalogBrand => 'brandName' in item)
+                      .map((brand: dealerCatalogBrand) => (
+                        <Grid.Col key={brand._id} span={getGridSpan()}>
+                          <CatalogCard
+                            title={brand.brandName}
+                            companies={brand.companies}
+                            dealers={brand.dealers}
+                          />
+                        </Grid.Col>
+                      ))}
                 </Grid>
               </Box>
             )}

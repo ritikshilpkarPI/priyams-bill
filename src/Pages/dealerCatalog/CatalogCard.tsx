@@ -1,13 +1,6 @@
 import React from 'react';
 import { Card, Typography, Box, Chip, useTheme, useMediaQuery } from '@mui/material';
 
-interface CatalogCardProps {
-  title: string;
-  subtitle?: string;
-  brands?: Array<{ _id: string; brandName: string }>;
-  companies?: Array<{ _id: string; companyName: string }>;
-  dealers?: Array<{ _id: string; dealerName: string; dealerNumber: number }>;
-}
 
 const CatalogCard: React.FC<CatalogCardProps> = ({
   title,
