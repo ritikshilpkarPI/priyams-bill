@@ -126,11 +126,22 @@ const getAllItemsTrendReport = async (startDate, lastDate, page = 1, limit = 10)
       $unwind: '$items',
     },
     {
+      $lookup: {
+        from: 'items',
+        localField: 'items.itemDetail',
+        foreignField: '_id',
+        as: 'itemDetails'
+      }
+    },
+    {
+      $unwind: '$itemDetails'
+    },
+    {
       $group: {
         _id: '$items.itemDetail',
         staffId: { $first: '$staffId' },
-        itemDetail: { $first: "$items.itemDetail"},
-        itemBillingTrend:{ $push: {
+        itemDetail: { $first: '$itemDetails' },
+        itemBillingTrend: { $push: {
           date: '$createdAt',
           quantity: '$items.itemQuantityInBill',
         }},
@@ -148,11 +159,6 @@ const getAllItemsTrendReport = async (startDate, lastDate, page = 1, limit = 10)
   ]);
 
   const allItemsBillingTrend = await Bill.populate(unwindedItemDetails[0].data, [
-    {
-      path: 'itemDetail',
-      model: 'Item',
-      select: 'itemName itemCode sku'
-    },
     {
       path: 'staffId',
       model: 'staff',
@@ -247,7 +253,19 @@ const getDateRangeReport = async (req, res, next) => {
         page,
         limit
       );
-    } else if (filterType === 'itemBillingTrend') {
+      return res.status(200).json({ 
+        report, 
+        startDate, 
+        lastDate, 
+        filterType,
+        totalCount: report.total,
+        page: report.page,
+        limit: report.limit,
+        totalPages: report.totalPages,
+      });
+    } 
+    
+    if (filterType === 'itemBillingTrend') {
       report = await filterFunctionsObj[filterType](
         startDate,
         lastDate,
@@ -259,15 +277,8 @@ const getDateRangeReport = async (req, res, next) => {
         lastDate
       );
     }
-    if (filterType === 'allItemsBillingTrend') {
-      res.status(200).json({ report, startDate, lastDate, filterType ,
-        totalCount: report.total,
-        page: report.page,
-        limit: report.limit,
-        totalPages : report.totalPages,
-      });
-    }
-    res.status(200).json({ report, startDate, lastDate, filterType });
+    
+    return res.status(200).json({ report, startDate, lastDate, filterType });
   } catch (error) {
     next(error);
   }
