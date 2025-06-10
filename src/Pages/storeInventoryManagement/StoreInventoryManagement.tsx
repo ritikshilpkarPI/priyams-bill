@@ -536,6 +536,7 @@ try {
               enableDestinationForm={transactionId ? true : false}
               disabled={ stockTransaction?.approvedByAdmin || (!isAdminUser  && stockTransaction.transactionReason === CONSTANTS.TRANSACTION_REASON.QUANTITY_UPDATE ) }
               isSourceStaff={isSourceStaff}
+              transactionId={transactionId}
             />
           )}
         </Grid.Col>
