@@ -253,7 +253,19 @@ const getDateRangeReport = async (req, res, next) => {
         page,
         limit
       );
-    } else if (filterType === 'itemBillingTrend') {
+      return res.status(200).json({ 
+        report, 
+        startDate, 
+        lastDate, 
+        filterType,
+        totalCount: report.total,
+        page: report.page,
+        limit: report.limit,
+        totalPages: report.totalPages,
+      });
+    } 
+    
+    if (filterType === 'itemBillingTrend') {
       report = await filterFunctionsObj[filterType](
         startDate,
         lastDate,
@@ -265,15 +277,8 @@ const getDateRangeReport = async (req, res, next) => {
         lastDate
       );
     }
-    if (filterType === 'allItemsBillingTrend') {
-      res.status(200).json({ report, startDate, lastDate, filterType ,
-        totalCount: report.total,
-        page: report.page,
-        limit: report.limit,
-        totalPages : report.totalPages,
-      });
-    }
-    res.status(200).json({ report, startDate, lastDate, filterType });
+    
+    return res.status(200).json({ report, startDate, lastDate, filterType });
   } catch (error) {
     next(error);
   }
