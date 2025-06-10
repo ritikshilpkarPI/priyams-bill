@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { CONSTANTS } from 'src/constants/constants';
 import { pascalCase } from 'src/utils/pascalCase';
 import DestinationShelfTable from './shelfTable/DestinationShelfTable';
+import { Chip } from '@mui/material';
 
 export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   items,
@@ -23,6 +24,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
   enableDestinationForm,
   disabled = false,
   isSourceStaff = false,
+  transactionId,
 }) => {
   const [collapsedIds, setCollapsedIds] = useState<string[]>([]);
 
@@ -63,6 +65,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
           <tr>
             <th></th>
             <th>SKU</th>
+            {transactionId && <th>New Item</th>}
             {!enableDestinationForm && <> 
             <th>{`Qty ${pascalCase(transactionSource.sourceType ?? '')}`}</th>
             <th>{`Qty ${pascalCase(transactionDestination.destinationType ?? '')}`}</th>
@@ -89,6 +92,7 @@ export const InventoryItemPanel: React.FC<InventoryItemPanelProps> = ({
                     </ActionIcon>
                   </td>
                   <td>{item.sku}</td>
+                  {transactionId && <td>{item.isNew ? <Chip label={CONSTANTS.YES} color="success" variant="outlined" /> : null}</td>}
                 { !enableDestinationForm && <>
                   <td>{item.itemStockQuantity}</td>
                   <td>{item.itemQtyInStore}</td> </>}

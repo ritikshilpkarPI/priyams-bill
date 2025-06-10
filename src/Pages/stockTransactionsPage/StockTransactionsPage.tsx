@@ -4,7 +4,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CONSTANTS } from '../../constants/constants';
 import { getStockTransactionsByStatusApi } from 'src/utils/apiUtils';
 import DataTable from '../DataTable';
-import { Badge } from '@mantine/core';
+import { Badge, Chip } from '@mantine/core';
 import { generateColor } from 'src/utils/constants/generateColor';
 import { formatShortDate } from 'src/utils/formatDate';
 
@@ -111,6 +111,11 @@ const StockTransactionsPage: React.FC = () => {
       key: 'quantity',
       label: 'Quantity',
       render: (row: any) => row.transactionItems.length,
+    },
+    { key: 'approvedByAdmin', label: 'Approved',
+      render: (row: any) => {
+        return row.approvedByAdmin &&  <Chip defaultChecked color="green" variant="outline">YES</Chip>;
+      }
     },
     {
       key: 'transactionStatus',

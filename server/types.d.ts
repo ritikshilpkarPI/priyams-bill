@@ -272,3 +272,22 @@ export interface ExpiredItemsSchema {
   items: ExpiredItems[];
   itemWiseTotalCost: ItemWiseTotalCostType[];
 }
+
+export interface dealerCatalogDealer {
+  _id: Types.ObjectId;
+  dealerName: string;
+  dealerNumber: number;
+  dealerBrands?: Types.ObjectId[];
+  dealerCompanies?: Types.ObjectId[];
+}
+
+export interface dealerCatalogCompany {
+  _id: Types.ObjectId;
+  companyName: string;
+}
+
+export interface dealerCatalogBrand {
+  _id: Types.ObjectId;
+  brandName: string;
+  companyId?: Types.ObjectId;
+}

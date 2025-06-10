@@ -95,14 +95,15 @@ export const updateDestination = async ({
 
       bulkOps.push({
         updateOne: {
-          filter: { _id: storeItem._id },
+          filter: { itemId: new mongoose.Types.ObjectId(itemIdStr) },
           update: {
             $set: {
               itemQuantityInStore: storeItem.itemQuantityInStore,
               itemShelfDates: storeItem.itemShelfDates,
               itemStockChangeHistory: storeItem.itemStockChangeHistory
             }
-          }
+          },
+          upsert: true
         }
       });
 
