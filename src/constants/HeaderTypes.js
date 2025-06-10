@@ -67,7 +67,7 @@ export const sidebarListData = [
   },
   {
     BILL: [
-      { name: 'Dashboard', url: '/dashboard', icon: 'images/dashboard.svg' },
+      { name: 'Dashboard', url: '/dashboard', icon: 'images/icon-dashboard.png' },
       { name: 'All Bills', url: '/allBill', icon: 'images/bill.svg' },
       {
         name: 'Return & Exchange',

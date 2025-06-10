@@ -21,6 +21,7 @@ import expiredItemsBatchSlice from './expiredItemsBatch/ExpiredItemsBatchSlice'
 import inventoryReducer from './inventoryPage/inventorySlice';
 import storeInventorySlice from './storeInventory/StoreInventoryState'
 import expiryBatchReducer from './ExpiryBatch/expiryBatchSlice';
+import dashboardReducer from './dashboard/dashboardSlice';
 
 
 export const store = configureStore({
@@ -47,6 +48,7 @@ export const store = configureStore({
     expiredItemsBatch: expiredItemsBatchSlice,
     inventory: inventoryReducer,
     expiryBatch: expiryBatchReducer,
+    dashboard: dashboardReducer,
   },
 });
 
