@@ -513,6 +513,7 @@ declare global {
     destinationRemark?: string;
     sourceRemark?: string;
     error?: any;
+    isNew?: boolean;
   }
   interface StockTransactionType {
   transactionType: string;
@@ -751,6 +752,7 @@ declare global {
     enableDestinationForm?: boolean;
     disabled?: boolean;
     isSourceStaff?: boolean;
+    transactionId?: string;
   }
   interface ShelfLifeInfoProps {
     expiryDate: {
