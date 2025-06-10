@@ -36,7 +36,7 @@ export const updateSource = async ({
 }: UpdateSourceParams) => {
   const updatedItems = [];
 
-  if (sourceType === (CONSTANTS.STORE || CONSTANTS.WAREHOUSE)) {
+  if (sourceType === CONSTANTS.STORE || sourceType === CONSTANTS.WAREHOUSE) {
     const store = await StoreModel.findById(sourceEntityId);
     if (!store) throw new Error(MESSAGES.STORE_NOT_FOUND ?? 'Store not found');
 

@@ -38,4 +38,4 @@ export function getCheckedExpiredItems(resp: Record<string, any[]>) {
     }
   
     return { items, expiryBatchCost };
-  }
+}

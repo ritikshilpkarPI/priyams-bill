@@ -43,22 +43,27 @@ const expiryBatchSlice = createSlice({
         items: ItemData[];
       }>
     ) => {
-      state.items = {};
+      const newItems = { ...state.items };
+      
       action.payload.items.forEach((item) => {
-        state.items[item._id] = item.itemShelfDates.map((batch) => ({
-          _id: batch._id,
-          shelfId: batch._id,
-          manufacturingDate: batch.manufacturingDate,
-          expiryDate: batch.expiryDate,
-          quantity: batch.currentStockQuantity,
-          currentStockQuantity: batch.currentStockQuantity,
-          checked: false,
-          purchaseOrderId: batch.purchaseOrderId,
-          entryDate: batch.entryDate,
-          initialStockQuantity: batch.initialStockQuantity,
-          costPrice: batch.costPrice,
-        }));
+        if (!newItems[item._id] || newItems[item._id].length === 0) {
+          newItems[item._id] = item.itemShelfDates.map((batch) => ({
+            _id: batch._id,
+            shelfId: batch._id,
+            manufacturingDate: batch.manufacturingDate,
+            expiryDate: batch.expiryDate,
+            quantity: batch.currentStockQuantity,
+            currentStockQuantity: batch.currentStockQuantity,
+            checked: false,
+            purchaseOrderId: batch.purchaseOrderId,
+            entryDate: batch.entryDate,
+            initialStockQuantity: batch.initialStockQuantity,
+            costPrice: batch.costPrice,
+          }));
+        }
       });
+      
+      state.items = newItems;
     },
 
     toggleChecked: (
@@ -205,9 +210,7 @@ const expiryBatchSlice = createSlice({
       }
 
       state.itemsData = state.itemsData.filter((item: InventoryRow) => item._id !== itemId);
-
-      const { [itemId]: _, ...rest } = state.items;
-      state.items = rest;
+      
     },
     setItemsData: (state, action: PayloadAction<InventoryRow[]>) => {
       state.itemsData = action.payload;

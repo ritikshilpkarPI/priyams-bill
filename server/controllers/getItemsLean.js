@@ -8,76 +8,103 @@ const getItemsLean = async (req, res, next) => {
 
   try {
     let store;
-    let inventoryData = [];
-    let itemIds = [];
-    let storeItemQtyMap = {};
+    let aggregatedItems = [];
+    let itemsNameMap = {};
+    let itemsBarCodeMap = {};
+    let totalItemsCount = 0;
 
     if (storeId && mongoose.isValidObjectId(storeId)) {
-      store = await StoreModel.findById(storeId);
+      store = await StoreModel.findById(storeId).lean();
     } else if (storeCode) {
-      store = await StoreModel.findOne({ code: storeCode });
+      store = await StoreModel.findOne({ code: storeCode }).lean();
     } else if (pincode) {
-      store = await StoreModel.findOne({ pincode });
+      store = await StoreModel.findOne({ pincode }).lean();
     }
 
     if (store) {
-      const StoreInventoryModel = getStoreInventoryModel(store.collectionName);
-      inventoryData = await StoreInventoryModel.find({});
-      itemIds = inventoryData.map((inv) => inv.itemId);
-
-      inventoryData.forEach((entry) => {
-        if (entry.itemId && entry.itemQuantityInStore != null) {
-          storeItemQtyMap[entry.itemId] = entry.itemQuantityInStore || 0;
+      const inventoryColl = mongoose.connection.collection(store.collectionName);
+      const pipeline = [
+        {
+          $lookup: {
+            from: Item.collection.name,
+            localField: "itemId",
+            foreignField: "_id",
+            as: "itemDoc"
+          }
+        },
+        { $unwind: "$itemDoc" },
+        {
+          $match: {
+            "itemDoc.permanentlyOutOfStock": false,
+            "itemDoc.isDeleted": false,
+            "itemDoc.temporaryDeleted": { $exists: false }
+          }
+        },
+        { $sort: { "itemDoc.itemName": 1 } },
+        {
+          $project: {
+            _id: "$itemDoc._id",
+            itemBarcode: "$itemDoc.itemBarcode",
+            itemName: "$itemDoc.itemName",
+            itemMRPperUnit: "$itemDoc.itemMRPperUnit",
+            itemSellingPricePerUnit: "$itemDoc.itemSellingPricePerUnit",
+            slabPricing: "$itemDoc.slabPricing",
+            itemStockQuantity: "$itemQuantityInStore",
+            itemPerUnitQuantity: "$itemDoc.itemPerUnitQuantity",
+            quantityUnitName: "$itemDoc.quantityUnitName",
+            itemShelfDates: "$itemShelfDates",
+            sku: "$itemDoc.sku"
+          }
         }
-      });
+      ];
+
+      aggregatedItems = await inventoryColl.aggregate(pipeline).toArray();
+      totalItemsCount = aggregatedItems.length;
+    } else {
+      const itemFilter = {
+        permanentlyOutOfStock: false,
+        isDeleted: false,
+        temporaryDeleted: { $exists: false }
+      };
+
+      const allItemsList = await Item.find(itemFilter, null, { sort: { itemName: 1 } })
+        .select({
+          itemBarcode: 1,
+          itemName: 1,
+          itemMRPperUnit: 1,
+          itemSellingPricePerUnit: 1,
+          slabPricing: 1,
+          itemStockQuantity: 1,
+          itemPerUnitQuantity: 1,
+          quantityUnitName: 1,
+          itemShelfDates: 1,
+          sku: 1
+        })
+        .lean();
+
+      aggregatedItems = allItemsList.map(item => ({
+        _id: item._id,
+        itemBarcode: item.itemBarcode,
+        itemName: item.itemName,
+        itemMRPperUnit: item.itemMRPperUnit,
+        itemSellingPricePerUnit: item.itemSellingPricePerUnit,
+        slabPricing: item.slabPricing,
+        itemStockQuantity: item.itemStockQuantity,
+        itemPerUnitQuantity: item.itemPerUnitQuantity,
+        quantityUnitName: item.quantityUnitName,
+        itemShelfDates: item.itemShelfDates || [],
+        sku: item.sku,
+        itemQtyInStore: item.itemStockQuantity
+      }));
+      totalItemsCount = aggregatedItems.length;
     }
 
-    const itemFilter = {
-      permanentlyOutOfStock: false,
-      isDeleted: false,
-      temporaryDeleted: { $exists: false },
-    };
-
-    if (store) {
-      itemFilter._id = { $in: itemIds };
-    }
-
-    const allItemsList = await Item.find(itemFilter, null, {
-      sort: { itemName: 1 },
-    }).select({
-      itemBarcode: 1,
-      itemName: 1,
-      itemMRPperUnit: 1,
-      itemSellingPricePerUnit: 1,
-      slabPricing: 1,
-      itemStockQuantity: 1,
-      itemPerUnitQuantity: 1,
-      quantityUnitName: 1,
-      itemShelfDates: 1,
-      sku: 1,
-    });
-
-    const itemsBarCodeMap = {};
-    const itemsNameMap = {};
-
-    allItemsList.forEach((item) => {
-      const itemQty = storeItemQtyMap[item._id] || item.itemStockQuantity || 0;
-      const inventoryEntry = inventoryData.find((inv) => inv.itemId.toString() === item._id.toString());
-      let itemWithQty
-      if(store){
-        itemWithQty = {
-          ...item.toObject(),
-          itemQtyInStore: itemQty,
-          itemStockQuantity: itemQty,
-          itemShelfDates: inventoryEntry?.itemShelfDates || []
-        };
-      }else{
-        itemWithQty = {
-          ...item.toObject(),
-          itemQtyInStore: itemQty,
-          itemStockQuantity: itemQty,
-        };
-      }
+    aggregatedItems.forEach(item => {
+      const itemWithQty = {
+        ...item,
+        itemQtyInStore: item.itemStockQuantity,
+        itemStockQuantity: item.itemStockQuantity
+      };
 
       itemsNameMap[item.itemName] = itemWithQty;
 
@@ -89,13 +116,12 @@ const getItemsLean = async (req, res, next) => {
       }
     });
 
-    const totalItemsCount = allItemsList.length;
     res.status(200).json({
       message: {
         itemsNameMap,
         itemsBarCodeMap,
-        totalItemsCount,
-      },
+        totalItemsCount
+      }
     });
   } catch (error) {
     next(error);
