@@ -1,9 +1,14 @@
 import { DateRangePicker, TimeRangeInput } from '@mantine/dates';
 import { useState } from 'react';
 import {
+  Box,
   Button,
   Collapse,
+  Container,
+  Grid,
+  Group,
   Input,
+  Paper,
   Select,
   Table,
   Text,
@@ -12,7 +17,9 @@ import {
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
-
+import { fetchAllPaginatedAPI } from '../utils/fetchPaginatedAPI';
+import ItemTrendTable from 'src/components/ItemTrendTable';
+import { CONSTANTS } from '../constants/constants';
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
@@ -22,6 +29,71 @@ const formatDate = (dateString) => {
   })
     .replace(/,/g, '')  // Remove commas
     .replace(/ /g, '-'); // 30-Dec-23 format
+};
+
+const calculateWeeklyAverage = (item, dates) => {
+  const totalDays = dates.length;
+  if (totalDays < 7) return null;
+
+  const quantityMap = {};
+  if (item.itemBillingTrend) {
+    item.itemBillingTrend.forEach((entry) => {
+      const date = new Date(entry.date).toISOString().split('T')[0];
+      quantityMap[date] = (quantityMap[date] || 0) + entry.quantity;
+    });
+  }
+
+  const totalQuantity = Object.values(quantityMap).reduce(
+    (sum, quantity) => sum + quantity,
+    0
+  );
+  const weeks = totalDays / 7;
+
+  return Number((totalQuantity / weeks).toFixed(2));
+};
+
+
+const generateAllItemsBillingTrendCSV = (items, dateRange) => {
+  const start = new Date(dateRange[0]);
+  const end = new Date(dateRange[1]);
+  const dates = [];
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    dates.push(d.toISOString().split('T')[0]);
+  }
+
+  const totalDays = dates.length;
+  const showWeeklyAverage = totalDays >= 7;
+
+  const headers = [
+    CONSTANTS.TABLE_HEADERS.SKU,
+    CONSTANTS.TABLE_HEADERS.ITEM_NAME,
+    CONSTANTS.TABLE_HEADERS.BARCODE,
+    ...(showWeeklyAverage ? ['Weekly Average'] : []),
+    ...dates,
+  ];
+  const rows = items.map((item) => {
+    const quantityMap = {};
+    if (item.itemBillingTrend) {
+      item.itemBillingTrend.forEach((entry) => {
+        const date = new Date(entry.date).toISOString().split('T')[0];
+        quantityMap[date] = (quantityMap[date] || 0) + entry.quantity;
+      });
+    }
+
+    const weeklyAverage = showWeeklyAverage
+      ? calculateWeeklyAverage(item, dates)
+      : null;
+
+    return [
+      item.sku || item.itemDetail?.sku || '',
+      item.itemDetail?.itemName || '',
+      item.itemBarcode || item.itemDetail?.itemBarcode || '',
+      ...(showWeeklyAverage ? [weeklyAverage?.toFixed(2) || '-'] : []),
+      ...dates.map((date) => quantityMap[date] || 0),
+    ];
+  });
+
+  return [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
 };
 
 const Report = () => {
@@ -46,9 +118,9 @@ const Report = () => {
     purchasedItems: 'purchasedItems',
   };
 
-  const filterHasCSV = reportResult?.filterType === 'itemBillingTrend' ||
-    reportResult?.filterType === 'allItemsBillingTrend' ||
-    reportResult?.filterType === 'purchasedItems'
+  const filterHasCSV = reportResult?.filterType === filterNameObj.itemBillingTrend ||
+    reportResult?.filterType === filterNameObj.allItemsBillingTrend ||
+    reportResult?.filterType === filterNameObj.purchasedItems
 
   const handleDownloadCSV = () => {
     let csvContent;
@@ -58,8 +130,9 @@ const Report = () => {
     const fileName = `${startDate}_${selectedFilter}.csv`
       .replace(/ /g, '-')
       .toLowerCase();
-
-    if (selectedFilter === 'purchasedItems') {
+      if (selectedFilter === filterNameObj.allItemsBillingTrend) {
+        csvContent = generateAllItemsBillingTrendCSV(reportResult.report, dateRange);
+      } else if (selectedFilter === filterNameObj.purchasedItems) {
       // For purchased items filter
       const csvRows = [
         ['Barcode', 'Item Name', 'Total Purchased','Pkt. Amt', 'Pkt. Unit', 'MRP', 'Cost Price', 'Suppliers', 'First Purchase', 'Last Purchase', 'Expiry Date(s)', 'Mfg Date(s)', 'Qty per Batch'],
@@ -109,121 +182,210 @@ const Report = () => {
   };
 
   const findResult = async () => {
-    setLoading(true)
-    const result = await genericAxios({
-      url: `${API_PATHS.REPORT.POST_GET_DATE_RANGE_REPORT}/${selectedFilter}`,
-      method: API_METHODS.POST,
-      data: {
-        startDate: new Date(dateRange[0]),
-        lastDate: new Date(dateRange[1]),
-        startTime: new Date(timeRange[0]).toUTCString(),
-        lastTime: new Date(timeRange[1]).toUTCString(),
-        itemName: itemName,
-      },
-      headers: {
-        Cookie: '',
-      },
-    });
-    setLoading(false)
-    if (result.error) return setLoading(false);
-    setReportResult(result.data);
+    setLoading(true);
+    let result;
+    
+    try {
+      if(selectedFilter === filterNameObj.allItemsBillingTrend){
+        result = await fetchAllPaginatedAPI({
+          apiFunction: async (params) => {
+            const response = await genericAxios({
+              url: `${API_PATHS.REPORT.POST_GET_DATE_RANGE_REPORT}/${selectedFilter}`,
+              method: API_METHODS.POST,
+              data: {
+                startDate: new Date(dateRange[0]),
+                lastDate: new Date(dateRange[1]),
+                startTime: new Date(timeRange[0]).toUTCString(),
+                lastTime: new Date(timeRange[1]).toUTCString(),
+                itemName: itemName,
+              },
+              params: params,
+              headers: {
+                Cookie: '',
+              },
+            });
+            
+            if (response.error) {
+              throw new Error(`API call failed: ${response.error}`);
+            }
+            
+            return {
+              data: response.data.report.data || [],
+              isError: response.error ? true : false,
+              totalCount: response.data.report.total || 0
+            };
+          },
+          parallelCalls: 4, 
+          itemsPerCall: 50,
+          paginationStrategy: {
+            limitParamName: 'limit',
+            offsetParamName: 'page',
+            offsetType: 'page',
+            startOffsetValue: 1
+          },
+          maxRetriesPerCall: 3 
+        });
+        
+        // Floormat the result to match the expected structure
+        result = { data: { report: result, filterType: selectedFilter } };
+      } else {
+        result = await genericAxios({
+          url: `${API_PATHS.REPORT.POST_GET_DATE_RANGE_REPORT}/${selectedFilter}`,
+          method: API_METHODS.POST,
+          data: {
+            startDate: new Date(dateRange[0]),
+            lastDate: new Date(dateRange[1]),
+            startTime: new Date(timeRange[0]).toUTCString(),
+            lastTime: new Date(timeRange[1]).toUTCString(),
+            itemName: itemName,
+          },
+          headers: {
+            Cookie: '',
+          },
+        });
+      }
+      
+      if (result && !result.error) {
+        setReportResult(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching results:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFilterOption = (e) => {
     setSelectedFilter(e);
     setReportResult({}); // Clear previous results
-    setShowItemInput(e === 'itemBillingTrend');
+    setShowItemInput(e === filterNameObj.itemBillingTrend);
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', gap: '50px' }}>
-        <DateRangePicker
-          style={{ width: '350px' }}
-          label="Date Range"
-          placeholder="Pick dates range"
-          value={dateRange}
-          onChange={setDateRange}
-        />
-        {/* <TimeRangeInput
-          style={{ width: '350px' }}
-          format="12"
-          label="Time Range"
-          value={timeRange}
-          onChange={setTimeRange}
-          clearable
-        /> */}
-      </div>
-      <div style={{ display: 'flex', gap: '50px', paddingBottom: '10px' }}>
-        <Select
-          style={{ width: '350px' }}
-          label="Choose Filter"
-          placeholder="Pick one"
-          data={[
-            { value: 'itemBillingTrend', label: 'Single Item Billing Trend' },
-            { value: 'allItemsBillingTrend', label: 'All Items Billing Trend' },
-            { value: 'totalProfit', label: 'Total Profit sum' },
-            { value: 'totalAmount', label: 'Total Amount sum' },
-            { value: 'totalMRP', label: 'Total MRP sum' },
-            { value: 'totalDiscount', label: 'Total Discount sum' },
-            { value: 'purchasedItems', label: 'All Items Purchase Trend' },
-          ]}
-          value={selectedFilter}
-          onChange={(e) => handleFilterOption(e)}
-        />
-        {showItemInput ? (
-          <Input.Wrapper style={{ width: '200px' }} label="Enter Item Name">
-            <Input
-              value={itemName}
-              onChange={(e) => setItemName(e.target.value)}
-              placeholder="Input item name"
-            />
-          </Input.Wrapper>
-        ) : (
-          <></>
+    <Container size="xl" py="xl">
+      <Grid gutter="md">
+        <Grid.Col xs={12} md={6}>
+          <DateRangePicker
+            style={{ width: '100%' }}
+            label="Date Range"
+            placeholder="Pick dates range"
+            value={dateRange}
+            onChange={setDateRange}
+            size="md"
+          />
+        </Grid.Col>
+
+        <Grid.Col xs={12} md={6}>
+          <Select
+            style={{ width: '100%' }}
+            label="Choose Filter"
+            placeholder="Pick one"
+            data={[
+              {
+                value: 'itemBillingTrend',
+                label: 'Single Item Billing Trend',
+              },
+              {
+                value: 'allItemsBillingTrend',
+                label: 'All Items Billing Trend',
+              },
+              { value: 'totalProfit', label: 'Total Profit sum' },
+              { value: 'totalAmount', label: 'Total Amount sum' },
+              { value: 'totalMRP', label: 'Total MRP sum' },
+              { value: 'totalDiscount', label: 'Total Discount sum' },
+              { value: 'purchasedItems', label: 'All Items Purchase Trend' },
+            ]}
+            value={selectedFilter}
+            onChange={handleFilterOption}
+            size="md"
+          />
+        </Grid.Col>
+
+        {showItemInput && (
+          <Grid.Col xs={12} md={6}>
+            <Input.Wrapper label="Enter Item Name">
+              <Input
+                value={itemName}
+                onChange={(e) => setItemName(e.target.value)}
+                placeholder="Input item name"
+                size="md"
+              />
+            </Input.Wrapper>
+          </Grid.Col>
         )}
-      </div>
-      <Button 
-        onClick={findResult} 
-        loading={isLoading} 
-        disabled={(!dateRange?.at(0) || !dateRange?.at(1) || !selectedFilter)}
-      >
-        Show Result
-      </Button>
-      <Button
-        onClick={handleDownloadCSV}
-        disabled={!reportResult?.report?.length}
-        style={{ marginLeft: '10px' }}
-      >
-        Download CSV
-      </Button>
-      <div>
-        {reportResult?.report?.length !== 0 ? (
-          JSON.stringify(reportResult) !== '{}' ? (
-            filterHasCSV ? (
-              showBillTable(reportResult, selectedFilter)
+      </Grid>
+
+      <Group position="apart" mt="md">
+        <Group>
+          <Button
+            onClick={findResult}
+            loading={isLoading}
+            disabled={!dateRange?.at(0) || !dateRange?.at(1) || !selectedFilter}
+            size="md"
+            variant="filled"
+          >
+            Show Result
+          </Button>
+          <Button
+            onClick={handleDownloadCSV}
+            disabled={!reportResult?.report?.length}
+            size="md"
+            variant="outline"
+          >
+            Download CSV
+          </Button>
+        </Group>
+      </Group>
+
+      <Box mt="xl">
+        <Paper shadow="sm" p="md" radius="md" withBorder>
+          <Box
+            sx={{
+              width: '100%',
+              overflowX: 'auto',
+            }}
+          >
+            {reportResult?.filterType === filterNameObj.allItemsBillingTrend ? (
+              <ItemTrendTable
+                items={reportResult.report}
+                startDate={dateRange[0]}
+                endDate={dateRange[1]}
+                calculateWeeklyAverage={calculateWeeklyAverage}
+              />
             ) : (
-              <>
-                <Title>
-                  {reportResult?.report[0][filterNameObj[selectedFilter]]
-                    ? selectedFilter.toLocaleUpperCase()
-                    : ''}
-                </Title>
-                <Text>
-                  {reportResult?.report[0][
-                    filterNameObj[selectedFilter]
-                  ]?.toFixed(2)}
-                </Text>
-              </>
-            )
-          ) : (
-            ''
-          )
-        ) : (
-          'No Report available for this date range'
-        )}
-      </div>
-    </div>
+              <div>
+                {reportResult?.report?.length !== 0 ? (
+                  JSON.stringify(reportResult) !== '{}' ? (
+                    filterHasCSV ? (
+                      showBillTable(reportResult, selectedFilter)
+                    ) : (
+                      <>
+                        <Title>
+                          {reportResult?.report[0][
+                            filterNameObj[selectedFilter]
+                          ]
+                            ? selectedFilter.toLocaleUpperCase()
+                            : ''}
+                        </Title>
+                        <Text>
+                          {reportResult?.report[0][
+                            filterNameObj[selectedFilter]
+                          ]?.toFixed(2)}
+                        </Text>
+                      </>
+                    )
+                  ) : (
+                    ''
+                  )
+                ) : (
+                  'No Report available for this date range'
+                )}
+              </div>
+            )}
+          </Box>
+        </Paper>
+      </Box>
+    </Container>
   );
 };
 
