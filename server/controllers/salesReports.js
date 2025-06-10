@@ -105,7 +105,7 @@ const getItemTrendReport = async (startDate, lastDate, itemName) => {
       populate: {
         path: 'itemDetail',
         model: 'Item',
-        match: { itemName: { $eq: itemName } },
+        match: { sku: { $eq: itemName } },
       },
     },
     {
@@ -421,10 +421,12 @@ const getBrandWiseTopProducts = async (startDate, endDate, limit = 5) => {
 
 // 5. Top 10 dealers by quantity
 const getTopDealersByQuantity = async (startDate, endDate, limit = 10) => {
-  const result = await Bill.aggregate([
+  const result = await PurchaseOrder.aggregate([
     {
       $match: {
-        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) }
+        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        isApproved: true,
+        isRejected: false
       }
     },
     {
@@ -436,23 +438,33 @@ const getTopDealersByQuantity = async (startDate, endDate, limit = 10) => {
       }
     },
     { $unwind: '$dealerDetails' },
+    { $unwind: '$purchasedItems' },
     {
       $group: {
         _id: '$dealerDetails._id',
         dealerName: { $first: '$dealerDetails.dealerName' },
-        totalQuantity: { $sum: { $sum: '$items.itemQuantityInBill' } },
-        totalAmount: { $sum: '$billAmountTotal' }
+        totalOrders: { $sum: 1 },
+        totalQuantity: { $sum: '$purchasedItems.stockQuantity' },
+        totalAmount: { 
+          $sum: { 
+            $multiply: [
+              '$purchasedItems.stockQuantity',
+              '$purchasedItems.costPrice'
+            ]
+          }
+        }
       }
     },
     {
       $project: {
         _id: 1,
         dealerName: 1,
+        totalOrders: 1,
         totalQuantity: 1,
         totalAmount: 1
       }
     },
-    { $sort: { totalQuantity: -1 } },
+    { $sort: { totalOrders: -1 } },
     { $limit: limit }
   ]);
   return result;
@@ -460,10 +472,12 @@ const getTopDealersByQuantity = async (startDate, endDate, limit = 10) => {
 
 // 6. Top 10 dealers by bill amount
 const getTopDealersByAmount = async (startDate, endDate, limit = 10) => {
-  const result = await Bill.aggregate([
+  const result = await PurchaseOrder.aggregate([
     {
       $match: {
-        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) }
+        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        isApproved: true,
+        isRejected: false
       }
     },
     {
@@ -475,20 +489,30 @@ const getTopDealersByAmount = async (startDate, endDate, limit = 10) => {
       }
     },
     { $unwind: '$dealerDetails' },
+    { $unwind: '$purchasedItems' },
     {
       $group: {
         _id: '$dealerDetails._id',
         dealerName: { $first: '$dealerDetails.dealerName' },
-        totalAmount: { $sum: '$billAmountTotal' },
-        totalQuantity: { $sum: { $sum: '$items.itemQuantityInBill' } }
+        totalOrders: { $sum: 1 },
+        totalQuantity: { $sum: '$purchasedItems.stockQuantity' },
+        totalAmount: { 
+          $sum: { 
+            $multiply: [
+              '$purchasedItems.stockQuantity',
+              '$purchasedItems.costPrice'
+            ]
+          }
+        }
       }
     },
     {
       $project: {
         _id: 1,
         dealerName: 1,
-        totalAmount: 1,
-        totalQuantity: 1
+        totalOrders: 1,
+        totalQuantity: 1,
+        totalAmount: 1
       }
     },
     { $sort: { totalAmount: -1 } },

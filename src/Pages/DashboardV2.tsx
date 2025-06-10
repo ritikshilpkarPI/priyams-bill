@@ -1,6 +1,6 @@
 // Dashboard.tsx
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   Container,
   Grid,
@@ -36,6 +36,7 @@ import {
   IconChevronRight,
   IconSearch,
 } from '@tabler/icons-react';
+import { useDispatch, useSelector } from 'react-redux';
 import { postAPI } from '../utils/apiMethods';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { SummaryCard } from '../components/dashboard/SummaryCard';
@@ -58,6 +59,41 @@ import {
 } from '../components/dashboard/utils';
 import { REPORT_TYPES, ITEMS_PER_PAGE } from '../components/dashboard/constants';
 import { DateRange, ReportResponse, LoadingState, TableRowData } from '../components/dashboard/types';
+import {
+  setSummaryDateRange,
+  setTopQtyDateRange,
+  setTopAmountDateRange,
+  setCategoryDateRange,
+  setBrandDateRange,
+  setDealerDateRange,
+  setPurchasedDateRange,
+  setTrendDateRange,
+  setLoading,
+  setTotalSales,
+  setTotalProfit,
+  setTotalDiscount,
+  setTotalMRP,
+  setTopByQty,
+  setTopByAmount,
+  setCategoryWiseData,
+  setBrandWiseData,
+  setDealersByQty,
+  setDealersByAmount,
+  setPurchasedItems,
+  setItemBillingTrend,
+  setOverallItemBilling,
+  setTopQtySearch,
+  setTopAmountSearch,
+  setCategorySearch,
+  setBrandSearch,
+  setDealerSearch,
+  setPurchasedSearch,
+  setTrendSearch,
+  setSelectedItem,
+  setExpandedCategories,
+  setExpandedBrands,
+} from '../redux/dashboard/dashboardSlice';
+import { RootState } from '../redux/store';
 
 const fetchReport = async <T extends Record<string, any>>(
   reportType: string,
@@ -91,113 +127,58 @@ const fetchReport = async <T extends Record<string, any>>(
 };
 
 const Dashboard: React.FC = () => {
-  // Individual date ranges for each section
-  const [summaryDateRange, setSummaryDateRange] = useState<DateRange>(() => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - 15);
-    return [start, end];
-  });
+  const dispatch = useDispatch();
+  const {
+    // Date ranges
+    summaryDateRange,
+    topQtyDateRange,
+    topAmountDateRange,
+    categoryDateRange,
+    brandDateRange,
+    dealerDateRange,
+    purchasedDateRange,
+    trendDateRange,
 
-  const [topQtyDateRange, setTopQtyDateRange] = useState<DateRange>(() => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - 15);
-    return [start, end];
-  });
+    // Loading states
+    loading,
 
-  const [topAmountDateRange, setTopAmountDateRange] = useState<DateRange>(() => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - 15);
-    return [start, end];
-  });
+    // Summary data
+    totalSales,
+    totalProfit,
+    totalDiscount,
+    totalMRP,
 
-  const [categoryDateRange, setCategoryDateRange] = useState<DateRange>(() => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - 15);
-    return [start, end];
-  });
+    // Table data
+    topByQty,
+    topByAmount,
+    categoryWiseData,
+    brandWiseData,
+    dealersByQty,
+    dealersByAmount,
+    purchasedItems,
+    itemBillingTrend,
+    overallItemBilling,
 
-  const [brandDateRange, setBrandDateRange] = useState<DateRange>(() => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - 15);
-    return [start, end];
-  });
+    // Search states
+    topQtySearch,
+    topAmountSearch,
+    categorySearch,
+    brandSearch,
+    dealerSearch,
+    purchasedSearch,
+    trendSearch,
 
-  const [dealerDateRange, setDealerDateRange] = useState<DateRange>(() => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - 15);
-    return [start, end];
-  });
+    // Selected item for trend
+    selectedItem,
 
-  const [purchasedDateRange, setPurchasedDateRange] = useState<DateRange>(() => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - 15);
-    return [start, end];
-  });
-
-  const [trendDateRange, setTrendDateRange] = useState<DateRange>(() => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(start.getDate() - 15);
-    return [start, end];
-  });
-
-  // Individual loading states
-  const [loading, setLoading] = useState<LoadingState>({
-    totalSales: false,
-    totalProfit: false,
-    totalDiscount: false,
-    totalMRP: false,
-    topQty: false,
-    topAmount: false,
-    categoryWise: false,
-    brandWise: false,
-    dealersQty: false,
-    dealersAmount: false,
-    purchased: false,
-    itemTrend: false,
-    overallTrend: false,
-  });
-
-  const [totalSales, setTotalSales] = useState<number | null>(null);
-  const [totalProfit, setTotalProfit] = useState<number | null>(null);
-  const [totalDiscount, setTotalDiscount] = useState<number | null>(null);
-  const [totalMRP, setTotalMRP] = useState<number | null>(null);
-
-  const [topByQty, setTopByQty] = useState<TableRowData[] | undefined>(undefined);
-  const [topByAmount, setTopByAmount] = useState<TableRowData[] | undefined>(undefined);
-  const [categoryWiseData, setCategoryWiseData] = useState<TableRowData[] | undefined>(undefined);
-  const [brandWiseData, setBrandWiseData] = useState<TableRowData[] | undefined>(undefined);
-  const [dealersByQty, setDealersByQty] = useState<TableRowData[] | undefined>(undefined);
-  const [dealersByAmount, setDealersByAmount] = useState<TableRowData[] | undefined>(undefined);
-  const [purchasedItems, setPurchasedItems] = useState<TableRowData[] | undefined>(undefined);
-  const [itemBillingTrend, setItemBillingTrend] = useState<TableRowData[] | undefined>(undefined);
-  const [overallItemBilling, setOverallItemBilling] = useState<TableRowData[] | undefined>(undefined);
-
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
-
-  // Add state for expanded sections
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
-  const [expandedBrands, setExpandedBrands] = useState<Record<string, boolean>>({});
-
-  // Add search states for each table
-  const [topQtySearch, setTopQtySearch] = useState('');
-  const [topAmountSearch, setTopAmountSearch] = useState('');
-  const [categorySearch, setCategorySearch] = useState('');
-  const [brandSearch, setBrandSearch] = useState('');
-  const [dealerSearch, setDealerSearch] = useState('');
-  const [purchasedSearch, setPurchasedSearch] = useState('');
-  const [trendSearch, setTrendSearch] = useState('');
+    // Expanded sections
+    expandedCategories,
+    expandedBrands,
+  } = useSelector((state: RootState) => state.dashboard);
 
   // Individual fetch functions for each section
   const fetchSummaryData = useCallback(async (start: Date, end: Date) => {
-    setLoading(prev => ({ ...prev, totalSales: true, totalProfit: true, totalDiscount: true, totalMRP: true }));
+    dispatch(setLoading({ totalSales: true, totalProfit: true, totalDiscount: true, totalMRP: true }));
     
     try {
       const [salesData, profitData, discountData, mrpData] = await Promise.all([
@@ -207,68 +188,67 @@ const Dashboard: React.FC = () => {
         fetchReport<any>(REPORT_TYPES.TOTAL_MRP, start, end),
       ]);
 
-      if (salesData) {
-        const sum = salesData.reduce((acc: number, row: any) => acc + (row.totalAmount || 0), 0);
-        setTotalSales(sum);
+      if (salesData && salesData.length > 0) {
+        dispatch(setTotalSales(salesData[0].totalAmountSum ?? 0));
       }
       if (profitData && profitData.length > 0) {
-        setTotalProfit(profitData[0].totalProfitSum ?? null);
+        dispatch(setTotalProfit(profitData[0].totalProfitSum ?? null));
       }
       if (discountData && discountData.length > 0) {
-        setTotalDiscount(discountData[0].totalDiscountSum ?? null);
+        dispatch(setTotalDiscount(discountData[0].totalDiscountSum ?? null));
       }
       if (mrpData && mrpData.length > 0) {
-        setTotalMRP(mrpData[0].totalMRPsum ?? null);
+        dispatch(setTotalMRP(mrpData[0].totalMRPsum ?? null));
       }
     } finally {
-      setLoading(prev => ({ ...prev, totalSales: false, totalProfit: false, totalDiscount: false, totalMRP: false }));
+      dispatch(setLoading({ totalSales: false, totalProfit: false, totalDiscount: false, totalMRP: false }));
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchTopQtyData = useCallback(async (start: Date, end: Date) => {
-    setLoading(prev => ({ ...prev, topQty: true }));
+    dispatch(setLoading({ topQty: true }));
     try {
       const topQtyData = await fetchReport<any>(REPORT_TYPES.TOP_ITEMS_BY_QTY, start, end);
-      setTopByQty(topQtyData);
+      dispatch(setTopByQty(topQtyData));
     } finally {
-      setLoading(prev => ({ ...prev, topQty: false }));
+      dispatch(setLoading({ topQty: false }));
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchTopAmountData = useCallback(async (start: Date, end: Date) => {
-    setLoading(prev => ({ ...prev, topAmount: true }));
+    dispatch(setLoading({ topAmount: true }));
     try {
       const topAmountData = await fetchReport<any>(REPORT_TYPES.TOP_ITEMS_BY_AMOUNT, start, end);
-      setTopByAmount(topAmountData);
+      dispatch(setTopByAmount(topAmountData));
     } finally {
-      setLoading(prev => ({ ...prev, topAmount: false }));
+      dispatch(setLoading({ topAmount: false }));
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchCategoryData = useCallback(async (start: Date, end: Date) => {
-    setLoading(prev => ({ ...prev, categoryWise: true }));
+    dispatch(setLoading({ categoryWise: true }));
     
     try {
       const categoryData = await fetchReport<any>(REPORT_TYPES.CATEGORY_WISE, start, end);
-      setCategoryWiseData(categoryData);
+      dispatch(setCategoryWiseData(categoryData));
     } finally {
-      setLoading(prev => ({ ...prev, categoryWise: false }));
+      dispatch(setLoading({ categoryWise: false }));
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchBrandData = useCallback(async (start: Date, end: Date) => {
-    setLoading(prev => ({ ...prev, brandWise: true }));
+    dispatch(setLoading({ brandWise: true }));
     
     try {
       const brandData = await fetchReport<any>(REPORT_TYPES.BRAND_WISE, start, end);
-      setBrandWiseData(brandData);
+      dispatch(setBrandWiseData(brandData));
     } finally {
-      setLoading(prev => ({ ...prev, brandWise: false }));
+      dispatch(setLoading({ brandWise: false }));
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchDealerData = useCallback(async (start: Date, end: Date) => {
-    setLoading(prev => ({ ...prev, dealersQty: true, dealersAmount: true }));
+    dispatch(setLoading({ dealersQty: true, dealersAmount: true }));
     
     try {
       const [dealersQtyData, dealersAmountData] = await Promise.all([
@@ -276,26 +256,26 @@ const Dashboard: React.FC = () => {
         fetchReport<any>(REPORT_TYPES.TOP_DEALERS_AMOUNT, start, end),
       ]);
       
-      setDealersByQty(dealersQtyData);
-      setDealersByAmount(dealersAmountData);
+      dispatch(setDealersByQty(dealersQtyData));
+      dispatch(setDealersByAmount(dealersAmountData));
     } finally {
-      setLoading(prev => ({ ...prev, dealersQty: false, dealersAmount: false }));
+      dispatch(setLoading({ dealersQty: false, dealersAmount: false }));
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchPurchasedData = useCallback(async (start: Date, end: Date) => {
-    setLoading(prev => ({ ...prev, purchased: true }));
+    dispatch(setLoading({ purchased: true }));
     
     try {
       const purchasedData = await fetchReport<any>(REPORT_TYPES.PURCHASED_ITEMS, start, end);
-      setPurchasedItems(purchasedData);
+      dispatch(setPurchasedItems(purchasedData));
     } finally {
-      setLoading(prev => ({ ...prev, purchased: false }));
+      dispatch(setLoading({ purchased: false }));
     }
-  }, []);
+  }, [dispatch]);
 
   const fetchTrendData = useCallback(async (start: Date, end: Date) => {
-    setLoading(prev => ({ ...prev, itemTrend: true, overallTrend: true }));
+    dispatch(setLoading({ itemTrend: true, overallTrend: true }));
     
     try {
       const [overallBillingData, itemTrendData] = await Promise.all([
@@ -303,12 +283,12 @@ const Dashboard: React.FC = () => {
         selectedItem ? fetchReport<any>(REPORT_TYPES.ITEM_BILLING_TREND, start, end, selectedItem) : undefined,
       ]);
       
-      setOverallItemBilling(overallBillingData);
-      setItemBillingTrend(itemTrendData);
+      dispatch(setOverallItemBilling(overallBillingData));
+      dispatch(setItemBillingTrend(itemTrendData));
     } finally {
-      setLoading(prev => ({ ...prev, itemTrend: false, overallTrend: false }));
+      dispatch(setLoading({ itemTrend: false, overallTrend: false }));
     }
-  }, [selectedItem]);
+  }, [dispatch, selectedItem]);
 
   // Effect hooks for each section
   useEffect(() => {
@@ -384,6 +364,7 @@ const Dashboard: React.FC = () => {
 
   const mapDealerQtyToCSV = (item: TableRowData) => [
     item.dealerName || '-',
+    item.totalOrders?.toString() || '0',
     item.totalQuantity?.toString() || '0',
     item.totalAmount?.toFixed(2) || '0.00',
   ];
@@ -442,7 +423,7 @@ const Dashboard: React.FC = () => {
                 placeholder="Select date range"
                 label="Date Range"
                 value={summaryDateRange}
-                onChange={setSummaryDateRange}
+                onChange={(value) => dispatch(setSummaryDateRange(value))}
                 clearable
                 w={400}
                 withinPortal
@@ -501,7 +482,7 @@ const Dashboard: React.FC = () => {
                       placeholder="Select date range"
                       label="Date Range"
                       value={topQtyDateRange}
-                      onChange={setTopQtyDateRange}
+                      onChange={(value) => dispatch(setTopQtyDateRange(value))}
                       clearable
                       w={300}
                       withinPortal
@@ -509,7 +490,7 @@ const Dashboard: React.FC = () => {
                     <TextInput
                       placeholder="Search by SKU or Barcode"
                       value={topQtySearch}
-                      onChange={(e) => setTopQtySearch(e.currentTarget.value)}
+                      onChange={(e) => dispatch(setTopQtySearch(e.currentTarget.value))}
                       icon={<IconSearch size={14} />}
                       size="sm"
                       w={300}
@@ -545,7 +526,7 @@ const Dashboard: React.FC = () => {
                       placeholder="Select date range"
                       label="Date Range"
                       value={topAmountDateRange}
-                      onChange={setTopAmountDateRange}
+                      onChange={(value) => dispatch(setTopAmountDateRange(value))}
                       clearable
                       w={300}
                       withinPortal
@@ -553,7 +534,7 @@ const Dashboard: React.FC = () => {
                     <TextInput
                       placeholder="Search by SKU or Barcode"
                       value={topAmountSearch}
-                      onChange={(e) => setTopAmountSearch(e.currentTarget.value)}
+                      onChange={(e) => dispatch(setTopAmountSearch(e.currentTarget.value))}
                       icon={<IconSearch size={14} />}
                       size="sm"
                       w={300}
@@ -591,7 +572,7 @@ const Dashboard: React.FC = () => {
                   placeholder="Select date range"
                   label="Date Range"
                   value={categoryDateRange}
-                  onChange={setCategoryDateRange}
+                  onChange={(value) => dispatch(setCategoryDateRange(value))}
                   clearable
                   w={300}
                   withinPortal
@@ -599,7 +580,7 @@ const Dashboard: React.FC = () => {
                 <TextInput
                   placeholder="Search by SKU or Barcode"
                   value={categorySearch}
-                  onChange={(e) => setCategorySearch(e.currentTarget.value)}
+                  onChange={(e) => dispatch(setCategorySearch(e.currentTarget.value))}
                   icon={<IconSearch size={14} />}
                   size="sm"
                   w={300}
@@ -618,7 +599,7 @@ const Dashboard: React.FC = () => {
               columns={['Category', 'SKU', 'Barcode', 'Qty / Amount']}
               data={filterTableData(categoryWiseData, categorySearch, true)}
               loading={loading.categoryWise}
-              renderRow={(item, idx) => renderCategoryRow(item, idx, expandedCategories, setExpandedCategories, categorySearch)}
+              renderRow={(item, idx) => renderCategoryRow(item, idx, expandedCategories, (value: Record<string, boolean>) => dispatch(setExpandedCategories(value)), categorySearch)}
               csvHeaders={['Category', 'SKU', 'Barcode', 'Quantity', 'Amount']}
               mapRowToCSV={(item: any) => {
                 const firstProduct = item.topProducts[0];
@@ -644,7 +625,7 @@ const Dashboard: React.FC = () => {
                   placeholder="Select date range"
                   label="Date Range"
                   value={brandDateRange}
-                  onChange={setBrandDateRange}
+                  onChange={(value) => dispatch(setBrandDateRange(value))}
                   clearable
                   w={300}
                   withinPortal
@@ -652,7 +633,7 @@ const Dashboard: React.FC = () => {
                 <TextInput
                   placeholder="Search by SKU or Barcode"
                   value={brandSearch}
-                  onChange={(e) => setBrandSearch(e.currentTarget.value)}
+                  onChange={(e) => dispatch(setBrandSearch(e.currentTarget.value))}
                   icon={<IconSearch size={14} />}
                   size="sm"
                   w={300}
@@ -671,7 +652,7 @@ const Dashboard: React.FC = () => {
               columns={['Brand', 'SKU', 'Barcode', 'Qty / Amount']}
               data={filterTableData(brandWiseData, brandSearch, true)}
               loading={loading.brandWise}
-              renderRow={(item, idx) => renderBrandRow(item, idx, expandedBrands, setExpandedBrands, brandSearch)}
+              renderRow={(item, idx) => renderBrandRow(item, idx, expandedBrands, (value: Record<string, boolean>) => dispatch(setExpandedBrands(value)), brandSearch)}
               csvHeaders={['Brand', 'SKU', 'Barcode', 'Quantity', 'Amount']}
               mapRowToCSV={(item: any) => {
                 const firstProduct = item.topProducts[0];
@@ -696,7 +677,7 @@ const Dashboard: React.FC = () => {
                 placeholder="Select date range"
                 label="Date Range"
                 value={dealerDateRange}
-                onChange={setDealerDateRange}
+                onChange={(value) => dispatch(setDealerDateRange(value))}
                 clearable
                 w={400}
                 withinPortal
@@ -706,11 +687,11 @@ const Dashboard: React.FC = () => {
               <Grid.Col md={6}>
                 <TableSection
                   title="Top Dealers by Quantity"
-                  columns={['Dealer Name', 'Quantity', 'Amount']}
+                  columns={['Dealer Name', 'Total Orders', 'Quantity', 'Amount']}
                   data={dealersByQty}
                   loading={loading.dealersQty}
                   renderRow={renderDealerQtyRow}
-                  csvHeaders={['Dealer Name', 'Quantity', 'Amount']}
+                  csvHeaders={['Dealer Name', 'Total Orders', 'Quantity', 'Amount']}
                   mapRowToCSV={mapDealerQtyToCSV}
                 />
               </Grid.Col>
@@ -739,7 +720,7 @@ const Dashboard: React.FC = () => {
                   placeholder="Select date range"
                   label="Date Range"
                   value={purchasedDateRange}
-                  onChange={setPurchasedDateRange}
+                  onChange={(value) => dispatch(setPurchasedDateRange(value))}
                   clearable
                   w={300}
                   withinPortal
@@ -747,7 +728,7 @@ const Dashboard: React.FC = () => {
                 <TextInput
                   placeholder="Search by SKU or Item Name"
                   value={purchasedSearch}
-                  onChange={(e) => setPurchasedSearch(e.currentTarget.value)}
+                  onChange={(e) => dispatch(setPurchasedSearch(e.currentTarget.value))}
                   icon={<IconSearch size={14} />}
                   size="sm"
                   w={300}
@@ -801,7 +782,7 @@ const Dashboard: React.FC = () => {
                   placeholder="Select date range"
                   label="Date Range"
                   value={trendDateRange}
-                  onChange={setTrendDateRange}
+                  onChange={(value) => dispatch(setTrendDateRange(value))}
                   clearable
                   w={400}
                   withinPortal
@@ -811,7 +792,7 @@ const Dashboard: React.FC = () => {
                   label="Item"
                   data={itemOptions}
                   value={selectedItem}
-                  onChange={setSelectedItem}
+                  onChange={(value) => dispatch(setSelectedItem(value))}
                   w={200}
                   size="xs"
                 />

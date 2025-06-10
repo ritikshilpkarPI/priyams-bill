@@ -14,12 +14,6 @@ const initialState: ExpiredItemsStateType = {
 
 interface SetExpiredItemsPayload {
   data: ExpiredItem[];
-  pagination: {
-    page: number;
-    limit: number;
-    totalPages: number;
-    total: number;
-  };
 }
 
 const expiredItemsBatchSlice = createSlice({
@@ -28,13 +22,22 @@ const expiredItemsBatchSlice = createSlice({
   reducers: {
     setExpiredItemsBatch: (state, action: PayloadAction<SetExpiredItemsPayload>) => {
       state.data = action.payload.data;
-      state.pagination = action.payload.pagination;
-      state.loading = false;
-      state.error = null;
+    },
+    setPage: (state, action: PayloadAction<number>) => {
+      state.pagination.page = action.payload;
+    },
+    setLimit: (state, action: PayloadAction<number>) => {
+      state.pagination.limit = action.payload;
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
+    setTotal: (state, action: PayloadAction<number>) => {
+      state.pagination.total = action.payload;
     },
   },
 });
 
-export const { setExpiredItemsBatch } = expiredItemsBatchSlice.actions;
+export const { setExpiredItemsBatch,setPage , setLimit, setLoading, setTotal } = expiredItemsBatchSlice.actions;
 
 export default expiredItemsBatchSlice.reducer;
