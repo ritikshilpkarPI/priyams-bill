@@ -25,7 +25,7 @@ export const copyPurchaseOrder = async (req: Request, res: Response, next: NextF
         totalItemsCost: originalOrder.purchaseDetails?.totalItemsCost || 0,
         totalPayableAmount: 0,
         totalBillAmount: 0,
-        paymentType: '',
+        paymentType: 'fully paid',
         remark: '',
         credits: [],
         payments: []
