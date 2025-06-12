@@ -364,6 +364,7 @@ const Dashboard: React.FC = () => {
 
   const mapDealerQtyToCSV = (item: TableRowData) => [
     item.dealerName || '-',
+    item.totalOrders?.toString() || '0',
     item.totalQuantity?.toString() || '0',
     item.totalAmount?.toFixed(2) || '0.00',
   ];
@@ -686,11 +687,11 @@ const Dashboard: React.FC = () => {
               <Grid.Col md={6}>
                 <TableSection
                   title="Top Dealers by Quantity"
-                  columns={['Dealer Name', 'Quantity', 'Amount']}
+                  columns={['Dealer Name', 'Total Orders', 'Quantity', 'Amount']}
                   data={dealersByQty}
                   loading={loading.dealersQty}
                   renderRow={renderDealerQtyRow}
-                  csvHeaders={['Dealer Name', 'Quantity', 'Amount']}
+                  csvHeaders={['Dealer Name', 'Total Orders', 'Quantity', 'Amount']}
                   mapRowToCSV={mapDealerQtyToCSV}
                 />
               </Grid.Col>
