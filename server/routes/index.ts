@@ -92,6 +92,7 @@ const {
   updateStockTransactionBySource,
   getDealerCatalog,
   getStockTransactionsByStatus,
+  copyPurchaseOrder
 } = require('../controllers/index');
 
 
@@ -205,6 +206,12 @@ router.post(
   API_PATHS.PURCHASE_ORDER.GET_ORDERS_BY_QUERY,
   isLoggedIn,
   getOrdersByQuery
+);
+
+router.get(
+  `${API_PATHS.PURCHASE_ORDER.COPY_PURCHASE_ORDER}/:id`,
+  isLoggedIn,
+  copyPurchaseOrder
 );
 
 router.get(API_PATHS.BILLING.GET_BILL_FEED, isLoggedIn, getAllBill);
