@@ -112,8 +112,8 @@ const StoreRoutes = () => {
             <Route exact path="/createPurchaseOrderPage" component={CreatePurchaseOrderPage} />
 
             <ProtectedComponent role={access.STORE_INVENTORY_MANAGEMENT}>
-            <Route exact path="/create-transaction" component={StoreInventory} />
-            <Route exact path="/create-transaction/:id" component={StoreInventory} />
+            <Route exact path="/createTransaction" component={StoreInventory} />
+            <Route exact path="/createTransaction/:id" component={StoreInventory} />
 
             <Route exact path="/newInventoryPage" component={NewInventoryPage} />
             

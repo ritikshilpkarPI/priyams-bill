@@ -141,7 +141,7 @@ const StockTransactionsPage: React.FC = () => {
       label: 'Action',
       render: (row: any) => (
         <Button
-          onClick={() => navigate(`/create-transaction/${row._id}`)}
+          onClick={() => navigate(`/createTransaction/${row._id}`)}
         >
           View
         </Button>
