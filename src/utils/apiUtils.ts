@@ -944,3 +944,15 @@ export const getDealerCatalogAPI = async (type: 'dealer' | 'brand' | 'company') 
     return { isError: true, error }
   }
 };
+
+export const copyPurchaseOrderAPI = async (purchaseOrderId: string) => {
+  try {
+    const response = await getAPI({
+      path: `${API_PATHS.PURCHASE_ORDER.COPY_PURCHASE_ORDER}/${purchaseOrderId}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
