@@ -5,6 +5,10 @@ const MESSAGES = Object.freeze({
     AT_LEAST_ONE_TRANSACTION_ITEM_REQUIRED: 'At least one transaction item is required',
     PURCHASE_ORDER_NOT_FOUND: 'Purchase order not found',
     PURCHASE_ORDER_COPIED_SUCCESS: 'Purchase order copied successfully',
+    STOCK_TRANSACTIONS: {
+        TRANSACTION_NOT_FOUND: 'Stock transaction not found',
+        COPIED_SUCCESS: 'Stock transaction copied successfully',
+    },
   });
   
 export default MESSAGES ;

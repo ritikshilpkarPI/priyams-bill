@@ -973,3 +973,16 @@ export const copyPurchaseOrderAPI = async (purchaseOrderId: string) => {
   }
 };
 
+export const copyTransactionAPI = async (
+  transactionsId: string
+) => {
+  try {
+    const response = await getAPI({
+      path: `${API_PATHS.STOCK_TRANSACTION.COPY_TRANSACTION}/${transactionsId}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+

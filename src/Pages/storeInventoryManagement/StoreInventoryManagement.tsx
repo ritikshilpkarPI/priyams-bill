@@ -31,6 +31,7 @@ import {
   addNewStockTransactionsAPI,
   addNewStockTransactionsBySourceAPI,
   approveStockTransactionsAPI,
+  copyTransactionAPI,
   getAllStaffsByStoreIdAPI,
   getAllStoresAPI,
   getStockTransactionsApi,
@@ -446,8 +447,22 @@ try {
   
 };
   
-  console.log("inventoryItems: ",inventoryItems);
-  
+const createTransactionCopy = async () => {
+  if (!transactionId) {
+    toast.error(MESSAGES.STOCK_TRANSACTIONS.TRANSACTION_NOT_FOUND);
+    return;
+  }
+  setLoading(true);
+  const response = await copyTransactionAPI(transactionId);
+  setLoading(false);
+  if (response?.transaction) {
+    const newTransactionId = response?.transaction?._id;
+    if (newTransactionId) {
+      window.open(`/createTransaction/${newTransactionId}`, '_blank');
+      toast.success(MESSAGES.STOCK_TRANSACTIONS.COPIED_SUCCESS);
+    }
+  }
+};  
 
   return (
     <Flex
@@ -476,6 +491,20 @@ try {
           </Chip>
         )}
         </Grid.Col>
+
+        {transactionId && (
+          <Group position="left" mb={'26px'} mr={'26px'}  >
+                  <Button
+                    variant="filled"
+                    color="blue"
+                    onClick={createTransactionCopy}
+                    className='copy-transaction-cta'
+                    loading={loading}
+                  >
+                    Copy Transaction
+                  </Button>
+          </Group>
+        )}
 
        
 
