@@ -421,10 +421,12 @@ const getBrandWiseTopProducts = async (startDate, endDate, limit = 5) => {
 
 // 5. Top 10 dealers by quantity
 const getTopDealersByQuantity = async (startDate, endDate, limit = 10) => {
-  const result = await Bill.aggregate([
+  const result = await PurchaseOrder.aggregate([
     {
       $match: {
-        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) }
+        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        isApproved: true,
+        isRejected: false
       }
     },
     {
@@ -436,23 +438,33 @@ const getTopDealersByQuantity = async (startDate, endDate, limit = 10) => {
       }
     },
     { $unwind: '$dealerDetails' },
+    { $unwind: '$purchasedItems' },
     {
       $group: {
         _id: '$dealerDetails._id',
         dealerName: { $first: '$dealerDetails.dealerName' },
-        totalQuantity: { $sum: { $sum: '$items.itemQuantityInBill' } },
-        totalAmount: { $sum: '$billAmountTotal' }
+        totalOrders: { $sum: 1 },
+        totalQuantity: { $sum: '$purchasedItems.stockQuantity' },
+        totalAmount: { 
+          $sum: { 
+            $multiply: [
+              '$purchasedItems.stockQuantity',
+              '$purchasedItems.costPrice'
+            ]
+          }
+        }
       }
     },
     {
       $project: {
         _id: 1,
         dealerName: 1,
+        totalOrders: 1,
         totalQuantity: 1,
         totalAmount: 1
       }
     },
-    { $sort: { totalQuantity: -1 } },
+    { $sort: { totalOrders: -1 } },
     { $limit: limit }
   ]);
   return result;
@@ -460,15 +472,14 @@ const getTopDealersByQuantity = async (startDate, endDate, limit = 10) => {
 
 // 6. Top 10 dealers by bill amount
 const getTopDealersByAmount = async (startDate, endDate, limit = 10) => {
-  // First get items and their dealers from Purchase Orders
-  const dealerItems = await PurchaseOrder.aggregate([
+  const result = await PurchaseOrder.aggregate([
     {
       $match: {
+        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
         isApproved: true,
         isRejected: false
       }
     },
-    { $unwind: '$purchasedItems' },
     {
       $lookup: {
         from: 'dealers',
@@ -478,91 +489,36 @@ const getTopDealersByAmount = async (startDate, endDate, limit = 10) => {
       }
     },
     { $unwind: '$dealerDetails' },
+    { $unwind: '$purchasedItems' },
     {
       $group: {
-        _id: {
-          dealerId: '$dealerDetails._id',
-          itemId: '$purchasedItems.item_id'
-        },
+        _id: '$dealerDetails._id',
         dealerName: { $first: '$dealerDetails.dealerName' },
-        itemName: { $first: '$purchasedItems.inputName' },
-        itemBarcode: { $first: '$purchasedItems.barcode' }
+        totalOrders: { $sum: 1 },
+        totalQuantity: { $sum: '$purchasedItems.stockQuantity' },
+        totalAmount: { 
+          $sum: { 
+            $multiply: [
+              '$purchasedItems.stockQuantity',
+              '$purchasedItems.costPrice'
+            ]
+          }
+        }
       }
-    }
+    },
+    {
+      $project: {
+        _id: 1,
+        dealerName: 1,
+        totalOrders: 1,
+        totalQuantity: 1,
+        totalAmount: 1
+      }
+    },
+    { $sort: { totalAmount: -1 } },
+    { $limit: limit }
   ]);
-
-  // Get all items from the dealer items
-  const itemIds = [...new Set(dealerItems.map(di => di._id.itemId))];
-
-  // Now get sales data for these items from Bills
-  const result = await Bill.aggregate([
-    {
-      $match: {
-        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) }
-      }
-    },
-    { $unwind: '$items' },
-    {
-      $lookup: {
-        from: 'items',
-        localField: 'items.itemDetail',
-        foreignField: '_id',
-        as: 'itemDetails'
-      }
-    },
-    { $unwind: '$itemDetails' },
-    {
-      $match: {
-        'itemDetails._id': { $in: itemIds }
-      }
-    },
-    {
-      $group: {
-        _id: '$itemDetails._id',
-        totalAmount: { $sum: '$items.itemSellingPriceTotal' },
-        totalQuantity: { $sum: '$items.itemQuantityInBill' },
-        itemName: { $first: '$itemDetails.itemName' },
-        itemBarcode: { $first: '$itemDetails.itemBarcode' }
-      }
-    }
-  ]);
-
-  // Combine the data and calculate dealer totals
-  const dealerTotals = dealerItems.reduce((acc, curr) => {
-    const dealerId = curr._id.dealerId;
-    const itemSales = result.find(r => r._id.toString() === curr._id.itemId.toString());
-    
-    if (!acc[dealerId]) {
-      acc[dealerId] = {
-        dealerName: curr.dealerName,
-        totalAmount: 0,
-        totalQuantity: 0,
-        items: new Set()
-      };
-    }
-
-    if (itemSales) {
-      acc[dealerId].totalAmount += itemSales.totalAmount;
-      acc[dealerId].totalQuantity += itemSales.totalQuantity;
-      acc[dealerId].items.add(curr.itemName);
-    }
-
-    return acc;
-  }, {});
-
-  // Convert to array and sort
-  const finalResult = Object.entries(dealerTotals)
-    .map(([dealerId, data]) => ({
-      _id: dealerId,
-      dealerName: data.dealerName,
-      totalAmount: data.totalAmount,
-      totalQuantity: data.totalQuantity,
-      items: Array.from(data.items)
-    }))
-    .sort((a, b) => b.totalAmount - a.totalAmount)
-    .slice(0, limit);
-
-  return finalResult;
+  return result;
 };
 
 // Main controller function to handle all report requests

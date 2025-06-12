@@ -235,6 +235,11 @@ export const renderDealerQtyRow = (item: any, idx: number) => (
       </Group>
     </td>
     <td>
+      <Badge size="lg" variant="filled" color="violet">
+        {item.totalOrders}
+      </Badge>
+    </td>
+    <td>
       <Badge size="lg" variant="filled" color="blue">
         {item.totalQuantity}
       </Badge>
