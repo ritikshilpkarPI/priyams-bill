@@ -139,6 +139,7 @@ export const API_PATHS = {
 
     MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" ,
     UPDATE_STOCK_TRANSACTION_BY_SOURCE: "/api/stockTransaction/updateStockTransactionBySource",
+    COPY_TRANSACTION: "/api/stockTransaction/copyTransaction",
   },
   EXPIRED_ITEMS_BATCH: {
     GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",
