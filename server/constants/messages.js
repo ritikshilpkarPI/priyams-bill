@@ -58,6 +58,7 @@ const MESSAGES = Object.freeze({
   EXPIRED_ITEMS_BATCH_NOT_FOUND: "Expired item batch not found",
   EXPIRED_ITEMS_BATCH_MARKED_AS_CLEARED: "Expired items batch marked as cleared",
   MISMATCH_TRANSACTION_CREATED: "Stock mismatch correction transaction has been successfully created",
+  PURCHASE_ORDER_COPIED_SUCCESSFULLY: "Purchase order copied successfully",
 });
 
 module.exports = { MESSAGES };
