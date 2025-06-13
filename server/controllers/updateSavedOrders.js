@@ -1,8 +1,10 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { isShelfExpired } = require('../util/isShelfExpired');
 const { getItemSKU } = require('../util/getItemSKU');
-const { MESSAGES } = require ('../constants/messages');
+const { MESSAGES } = require('../constants/messages');
 const { createBrandAndCompany } = require('../util/createBrandAndCompany');
+const { uploadMultipleImages } = require('../util/image');
+const { clodinaryFoldersPathKey } = require('../util/constant');
 
 const updateSavedOrders = async (req, res, next) => {
   try {
@@ -26,13 +28,49 @@ const updateSavedOrders = async (req, res, next) => {
         });
     }
 
+    const imageTypes = [
+      'barcodeImages',
+      'itemNameImages',
+      'packetQtyImages',
+      'unitImages',
+      'mrpImages',
+      'costPriceImages',
+      'sellingPriceImages',
+      'stockQuantityImages'
+    ];
+
+    const uploadedImages = {};
+    
+    for (const type of imageTypes) {
+      if (new_order[type] && new_order[type].length > 0) {
+        try {
+          const formattedImages = new_order[type].map((image, index) => ({
+            data: image,
+            name: `${type}_${index}_${Date.now()}.jpg`
+          }));
+
+          const uploadedUrls = await uploadMultipleImages(
+            formattedImages,
+            clodinaryFoldersPathKey.itemsImages.toString()
+          );
+          uploadedImages[type] = uploadedUrls;
+        } catch (error) {
+          console.error(`Error uploading ${type}:`, error);
+          uploadedImages[type] = [];
+        }
+      } else {
+        uploadedImages[type] = [];
+      }
+    }
+
     const itemSKU = getItemSKU({
       itemQuantity: new_order.itemQuantity,
       unit: new_order.unit,
       itemName: new_order.inputName,
       barcode: new_order.barcode,
       mrp: new_order.mrp
-    });;
+    });
+
     let updatedExpiryDates = new_order.expiryDates;
     if(new_order.expiryDates) {
       updatedExpiryDates = new_order.expiryDates.map(expiryDates => ({
@@ -50,6 +88,7 @@ const updateSavedOrders = async (req, res, next) => {
     const updatedOrder = await purchaseOrder.updateOne({
       purchasedItems: [...purchaseOrder.purchasedItems, {
         ...new_order,
+        ...uploadedImages, 
         expiryDates: updatedExpiryDates,
         sku: itemSKU,
         brandId: brand._id,
@@ -58,7 +97,6 @@ const updateSavedOrders = async (req, res, next) => {
       purchaseDetails:{
         ...purchaseOrder.purchaseDetails,
         totalItemsCost: (purchaseOrder.purchaseDetails?.totalItemsCost || 0) + newItemCost,
-      
       }
     });
     res.status(200).send({

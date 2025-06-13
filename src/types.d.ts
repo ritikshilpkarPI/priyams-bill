@@ -235,6 +235,14 @@ declare global {
       companyId: string;
     };
     newItem?: boolean;
+    barcodeImages?: []
+    itemNameImages?: []
+    unitImages?: []
+    mrpImages?: []
+    packetQtyImages?:[]
+    costPriceImages?:[]
+    sellingPriceImages?: []
+    stockQuantityImages?:[]
   }
 
   interface PurchasedItemDetailFormProps {
@@ -248,6 +256,7 @@ declare global {
     value: number;
     mfgDate: Date;
     date: Date;
+    images?: CloudImage[];
   }
 
   interface ItemExpiryTableProps {
@@ -1330,6 +1339,51 @@ export interface ExpiredItemTableProps {
   setItemsData: (items: any) => void;
   id?: string;
   isLoading?: boolean;
+}
+
+export interface ImageComponentProps {
+  src: string;
+  alt?: string;
+  width?: number | string;
+  height?: number | string;
+  radius?: MantineNumberSize;
+  fit?: 'contain' | 'cover' | 'fill';
+  className?: string;
+  style?: React.CSSProperties;
+  fallbackSrc?: string;
+  withModal?: boolean;
+  modalSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  onClick?: () => void;
+}
+
+export interface CloudImage {
+  public_id: string;
+  secure_url: string;
+}
+
+export interface ImagePreviewProps {
+  images: CloudImage[];
+  title: string;
+}
+
+export interface ImageUploadComponentProps {
+  onImagesChange?: (files: File[]) => void;
+  maxFiles?: number;
+  maxSize?: number; 
+  acceptedFileTypes?: string[];
+  initialImages?: any[];
+  disabled?: boolean;
+  className?: string;
+  size?: number;
+  previewSize?: number; 
+}
+
+export interface PurchasedItemDetailFormProps {
+  onSubmit: (data: PurchasedItemDetailFormType) => void;
+  loading?: boolean;
+  isApprovedPO?: boolean;
+  onItemSelect?: (item: any) => void;
+  purchaseOrderId: string;
 }
 
 export {};

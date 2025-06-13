@@ -49,6 +49,38 @@ const purchaseOrderSchema = new mongoose.Schema({
         public_id: String,
         secure_url: String
       },
+      barcodeImages: [{
+        public_id: String,
+        secure_url: String
+      }],
+      itemNameImages: [{
+        public_id: String,
+        secure_url: String
+      }],
+      packetQtyImages: [{
+        public_id: String,
+        secure_url: String
+      }],
+      unitImages: [{
+        public_id: String,
+        secure_url: String
+      }],
+      mrpImages: [{
+        public_id: String,
+        secure_url: String
+      }],
+      costPriceImages: [{
+        public_id: String,
+        secure_url: String
+      }],
+      sellingPriceImages: [{
+        public_id: String,
+        secure_url: String
+      }],
+      stockQuantityImages: [{
+        public_id: String,
+        secure_url: String
+      }],
       createdAt: { type: Date, default: Date.now },
       itemHasExpiry: { type: Boolean, default: null },
       expiryDates: [
@@ -57,6 +89,10 @@ const purchaseOrderSchema = new mongoose.Schema({
           value: Number,
           mfgDate: Date,
           isShelfExpired: Boolean,
+          images: [{
+            public_id: String,
+            secure_url: String
+          }]
         },
       ],
       slabPrice: [],

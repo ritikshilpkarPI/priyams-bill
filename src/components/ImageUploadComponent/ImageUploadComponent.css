@@ -1,0 +1,100 @@
+.image-upload-component {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.upload-icon {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-icon:hover {
+  transform: scale(1.1);
+}
+
+.upload-icon.active {
+  background-color: var(--mantine-color-blue-1);
+}
+
+.preview-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.preview-item {
+  position: relative;
+  display: inline-block;
+}
+
+.preview-item img {
+  border-radius: 4px;
+  object-fit: cover;
+  transition: all 0.2s ease;
+}
+
+.preview-item:hover img {
+  transform: scale(1.05);
+}
+
+.remove-button {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  width: 16px;
+  height: 16px;
+}
+
+.preview-item:hover .remove-button {
+  opacity: 1;
+}
+
+.more-images-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-weight: 600;
+  padding: 2px 4px;
+  min-width: 16px;
+  height: 16px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-container {
+  background-color: var(--mantine-color-red-0);
+  border: 1px solid var(--mantine-color-red-3);
+  width: 100%;
+}
+
+/* Modal styles */
+.image-modal {
+  .modal-content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-image {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .modal-close-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1;
+  }
+} 

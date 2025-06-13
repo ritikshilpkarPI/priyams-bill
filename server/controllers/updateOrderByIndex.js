@@ -2,6 +2,8 @@ const { getItemSKU } = require('../util/getItemSKU');
 const PurchaseOrder = require('../db-models/purchase-order-model');
 const { MESSAGES } = require ('../constants/messages');
 const { createBrandAndCompany } = require('../util/createBrandAndCompany');
+const { uploadImages } = require('../util/image');
+const { clodinaryFoldersPath } = require('../util/constant');
 
 const updateOrderByIndex = async (req, res,next) => {
     try {
@@ -23,6 +25,31 @@ const updateOrderByIndex = async (req, res,next) => {
             message: MESSAGES.SOMETHING_WENT_WRONG_WHILE_CREATING_BRAND_COMPANY,
             success: false,
           });
+      }
+
+      if (new_order.expiryDates && new_order.expiryDates.length > 0) {
+        for (let i = 0; i < new_order.expiryDates.length; i++) {
+          const expiryDate = new_order.expiryDates[i];
+          if (expiryDate.images && expiryDate.images.length > 0) {
+            try {
+              const existingImages = expiryDate.images.filter(img => img.public_id);
+              const newImages = expiryDate.images.filter(img => !img.public_id);
+              
+              if (newImages.length > 0) {
+                const uploadedImages = await uploadImages(
+                  newImages.map(img => img.data || img), 
+                  clodinaryFoldersPath.itemsImages
+                );
+                new_order.expiryDates[i].images = [...existingImages, ...uploadedImages];
+              } else {
+                new_order.expiryDates[i].images = existingImages;
+              }
+            } catch (error) {
+              console.error(`Error uploading expiry date images for index ${i}:`, error);
+              new_order.expiryDates[i].images = expiryDate.images.filter(img => img.public_id);
+            }
+          }
+        }
       }
 
       new_order.sku = getItemSKU(
