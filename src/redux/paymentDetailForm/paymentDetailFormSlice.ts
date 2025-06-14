@@ -12,7 +12,7 @@ const initialState: PaymentDetailType = {
     },
     addPaymentDetail: {
         paymentDate: new Date().toLocaleDateString(),
-        paidBy: 'upi',
+        paidBy: 'neft',
         paidAmount: 0,
         paymentImages: [],
         idx: 0
