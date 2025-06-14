@@ -27,6 +27,43 @@ const updateOrderByIndex = async (req, res,next) => {
           });
       }
 
+      const imageTypes = [
+        'barcodeImages',
+        'itemNameImages',
+        'packetQtyImages',
+        'unitImages',
+        'mrpImages',
+        'costPriceImages',
+        'sellingPriceImages',
+        'stockQuantityImages'
+      ];
+
+      const uploadedImages = {};
+      
+      for (const type of imageTypes) {
+        if (new_order[type] && new_order[type].length > 0) {
+          try {
+            const existingImages = new_order[type].filter(img => img.public_id);
+            const newImages = new_order[type].filter(img => !img.public_id);
+            
+            if (newImages.length > 0) {
+              const uploadedUrls = await uploadImages(
+                newImages.map(img => img.data || img),
+                clodinaryFoldersPath.itemsImages
+              );
+              uploadedImages[type] = [...existingImages, ...uploadedUrls];
+            } else {
+              uploadedImages[type] = existingImages;
+            }
+          } catch (error) {
+            console.error(`Error uploading ${type}:`, error);
+            uploadedImages[type] = new_order[type].filter(img => img.public_id);
+          }
+        } else {
+          uploadedImages[type] = [];
+        }
+      }
+
       if (new_order.expiryDates && new_order.expiryDates.length > 0) {
         for (let i = 0; i < new_order.expiryDates.length; i++) {
           const expiryDate = new_order.expiryDates[i];
@@ -62,6 +99,8 @@ const updateOrderByIndex = async (req, res,next) => {
        });
       new_order.brandId = brand._id
       new_order.companyId = company._id
+
+      Object.assign(new_order, uploadedImages);
 
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
       
