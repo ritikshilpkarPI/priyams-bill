@@ -55,7 +55,6 @@ export const sidebarListData = [
   },
   {
     BILL: [
-      { name: 'Dashboard', url: '/dashboard', icon: 'images/icon-dashboard.png' },
       { name: 'All Bills', url: '/allBill', icon: 'images/bill.svg' },
       {
         name: 'Return & Exchange',
@@ -63,7 +62,6 @@ export const sidebarListData = [
         icon: 'images/returnBill.svg',
       },
       { name: 'Day Bills', url: '/dayBill', icon: 'images/dailybills.svg' },
-      { name: 'Reports', url: '/report', icon: 'images/report.svg' },
     ],
   },
   {
@@ -73,7 +71,9 @@ export const sidebarListData = [
   },
   {
     REPORT: [
-      { name: 'Dealer Catalog', url: '/dealer-catalog', icon: 'images/openclose.svg' },
+      { name: 'Reports', url: '/report', icon: 'images/report.svg' },
+      { name: 'Dashboard', url: '/dashboard', icon: 'images/icon-dashboard.png' },
+      { name: 'Dealer Catalog', url: '/dealer-catalog', icon: 'images/dealer.svg' },
     ]
   },
   {
