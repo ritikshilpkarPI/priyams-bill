@@ -115,7 +115,7 @@ export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
                 radius="md"
                 fit="cover"
                 onClick={() => openPreview(0)}
-                style={{ cursor: 'pointer' }}
+                className="preview-image"
               />
               {!disabled && (
                 <ActionIcon
