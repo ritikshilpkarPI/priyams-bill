@@ -347,8 +347,7 @@ const Dashboard: React.FC = () => {
 
       if (response.success) {
         const dataWithIds = (response.data.data || []).map((item: any, index: number) => ({
-          id: item._id || `row-${index}`,
-          _id: item._id,
+          _id: item._id || `row-${index}`,
           itemDetail: item.itemDetail || {},
           itemBillingTrend: item.itemBillingTrend || []
         }));
@@ -942,7 +941,7 @@ const Dashboard: React.FC = () => {
                 {
                   key: 'sku',
                   label: 'SKU',
-                  render: (row: any) => row.itemDetail?.sku || '-',
+                  render: (row: any) => row?.itemDetail?.sku || '-',
                   minWidth: 120,
                 },
                 {
@@ -950,13 +949,14 @@ const Dashboard: React.FC = () => {
                   label: '7-Day Average',
                   minWidth: 120,
                   render: (row: any) => {
+                    if (!row) return '-';
                     const avg = calculateWeeklyAverage(row, dateColumns.map(col => col.key));
                     return avg === null ? '-' : avg;
                   }
                 },
                 ...dateColumns
               ]}
-              data={allItemsTrendData}
+              data={allItemsTrendData || []}
               isLoading={loading.itemTrend}
               page={page}
               rowsPerPage={rowsPerPage}
