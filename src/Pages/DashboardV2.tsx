@@ -1,6 +1,6 @@
 // Dashboard.tsx
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import {
   Container,
   Grid,
@@ -94,6 +94,8 @@ import {
   setExpandedBrands,
 } from '../redux/dashboard/dashboardSlice';
 import { RootState } from '../redux/store';
+import DataTable from './DataTable';
+import { calculateWeeklyAverage } from '../utils/calculations';
 
 const fetchReport = async <T extends Record<string, any>>(
   reportType: string,
@@ -175,6 +177,45 @@ const Dashboard: React.FC = () => {
     expandedCategories,
     expandedBrands,
   } = useSelector((state: RootState) => state.dashboard);
+
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [allItemsTrendData, setAllItemsTrendData] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [dateColumns, setDateColumns] = useState<Array<{ key: string; label: string }>>([]);
+
+  const generateDateColumns = useCallback((start: Date, end: Date) => {
+    const columns = [];
+    const currentDate = new Date(start);
+    const dates: string[] = [];
+    
+    while (currentDate <= end) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      dates.push(dateStr);
+      const formattedDate = currentDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: '2-digit'
+      });
+      columns.push({
+        key: dateStr,
+        label: formattedDate,
+        minWidth: 100,
+        render: (row: any) => {
+          const trend = row.itemBillingTrend || [];
+          const dateData = trend.find((t: any) => 
+            new Date(t.date).toISOString().split('T')[0] === dateStr
+          );
+          return dateData ? dateData.quantity : (
+            <Text size="sm" color="dimmed">0</Text>
+          );
+        }
+      });
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    setDateColumns(columns);
+  }, []);
 
   // Individual fetch functions for each section
   const fetchSummaryData = useCallback(async (start: Date, end: Date) => {
@@ -290,6 +331,40 @@ const Dashboard: React.FC = () => {
     }
   }, [dispatch, selectedItem]);
 
+  const fetchAllItemsTrend = useCallback(async (start: Date, end: Date, page: number = 1, limit: number = 10) => {
+    dispatch(setLoading({ itemTrend: true }));
+    try {
+      const response = await postAPI({
+        path: `${API_PATHS.REPORT.POST_SALES_REPORTS}/reports`,
+        data: {
+          reportType: 'allItemsBillingTrendList',
+          startDate: start.toISOString().split('T')[0],
+          endDate: end.toISOString().split('T')[0],
+          page,
+          limit
+        }
+      });
+
+      if (response.success) {
+        const dataWithIds = (response.data.data || []).map((item: any, index: number) => ({
+          id: item._id || `row-${index}`,
+          _id: item._id,
+          itemDetail: item.itemDetail || {},
+          itemBillingTrend: item.itemBillingTrend || []
+        }));
+
+        setAllItemsTrendData(dataWithIds);
+        setTotalCount(response.data.total || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching all items trend:', error);
+      setAllItemsTrendData([]);
+      setTotalCount(0);
+    } finally {
+      dispatch(setLoading({ itemTrend: false }));
+    }
+  }, [dispatch]);
+
   // Effect hooks for each section
   useEffect(() => {
     if (isDateRangeComplete(summaryDateRange)) {
@@ -335,9 +410,17 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (isDateRangeComplete(trendDateRange)) {
-      fetchTrendData(trendDateRange[0], trendDateRange[1]);
+      setPage(1); 
+      generateDateColumns(trendDateRange[0], trendDateRange[1]);
+      fetchAllItemsTrend(trendDateRange[0], trendDateRange[1], 1, rowsPerPage);
     }
-  }, [trendDateRange, fetchTrendData]);
+  }, [trendDateRange, fetchAllItemsTrend, rowsPerPage, generateDateColumns]);
+
+  useEffect(() => {
+    if (isDateRangeComplete(trendDateRange)) {
+      fetchAllItemsTrend(trendDateRange[0], trendDateRange[1], page, rowsPerPage);
+    }
+  }, [page, rowsPerPage, trendDateRange, fetchAllItemsTrend]);
 
   // Build Select options for "Item Billing Trend"
   const itemOptions = (topByQty || [])
@@ -408,6 +491,19 @@ const Dashboard: React.FC = () => {
     item.lastSale ? new Date(item.lastSale).toLocaleDateString() : 'N/A',
     item.staffName || '-',
   ];
+
+  const handlePageChange = (_: unknown, newPage: number) => {
+    console.log('Page changed to:', newPage);
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const newRowsPerPage = parseInt(e.target.value.toString(), 10);
+    console.log('Rows per page changed to:', newRowsPerPage);
+    setRowsPerPage(newRowsPerPage);
+  };
 
   return (
     <Container size="xl" py="xl">
@@ -820,6 +916,54 @@ const Dashboard: React.FC = () => {
                 'Discount Total',
               ]}
               mapRowToCSV={mapItemTrendToCSV}
+            />
+          </Stack>
+        </Card>
+
+        {/* All Items Billing Trend List Section */}
+        <Card withBorder p="md" radius="md">
+          <Stack spacing="md">
+            <Group position="apart">
+              <Title order={3}>All Items Billing Trend</Title>
+              <Group>
+                <DateRangePicker
+                  placeholder="Select date range"
+                  label="Date Range"
+                  value={trendDateRange}
+                  onChange={(value) => dispatch(setTrendDateRange(value))}
+                  clearable
+                  w={400}
+                  withinPortal
+                />
+              </Group>
+            </Group>
+            <DataTable
+              columns={[
+                {
+                  key: 'sku',
+                  label: 'SKU',
+                  render: (row: any) => row.itemDetail?.sku || '-',
+                  minWidth: 120,
+                },
+                {
+                  key: 'sevenDayAvg',
+                  label: '7-Day Average',
+                  minWidth: 120,
+                  render: (row: any) => {
+                    const avg = calculateWeeklyAverage(row, dateColumns.map(col => col.key));
+                    return avg === null ? '-' : avg;
+                  }
+                },
+                ...dateColumns
+              ]}
+              data={allItemsTrendData}
+              isLoading={loading.itemTrend}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+              rowCount={totalCount}
+              paginationMode="server"
             />
           </Stack>
         </Card>
