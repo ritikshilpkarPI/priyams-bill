@@ -57,6 +57,7 @@ import { AppDispatch } from '../../redux/store';
 import { ImageUploadComponent } from '../ImageUploadComponent/ImageUploadComponent';
 import { toast } from 'react-toastify';
 import { CloudImage } from 'src/types';
+import { convertFilesToBase64 } from 'src/utils/imageUtils';
 
 
 
@@ -86,17 +87,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
 
   const handleImagesChange = async (key: string, files: File[]) => {
     try {
-      const imagePromises = files.map(file => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result);
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-
-      const imageData = await Promise.all(imagePromises);
+      const imageData = await convertFilesToBase64(files);
       dispatch(setPurchasedItemDetailForm({
         [`${key}Images`]: imageData
       }));
@@ -300,21 +291,14 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
 
   const handleExpiryImagesChange = async (idx: number, files: File[]) => {
     try {
-      const imagePromises = files.map(file => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result);
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-
-      const imageData = await Promise.all(imagePromises);
+      const imageData = await convertFilesToBase64(files);
       const updatedExpiryDates = [...purchasedItemFormData.expiryDates];
       updatedExpiryDates[idx] = {
         ...updatedExpiryDates[idx],
-        images: imageData as CloudImage[]
+        images: imageData.map(img => ({
+          ...img,
+          expiryDateIndex: idx 
+        }))
       };
       dispatch(setPurchasedItemDetailForm({
         expiryDates: updatedExpiryDates

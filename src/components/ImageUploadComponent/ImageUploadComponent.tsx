@@ -5,8 +5,6 @@ import { useDropzone } from 'react-dropzone';
 import './ImageUploadComponent.css';
 import { ImageUploadComponentProps } from 'src/types';
 
-
-
 export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
   onImagesChange,
   maxFiles = 10,
@@ -83,10 +81,10 @@ export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
   };
 
   useEffect(() => {
-      const initialPreviews = initialImages.map(image => {
-        return image?.secure_url
-      })
-      setPreviews(initialPreviews);
+    const initialPreviews = initialImages.map(image => {
+      return image?.secure_url ? image?.secure_url : image;
+    })
+    setPreviews(initialPreviews);
   }, [initialImages]);
   
   return (
@@ -108,7 +106,7 @@ export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
           </Tooltip>
         ) : (
           <Box className="preview-container">
-            <Box className="preview-item" style={{ position: 'relative' }}>
+            <Box className="preview-item">
               <Image
                 src={previews[0]}
                 alt="Preview"
@@ -125,7 +123,6 @@ export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
                   color="red"
                   variant="filled"
                   onClick={() => removeImage(0)}
-                  style={{ position: 'absolute', top: -8, right: -8 }}
                 >
                   <IconX size={16} />
                 </ActionIcon>
@@ -180,52 +177,54 @@ export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
         padding={0}
         withCloseButton={false}
       >
-        <Box style={{ position: 'relative', height: '80vh' }}>
-          <Image
-            src={previews[currentPreviewIndex]}
-            alt={`Preview ${currentPreviewIndex + 1}`}
-            fit="contain"
-            style={{ height: '100%', width: '100%' }}
-          />
-          
-          <ActionIcon
-            style={{ position: 'absolute', top: 10, right: 10 }}
-            color="dark"
-            variant="filled"
-            onClick={() => setPreviewModalOpen(false)}
-          >
-            <IconX size={20} />
-          </ActionIcon>
+        <Box className="image-modal">
+          <Box className="modal-content">
+            <Image
+              src={previews[currentPreviewIndex]}
+              alt={`Preview ${currentPreviewIndex + 1}`}
+              fit="contain"
+              className="modal-image"
+            />
+            
+            <ActionIcon
+              className="modal-close-button"
+              color="dark"
+              variant="filled"
+              onClick={() => setPreviewModalOpen(false)}
+            >
+              <IconX size={20} />
+            </ActionIcon>
 
-          <ActionIcon
-            style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)' }}
-            color="dark"
-            variant="filled"
-            onClick={() => navigatePreview('prev')}
-          >
-            <IconChevronLeft size={20} />
-          </ActionIcon>
+            <ActionIcon
+              className="modal-nav-button prev"
+              color="dark"
+              variant="filled"
+              onClick={() => navigatePreview('prev')}
+            >
+              <IconChevronLeft size={20} />
+            </ActionIcon>
 
-          <ActionIcon
-            style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)' }}
-            color="dark"
-            variant="filled"
-            onClick={() => navigatePreview('next')}
-          >
-            <IconChevronRight size={20} />
-          </ActionIcon>
+            <ActionIcon
+              className="modal-nav-button next"
+              color="dark"
+              variant="filled"
+              onClick={() => navigatePreview('next')}
+            >
+              <IconChevronRight size={20} />
+            </ActionIcon>
 
-          <ActionIcon
-            style={{ position: 'absolute', bottom: 10, right: 10 }}
-            color="red"
-            variant="filled"
-            onClick={() => {
-              removeImage(currentPreviewIndex);
-              setPreviewModalOpen(false);
-            }}
-          >
-            <IconX size={20} />
-          </ActionIcon>
+            <ActionIcon
+              className="modal-delete-button"
+              color="red"
+              variant="filled"
+              onClick={() => {
+                removeImage(currentPreviewIndex);
+                setPreviewModalOpen(false);
+              }}
+            >
+              <IconX size={20} />
+            </ActionIcon>
+          </Box>
         </Box>
       </Modal>
     </Box>

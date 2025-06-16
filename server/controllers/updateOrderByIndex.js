@@ -3,7 +3,7 @@ const PurchaseOrder = require('../db-models/purchase-order-model');
 const { MESSAGES } = require ('../constants/messages');
 const { createBrandAndCompany } = require('../util/createBrandAndCompany');
 const { uploadImages } = require('../util/image');
-const { clodinaryFoldersPath } = require('../util/constant');
+const { clodinaryFoldersPath, POItemImageTypes } = require('../util/constant');
 
 const updateOrderByIndex = async (req, res,next) => {
     try {
@@ -27,28 +27,41 @@ const updateOrderByIndex = async (req, res,next) => {
           });
       }
 
-      const imageTypes = [
-        'barcodeImages',
-        'itemNameImages',
-        'packetQtyImages',
-        'unitImages',
-        'mrpImages',
-        'costPriceImages',
-        'sellingPriceImages',
-        'stockQuantityImages'
-      ];
-
       const uploadedImages = {};
       
-      for (const type of imageTypes) {
-        if (new_order[type] && new_order[type].length > 0) {
+      for (const type of POItemImageTypes) {
+        if (new_order[type]?.length > 0) {
+          const validImages = new_order[type].filter(img => 
+            typeof img === 'object' && (img.public_id || img.data)
+          );
+          if (validImages.length > 0) {
+            uploadedImages[type] = validImages;
+          }
+        }
+      }
+      
+      if (new_order.expiryDates?.length > 0) {
+        new_order.expiryDates.forEach((expiryDate, idx) => {
+          if (expiryDate.images?.length > 0) {
+            const validImages = expiryDate.images.filter(img => 
+              typeof img === 'object' && (img.public_id || img.data)
+            );
+            if (validImages.length > 0) {
+              uploadedImages[`expiryDate_${idx}`] = validImages;
+            }
+          }
+        });
+      }
+
+      for (const [type, images] of Object.entries(uploadedImages)) {
+        if (images && images.length > 0) {
           try {
-            const existingImages = new_order[type].filter(img => img.public_id);
-            const newImages = new_order[type].filter(img => !img.public_id);
+            const existingImages = images.filter(img => img.public_id);
+            const newImages = images.filter(img => !img.public_id && img.data);
             
             if (newImages.length > 0) {
               const uploadedUrls = await uploadImages(
-                newImages.map(img => img.data || img),
+                newImages.map(img => img.data),
                 clodinaryFoldersPath.itemsImages
               );
               uploadedImages[type] = [...existingImages, ...uploadedUrls];
@@ -56,36 +69,24 @@ const updateOrderByIndex = async (req, res,next) => {
               uploadedImages[type] = existingImages;
             }
           } catch (error) {
-            console.error(`Error uploading ${type}:`, error);
-            uploadedImages[type] = new_order[type].filter(img => img.public_id);
+            console.error(`Error uploading ${type} images:`, error);
+            uploadedImages[type] = images.filter(img => img.public_id);
           }
         } else {
           uploadedImages[type] = [];
         }
       }
 
-      if (new_order.expiryDates && new_order.expiryDates.length > 0) {
-        for (let i = 0; i < new_order.expiryDates.length; i++) {
-          const expiryDate = new_order.expiryDates[i];
-          if (expiryDate.images && expiryDate.images.length > 0) {
-            try {
-              const existingImages = expiryDate.images.filter(img => img.public_id);
-              const newImages = expiryDate.images.filter(img => !img.public_id);
-              
-              if (newImages.length > 0) {
-                const uploadedImages = await uploadImages(
-                  newImages.map(img => img.data || img), 
-                  clodinaryFoldersPath.itemsImages
-                );
-                new_order.expiryDates[i].images = [...existingImages, ...uploadedImages];
-              } else {
-                new_order.expiryDates[i].images = existingImages;
-              }
-            } catch (error) {
-              console.error(`Error uploading expiry date images for index ${i}:`, error);
-              new_order.expiryDates[i].images = expiryDate.images.filter(img => img.public_id);
-            }
-          }
+      if (new_order.expiryDates?.length > 0) {
+        new_order.expiryDates = new_order.expiryDates.map((expiryDate, idx) => ({
+          ...expiryDate,
+          images: uploadedImages[`expiryDate_${idx}`] || []
+        }));
+      }
+
+      for (const type of POItemImageTypes) {
+        if (new_order[type]) {
+          new_order[type] = uploadedImages[type] || [];
         }
       }
 
@@ -99,8 +100,6 @@ const updateOrderByIndex = async (req, res,next) => {
        });
       new_order.brandId = brand._id
       new_order.companyId = company._id
-
-      Object.assign(new_order, uploadedImages);
 
       const purchaseOrder = await PurchaseOrder.findById(purchase_id);
       

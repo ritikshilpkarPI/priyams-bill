@@ -4,7 +4,7 @@ const { getItemSKU } = require('../util/getItemSKU');
 const { MESSAGES } = require('../constants/messages');
 const { createBrandAndCompany } = require('../util/createBrandAndCompany');
 const { uploadMultipleImages } = require('../util/image');
-const { clodinaryFoldersPathKey } = require('../util/constant');
+const { clodinaryFoldersPathKey, POItemImageTypes } = require('../util/constant');
 
 const updateSavedOrders = async (req, res, next) => {
   try {
@@ -28,20 +28,11 @@ const updateSavedOrders = async (req, res, next) => {
         });
     }
 
-    const imageTypes = [
-      'barcodeImages',
-      'itemNameImages',
-      'packetQtyImages',
-      'unitImages',
-      'mrpImages',
-      'costPriceImages',
-      'sellingPriceImages',
-      'stockQuantityImages'
-    ];
+   
 
     const uploadedImages = {};
     
-    for (const type of imageTypes) {
+    for (const type of POItemImageTypes) {
       if (new_order[type] && new_order[type].length > 0) {
         try {
           const formattedImages = new_order[type].map((image, index) => ({
