@@ -83,6 +83,7 @@ import { updateStockTransactionBySource } from "./updateStockTransactionBySource
 import { addAllowedRoutesToMultipleStaff } from './addAllowedRoutesToMultipleStaff';
 import { removeAllowedRoutes } from './removeAllowedRoutes';
 import { addAllowedRoutesToStaff } from './addAllowedRoutesToStaff';
+import { getDealerCatalog } from './getDealerCatalog';
 import { getStockTransactionsByStatus } from './getStockTransactionsByStatus';
 
 export {
@@ -171,5 +172,6 @@ export {
   addAllowedRoutesToStaff,
   removeAllowedRoutes,
   addAllowedRoutesToMultipleStaff,
+  getDealerCatalog,
   getStockTransactionsByStatus,
 };

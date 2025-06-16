@@ -513,6 +513,7 @@ declare global {
     destinationRemark?: string;
     sourceRemark?: string;
     error?: any;
+    isNew?: boolean;
   }
   interface StockTransactionType {
   transactionType: string;
@@ -751,6 +752,7 @@ declare global {
     enableDestinationForm?: boolean;
     disabled?: boolean;
     isSourceStaff?: boolean;
+    transactionId?: string;
   }
   interface ShelfLifeInfoProps {
     expiryDate: {
@@ -1160,6 +1162,49 @@ declare global {
     paginationStrategy: PaginationStrategy;
     parallelCalls?: number;
     maxRetriesPerCall?: number;
+  }
+  interface CatalogCardProps {
+    title: string;
+    subtitle?: string;
+    brands?: Array<{ _id: string; brandName: string }>;
+    companies?: Array<{ _id: string; companyName: string }>;
+    dealers?: Array<{ _id: string; dealerName: string; dealerNumber: number }>;
+  }
+
+  interface dealerCatalogCounts {
+    dealers: number;
+    companies: number;
+    brands: number;
+  }
+  
+  interface dealerCatalogDealer {
+    _id: string;
+    dealerName: string;
+    dealerNumber: number;
+    brands: Array<{ _id: string; brandName: string }>;
+    companies: Array<{ _id: string; companyName: string }>;
+  }
+  
+  interface dealerCatalogCompany {
+    _id: string;
+    companyName: string;
+    dealers: Array<{ _id: string; dealerName: string; dealerNumber: number }>;
+    brands: Array<{ _id: string; brandName: string }>;
+  }
+  
+  interface dealerCatalogBrand {
+    _id: string;
+    brandName: string;
+    companies: Array<{ _id: string; companyName: string }>;
+    dealers: Array<{ _id: string; dealerName: string; dealerNumber: number }>;
+  }
+  
+  type dealerCatalogItem = dealerCatalogDealer | dealerCatalogCompany | dealerCatalogBrand;
+  
+  interface dealerCatalogTabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
   }
 
 }

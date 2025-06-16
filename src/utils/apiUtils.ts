@@ -950,3 +950,15 @@ export const generateItemLists = (itemsNameMap: any, itemsBarCodeMap: any) => {
     itemBarCodesList
   };
 };
+
+export const getDealerCatalogAPI = async (type: 'dealer' | 'brand' | 'company') => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.DEALER_CATALOG,
+      data: { type },
+    });
+    return response.data;
+  } catch (error) {
+    return { isError: true, error }
+  }
+};
