@@ -128,7 +128,7 @@ export const API_PATHS = {
   },
   STOCK_TRANSACTION:{
     GET_ITEM_TRANSACTIONS:"/api/stockTransactions/items",
-    PUT_UPDATE_STOCK_TRANSACTION: '/api/stock-transactions/:id/admin',
+    PUT_UPDATE_STOCK_TRANSACTION: '/api/stockTransactions/:id/admin',
     ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
     UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
     GET_STOCK_TRANSACTIONS:"/api/stockTransactions",
@@ -137,7 +137,7 @@ export const API_PATHS = {
     APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
     POST_BULK_APPROVE_STOCK_TRANSACTIONS: "/api/stockTransaction/bulkApproveStockTransactions",
 
-    MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" ,
+    MISMATCH_STOCK_TRANSACTION: "/api/stockTransactions/mismatch-correction" ,
     UPDATE_STOCK_TRANSACTION_BY_SOURCE: "/api/stockTransaction/updateStockTransactionBySource",
     COPY_TRANSACTION: "/api/stockTransaction/copyTransaction",
   },

@@ -68,7 +68,6 @@ const StockTransactionsPage: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setRowsPerPage(Number(event.target.value));
-    setPage(1);
   };
 
   const flattenedTransactions = transactions.map((txn: any) => ({
@@ -183,6 +182,7 @@ const StockTransactionsPage: React.FC = () => {
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowsPerPageChange}
         rowCount={rowCount}
+        paginationMode="server"
         expandedRows={expandedRows}
       />
     </Box>
