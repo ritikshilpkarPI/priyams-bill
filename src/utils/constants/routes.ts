@@ -43,6 +43,6 @@ export const ROUTES = Object.freeze({
     EXPIRY_ITEMS_BATCH_BY_ID: "/expiry-items-batch/:id",
     ADD_EXPIRY_ITEMS_BATCH_CLEARANCE: "/expiry-items-batch/:id/add-clearance",
     UPDATE_EXPIRY_ITEMS_BATCH: "/addExpiredItem/:id",
+    STOCK_TRANSACTIONS:"/stock-transactions",
     DEALER_CATALOG: "/dealer-catalog",
-    STOCK_TRANSACTIONS:"/stockTransactions",
 })

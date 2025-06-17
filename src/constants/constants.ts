@@ -37,7 +37,16 @@ export const CONSTANTS = Object.freeze({
         DESTINATION_UPDATED: "destinationUpdated",
         APPROVED: "approved"
     },
-
+    TABLE_HEADERS:{
+        SKU: 'SKU',
+        ITEM_NAME: 'Item Name',
+        BARCODE: 'Barcode',
+        WEEKLY_AVERAGE: 'Weekly Average',
+        QUANTITY: 'Total Quantity',
+        MRP: 'Total MRP',
+        TOTAL_AMOUNT: 'Total Amount',
+        DISCOUNT: 'Total Discount',
+    },
 })
 
 export const ITEM_EXPIRY_BATCH_ACTION = Object.freeze({
@@ -52,19 +61,5 @@ export const ITEM_EXPIRY_BATCH_STATUS = Object.freeze({
     DRAFTED: "DRAFTED",
     SAVED: "SAVED",
     CLEARED: "CLEARED",
-    TABLE_HEADERS:{
-        SKU: 'SKU',
-        ITEM_NAME: 'Item Name',
-        BARCODE: 'Barcode',
-        WEEKLY_AVERAGE: 'Weekly Average',
-        QUANTITY: 'Total Quantity',
-        MRP: 'Total MRP',
-        TOTAL_AMOUNT: 'Total Amount',
-        DISCOUNT: 'Total Discount',
-    },
-    TRANSACTIONS_STATUS:{
-        SOURCE_CREATED: "sourceCreated",
-        DESTINATION_UPDATED: "destinationUpdated",
-        APPROVED: "approved"
-    },
+
 })

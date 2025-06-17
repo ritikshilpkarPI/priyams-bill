@@ -26,8 +26,8 @@ import {
   StoreInventory,
   StockTransactions,
   ExpiryItemsBatch,
+  StockTransactionsPage,
   DealerCatalog,
-  StockTransactionsPage
 } from '../Pages';
 import AddClearancePage from 'src/Pages/AddClearancePage';
 

@@ -6,7 +6,7 @@ import {
   getItemsFromStoreInventoryAPI,
   itemPurchaseBatchesAPI,
 } from 'src/utils/apiUtils';
-import { executePaginatedAPICalls, PaginationStrategy } from 'src/utils/executePaginatedAPICalls';
+import { executePaginatedAPICalls, PaginationStrategy } from '../utils/executePaginatedAPICalls';
 import { CONSTANTS } from '../constants/constants';
 import { generateStoreCSV } from '../utils/generateStoreCSV';
 const DEFAULT_LIMIT = 100;
@@ -158,12 +158,12 @@ if(isStore){
     }
   };
 
-  const paginationStrategy: PaginationStrategy = {
+  const paginationStrategy = {
     limitParamName: isStore ? 'size' : 'limit',
     offsetParamName: 'page',
     offsetType: 'page',
     startOffsetValue: initialPageToFetch + 1,
-  };
+  } as PaginationStrategy;
 
   const subsequentItems = await executePaginatedAPICalls<T>({
     apiFnToGetData: paginatedApiFunction,

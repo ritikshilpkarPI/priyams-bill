@@ -1,7 +1,7 @@
 export interface PaginationStrategy {
   limitParamName: string;
   offsetParamName: string;
-  offsetType: 'page' | 'offset' | 'skip';
+  offsetType: 'page' | 'offset';
   startOffsetValue: number;
 }
 
@@ -24,7 +24,6 @@ export async function executePaginatedAPICalls<T>({
 }: PaginatedAPIConfig<T>): Promise<T[]> {
   const results: T[] = [];
   const totalPages = Math.ceil(totalObjectsCount / itemsPerCall);
-
   const startPage = paginationStrategy.startOffsetValue;
   const endPage = startPage + totalPages;
   

@@ -83,8 +83,11 @@ import { updateStockTransactionBySource } from "./updateStockTransactionBySource
 import { addAllowedRoutesToMultipleStaff } from './addAllowedRoutesToMultipleStaff';
 import { removeAllowedRoutes } from './removeAllowedRoutes';
 import { addAllowedRoutesToStaff } from './addAllowedRoutesToStaff';
-import { getDealerCatalog } from './getDealerCatalog';
+<<<<<<<<< Temporary merge branch 1
 import { getStockTransactionsByStatus } from './getStockTransactionsByStatus';
+import { getDealerCatalog } from './getDealerCatalog';
+import { copyPurchaseOrder } from './copyPurchaseOrder';
+import { copyStockTransaction } from './copyStockTransaction';
 
 export {
   addBulkItems,
@@ -172,6 +175,8 @@ export {
   addAllowedRoutesToStaff,
   removeAllowedRoutes,
   addAllowedRoutesToMultipleStaff,
-  getDealerCatalog,
   getStockTransactionsByStatus,
+  getDealerCatalog,
+  copyPurchaseOrder,
+  copyStockTransaction
 };
