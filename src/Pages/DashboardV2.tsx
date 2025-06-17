@@ -496,7 +496,6 @@ const Dashboard: React.FC = () => {
   ];
 
   const handlePageChange = (_: unknown, newPage: number) => {
-    console.log('Page changed to:', newPage);
     dispatch(setPage(newPage));
   };
 
@@ -504,7 +503,6 @@ const Dashboard: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const newRowsPerPage = parseInt(e.target.value.toString(), 10);
-    console.log('Rows per page changed to:', newRowsPerPage);
     dispatch(setRowsPerPage(newRowsPerPage));
   };
 
