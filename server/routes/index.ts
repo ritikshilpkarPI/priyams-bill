@@ -209,6 +209,12 @@ router.post(
   getOrdersByQuery
 );
 
+router.get(
+  `${API_PATHS.PURCHASE_ORDER.COPY_PURCHASE_ORDER}/:id`,
+  isLoggedIn,
+  copyPurchaseOrder
+);
+
 router.get(API_PATHS.BILLING.GET_BILL_FEED, isLoggedIn, getAllBill);
 router.get(API_PATHS.BILLING.GET_ALL_DAILY_BILLS, isLoggedIn, getDayWiseBills);
 
