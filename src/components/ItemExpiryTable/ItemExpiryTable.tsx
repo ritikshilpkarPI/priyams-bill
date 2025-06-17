@@ -1,8 +1,10 @@
 import React from 'react';
-import { Badge, Button, Flex, Group, Table, Text } from '@mantine/core';
-import { IconX } from '@tabler/icons-react';
-
+import { Badge, Button, Flex, Group, Table, Text, Box } from '@mantine/core';
+import { IconX, IconEdit, IconTrash } from '@tabler/icons-react';
+import { ImageUploadComponent } from '../ImageUploadComponent/ImageUploadComponent';
+import { ImagePreview } from '../ImagePreview/ImagePreview';
 import { ShelfLifeInfo } from '../shelfLifeInfo/ShelfLifeInfo';
+import { CloudImage } from 'src/types';
 
 export interface ItemExpiryTableProps {
   expiryDates: ItemExpiryDateType[];
@@ -10,6 +12,9 @@ export interface ItemExpiryTableProps {
   showActions?: boolean;
   showTotal?: boolean;
   onEdit?: (idx: number) => void;
+  onImagesChange?: (idx: number, files: File[]) => void;
+  disabled?: boolean;
+  images?: CloudImage[];
 }
 
 export const ItemExpiryTable = ({
@@ -18,6 +23,9 @@ export const ItemExpiryTable = ({
   showActions,
   showTotal,
   onEdit,
+  onImagesChange,
+  disabled = false,
+  images = [],
 }: ItemExpiryTableProps) => {
   const totalExpiryQuantity = expiryDates.reduce(
     (acc, expiryDate) => acc + Number(expiryDate.value || 0),
@@ -26,7 +34,7 @@ export const ItemExpiryTable = ({
 
   const rows = expiryDates.map((expiryDate, idx) => {
     const mfgDate = new Date(expiryDate.mfgDate);
-    const expDate = new Date(expiryDate.date);
+    const expDate = new Date(expiryDate.date);    
 
     return (
       <tr key={idx}>
@@ -35,6 +43,29 @@ export const ItemExpiryTable = ({
         <td>{expiryDate.value}</td>
         <td style={{ whiteSpace: 'nowrap', minWidth: 250 }}>
           <ShelfLifeInfo expiryDate={expiryDate} />
+        </td>
+        <td>
+          <Group spacing="xs">
+            <ImagePreview
+              images={expiryDate.images?.expiryImages || images}
+              title={`Expiry Date ${idx + 1}`}
+            />
+            {onImagesChange && !disabled && (
+              <Box>
+                <Text size="xs" color="dimmed" mb={4}>
+                  Upload Expiry Images {idx + 1}
+                </Text>
+                <ImageUploadComponent
+                  onImagesChange={(files) => onImagesChange(idx, files)}
+                  maxFiles={2}
+                  maxSize={2 * 1024 * 1024}
+                  acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                  initialImages={expiryDate.images?.expiryImages || images}
+                  size={24}
+                />
+              </Box>
+            )}
+          </Group>
         </td>
         {showActions && (
           <td>
@@ -60,47 +91,31 @@ export const ItemExpiryTable = ({
   });
 
   return (
-    <Flex
-      sx={{
-        border: '0.5px solid #D4D4D4',
-        borderRadius: '4px',
-        padding: '10px',
-        overflowX: 'auto',
-        width: '100%',
-        maxWidth: '100%',
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
-      }}
-      mt="8px"
-    >
-      <Table
-        striped
-        highlightOnHover
-        verticalSpacing="sm"
-        style={{ minWidth: '800px', width: '100%' }}
-      >
-        <thead>
+    <Table withColumnBorders striped withBorder>
+      <thead>
+        <tr>
+          <th>Manufacturing Date</th>
+          <th>Expiry Date</th>
+          <th>Quantity</th>
+          <th>Shelf Life</th>
+          <th>Expiry Images</th>
+          {showActions && <th>Actions</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {rows}
+        {showTotal && (
           <tr>
-            <th>Mfg. Date</th>
-            <th>Exp. Date</th>
-            <th>Qty.</th>
-            <th style={{ minWidth: 250 }}>Shelf Life Info</th>
-            {showActions && <th>Action</th>}
+            <td colSpan={2}>
+              <Text weight={500}>Total</Text>
+            </td>
+            <td>
+              <Text weight={500}>{totalExpiryQuantity}</Text>
+            </td>
+            <td colSpan={showActions ? 3 : 2}></td>
           </tr>
-        </thead>
-        <tbody>
-          {rows}
-          {showTotal && (
-            <tr>
-              <td><strong>Total</strong></td>
-              <td>-</td>
-              <td>{totalExpiryQuantity}</td>
-              <td colSpan={showActions ? 2 : 1}>—</td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
-    </Flex>
+        )}
+      </tbody>
+    </Table>
   );
 };

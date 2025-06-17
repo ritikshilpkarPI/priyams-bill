@@ -1,0 +1,65 @@
+.image-preview-modal {
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+}
+
+.image-preview-header {
+  border-bottom: 1px solid #eee;
+  padding: 16px;
+}
+
+.image-preview-body {
+  padding: 0 !important;
+  height: calc(90vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-preview-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.image-preview-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: calc(90vh - 150px);
+  object-fit: contain;
+}
+
+.image-preview-nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview-nav-button:hover {
+  background-color: rgba(255, 255, 255, 1) !important;
+}
+
+.prev-button {
+  left: 20px;
+  color: #000;
+}
+
+.next-button {
+  right: 20px;
+  color: #000;
+} 
