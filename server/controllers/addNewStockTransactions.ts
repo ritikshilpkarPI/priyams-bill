@@ -115,7 +115,7 @@ export const addNewStockTransactions = async (
       dateOfTransaction,
       adminRemark,
       hasErrors,
-      transactionStatus: CONSTANTS.STATUS.PENDING,
+      transactionStatus: CONSTANTS.TRANSACTIONS_STATUS.SOURCE_CREATED,
       approvedByAdmin: false,
       transactionSlug: `${Date.now()}${generateRandomKey(4)}`,
     });

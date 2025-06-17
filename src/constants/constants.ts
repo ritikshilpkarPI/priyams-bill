@@ -31,6 +31,12 @@ export const CONSTANTS = Object.freeze({
     },
     WAREHOUSE_COLLECTION_NAME: "pstr_1_462020_warehouse",
     NEW_ITEM: "NEW ITEM",
+    
+    TRANSACTIONS_STATUS:{
+        SOURCE_CREATED: "sourceCreated",
+        DESTINATION_UPDATED: "destinationUpdated",
+        APPROVED: "approved"
+    },
 
 })
 
@@ -55,5 +61,10 @@ export const ITEM_EXPIRY_BATCH_STATUS = Object.freeze({
         MRP: 'Total MRP',
         TOTAL_AMOUNT: 'Total Amount',
         DISCOUNT: 'Total Discount',
-    }   
+    },
+    TRANSACTIONS_STATUS:{
+        SOURCE_CREATED: "sourceCreated",
+        DESTINATION_UPDATED: "destinationUpdated",
+        APPROVED: "approved"
+    },
 })
