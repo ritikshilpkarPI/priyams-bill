@@ -1,4 +1,5 @@
 const PurchaseOrder = require('../db-models/purchase-order-model');
+const { Image } = require('../db-models/image-model');
 const { isShelfExpired } = require('../util/isShelfExpired');
 const { getItemSKU } = require('../util/getItemSKU');
 const { MESSAGES } = require('../constants/messages');
@@ -28,68 +29,87 @@ const updateSavedOrders = async (req, res, next) => {
         });
     }
 
-   
+    const imagesToUpload = [];
+    const imageTypes = [];
 
-    const uploadedImages = {};
-    
-    for (const type of POItemImageTypes) {
-      if (new_order[type] && new_order[type].length > 0) {
-        try {
-          const formattedImages = new_order[type].map((image, index) => ({
-            data: image,
-            name: `${type}_${index}_${Date.now()}.jpg`
-          }));
+    const regularImages = POItemImageTypes.flatMap(type => 
+      (new_order[type] || []).map((image, index) => 
+        typeof image === 'string' ? { data: image, name: `${type}_${index}_${Date.now()}.jpg`, type } : null
+      ).filter(Boolean)
+    );
 
-          const uploadedUrls = await uploadMultipleImages(
-            formattedImages,
-            clodinaryFoldersPathKey.itemsImages.toString()
-          );
-          uploadedImages[type] = uploadedUrls;
-        } catch (error) {
-          console.error(`Error uploading ${type}:`, error);
-          uploadedImages[type] = [];
-        }
-      } else {
-        uploadedImages[type] = [];
+    const expiryImages = (new_order.expiryDates || []).flatMap((expiryDate, expiryIndex) => 
+      (expiryDate.images?.expiryImages || []).map((image, index) => 
+        typeof image === 'string' ? { 
+          data: image, 
+          name: `expiry_${expiryIndex}_${index}_${Date.now()}.jpg`, 
+          type: 'expiryImages',
+          expiryIndex 
+        } : null
+      ).filter(Boolean)
+    );
+
+    imagesToUpload.push(...regularImages, ...expiryImages);
+    imageTypes.push(...new Set(regularImages.map(img => img.type)));
+
+    let imageIds = [];
+    if (imagesToUpload.length) {
+      const formattedImages = imagesToUpload.map(img => ({ data: img.data, name: img.name }));
+      const uploadedUrls = await uploadMultipleImages(formattedImages, clodinaryFoldersPathKey.itemsImages.toString());
+      
+      const images = uploadedUrls.map((url, index) => ({
+        public_id: url.public_id,
+        secure_url: url.secure_url,
+        type: imagesToUpload[index].type,
+        expiryIndex: imagesToUpload[index].expiryIndex
+      }));
+
+      const savedImages = await Promise.all(images.map(image => new Image(image).save()));
+      imageIds = savedImages.map(img => img._id);
+    }
+
+    const updatedExpiryDates = (new_order.expiryDates || []).map(expiryDate => ({
+      date: expiryDate.date,
+      value: expiryDate.value,
+      mfgDate: expiryDate.mfgDate,
+      isShelfExpired: isShelfExpired(expiryDate.mfgDate, expiryDate.date),
+      images: {
+        expiryImages: expiryDate.images?.expiryImages || []
       }
-    }
+    }));
 
-    const itemSKU = getItemSKU({
-      itemQuantity: new_order.itemQuantity,
-      unit: new_order.unit,
-      itemName: new_order.inputName,
-      barcode: new_order.barcode,
-      mrp: new_order.mrp
-    });
-
-    let updatedExpiryDates = new_order.expiryDates;
-    if(new_order.expiryDates) {
-      updatedExpiryDates = new_order.expiryDates.map(expiryDates => ({
-        ...expiryDates,
-        isShelfExpired: isShelfExpired(expiryDates.mfgDate, expiryDates.date)
-      }))
-    }
-
-    if(!Boolean(new_order?.item_id)){
+    if(!Boolean(new_order?.item_id)) {
       new_order.newItem = true;
     }
 
     const purchaseOrder = await PurchaseOrder.findById(id);
     const newItemCost = new_order.costPrice * new_order.stockQuantity;
+
+    const newPurchasedItem = {
+      ...new_order,
+      images: imageIds,
+      expiryDates: updatedExpiryDates,
+      sku: getItemSKU({
+        itemQuantity: new_order.itemQuantity,
+        unit: new_order.unit,
+        itemName: new_order.inputName,
+        barcode: new_order.barcode,
+        mrp: new_order.mrp
+      }),
+      brandId: brand._id,
+      companyId: company._id,
+    };
+
+    POItemImageTypes.forEach(type => delete newPurchasedItem[type]);
+
     const updatedOrder = await purchaseOrder.updateOne({
-      purchasedItems: [...purchaseOrder.purchasedItems, {
-        ...new_order,
-        ...uploadedImages, 
-        expiryDates: updatedExpiryDates,
-        sku: itemSKU,
-        brandId: brand._id,
-        companyId: company._id,
-      }],
+      purchasedItems: [...purchaseOrder.purchasedItems, newPurchasedItem],
       purchaseDetails:{
         ...purchaseOrder.purchaseDetails,
         totalItemsCost: (purchaseOrder.purchaseDetails?.totalItemsCost || 0) + newItemCost,
       }
     });
+
     res.status(200).send({
       message: 'order added successfully',
       success: true,

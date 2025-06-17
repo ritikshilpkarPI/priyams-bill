@@ -295,10 +295,9 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       const updatedExpiryDates = [...purchasedItemFormData.expiryDates];
       updatedExpiryDates[idx] = {
         ...updatedExpiryDates[idx],
-        images: imageData.map(img => ({
-          ...img,
-          expiryDateIndex: idx 
-        }))
+        images: {
+          expiryImages: imageData
+        }
       };
       dispatch(setPurchasedItemDetailForm({
         expiryDates: updatedExpiryDates
@@ -370,7 +369,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           maxFiles={2}
                           maxSize={2 * 1024 * 1024}
                           acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
-                          initialImages={purchasedItemFormData.barcodeImages || []}
+                          initialImages={purchasedItemFormData?.images?.barcodeImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('barcode', files)}
                         />
@@ -399,7 +398,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           maxFiles={2}
                           maxSize={2 * 1024 * 1024}
                           acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
-                          initialImages={purchasedItemFormData.itemNameImages || []}
+                          initialImages={purchasedItemFormData?.images?.itemNameImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('itemName', files)}
                         />
@@ -424,7 +423,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           maxFiles={2}
                           maxSize={2 * 1024 * 1024}
                           acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
-                          initialImages={purchasedItemFormData.packetQtyImages || []}
+                          initialImages={purchasedItemFormData?.images?.packetQtyImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('packetQty', files)}
                         />
@@ -446,7 +445,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           maxFiles={2}
                           maxSize={2 * 1024 * 1024}
                           acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
-                          initialImages={purchasedItemFormData.unitImages || []}
+                          initialImages={purchasedItemFormData?.images?.unitImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('unit', files)}
                         />
@@ -468,7 +467,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           maxFiles={2}
                           maxSize={2 * 1024 * 1024}
                           acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
-                          initialImages={purchasedItemFormData.mrpImages || []}
+                          initialImages={purchasedItemFormData?.images?.mrpImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('mrp', files)}
                         />
@@ -601,7 +600,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           maxFiles={2}
                           maxSize={2 * 1024 * 1024}
                           acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
-                          initialImages={purchasedItemFormData.costPriceImages || []}
+                          initialImages={purchasedItemFormData?.images?.costPriceImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('costPrice', files)}
                         />
@@ -622,7 +621,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           maxFiles={2}
                           maxSize={2 * 1024 * 1024}
                           acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
-                          initialImages={purchasedItemFormData.sellingPriceImages || []}
+                          initialImages={purchasedItemFormData?.images?.sellingPriceImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('sellingPrice', files)}
                         />
@@ -657,7 +656,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           maxFiles={2}
                           maxSize={2 * 1024 * 1024}
                           acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
-                          initialImages={purchasedItemFormData.stockQuantityImages || []}
+                          initialImages={purchasedItemFormData?.images?.stockQuantityImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('stockQuantity', files)}
                         />

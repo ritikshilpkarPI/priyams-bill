@@ -235,14 +235,7 @@ declare global {
       companyId: string;
     };
     newItem?: boolean;
-    barcodeImages?: []
-    itemNameImages?: []
-    unitImages?: []
-    mrpImages?: []
-    packetQtyImages?:[]
-    costPriceImages?:[]
-    sellingPriceImages?: []
-    stockQuantityImages?:[]
+    images?: ItemImages;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -256,7 +249,7 @@ declare global {
     value: number;
     mfgDate: Date;
     date: Date;
-    images?: CloudImage[];
+    images?: ItemImages;
   }
 
   interface ItemExpiryTableProps {
@@ -1361,6 +1354,21 @@ export interface CloudImage {
   secure_url: string;
 }
 
+interface ItemImages {
+  barcodeImages?: CloudImage[];
+  itemNameImages?: CloudImage[];
+  packetQtyImages?: CloudImage[];
+  unitImages?: CloudImage[];
+  mrpImages?: CloudImage[];
+  costPriceImages?: CloudImage[];
+  sellingPriceImages?: CloudImage[];
+  stockQuantityImages?: CloudImage[];
+  expiryImages?: CloudImage[];
+  billImages?: CloudImage[];
+  paymentImages?: CloudImage[];
+  otherImages?: CloudImage[];
+}
+
 export interface ImagePreviewProps {
   images: CloudImage[];
   title: string;
@@ -1371,7 +1379,7 @@ export interface ImageUploadComponentProps {
   maxFiles?: number;
   maxSize?: number; 
   acceptedFileTypes?: string[];
-  initialImages?: any[];
+  initialImages?: any;
   disabled?: boolean;
   className?: string;
   size?: number;

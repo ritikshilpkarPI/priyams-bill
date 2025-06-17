@@ -81,7 +81,9 @@ export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
   };
 
   useEffect(() => {
-    const initialPreviews = initialImages.map(image => {
+    console.log({initialImages});
+    if (!initialImages || initialImages.length === 0) return;
+    const initialPreviews = initialImages?.map((image: { secure_url: any; }) => {
       return image?.secure_url ? image?.secure_url : image;
     })
     setPreviews(initialPreviews);

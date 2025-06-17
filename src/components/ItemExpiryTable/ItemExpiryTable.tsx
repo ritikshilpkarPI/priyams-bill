@@ -4,6 +4,7 @@ import { IconX, IconEdit, IconTrash } from '@tabler/icons-react';
 import { ImageUploadComponent } from '../ImageUploadComponent/ImageUploadComponent';
 import { ImagePreview } from '../ImagePreview/ImagePreview';
 import { ShelfLifeInfo } from '../shelfLifeInfo/ShelfLifeInfo';
+import { CloudImage } from 'src/types';
 
 export interface ItemExpiryTableProps {
   expiryDates: ItemExpiryDateType[];
@@ -13,6 +14,7 @@ export interface ItemExpiryTableProps {
   onEdit?: (idx: number) => void;
   onImagesChange?: (idx: number, files: File[]) => void;
   disabled?: boolean;
+  images?: CloudImage[];
 }
 
 export const ItemExpiryTable = ({
@@ -23,6 +25,7 @@ export const ItemExpiryTable = ({
   onEdit,
   onImagesChange,
   disabled = false,
+  images = [],
 }: ItemExpiryTableProps) => {
   const totalExpiryQuantity = expiryDates.reduce(
     (acc, expiryDate) => acc + Number(expiryDate.value || 0),
@@ -31,7 +34,7 @@ export const ItemExpiryTable = ({
 
   const rows = expiryDates.map((expiryDate, idx) => {
     const mfgDate = new Date(expiryDate.mfgDate);
-    const expDate = new Date(expiryDate.date);
+    const expDate = new Date(expiryDate.date);    
 
     return (
       <tr key={idx}>
@@ -43,11 +46,25 @@ export const ItemExpiryTable = ({
         </td>
         <td>
           <Group spacing="xs">
-            <ImagePreview 
-              images={expiryDate.images || []} 
-              title={`Expiry Images - ${expDate.toLocaleDateString('en-GB')}`} 
+            <ImagePreview
+              images={expiryDate.images?.expiryImages || images}
+              title={`Expiry Date ${idx + 1}`}
             />
-            
+            {onImagesChange && !disabled && (
+              <Box>
+                <Text size="xs" color="dimmed" mb={4}>
+                  Upload Expiry Images {idx + 1}
+                </Text>
+                <ImageUploadComponent
+                  onImagesChange={(files) => onImagesChange(idx, files)}
+                  maxFiles={2}
+                  maxSize={2 * 1024 * 1024}
+                  acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                  initialImages={expiryDate.images?.expiryImages || images}
+                  size={24}
+                />
+              </Box>
+            )}
           </Group>
         </td>
         {showActions && (

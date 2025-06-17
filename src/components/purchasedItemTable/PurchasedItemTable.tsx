@@ -104,50 +104,50 @@ export const PurchasedItemTable = ({
       <td>
         <Group spacing="xs">
           <Text>{purchasedItem?.barcode || '-'}</Text>
-          <ImagePreview images={purchasedItem?.barcodeImages || []} title="Barcode Images" />
+          <ImagePreview images={purchasedItem?.images?.barcodeImages || []} title="Barcode Images" />
         </Group>
       </td>
       <td>
         <Group spacing="xs">
           <Text>{purchasedItem?.inputName || '-'}</Text>
-          <ImagePreview images={purchasedItem?.itemNameImages || []} title="Item Name Images" />
+          <ImagePreview images={purchasedItem?.images?.itemNameImages || []} title="Item Name Images" />
         </Group>
       </td>
       <td>
         <Group spacing="xs">
           <Text>{purchasedItem?.itemQuantity || '-'}</Text>
-          <ImagePreview images={purchasedItem?.packetQtyImages || []} title="Packet Quantity Images" />
+          <ImagePreview images={purchasedItem?.images?.packetQtyImages || []} title="Packet Quantity Images" />
         </Group>
       </td>
       <td>
         <Group spacing="xs">
           <Text>{purchasedItem?.unit || '-'}</Text>
-          <ImagePreview images={purchasedItem?.unitImages || []} title="Unit Images" />
+          <ImagePreview images={purchasedItem?.images?.unitImages || []} title="Unit Images" />
         </Group>
       </td>
       <td>
         <Group spacing="xs">
           <Text>{purchasedItem?.mrp || '-'}</Text>
-          <ImagePreview images={purchasedItem?.mrpImages || []} title="MRP Images" />
+          <ImagePreview images={purchasedItem?.images?.mrpImages || []} title="MRP Images" />
         </Group>
       </td>
       <td>
         <Group spacing="xs">
           <Text>{purchasedItem?.costPrice || '-'}</Text>
-          <ImagePreview images={purchasedItem?.costPriceImages || []} title="Cost Price Images" />
+          <ImagePreview images={purchasedItem?.images?.costPriceImages || []} title="Cost Price Images" />
         </Group>
       </td>
       <td>
         <Group spacing="xs">
           <Text>{purchasedItem?.sellingPrice || '-'}</Text>
-          <ImagePreview images={purchasedItem?.sellingPriceImages || []} title="Selling Price Images" />
+          <ImagePreview images={purchasedItem?.images?.sellingPriceImages || []} title="Selling Price Images" />
         </Group>
       </td>
       <td>{purchasedItem?.profitPercentage || '-'}</td>
       <td>
         <Group spacing="xs">
           <Text>{purchasedItem?.stockQuantity || '-'}</Text>
-          <ImagePreview images={purchasedItem?.stockQuantityImages || []} title="Stock Quantity Images" />
+          <ImagePreview images={purchasedItem?.images?.stockQuantityImages || []} title="Stock Quantity Images" />
         </Group>
       </td>
       <td>{purchasedItem?.itemRemark || '-'}</td>
@@ -157,6 +157,7 @@ export const PurchasedItemTable = ({
           <ItemExpiryTable
             expiryDates={purchasedItem.expiryDates}
             onRemove={() => console.log('Function not implemented yet')}
+            images={purchasedItem.images?.expiryImages || []}
           />
         ) : (
           '-'
