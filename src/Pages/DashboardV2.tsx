@@ -92,6 +92,11 @@ import {
   setSelectedItem,
   setExpandedCategories,
   setExpandedBrands,
+  setPage,
+  setRowsPerPage,
+  setAllItemsTrendData,
+  setTotalCount,
+  setDateColumns,
 } from '../redux/dashboard/dashboardSlice';
 import { RootState } from '../redux/store';
 import DataTable from './DataTable';
@@ -176,30 +181,30 @@ const Dashboard: React.FC = () => {
     // Expanded sections
     expandedCategories,
     expandedBrands,
+
+    // Pagination and trend data
+    page,
+    rowsPerPage,
+    allItemsTrendData,
+    totalCount,
+    dateColumns,
   } = useSelector((state: RootState) => state.dashboard);
 
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [allItemsTrendData, setAllItemsTrendData] = useState<any[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [dateColumns, setDateColumns] = useState<Array<{ key: string; label: string }>>([]);
-
   const generateDateColumns = useCallback((start: Date, end: Date) => {
-    const columns = [];
-    const currentDate = new Date(start);
-    const dates: string[] = [];
+    const daysDiff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
     
-    while (currentDate <= end) {
+    const columns = Array.from({ length: daysDiff + 1 }, (_, index) => {
+      const currentDate = new Date(start);
+      currentDate.setDate(start.getDate() + index);
       const dateStr = currentDate.toISOString().split('T')[0];
-      dates.push(dateStr);
-      const formattedDate = currentDate.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: '2-digit'
-      });
-      columns.push({
+      
+      return {
         key: dateStr,
-        label: formattedDate,
+        label: currentDate.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: '2-digit'
+        }),
         minWidth: 100,
         render: (row: any) => {
           const trend = row.itemBillingTrend || [];
@@ -210,12 +215,11 @@ const Dashboard: React.FC = () => {
             <Text size="sm" color="dimmed">0</Text>
           );
         }
-      });
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
+      };
+    });
     
-    setDateColumns(columns);
-  }, []);
+    dispatch(setDateColumns(columns));
+  }, [dispatch]);
 
   // Individual fetch functions for each section
   const fetchSummaryData = useCallback(async (start: Date, end: Date) => {
@@ -352,13 +356,13 @@ const Dashboard: React.FC = () => {
           itemBillingTrend: item.itemBillingTrend || []
         }));
 
-        setAllItemsTrendData(dataWithIds);
-        setTotalCount(response.data.total || 0);
+        dispatch(setAllItemsTrendData(dataWithIds));
+        dispatch(setTotalCount(response.data.total || 0));
       }
     } catch (error) {
       console.error('Error fetching all items trend:', error);
-      setAllItemsTrendData([]);
-      setTotalCount(0);
+      dispatch(setAllItemsTrendData([]));
+      dispatch(setTotalCount(0));
     } finally {
       dispatch(setLoading({ itemTrend: false }));
     }
@@ -493,7 +497,7 @@ const Dashboard: React.FC = () => {
 
   const handlePageChange = (_: unknown, newPage: number) => {
     console.log('Page changed to:', newPage);
-    setPage(newPage);
+    dispatch(setPage(newPage));
   };
 
   const handleRowsPerPageChange = (
@@ -501,7 +505,7 @@ const Dashboard: React.FC = () => {
   ) => {
     const newRowsPerPage = parseInt(e.target.value.toString(), 10);
     console.log('Rows per page changed to:', newRowsPerPage);
-    setRowsPerPage(newRowsPerPage);
+    dispatch(setRowsPerPage(newRowsPerPage));
   };
 
   return (
