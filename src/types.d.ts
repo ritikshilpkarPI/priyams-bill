@@ -235,6 +235,7 @@ declare global {
       companyId: string;
     };
     newItem?: boolean;
+    images?: ItemImages;
   }
 
   interface PurchasedItemDetailFormProps {
@@ -248,6 +249,7 @@ declare global {
     value: number;
     mfgDate: Date;
     date: Date;
+    images?: ItemImages;
   }
 
   interface ItemExpiryTableProps {
@@ -378,6 +380,7 @@ declare global {
     _id: string;
     itemBarcode: string;
     itemName: string;
+    sku: string;
   }
 
   interface PurchaseObjType extends PurchaseOrderDataType {
@@ -513,6 +516,7 @@ declare global {
     destinationRemark?: string;
     sourceRemark?: string;
     error?: any;
+    isNew?: boolean;
   }
   interface StockTransactionType {
   transactionType: string;
@@ -751,6 +755,7 @@ declare global {
     enableDestinationForm?: boolean;
     disabled?: boolean;
     isSourceStaff?: boolean;
+    transactionId?: string;
   }
   interface ShelfLifeInfoProps {
     expiryDate: {
@@ -1330,6 +1335,66 @@ export interface ExpiredItemTableProps {
   setItemsData: (items: any) => void;
   id?: string;
   isLoading?: boolean;
+}
+
+export interface ImageComponentProps {
+  src: string;
+  alt?: string;
+  width?: number | string;
+  height?: number | string;
+  radius?: MantineNumberSize;
+  fit?: 'contain' | 'cover' | 'fill';
+  className?: string;
+  style?: React.CSSProperties;
+  fallbackSrc?: string;
+  withModal?: boolean;
+  modalSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  onClick?: () => void;
+}
+
+export interface CloudImage {
+  public_id: string;
+  secure_url: string;
+}
+
+interface ItemImages {
+  barcodeImages?: CloudImage[];
+  itemNameImages?: CloudImage[];
+  packetQtyImages?: CloudImage[];
+  unitImages?: CloudImage[];
+  mrpImages?: CloudImage[];
+  costPriceImages?: CloudImage[];
+  sellingPriceImages?: CloudImage[];
+  stockQuantityImages?: CloudImage[];
+  expiryImages?: CloudImage[];
+  billImages?: CloudImage[];
+  paymentImages?: CloudImage[];
+  otherImages?: CloudImage[];
+}
+
+export interface ImagePreviewProps {
+  images: CloudImage[];
+  title: string;
+}
+
+export interface ImageUploadComponentProps {
+  onImagesChange?: (files: File[]) => void;
+  maxFiles?: number;
+  maxSize?: number; 
+  acceptedFileTypes?: string[];
+  initialImages?: any;
+  disabled?: boolean;
+  className?: string;
+  size?: number;
+  previewSize?: number; 
+}
+
+export interface PurchasedItemDetailFormProps {
+  onSubmit: (data: PurchasedItemDetailFormType) => void;
+  loading?: boolean;
+  isApprovedPO?: boolean;
+  onItemSelect?: (item: any) => void;
+  purchaseOrderId: string;
 }
 
 export {};
