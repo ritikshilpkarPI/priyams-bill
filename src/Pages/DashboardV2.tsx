@@ -94,6 +94,10 @@ import {
   setExpandedBrands,
 } from '../redux/dashboard/dashboardSlice';
 import { RootState } from '../redux/store';
+import { ItemSearch } from '../components/ItemSearch/ItemSearch';
+import { CONSTANTS } from '../constants/constants';
+import { fetchBillingLeanItems } from '../utils/fetchBillingLeanItems';
+import { AppDispatch } from '../redux/store';
 
 const fetchReport = async <T extends Record<string, any>>(
   reportType: string,
@@ -127,7 +131,7 @@ const fetchReport = async <T extends Record<string, any>>(
 };
 
 const Dashboard: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const {
     // Date ranges
     summaryDateRange,
@@ -283,8 +287,16 @@ const Dashboard: React.FC = () => {
         selectedItem ? fetchReport<any>(REPORT_TYPES.ITEM_BILLING_TREND, start, end, selectedItem) : undefined,
       ]);
       
+      const itemBillingTrend = itemTrendData?.map((itemTrend) => ({
+        billNo: itemTrend.slug,
+        billDate: new Date(itemTrend.createdAt).toLocaleString(),
+        staffName: itemTrend.staffId?.name || 'N/A',
+        itemQuantity: itemTrend.totalNumberOfItems,
+        sellingPriceTotal: itemTrend.billAmountTotal,
+        discountTotal: itemTrend.billDiscountTotal,
+      })) || [];
       dispatch(setOverallItemBilling(overallBillingData));
-      dispatch(setItemBillingTrend(itemTrendData));
+      dispatch(setItemBillingTrend(itemBillingTrend));
     } finally {
       dispatch(setLoading({ itemTrend: false, overallTrend: false }));
     }
@@ -338,6 +350,10 @@ const Dashboard: React.FC = () => {
       fetchTrendData(trendDateRange[0], trendDateRange[1]);
     }
   }, [trendDateRange, fetchTrendData]);
+
+  useEffect(() => {
+    dispatch(fetchBillingLeanItems('', '', CONSTANTS.STORE));
+  }, []);
 
   // Build Select options for "Item Billing Trend"
   const itemOptions = (topByQty || [])
@@ -408,6 +424,13 @@ const Dashboard: React.FC = () => {
     item.lastSale ? new Date(item.lastSale).toLocaleDateString() : 'N/A',
     item.staffName || '-',
   ];
+
+  const onItemSelect = async (item: { itemDetail: BillLeanItemType }) => {
+    const itemDetails = item?.itemDetail;
+    if (!itemDetails?._id) return;
+    console.log(item);
+    dispatch(setSelectedItem(item.itemDetail.sku))
+  };
 
   return (
     <Container size="xl" py="xl">
@@ -787,17 +810,17 @@ const Dashboard: React.FC = () => {
                   w={400}
                   withinPortal
                 />
-                <Select
-                  placeholder="Select item"
-                  label="Item"
-                  data={itemOptions}
-                  value={selectedItem}
-                  onChange={(value) => dispatch(setSelectedItem(value))}
-                  w={200}
-                  size="xs"
-                />
               </Group>
             </Group>
+            <ItemSearch 
+              onItemSelect={onItemSelect} 
+              isApprovedPO={false} 
+              isWarehouse={false} />
+            {selectedItem && (
+              <Text size="sm" color="dimmed" mt={-8} mb="md">
+                {selectedItem}
+              </Text>
+            )}
             <TableSection
               title=""
               columns={[

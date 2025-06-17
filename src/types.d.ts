@@ -378,6 +378,7 @@ declare global {
     _id: string;
     itemBarcode: string;
     itemName: string;
+    sku: string;
   }
 
   interface PurchaseObjType extends PurchaseOrderDataType {
