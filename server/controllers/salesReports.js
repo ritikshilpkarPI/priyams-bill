@@ -521,71 +521,6 @@ const getTopDealersByAmount = async (startDate, endDate, limit = 10) => {
   return result;
 };
 
-const getAllItemsTrendReportList = async (startDate, lastDate, page = 1, limit = 10) => {
-  page = Math.max(1, parseInt(page) || 1);
-  limit = Math.max(1, Math.min(100, parseInt(limit) || 10));
-  const skip = (page - 1) * limit;
-
-  const unwindedItemDetails = await Bill.aggregate([
-    {
-      $match: {
-        createdAt: { $gte: new Date(startDate), $lte: new Date(lastDate) },
-      },
-    },
-    {
-      $unwind: '$items',
-    },
-    {
-      $lookup: {
-        from: 'items',
-        localField: 'items.itemDetail',
-        foreignField: '_id',
-        as: 'itemDetails'
-      }
-    },
-    {
-      $unwind: '$itemDetails'
-    },
-    {
-      $group: {
-        _id: '$items.itemDetail',
-        staffId: { $first: '$staffId' },
-        itemDetail: { $first: '$itemDetails' },
-        itemBillingTrend: { $push: {
-          date: '$createdAt',
-          quantity: '$items.itemQuantityInBill',
-        }},
-      },
-    },
-    {
-      $facet: {
-        metadata: [{ $count: "total" }],
-        data: [
-          { $skip: skip },
-          { $limit: limit }
-        ]
-      }
-    }
-  ]);
-
-  const allItemsBillingTrend = await Bill.populate(unwindedItemDetails[0].data, [
-    {
-      path: 'staffId',
-      model: 'staff',
-      select: 'name'
-    }
-  ]);
-
-  // Format response to match what fetchAllPaginatedItems expects
-  return {
-    data: allItemsBillingTrend,
-    total: unwindedItemDetails[0].metadata[0]?.total || 0,
-    page,
-    limit,
-    totalPages: Math.ceil((unwindedItemDetails[0].metadata[0]?.total || 0) / limit)
-  };
-};
-
 // Main controller function to handle all report requests
 const getSalesReport = async (req, res, next) => {
   try {
@@ -634,10 +569,6 @@ const getSalesReport = async (req, res, next) => {
         break;
       case 'allItemsBillingTrend':
         report = await getAllItemsTrendReport(dateRange.startDate, dateRange.endDate);
-        break;
-      case 'allItemsBillingTrendList':
-        const { page = 1, limit: pageLimit = 10 } = req.body;
-        report = await getAllItemsTrendReportList(dateRange.startDate, dateRange.endDate, page, pageLimit);
         break;
       case 'purchasedItems':
         report = await getPurchasedItemsReport(dateRange.startDate, dateRange.endDate);

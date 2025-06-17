@@ -20,8 +20,6 @@ import { API_METHODS } from '../utils/constants/apiMethods';
 import { fetchAllPaginatedAPI } from '../utils/fetchPaginatedAPI';
 import ItemTrendTable from 'src/components/ItemTrendTable';
 import { CONSTANTS } from '../constants/constants';
-import { calculateWeeklyAverage } from '../utils/calculations';
-
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
@@ -32,6 +30,28 @@ const formatDate = (dateString) => {
     .replace(/,/g, '')  // Remove commas
     .replace(/ /g, '-'); // 30-Dec-23 format
 };
+
+const calculateWeeklyAverage = (item, dates) => {
+  const totalDays = dates.length;
+  if (totalDays < 7) return null;
+
+  const quantityMap = {};
+  if (item.itemBillingTrend) {
+    item.itemBillingTrend.forEach((entry) => {
+      const date = new Date(entry.date).toISOString().split('T')[0];
+      quantityMap[date] = (quantityMap[date] || 0) + entry.quantity;
+    });
+  }
+
+  const totalQuantity = Object.values(quantityMap).reduce(
+    (sum, quantity) => sum + quantity,
+    0
+  );
+  const weeks = totalDays / 7;
+
+  return Number((totalQuantity / weeks).toFixed(2));
+};
+
 
 const generateAllItemsBillingTrendCSV = (items, dateRange) => {
   const start = new Date(dateRange[0]);

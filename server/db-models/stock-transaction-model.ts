@@ -70,10 +70,6 @@ const StockTransactionSchema = new Schema<StockTransactionType>(
           required: true,
           ref: 'Item',
         },
-        isNew:{ 
-          type: Boolean,
-          default:false
-        },
         itemByDate: [
           {
             sourceQuantity: {

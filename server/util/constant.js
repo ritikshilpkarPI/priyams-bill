@@ -13,13 +13,3 @@ export const clodinaryFoldersPathKey= Object.freeze({
     expiredItemsBatch: 'expiredItemsBatch',
     other: 'other'
 })
-
-
-export const POItemImageTypes = [
-      'barcodeImages',
-      'itemNameImages',
-      'packetQtyImages',
-      'unitImages',
-      'mrpImages',
-      'stockQuantityImages'
-    ];
