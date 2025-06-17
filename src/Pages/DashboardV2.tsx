@@ -428,10 +428,8 @@ const Dashboard: React.FC = () => {
   const onItemSelect = async (item: { itemDetail: BillLeanItemType }) => {
     const itemDetails = item?.itemDetail;
     if (!itemDetails?._id) return;
-    console.log(item);
     dispatch(setSelectedItem(item.itemDetail.sku))
   };
-console.log(itemBillingTrend);
 
   return (
     <Container size="xl" py="xl">
