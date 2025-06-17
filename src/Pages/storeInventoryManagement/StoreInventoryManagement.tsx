@@ -31,7 +31,6 @@ import {
   addNewStockTransactionsAPI,
   addNewStockTransactionsBySourceAPI,
   approveStockTransactionsAPI,
-  copyTransactionAPI,
   getAllStaffsByStoreIdAPI,
   getAllStoresAPI,
   getStockTransactionsApi,
@@ -447,22 +446,8 @@ try {
   
 };
   
-const createTransactionCopy = async () => {
-  if (!transactionId) {
-    toast.error(MESSAGES.STOCK_TRANSACTIONS.TRANSACTION_NOT_FOUND);
-    return;
-  }
-  setLoading(true);
-  const response = await copyTransactionAPI(transactionId);
-  setLoading(false);
-  if (response?.transaction) {
-    const newTransactionId = response?.transaction?._id;
-    if (newTransactionId) {
-      window.open(`/createTransaction/${newTransactionId}`, '_blank');
-      toast.success(MESSAGES.STOCK_TRANSACTIONS.COPIED_SUCCESS);
-    }
-  }
-};  
+  console.log("inventoryItems: ",inventoryItems);
+  
 
   return (
     <Flex
@@ -491,20 +476,6 @@ const createTransactionCopy = async () => {
           </Chip>
         )}
         </Grid.Col>
-
-        {transactionId && (
-          <Group position="left" mb={'26px'} mr={'26px'}  >
-                  <Button
-                    variant="filled"
-                    color="blue"
-                    onClick={createTransactionCopy}
-                    className='copy-transaction-cta'
-                    loading={loading}
-                  >
-                    Copy Transaction
-                  </Button>
-          </Group>
-        )}
 
        
 
@@ -566,7 +537,6 @@ const createTransactionCopy = async () => {
               enableDestinationForm={transactionId ? true : false}
               disabled={ stockTransaction?.approvedByAdmin || (!isAdminUser  && stockTransaction.transactionReason === CONSTANTS.TRANSACTION_REASON.QUANTITY_UPDATE ) }
               isSourceStaff={isSourceStaff}
-              transactionId={transactionId}
             />
           )}
         </Grid.Col>

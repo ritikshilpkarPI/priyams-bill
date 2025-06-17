@@ -47,13 +47,6 @@ interface DashboardState {
   // Expanded sections
   expandedCategories: Record<string, boolean>;
   expandedBrands: Record<string, boolean>;
-
-  // Pagination and trend data
-  page: number;
-  rowsPerPage: number;
-  allItemsTrendData: any[];
-  totalCount: number;
-  dateColumns: Array<{ key: string; label: string }>;
 }
 
 const getDefaultDateRange = (): DateRange => {
@@ -123,13 +116,6 @@ const initialState: DashboardState = {
   // Expanded sections
   expandedCategories: {},
   expandedBrands: {},
-
-  // Pagination and trend data
-  page: 1,
-  rowsPerPage: 10,
-  allItemsTrendData: [],
-  totalCount: 0,
-  dateColumns: [],
 };
 
 const dashboardSlice = createSlice({
@@ -246,23 +232,6 @@ const dashboardSlice = createSlice({
       state.expandedBrands = action.payload;
     },
 
-    // Pagination and trend data setters
-    setPage: (state, action: PayloadAction<number>) => {
-      state.page = action.payload;
-    },
-    setRowsPerPage: (state, action: PayloadAction<number>) => {
-      state.rowsPerPage = action.payload;
-    },
-    setAllItemsTrendData: (state, action: PayloadAction<any[]>) => {
-      state.allItemsTrendData = action.payload;
-    },
-    setTotalCount: (state, action: PayloadAction<number>) => {
-      state.totalCount = action.payload;
-    },
-    setDateColumns: (state, action: PayloadAction<Array<{ key: string; label: string }>>) => {
-      state.dateColumns = action.payload;
-    },
-
     // Reset state
     resetDashboard: (state) => {
       Object.assign(state, initialState);
@@ -316,13 +285,6 @@ export const {
   // Expanded sections actions
   setExpandedCategories,
   setExpandedBrands,
-
-  // Pagination and trend data actions
-  setPage,
-  setRowsPerPage,
-  setAllItemsTrendData,
-  setTotalCount,
-  setDateColumns,
 
   // Reset action
   resetDashboard,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Box, Button, Flex, Table, Title, Group, Text } from '@mantine/core';
+import { Badge, Box, Button, Flex, Table, Title } from '@mantine/core';
 import { useSelector } from 'react-redux';
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import { ItemExpiryTable } from '../ItemExpiryTable/ItemExpiryTable';
@@ -12,7 +12,6 @@ import { convertDateToISO } from 'src/utils/convertDateToISO';
 import { convertMonthDates } from 'src/utils/convertMonthDates';
 import { formatSoldItemsByDate } from 'src/utils/formatSoldItemsByDate';
 import { CONSTANTS } from '../../constants/constants';
-import { ImagePreview } from '../ImagePreview/ImagePreview';
 
 export const PurchasedItemTable = ({
   onRemove,
@@ -101,55 +100,15 @@ export const PurchasedItemTable = ({
 
   const rows = purchasedItems?.map((purchasedItem, idx) => (
     <tr key={`${purchasedItem._id}_${idx}`} className="purchased-item-table-row">
-      <td>
-        <Group spacing="xs">
-          <Text>{purchasedItem?.barcode || '-'}</Text>
-          <ImagePreview images={purchasedItem?.images?.barcodeImages || []} title="Barcode Images" />
-        </Group>
-      </td>
-      <td>
-        <Group spacing="xs">
-          <Text>{purchasedItem?.inputName || '-'}</Text>
-          <ImagePreview images={purchasedItem?.images?.itemNameImages || []} title="Item Name Images" />
-        </Group>
-      </td>
-      <td>
-        <Group spacing="xs">
-          <Text>{purchasedItem?.itemQuantity || '-'}</Text>
-          <ImagePreview images={purchasedItem?.images?.packetQtyImages || []} title="Packet Quantity Images" />
-        </Group>
-      </td>
-      <td>
-        <Group spacing="xs">
-          <Text>{purchasedItem?.unit || '-'}</Text>
-          <ImagePreview images={purchasedItem?.images?.unitImages || []} title="Unit Images" />
-        </Group>
-      </td>
-      <td>
-        <Group spacing="xs">
-          <Text>{purchasedItem?.mrp || '-'}</Text>
-          <ImagePreview images={purchasedItem?.images?.mrpImages || []} title="MRP Images" />
-        </Group>
-      </td>
-      <td>
-        <Group spacing="xs">
-          <Text>{purchasedItem?.costPrice || '-'}</Text>
-          <ImagePreview images={purchasedItem?.images?.costPriceImages || []} title="Cost Price Images" />
-        </Group>
-      </td>
-      <td>
-        <Group spacing="xs">
-          <Text>{purchasedItem?.sellingPrice || '-'}</Text>
-          <ImagePreview images={purchasedItem?.images?.sellingPriceImages || []} title="Selling Price Images" />
-        </Group>
-      </td>
+      <td>{purchasedItem?.barcode || '-'}</td>
+      <td>{purchasedItem?.inputName || '-'}</td>
+      <td>{purchasedItem?.itemQuantity || '-'}</td>
+      <td>{purchasedItem?.unit || '-'}</td>
+      <td>{purchasedItem?.mrp || '-'}</td>
+      <td>{purchasedItem?.costPrice || '-'}</td>
+      <td>{purchasedItem?.sellingPrice || '-'}</td>
       <td>{purchasedItem?.profitPercentage || '-'}</td>
-      <td>
-        <Group spacing="xs">
-          <Text>{purchasedItem?.stockQuantity || '-'}</Text>
-          <ImagePreview images={purchasedItem?.images?.stockQuantityImages || []} title="Stock Quantity Images" />
-        </Group>
-      </td>
+      <td>{purchasedItem?.stockQuantity || '-'}</td>
       <td>{purchasedItem?.itemRemark || '-'}</td>
       <td>{purchasedItem?.itemHasExpiry !== null? purchasedItem?.itemHasExpiry? CONSTANTS.YES : CONSTANTS.NO : "-"}</td>
       <td>
@@ -157,21 +116,21 @@ export const PurchasedItemTable = ({
           <ItemExpiryTable
             expiryDates={purchasedItem.expiryDates}
             onRemove={() => console.log('Function not implemented yet')}
-            images={purchasedItem.images?.expiryImages || []}
           />
         ) : (
           '-'
         )}
       </td>
       <td>
-        {(
-          (isApprovedPO && ( purchasedItem?.newItem)) ||
-          (!isApprovedPO && (!purchasedItem.item_id || purchasedItem?.newItem))
-        ) && (
-          <Badge color="green">New Item</Badge>
-        )}
-      </td>     
-      <td className="purchased-item-table-action-td">
+  {(
+    (isApprovedPO && ( purchasedItem?.newItem)) ||
+    (!isApprovedPO && (!purchasedItem.item_id || purchasedItem?.newItem))
+  ) && (
+    <Badge color="green">New Item</Badge>
+  )}
+</td>     
+
+       <td className="purchased-item-table-action-td">
         <Button
           disabled={Boolean(loadingRemoveItemById) || isApprovedPO}
           variant="default"

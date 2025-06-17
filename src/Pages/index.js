@@ -26,4 +26,3 @@ export const NewInventoryPage = lazy(()=> import("./NewInventoryPage"));
 export const ItemPurchaseOrdersPage = lazy (()=> import("./ItemPurchaseOrdersPage"));
 export const Dashboard = lazy(() => import('./DashboardV2'));
 export const DealerCatalog = lazy(() => import("./dealerCatalog/DealerCatalog"));
-export const StockTransactionsPage = lazy (()=> import("./stockTransactionsPage/StockTransactionsPage"));

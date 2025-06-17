@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DealerDetailForm } from '../../components/dealerDetailForm/DealerDetailForm';
-import {  Flex, Chip, Group, LoadingOverlay, Tabs, Title, Badge, Button } from '@mantine/core';
+import {  Flex, Chip, Group, LoadingOverlay, Tabs, Title, Badge } from '@mantine/core';
 import './NewPurchaseOrder.css';
 import { useDispatch } from 'react-redux';
 import PurchasedItemPanel from '../../components/purchasedItemPanel/PurchasedItemPanel';
-import { copyPurchaseOrderAPI, getPurchaseOrderDetailsAPI } from '../../utils/apiUtils';
+import { getPurchaseOrderDetailsAPI } from '../../utils/apiUtils';
 import {
   resetPurchaseOrder,
   setPurchaseOrder,
@@ -31,7 +31,6 @@ import { TAB, TabChip, TabKey } from 'src/components/TabChip';
 import { useSelector } from 'react-redux';
 
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
-import MESSAGES from 'src/utils/constants/messages';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -141,26 +140,6 @@ const NewPurchaseOrder = () => {
     setIsApprovedPO(isApproved);
   },[isApproved])
 
-  const createPOCopy = async () => {
-    if (!purchaseOrderId) {
-      toast.error(MESSAGES.PURCHASE_ORDER_NOT_FOUND);
-      return;
-    }
-    setLoading(true);
-    const response = await copyPurchaseOrderAPI(purchaseOrderId);
-    setLoading(false);
-
-    if(response?.order){
-      const newPurchaseOrderId = response?.order?._id;
-      if (newPurchaseOrderId) {
-        window.open(`/new-purchase-order/${newPurchaseOrderId}`, '_blank');
-        toast.success(MESSAGES.PURCHASE_ORDER_COPIED_SUCCESS);
-      }
-    }
-    
-   
-  }
-
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
        <Flex className='purchase-order-title-wrapper' columnGap={30} wrap={'wrap'} align={'center'} justify={'center'}>
@@ -171,17 +150,6 @@ const NewPurchaseOrder = () => {
           </Chip>
         )}
       </Flex>
-    { purchaseOrderId && <Group position="right" mb={'26px'} mr={'26px'}  >
-        <Button
-          variant="filled"
-          color="blue"
-          onClick={createPOCopy}
-          className='copy-po-cta'
-          loading={loading}
-        >
-          Create PO Copy
-        </Button>
-      </Group>}
       <Tabs
         variant="default"
         color="black"

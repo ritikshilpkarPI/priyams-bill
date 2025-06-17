@@ -84,7 +84,6 @@ import { addAllowedRoutesToMultipleStaff } from './addAllowedRoutesToMultipleSta
 import { removeAllowedRoutes } from './removeAllowedRoutes';
 import { addAllowedRoutesToStaff } from './addAllowedRoutesToStaff';
 import { getDealerCatalog } from './getDealerCatalog';
-import { getStockTransactionsByStatus } from './getStockTransactionsByStatus';
 
 export {
   addBulkItems,
@@ -173,5 +172,4 @@ export {
   removeAllowedRoutes,
   addAllowedRoutesToMultipleStaff,
   getDealerCatalog,
-  getStockTransactionsByStatus,
 };
