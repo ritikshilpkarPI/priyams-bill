@@ -289,7 +289,7 @@ const Dashboard: React.FC = () => {
       
       const itemBillingTrend = itemTrendData?.map((itemTrend) => ({
         billNo: itemTrend.slug,
-        billDate: new Date(itemTrend.createdAt).toLocaleString(),
+        billDate: itemTrend.createdAt,
         staffName: itemTrend.staffId?.name || 'N/A',
         itemQuantity: itemTrend.totalNumberOfItems,
         sellingPriceTotal: itemTrend.billAmountTotal,
@@ -431,6 +431,7 @@ const Dashboard: React.FC = () => {
     console.log(item);
     dispatch(setSelectedItem(item.itemDetail.sku))
   };
+console.log(itemBillingTrend);
 
   return (
     <Container size="xl" py="xl">
