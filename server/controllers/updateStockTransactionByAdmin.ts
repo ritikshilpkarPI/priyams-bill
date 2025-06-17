@@ -183,8 +183,8 @@ export const updateStockTransactionByAdmin = async (
     }
 
     if (adminRemark !== undefined) {
-      updateFields.adminRemark = adminRemark;
-      updateFields.transactionStatus = 'approved';
+      transaction.adminRemark = adminRemark;
+      transaction.transactionStatus = CONSTANTS.TRANSACTIONS_STATUS.DESTINATION_UPDATED;
     }
 
     const updatedTransaction = await StockTransactionModel.findOneAndUpdate(

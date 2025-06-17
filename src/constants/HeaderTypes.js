@@ -45,13 +45,25 @@ export const sidebarListData = [
         url: '/barcodePrint',
         icon: 'images/barcode.svg',
       },
-      { name: 'New Transaction', url: '/createTransaction', icon: 'images/inventory.png' },
       {
         name: 'Stock Transaction',
         url: '/stockTransactions',
         icon: 'images/inventory-management.svg'
       }
     ],
+  },
+  {
+    TRANSACTIONS:[
+      { name: 'Create Transaction', 
+        url: '/create-transaction', 
+        icon: 'images/createTransaction.svg' 
+      },
+      {
+        name: 'View Transactions',
+        url: '/stock-transactions',
+        icon: 'images/viewTransaction.svg'
+      }
+    ]
   },
   {
     BILL: [

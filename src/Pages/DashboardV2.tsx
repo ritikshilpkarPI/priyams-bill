@@ -99,6 +99,10 @@ import {
   setDateColumns,
 } from '../redux/dashboard/dashboardSlice';
 import { RootState } from '../redux/store';
+import { ItemSearch } from '../components/ItemSearch/ItemSearch';
+import { CONSTANTS } from '../constants/constants';
+import { fetchBillingLeanItems } from '../utils/fetchBillingLeanItems';
+import { AppDispatch } from '../redux/store';
 import DataTable from './DataTable';
 import { calculateWeeklyAverage } from '../utils/calculations';
 
@@ -134,7 +138,7 @@ const fetchReport = async <T extends Record<string, any>>(
 };
 
 const Dashboard: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const {
     // Date ranges
     summaryDateRange,
@@ -328,8 +332,16 @@ const Dashboard: React.FC = () => {
         selectedItem ? fetchReport<any>(REPORT_TYPES.ITEM_BILLING_TREND, start, end, selectedItem) : undefined,
       ]);
       
+      const itemBillingTrend = itemTrendData?.map((itemTrend) => ({
+        billNo: itemTrend.slug,
+        billDate: itemTrend.createdAt,
+        staffName: itemTrend.staffId?.name || 'N/A',
+        itemQuantity: itemTrend.totalNumberOfItems,
+        sellingPriceTotal: itemTrend.billAmountTotal,
+        discountTotal: itemTrend.billDiscountTotal,
+      })) || [];
       dispatch(setOverallItemBilling(overallBillingData));
-      dispatch(setItemBillingTrend(itemTrendData));
+      dispatch(setItemBillingTrend(itemBillingTrend));
     } finally {
       dispatch(setLoading({ itemTrend: false, overallTrend: false }));
     }
@@ -425,6 +437,10 @@ const Dashboard: React.FC = () => {
     }
   }, [page, rowsPerPage, trendDateRange, fetchAllItemsTrend]);
 
+  useEffect(() => {
+    dispatch(fetchBillingLeanItems('', '', CONSTANTS.STORE));
+  }, []);
+
   // Build Select options for "Item Billing Trend"
   const itemOptions = (topByQty || [])
     .filter(item => item.sku || item.itemName)
@@ -494,6 +510,41 @@ const Dashboard: React.FC = () => {
     item.lastSale ? new Date(item.lastSale).toLocaleDateString() : 'N/A',
     item.staffName || '-',
   ];
+
+  const onItemSelect = async (item: { itemDetail: BillLeanItemType }) => {
+    const itemDetails = item?.itemDetail;
+    if (!itemDetails?._id) return;
+    dispatch(setSelectedItem(item.itemDetail.sku));
+    
+    // Fetch trend data for selected item
+    if (isDateRangeComplete(trendDateRange)) {
+      dispatch(setLoading({ itemTrend: true }));
+      try {
+        const itemTrendData = await fetchReport<any>(
+          REPORT_TYPES.ITEM_BILLING_TREND,
+          trendDateRange[0],
+          trendDateRange[1],
+          item.itemDetail.sku
+        );
+
+        const formattedItemTrend = itemTrendData?.map((itemTrend) => ({
+          billNo: itemTrend.slug,
+          billDate: itemTrend.createdAt,
+          staffName: itemTrend.staffId?.name || 'N/A',
+          itemQuantity: itemTrend.totalNumberOfItems,
+          sellingPriceTotal: itemTrend.billAmountTotal,
+          discountTotal: itemTrend.billDiscountTotal,
+        })) || [];
+
+        dispatch(setItemBillingTrend(formattedItemTrend));
+      } catch (error) {
+        console.error('Error fetching item trend:', error);
+        dispatch(setItemBillingTrend([]));
+      } finally {
+        dispatch(setLoading({ itemTrend: false }));
+      }
+    }
+  };
 
   const handlePageChange = (_: unknown, newPage: number) => {
     dispatch(setPage(newPage));
@@ -884,17 +935,17 @@ const Dashboard: React.FC = () => {
                   w={400}
                   withinPortal
                 />
-                <Select
-                  placeholder="Select item"
-                  label="Item"
-                  data={itemOptions}
-                  value={selectedItem}
-                  onChange={(value) => dispatch(setSelectedItem(value))}
-                  w={200}
-                  size="xs"
-                />
               </Group>
             </Group>
+            <ItemSearch 
+              onItemSelect={onItemSelect} 
+              isApprovedPO={false} 
+              isWarehouse={false} />
+            {selectedItem && (
+              <Text size="sm" color="dimmed" mt={-8} mb="md">
+                {selectedItem}
+              </Text>
+            )}
             <TableSection
               title=""
               columns={[

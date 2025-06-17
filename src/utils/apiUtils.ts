@@ -596,7 +596,6 @@ export const itemPurchaseBatchesWebAPI = async ({
   }
 };
 
-
 export const getItemsFromStoreInventoryAPI = async (  
   storeId: string, 
   query: { size: number; page: number; itemNameOrBarcode: string }
@@ -726,7 +725,6 @@ export const updateStockTransactionsAPI = async (
 
 }
 
-
 export const approveStockTransactionsAPI = async (
   transactionsId: string,
   approvedByAdmin: boolean,
@@ -748,6 +746,25 @@ export const approveStockTransactionsAPI = async (
     return { isError: true, error };
   }
 }
+
+export const getStockTransactionsByStatusApi = async (
+  status:string,
+  page:number,
+  limit:number,
+) => {
+  try {
+    const params = new URLSearchParams();
+    if (status) params.append('status', status);
+    if (typeof page === 'number') params.append('page', page.toString());
+    if (typeof limit === 'number') params.append('limit', limit.toString());
+    const response = await postAPI({
+      path: `${API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS_BY_STATUS}?${params.toString()}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
 
 export const getAllExpiryItemsBatchAPI = async (queryParams: ExpiryItemsQueryParams = {}) => {
   try {
@@ -944,3 +961,28 @@ export const getDealerCatalogAPI = async (type: 'dealer' | 'brand' | 'company') 
     return { isError: true, error }
   }
 };
+
+export const copyPurchaseOrderAPI = async (purchaseOrderId: string) => {
+  try {
+    const response = await getAPI({
+      path: `${API_PATHS.PURCHASE_ORDER.COPY_PURCHASE_ORDER}/${purchaseOrderId}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const copyTransactionAPI = async (
+  transactionsId: string
+) => {
+  try {
+    const response = await getAPI({
+      path: `${API_PATHS.STOCK_TRANSACTION.COPY_TRANSACTION}/${transactionsId}`,
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+

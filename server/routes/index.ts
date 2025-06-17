@@ -91,7 +91,9 @@ const {
   approveOrRejectExpiryItemsBatch,
   updateStockTransactionBySource,
   getDealerCatalog,
-
+  getStockTransactionsByStatus,
+  copyPurchaseOrder,
+  copyStockTransaction
 } = require('../controllers/index');
 
 
@@ -205,6 +207,12 @@ router.post(
   API_PATHS.PURCHASE_ORDER.GET_ORDERS_BY_QUERY,
   isLoggedIn,
   getOrdersByQuery
+);
+
+router.get(
+  `${API_PATHS.PURCHASE_ORDER.COPY_PURCHASE_ORDER}/:id`,
+  isLoggedIn,
+  copyPurchaseOrder
 );
 
 router.get(API_PATHS.BILLING.GET_BILL_FEED, isLoggedIn, getAllBill);
@@ -329,6 +337,8 @@ router.post(API_PATHS.STOCK_TRANSACTION.ADD_NEW_STOCK_TRANSACTION, isLoggedIn, a
 router.get(`${API_PATHS.STORE.GET_ITEMS_BY_STORE_ID}/:storeId`, isLoggedIn, getItemsFromStoreInventory);
 router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS, isLoggedIn, getStockTransactions)
 router.post(API_PATHS.STOCK_TRANSACTION.GET_ITEM_TRANSACTIONS, isLoggedIn, getItemTransactions)
+router.post(API_PATHS.STOCK_TRANSACTION.GET_STOCK_TRANSACTIONS_BY_STATUS, getStockTransactionsByStatus)
+router.get(`${API_PATHS.STOCK_TRANSACTION.COPY_TRANSACTION}/:id`, isLoggedIn, copyStockTransaction);
 
 router.get(API_PATHS.EXPIRED_ITEMS_BATCH.GET_ALL_EXPIRED_ITEMS_BATCH, isLoggedIn, getAllExpiryItemsBatch);
 

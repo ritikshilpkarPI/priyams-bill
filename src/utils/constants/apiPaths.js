@@ -13,6 +13,7 @@ export const API_PATHS = {
     GET_ORDERS: '/api/purchaseOrder/orders',
     EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
     GET_ITEM_SOLD:'/api/purchaseOrder/itemSold',
+    COPY_PURCHASE_ORDER: '/api/purchaseOrder/copyPurchaseOrder',
   },
   SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {
@@ -131,12 +132,14 @@ export const API_PATHS = {
     ADD_NEW_STOCK_TRANSACTION: "/api/add-new-stock-transaction",
     UPDATE_DESTINATION: "/api/stockTransaction/updateDestination",
     GET_STOCK_TRANSACTIONS:"/api/stockTransactions",
+    GET_STOCK_TRANSACTIONS_BY_STATUS:"/api/stockTransactions/status",
     UPDATE_STOCK_TRANSACTION_BY_DESTINATION: "/api/stockTransaction/updateStockTransactionByDestination",
     APPROVE_STOCK_TRANSACTION: "/api/stockTransaction/approveStockTransaction",
     POST_BULK_APPROVE_STOCK_TRANSACTIONS: "/api/stockTransaction/bulkApproveStockTransactions",
 
     MISMATCH_STOCK_TRANSACTION: "/api/stock-transactions/mismatch-correction" ,
     UPDATE_STOCK_TRANSACTION_BY_SOURCE: "/api/stockTransaction/updateStockTransactionBySource",
+    COPY_TRANSACTION: "/api/stockTransaction/copyTransaction",
   },
   EXPIRED_ITEMS_BATCH: {
     GET_ALL_EXPIRED_ITEMS_BATCH: "/api/expiry-items-batch/getAllExpiryItemsBatch",
