@@ -55,12 +55,12 @@ export const sidebarListData = [
   {
     TRANSACTIONS:[
       { name: 'Create Transaction', 
-        url: '/create-transaction', 
+        url: '/createTransaction', 
         icon: 'images/createTransaction.svg' 
       },
       {
         name: 'View Transactions',
-        url: '/stock-transactions',
+        url: '/stockTransactions',
         icon: 'images/viewTransaction.svg'
       }
     ]

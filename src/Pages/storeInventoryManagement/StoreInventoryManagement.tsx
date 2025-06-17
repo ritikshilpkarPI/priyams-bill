@@ -255,7 +255,7 @@ const StoreInventoryManagement: React.FC = () => {
     setLoading(true);
      await addNewStockTransactionsAPI(stockTransaction);
     setLoading(false);
-    navigate('/stock-transactions');
+    navigate('/stockTransactions');
     }
    
   };
@@ -375,7 +375,7 @@ const StoreInventoryManagement: React.FC = () => {
       toast.success('Destination added successfully');
       dispatch(resetStoreInventory());
       dispatch(resetStoreStockInventory());
-      navigate('/stock-transactions');
+      navigate('/stockTransactions');
     }
   };
 
@@ -431,7 +431,7 @@ try {
    });
     if (response.success) {
     setLoading(false);
-    navigate('/stock-transactions');
+    navigate('/stockTransactions');
     toast.success('Transaction updated successfully');
     dispatch(resetStoreInventory());
     dispatch(resetStoreStockInventory());
