@@ -151,6 +151,7 @@ const StoreInventory: React.FC = () => {
     },
     { key: 'quantityUnitName', label: 'Unit' },
     { key: 'itemMRPperUnit', label: 'MRP' },
+    { key: 'itemCostPricePerUnit', label: 'CP' },
     { key: 'itemBrandName', label: 'Brand Name' },
     {
       key: 'itemCategory',
