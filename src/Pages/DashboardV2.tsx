@@ -835,22 +835,22 @@ const Dashboard: React.FC = () => {
               <Grid.Col md={6}>
                 <TableSection
                   title="Top Dealers by Quantity"
-                  columns={['Dealer Name', 'Total Orders', 'Quantity', 'Amount']}
+                  columns={['Dealer Name', 'Total Orders', 'Quantity', 'Amount', 'Dealer number']}
                   data={dealersByQty}
                   loading={loading.dealersQty}
                   renderRow={renderDealerQtyRow}
-                  csvHeaders={['Dealer Name', 'Total Orders', 'Quantity', 'Amount']}
+                  csvHeaders={['Dealer Name', 'Total Orders', 'Quantity', 'Amount', 'Dealer number']}
                   mapRowToCSV={mapDealerQtyToCSV}
                 />
               </Grid.Col>
               <Grid.Col md={6}>
                 <TableSection
                   title="Top Dealers by Sales Amount"
-                  columns={['Dealer Name', 'Amount', 'Quantity']}
+                  columns={['Dealer Name', 'Amount', 'Quantity', 'Dealer number']}
                   data={dealersByAmount}
                   loading={loading.dealersAmount}
                   renderRow={renderDealerAmountRow}
-                  csvHeaders={['Dealer Name', 'Amount', 'Quantity']}
+                  csvHeaders={['Dealer Name', 'Amount', 'Quantity', 'Dealer number']}
                   mapRowToCSV={mapDealerAmountToCSV}
                 />
               </Grid.Col>

@@ -249,6 +249,13 @@ export const renderDealerQtyRow = (item: any, idx: number) => (
         ₹{item.totalAmount?.toFixed(2)}
       </Badge>
     </td>
+    <td>
+     <Text size="md" color="dark">
+        <a href={`tel:${item.dealerNumber}`} style={{ color: 'inherit' }}>
+        {item.dealerNumber}
+        </a>
+      </Text>
+    </td>
   </tr>
 );
 
@@ -273,6 +280,13 @@ export const renderDealerAmountRow = (item: any, idx: number) => (
       <Badge size="lg" variant="filled" color="blue">
         {item.totalQuantity}
       </Badge>
+    </td>
+    <td>
+      <Text size="md" color="dark">
+        <a href={`tel:${item.dealerNumber}`} style={{ color: 'inherit' }}>
+        {item.dealerNumber}
+        </a>
+      </Text>
     </td>
   </tr>
 );
