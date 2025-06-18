@@ -236,7 +236,7 @@ const Dashboard: React.FC = () => {
         fetchReport<any>(REPORT_TYPES.TOTAL_DISCOUNT, start, end),
         fetchReport<any>(REPORT_TYPES.TOTAL_MRP, start, end),
       ]);
-
+      
       if (salesData && salesData.length > 0) {
         dispatch(setTotalSales(salesData[0].totalAmountSum ?? 0));
       }
@@ -247,7 +247,7 @@ const Dashboard: React.FC = () => {
         dispatch(setTotalDiscount(discountData[0].totalDiscountSum ?? null));
       }
       if (mrpData && mrpData.length > 0) {
-        dispatch(setTotalMRP(mrpData[0].totalMRPsum ?? null));
+        dispatch(setTotalMRP(mrpData[0].totalMRPSum ?? null));
       }
     } finally {
       dispatch(setLoading({ totalSales: false, totalProfit: false, totalDiscount: false, totalMRP: false }));
@@ -586,12 +586,22 @@ const Dashboard: React.FC = () => {
                   loading={loading.totalSales}
                 />
               </Grid.Col>
+                <Grid.Col xs={6} md={3}>
+                <SummaryCard
+                  label="Total MRP"
+                  value={totalMRP !== null ? `₹${totalMRP.toFixed(2)}` : null}
+                  icon={<IconBuildingStore size={32} color="#7950f2" />}
+                  loading={loading.totalMRP}
+                />
+              </Grid.Col>
               <Grid.Col xs={6} md={3}>
                 <SummaryCard
                   label="Total Profit"
                   value={totalProfit !== null ? `₹${totalProfit.toFixed(2)}` : null}
                   icon={<IconTrendingUp size={32} color="#20c997" />}
                   loading={loading.totalProfit}
+                  disabled={true}
+
                 />
               </Grid.Col>
               <Grid.Col xs={6} md={3}>
@@ -604,16 +614,10 @@ const Dashboard: React.FC = () => {
                   }
                   icon={<IconDiscountCheck size={32} color="#fa5252" />}
                   loading={loading.totalDiscount}
+                  disabled={true}
                 />
               </Grid.Col>
-              <Grid.Col xs={6} md={3}>
-                <SummaryCard
-                  label="Total MRP"
-                  value={totalMRP !== null ? `₹${totalMRP.toFixed(2)}` : null}
-                  icon={<IconBuildingStore size={32} color="#7950f2" />}
-                  loading={loading.totalMRP}
-                />
-              </Grid.Col>
+            
             </Grid>
           </Stack>
         </Card>
@@ -894,7 +898,6 @@ const Dashboard: React.FC = () => {
               title=""
               columns={[
                 'SKU',
-                'Item Name',
                 'Total Stock',
                 'MRP',
                 'Cost Price',
@@ -906,8 +909,7 @@ const Dashboard: React.FC = () => {
               loading={loading.purchased}
               renderRow={renderPurchasedRow}
               csvHeaders={[
-                'SKU',
-                'Item Name',
+                'SKU',             
                 'Total Stock',
                 'MRP',
                 'Cost Price',

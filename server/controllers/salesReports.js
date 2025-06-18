@@ -194,6 +194,7 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         suppliers: { $addToSet: '$procurementSource' },
         purchaseOrderIds: { $addToSet: '$_id' },
         expiryDates: { $addToSet: '$purchasedItems.expiryDates' },
+        sku: { $first: '$purchasedItems.sku' },
       },
     },
     {
@@ -211,6 +212,7 @@ const getPurchasedItemsReport = async (startDate, lastDate) => {
         itemQuantity: 1,
         unit: 1,
         expiryDates: 1,
+        sku: 1
       }
     }
   ]);
