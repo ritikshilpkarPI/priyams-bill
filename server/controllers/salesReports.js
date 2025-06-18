@@ -454,7 +454,8 @@ const getTopDealersByQuantity = async (startDate, endDate, limit = 10) => {
               '$purchasedItems.costPrice'
             ]
           }
-        }
+        },
+        dealerNumber: { $first: '$dealerDetails.dealerNumber' }
       }
     },
     {
@@ -463,7 +464,8 @@ const getTopDealersByQuantity = async (startDate, endDate, limit = 10) => {
         dealerName: 1,
         totalOrders: 1,
         totalQuantity: 1,
-        totalAmount: 1
+        totalAmount: 1,
+        dealerNumber: 1
       }
     },
     { $sort: { totalOrders: -1 } },
@@ -505,7 +507,8 @@ const getTopDealersByAmount = async (startDate, endDate, limit = 10) => {
               '$purchasedItems.costPrice'
             ]
           }
-        }
+        },
+        dealerNumber: { $first: '$dealerDetails.dealerNumber' }
       }
     },
     {
@@ -514,7 +517,8 @@ const getTopDealersByAmount = async (startDate, endDate, limit = 10) => {
         dealerName: 1,
         totalOrders: 1,
         totalQuantity: 1,
-        totalAmount: 1
+        totalAmount: 1,
+        dealerNumber: 1
       }
     },
     { $sort: { totalAmount: -1 } },
