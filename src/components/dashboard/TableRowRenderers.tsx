@@ -280,7 +280,6 @@ export const renderDealerAmountRow = (item: any, idx: number) => (
 export const renderPurchasedRow = (item: any, idx: number) => (
   <tr key={idx}>
     <td>{item.sku || '-'}</td>
-    <td>{item.itemName || '-'}</td>
     <td>{item.totalStock}</td>
     <td>₹{item.mrp?.toFixed(2)}</td>
     <td>₹{item.costPrice?.toFixed(2)}</td>
