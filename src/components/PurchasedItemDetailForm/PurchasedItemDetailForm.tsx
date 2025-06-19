@@ -309,7 +309,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       toast.error('Failed to save expiry date images');
     }
   };
-    
+
+  const handleGlobalImagesChange = async (files: File[]) => {
+    try {
+      const imageData = await convertFilesToBase64(files);
+      dispatch(setPurchasedItemDetailForm({
+        globalImages: imageData
+      }));
+      toast.success('Global images saved successfully');
+    } catch (error) {
+      console.error('Error saving global images:', error);
+      toast.error('Failed to save global images');
+    }
+  };
 
   return (
     <Flex direction="column" gap="16px" pos="relative">
@@ -845,6 +857,16 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       </Radio.Group>
         }
       />
+      <Box mt="md" sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+        <ImageUploadComponent
+          maxFiles={5}
+          maxSize={2 * 1024 * 1024}
+          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+          initialImages={purchasedItemFormData?.globalImages || []}
+          size={44}
+          onImagesChange={handleGlobalImagesChange}
+        />
+      </Box>
       <LoadingOverlay visible={Boolean(loading)} />
     </Flex>
   );

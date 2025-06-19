@@ -42,6 +42,12 @@ const purchaseOrderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Image'
       }],
+      globalImages: [
+        {
+          public_id: String,
+          secure_url: String,
+        }
+      ],
       createdAt: { type: Date, default: Date.now },
       itemHasExpiry: { type: Boolean, default: null },
       expiryDates: [

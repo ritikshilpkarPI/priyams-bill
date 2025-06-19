@@ -68,6 +68,22 @@ const updateSavedOrders = async (req, res, next) => {
       imageIds = savedImages.map(img => img._id);
     }
 
+    // Handle globalImages
+    const globalImagesToUpload = (new_order.globalImages || []).map((image, index) =>
+      typeof image === 'string'
+        ? { data: image, name: `global_${index}_${Date.now()}.jpg` }
+        : null
+    ).filter(Boolean);
+
+    let globalImages = [];
+    if (globalImagesToUpload.length) {
+      const uploadedGlobalUrls = await uploadMultipleImages(globalImagesToUpload, clodinaryFoldersPathKey.itemsImages.toString());
+      globalImages = uploadedGlobalUrls.map(url => ({
+        public_id: url.public_id,
+        secure_url: url.secure_url
+      }));
+    }
+
     const updatedExpiryDates = (new_order.expiryDates || []).map(expiryDate => ({
       date: expiryDate.date,
       value: expiryDate.value,
@@ -98,6 +114,7 @@ const updateSavedOrders = async (req, res, next) => {
       }),
       brandId: brand._id,
       companyId: company._id,
+      globalImages,
     };
 
     POItemImageTypes.forEach(type => delete newPurchasedItem[type]);

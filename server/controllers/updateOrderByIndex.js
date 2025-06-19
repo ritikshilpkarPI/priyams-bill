@@ -87,6 +87,23 @@ const updateOrderByIndex = async (req, res,next) => {
         }
       }
 
+      // Handle globalImages
+      const globalImagesToUpload = (new_order.globalImages || []).filter(img => typeof img === 'string').map((image, index) =>
+        ({ data: image, name: `global_${index}_${Date.now()}.jpg` })
+      );
+
+      let globalImages = [];
+      if (globalImagesToUpload.length) {
+        const uploadedGlobalUrls = await uploadMultipleImages(globalImagesToUpload, clodinaryFoldersPathKey.itemsImages.toString());
+        globalImages = uploadedGlobalUrls.map(url => ({
+          public_id: url.public_id,
+          secure_url: url.secure_url
+        }));
+      } else if (Array.isArray(new_order.globalImages)) {
+        // If already uploaded (edit case), keep the existing objects
+        globalImages = new_order.globalImages.filter(img => typeof img === 'object' && img.public_id && img.secure_url);
+      }
+
       const imageIds = [...existingImageIds, ...newImageIds];
 
       const updatedExpiryDates = (new_order.expiryDates || []).map(expiryDate => ({
@@ -111,7 +128,8 @@ const updateOrderByIndex = async (req, res,next) => {
           mrp: new_order.mrp
         }),
         brandId: brand._id,
-        companyId: company._id
+        companyId: company._id,
+        globalImages,
       };
 
       POItemImageTypes.forEach(type => delete updatedPurchasedItem[type]);

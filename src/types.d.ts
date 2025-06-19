@@ -236,6 +236,7 @@ declare global {
     };
     newItem?: boolean;
     images?: ItemImages;
+    globalImages?: CloudImage[];
   }
 
   interface PurchasedItemDetailFormProps {
