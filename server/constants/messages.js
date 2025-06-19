@@ -45,6 +45,8 @@ const MESSAGES = Object.freeze({
     TRANSACTIONS_REQUIRED: 'At least one transaction is required',
     TRANSACTION_ITEMS_REQUIRED: 'At least one transaction item is required',
     CREATED: 'Stock transaction created successfully.',
+    TRANSACTION_NOT_FOUND: 'Stock transaction not found',
+    COPIED_SUCCESS: 'Stock transaction copied successfully',
   },
   INVALID_TRANSACTION_IDS: 'Invalid transactionIds',
   INVALID_STORE_ID: 'Invalid storeId',
@@ -58,6 +60,7 @@ const MESSAGES = Object.freeze({
   EXPIRED_ITEMS_BATCH_NOT_FOUND: "Expired item batch not found",
   EXPIRED_ITEMS_BATCH_MARKED_AS_CLEARED: "Expired items batch marked as cleared",
   MISMATCH_TRANSACTION_CREATED: "Stock mismatch correction transaction has been successfully created",
+  PURCHASE_ORDER_COPIED_SUCCESSFULLY: "Purchase order copied successfully",
 });
 
 module.exports = { MESSAGES };

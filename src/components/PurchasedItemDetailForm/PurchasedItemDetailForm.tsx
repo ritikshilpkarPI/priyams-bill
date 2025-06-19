@@ -54,6 +54,11 @@ import BrandSelector from '../brandSelector/BrandSelector';
 import { fetchBillingLeanItems } from '../../utils/fetchBillingLeanItems';
 import { CONSTANTS } from '../../constants/constants';
 import { AppDispatch } from '../../redux/store';
+import { ImageUploadComponent } from '../ImageUploadComponent/ImageUploadComponent';
+import { toast } from 'react-toastify';
+import { CloudImage } from 'src/types';
+import { convertFilesToBase64 } from 'src/utils/imageUtils';
+
 
 
 
@@ -79,6 +84,20 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
 
   const [isEditing, setIsEditing] = useState(false);
   const [updateChoice, setUpdateChoice] = useState<string>()
+
+  const handleImagesChange = async (key: string, files: File[]) => {
+    try {
+      const imageData = await convertFilesToBase64(files);
+      dispatch(setPurchasedItemDetailForm({
+        [`${key}Images`]: imageData
+      }));
+
+      toast.success('Images saved successfully');
+    } catch (error) {
+      console.error('Error saving images:', error);
+      toast.error('Failed to save images');
+    }
+  };
 
   const skuFields: Record<string, string> = {
     inputName: 'inputName',
@@ -270,6 +289,40 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       dispatch(fetchBillingLeanItems('', '', CONSTANTS.WAREHOUSE));
     }, []);
 
+  const handleExpiryImagesChange = async (idx: number, files: File[]) => {
+    try {
+      const imageData = await convertFilesToBase64(files);
+      const updatedExpiryDates = [...purchasedItemFormData.expiryDates];
+      updatedExpiryDates[idx] = {
+        ...updatedExpiryDates[idx],
+        images: {
+          expiryImages: imageData
+        }
+      };
+      dispatch(setPurchasedItemDetailForm({
+        expiryDates: updatedExpiryDates
+      }));
+
+      toast.success('Expiry date images saved successfully');
+    } catch (error) {
+      console.error('Error saving expiry date images:', error);
+      toast.error('Failed to save expiry date images');
+    }
+  };
+
+  const handleGlobalImagesChange = async (files: File[]) => {
+    try {
+      const imageData = await convertFilesToBase64(files);
+      dispatch(setPurchasedItemDetailForm({
+        globalImages: imageData
+      }));
+      toast.success('Global images saved successfully');
+    } catch (error) {
+      console.error('Error saving global images:', error);
+      toast.error('Failed to save global images');
+    }
+  };
+
   return (
     <Flex direction="column" gap="16px" pos="relative">
       <Flex
@@ -299,6 +352,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
           <Box>
             <Divider my="xs" label="Item SKU Details" labelPosition="center" />
             <Grid gutter="md" sx={{ width: '240px' }}>
+              <Box sx={{ width: 'fit-content', marginBottom: '16px' }}>
               <Col span={12}>
                 <TextInput
                   label="Barcode"
@@ -321,7 +375,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   }
                   disabled={isApprovedPO}
                 />
+
+                 <Box mt={'md'} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <ImageUploadComponent
+                          maxFiles={2}
+                          maxSize={2 * 1024 * 1024}
+                          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                          initialImages={purchasedItemFormData?.images?.barcodeImages || []}
+                          size={24}
+                          onImagesChange={(files) => handleImagesChange('barcode', files)}
+                        />
+                      </Box>
               </Col>
+              </Box>
 
               <Col span={12}>
                 <TextInput
@@ -338,6 +404,17 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   placeholder="Enter Item name"
                   disabled={isApprovedPO}
                 />
+
+                <Box mt={'md'} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <ImageUploadComponent
+                          maxFiles={2}
+                          maxSize={2 * 1024 * 1024}
+                          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                          initialImages={purchasedItemFormData?.images?.itemNameImages || []}
+                          size={24}
+                          onImagesChange={(files) => handleImagesChange('itemName', files)}
+                        />
+                </Box>
               </Col>
 
               <Col span={12}>
@@ -352,6 +429,17 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   placeholder="Enter Packet Quantity"
                   disabled={isApprovedPO}
                 />
+
+                <Box mt={'md'} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <ImageUploadComponent
+                          maxFiles={2}
+                          maxSize={2 * 1024 * 1024}
+                          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                          initialImages={purchasedItemFormData?.images?.packetQtyImages || []}
+                          size={24}
+                          onImagesChange={(files) => handleImagesChange('packetQty', files)}
+                        />
+                </Box>
               </Col>
 
               <Col span={12}>
@@ -363,6 +451,17 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   onChange={(value) => onChange('unit', value!)}
                   disabled={isApprovedPO}
                 />
+
+                <Box mt={'md'} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <ImageUploadComponent
+                          maxFiles={2}
+                          maxSize={2 * 1024 * 1024}
+                          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                          initialImages={purchasedItemFormData?.images?.unitImages || []}
+                          size={24}
+                          onImagesChange={(files) => handleImagesChange('unit', files)}
+                        />
+                </Box>
               </Col>
 
               <Col span={12}>
@@ -374,6 +473,17 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   error={errors.mrp}
                   disabled={isApprovedPO}
                 />
+
+                <Box mt={'md'} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <ImageUploadComponent
+                          maxFiles={2}
+                          maxSize={2 * 1024 * 1024}
+                          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                          initialImages={purchasedItemFormData?.images?.mrpImages || []}
+                          size={24}
+                          onImagesChange={(files) => handleImagesChange('mrp', files)}
+                        />
+                </Box>
               </Col>
               <Col span={12}>
                 {purchasedItemFormData.inputName && purchasedItemFormData.barcode ? (
@@ -414,7 +524,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   </Alert>
                 )}
               </Col>
-            </Grid>
+            </Grid>  
           </Box>
 
           <Box>
@@ -496,6 +606,17 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   error={errors.costPrice}
                   disabled={isApprovedPO}
                 />
+
+                <Box mt={'md'} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <ImageUploadComponent
+                          maxFiles={2}
+                          maxSize={2 * 1024 * 1024}
+                          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                          initialImages={purchasedItemFormData?.images?.costPriceImages || []}
+                          size={24}
+                          onImagesChange={(files) => handleImagesChange('costPrice', files)}
+                        />
+                </Box>
               </Col>
               <Col span={12}>
                 <CustomNumberInput
@@ -506,6 +627,17 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   error={errors.sellingPrice}
                   disabled={isApprovedPO}
                 />
+
+                <Box mt={'md'} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <ImageUploadComponent
+                          maxFiles={2}
+                          maxSize={2 * 1024 * 1024}
+                          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                          initialImages={purchasedItemFormData?.images?.sellingPriceImages || []}
+                          size={24}
+                          onImagesChange={(files) => handleImagesChange('sellingPrice', files)}
+                        />
+                </Box>
               </Col>
               <Col>
                 <TextInput
@@ -530,6 +662,17 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                   error={errors.stockQuantity}
                   disabled={isApprovedPO}
                 />
+
+                <Box mt={'md'} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <ImageUploadComponent
+                          maxFiles={2}
+                          maxSize={2 * 1024 * 1024}
+                          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+                          initialImages={purchasedItemFormData?.images?.stockQuantityImages || []}
+                          size={24}
+                          onImagesChange={(files) => handleImagesChange('stockQuantity', files)}
+                        />
+                </Box>
               </Col>
             </Grid>
           </Box>
@@ -611,7 +754,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
         </Flex>
         <Flex>
           <Box>
-            <Divider my="xs" label="Add Items Expiry" labelPosition="center"/>
+            <Divider my="xs" label="Add Items Expirya" labelPosition="center"/>
             <Flex gap="16px" align="center" wrap="wrap">
               <DatePicker
                 label="MFG Date."
@@ -650,6 +793,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               <Button leftIcon={<IconPlus />} onClick={onAddOrUpdateExpiryDate} disabled={isApprovedPO}>
                 {isEditing ? 'Update' : 'Add'}
               </Button>
+           
             </Flex>
             <ItemExpiryTable
               expiryDates={purchasedItemFormData.expiryDates}
@@ -657,6 +801,8 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               onEdit={onEditExpiryDate}
               showTotal={true}
               showActions={true}
+              onImagesChange={handleExpiryImagesChange}
+              disabled={isApprovedPO}
             />
           </Box>
         </Flex>
@@ -682,8 +828,8 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
               disabled={isApprovedPO}
             >
               Reset
-            </Button>
-          </Flex>
+            </Button>         
+          </Flex>      
         </Box>
       </Flex>
       <QuestionModal
@@ -711,6 +857,16 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       </Radio.Group>
         }
       />
+      <Box mt="md" sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+        <ImageUploadComponent
+          maxFiles={5}
+          maxSize={2 * 1024 * 1024}
+          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+          initialImages={purchasedItemFormData?.globalImages || []}
+          size={44}
+          onImagesChange={handleGlobalImagesChange}
+        />
+      </Box>
       <LoadingOverlay visible={Boolean(loading)} />
     </Flex>
   );

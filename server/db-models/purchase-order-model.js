@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { BrandModel } = require('./brand-model');
 const { CompanyModel } = require('./company-model');
+const { imageSchema } = require('./image-model');
 
 const purchaseOrderSchema = new mongoose.Schema({
   purchasedItems: [
@@ -29,14 +30,6 @@ const purchaseOrderSchema = new mongoose.Schema({
         ref: 'Company',
       },
       category: String,
-      brandId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Brand',
-      },
-      companyId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Company',
-      },
       subCategory: String,
       flavourOrFeature: String,
       freeItemsAvailable: Boolean,
@@ -45,10 +38,16 @@ const purchaseOrderSchema = new mongoose.Schema({
       returnPolicyRemarks: String,
       companyName: String,
       saleTime: String,
-      imageUrl: {
-        public_id: String,
-        secure_url: String
-      },
+      images: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image'
+      }],
+      globalImages: [
+        {
+          public_id: String,
+          secure_url: String,
+        }
+      ],
       createdAt: { type: Date, default: Date.now },
       itemHasExpiry: { type: Boolean, default: null },
       expiryDates: [
@@ -56,7 +55,7 @@ const purchaseOrderSchema = new mongoose.Schema({
           date: Date,
           value: Number,
           mfgDate: Date,
-          isShelfExpired: Boolean,
+          isShelfExpired: Boolean
         },
       ],
       slabPrice: [],
@@ -87,7 +86,7 @@ const purchaseOrderSchema = new mongoose.Schema({
       {
         paymentDate: { type: Date, default: Date.now },
         paidBy: String,
-        paymentImgURL: [{
+       paymentImgURL: [{
           public_id: String,
           secure_url: String,
         }],
@@ -171,18 +170,18 @@ purchaseOrderSchema.pre("save", function (next) {
   const purchaseOrder = this;
   const { isApproved, isDraft } = purchaseOrder;
 
-  // If the purchase order is a draft and not yet approved
+    // If the purchase order is a draft and not yet approved
   if (!isApproved && isDraft) {
     const historyEntry = {
       data: purchaseOrder.toObject(), 
       createdAt: Date.now(), 
     };
 
-    // Add to statusHistory array
+        // Add to statusHistory array
     purchaseOrder.statusHistory.push(historyEntry);
   }
 
-  // No need for next() with async operations or save recursion
+    // No need for next() with async operations or save recursion
   next();
 });
 

@@ -14,13 +14,12 @@ import { setWarehouseItemsFeedAPILoading, setWarehouseItemsFeedData } from '../r
 export const fetchBillingLeanItems = (selectedStoreId?: string, storeId?: any, sourceType?:string) => async (dispatch: AppDispatch) => {
   let attempts = 0;
 
-    dispatch(setItemsFeedAPILoading(true));
-    dispatch(setWarehouseItemsFeedAPILoading(true));
-
     const isWarehouse = sourceType === CONSTANTS.WAREHOUSE;
 
   while (attempts < MAX_RETRIES_BILLING_LEAN_ITEMS_API) {
     try {
+      dispatch(setItemsFeedAPILoading(true));
+      dispatch(setWarehouseItemsFeedAPILoading(true));
       const response = await getBillingLeanItemsAPI(selectedStoreId = selectedStoreId ?? "", storeId = storeId ?? "", sourceType = sourceType ?? "");
       if (response && !response.isError) {
         if (isWarehouse) {
@@ -39,6 +38,9 @@ export const fetchBillingLeanItems = (selectedStoreId?: string, storeId?: any, s
         `BillingLeanItems API - Attempt ${attempts + 1} failed due to network error:`,
         error
       );
+    } finally {
+      dispatch(setItemsFeedAPILoading(false));
+      dispatch(setWarehouseItemsFeedAPILoading(false));
     }
 
     attempts++;
@@ -48,8 +50,6 @@ export const fetchBillingLeanItems = (selectedStoreId?: string, storeId?: any, s
       );
     }
   }
-    dispatch(setItemsFeedAPILoading(false));
-    dispatch(setWarehouseItemsFeedAPILoading(false));
   console.error(
     `BillingLeanItems API failed after ${MAX_RETRIES_BILLING_LEAN_ITEMS_API} attempts.`
   );
