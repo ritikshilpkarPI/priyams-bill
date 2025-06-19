@@ -202,7 +202,7 @@ export const BillUploadPanel: React.FC<PurchaseOrderProps> = ({isApprovedPO}) =>
                 sx={{ objectFit: 'cover', maxWidth: '300px' }}
               />
             </Flex>
-          ))}
+          ))}    
         </Flex>
       </Container>
       <Box mt="16px">
