@@ -298,9 +298,6 @@ export const renderItemTrendRow = (item: any, idx: number) => (
   <tr key={idx}>
     <td>
       <Text
-        component="a"
-        href={`/bills/${item.billNo}`}
-        target="_blank"
         size="sm"
       >
         {item.billNo}
