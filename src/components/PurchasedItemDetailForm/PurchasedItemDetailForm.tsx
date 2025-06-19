@@ -197,6 +197,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       }
       setErrors({});
       onSubmit(purchasedItemFormData);
+      dispatch(setPurchasedItemDetailForm({
+        globalImages: [],
+        images: {
+          barcodeImages: [],
+          itemNameImages: [],
+          packetQtyImages: [],
+          unitImages: [],
+          mrpImages: [],
+          costPriceImages: [],
+          sellingPriceImages: [],
+          stockQuantityImages: [],
+        },
+      }));
     } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
@@ -384,6 +397,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.barcodeImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('barcode', files)}
+                          hidePreview={false}
                         />
                       </Box>
               </Col>
@@ -413,6 +427,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.itemNameImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('itemName', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -438,6 +453,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.packetQtyImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('packetQty', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -460,6 +476,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.unitImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('unit', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -482,6 +499,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.mrpImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('mrp', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -615,6 +633,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.costPriceImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('costPrice', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -636,6 +655,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.sellingPriceImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('sellingPrice', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -671,6 +691,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.stockQuantityImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('stockQuantity', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -865,6 +886,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
           initialImages={purchasedItemFormData?.globalImages || []}
           size={44}
           onImagesChange={handleGlobalImagesChange}
+          hidePreview={true}
         />
       </Box>
       <LoadingOverlay visible={Boolean(loading)} />

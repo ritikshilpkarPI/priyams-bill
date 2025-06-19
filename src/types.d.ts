@@ -1388,6 +1388,7 @@ export interface ImageUploadComponentProps {
   className?: string;
   size?: number;
   previewSize?: number; 
+  hidePreview?: boolean;
 }
 
 export interface PurchasedItemDetailFormProps {

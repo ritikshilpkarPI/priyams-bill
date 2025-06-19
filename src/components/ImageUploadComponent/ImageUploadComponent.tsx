@@ -15,6 +15,7 @@ export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
   className = '',
   size = 24,
   previewSize = 40,
+  hidePreview = false,
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>(initialImages);
@@ -106,54 +107,75 @@ export const ImageUploadComponent: React.FC<ImageUploadComponentProps> = ({
             </ActionIcon>
           </Tooltip>
         ) : (
-          <Box className="preview-container">
-            <Box className="preview-item">
-              <Image
-                src={previews[0]}
-                alt="Preview"
-                width={previewSize}
-                height={previewSize}
-                radius="md"
-                fit="cover"
-                onClick={() => openPreview(0)}
-                className="preview-image"
-              />
-              {!disabled && (
+          hidePreview ? (
+            <>
+              <Tooltip label="Upload images" position="top">
                 <ActionIcon
-                  className="remove-button"
-                  color="red"
-                  variant="filled"
-                  onClick={() => removeImage(0)}
-                >
-                  <IconX size={16} />
-                </ActionIcon>
-              )}
-              {previews.length > 1 && (
-                <Badge
-                  className="more-images-badge"
+                  {...getRootProps()}
+                  size={size}
+                  variant="light"
                   color="blue"
-                  variant="filled"
-                  size="lg"
-                  radius="xl"
+                  disabled={disabled}
+                  className={`upload-icon ${isDragActive ? 'active' : ''}`}
                 >
-                  +{previews.length - 1}
-                </Badge>
-              )}
+                  <input {...getInputProps()} />
+                  <IconUpload size={size * 0.6} />
+                </ActionIcon>
+              </Tooltip>
+              <Text size="xs" color="dimmed">
+                {previews.length} image{previews.length > 1 ? 's' : ''} uploaded
+              </Text>
+            </>
+          ) : (
+            <Box className="preview-container">
+              <Box className="preview-item">
+                <Image
+                  src={previews[0]}
+                  alt="Preview"
+                  width={previewSize}
+                  height={previewSize}
+                  radius="md"
+                  fit="cover"
+                  onClick={() => openPreview(0)}
+                  className="preview-image"
+                />
+                {!disabled && (
+                  <ActionIcon
+                    className="remove-button"
+                    color="red"
+                    variant="filled"
+                    onClick={() => removeImage(0)}
+                  >
+                    <IconX size={16} />
+                  </ActionIcon>
+                )}
+                {previews.length > 1 && (
+                  <Badge
+                    className="more-images-badge"
+                    color="blue"
+                    variant="filled"
+                    size="lg"
+                    radius="xl"
+                  >
+                    +{previews.length - 1}
+                  </Badge>
+                )}
+              </Box>
+              <Tooltip label="Add more images" position="top">
+                <ActionIcon
+                  {...getRootProps()}
+                  size={size}
+                  variant="light"
+                  color="blue"
+                  disabled={disabled || previews.length >= maxFiles}
+                  className={`upload-icon ${isDragActive ? 'active' : ''}`}
+                >
+                  <input {...getInputProps()} />
+                  <IconUpload size={size * 0.6} />
+                </ActionIcon>
+              </Tooltip>
             </Box>
-            <Tooltip label="Add more images" position="top">
-              <ActionIcon
-                {...getRootProps()}
-                size={size}
-                variant="light"
-                color="blue"
-                disabled={disabled || previews.length >= maxFiles}
-                className={`upload-icon ${isDragActive ? 'active' : ''}`}
-              >
-                <input {...getInputProps()} />
-                <IconUpload size={size * 0.6} />
-              </ActionIcon>
-            </Tooltip>
-          </Box>
+          )
         )}
       </Group>
 
