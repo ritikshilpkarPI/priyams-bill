@@ -2,19 +2,9 @@ import { Types } from 'mongoose';
 import { StockTransactionModel } from '../db-models/stock-transaction-model';
 import { StoreModel } from '../db-models/store-model';
 import { CONSTANTS } from '../constants/constants';
+import { CreateDeficiencyTransactionParams } from 'server/types';
 
-interface DeficiencyItem {
-  itemId: string;
-  deficiencyQty: number;
-  expiryDate?: Date;
-  manufacturingDate?: Date;
-}
 
-interface CreateDeficiencyTransactionParams {
-  storeId: string;
-  staffId: string;
-  items: DeficiencyItem[];
-}
 
 export async function createWarehouseToStoreDeficiencyTransaction({
   storeId,

@@ -14,15 +14,20 @@ export async function handleLowStockAndCreateTransactions({
   const StoreInventory = getStoreInventoryModel(store.collectionName);
   const inventoryItems = await StoreInventory.find({}).lean();
 
+  let minStockMultiplier = (store as any).minStockMultiplier;
+  if (typeof minStockMultiplier !== 'number' || minStockMultiplier <= 0) {
+    minStockMultiplier = 1.5;
+  }
+
   const lowStockItems = inventoryItems.filter(item => {
     const sellFrequency = Number((item as any).sellFrequency) || 0;
     const qty = Number((item as any).itemQuantityInStore) || 0;
-    return sellFrequency > 0 && qty < 2 * sellFrequency;
+    return sellFrequency > 0 && qty < minStockMultiplier * sellFrequency;
   });
 
   const deficiencyItems = lowStockItems.map((item: any) => ({
     itemId: item.itemId.toString(),
-    deficiencyQty: Math.ceil(2 * Number(item.sellFrequency)) - Number(item.itemQuantityInStore),
+    deficiencyQty: Math.ceil(minStockMultiplier * Number(item.sellFrequency)) - Number(item.itemQuantityInStore),
   }));
 
   let transactions = [];
@@ -41,6 +46,6 @@ export async function handleLowStockAndCreateTransactions({
   return {
     lowStockItems,
     transactions,
-    message: `${lowStockItems.length} items have less than 2x sellFrequency in stock. ${transactions.length ? transactions.length + ' transaction(s) created.' : 'No transaction created.'}`,
+    message: `${lowStockItems.length} items have less than ${minStockMultiplier}x sellFrequency in stock. ${transactions.length ? transactions.length + ' transaction(s) created.' : 'No transaction created.'}`,
   };
 }
