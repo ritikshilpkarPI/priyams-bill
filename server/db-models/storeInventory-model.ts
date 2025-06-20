@@ -30,7 +30,7 @@ const StoreInventoryItemSchema: Schema = new Schema({
       initialStockQuantity: { type: Number },
     }
   ],
-  
+  sellFrequency: { type: Number, default: 5 }, // in days  
 });
 
 /**
