@@ -88,6 +88,7 @@ import { getStockTransactionsByStatus } from './getStockTransactionsByStatus';
 import {copyStockTransaction} from './copyStockTransaction';
 import {copyPurchaseOrder} from './copyPurchaseOrder';
 import { updateSellFrequency } from './updateSellFrequency';
+import { checkLowStockAndCreateTransaction } from './checkLowStockAndCreateTransaction';
 
 export {
   addBulkItems,
@@ -179,5 +180,6 @@ export {
   getStockTransactionsByStatus,
   copyStockTransaction,
   copyPurchaseOrder,
-  updateSellFrequency
+  updateSellFrequency,
+  checkLowStockAndCreateTransaction
 };

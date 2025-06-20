@@ -94,7 +94,8 @@ const {
   getStockTransactionsByStatus,
   copyPurchaseOrder,
   copyStockTransaction,
-  updateSellFrequency
+  updateSellFrequency,
+  checkLowStockAndCreateTransaction
 } = require('../controllers/index');
 
 
@@ -366,5 +367,7 @@ router.use(API_PATHS.REPORT.POST_SALES_REPORTS, isLoggedIn, salesReportsRouter);
 router.post(API_PATHS.DEALER_CATALOG , getDealerCatalog);
 
 router.post(API_PATHS.STORE.UPDATE_SELL_FREQUENCY, updateSellFrequency);
+
+router.post(API_PATHS.STORE.CHECK_LOW_STOCK_AND_CREATE_TRANSACTION, checkLowStockAndCreateTransaction);
 
 export default router;
