@@ -30,6 +30,8 @@ const StoreInventoryItemSchema: Schema = new Schema({
       initialStockQuantity: { type: Number },
     }
   ],
+  sellFrequency: { type: Number, default: 5 }, // in days
+  minStockMultiplier: { type: Number, default: 1 }, // eg: 1, 1.5
   
 });
 
