@@ -197,6 +197,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       }
       setErrors({});
       onSubmit(purchasedItemFormData);
+      dispatch(setPurchasedItemDetailForm({
+        globalImages: [],
+        images: {
+          barcodeImages: [],
+          itemNameImages: [],
+          packetQtyImages: [],
+          unitImages: [],
+          mrpImages: [],
+          costPriceImages: [],
+          sellingPriceImages: [],
+          stockQuantityImages: [],
+        },
+      }));
     } catch (error) {
       setErrors(getYupValidationErrorMap(error));
     }
@@ -309,7 +322,19 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       toast.error('Failed to save expiry date images');
     }
   };
-    
+
+  const handleGlobalImagesChange = async (files: File[]) => {
+    try {
+      const imageData = await convertFilesToBase64(files);
+      dispatch(setPurchasedItemDetailForm({
+        globalImages: imageData
+      }));
+      toast.success('Global images saved successfully');
+    } catch (error) {
+      console.error('Error saving global images:', error);
+      toast.error('Failed to save global images');
+    }
+  };
 
   return (
     <Flex direction="column" gap="16px" pos="relative">
@@ -372,6 +397,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.barcodeImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('barcode', files)}
+                          hidePreview={false}
                         />
                       </Box>
               </Col>
@@ -401,6 +427,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.itemNameImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('itemName', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -426,6 +453,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.packetQtyImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('packetQty', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -448,6 +476,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.unitImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('unit', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -470,6 +499,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.mrpImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('mrp', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -603,6 +633,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.costPriceImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('costPrice', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -624,6 +655,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.sellingPriceImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('sellingPrice', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -659,6 +691,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
                           initialImages={purchasedItemFormData?.images?.stockQuantityImages || []}
                           size={24}
                           onImagesChange={(files) => handleImagesChange('stockQuantity', files)}
+                          hidePreview={false}
                         />
                 </Box>
               </Col>
@@ -845,6 +878,17 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       </Radio.Group>
         }
       />
+      <Box mt="md" sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+        <ImageUploadComponent
+          maxFiles={5}
+          maxSize={2 * 1024 * 1024}
+          acceptedFileTypes={['image/jpeg', 'image/png', 'image/webp']}
+          initialImages={purchasedItemFormData?.globalImages || []}
+          size={44}
+          onImagesChange={handleGlobalImagesChange}
+          hidePreview={true}
+        />
+      </Box>
       <LoadingOverlay visible={Boolean(loading)} />
     </Flex>
   );
