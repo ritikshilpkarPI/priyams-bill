@@ -84,9 +84,12 @@ import { addAllowedRoutesToMultipleStaff } from './addAllowedRoutesToMultipleSta
 import { removeAllowedRoutes } from './removeAllowedRoutes';
 import { addAllowedRoutesToStaff } from './addAllowedRoutesToStaff';
 import { getStockTransactionsByStatus } from './getStockTransactionsByStatus';
+import {copyStockTransaction} from './copyStockTransaction';
+import {copyPurchaseOrder} from './copyPurchaseOrder';
+import { updateSellFrequency } from './updateSellFrequency';
+import { checkLowStockAndCreateTransaction } from './checkLowStockAndCreateTransaction';
 import { getDealerCatalog } from './getDealerCatalog';
-import { copyPurchaseOrder } from './copyPurchaseOrder';
-import { copyStockTransaction } from './copyStockTransaction';
+
 
 export {
   addBulkItems,
@@ -176,6 +179,8 @@ export {
   addAllowedRoutesToMultipleStaff,
   getStockTransactionsByStatus,
   getDealerCatalog,
+  copyStockTransaction,
   copyPurchaseOrder,
-  copyStockTransaction
+  updateSellFrequency,
+  checkLowStockAndCreateTransaction
 };
