@@ -14,21 +14,33 @@ export async function handleLowStockAndCreateTransactions({
   const StoreInventory = getStoreInventoryModel(store.collectionName);
   const inventoryItems = await StoreInventory.find({}).lean();
 
-  let minStockMultiplier = (store as any).minStockMultiplier;
-  if (typeof minStockMultiplier !== 'number' || minStockMultiplier <= 0) {
-    minStockMultiplier = 1.5;
-  }
-
   const lowStockItems = inventoryItems.filter(item => {
     const sellFrequency = Number((item as any).sellFrequency) || 0;
-    const qty = Number((item as any).itemQuantityInStore) || 0;
+    let qty = Number((item as any).itemQuantityInStore) || 0;
+    if (qty < 0) qty = 0;
+    
+    let minStockMultiplier = (item as any).minStockMultiplier;
+    if (typeof minStockMultiplier !== 'number' || minStockMultiplier <= 0) {
+      minStockMultiplier = 1.5;
+    }
+    
     return sellFrequency > 0 && qty < minStockMultiplier * sellFrequency;
   });
 
-  const deficiencyItems = lowStockItems.map((item: any) => ({
-    itemId: item.itemId.toString(),
-    deficiencyQty: Math.ceil(minStockMultiplier * Number(item.sellFrequency)) - Number(item.itemQuantityInStore),
-  }));
+  const deficiencyItems = lowStockItems.map((item: any) => {
+    let minStockMultiplier = (item as any).minStockMultiplier;
+    if (typeof minStockMultiplier !== 'number' || minStockMultiplier <= 0) {
+      minStockMultiplier = 1.5;
+    }
+    
+    let qty = Number((item as any).itemQuantityInStore) || 0;
+    if (qty < 0) qty = 0;
+    
+    return {
+      itemId: item.itemId.toString(),
+      deficiencyQty: Math.ceil(minStockMultiplier * Number(item.sellFrequency)) - qty,
+    };
+  });
 
   let transactions = [];
   if (deficiencyItems.length > 0 && staffId) {
@@ -46,6 +58,6 @@ export async function handleLowStockAndCreateTransactions({
   return {
     lowStockItems,
     transactions,
-    message: `${lowStockItems.length} items have less than ${minStockMultiplier}x sellFrequency in stock. ${transactions.length ? transactions.length + ' transaction(s) created.' : 'No transaction created.'}`,
+    message: `${lowStockItems.length} items have less than their minStockMultiplier x sellFrequency in stock. ${transactions.length ? transactions.length + ' transaction(s) created.' : 'No transaction created.'}`,
   };
 }

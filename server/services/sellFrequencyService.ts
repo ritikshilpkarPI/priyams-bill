@@ -24,17 +24,30 @@ export async function updateSellFrequencyForStore(storeId: string) {
         _id: '$items.itemDetail',
         totalSold: { $sum: '$items.itemQuantityInBill' }
       }
+    },
+    { $group: {
+      _id: null,
+      kv: {
+        $push: {
+          k: { $toString: '$_id' },  
+          v: '$totalSold'
+        }
+      }
     }
+  },
+  { $project: {
+      _id: 0,
+      sales: { $arrayToObject: '$kv' }
+    }
+  }
   ]);
 
-  const salesMap = sales.reduce<Record<string, number>>((acc, { _id, totalSold }) => {
-    acc[_id.toString()] = totalSold;
-    return acc;
-  }, {});
+  const salesMap = sales.length > 0 ? sales[0].sales : {};
+
 
   const bulkOps = inventoryItems.map(inv => {
-    const tid = inv.itemId.toString();
-    const totalSold = salesMap[tid] || 0;
+    const itemId = inv.itemId.toString();
+    const totalSold = salesMap[itemId] || 0;
     let sellFrequency = totalSold / 30;
     sellFrequency = Math.ceil(sellFrequency);
     return {

@@ -29,7 +29,6 @@ const StoreSchema: Schema<StoreType> = new Schema({
   name: { type: String },
   // define a fields which will be used to identify it's a store or warehouse use enum
   type: { type: String, enum: ["STORE", "WAREHOUSE"], default: "STORE" },
-  minStockMultiplier: { type: Number, default: 1.5 },
 });
 
 StoreSchema.pre<StoreType>("save", async function (next) {
