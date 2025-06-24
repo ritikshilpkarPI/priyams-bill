@@ -12,6 +12,7 @@ export interface StoreType extends Document {
   collectionName: string;
   name: string;
   type: "STORE" | "WAREHOUSE";
+  minStockMultiplier?: number;
 }
 const StoreSchema: Schema<StoreType> = new Schema({
   address: {
