@@ -247,6 +247,7 @@ declare global {
   }
 
   interface ItemExpiryDateType {
+    addedOn: string;
     value: number;
     mfgDate: Date;
     date: Date;
@@ -760,6 +761,7 @@ declare global {
   }
   interface ShelfLifeInfoProps {
     expiryDate: {
+      addedOn: string | number | Date;
       mfgDate: string | Date;
       date: string | Date;
     };
