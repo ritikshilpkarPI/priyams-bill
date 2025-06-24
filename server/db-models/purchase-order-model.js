@@ -55,7 +55,8 @@ const purchaseOrderSchema = new mongoose.Schema({
           date: Date,
           value: Number,
           mfgDate: Date,
-          isShelfExpired: Boolean
+          isShelfExpired: Boolean,
+          addedOn: { type: Date, default: Date.now },
         },
       ],
       slabPrice: [],

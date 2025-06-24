@@ -5,7 +5,9 @@ import { getShelfLifeInfo } from 'src/utils/calculateShelfLife';
 export const ShelfLifeInfo = ({ expiryDate }: ShelfLifeInfoProps) => {
   const mfgDate = new Date(expiryDate.mfgDate);
   const expDate = new Date(expiryDate.date);
-  const shelfLife = getShelfLifeInfo(mfgDate, expDate);
+  const addedOn =  new Date(expiryDate.addedOn);
+    
+  const shelfLife = getShelfLifeInfo(mfgDate, expDate, addedOn);
 
   return (
     <Flex direction="column" gap={4}>

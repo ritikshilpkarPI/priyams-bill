@@ -77,6 +77,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
     mfgDate: null as Date | null,
     date: null as Date | null,
     value: 0,
+    addedOn: new Date().toISOString(),
   };
 
   const [formExpiryDate, setFormExpiryDate] = useState(defaulValuesExpiryItemForm);
@@ -277,6 +278,7 @@ export const PurchasedItemDetailForm: React.FC<PurchasedItemDetailFormProps> = (
       mfgDate: itemToEdit.mfgDate ?? null,
       date: itemToEdit.date ?? null,
       value: itemToEdit.value,
+      addedOn: itemToEdit.addedOn ?? new Date().toISOString(),
     });
 
     setIsEditing(true);
