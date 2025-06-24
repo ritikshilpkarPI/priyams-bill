@@ -8,13 +8,14 @@ function formatDurationParts({ years, months, days }: { years?: number; months?:
   return parts.join(', ');
 }
 
-export function getShelfLifeInfo(mfgDate: Date, expDate: Date) {
-  const today = new Date();
+export function getShelfLifeInfo(mfgDate: Date, expDate: Date, expiryCreatedAt?: Date) {
+  const expiryCreatedDate = expiryCreatedAt || new Date();
+  
   const totalDays = Math.max(differenceInDays(expDate, mfgDate), 0);
-  const leftDays = Math.max(differenceInDays(expDate, today), 0);
+  const leftDays = Math.max(differenceInDays(expDate, expiryCreatedDate), 0);
 
   const totalDuration = intervalToDuration({ start: mfgDate, end: expDate });
-  const leftDuration = intervalToDuration({ start: today, end: expDate });
+  const leftDuration = intervalToDuration({ start: expiryCreatedDate, end: expDate });
 
   const totalText = `${formatDurationParts(totalDuration)} (${totalDays} day${totalDays !== 1 ? 's' : ''})`;
   const leftText = `${formatDurationParts(leftDuration)} (${leftDays} day${leftDays !== 1 ? 's' : ''})`;

@@ -91,7 +91,8 @@ const updateSavedOrders = async (req, res, next) => {
       isShelfExpired: isShelfExpired(expiryDate.mfgDate, expiryDate.date),
       images: {
         expiryImages: expiryDate.images?.expiryImages || []
-      }
+      },
+      addedOn: expiryDate.addedOn || new Date(),
     }));
 
     if(!Boolean(new_order?.item_id)) {

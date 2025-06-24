@@ -105,7 +105,7 @@ const updateOrderByIndex = async (req, res,next) => {
       }
 
       const imageIds = [...existingImageIds, ...newImageIds];
-
+      
       const updatedExpiryDates = (new_order.expiryDates || []).map(expiryDate => ({
         date: expiryDate.date,
         value: expiryDate.value,
@@ -113,7 +113,8 @@ const updateOrderByIndex = async (req, res,next) => {
         isShelfExpired: isShelfExpired(expiryDate.mfgDate, expiryDate.date),
         images: {
           expiryImages: expiryDate.images?.expiryImages || []
-        }
+        },
+        addedOn: expiryDate.addedOn || new Date(),
       }));
 
       const updatedPurchasedItem = {
