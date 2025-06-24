@@ -305,3 +305,15 @@ export interface CreateDeficiencyTransactionParams {
   staffId: string;
   items: DeficiencyItem[];
 }
+
+
+interface NewPOItem {
+  itemId: string;
+  poQty: number;
+}
+
+export interface CreatePOAutoWarehouseToStoreTransactionParams {
+  storeId?: string; 
+  staffId: string;
+  newItems: NewPOItem[];
+}

@@ -21,7 +21,7 @@ export async function createWarehouseToStoreDeficiencyTransaction({
         sourceQuantity: {
           expiryDate: item.expiryDate || null,
           manufacturingDate: item.manufacturingDate || null,
-          qty: 0,
+          qty: item.deficiencyQty,
         },
         destinationQuantity: {
           expiryDate: item.expiryDate || null,
@@ -49,6 +49,6 @@ export async function createWarehouseToStoreDeficiencyTransaction({
     approvedByAdmin: false,
     transactionItems,
     dateOfTransaction: new Date(),
-  });
+  });  
   return transaction;
 } 
