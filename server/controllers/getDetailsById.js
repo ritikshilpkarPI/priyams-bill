@@ -8,6 +8,7 @@ const getDetailsById = async (req, res, next) => {
       .populate('purchasedItems.brandId', 'brandName')
       .populate('purchasedItems.companyId', 'companyName')
       .populate('purchasedItems.images')
+      .populate('expiryBatches')
       .lean();
 
     data.purchasedItems = data.purchasedItems.map(item => ({

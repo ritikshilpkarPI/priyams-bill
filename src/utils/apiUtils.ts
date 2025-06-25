@@ -987,3 +987,15 @@ export const copyTransactionAPI = async (
   }
 };
 
+export const addExpiryBatchToPOAPI = async (purchaseOrderId: string, expiryBatchId: string) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.PURCHASE_ORDER.ADD_EXPIRY_BATCH_TO_PO,
+      data: { purchaseOrderId, expiryBatchId },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
