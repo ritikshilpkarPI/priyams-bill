@@ -9,7 +9,15 @@ function formatDurationParts({ years, months, days }: { years?: number; months?:
 }
 
 export function getShelfLifeInfo(mfgDate: Date, expDate: Date, expiryCreatedAt?: Date) {
-  const expiryCreatedDate = expiryCreatedAt || new Date();
+  
+  let expiryCreatedDate: Date;
+  if (expiryCreatedAt instanceof Date && !isNaN(expiryCreatedAt.getTime())) {
+    expiryCreatedDate = expiryCreatedAt;
+  } else if (typeof expiryCreatedAt === 'string' && !isNaN(Date.parse(expiryCreatedAt))) {
+    expiryCreatedDate = new Date(expiryCreatedAt);
+  } else {
+    expiryCreatedDate = new Date();
+  }
   
   const totalDays = Math.max(differenceInDays(expDate, mfgDate), 0);
   const leftDays = Math.max(differenceInDays(expDate, expiryCreatedDate), 0);
