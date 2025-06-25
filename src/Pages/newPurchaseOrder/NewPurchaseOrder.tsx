@@ -32,6 +32,7 @@ import { useSelector } from 'react-redux';
 
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import MESSAGES from 'src/utils/constants/messages';
+import DealerExpiryBatchList from 'src/components/DealerExpiryBatchList';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -226,6 +227,15 @@ const NewPurchaseOrder = () => {
               onTabChange={onTabChange}
             />
           </Tabs.Tab>
+          <Tabs.Tab value={TAB.expiryBatch}>
+            <TabChip
+              label="Add Expiry Batch"
+              isValid={Boolean(purchaseOrder?.expiryBatches?.length)}
+              tabKey={TAB.expiryBatch}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
           <Tabs.Tab value={TAB.billUpload}>
            
             <TabChip
@@ -266,8 +276,11 @@ const NewPurchaseOrder = () => {
         <Tabs.Panel value={TAB.paymentDetails}>
           <PaymentDetailAndBillPanel />
         </Tabs.Panel>
+        <Tabs.Panel value={TAB.expiryBatch}>
+          <DealerExpiryBatchList dealerId={purchaseOrder?.dealerId} purchaseOrderId={purchaseOrderId} expiryBatches={purchaseOrder?.expiryBatches || []} />
+        </Tabs.Panel>
         <Tabs.Panel value={TAB.billUpload}>
-          <BillUploadPanel  isApprovedPO={isApprovedPO}/>
+          <BillUploadPanel isApprovedPO={isApprovedPO}/>
         </Tabs.Panel>
         <Tabs.Panel value={TAB.summary}>
           <PurchaseOrderSummary />

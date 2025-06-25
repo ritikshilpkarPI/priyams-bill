@@ -314,6 +314,7 @@ declare global {
   
   
   interface PurchaseOrderDataType {
+    dealerId?: string;
     isApproved?: boolean;
     isRejected?: boolean;
     isDraft?: boolean;
@@ -332,6 +333,7 @@ declare global {
     remark?: string;
     dateOnBill?: Date | null;
     statusHistory?: StatusHistoryItemType[];
+    expiryBatches?: any;
   }
 
   interface PurchasedItemTableProps {
@@ -1399,6 +1401,14 @@ export interface PurchasedItemDetailFormProps {
   isApprovedPO?: boolean;
   onItemSelect?: (item: any) => void;
   purchaseOrderId: string;
+}
+
+export interface DealerExpiryBatchListProps {
+  dealerId?: string;
+  purchaseOrderId?: string;
+  expiryBatches?: [{
+    _id?: string
+  }];
 }
 
 export {};
