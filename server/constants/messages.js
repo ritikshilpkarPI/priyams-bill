@@ -61,6 +61,8 @@ const MESSAGES = Object.freeze({
   EXPIRED_ITEMS_BATCH_MARKED_AS_CLEARED: "Expired items batch marked as cleared",
   MISMATCH_TRANSACTION_CREATED: "Stock mismatch correction transaction has been successfully created",
   PURCHASE_ORDER_COPIED_SUCCESSFULLY: "Purchase order copied successfully",
+  SKU_ALREADY_EXISTS_IN_PURCHASE_ORDER: "Item with this SKU already exists in the purchase order.",
+  PURCHASE_ORDER_NOT_FOUND: "Purchase order not found.",
 });
 
 module.exports = { MESSAGES };
