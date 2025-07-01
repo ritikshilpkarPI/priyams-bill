@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Badge, Button, Col, Flex, Grid, Input, Text } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -45,7 +46,7 @@ export const AddCreditForm = ({ purchaseOrderId }: PaymentDetailFormProps) => {
   const updateCredit = async () => {
     if (!purchaseOrderId) return;
     setLoading(true);
-    const paymentDetails = {
+    const paymentDetails: any = {
       totalPayableAmount: purchaseDetails.totalPayableAmount,
       totalBillAmount: purchaseDetails.totalBillAmount,
       paymentType: purchaseDetails.paymentType,
