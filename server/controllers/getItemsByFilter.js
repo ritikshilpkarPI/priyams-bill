@@ -2,7 +2,7 @@ const { Item } = require('../db-models/item-model');
 
 const getItemsByFilter = async (req, res, next) => {
   try {
-    const { itemBarcode, itemName, itemBrandName } = req.body;
+    const { itemBarcode, itemName, itemBrandName, brandId, companyId } = req.body;
 
     const query = {};
 
@@ -16,6 +16,14 @@ const getItemsByFilter = async (req, res, next) => {
 
     if (itemBrandName) {
       query.itemBrandName = { $regex: itemBrandName, $options: 'i' };
+    }
+
+    if (brandId) {
+      query.brandId = brandId;
+    }
+
+    if (companyId) {
+      query.companyId = companyId;
     }
 
     if(Object.keys(query).length <= 0){

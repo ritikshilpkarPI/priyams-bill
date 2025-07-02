@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Typography, Box, Chip, useTheme, useMediaQuery } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 const CatalogCard: React.FC<CatalogCardProps> = ({
@@ -11,6 +12,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
 
   return (
     <Card
@@ -88,8 +90,10 @@ const CatalogCard: React.FC<CatalogCardProps> = ({
                   fontSize: isMobile ? '0.75rem' : '0.875rem',
                   bgcolor: '#2EA8FF',
                   color: '#FFFFFF',
-                  border:"none"
+                  border:"none",
+                  cursor: 'pointer',
                 }}
+                onClick={() => navigate(`/items-by/brand/${brand._id}`)}
               />
             ))}
           </Box>
@@ -126,7 +130,9 @@ const CatalogCard: React.FC<CatalogCardProps> = ({
                   bgcolor: '#907AEA',
                   color: '#FFFFFF',
                   border: 'none',
+                  cursor: 'pointer',
                 }}
+                onClick={() => navigate(`/items-by/company/${company._id}`)}
               />
             ))}
           </Box>
