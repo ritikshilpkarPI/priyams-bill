@@ -11,27 +11,32 @@ const locationMiddleware = async (
 ): Promise<void> => {
     try {
         let pincode = req.query?.pincode || req.body?.pincode;
+        const username = req.body.username as string;
 
+        
+        // Check if user is admin first
+        if (username) {
+            const user = await Staff.findOne({ username });
+            if (user && user.role === 'admin') {
+                pincode = "462022";
+                req.body.pincode = pincode;
+            }
+        }
+        
         if (!pincode) {
             const latitude = req.query.latitude as string;
             const longitude = req.query.longitude as string;
-            const username = req.query.username as string;
 
             if (!latitude || !longitude) {
                 res.status(400).json({ error: MESSAGES.LAT_LONG_REQUIRED });
                 return;
             }
-
+            
             pincode = await getPincodeFromCoordinates(latitude, longitude);
 
             if (!pincode) {
-                const user = await Staff.findOne({ username });
-                if (user && user?.role === 'admin') {
-                    pincode = "462022";
-                } else {
-                    res.status(400).json({ error: MESSAGES.PINCODE_FETCH_FAILED });
-                    return;
-                }
+                res.status(400).json({ error: MESSAGES.PINCODE_FETCH_FAILED });
+                return;
             }
         }
 

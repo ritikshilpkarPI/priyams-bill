@@ -108,7 +108,7 @@ router.post(API_PATHS.ORDERS.EXPEL_ORDER_TO_RIDER, isLoggedIn, expelOrderToRider
 router.get(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsFeed);
 router.post(API_PATHS.SUBSCRIPTION, isLoggedIn, getSaveSubscription);
 router.get(`${API_PATHS.INVENTORY.GET_ITEMS}/:itemBarcode`, isLoggedIn, getItemByBarcode);
-router.post(API_PATHS.INVENTORY.GET_ITEMS, isLoggedIn, getItemsByFilter);
+router.post('/api/inventory/items/filter', isLoggedIn, getItemsByFilter);
 router.get(
   API_PATHS.INVENTORY.GET_ITEMS_LEAN_FOR_BILLING,
   isLoggedIn,
