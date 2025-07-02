@@ -19,7 +19,7 @@ import {
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import Papa from 'papaparse';
-import BarcodeScannerComponent from 'react-qr-barcode-scanner';
+// import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 import { genericAxios } from '../utils/genericAxiosMethod';
 import { API_PATHS } from '../utils/constants/apiPaths';
 import { API_METHODS } from '../utils/constants/apiMethods';
@@ -1586,7 +1586,7 @@ const ItemsList = () => {
         </Button>
       </div>
       <h4 className="total-item-count">Total Items : {totalItemsCount}</h4>
-      {openScanner && (
+      {/* {openScanner && (
         <BarcodeScannerComponent
           width={500}
           height={500}
@@ -1599,7 +1599,7 @@ const ItemsList = () => {
             }
           }}
         />
-      )}
+      )} */}
       <div>
         <Table
           striped
