@@ -74,7 +74,7 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
     >
       <Stack spacing="md">
         {batches.map((batch) => {
-          const isAdded = expiryBatches?.some((poBatch) => poBatch?._id?.toString() === batch._id?.toString());
+          const isAdded = expiryBatches?.some((poBatch: any) => poBatch?._id?.toString() === batch._id?.toString());
           return (
             <Card
               key={batch._id}
