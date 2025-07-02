@@ -89,6 +89,7 @@ import {copyStockTransaction} from './copyStockTransaction';
 import {copyPurchaseOrder} from './copyPurchaseOrder';
 import { updateSellFrequency } from './updateSellFrequency';
 import { checkLowStockAndCreateTransaction } from './checkLowStockAndCreateTransaction';
+import { addExpiryBatchToPO } from './addExpiryBatchToPO'
 
 export {
   addBulkItems,
@@ -181,5 +182,6 @@ export {
   copyStockTransaction,
   copyPurchaseOrder,
   updateSellFrequency,
-  checkLowStockAndCreateTransaction
+  checkLowStockAndCreateTransaction,
+  addExpiryBatchToPO
 };

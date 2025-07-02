@@ -14,6 +14,7 @@ export const API_PATHS = {
     EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
     GET_ITEM_SOLD:'/api/purchaseOrder/itemSold',
     COPY_PURCHASE_ORDER: '/api/purchaseOrder/copyPurchaseOrder',
+    ADD_EXPIRY_BATCH_TO_PO: '/api/purchaseOrder/addExpiryBatchToPO',
   },
   SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {

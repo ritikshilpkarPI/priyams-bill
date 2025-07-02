@@ -66,6 +66,12 @@ const purchaseOrderSchema = new mongoose.Schema({
       },
     },
   ],
+  expiryBatches: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ExpiredItemsBatch',
+    },
+  ],
   purchaseDetails: {
     totalPayableAmount: Number,
     totalBillAmount: Number,

@@ -5,6 +5,9 @@ import {
   Select,
   Textarea,
   TextInput,
+  Paper,
+  Title,
+  Box,
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -36,7 +39,7 @@ import {
 } from 'src/redux/paymentDetailForm/paymentDetailFormSlice';
 import { CONSTANTS } from 'src/constants/constants';
 import { selectPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSelectors';
-// import './PaymentDetailsForm.css';
+import './PaymentDetailsForm.css';
 import { useMediaQuery } from '@mantine/hooks';
 export const PaymentDetailsForm = ({
   purchaseOrderId,
@@ -57,6 +60,12 @@ export const PaymentDetailsForm = ({
   const totalItemsCost = parseFloat(purchaseOrder.purchaseDetails?.totalItemsCost?.toFixed(2) ?? '');
   const paymentsList = purchaseOrder.purchaseDetails?.payments || [];
   const creditsList = purchaseOrder.purchaseDetails?.credits || [];
+
+  const expiryBatches = purchaseOrder.expiryBatches || [];
+  const expiryBatchCost = Array.isArray(expiryBatches)
+    ? expiryBatches.reduce((sum, batch) => sum + (batch?.expiryBatchCost || 0), 0)
+    : 0;
+  const hasExpiryBatchCost = expiryBatchCost > 0;
 
   const setDefaultPurchaseDetails = () => {
     if (!purchaseOrder || !purchaseOrder.purchaseDetails) return;
@@ -155,24 +164,44 @@ export const PaymentDetailsForm = ({
 
   const isRemarkRequired = ((totalBillAmount !== totalItemsCost) || (totalPayableAmount !== totalItemsCost));
 
+  const safeCurrency = (value: number) => isNaN(value) ? '0.00' : value.toFixed(2);
+
   return (
-    <Flex
-      gap="16px"
-      direction="column"
-      sx={{
-        border: '1px solid grey',
-        padding: '16px',
-        borderRadius: '8px',
-        textAlign: 'left',
-        overflow: 'scroll',
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
-      }}
-      mx="sm"
-      mt="16px"
+    <div
+      className={`payment-details-form-container ${isSmallScreen ? 'column' : 'row'}`}
+      style={{ margin: '16px' }}
     >
+      <Paper
+        className="summary-card"
+        withBorder
+      >
+        <div className="summary-title">Order Summary</div>
+        <div className="summary-row">
+          <span className="summary-label">Total Price</span>
+          <span className="summary-value">₹{safeCurrency(totalItemsCost || 0)}</span>
+        </div>
+        <div className="summary-row">
+          <span className="summary-label">Expiry Price</span>
+          <span className="summary-value expiry">₹{safeCurrency(expiryBatchCost)}</span>
+        </div>
+        <div className="summary-row" style={{ marginTop: 8 }}>
+          <span className="summary-label" style={{ color: '#222', fontWeight: 600 }}>Total Payable</span>
+          <span className="summary-value payable">₹{safeCurrency((totalItemsCost || 0) - (expiryBatchCost || 0))}</span>
+        </div>
+      </Paper>
+
+      <Box sx={{ flex: 1 }}>
         <Grid columns={12} sx={{ width: '100%' }}>
+          {hasExpiryBatchCost && (
+            <Grid.Col span={isSmallScreen ? 12 : 4}>
+              <TextInput
+                label="Expiry Batch Cost"
+                disabled={true}
+                value={expiryBatchCost.toFixed(2)}
+                sx={{ width: '100%' }}
+              />
+            </Grid.Col>
+          )}
           <Grid.Col span={isSmallScreen ? 12 : 4}>
             <CustomNumberInput
               label="Total Bill Amount"
@@ -291,6 +320,7 @@ export const PaymentDetailsForm = ({
               )}
           </Grid.Col>
         </Grid>
-    </Flex>
+      </Box>
+    </div>
   );
 };
