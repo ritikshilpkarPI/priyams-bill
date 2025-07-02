@@ -116,6 +116,8 @@ export const API_PATHS = {
     GET_ALL_STORES: "/api/store",
     GET_ITEMS_BY_STORE_ID: '/api/store/inventory/items',
     GET_STORE_INVENTORY_MANAGEMENT: '/api/store/inventory',
+    UPDATE_SELL_FREQUENCY: '/api/store/updateSellFrequency',
+    CHECK_LOW_STOCK_AND_CREATE_TRANSACTION: '/api/store/checkLowStockAndCreateTransaction',
   },
   COMPANY:{
     GET_ALL_COMPANY: "/api/getAllCompany"

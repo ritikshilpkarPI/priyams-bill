@@ -87,6 +87,8 @@ import { getDealerCatalog } from './getDealerCatalog';
 import { getStockTransactionsByStatus } from './getStockTransactionsByStatus';
 import {copyStockTransaction} from './copyStockTransaction';
 import {copyPurchaseOrder} from './copyPurchaseOrder';
+import { updateSellFrequency } from './updateSellFrequency';
+import { checkLowStockAndCreateTransaction } from './checkLowStockAndCreateTransaction';
 import { addExpiryBatchToPO } from './addExpiryBatchToPO'
 
 export {
@@ -179,5 +181,7 @@ export {
   getStockTransactionsByStatus,
   copyStockTransaction,
   copyPurchaseOrder,
+  updateSellFrequency,
+  checkLowStockAndCreateTransaction,
   addExpiryBatchToPO
 };

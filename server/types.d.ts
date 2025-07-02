@@ -291,3 +291,17 @@ export interface dealerCatalogBrand {
   brandName: string;
   companyId?: Types.ObjectId;
 }
+
+
+export interface DeficiencyItem {
+  itemId: string;
+  deficiencyQty: number;
+  expiryDate?: Date;
+  manufacturingDate?: Date;
+}
+
+export interface CreateDeficiencyTransactionParams {
+  storeId: string;
+  staffId: string;
+  items: DeficiencyItem[];
+}
