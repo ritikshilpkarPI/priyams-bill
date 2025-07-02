@@ -16,6 +16,7 @@ import {
 import App from '../App';
 import { parseJwtToken } from '../utils/cookie';
 import { protectedRouteMap } from './protectedRouteMap';
+import ItemsByBrandOrCompanyPage from '../Pages/dealerCatalog/ItemsByBrandOrCompanyPage';
 
 const { allowedRoutes = [], role = '' } = parseJwtToken() ?? {};
 
@@ -73,6 +74,10 @@ export const router = createBrowserRouter([
         path: ROUTES.CUSTOMER_BILL,
         element: <CustomerBill />,
         index: true,
+      },
+      {
+        path: ROUTES.ITEMS_BY_BRAND_OR_COMPANY,
+        element: <ItemsByBrandOrCompanyPage />,
       },
     ],
   },
