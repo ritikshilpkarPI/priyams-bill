@@ -16,6 +16,7 @@ const initialState: PurchaseOrderDataType = {
   isDraft: undefined,
   isRejected: undefined,
   statusHistory:[],
+  dealerId: '',
 };
 
 const purchaseOrderSlice = createSlice({
