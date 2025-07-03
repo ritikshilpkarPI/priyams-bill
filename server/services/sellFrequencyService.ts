@@ -53,7 +53,7 @@ export async function updateSellFrequencyForStore(storeId: string) {
     return {
       updateOne: {
         filter: { _id: inv._id },
-        update: { $set: { sellFrequency } }
+        update: { $set: { sellFrequency, minStockMultiplier: 2 } }
       }
     };
   });

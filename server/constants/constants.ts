@@ -43,4 +43,5 @@ export const CONSTANTS = Object.freeze({
       APPROVED: "APPROVED"
     },
     STORE_COLLECTION_NAME: "store_items_1_462022",
+    AUTO_STORE_STOCK_TRANSACTION: "AUTO_STORE_STOCK_TRANSACTION",
 })

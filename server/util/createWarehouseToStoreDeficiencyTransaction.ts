@@ -44,7 +44,7 @@ export async function createWarehouseToStoreDeficiencyTransaction({
       destinationEntityId: storeId,
       destinationType: CONSTANTS.STORE,
     },
-    transactionReason: CONSTANTS.QUANTITY_UPDATE,
+    transactionReason: CONSTANTS.AUTO_STORE_STOCK_TRANSACTION,
     transactionStatus: CONSTANTS.TRANSACTIONS_STATUS.SOURCE_CREATED,
     approvedByAdmin: false,
     transactionItems,

@@ -150,14 +150,15 @@ const StockTransactions: React.FC = () => {
     navigate(`/createTransaction/${transactionId}`);
   };
 
-  const renderTransactionId = (row: { _id: string; isSubRow?: boolean }) => {
-    if (row.isSubRow) return null;    
+  const renderTransactionId = (row: { transactionId: string; isSubRow?: boolean }) => {
+    if (row.isSubRow) return null;
+    
     return (
       <Chip
-        label={row._id}
+        label={row.transactionId}
         size="small"
         sx={{
-          backgroundColor: generateColor(row._id),
+          backgroundColor: generateColor(row.transactionId),
           color: '#fff',
         }}
       />
