@@ -27,7 +27,8 @@ export const CONSTANTS = Object.freeze({
         TRANSFER_OF_GOOD: "Transfer of Good",
         ERROR: "Error", 
         PACKAGING: "Packaging",
-        QUANTITY_UPDATE: "QUANTITY_UPDATE" 
+        QUANTITY_UPDATE: "QUANTITY_UPDATE",
+        AUTO_STORE_STOCK_TRANSACTION: "AUTO_STORE_STOCK_TRANSACTION",
     },
     WAREHOUSE_COLLECTION_NAME: "pstr_1_462020_warehouse",
     NEW_ITEM: "NEW ITEM",
