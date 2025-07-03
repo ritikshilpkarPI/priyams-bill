@@ -46,4 +46,5 @@ export const ROUTES = Object.freeze({
     STOCK_TRANSACTIONS:"/stock-transactions",
     DEALER_CATALOG: "/dealer-catalog",
     ITEMS_BY_BRAND_OR_COMPANY: '/items-by/:type/:id',
+    ADMIN: '/admin'
 })

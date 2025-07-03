@@ -986,3 +986,31 @@ export const copyTransactionAPI = async (
   }
 };
 
+export const updateSellFrequencyAPI = async (storeId: string, token: string) => {
+  try {
+    const response = await genericAxios({
+      url: API_PATHS.STORE.UPDATE_SELL_FREQUENCY,
+      method: 'POST',
+      data: { storeId },
+      
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const checkLowStockAndCreateTransactionAPI = async (storeId: string, staffId: string, token: string) => {
+  try {
+    const response = await genericAxios({
+      url: API_PATHS.STORE.CHECK_LOW_STOCK_AND_CREATE_TRANSACTION,
+      method: 'POST',
+      data: { storeId, staffId },
+      
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
