@@ -19,6 +19,14 @@ export const PAGES = {
 
 export const sidebarListData = [
   {
+    ADMIN: [{
+      name: 'Admin Panel',
+      url: '/admin',
+      icon: 'images/dealer.svg',
+    }]
+
+  },
+  {
     ITEM: [
       { name: 'Warehouse Inventory', url: '/warehouseInventory', icon: 'images/warehouse-inventory.svg' },
       { name: 'Store Inventory', url: '/storeInventory', icon: 'images/store-inventory.svg' },
