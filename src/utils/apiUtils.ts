@@ -1029,3 +1029,15 @@ export const checkLowStockAndCreateTransactionAPI = async (storeId: string, staf
   }
 };
 
+export const removeExpiryBatchFromPOAPI = async (purchaseOrderId: string, batchId: string) => {
+  try {
+    const response = await postAPI({
+      path: API_PATHS.PURCHASE_ORDER.REMOVE_EXPIRY_BATCH_FROM_PO,
+      data: { purchaseOrderId, batchId },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
