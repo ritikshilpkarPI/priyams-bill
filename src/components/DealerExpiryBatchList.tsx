@@ -3,12 +3,11 @@ import { Table, Loader, Text, Paper, Group, Badge, Button, Card, Box, Divider, S
 import { getAllExpiryItemsBatchAPI, addExpiryBatchToPOAPI, removeExpiryBatchFromPOAPI } from 'src/utils/apiUtils';
 import { IconPlus } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
-import { DealerExpiryBatchListProps } from 'src/types';
 import styles from './DealerExpiryBatchList.module.css';
 import { useDispatch } from 'react-redux';
 import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
 
-const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId, purchaseOrderId, expiryBatches = [] }) => {
+const DealerExpiryBatchList: React.FC<{ dealerId: string; purchaseOrderId: string; expiryBatches: any[] }> = ({ dealerId, purchaseOrderId, expiryBatches = [] }) => {
   const [loading, setLoading] = useState(false);
   const [batches, setBatches] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -35,10 +34,16 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
   }, [dealerId]);
 
   useEffect(() => {
-    setLocalExpiryBatches(expiryBatches);
-    console.log('expiryBatches prop updated:', expiryBatches);
-    console.log('localExpiryBatches after prop update:', localExpiryBatches);
-  }, [expiryBatches]);
+    let mapped: any[] = [];
+    if (expiryBatches && expiryBatches.length > 0) {
+      if (typeof expiryBatches[0] === 'string' || typeof expiryBatches[0] === 'number') {
+        mapped = batches.filter((batch) => expiryBatches.includes(batch._id?.toString()));
+      } else {
+        mapped = expiryBatches;
+      }
+    }
+    setLocalExpiryBatches(mapped);
+  }, [expiryBatches, batches]);
 
   const onAddToPO = async (batch: any) => {
     if (!purchaseOrderId) {
@@ -50,12 +55,15 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
     setAddingBatchId(null);
     if (res?.success) {
       setLocalExpiryBatches(prev => {
-        const updated = [...prev, batch];
+        const updated = prev.filter(b => b._id?.toString() !== batch._id?.toString());
         return updated;
-      });
+      });      
       toast.success('Expiry batch added to PO');
       if (res.order) {
-        dispatch(setPurchaseOrder(res.order));
+        dispatch(setPurchaseOrder({
+          ...res.order,
+          expiryBatchCost: res.order.expiryBatchCost || 0,
+        }));
       }
     } else {
       toast.error(res?.message || 'Failed to add expiry batch to PO');
@@ -74,7 +82,7 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
       setLocalExpiryBatches(prev => {
         const updated = prev.filter(b => b._id?.toString() !== batch._id?.toString());
         return updated;
-      });
+      });      
       toast.success('Expiry batch removed from PO');
       if (res.order) {
         dispatch(setPurchaseOrder(res.order));
@@ -121,6 +129,10 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
                 <Group className={styles.badgeGroup}>
                   <Badge color="blue" size="lg" variant="filled" radius="sm">
                     Box ID: {batch.boxId || '-'}
+                  </Badge>
+                  
+                  <Badge className={styles.seeDetailsExpiryBatch}  color="orange" variant="light"  onClick={() => window.open(`/addExpiredItem/${batch._id}`, '_blank')}>
+                    see details
                   </Badge>
                   <Badge color="teal" variant="light">
                     {batch.createdAt ? new Date(batch.createdAt).toLocaleString() : '-'}

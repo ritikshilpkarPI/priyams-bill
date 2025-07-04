@@ -46,4 +46,8 @@
   flex-wrap: wrap;
   gap: 8px;
   align-items: flex-start;
-} 
+}
+
+.seeDetailsExpiryBatch {
+  cursor: pointer !important;
+}
