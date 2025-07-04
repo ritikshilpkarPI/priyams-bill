@@ -157,6 +157,25 @@ export const PaymentDetailsForm = ({
     }
   }, [purchaseOrder]);
 
+  useEffect(() => {
+    if (purchaseOrder && purchaseOrder.purchaseDetails) {
+      const newTotalPayable = (totalItemsCost || 0) - (expiryBatchCost || 0);
+      if (purchaseDetails.totalPayableAmount !== newTotalPayable) {
+        dispatch(setPaymentDetailForm({
+          ...purchaseDetails,
+          totalPayableAmount: newTotalPayable,
+        }));
+        paymentDetailFormValidation.validate({
+          ...purchaseDetails,
+          totalPayableAmount: newTotalPayable,
+          totalItemsCost,
+        }, { abortEarly: false })
+          .then(() => setErrors({}))
+          .catch((error) => setErrors(getYupValidationErrorMap(error)));
+      }
+    }
+  }, [expiryBatchCost, totalItemsCost]);
+
   const {
     totalBillAmount,
     totalPayableAmount,

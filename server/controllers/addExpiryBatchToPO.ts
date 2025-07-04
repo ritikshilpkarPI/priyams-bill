@@ -31,6 +31,7 @@ export const addExpiryBatchToPO = async (
       purchaseOrder.expiryBatches.push(expiryBatchId);
     }
     await purchaseOrder.save();
+    await purchaseOrder.populate('expiryBatches');
     return res.status(200).json({ success: true, message: MESSAGES.EXPIRED_ITEMS_BATCH_ADDED_TO_PO, order: purchaseOrder });
   } catch (error) {
     next(error);
