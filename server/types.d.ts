@@ -271,6 +271,7 @@ export interface ExpiredItemsSchema {
   isCleared: boolean;
   items: ExpiredItems[];
   itemWiseTotalCost: ItemWiseTotalCostType[];
+  purchaseOrderId?: mongoose.Types.ObjectId;
 }
 
 export interface dealerCatalogDealer {

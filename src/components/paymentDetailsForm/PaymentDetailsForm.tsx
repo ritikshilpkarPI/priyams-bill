@@ -174,7 +174,7 @@ export const PaymentDetailsForm = ({
           .catch((error) => setErrors(getYupValidationErrorMap(error)));
       }
     }
-  }, [expiryBatchCost, totalItemsCost]);
+  }, [expiryBatchCost, totalItemsCost, purchaseDetails]);
 
   const {
     totalBillAmount,
