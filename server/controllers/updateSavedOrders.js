@@ -99,19 +99,34 @@ const updateSavedOrders = async (req, res, next) => {
     }
 
     const purchaseOrder = await PurchaseOrder.findById(id);
+    if (!purchaseOrder) {
+      return res.status(404).json({ error: MESSAGES.PURCHASE_ORDER_NOT_FOUND });
+    }
+
+    const newSku = getItemSKU({
+      itemQuantity: new_order.itemQuantity,
+      unit: new_order.unit,
+      itemName: new_order.inputName,
+      barcode: new_order.barcode,
+      mrp: new_order.mrp
+    });
+
+    const existingItem = purchaseOrder.purchasedItems.find(item => item.sku === newSku);
+    if (existingItem) {
+      return res.status(409).json({
+        message: MESSAGES.SKU_ALREADY_EXISTS_IN_PURCHASE_ORDER,
+        success: false,
+        existingItemId: existingItem._id
+      });
+    }
+
     const newItemCost = new_order.costPrice * new_order.stockQuantity;
 
     const newPurchasedItem = {
       ...new_order,
       images: imageIds,
       expiryDates: updatedExpiryDates,
-      sku: getItemSKU({
-        itemQuantity: new_order.itemQuantity,
-        unit: new_order.unit,
-        itemName: new_order.inputName,
-        barcode: new_order.barcode,
-        mrp: new_order.mrp
-      }),
+      sku: newSku,
       brandId: brand._id,
       companyId: company._id,
       globalImages,
