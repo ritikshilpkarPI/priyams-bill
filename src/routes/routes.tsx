@@ -6,6 +6,7 @@ import AdminRoute from '../components/AdminRoute';
 import { ROUTES } from '../utils/constants/routes';
 import CustomerBill from '../Pages/CustomerBill';
 import Cookies from 'js-cookie';
+import AdminPage from '../Pages/AdminPage';
 
 import {
   DayWiseBillFeed,
@@ -79,6 +80,10 @@ export const router = createBrowserRouter([
         path: ROUTES.ITEMS_BY_BRAND_OR_COMPANY,
         element: <ItemsByBrandOrCompanyPage />,
       },
+      {
+        path: ROUTES.ADMIN,
+        element: <AdminPage />,
+      }
     ],
   },
   {

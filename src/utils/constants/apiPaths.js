@@ -14,6 +14,8 @@ export const API_PATHS = {
     EXPIRED_ITEM: '/api/purchaseOrder/addExpiredProduct',
     GET_ITEM_SOLD:'/api/purchaseOrder/itemSold',
     COPY_PURCHASE_ORDER: '/api/purchaseOrder/copyPurchaseOrder',
+    ADD_EXPIRY_BATCH_TO_PO: '/api/purchaseOrder/addExpiryBatchToPO',
+    REMOVE_EXPIRY_BATCH_FROM_PO: '/api/purchaseOrder/removeBatchFromPO',
   },
   SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {
@@ -115,6 +117,8 @@ export const API_PATHS = {
     GET_ALL_STORES: "/api/store",
     GET_ITEMS_BY_STORE_ID: '/api/store/inventory/items',
     GET_STORE_INVENTORY_MANAGEMENT: '/api/store/inventory',
+    UPDATE_SELL_FREQUENCY: '/api/store/updateSellFrequency',
+    CHECK_LOW_STOCK_AND_CREATE_TRANSACTION: '/api/store/checkLowStockAndCreateTransaction',
   },
   COMPANY:{
     GET_ALL_COMPANY: "/api/getAllCompany"

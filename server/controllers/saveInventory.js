@@ -4,6 +4,8 @@ import { Item } from "../db-models/item-model";
 import PurchaseOrder from "../db-models/purchase-order-model";
 import { DealerModel } from "../db-models/dealer-model";
 import { getStoreInventoryModel } from "../db-models/storeInventory-model"; 
+import { createPOAutoWarehouseToStoreTransaction } from '../util/createPOAutoWarehouseToStoreTransaction';
+import { addClearanceToExpiryBatches } from '../util/expiryBatchUtils';
 const { CONSTANTS } = require('../constants/constants');
 
 const saveInventory = async (req, res, next) => {
@@ -208,6 +210,27 @@ const saveInventory = async (req, res, next) => {
       await PurchaseOrder.bulkWrite(purchaseOrderItemBulkUpdates, { session });
     }
 
+    const staffId = user?._id?.toString();    
+    const newPOItems = newItems
+      .filter(item => !item.item_id)
+      .map(item => {
+        const insertedItems = newlyInsertedItems.find(i => i.sku === item.sku);
+        return insertedItems ? { itemId: insertedItems._id.toString(), poQty: Number(item.stockQuantity) || 0 } : null;
+      })
+      .filter(Boolean);      
+
+    if (newPOItems.length > 0 && staffId) {
+      try {
+      await createPOAutoWarehouseToStoreTransaction({
+        staffId,
+        newItems: newPOItems,
+      });
+    } catch(err) {
+      console.error(err)
+      }
+
+    }
+
     failedItems = newItems.filter(
       (item) =>
         !bulkWriteResult.insertedCount &&
@@ -272,6 +295,11 @@ const saveInventory = async (req, res, next) => {
       },
       { new: true, session }
     );
+
+    // After approval, if there are expiry batches, add clearance (fire and forget)
+    if (order && Array.isArray(order.expiryBatches) && order.expiryBatches.length > 0) {      
+     await addClearanceToExpiryBatches(order.expiryBatches, order._id.toString(), 'Order Approved');
+    }
 
     await session.commitTransaction();
     session.endSession();

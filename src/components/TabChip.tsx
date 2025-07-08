@@ -4,6 +4,7 @@ export const TAB: Record<string, string> = {
   dealerDetails: 'dealerDetails',
   itemDetails: 'itemDetails',
   paymentDetails: 'paymentDetails',
+  expiryBatch: 'expiryBatch',
   billUpload: 'billUpload',
   summary: 'summary',
 };

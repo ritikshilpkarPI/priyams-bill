@@ -93,7 +93,11 @@ const {
   getDealerCatalog,
   getStockTransactionsByStatus,
   copyPurchaseOrder,
-  copyStockTransaction
+  copyStockTransaction,
+  updateSellFrequency,
+  checkLowStockAndCreateTransaction,
+  addExpiryBatchToPO,
+  removeExpiryBatchFromPO
 } = require('../controllers/index');
 
 
@@ -363,5 +367,16 @@ router.post(API_PATHS.STOCK_TRANSACTION.UPDATE_STOCK_TRANSACTION_BY_SOURCE, isLo
 router.use(API_PATHS.REPORT.POST_SALES_REPORTS, isLoggedIn, salesReportsRouter);
 
 router.post(API_PATHS.DEALER_CATALOG , getDealerCatalog);
+
+router.post(API_PATHS.STORE.UPDATE_SELL_FREQUENCY, updateSellFrequency);
+
+router.post(API_PATHS.STORE.CHECK_LOW_STOCK_AND_CREATE_TRANSACTION, checkLowStockAndCreateTransaction);
+router.post(
+  `${API_PATHS.PURCHASE_ORDER.ADD_EXPIRY_BATCH_TO_PO}`,
+  isLoggedIn,
+  addExpiryBatchToPO
+);
+
+router.post(API_PATHS.PURCHASE_ORDER.REMOVE_EXPIRY_BATCH_FROM_PO, isLoggedIn, removeExpiryBatchFromPO);
 
 export default router;

@@ -8,4 +8,64 @@
     .mantine-DatePicker-label {
       font-size: 12px;
     }
-  }
+    display: flex;
+    gap: 16px;
+    border: 1px solid grey;
+    padding: 16px;
+    border-radius: 8px;
+    overflow: scroll;
+}
+
+.payment-details-form-container.column {
+  flex-direction: column;
+}
+
+.payment-details-form-container.row {
+  flex-direction: row;
+}
+
+.summary-card {
+  min-width: 260px;
+  max-width: 320px;
+  margin-left: auto;
+  margin-bottom: 0;
+  background: #f8fafc;
+  align-self: flex-start;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  border: 1px solid #e0e7ef;
+  padding: 24px 20px;
+}
+
+.summary-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.summary-label {
+  color: #666;
+}
+
+.summary-value {
+  font-weight: 700;
+  color: #222;
+}
+
+.summary-value.expiry {
+  color: #e8590c;
+}
+
+.summary-value.payable {
+  color: #1864ab;
+  font-weight: 800;
+  font-size: 18px;
+}

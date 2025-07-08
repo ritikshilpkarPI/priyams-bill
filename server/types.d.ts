@@ -271,6 +271,7 @@ export interface ExpiredItemsSchema {
   isCleared: boolean;
   items: ExpiredItems[];
   itemWiseTotalCost: ItemWiseTotalCostType[];
+  purchaseOrderId?: mongoose.Types.ObjectId;
 }
 
 export interface dealerCatalogDealer {
@@ -290,4 +291,30 @@ export interface dealerCatalogBrand {
   _id: Types.ObjectId;
   brandName: string;
   companyId?: Types.ObjectId;
+}
+
+
+export interface DeficiencyItem {
+  itemId: string;
+  deficiencyQty: number;
+  expiryDate?: Date;
+  manufacturingDate?: Date;
+}
+
+export interface CreateDeficiencyTransactionParams {
+  storeId: string;
+  staffId: string;
+  items: DeficiencyItem[];
+}
+
+
+interface NewPOItem {
+  itemId: string;
+  poQty: number;
+}
+
+export interface CreatePOAutoWarehouseToStoreTransactionParams {
+  storeId?: string; 
+  staffId: string;
+  newItems: NewPOItem[];
 }

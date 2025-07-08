@@ -87,6 +87,10 @@ import { getDealerCatalog } from './getDealerCatalog';
 import { getStockTransactionsByStatus } from './getStockTransactionsByStatus';
 import {copyStockTransaction} from './copyStockTransaction';
 import {copyPurchaseOrder} from './copyPurchaseOrder';
+import { updateSellFrequency } from './updateSellFrequency';
+import { checkLowStockAndCreateTransaction } from './checkLowStockAndCreateTransaction';
+import { addExpiryBatchToPO } from './addExpiryBatchToPO';
+import { removeExpiryBatchFromPO } from "./removeExpiryBatchFromPO";
 
 export {
   addBulkItems,
@@ -177,5 +181,9 @@ export {
   getDealerCatalog,
   getStockTransactionsByStatus,
   copyStockTransaction,
-  copyPurchaseOrder
+  copyPurchaseOrder,
+  updateSellFrequency,
+  checkLowStockAndCreateTransaction,
+  addExpiryBatchToPO,
+  removeExpiryBatchFromPO
 };
