@@ -78,6 +78,10 @@ const expiredItemsBatchSchema = new Schema<ExpiredItemsSchema>(
         itemTotalCost: { type: Number },
       },
     ],
+    purchaseOrderId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'PurchaseOrder',
+    }
   },
   {
     timestamps: true,

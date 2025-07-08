@@ -1409,6 +1409,12 @@ export interface DealerExpiryBatchListProps {
   }];
 }
 
+export type DealerExpiryBatchListProps = {
+  dealerId: string;
+  purchaseOrderId: string;
+  expiryBatches: any[];
+};
+
 export {};
 
 

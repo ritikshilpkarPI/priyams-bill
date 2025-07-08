@@ -15,6 +15,7 @@ export const API_PATHS = {
     GET_ITEM_SOLD:'/api/purchaseOrder/itemSold',
     COPY_PURCHASE_ORDER: '/api/purchaseOrder/copyPurchaseOrder',
     ADD_EXPIRY_BATCH_TO_PO: '/api/purchaseOrder/addExpiryBatchToPO',
+    REMOVE_EXPIRY_BATCH_FROM_PO: '/api/purchaseOrder/removeBatchFromPO',
   },
   SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {

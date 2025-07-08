@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Loader, Text, Paper, Group, Badge, Button, Card, Box, Divider, ScrollArea, Tooltip, Stack } from '@mantine/core';
-import { getAllExpiryItemsBatchAPI, addExpiryBatchToPOAPI } from 'src/utils/apiUtils';
+import { getAllExpiryItemsBatchAPI, addExpiryBatchToPOAPI, removeExpiryBatchFromPOAPI } from 'src/utils/apiUtils';
 import { IconPlus } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
-import { DealerExpiryBatchListProps } from 'src/types';
 import styles from './DealerExpiryBatchList.module.css';
 import { useDispatch } from 'react-redux';
 import { setPurchaseOrder } from 'src/redux/purchaseOrder/purchaseOrderSlice';
 
-const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId, purchaseOrderId, expiryBatches = [] }) => {
+const DealerExpiryBatchList: React.FC<{ dealerId: string; purchaseOrderId: string; expiryBatches: any[] }> = ({ dealerId, purchaseOrderId, expiryBatches = [] }) => {
   const [loading, setLoading] = useState(false);
   const [batches, setBatches] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [addingBatchId, setAddingBatchId] = useState<string | null>(null);
+  const [removingBatchId, setRemovingBatchId] = useState<string | null>(null);
+  const [localExpiryBatches, setLocalExpiryBatches] = useState<any[]>(expiryBatches);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,6 +33,18 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
       .finally(() => setLoading(false));
   }, [dealerId]);
 
+  useEffect(() => {
+    let mapped: any[] = [];
+    if (expiryBatches && expiryBatches.length > 0) {
+      if (typeof expiryBatches[0] === 'string' || typeof expiryBatches[0] === 'number') {
+        mapped = batches.filter((batch) => expiryBatches.includes(batch._id?.toString()));
+      } else {
+        mapped = expiryBatches;
+      }
+    }
+    setLocalExpiryBatches(mapped);
+  }, [expiryBatches, batches]);
+
   const onAddToPO = async (batch: any) => {
     if (!purchaseOrderId) {
       toast.error('No purchase order selected');
@@ -41,12 +54,41 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
     const res = await addExpiryBatchToPOAPI(purchaseOrderId, batch._id);
     setAddingBatchId(null);
     if (res?.success) {
+      setLocalExpiryBatches(prev => {
+        const updated = prev.filter(b => b._id?.toString() !== batch._id?.toString());
+        return updated;
+      });      
       toast.success('Expiry batch added to PO');
+      if (res.order) {
+        dispatch(setPurchaseOrder({
+          ...res.order,
+          expiryBatchCost: res.order.expiryBatchCost || 0,
+        }));
+      }
+    } else {
+      toast.error(res?.message || 'Failed to add expiry batch to PO');
+    }
+  };
+
+  const onRemoveFromPO = async (batch: any) => {
+    if (!purchaseOrderId) {
+      toast.error('No purchase order selected');
+      return;
+    }
+    setRemovingBatchId(batch._id);
+    const res = await removeExpiryBatchFromPOAPI(purchaseOrderId, batch._id);
+    setRemovingBatchId(null);
+    if (res?.success) {
+      setLocalExpiryBatches(prev => {
+        const updated = prev.filter(b => b._id?.toString() !== batch._id?.toString());
+        return updated;
+      });      
+      toast.success('Expiry batch removed from PO');
       if (res.order) {
         dispatch(setPurchaseOrder(res.order));
       }
     } else {
-      toast.error(res?.message || 'Failed to add expiry batch to PO');
+      toast.error(res?.message || 'Failed to remove expiry batch from PO');
     }
   };
 
@@ -74,7 +116,7 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
     >
       <Stack spacing="md">
         {batches.map((batch) => {
-          const isAdded = expiryBatches?.some((poBatch: any) => poBatch?._id?.toString() === batch._id?.toString());
+          const isAdded = localExpiryBatches?.some((poBatch: any) => poBatch?._id?.toString() === batch._id?.toString());          
           return (
             <Card
               key={batch._id}
@@ -88,6 +130,10 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
                   <Badge color="blue" size="lg" variant="filled" radius="sm">
                     Box ID: {batch.boxId || '-'}
                   </Badge>
+                  
+                  <Badge className={styles.seeDetailsExpiryBatch}  color="orange" variant="light"  onClick={() => window.open(`/addExpiredItem/${batch._id}`, '_blank')}>
+                    see details
+                  </Badge>
                   <Badge color="teal" variant="light">
                     {batch.createdAt ? new Date(batch.createdAt).toLocaleString() : '-'}
                   </Badge>
@@ -98,21 +144,38 @@ const DealerExpiryBatchList: React.FC<DealerExpiryBatchListProps> = ({ dealerId,
                     {batch.expiryBatchCost ? `₹${batch.expiryBatchCost.toFixed(2)}` : '-'}
                   </Badge>
                 </Group>
-                <Tooltip label={isAdded ? 'Already added to PO' : 'Add this expiry batch to PO'}>
-                  <Button
-                    leftIcon={<IconPlus size={18} />}
-                    color={isAdded ? 'gray' : 'indigo'}
-                    variant="gradient"
-                    gradient={{ from: 'indigo', to: 'cyan' }}
-                    size="sm"
-                    radius="md"
-                    onClick={() => onAddToPO(batch)}
-                    style={{ minWidth: 140 }}
-                    loading={addingBatchId === batch._id}
-                    disabled={isAdded || !!addingBatchId}
-                  >
-                    {isAdded ? 'Added' : 'Add to PO'}
-                  </Button>
+                <Tooltip label={isAdded ? 'Remove this expiry batch from PO' : 'Add this expiry batch to PO'}>
+                  {isAdded ? (
+                    <Button
+                      leftIcon={<IconPlus size={18} />}
+                      color="red"
+                      variant="gradient"
+                      gradient={{ from: 'red', to: 'orange' }}
+                      size="sm"
+                      radius="md"
+                      onClick={() => onRemoveFromPO(batch)}
+                      style={{ minWidth: 140 }}
+                      loading={removingBatchId === batch._id}
+                      disabled={!!addingBatchId || removingBatchId === batch._id}
+                    >
+                      {removingBatchId === batch._id ? 'Removing...' : 'Remove from PO'}
+                    </Button>
+                  ) : (
+                    <Button
+                      leftIcon={<IconPlus size={18} />}
+                      color="indigo"
+                      variant="gradient"
+                      gradient={{ from: 'indigo', to: 'cyan' }}
+                      size="sm"
+                      radius="md"
+                      onClick={() => onAddToPO(batch)}
+                      style={{ minWidth: 140 }}
+                      loading={addingBatchId === batch._id}
+                      disabled={isAdded || !!addingBatchId || !!removingBatchId}
+                    >
+                      {addingBatchId === batch._id ? 'Adding...' : 'Add to PO'}
+                    </Button>
+                  )}
                 </Tooltip>
               </Group>
               <Divider my="sm" />
