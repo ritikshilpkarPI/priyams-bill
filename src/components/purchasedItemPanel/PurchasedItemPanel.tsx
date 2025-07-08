@@ -100,9 +100,9 @@ const PurchasedItemPanel: React.FC<PurchaseOrderProps> =  ({isApprovedPO}) => {
     const response = await updatePurchaseOrderByIdAPI(
       purchasedItemData,
       purchaseOrderId
-    );
+    );   
     if (response.isError)
-      return toast.error('unable to add item, please try again');
+      return toast.error(response?.error?.message ?? 'unable to add item, please try again');
     dispatch(resetPurchasedItemForm());
     getPurchaseOrderDetails();
   };
