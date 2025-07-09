@@ -418,8 +418,9 @@ const StoreInventoryManagement: React.FC = () => {
   const user = getUser();
 
 
- const isSourceStaff = Boolean(transactionId) && user?.storeId?._id === stockTransaction?.source?.sourceEntityId;
+ const isSourceStaff = Boolean(transactionId) && user?.storeId === stockTransaction?.source?.sourceEntityId;
 
+ 
 
  const handleUpdateTransaction = async () => {
 try {
