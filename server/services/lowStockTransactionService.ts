@@ -47,6 +47,7 @@ export async function handleLowStockAndCreateTransactions({
 
   const existingTransaction = await StockTransactionModel.findOne({
     transactionReason: CONSTANTS.AUTO_STORE_STOCK_TRANSACTION,
+    approvedByAdmin: false,
   });
   
 
