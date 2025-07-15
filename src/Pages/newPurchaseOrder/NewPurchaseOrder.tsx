@@ -33,6 +33,7 @@ import { useSelector } from 'react-redux';
 import { selectPurchasedItems } from '../../redux/purchaseOrder/purchaseOrderSelectors';
 import MESSAGES from 'src/utils/constants/messages';
 import DealerExpiryBatchList from 'src/components/DealerExpiryBatchList';
+import AutoPOListPanel from '../../components/AutoPOListPanel';
 
 const NewPurchaseOrder = () => {
   const location = useLocation();
@@ -162,6 +163,8 @@ const NewPurchaseOrder = () => {
    
   }
 
+const procurementSource = purchaseOrder?.procurementSource || 'MANUAL';
+
   return (
     <div style={{ marginTop: '16px', marginBottom: '16px' }}>
        <Flex className='purchase-order-title-wrapper' columnGap={30} wrap={'wrap'} align={'center'} justify={'center'}>
@@ -171,6 +174,13 @@ const NewPurchaseOrder = () => {
             {purchaseOrderStatus.label}
           </Chip>
         )}
+        {
+procurementSource === 'AUTO_PO_CREATION' && (
+          <Chip color="blue" variant="filled">
+            Auto PO Creation
+          </Chip>
+        )
+        }
       </Flex>
     { purchaseOrderId && <Group position="right" mb={'26px'} mr={'26px'}  >
         <Button
@@ -261,6 +271,15 @@ const NewPurchaseOrder = () => {
               onTabChange={onTabChange}
             />
           </Tabs.Tab>
+          <Tabs.Tab value={TAB.autoPOs}>
+            <TabChip
+              label="Auto POs"
+              isValid={true}
+              tabKey={TAB.autoPOs}
+              activeTab={activeTab}
+              onTabChange={onTabChange}
+            />
+          </Tabs.Tab>
         </Tabs.List>
       </Tabs>
 
@@ -284,6 +303,9 @@ const NewPurchaseOrder = () => {
         </Tabs.Panel>
         <Tabs.Panel value={TAB.summary}>
           <PurchaseOrderSummary />
+        </Tabs.Panel>
+        <Tabs.Panel value={TAB.autoPOs}>
+          <AutoPOListPanel currentPOId={purchaseOrderId} />
         </Tabs.Panel>
       </Tabs>
       <LoadingOverlay visible={loading} />

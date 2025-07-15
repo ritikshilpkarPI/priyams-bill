@@ -1041,3 +1041,57 @@ export const removeExpiryBatchFromPOAPI = async (purchaseOrderId: string, batchI
   }
 };
 
+export const checkLowStockAndCreateAutoPOAPI = async (storeId: string, staffId: string, token?: string) => {
+  try {
+    const response = await genericAxios({
+      url: '/api/auto-low-stock-po',
+      method: 'POST',
+      data: { storeId, staffId },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const getAllAutoPOsAPI = async () => {
+  try {
+    const response = await genericAxios({
+      url: '/api/purchase-orders',
+      method: 'GET',
+      params: {
+        procurementSource: 'AUTO_PO_CREATION',
+        isApproved: false,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const combinePOsAPI = async (mainPOId: string, mergePOIds: string[]) => {
+  try {
+    const response = await genericAxios({
+      url: API_PATHS.PURCHASE_ORDER.COMBINE_POS,
+      method: 'POST',
+      data: { mainPOId, mergePOIds },
+    });
+    if (response && typeof response === 'object' && 'data' in response) {
+      return response.data;
+    }
+    return response;
+  } catch (error) {
+    return { isError: true, error };
+  }
+};
+
+export const getOrdersByQueryAPI = async (query: any) => {
+  const response = await genericAxios({
+    url: '/api/purchaseOrder/getOrdersByQuery/',
+    method: 'POST',
+    data: { query },
+  });
+  return response;
+};
+

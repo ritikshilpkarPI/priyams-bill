@@ -7,6 +7,7 @@ export const TAB: Record<string, string> = {
   expiryBatch: 'expiryBatch',
   billUpload: 'billUpload',
   summary: 'summary',
+  autoPOs: 'autoPOs'
 };
 
 export type TabKey = keyof typeof TAB;

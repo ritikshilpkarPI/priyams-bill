@@ -97,7 +97,9 @@ const {
   updateSellFrequency,
   checkLowStockAndCreateTransaction,
   addExpiryBatchToPO,
-  removeExpiryBatchFromPO
+  removeExpiryBatchFromPO,
+  checkLowStockAndCreateAutoPO,
+  combinePOsController
 } = require('../controllers/index');
 
 
@@ -378,5 +380,9 @@ router.post(
 );
 
 router.post(API_PATHS.PURCHASE_ORDER.REMOVE_EXPIRY_BATCH_FROM_PO, isLoggedIn, removeExpiryBatchFromPO);
+
+router.post(API_PATHS.PURCHASE_ORDER.AUTO_PO_CREATE, isLoggedIn, checkLowStockAndCreateAutoPO)
+
+router.post(API_PATHS.PURCHASE_ORDER.COMBINE_POS, isLoggedIn, combinePOsController);
 
 export default router;
