@@ -62,10 +62,6 @@ export const PaymentDetailsForm = ({
   const creditsList = purchaseOrder.purchaseDetails?.credits || [];
 
   const expiryBatches = purchaseOrder.expiryBatches || [];
-  const expiryBatchCost = Array.isArray(expiryBatches)
-    ? expiryBatches.reduce((sum, batch) => sum + (batch?.expiryBatchCost || 0), 0)
-    : 0;
-  const hasExpiryBatchCost = expiryBatchCost > 0;
 
   const setDefaultPurchaseDetails = () => {
     if (!purchaseOrder || !purchaseOrder.purchaseDetails) return;
@@ -157,25 +153,6 @@ export const PaymentDetailsForm = ({
     }
   }, [purchaseOrder]);
 
-  useEffect(() => {
-    if (purchaseOrder && purchaseOrder.purchaseDetails) {
-      const newTotalPayable = (totalItemsCost || 0) - (expiryBatchCost || 0);
-      if (purchaseDetails.totalPayableAmount !== newTotalPayable) {
-        dispatch(setPaymentDetailForm({
-          ...purchaseDetails,
-          totalPayableAmount: newTotalPayable,
-        }));
-        paymentDetailFormValidation.validate({
-          ...purchaseDetails,
-          totalPayableAmount: newTotalPayable,
-          totalItemsCost,
-        }, { abortEarly: false })
-          .then(() => setErrors({}))
-          .catch((error) => setErrors(getYupValidationErrorMap(error)));
-      }
-    }
-  }, [expiryBatchCost, totalItemsCost, purchaseDetails]);
-
   const {
     totalBillAmount,
     totalPayableAmount,
@@ -199,28 +176,14 @@ export const PaymentDetailsForm = ({
           <span className="summary-label">Total Price</span>
           <span className="summary-value">₹{safeCurrency(totalItemsCost || 0)}</span>
         </div>
-        <div className="summary-row">
-          <span className="summary-label">Expiry Price</span>
-          <span className="summary-value expiry">₹{safeCurrency(expiryBatchCost)}</span>
-        </div>
         <div className="summary-row" style={{ marginTop: 8 }}>
           <span className="summary-label" style={{ color: '#222', fontWeight: 600 }}>Total Payable</span>
-          <span className="summary-value payable">₹{safeCurrency((totalItemsCost || 0) - (expiryBatchCost || 0))}</span>
+          <span className="summary-value payable">₹{safeCurrency(totalItemsCost || 0)}</span>
         </div>
       </Paper>
 
       <Box sx={{ flex: 1 }}>
         <Grid columns={12} sx={{ width: '100%' }}>
-          {hasExpiryBatchCost && (
-            <Grid.Col span={isSmallScreen ? 12 : 4}>
-              <TextInput
-                label="Expiry Batch Cost"
-                disabled={true}
-                value={expiryBatchCost.toFixed(2)}
-                sx={{ width: '100%' }}
-              />
-            </Grid.Col>
-          )}
           <Grid.Col span={isSmallScreen ? 12 : 4}>
             <CustomNumberInput
               label="Total Bill Amount"

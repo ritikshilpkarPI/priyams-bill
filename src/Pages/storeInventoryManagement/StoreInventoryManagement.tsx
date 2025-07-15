@@ -418,8 +418,9 @@ const StoreInventoryManagement: React.FC = () => {
   const user = getUser();
 
 
- const isSourceStaff = Boolean(transactionId) && user?.storeId?._id === stockTransaction?.source?.sourceEntityId;
+ const isSourceStaff = Boolean(transactionId) && user?.storeId === stockTransaction?.source?.sourceEntityId;
 
+const isDestinationStaff = Boolean(transactionId) && user?.storeId === stockTransaction?.destination?.destinationEntityId; 
 
  const handleUpdateTransaction = async () => {
 try {
@@ -641,7 +642,7 @@ const createTransactionCopy = async () => {
         )}
          
          {
-          isSourceStaff && transactionId && (
+          (isSourceStaff || isDestinationStaff) && transactionId && (
             <Grid.Col span={isSmallScreen? 12 : 4}>
               <Button
                 loading={loading}
