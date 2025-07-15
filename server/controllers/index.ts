@@ -91,6 +91,8 @@ import { updateSellFrequency } from './updateSellFrequency';
 import { checkLowStockAndCreateTransaction } from './checkLowStockAndCreateTransaction';
 import { addExpiryBatchToPO } from './addExpiryBatchToPO';
 import { removeExpiryBatchFromPO } from "./removeExpiryBatchFromPO";
+import { checkLowStockAndCreateAutoPO } from "./checkLowStockAndCreateAutoPO";
+import { combinePOsController } from "./combinePOsController";
 
 export {
   addBulkItems,
@@ -185,5 +187,7 @@ export {
   updateSellFrequency,
   checkLowStockAndCreateTransaction,
   addExpiryBatchToPO,
-  removeExpiryBatchFromPO
+  removeExpiryBatchFromPO,
+  checkLowStockAndCreateAutoPO,
+  combinePOsController
 };

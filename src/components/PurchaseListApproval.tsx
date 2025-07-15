@@ -81,7 +81,25 @@ const PurchaseListApproval: React.FC<PurchaseListApprovalProps> = ({
     dispatch(setOrderBy(columnKey));
   };
 
-  const columns = purchaseOrderTableConstants.COLUMNS.map((col) => {
+  const columns = [
+    ...purchaseOrderTableConstants.COLUMNS,
+    {
+      key: 'procurementSource',
+      label: 'Source',
+      render: (row: any) =>
+        row.procurementSource === 'AUTO_PO_CREATION' ? (
+          <span style={{
+            background: '#e0f7fa',
+            color: '#00796b',
+            padding: '2px 8px',
+            borderRadius: '8px',
+            fontWeight: 600,
+            fontSize: '0.85em',
+            marginLeft: 4,
+          }}>AUTO</span>
+        ) : null,
+    },
+  ].map((col) => {
     if (col.key === purchaseOrderTableConstants.IS_PAID) {
       return {
         ...col,

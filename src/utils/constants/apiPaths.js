@@ -16,6 +16,8 @@ export const API_PATHS = {
     COPY_PURCHASE_ORDER: '/api/purchaseOrder/copyPurchaseOrder',
     ADD_EXPIRY_BATCH_TO_PO: '/api/purchaseOrder/addExpiryBatchToPO',
     REMOVE_EXPIRY_BATCH_FROM_PO: '/api/purchaseOrder/removeBatchFromPO',
+    AUTO_PO_CREATE: '/api/purchaseOrder/autoPOCreate',
+    COMBINE_POS: '/api/purchaseOrder/combinePOs'
   },
   SUBSCRIPTION:'/api/subscription',
   ATTENDANCE: {
